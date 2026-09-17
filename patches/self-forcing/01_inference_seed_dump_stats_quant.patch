@@ -1,0 +1,192 @@
+diff --git a/inference.py b/inference.py
+index e72657e..d7bd894 100644
+--- a/inference.py
++++ b/inference.py
+@@ -19,6 +19,10 @@ from utils.misc import set_seed
+ 
+ from demo_utils.memory import gpu, get_cuda_free_memory_gb, DynamicSwapInstaller
+ 
++import json
++import sys
++import time
++
+ parser = argparse.ArgumentParser()
+ parser.add_argument("--config_path", type=str, help="Path to the config file")
+ parser.add_argument("--checkpoint_path", type=str, help="Path to the checkpoint folder")
+@@ -33,6 +37,32 @@ parser.add_argument("--seed", type=int, default=0, help="Random seed")
+ parser.add_argument("--num_samples", type=int, default=1, help="Number of samples to generate per prompt")
+ parser.add_argument("--save_with_index", action="store_true",
+                     help="Whether to save the video using the index or prompt as the filename")
++parser.add_argument("--latent_dump_root", type=str, default=None,
++                    help="If set, dump per-chunk latents under <root>/prompt<idx>/")
++parser.add_argument("--stats_path", type=str, default=None,
++                    help="If set, write peak VRAM / wall-clock stats as JSON here")
++parser.add_argument("--no_decode", action="store_true",
++                    help="Skip VAE decoding and video writing (latent-only runs)")
++parser.add_argument("--fakequant", type=str, default=None,
++                    help="Fake-quantization config name from fakequant.CONFIGS (e.g. w4a4)")
++parser.add_argument("--fakequant_group", type=int, default=128,
++                    help="Group size for integer fake quantization")
++parser.add_argument("--kv_quant", type=str, default=None,
++                    help="KV cache quantization method from the UCSD kv_quant package (e.g. RTN, KIVI)")
++parser.add_argument("--kv_bits", type=int, default=4, help="Bits for KV cache quantization (2 or 4)")
++parser.add_argument("--kv_block_size", type=int, default=16, help="Block size for KV cache quantization")
++parser.add_argument("--kv_key_bits", type=int, default=None,
++                    help="Override bits for keys only (defaults to --kv_bits)")
++parser.add_argument("--kv_value_bits", type=int, default=None,
++                    help="Override bits for values only (defaults to --kv_bits)")
++parser.add_argument("--kv_err_log", type=str, default=None,
++                    help="If set, write per-chunk KV cache quantization error JSON here")
++parser.add_argument("--noise_perturb", type=float, default=0.0,
++                    help="Control run: scale the initial noise by (1 + eps*N(0,1)) to measure "
++                         "how fast the model diverges from any perturbation at all")
++parser.add_argument("--kv_quant_repo", type=str,
++                    default=os.path.expanduser("~/gpu/kv-quant-longhorizon"),
++                    help="Path to the kv-quant-longhorizon checkout")
+ args = parser.parse_args()
+ 
+ # Initialize distributed inference
+@@ -78,6 +108,29 @@ else:
+ pipeline.generator.to(device=gpu)
+ pipeline.vae.to(device=gpu)
+ 
++if args.kv_quant and args.kv_quant.upper() != "BF16":
++    if args.kv_quant_repo not in sys.path:
++        sys.path.insert(0, args.kv_quant_repo)
++    from kv_quant.factory import create_quantizer
++    kb = args.kv_key_bits if args.kv_key_bits is not None else args.kv_bits
++    vb = args.kv_value_bits if args.kv_value_bits is not None else args.kv_bits
++    qname = (f"{args.kv_quant.upper()}_INT{args.kv_bits}" if kb == vb == args.kv_bits
++             else f"{args.kv_quant.upper()}_K{kb}_V{vb}")
++    kv_quantizer = create_quantizer(
++        args.kv_quant, bits=args.kv_bits, block_size=args.kv_block_size,
++        key_bits=kb, value_bits=vb, name=qname)
++    pipeline.kv_quantizer = kv_quantizer
++    print(f"[kv_quant] {kv_quantizer.name()} block_size={args.kv_block_size}")
++    if args.kv_err_log:
++        import wan.modules.causal_model as _cm
++        _cm.KV_ERR_LOG = []
++        pipeline.kv_err_log = _cm.KV_ERR_LOG
++
++fq = None
++if args.fakequant and args.fakequant != "bf16":
++    from fakequant import apply_config
++    fq = apply_config(pipeline.generator.model, args.fakequant, group=args.fakequant_group)
++
+ 
+ # Create dataset
+ if args.i2v:
+@@ -120,6 +173,9 @@ def encode(self, videos: torch.Tensor) -> torch.Tensor:
+     return output
+ 
+ 
++run_stats = []
++torch.cuda.reset_peak_memory_stats()
++
+ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+     idx = batch_data['idx'].item()
+ 
+@@ -158,9 +214,34 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+             prompts = [prompt] * args.num_samples
+         initial_latent = None
+ 
+-        sampled_noise = torch.randn(
+-            [args.num_samples, args.num_output_frames, 16, 60, 104], device=device, dtype=torch.bfloat16
+-        )
++        # Per-chunk seeded noise: chunk c always gets the same noise regardless of
++        # what else consumed RNG, so quantized runs share BF16's trajectory.
++        num_frame_per_block = getattr(config, "num_frame_per_block", 1)
++        assert args.num_output_frames % num_frame_per_block == 0, \
++            f"num_output_frames={args.num_output_frames} not divisible by num_frame_per_block={num_frame_per_block}"
++        noise_chunks = []
++        for chunk_idx in range(args.num_output_frames // num_frame_per_block):
++            g = torch.Generator(device=device)
++            g.manual_seed(args.seed * 1000003 + chunk_idx)
++            noise_chunks.append(torch.randn(
++                [args.num_samples, num_frame_per_block, 16, 60, 104],
++                generator=g, device=device, dtype=torch.bfloat16))
++        sampled_noise = torch.cat(noise_chunks, dim=1)
++
++        if args.noise_perturb > 0:
++            pg = torch.Generator(device=device)
++            pg.manual_seed(args.seed * 1000003 + 424242)
++            sampled_noise = sampled_noise * (
++                1.0 + args.noise_perturb * torch.randn(
++                    sampled_noise.shape, generator=pg,
++                    device=device, dtype=sampled_noise.dtype))
++
++    latent_dump_dir = None
++    if args.latent_dump_root is not None:
++        latent_dump_dir = os.path.join(args.latent_dump_root, f"prompt{idx:03d}")
++
++    torch.cuda.synchronize()
++    t0 = time.time()
+ 
+     # Generate 81 frames
+     video, latents = pipeline.inference(
+@@ -169,7 +250,30 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+         return_latents=True,
+         initial_latent=initial_latent,
+         low_memory=low_memory,
++        base_seed=args.seed,
++        latent_dump_dir=latent_dump_dir,
+     )
++    torch.cuda.synchronize()
++    elapsed = time.time() - t0
++    run_stats.append({
++        "idx": idx,
++        "seconds": elapsed,
++        "num_latent_frames": int(latents.shape[1]),
++        "peak_vram_gb": torch.cuda.max_memory_allocated() / 1024 ** 3,
++        "peak_vram_reserved_gb": torch.cuda.max_memory_reserved() / 1024 ** 3,
++    })
++    print(f"[stats] prompt {idx}: {elapsed:.1f}s, "
++          f"peak_alloc {torch.cuda.max_memory_allocated() / 1024 ** 3:.2f} GB, "
++          f"peak_reserved {torch.cuda.max_memory_reserved() / 1024 ** 3:.2f} GB")
++
++    if args.latent_dump_root is not None:
++        torch.save({"latent": latents.detach().to(torch.float32).cpu()},
++                   os.path.join(latent_dump_dir, "full.pt"))
++
++    if args.no_decode:
++        pipeline.vae.model.clear_cache()
++        continue
++
+     current_video = rearrange(video, 'b t c h w -> b t h w c').cpu()
+     all_video.append(current_video)
+     num_generated_frames += latents.shape[1]
+@@ -190,3 +294,34 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+             else:
+                 output_path = os.path.join(args.output_folder, f'{prompt[:100]}-{seed_idx}.mp4')
+             write_video(output_path, video[seed_idx], fps=16)
++
++if args.kv_err_log and local_rank == 0 and getattr(pipeline, "kv_err_by_chunk", None):
++    os.makedirs(os.path.dirname(os.path.abspath(args.kv_err_log)), exist_ok=True)
++    with open(args.kv_err_log, "w") as f:
++        json.dump({"kv_quant": args.kv_quant, "kv_bits": args.kv_bits,
++                   "by_chunk": pipeline.kv_err_by_chunk}, f, indent=2)
++    print(f"[kv_err] wrote {args.kv_err_log}")
++
++if args.stats_path and local_rank == 0:
++    os.makedirs(os.path.dirname(os.path.abspath(args.stats_path)), exist_ok=True)
++    with open(args.stats_path, "w") as f:
++        json.dump({
++            "torch": torch.__version__,
++            "cuda": torch.version.cuda,
++            "gpu": torch.cuda.get_device_name(0),
++            "seed": args.seed,
++            "num_output_frames": args.num_output_frames,
++            "num_frame_per_block": getattr(config, "num_frame_per_block", 1),
++            "local_attn_size": int(pipeline.local_attn_size),
++            "denoising_step_list": list(config.denoising_step_list),
++            "fakequant": args.fakequant or "bf16",
++            "fakequant_group": args.fakequant_group,
++            "kv_quant": args.kv_quant or "bf16",
++            "kv_bits": args.kv_bits,
++            "kv_key_bits": args.kv_key_bits,
++            "kv_value_bits": args.kv_value_bits,
++            "kv_block_size": args.kv_block_size,
++            "noise_perturb": args.noise_perturb,
++            "runs": run_stats,
++        }, f, indent=2)
++    print(f"[stats] wrote {args.stats_path}")

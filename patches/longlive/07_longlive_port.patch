@@ -1,0 +1,325 @@
+diff --git a/inference.py b/inference.py
+index cd26365..8b7ec77 100644
+--- a/inference.py
++++ b/inference.py
+@@ -22,9 +22,33 @@ from utils.memory import gpu, get_cuda_free_memory_gb, DynamicSwapInstaller, log
+ 
+ parser = argparse.ArgumentParser()
+ parser.add_argument("--config_path", type=str, help="Path to the config file")
++parser.add_argument("--seed", type=int, default=0, help="Base seed for per-chunk noise")
++parser.add_argument("--latent_dump_root", type=str, default=None,
++                    help="If set, dump per-chunk latents under <root>/prompt<idx>/")
++parser.add_argument("--stats_path", type=str, default=None,
++                    help="If set, write peak VRAM / wall-clock stats as JSON here")
++parser.add_argument("--noise_perturb", type=float, default=0.0,
++                    help="Control run: scale the initial noise by (1 + eps*N(0,1))")
++parser.add_argument("--kv_quant", type=str, default=None,
++                    help="KV cache quantization method from the UCSD kv_quant package")
++parser.add_argument("--kv_bits", type=int, default=4)
++parser.add_argument("--kv_key_bits", type=int, default=None)
++parser.add_argument("--kv_value_bits", type=int, default=None)
++parser.add_argument("--kv_block_size", type=int, default=16)
++parser.add_argument("--kv_err_log", type=str, default=None,
++                    help="If set, write per-chunk KV cache quantization error JSON here")
++parser.add_argument("--kv_sink_bf16", action="store_true",
++                    help="Keep the sink slots in BF16 and quantize only the rolling window")
++parser.add_argument("--kv_quant_repo", type=str,
++                    default=os.path.expanduser("~/gpu/kv-quant-longhorizon"))
++parser.add_argument("--fakequant", type=str, default=None)
++parser.add_argument("--fakequant_group", type=int, default=128)
++parser.add_argument("--output_folder", type=str, default=None)
+ args = parser.parse_args()
+ 
+ config = OmegaConf.load(args.config_path)
++if args.output_folder:
++    config.output_folder = args.output_folder
+ 
+ # Initialize distributed inference
+ if "LOCAL_RANK" in os.environ:
+@@ -131,13 +155,43 @@ if getattr(config, "adapter", None) and configure_lora_for_model is not None:
+     pipeline.is_lora_enabled = True
+ 
+ 
+-# Move pipeline to appropriate dtype and device
++# Move pipeline to appropriate dtype and device.
++# The text encoder is built on `device` in fp32 (~22 GB for umT5), which leaves
++# no room for the dtype conversion itself; stage it through CPU first.
++pipeline.text_encoder.to("cpu")
++torch.cuda.empty_cache()
+ pipeline = pipeline.to(dtype=torch.bfloat16)
+ if low_memory:
+     DynamicSwapInstaller.install_model(pipeline.text_encoder, device=device)
+ pipeline.generator.to(device=device)
+ pipeline.vae.to(device=device)
+ 
++if args.kv_quant and args.kv_quant.upper() not in ("BF16", "NONE"):
++    import sys as _sys
++    if args.kv_quant_repo not in _sys.path:
++        _sys.path.insert(0, args.kv_quant_repo)
++    from kv_quant.factory import create_quantizer
++    import wan.modules.causal_model as _cm
++    _kb = args.kv_key_bits if args.kv_key_bits is not None else args.kv_bits
++    _vb = args.kv_value_bits if args.kv_value_bits is not None else args.kv_bits
++    _cm.KV_QUANTIZER = create_quantizer(
++        args.kv_quant, bits=args.kv_bits, block_size=args.kv_block_size,
++        key_bits=_kb, value_bits=_vb,
++        name=f"{args.kv_quant.upper()}_K{_kb}_V{_vb}")
++    _cm.KV_SINK_BF16 = bool(args.kv_sink_bf16)
++    if args.kv_err_log:
++        _cm.KV_ERR_LOG = []
++    print(f"[kv_quant] {_cm.KV_QUANTIZER.name()} block={args.kv_block_size} "
++          f"sink_bf16={_cm.KV_SINK_BF16}")
++
++if args.fakequant and args.fakequant not in ("bf16", "none"):
++    import sys as _sys2
++    _sfp = os.path.expanduser("~/gpu/Self-Forcing")
++    if _sfp not in _sys2.path:
++        _sys2.path.insert(0, _sfp)
++    from fakequant import apply_config as _apply_fq
++    _apply_fq(pipeline.generator.model, args.fakequant, group=args.fakequant_group)
++
+ extended_prompt_path = config.data_path
+ dataset = TextDataset(prompt_path=config.data_path, extended_prompt_path=extended_prompt_path)
+ num_prompts = len(dataset)
+@@ -191,9 +245,26 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+     else:
+         prompts = [prompt] * config.num_samples
+ 
+-    sampled_noise = torch.randn(
+-        [config.num_samples, config.num_output_frames, 16, 60, 104], device=device, dtype=torch.bfloat16
+-    )
++    # Per-chunk seeded noise: chunk c always gets the same noise regardless of
++    # what else consumed RNG, so quantized runs share the BF16 trajectory.
++    _seed = getattr(args, "seed", 0)
++    _nfb = config.num_frame_per_block
++    assert config.num_output_frames % _nfb == 0, \
++        f"num_output_frames={config.num_output_frames} not divisible by num_frame_per_block={_nfb}"
++    _chunks = []
++    for _c in range(config.num_output_frames // _nfb):
++        _g = torch.Generator(device=device)
++        _g.manual_seed(_seed * 1000003 + _c)
++        _chunks.append(torch.randn(
++            [config.num_samples, _nfb, 16, 60, 104],
++            generator=_g, device=device, dtype=torch.bfloat16))
++    sampled_noise = torch.cat(_chunks, dim=1)
++    if getattr(args, "noise_perturb", 0.0) > 0:
++        _pg = torch.Generator(device=device)
++        _pg.manual_seed(_seed * 1000003 + 424242)
++        sampled_noise = sampled_noise * (
++            1.0 + args.noise_perturb * torch.randn(
++                sampled_noise.shape, generator=_pg, device=device, dtype=sampled_noise.dtype))
+ 
+     print("sampled_noise.device", sampled_noise.device)
+     # print("initial_latent.device", initial_latent.device)
+@@ -204,9 +275,15 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+     # print('pipeline.text_encoder', pipeline.text_encoder)
+     # print('pipeline.vae', pipeline.vae)
+ 
++    _dump = None
++    if getattr(args, "latent_dump_root", None):
++        _dump = os.path.join(args.latent_dump_root, f"prompt{idx:03d}")
++
+     video, latents = pipeline.inference(
+         noise=sampled_noise,
+         text_prompts=prompts,
++        base_seed=_seed,
++        latent_dump_dir=_dump,
+         return_latents=True,
+         low_memory=low_memory,
+         profile=False,
+@@ -246,5 +323,14 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+ 
+     if config.inference_iter != -1 and i >= config.inference_iter:
+         break
++if args.kv_err_log and getattr(pipeline, "kv_err_by_chunk", None):
++    import json as _json
++    os.makedirs(os.path.dirname(os.path.abspath(args.kv_err_log)), exist_ok=True)
++    with open(args.kv_err_log, "w") as _f:
++        _json.dump({"kv_quant": args.kv_quant, "kv_bits": args.kv_bits,
++                    "kv_sink_bf16": bool(args.kv_sink_bf16),
++                    "by_chunk": pipeline.kv_err_by_chunk}, _f, indent=2)
++    print(f"[kv_err] wrote {args.kv_err_log}")
++
+ if dist.is_initialized():
+     dist.destroy_process_group()
+\ No newline at end of file
+diff --git a/pipeline/causal_inference.py b/pipeline/causal_inference.py
+index 17af1f7..48861bf 100644
+--- a/pipeline/causal_inference.py
++++ b/pipeline/causal_inference.py
+@@ -1,8 +1,8 @@
+ # Adopted from https://github.com/guandeh17/Self-Forcing
+ # SPDX-License-Identifier: Apache-2.0
+ from typing import List, Optional
+-import torch
+ import os
++import torch
+ 
+ from utils.wan_wrapper import WanDiffusionWrapper, WanTextEncoder, WanVAEWrapper
+ 
+@@ -60,6 +60,8 @@ class CausalInferencePipeline(torch.nn.Module):
+         return_latents: bool = False,
+         profile: bool = False,
+         low_memory: bool = False,
++        base_seed: Optional[int] = None,
++        latent_dump_dir: Optional[str] = None,
+     ) -> torch.Tensor:
+         """
+         Perform inference on the given noise and text prompts.
+@@ -143,10 +145,21 @@ class CausalInferencePipeline(torch.nn.Module):
+ 
+         # Step 2: Temporal denoising loop
+         all_num_frames = [self.num_frame_per_block] * num_blocks
+-        for current_num_frames in all_num_frames:
++        if latent_dump_dir is not None:
++            os.makedirs(latent_dump_dir, exist_ok=True)
++
++        for chunk_idx, current_num_frames in enumerate(all_num_frames):
+             if profile:
+                 block_start.record()
+ 
++            # Reproducibility: per-chunk generator so the trajectory does not
++            # depend on how much RNG anything else consumed.
++            if base_seed is not None:
++                renoise_gen = torch.Generator(device=noise.device)
++                renoise_gen.manual_seed(base_seed * 1000003 + 7919 + chunk_idx)
++            else:
++                renoise_gen = None
++
+             noisy_input = noise[
+                 :, current_start_frame:current_start_frame + current_num_frames]
+ 
+@@ -170,9 +183,16 @@ class CausalInferencePipeline(torch.nn.Module):
+                         current_start=current_start_frame * self.frame_seq_length
+                     )
+                     next_timestep = self.denoising_step_list[index + 1]
++                    flat_pred = denoised_pred.flatten(0, 1)
++                    if renoise_gen is not None:
++                        renoise = torch.randn(
++                            flat_pred.shape, generator=renoise_gen,
++                            device=flat_pred.device, dtype=flat_pred.dtype)
++                    else:
++                        renoise = torch.randn_like(flat_pred)
+                     noisy_input = self.scheduler.add_noise(
+-                        denoised_pred.flatten(0, 1),
+-                        torch.randn_like(denoised_pred.flatten(0, 1)),
++                        flat_pred,
++                        renoise,
+                         next_timestep * torch.ones(
+                             [batch_size * current_num_frames], device=noise.device, dtype=torch.long)
+                     ).unflatten(0, denoised_pred.shape[:2])
+@@ -188,6 +208,30 @@ class CausalInferencePipeline(torch.nn.Module):
+                     )
+             # Step 2.2: record the model's output
+             output[:, current_start_frame:current_start_frame + current_num_frames] = denoised_pred.to(output.device)
++
++            import wan.modules.causal_model as _cm
++            if _cm.KV_ERR_LOG is not None:
++                start = getattr(self, "_kv_err_mark", 0)
++                batch = _cm.KV_ERR_LOG[start:]
++                self._kv_err_mark = len(_cm.KV_ERR_LOG)
++                if batch:
++                    if not hasattr(self, "kv_err_by_chunk"):
++                        self.kv_err_by_chunk = []
++                    self.kv_err_by_chunk.append({
++                        "chunk_idx": chunk_idx,
++                        "n_records": len(batch),
++                        "k_rel_mean": sum(r["k_rel"] for r in batch) / len(batch),
++                        "v_rel_mean": sum(r["v_rel"] for r in batch) / len(batch),
++                        "tokens": batch[-1]["tokens"],
++                    })
++
++            if latent_dump_dir is not None:
++                torch.save(
++                    {"latent": denoised_pred.detach().to(torch.float32).cpu(),
++                     "chunk_idx": chunk_idx,
++                     "start_frame": current_start_frame,
++                     "num_frames": current_num_frames},
++                    os.path.join(latent_dump_dir, f"chunk_{chunk_idx:04d}.pt"))
+             # Step 2.3: rerun with timestep zero to update KV cache using clean context
+             context_timestep = torch.ones_like(timestep) * self.args.context_noise
+             self.generator(
+diff --git a/wan/modules/causal_model.py b/wan/modules/causal_model.py
+index a2170ef..6ff2550 100644
+--- a/wan/modules/causal_model.py
++++ b/wan/modules/causal_model.py
+@@ -1,6 +1,30 @@
+ # Adopted from https://github.com/guandeh17/Self-Forcing
+ # SPDX-License-Identifier: CC-BY-NC-SA-4.0
+ from wan.modules.attention import attention
++
++# Set by inference.py: a kv_quant quantizer, and optional in-situ error log.
++# LongLive keeps the live cache in kv_cache["k"]/["v"] and builds a throwaway
++# temp_k/temp_v for attention, so quantization is applied at the two read sites
++# and once per write-back in _update_kv_cache.
++KV_QUANTIZER = None
++KV_ERR_LOG = None
++KV_SINK_BF16 = False
++
++
++def _kv_read(cache, key):
++    """Return the cache tensor a forward pass should attend over."""
++    if KV_QUANTIZER is None or cache.get("quant_state") is None:
++        return cache[key].clone()
++    rk, rv = KV_QUANTIZER.dequantize_kv(
++        cache["quant_state"], meta={"tensor_dtype": cache[key].dtype})
++    out = (rk if key == "k" else rv).to(device=cache[key].device, dtype=cache[key].dtype)
++    if KV_SINK_BF16:
++        # Sink slots stay in BF16; only the rolling window is quantized.
++        st = int(cache.get("sink_tokens", 0))
++        if st > 0:
++            out = out.clone()
++            out[:, :st] = cache[key][:, :st]
++    return out
+ from wan.modules.model import (
+     WanRMSNorm,
+     rope_apply,
+@@ -247,8 +271,8 @@ class CausalWanSelfAttention(nn.Module):
+ 
+                 # Construct full k, v for attention computation (without modifying the original cache)
+                 # Create temporary k, v for computation
+-                temp_k = kv_cache["k"].clone()
+-                temp_v = kv_cache["v"].clone()
++                temp_k = _kv_read(kv_cache, "k")
++                temp_v = _kv_read(kv_cache, "v")
+                 
+                 # Apply rolling update to the temporary cache
+                 temp_k[:, sink_tokens:sink_tokens + num_rolled_tokens] = \
+@@ -289,8 +313,8 @@ class CausalWanSelfAttention(nn.Module):
+                 local_start_index = local_end_index - num_new_tokens
+ 
+                 # Construct full k, v for attention computation (without modifying the original cache)
+-                temp_k = kv_cache["k"].clone()
+-                temp_v = kv_cache["v"].clone()
++                temp_k = _kv_read(kv_cache, "k")
++                temp_v = _kv_read(kv_cache, "v")
+                 # Protect sink_tokens only during recomputation; regular forward generation allows writing into the initial sink region
+                 write_start_index = max(local_start_index, sink_tokens) if is_recompute else local_start_index
+                 if sink_recache_after_switch:
+@@ -882,6 +906,26 @@ class CausalWanModel(ModelMixin, ConfigMixin):
+                         cache["k"][:, write_start_index:write_end_index] = new_k
+                         cache["v"][:, write_start_index:write_end_index] = new_v
+             
++            # Re-quantize the live cache after the write-back, mirroring what the
++            # UCSD patch does for Self-Forcing.
++            if KV_QUANTIZER is not None and update_info is not None:
++                cache = kv_cache[block_index]
++                cache["sink_tokens"] = int(update_info.get("sink_tokens", 0))
++                cache["quant_state"] = KV_QUANTIZER.quantize_kv(
++                    cache["k"], cache["v"], meta={"tensor_dtype": cache["k"].dtype})
++                if KV_ERR_LOG is not None:
++                    n = int(local_end_index)
++                    rk, rv = KV_QUANTIZER.dequantize_kv(
++                        cache["quant_state"], meta={"tensor_dtype": cache["k"].dtype})
++                    kf, vf = cache["k"][:, :n].float(), cache["v"][:, :n].float()
++                    KV_ERR_LOG.append({
++                        "k_rel": ((rk[:, :n].to(kf.device).float() - kf).norm()
++                                  / kf.norm().clamp(min=1e-12)).item(),
++                        "v_rel": ((rv[:, :n].to(vf.device).float() - vf).norm()
++                                  / vf.norm().clamp(min=1e-12)).item(),
++                        "tokens": n,
++                    })
++
+             # Update indices: do not roll back pointers during recomputation
+             is_recompute = False if update_info is None else update_info.get("is_recompute", False)
+             if not is_recompute:

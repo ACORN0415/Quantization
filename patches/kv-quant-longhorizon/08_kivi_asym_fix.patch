@@ -1,0 +1,75 @@
+diff --git a/kv_quant/base.py b/kv_quant/base.py
+index 74ae9c6..19240f4 100644
+--- a/kv_quant/base.py
++++ b/kv_quant/base.py
+@@ -26,10 +26,13 @@ class KVQuantizer(ABC):
+     ) -> None:
+         key_bits = bits if key_bits is None else key_bits
+         value_bits = bits if value_bits is None else value_bits
+-        if key_bits not in (2, 4):
+-            raise ValueError(f"Unsupported key_bits={key_bits}; expected one of [2, 4].")
+-        if value_bits not in (2, 4):
+-            raise ValueError(f"Unsupported value_bits={value_bits}; expected one of [2, 4].")
++        # The quantization maths and `packed_bytes` are bit-width agnostic; the
++        # original [2, 4] guard just reflected the widths the study happened to
++        # run. Widened so intermediate widths can be swept.
++        if not 2 <= key_bits <= 8:
++            raise ValueError(f"Unsupported key_bits={key_bits}; expected 2..8.")
++        if not 2 <= value_bits <= 8:
++            raise ValueError(f"Unsupported value_bits={value_bits}; expected 2..8.")
+         if block_size <= 0:
+             raise ValueError("block_size must be > 0")
+         self.bits = bits
+diff --git a/kv_quant/factory.py b/kv_quant/factory.py
+index 1019a57..cb34c90 100644
+--- a/kv_quant/factory.py
++++ b/kv_quant/factory.py
+@@ -15,6 +15,10 @@ def create_quantizer(method: str, bits: int | None, block_size: int, **kwargs):
+         return FlowCacheProfileQuantizer(block_size=block_size, **kwargs)
+     if bits is None:
+         raise ValueError(f"bits must be provided for method={method}")
++    # RTN/KIVI accept these through **kwargs; pull them out so they are bound names.
++    key_bits = kwargs.pop("key_bits", None)
++    value_bits = kwargs.pop("value_bits", None)
++    name = kwargs.pop("name", None)
+     if method == "RTN":
+         from .rtn import RTNQuantizer
+         return RTNQuantizer(bits=bits, block_size=block_size, key_bits=key_bits, value_bits=value_bits, name=name)
+diff --git a/kv_quant/utils.py b/kv_quant/utils.py
+index 1b4ab9d..90ab593 100644
+--- a/kv_quant/utils.py
++++ b/kv_quant/utils.py
+@@ -35,9 +35,20 @@ def quantize_asym(x: torch.Tensor, bits: int, reduce_dims: Tuple[int, ...]):
+     x_min = x.amin(dim=reduce_dims, keepdim=True)
+     x_max = x.amax(dim=reduce_dims, keepdim=True)
+     scale = ((x_max - x_min) / max(qmax - qmin, 1)).clamp_min(EPS)
+-    zp = torch.round(qmin - x_min / scale).clamp(qmin, qmax)
+-    q = torch.round(x / scale + zp).clamp(qmin, qmax).to(torch.int8)
+-    return q, scale.to(torch.float16), zp.to(torch.float16)
++    # Offset form: store the group minimum rather than a zero-point code.
++    #
++    # The original `zp = round(qmin - x_min/scale).clamp(qmin, qmax)` is wrong
++    # twice over. The clamp collapses any group that does not straddle zero
++    # (all-positive or all-negative), which post-RoPE keys hit constantly. And
++    # dropping the clamp is not enough either: EPS=1e-8 underflows to zero in
++    # the fp16 the scale is stored in, so a group whose spread falls below bf16
++    # resolution gets scale->0 and zp->inf, and dequantizing yields NaN.
++    #
++    # Storing x_min avoids both. It is a data value, so fp16 always holds it,
++    # and a constant group round-trips exactly (q=0 -> 0*scale + x_min).
++    # Storage cost is unchanged: one fp16 per group either way.
++    q = torch.round((x - x_min) / scale).clamp(qmin, qmax).to(torch.int8)
++    return q, scale.to(torch.float16), x_min.to(torch.float16)
+ 
+ 
+ def dequantize_asym(
+@@ -46,7 +57,8 @@ def dequantize_asym(
+     zp: torch.Tensor,
+     dtype: torch.dtype = torch.float32,
+ ) -> torch.Tensor:
+-    return (q.to(dtype) - zp.to(dtype)) * scale.to(dtype)
++    # `zp` carries the group minimum (see quantize_asym).
++    return q.to(dtype) * scale.to(dtype) + zp.to(dtype)
+ 
+ 
+ def quantize_sym(x: torch.Tensor, bits: int, reduce_dims: Tuple[int, ...]):
