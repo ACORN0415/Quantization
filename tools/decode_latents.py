@@ -32,7 +32,7 @@ def load_full_latent(prompt_dir):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--config_path", default="configs/ll_quant63.yaml")
+    ap.add_argument("--config_path", default="configs/gateA_A1.yaml")
     ap.add_argument("--latent_roots", nargs="+", required=True,
                     help="tag=dir pairs, e.g. kv_int4=results/latents_ll/kv_int4")
     ap.add_argument("--out_root", default="results")
@@ -41,7 +41,8 @@ def main():
 
     torch.set_grad_enabled(False)
     device = torch.device("cuda")
-    config = OmegaConf.load(args.config_path)
+    config = OmegaConf.merge(OmegaConf.load("configs/default_config.yaml"),
+                             OmegaConf.load(args.config_path))
 
     # Only the VAE is needed; build the pipeline and drop the rest.
     pipeline = CausalInferencePipeline(config, device=device)
@@ -55,7 +56,7 @@ def main():
         if not os.path.isdir(root):
             print(f"  ! {root} missing, skipped")
             continue
-        out_dir = os.path.join(args.out_root, f"ll_{tag}", "videos")
+        out_dir = os.path.join(args.out_root, tag, "videos")
         os.makedirs(out_dir, exist_ok=True)
         for pi, p in enumerate(sorted(os.listdir(root))):
             pdir = os.path.join(root, p)
