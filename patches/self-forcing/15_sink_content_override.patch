@@ -1,0 +1,196 @@
+diff --git a/wan/modules/causal_model.py b/wan/modules/causal_model.py
+index 98e398a..a5e62a0 100644
+--- a/wan/modules/causal_model.py
++++ b/wan/modules/causal_model.py
+@@ -1,4 +1,69 @@
+ from wan.modules.attention import attention
++
++# Set to a list by inference.py to collect per-layer KV cache quantization error.
++KV_ERR_LOG = None
++
++# Gate E2: replace what sits in the sink slot, keeping its position and size.
++# "int2"     quantize the sink content to INT2 and back  (a contaminated anchor)
++# "noise"    Gaussian noise at the sink's own norm       (position only, no content)
++# "freeze"   capture the sink once, then hold it fixed   (re-quantization is
++#                                                         near-idempotent, so this
++#                                                         should change nothing)
++# "override" content supplied externally, e.g. another prompt's chunk 0
++SINK_MODE = None
++SINK_TENSORS = {}       # layer index -> (k, v) for "override"/"freeze"
++SINK_LAYER_COUNTER = [0]
++
++
++def _apply_sink_mode(cache_k, cache_v, sink_tokens, layer_id):
++    """Rewrite cache[:, :sink_tokens] according to SINK_MODE."""
++    import torch as _t
++    if not SINK_MODE or sink_tokens <= 0:
++        return
++    k_slot = cache_k[:, :sink_tokens]
++    v_slot = cache_v[:, :sink_tokens]
++
++    if SINK_MODE == "noise":
++        g = _t.Generator(device=k_slot.device); g.manual_seed(20260916 + layer_id)
++        for slot in (k_slot, v_slot):
++            n = _t.randn(slot.shape, generator=g, device=slot.device, dtype=_t.float32)
++            n = n / n.norm().clamp(min=1e-12) * slot.float().norm()
++            slot.copy_(n.to(slot.dtype))
++        return
++
++    if SINK_MODE == "int2":
++        import sys as _s
++        _p = os.path.expanduser("~/gpu/kv-quant-longhorizon")
++        if _p not in _s.path:
++            _s.path.insert(0, _p)
++        from kv_quant.factory import create_quantizer
++        q = create_quantizer("RTN", bits=2, block_size=16,
++                             key_bits=2, value_bits=2, name="RTN_INT2")
++        st = q.quantize_kv(k_slot, v_slot, meta={"tensor_dtype": k_slot.dtype})
++        rk, rv = q.dequantize_kv(st, meta={"tensor_dtype": k_slot.dtype})
++        k_slot.copy_(rk.to(k_slot.dtype)); v_slot.copy_(rv.to(v_slot.dtype))
++        return
++
++    if SINK_MODE in ("freeze", "override"):
++        if layer_id not in SINK_TENSORS:
++            if SINK_MODE == "freeze":
++                SINK_TENSORS[layer_id] = (k_slot.detach().clone(), v_slot.detach().clone())
++            return
++        k_ref, v_ref = SINK_TENSORS[layer_id]
++        k_slot.copy_(k_ref.to(k_slot.dtype)); v_slot.copy_(v_ref.to(v_slot.dtype))
++        return
++
++
++# Set by attn_mass.py: called with (roped_query, cache_k, current_start,
++# local_end_index) just before attention, so the softmax mass over token ranges
++# can be measured without flash-attn exposing the attention matrix.
++ATTN_MASS_HOOK = None
++
++# Set to a list by teacher_forced.py to capture the *newly computed* K/V of the
++# current chunk (post-RoPE, pre-cache-quantization) for one generator call. This
++# is what the chunk hands forward to the next one, so comparing it against the
++# BF16 reference measures how much contamination it passes on.
++KV_NEW_CAPTURE = None
+ from wan.modules.model import (
+     WanRMSNorm,
+     rope_apply,
+@@ -197,11 +262,36 @@ class CausalWanSelfAttention(nn.Module):
+                 q, grid_sizes, freqs, start_frame=current_start_frame).type_as(v)
+             roped_key = causal_rope_apply(
+                 k, grid_sizes, freqs, start_frame=current_start_frame).type_as(v)
++            quantizer = kv_cache.get("quantizer", None)
++            if quantizer is not None:
++                kv_cache_size = kv_cache.get("kv_cache_size", None)
++                if kv_cache_size is None:
++                    if isinstance(kv_cache.get("k"), torch.Tensor) and kv_cache["k"].ndim >= 2:
++                        kv_cache_size = int(kv_cache["k"].shape[1])
++                    else:
++                        kv_cache_size = int(self.max_attention_size)
++
++                if kv_cache.get("quant_state") is not None:
++                    cache_k, cache_v = quantizer.dequantize_kv(kv_cache["quant_state"], meta={"tensor_dtype": v.dtype})
++                    cache_k = cache_k.to(device=v.device, dtype=v.dtype)
++                    cache_v = cache_v.to(device=v.device, dtype=v.dtype)
++                elif isinstance(kv_cache.get("k"), torch.Tensor) and kv_cache["k"].ndim == 4 and kv_cache["k"].shape[1] == kv_cache_size:
++                    cache_k = kv_cache["k"]
++                    cache_v = kv_cache["v"]
++                else:
++                    cache_k = torch.zeros([b, kv_cache_size, n, d], dtype=v.dtype, device=v.device)
++                    cache_v = torch.zeros_like(cache_k)
++            else:
++                cache_k = kv_cache["k"]
++                cache_v = kv_cache["v"]
++
++            if KV_NEW_CAPTURE is not None:
++                KV_NEW_CAPTURE.append((roped_key.detach(), v.detach()))
+ 
+             current_end = current_start + roped_query.shape[1]
+             sink_tokens = self.sink_size * frame_seqlen
+             # If we are using local attention and the current KV cache size is larger than the local attention size, we need to truncate the KV cache
+-            kv_cache_size = kv_cache["k"].shape[1]
++            kv_cache_size = cache_k.shape[1]
+             num_new_tokens = roped_query.shape[1]
+             if self.local_attn_size != -1 and (current_end > kv_cache["global_end_index"].item()) and (
+                     num_new_tokens + kv_cache["local_end_index"].item() > kv_cache_size):
+@@ -210,29 +300,73 @@ class CausalWanSelfAttention(nn.Module):
+                 # Clone the source slice to avoid overlapping memory error
+                 num_evicted_tokens = num_new_tokens + kv_cache["local_end_index"].item() - kv_cache_size
+                 num_rolled_tokens = kv_cache["local_end_index"].item() - num_evicted_tokens - sink_tokens
+-                kv_cache["k"][:, sink_tokens:sink_tokens + num_rolled_tokens] = \
+-                    kv_cache["k"][:, sink_tokens + num_evicted_tokens:sink_tokens + num_evicted_tokens + num_rolled_tokens].clone()
+-                kv_cache["v"][:, sink_tokens:sink_tokens + num_rolled_tokens] = \
+-                    kv_cache["v"][:, sink_tokens + num_evicted_tokens:sink_tokens + num_evicted_tokens + num_rolled_tokens].clone()
++                cache_k[:, sink_tokens:sink_tokens + num_rolled_tokens] = \
++                    cache_k[:, sink_tokens + num_evicted_tokens:sink_tokens + num_evicted_tokens + num_rolled_tokens].clone()
++                cache_v[:, sink_tokens:sink_tokens + num_rolled_tokens] = \
++                    cache_v[:, sink_tokens + num_evicted_tokens:sink_tokens + num_evicted_tokens + num_rolled_tokens].clone()
+                 # Insert the new keys/values at the end
+                 local_end_index = kv_cache["local_end_index"].item() + current_end - \
+                     kv_cache["global_end_index"].item() - num_evicted_tokens
+                 local_start_index = local_end_index - num_new_tokens
+-                kv_cache["k"][:, local_start_index:local_end_index] = roped_key
+-                kv_cache["v"][:, local_start_index:local_end_index] = v
++                cache_k[:, local_start_index:local_end_index] = roped_key
++                cache_v[:, local_start_index:local_end_index] = v
+             else:
+                 # Assign new keys/values directly up to current_end
+                 local_end_index = kv_cache["local_end_index"].item() + current_end - kv_cache["global_end_index"].item()
+                 local_start_index = local_end_index - num_new_tokens
+-                kv_cache["k"][:, local_start_index:local_end_index] = roped_key
+-                kv_cache["v"][:, local_start_index:local_end_index] = v
++                cache_k[:, local_start_index:local_end_index] = roped_key
++                cache_v[:, local_start_index:local_end_index] = v
++            # Only once the cache is full and actually evicting. Before that the
++            # sink is pinned in name only — A1 and A2 are bit-identical — so
++            # touching it earlier would conflate "chunk 0 was corrupted all
++            # along" with "the pinned anchor is corrupted", and Gate A's effect
++            # exists only after eviction.
++            # local_end_index saturates at the cache size one chunk before
++            # eviction actually begins, so gate on current_end instead.
++            if (SINK_MODE and sink_tokens > 0
++                    and current_end > cache_k.shape[1]):
++                # Layers are visited in order within a generator call, so a
++                # rolling counter recovers the layer id without plumbing it in.
++                _lid = SINK_LAYER_COUNTER[0] % 30
++                SINK_LAYER_COUNTER[0] += 1
++                _apply_sink_mode(cache_k, cache_v, sink_tokens, _lid)
++
++            if ATTN_MASS_HOOK is not None:
++                _w0 = max(0, local_end_index - self.max_attention_size)
++                ATTN_MASS_HOOK(roped_query,
++                               cache_k[:, _w0:local_end_index],
++                               cache_v[:, _w0:local_end_index],
++                               current_start, _w0, local_end_index)
++
+             x = attention(
+                 roped_query,
+-                kv_cache["k"][:, max(0, local_end_index - self.max_attention_size):local_end_index],
+-                kv_cache["v"][:, max(0, local_end_index - self.max_attention_size):local_end_index]
++                cache_k[:, max(0, local_end_index - self.max_attention_size):local_end_index],
++                cache_v[:, max(0, local_end_index - self.max_attention_size):local_end_index]
+             )
+             kv_cache["global_end_index"].fill_(current_end)
+             kv_cache["local_end_index"].fill_(local_end_index)
++            if quantizer is not None:
++                kv_cache["kv_cache_size"] = int(cache_k.shape[1])
++                kv_cache["batch_size"] = int(cache_k.shape[0])
++                kv_cache["num_heads"] = int(cache_k.shape[2])
++                kv_cache["head_dim"] = int(cache_k.shape[3])
++                kv_cache["quant_state"] = quantizer.quantize_kv(cache_k, cache_v, meta={"tensor_dtype": v.dtype})
++                if KV_ERR_LOG is not None:
++                    # Only the live prefix is meaningful; the tail is still zeros.
++                    _n = local_end_index
++                    _rk, _rv = quantizer.dequantize_kv(
++                        kv_cache["quant_state"], meta={"tensor_dtype": v.dtype})
++                    _kf, _vf = cache_k[:, :_n].float(), cache_v[:, :_n].float()
++                    KV_ERR_LOG.append({
++                        "k_rel": ((_rk[:, :_n].to(_kf.device).float() - _kf).norm()
++                                  / _kf.norm().clamp(min=1e-12)).item(),
++                        "v_rel": ((_rv[:, :_n].to(_vf.device).float() - _vf).norm()
++                                  / _vf.norm().clamp(min=1e-12)).item(),
++                        "tokens": int(_n),
++                    })
++                # Drop persistent BF16 cache residency for quantized methods.
++                kv_cache["k"] = cache_k.new_empty(0)
++                kv_cache["v"] = cache_v.new_empty(0)
+ 
+         # output
+         x = x.flatten(2)

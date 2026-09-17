@@ -1,0 +1,171 @@
+{
+  "tag": "e1_A1_int4",
+  "config": "configs/gateA_A1.yaml",
+  "kv": "RTN_INT4",
+  "sink_tokens": 0,
+  "n_slots": 7,
+  "by_chunk": [
+    {
+      "chunk": 8,
+      "slots": [
+        {
+          "slot": 0,
+          "age_rank": 6,
+          "k_rel_mean": 0.18985951116929453,
+          "v_rel_mean": 0.3662772692243258,
+          "n_prompts": 10
+        },
+        {
+          "slot": 1,
+          "age_rank": 5,
+          "k_rel_mean": 0.24796881717940172,
+          "v_rel_mean": 0.4905579075713952,
+          "n_prompts": 10
+        },
+        {
+          "slot": 2,
+          "age_rank": 4,
+          "k_rel_mean": 0.30350844509899616,
+          "v_rel_mean": 0.5970709050198396,
+          "n_prompts": 10
+        },
+        {
+          "slot": 3,
+          "age_rank": 3,
+          "k_rel_mean": 0.3528693449745576,
+          "v_rel_mean": 0.6920535556475321,
+          "n_prompts": 10
+        },
+        {
+          "slot": 4,
+          "age_rank": 2,
+          "k_rel_mean": 0.40189261625210443,
+          "v_rel_mean": 0.7676567166050275,
+          "n_prompts": 10
+        },
+        {
+          "slot": 5,
+          "age_rank": 1,
+          "k_rel_mean": 0.45458987906575204,
+          "v_rel_mean": 0.8451773349444072,
+          "n_prompts": 10
+        },
+        {
+          "slot": 6,
+          "age_rank": 0,
+          "k_rel_mean": 0.49269030660390856,
+          "v_rel_mean": 0.8944941184918086,
+          "n_prompts": 10
+        }
+      ]
+    },
+    {
+      "chunk": 14,
+      "slots": [
+        {
+          "slot": 0,
+          "age_rank": 6,
+          "k_rel_mean": 0.4970801959435145,
+          "v_rel_mean": 0.8986343810955684,
+          "n_prompts": 10
+        },
+        {
+          "slot": 1,
+          "age_rank": 5,
+          "k_rel_mean": 0.4966630471746127,
+          "v_rel_mean": 0.8974286887049675,
+          "n_prompts": 10
+        },
+        {
+          "slot": 2,
+          "age_rank": 4,
+          "k_rel_mean": 0.5225001998742421,
+          "v_rel_mean": 0.925791713198026,
+          "n_prompts": 10
+        },
+        {
+          "slot": 3,
+          "age_rank": 3,
+          "k_rel_mean": 0.5378105821460486,
+          "v_rel_mean": 0.9427608892321586,
+          "n_prompts": 10
+        },
+        {
+          "slot": 4,
+          "age_rank": 2,
+          "k_rel_mean": 0.536822994897763,
+          "v_rel_mean": 0.9469703239202499,
+          "n_prompts": 10
+        },
+        {
+          "slot": 5,
+          "age_rank": 1,
+          "k_rel_mean": 0.5411092707763115,
+          "v_rel_mean": 0.9520306437214215,
+          "n_prompts": 10
+        },
+        {
+          "slot": 6,
+          "age_rank": 0,
+          "k_rel_mean": 0.5429884072889885,
+          "v_rel_mean": 0.9583742490410805,
+          "n_prompts": 10
+        }
+      ]
+    },
+    {
+      "chunk": 20,
+      "slots": [
+        {
+          "slot": 0,
+          "age_rank": 6,
+          "k_rel_mean": 0.5471227632214626,
+          "v_rel_mean": 0.9624072561661402,
+          "n_prompts": 10
+        },
+        {
+          "slot": 1,
+          "age_rank": 5,
+          "k_rel_mean": 0.5599850877622763,
+          "v_rel_mean": 0.9736024856567382,
+          "n_prompts": 10
+        },
+        {
+          "slot": 2,
+          "age_rank": 4,
+          "k_rel_mean": 0.5933694026370844,
+          "v_rel_mean": 1.0211619490385055,
+          "n_prompts": 10
+        },
+        {
+          "slot": 3,
+          "age_rank": 3,
+          "k_rel_mean": 0.5870305072516203,
+          "v_rel_mean": 1.0154320218165716,
+          "n_prompts": 10
+        },
+        {
+          "slot": 4,
+          "age_rank": 2,
+          "k_rel_mean": 0.6042526369045178,
+          "v_rel_mean": 1.0400251068671544,
+          "n_prompts": 10
+        },
+        {
+          "slot": 5,
+          "age_rank": 1,
+          "k_rel_mean": 0.6087402720252673,
+          "v_rel_mean": 1.046343385974566,
+          "n_prompts": 10
+        },
+        {
+          "slot": 6,
+          "age_rank": 0,
+          "k_rel_mean": 0.6196156960477431,
+          "v_rel_mean": 1.0609148705005647,
+          "n_prompts": 10
+        }
+      ]
+    }
+  ]
+}
