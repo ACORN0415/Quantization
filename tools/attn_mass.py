@@ -70,26 +70,40 @@ def masses_online(q, k, ranges, block=4096):
 
 
 @torch.no_grad()
-def verify_against_fa2(q, k, v, atol=1e-2):
+def verify_against_fa2(q, k, v, atol=1e-2, rtol=1e-2):
     """Recomputed softmax(QK^T/sqrt(d))V must match what the model actually ran.
 
-    Guards against using the wrong tensors, a wrong scale, or an unexpected mask.
-    Done one head at a time so the probability matrix stays around 300 MB.
+    Guards against the wrong tensors, a wrong scale, or a mask mismatch.
+
+    Mask: the model calls `attention(q, k, v)` with no `causal` argument, and
+    `attention` defaults to causal=False — every cached token and every token of
+    the current chunk is visible to every query (chunks are bidirectional
+    internally). The recomputation therefore applies NO mask. Imposing a
+    standard causal mask here would cut the current chunk to a lower triangle
+    and silently disagree with FA2.
+
+    Q and K are taken after norm_q/norm_k and after RoPE, matching exactly what
+    is handed to FA2; capturing them earlier would compare different scales.
+
+    Compared in fp32 with both atol and rtol, since FA2 accumulates in bf16.
+    One head at a time keeps the probability matrix near 300 MB.
     """
     from wan.modules.attention import attention
-    ref = attention(q, k, v)                      # the FA2 path the model uses
+    ref = attention(q, k, v).float()              # the FA2 path the model uses
     b, lq, h, d = q.shape
     scale = 1.0 / (d ** 0.5)
-    max_abs = 0.0
+    max_abs, ok = 0.0, True
     for hi in range(h):
-        qi = q[:, :, hi].float() * scale          # [B, Lq, D]
+        qi = q[:, :, hi].float() * scale
         ki = k[:, :, hi].float()
         vi = v[:, :, hi].float()
         probs = torch.softmax(torch.bmm(qi, ki.transpose(1, 2)), dim=-1)
-        out = torch.bmm(probs, vi).to(ref.dtype)
-        max_abs = max(max_abs, (out - ref[:, :, hi]).abs().max().item())
+        out = torch.bmm(probs, vi)
+        ri = ref[:, :, hi]
+        max_abs = max(max_abs, (out - ri).abs().max().item())
+        ok = ok and torch.allclose(out, ri, atol=atol, rtol=rtol)
         del probs, out
-    return max_abs <= atol, max_abs
+    return ok, max_abs
 
 
 def slot_ranges(window_len, chunk_tokens, sink_tokens, global_end):
@@ -117,6 +131,13 @@ def slot_ranges(window_len, chunk_tokens, sink_tokens, global_end):
             labels[name] = i                       # pinned sink chunk
         else:
             labels[name] = (rolling_global_start + (lo - sink_tokens)) // chunk_tokens
+    # The current chunk's K/V are written into the cache before attention runs,
+    # so the last slot is the query's own chunk. Queries attend to it too
+    # (chunks are bidirectional internally) and it must stay in the denominator:
+    # dropping it would inflate every past chunk's share.
+    if ranges:
+        last = f"slot{max(int(n[4:]) for n in ranges)}"
+        labels[last] = "self"
     return ranges, labels
 
 
@@ -187,10 +208,25 @@ def main():
     print(f"baseline: one chunk is {100.0 / capacity:.1f}% of the cache; "
           f"sink is {100.0 * sink_tokens / cache_tokens:.1f}%")
 
+    n_layers = pipeline.num_transformer_blocks
+    denoise_steps = [float(t) for t in pipeline.denoising_step_list]
     records = []
-    state = {"verified": False, "verify_err": None}
+    state = {"verified": False, "verify_err": None,
+             "chunk": None, "layer": 0, "step": 0}
 
     def hook(q, k, v, current_start, w0, local_end_index):
+        # Each generator call walks all layers once, so counting hook calls
+        # recovers which call we are in. Calls 0..3 are the denoising steps
+        # (t = 1000/750/500/250 warped); call 4 is the clean-context refresh.
+        cur = current_start // chunk_tokens
+        if cur != state["chunk"]:
+            state["chunk"], state["layer"], state["step"] = cur, 0, 0
+        layer_idx = state["layer"]
+        step_idx = state["step"]
+        state["layer"] += 1
+        if state["layer"] >= n_layers:
+            state["layer"] = 0
+            state["step"] += 1
         # One-time equivalence check before trusting any measurement.
         if not state["verified"]:
             ok, err = verify_against_fa2(q, k, v)
@@ -200,7 +236,7 @@ def main():
             if not ok:
                 raise SystemExit(f"FA2 equivalence check failed (max|diff|={err:.3e})")
 
-        cur_chunk = current_start // chunk_tokens
+        cur_chunk = cur
         if cur_chunk not in args.chunks:
             return
         window_len = int(local_end_index - w0)
@@ -212,6 +248,10 @@ def main():
         m = masses_online(q, k, ranges)
         records.append({
             "chunk": cur_chunk,
+            "layer": layer_idx,
+            "step": step_idx,
+            "step_timestep": (denoise_steps[step_idx] if step_idx < len(denoise_steps)
+                              else "context_refresh"),
             "window_len": window_len,
             "slots": {name: {"mass_per_head": [float(x) for x in m[name].cpu()],
                              "token_share": (ranges[name][1] - ranges[name][0]) / window_len,
@@ -240,14 +280,14 @@ def main():
 
     by_chunk = defaultdict(list)
     for r in records:
-        by_chunk[r["chunk"]].append(r)
+        by_chunk[(r["chunk"], r["step"])].append(r)
 
     summary = {"tag": args.tag, "config": args.config_path,
                "sink_frames": sink_frames, "cache_tokens": cache_tokens,
                "chunk_tokens": chunk_tokens, "capacity_chunks": capacity,
                "fa2_verify_max_abs_diff": state["verify_err"], "by_chunk": []}
-    for c in sorted(by_chunk):
-        rs = by_chunk[c]
+    for c, stp in sorted(by_chunk):
+        rs = by_chunk[(c, stp)]
         slots = defaultdict(list)
         shares, gchunk = {}, {}
         for r in rs:
@@ -255,7 +295,9 @@ def main():
                 slots[name].append(sum(d["mass_per_head"]) / len(d["mass_per_head"]))
                 shares[name] = d["token_share"]
                 gchunk[name] = d["global_chunk"]
-        entry = {"chunk": c, "n_records": len(rs), "slots": {}}
+        entry = {"chunk": c, "step": stp,
+                 "step_timestep": rs[0]["step_timestep"],
+                 "n_records": len(rs), "slots": {}}
         for name in sorted(slots, key=lambda x: int(x[4:])):
             mean = sum(slots[name]) / len(slots[name])
             entry["slots"][name] = {
@@ -263,15 +305,21 @@ def main():
                 "ratio": mean / shares[name] if shares[name] else float("nan"),
                 "global_chunk": gchunk[name],
             }
+        # No bucket may be missing: the slots partition the whole window, so
+        # their masses must sum to 1 (the self bucket included).
+        entry["mass_sum"] = sum(d["mass_mean"] for d in entry["slots"].values())
+        entry["share_sum"] = sum(d["token_share"] for d in entry["slots"].values())
         summary["by_chunk"].append(entry)
 
     with open(os.path.join(out_dir, "attn_mass.json"), "w") as f:
         json.dump({"summary": summary, "records": records}, f)
     print(f"\nwrote {out_dir}/attn_mass.json")
     for e in summary["by_chunk"]:
-        print(f"\nchunk {e['chunk']} (window slots -> attention mass / token share):")
+        flag = "" if abs(e["mass_sum"] - 1.0) < 1e-3 else "   !! BUCKET MISSING"
+        print(f"\nchunk {e['chunk']} step {e['step']} (t={e['step_timestep']})"
+              f"  mass_sum={e['mass_sum']:.4f} share_sum={e['share_sum']:.4f}{flag}")
         for name, d in e["slots"].items():
-            print(f"  {name:6s} gchunk={d['global_chunk']:2d}  "
+            print(f"  {name:6s} gchunk={str(d['global_chunk']):>5s}  "
                   f"mass {d['mass_mean']*100:5.1f}%  share {d['token_share']*100:5.1f}%  "
                   f"ratio {d['ratio']:.2f}x")
 
