@@ -1,0 +1,154 @@
+diff --git a/kv_quant/base.py b/kv_quant/base.py
+index 74ae9c6..19240f4 100644
+--- a/kv_quant/base.py
++++ b/kv_quant/base.py
+@@ -26,10 +26,13 @@ class KVQuantizer(ABC):
+     ) -> None:
+         key_bits = bits if key_bits is None else key_bits
+         value_bits = bits if value_bits is None else value_bits
+-        if key_bits not in (2, 4):
+-            raise ValueError(f"Unsupported key_bits={key_bits}; expected one of [2, 4].")
+-        if value_bits not in (2, 4):
+-            raise ValueError(f"Unsupported value_bits={value_bits}; expected one of [2, 4].")
++        # The quantization maths and `packed_bytes` are bit-width agnostic; the
++        # original [2, 4] guard just reflected the widths the study happened to
++        # run. Widened so intermediate widths can be swept.
++        if not 2 <= key_bits <= 8:
++            raise ValueError(f"Unsupported key_bits={key_bits}; expected 2..8.")
++        if not 2 <= value_bits <= 8:
++            raise ValueError(f"Unsupported value_bits={value_bits}; expected 2..8.")
+         if block_size <= 0:
+             raise ValueError("block_size must be > 0")
+         self.bits = bits
+diff --git a/kv_quant/factory.py b/kv_quant/factory.py
+index 1019a57..88dd73c 100644
+--- a/kv_quant/factory.py
++++ b/kv_quant/factory.py
+@@ -15,12 +15,18 @@ def create_quantizer(method: str, bits: int | None, block_size: int, **kwargs):
+         return FlowCacheProfileQuantizer(block_size=block_size, **kwargs)
+     if bits is None:
+         raise ValueError(f"bits must be provided for method={method}")
++    # RTN/KIVI accept these through **kwargs; pull them out so they are bound names.
++    key_bits = kwargs.pop("key_bits", None)
++    value_bits = kwargs.pop("value_bits", None)
++    name = kwargs.pop("name", None)
+     if method == "RTN":
+         from .rtn import RTNQuantizer
+         return RTNQuantizer(bits=bits, block_size=block_size, key_bits=key_bits, value_bits=value_bits, name=name)
+     if method == "KIVI":
+         from .kivi import KIVIQuantizer
+-        return KIVIQuantizer(bits=bits, block_size=block_size, key_bits=key_bits, value_bits=value_bits, name=name)
++        return KIVIQuantizer(bits=bits, block_size=block_size, key_bits=key_bits,
++                             value_bits=value_bits, name=name,
++                             residual_tokens=kwargs.pop("residual_tokens", 0))
+     if method == "QUAROT_KV":
+         from .quarot_kv import QuaRotKVQuantizer
+         return QuaRotKVQuantizer(bits=bits, block_size=block_size)
+diff --git a/kv_quant/kivi.py b/kv_quant/kivi.py
+index dbe7663..6deba66 100644
+--- a/kv_quant/kivi.py
++++ b/kv_quant/kivi.py
+@@ -23,7 +23,12 @@ class KIVIQuantizer(KVQuantizer):
+         key_bits: int | None = None,
+         value_bits: int | None = None,
+         name: str | None = None,
++        residual_tokens: int = 0,
+     ) -> None:
++        # KIVI keeps the most recent tokens in full precision. The upstream
++        # implementation has no residual window, which is why the sessions so far
++        # had to label their results "KIVI-style" rather than KIVI.
++        self.residual_tokens = int(residual_tokens)
+         key_bits = bits if key_bits is None else key_bits
+         value_bits = bits if value_bits is None else value_bits
+         resolved_name = name or (f"KIVI_INT{bits}" if key_bits == value_bits == bits else f"KIVI_K{key_bits}_V{value_bits}")
+@@ -70,13 +75,19 @@ class KIVIQuantizer(KVQuantizer):
+ 
+     def quantize_kv(self, k, v, meta: Dict[str, Any] | None = None) -> Dict[str, Any]:
+         bf16_bytes = int(k.numel() * 2 + v.numel() * 2)
++        resid = min(self.residual_tokens, k.shape[1]) if self.residual_tokens else 0
+         with timed() as t:
++            if resid:
++                k_res, v_res = k[:, -resid:].clone(), v[:, -resid:].clone()
++                k, v = k[:, :-resid], v[:, :-resid]
+             k_state = self._quantize_keys(k)
+             v_state = self._quantize_values(v)
+             tensor_dtype = (meta or {}).get("tensor_dtype", k.dtype)
+             k_state["tensor_dtype"] = tensor_dtype
+             v_state["tensor_dtype"] = tensor_dtype
+             state = {"k": k_state, "v": v_state}
++            if resid:
++                state["residual"] = {"k": k_res, "v": v_res, "tokens": resid}
+         self.stats.quantize_time_s += t[0]
+         self.stats.quantize_calls += 1
+         self.stats.bf16_kv_bytes = bf16_bytes
+@@ -84,21 +95,31 @@ class KIVIQuantizer(KVQuantizer):
+         return state
+ 
+     def dequantize_kv(self, state: Dict[str, Any], meta: Dict[str, Any] | None = None) -> Tuple[Any, Any]:
++        import torch as _t
+         with timed() as t:
+             k = self._dequantize(state["k"])
+             v = self._dequantize(state["v"])
++            res = state.get("residual")
++            if res:
++                k = _t.cat([k, res["k"].to(k.dtype)], dim=1)
++                v = _t.cat([v, res["v"].to(v.dtype)], dim=1)
+         self.stats.dequantize_time_s += t[0]
+         self.stats.dequantize_calls += 1
+         return k, v
+ 
+     def memory_bytes(self, state: Dict[str, Any]) -> int:
++        extra = 0
++        res = state.get("residual")
++        if res:
++            extra = res["k"].numel() * 2 + res["v"].numel() * 2
++
+         def _bytes_for_tensor(s: Dict[str, Any]) -> int:
+             q = s["q"]
+             scale = s["scale"]
+             zp = s["zp"]
+             return packed_bytes(q.numel(), int(s.get("bits", self.bits))) + scale.numel() * 2 + zp.numel() * 2
+ 
+-        return _bytes_for_tensor(state["k"]) + _bytes_for_tensor(state["v"])
++        return _bytes_for_tensor(state["k"]) + _bytes_for_tensor(state["v"]) + extra
+ 
+     def estimate_active_kv_bytes(
+         self,
+diff --git a/kv_quant/utils.py b/kv_quant/utils.py
+index 1b4ab9d..90ab593 100644
+--- a/kv_quant/utils.py
++++ b/kv_quant/utils.py
+@@ -35,9 +35,20 @@ def quantize_asym(x: torch.Tensor, bits: int, reduce_dims: Tuple[int, ...]):
+     x_min = x.amin(dim=reduce_dims, keepdim=True)
+     x_max = x.amax(dim=reduce_dims, keepdim=True)
+     scale = ((x_max - x_min) / max(qmax - qmin, 1)).clamp_min(EPS)
+-    zp = torch.round(qmin - x_min / scale).clamp(qmin, qmax)
+-    q = torch.round(x / scale + zp).clamp(qmin, qmax).to(torch.int8)
+-    return q, scale.to(torch.float16), zp.to(torch.float16)
++    # Offset form: store the group minimum rather than a zero-point code.
++    #
++    # The original `zp = round(qmin - x_min/scale).clamp(qmin, qmax)` is wrong
++    # twice over. The clamp collapses any group that does not straddle zero
++    # (all-positive or all-negative), which post-RoPE keys hit constantly. And
++    # dropping the clamp is not enough either: EPS=1e-8 underflows to zero in
++    # the fp16 the scale is stored in, so a group whose spread falls below bf16
++    # resolution gets scale->0 and zp->inf, and dequantizing yields NaN.
++    #
++    # Storing x_min avoids both. It is a data value, so fp16 always holds it,
++    # and a constant group round-trips exactly (q=0 -> 0*scale + x_min).
++    # Storage cost is unchanged: one fp16 per group either way.
++    q = torch.round((x - x_min) / scale).clamp(qmin, qmax).to(torch.int8)
++    return q, scale.to(torch.float16), x_min.to(torch.float16)
+ 
+ 
+ def dequantize_asym(
+@@ -46,7 +57,8 @@ def dequantize_asym(
+     zp: torch.Tensor,
+     dtype: torch.dtype = torch.float32,
+ ) -> torch.Tensor:
+-    return (q.to(dtype) - zp.to(dtype)) * scale.to(dtype)
++    # `zp` carries the group minimum (see quantize_asym).
++    return q.to(dtype) * scale.to(dtype) + zp.to(dtype)
+ 
+ 
+ def quantize_sym(x: torch.Tensor, bits: int, reduce_dims: Tuple[int, ...]):

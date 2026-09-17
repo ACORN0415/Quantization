@@ -1,5 +1,5 @@
 diff --git a/inference.py b/inference.py
-index e72657e..c6d3f2c 100644
+index e72657e..634e376 100644
 --- a/inference.py
 +++ b/inference.py
 @@ -19,6 +19,10 @@ from utils.misc import set_seed
@@ -13,7 +13,7 @@ index e72657e..c6d3f2c 100644
  parser = argparse.ArgumentParser()
  parser.add_argument("--config_path", type=str, help="Path to the config file")
  parser.add_argument("--checkpoint_path", type=str, help="Path to the checkpoint folder")
-@@ -33,6 +37,38 @@ parser.add_argument("--seed", type=int, default=0, help="Random seed")
+@@ -33,6 +37,40 @@ parser.add_argument("--seed", type=int, default=0, help="Random seed")
  parser.add_argument("--num_samples", type=int, default=1, help="Number of samples to generate per prompt")
  parser.add_argument("--save_with_index", action="store_true",
                      help="Whether to save the video using the index or prompt as the filename")
@@ -31,6 +31,8 @@ index e72657e..c6d3f2c 100644
 +                    help="KV cache quantization method from the UCSD kv_quant package (e.g. RTN, KIVI)")
 +parser.add_argument("--kv_bits", type=int, default=4, help="Bits for KV cache quantization (2 or 4)")
 +parser.add_argument("--kv_block_size", type=int, default=16, help="Block size for KV cache quantization")
++parser.add_argument("--kv_residual_tokens", type=int, default=0,
++                    help="KIVI residual window: keep this many newest tokens in BF16")
 +parser.add_argument("--kv_key_bits", type=int, default=None,
 +                    help="Override bits for keys only (defaults to --kv_bits)")
 +parser.add_argument("--kv_value_bits", type=int, default=None,
@@ -52,7 +54,7 @@ index e72657e..c6d3f2c 100644
  args = parser.parse_args()
  
  # Initialize distributed inference
-@@ -78,6 +114,39 @@ else:
+@@ -78,6 +116,40 @@ else:
  pipeline.generator.to(device=gpu)
  pipeline.vae.to(device=gpu)
  
@@ -66,7 +68,8 @@ index e72657e..c6d3f2c 100644
 +             else f"{args.kv_quant.upper()}_K{kb}_V{vb}")
 +    kv_quantizer = create_quantizer(
 +        args.kv_quant, bits=args.kv_bits, block_size=args.kv_block_size,
-+        key_bits=kb, value_bits=vb, name=qname)
++        key_bits=kb, value_bits=vb, name=qname,
++        residual_tokens=args.kv_residual_tokens)
 +    pipeline.kv_quantizer = kv_quantizer
 +    print(f"[kv_quant] {kv_quantizer.name()} block_size={args.kv_block_size}")
 +    if args.kv_err_log:
@@ -92,7 +95,7 @@ index e72657e..c6d3f2c 100644
  
  # Create dataset
  if args.i2v:
-@@ -120,6 +189,9 @@ def encode(self, videos: torch.Tensor) -> torch.Tensor:
+@@ -120,6 +192,9 @@ def encode(self, videos: torch.Tensor) -> torch.Tensor:
      return output
  
  
@@ -102,7 +105,7 @@ index e72657e..c6d3f2c 100644
  for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
      idx = batch_data['idx'].item()
  
-@@ -158,9 +230,34 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+@@ -158,9 +233,34 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
              prompts = [prompt] * args.num_samples
          initial_latent = None
  
@@ -140,7 +143,7 @@ index e72657e..c6d3f2c 100644
  
      # Generate 81 frames
      video, latents = pipeline.inference(
-@@ -169,7 +266,30 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+@@ -169,7 +269,30 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
          return_latents=True,
          initial_latent=initial_latent,
          low_memory=low_memory,
@@ -171,7 +174,7 @@ index e72657e..c6d3f2c 100644
      current_video = rearrange(video, 'b t c h w -> b t h w c').cpu()
      all_video.append(current_video)
      num_generated_frames += latents.shape[1]
-@@ -190,3 +310,34 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+@@ -190,3 +313,34 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
              else:
                  output_path = os.path.join(args.output_folder, f'{prompt[:100]}-{seed_idx}.mp4')
              write_video(output_path, video[seed_idx], fps=16)
