@@ -114,6 +114,7 @@ def main():
         print(f"reference frames cached: {len(ref_frames)}")
 
     rows = []
+    per_prompt = {}
     for tag, vdir in runs.items():
         if not os.path.isdir(vdir):
             print(f"  ! {vdir} missing, skipped")
@@ -148,6 +149,12 @@ def main():
             del v
             torch.cuda.empty_cache()
 
+        # Keep the per-prompt values: the configurations share a prompt set, so a
+        # paired comparison is far more powerful than comparing independent CIs,
+        # and the means alone cannot support one.
+        per_prompt[tag] = {str(c): {k: list(v) for k, v in per[c].items()}
+                           for c in sorted(per)}
+
         for c in sorted(per):
             row = {"config": tag, "chunk_idx": c,
                    "n_prompts": len(per[c].get("musiq") or per[c].get("clip") or [])}
@@ -174,6 +181,11 @@ def main():
         w.writeheader()
         w.writerows(rows)
     print(f"wrote {args.out_csv} ({len(rows)} rows, {len(fields)} columns)")
+
+    pp = os.path.splitext(args.out_csv)[0] + "_per_prompt.json"
+    with open(pp, "w") as f:
+        json.dump(per_prompt, f)
+    print(f"wrote {pp}")
 
 
 if __name__ == "__main__":
