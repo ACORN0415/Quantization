@@ -1,5 +1,5 @@
 diff --git a/inference.py b/inference.py
-index e72657e..8893432 100644
+index e72657e..c6d3f2c 100644
 --- a/inference.py
 +++ b/inference.py
 @@ -19,6 +19,10 @@ from utils.misc import set_seed
@@ -13,7 +13,7 @@ index e72657e..8893432 100644
  parser = argparse.ArgumentParser()
  parser.add_argument("--config_path", type=str, help="Path to the config file")
  parser.add_argument("--checkpoint_path", type=str, help="Path to the checkpoint folder")
-@@ -33,6 +37,35 @@ parser.add_argument("--seed", type=int, default=0, help="Random seed")
+@@ -33,6 +37,38 @@ parser.add_argument("--seed", type=int, default=0, help="Random seed")
  parser.add_argument("--num_samples", type=int, default=1, help="Number of samples to generate per prompt")
  parser.add_argument("--save_with_index", action="store_true",
                      help="Whether to save the video using the index or prompt as the filename")
@@ -35,6 +35,9 @@ index e72657e..8893432 100644
 +                    help="Override bits for keys only (defaults to --kv_bits)")
 +parser.add_argument("--kv_value_bits", type=int, default=None,
 +                    help="Override bits for values only (defaults to --kv_bits)")
++parser.add_argument("--tum_correct", action="store_true",
++                    help="Gate F2: subtract the TUM Jensen bias from cached logits "
++                         "(runs the explicit attention path, slower)")
 +parser.add_argument("--sink_mode", type=str, default=None,
 +                    choices=["int2", "noise", "freeze", "override"],
 +                    help="Gate E2: replace the sink slot's content, keeping its position")
@@ -49,7 +52,7 @@ index e72657e..8893432 100644
  args = parser.parse_args()
  
  # Initialize distributed inference
-@@ -78,6 +111,34 @@ else:
+@@ -78,6 +114,39 @@ else:
  pipeline.generator.to(device=gpu)
  pipeline.vae.to(device=gpu)
  
@@ -71,6 +74,11 @@ index e72657e..8893432 100644
 +        _cm.KV_ERR_LOG = []
 +        pipeline.kv_err_log = _cm.KV_ERR_LOG
 +
++if args.tum_correct:
++    import wan.modules.causal_model as _cm3
++    _cm3.TUM_ENABLED = True
++    print("[tum] Jensen-bias correction on (explicit attention path)")
++
 +if args.sink_mode:
 +    import wan.modules.causal_model as _cm2
 +    _cm2.SINK_MODE = args.sink_mode
@@ -84,7 +92,7 @@ index e72657e..8893432 100644
  
  # Create dataset
  if args.i2v:
-@@ -120,6 +181,9 @@ def encode(self, videos: torch.Tensor) -> torch.Tensor:
+@@ -120,6 +189,9 @@ def encode(self, videos: torch.Tensor) -> torch.Tensor:
      return output
  
  
@@ -94,7 +102,7 @@ index e72657e..8893432 100644
  for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
      idx = batch_data['idx'].item()
  
-@@ -158,9 +222,34 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+@@ -158,9 +230,34 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
              prompts = [prompt] * args.num_samples
          initial_latent = None
  
@@ -132,7 +140,7 @@ index e72657e..8893432 100644
  
      # Generate 81 frames
      video, latents = pipeline.inference(
-@@ -169,7 +258,30 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+@@ -169,7 +266,30 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
          return_latents=True,
          initial_latent=initial_latent,
          low_memory=low_memory,
@@ -163,7 +171,7 @@ index e72657e..8893432 100644
      current_video = rearrange(video, 'b t c h w -> b t h w c').cpu()
      all_video.append(current_video)
      num_generated_frames += latents.shape[1]
-@@ -190,3 +302,34 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+@@ -190,3 +310,34 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
              else:
                  output_path = os.path.join(args.output_folder, f'{prompt[:100]}-{seed_idx}.mp4')
              write_video(output_path, video[seed_idx], fps=16)
