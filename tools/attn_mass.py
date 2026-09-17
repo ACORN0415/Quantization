@@ -160,6 +160,8 @@ def main():
     ap.add_argument("--chunks", nargs="+", type=int, default=[6, 7, 14, 20])
     ap.add_argument("--kv_quant", default=None)
     ap.add_argument("--kv_bits", type=int, default=4)
+    ap.add_argument("--kv_key_bits", type=int, default=None)
+    ap.add_argument("--kv_value_bits", type=int, default=None)
     ap.add_argument("--kv_quant_repo", default=os.path.expanduser("~/gpu/kv-quant-longhorizon"))
     ap.add_argument("--out_dir", default=None)
     args = ap.parse_args()
@@ -190,9 +192,12 @@ def main():
         if args.kv_quant_repo not in _s.path:
             _s.path.insert(0, args.kv_quant_repo)
         from kv_quant.factory import create_quantizer
+        _kb = args.kv_key_bits if args.kv_key_bits is not None else args.kv_bits
+        _vb = args.kv_value_bits if args.kv_value_bits is not None else args.kv_bits
         pipeline.kv_quantizer = create_quantizer(
             args.kv_quant, bits=args.kv_bits, block_size=16,
-            name=f"{args.kv_quant.upper()}_INT{args.kv_bits}")
+            key_bits=_kb, value_bits=_vb,
+            name=f"{args.kv_quant.upper()}_K{_kb}_V{_vb}")
         print(f"[kv_quant] {pipeline.kv_quantizer.name()}")
 
     fsl = pipeline.frame_seq_length
