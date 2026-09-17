@@ -1,5 +1,5 @@
 diff --git a/wan/modules/causal_model.py b/wan/modules/causal_model.py
-index 98e398a..a5e62a0 100644
+index 98e398a..23506fd 100644
 --- a/wan/modules/causal_model.py
 +++ b/wan/modules/causal_model.py
 @@ -1,4 +1,69 @@
@@ -37,8 +37,8 @@ index 98e398a..a5e62a0 100644
 +        return
 +
 +    if SINK_MODE == "int2":
-+        import sys as _s
-+        _p = os.path.expanduser("~/gpu/kv-quant-longhorizon")
++        import os as _os, sys as _s
++        _p = _os.path.expanduser("~/gpu/kv-quant-longhorizon")
 +        if _p not in _s.path:
 +            _s.path.insert(0, _p)
 +        from kv_quant.factory import create_quantizer
