@@ -1,20 +1,23 @@
 """Gate B — where does attention mass actually go?
 
 The session-2 claim is that the first chunk acts as an implicit attention sink,
-and that losing it at eviction is what raises the model's sensitivity to cache
-quantization. So far that rests on error numbers alone. This measures the
-attention distribution directly.
+and that losing it at eviction is what raises sensitivity to cache quantization.
+So far that rests on error numbers alone. This reads the distribution directly.
 
-flash-attn never materializes the attention matrix, and building it would cost
-~3.7 GB per layer (4680 queries x 32760 keys x 12 heads). Instead this walks the
-keys in column blocks with an online-softmax accumulator, carrying only the
-running max, the running denominator, and the partial numerator for the token
-ranges of interest — exact, and O(query x block) memory.
+Design constraints (session 3 handoff, Gate B note):
+  * the generation forward keeps using FlashAttention-2 unchanged
+  * the hook receives the post-RoPE Q/K and recomputes softmax(QK^T/sqrt(d))
+    purely for measurement, collapsing the key axis into per-source-chunk sums
+    immediately so only scalars survive
+  * before any measurement, one layer's recomputed softmax(QK^T/sqrt(d))V is
+    checked against the FA2 output with torch.allclose(atol=1e-2)
 
-Reported per layer and head, for one generator call:
-  mass(range) = mean over queries of  sum_{k in range} softmax(qk/sqrt(d))
-Compare against the range's share of tokens: if chunk 0 holds 1/7 of the cache
-but takes 30% of the mass, it is a sink.
+The accumulation uses an online softmax over key blocks, so the full matrix is
+never held: exact, and O(queries x block) instead of ~306 MB per head.
+
+Baselines to compare the mass against, i.e. the chunk's share of cache tokens:
+  Self-Forcing  1 chunk / 7  = 14.3 %   (21-frame cache, 3 frames per chunk)
+  LongLive      sink 3 / 12  = 25.0 %
 """
 import argparse
 import json
@@ -26,7 +29,7 @@ import torch
 
 @torch.no_grad()
 def masses_online(q, k, ranges, block=4096):
-    """Exact softmax mass over token ranges, without forming the full matrix.
+    """Exact softmax mass per token range, without forming the full matrix.
 
     q: [B, Lq, H, D]   k: [B, Lk, H, D]   ranges: {name: (start, end)}
     returns {name: tensor[H]} — mean over queries of the mass in that range.
@@ -43,10 +46,9 @@ def masses_online(q, k, ranges, block=4096):
 
     for s in range(0, lk, block):
         e = min(s + block, lk)
-        logits = torch.bmm(qf, kf[:, s:e].transpose(1, 2))      # [B*H, Lq, e-s]
+        logits = torch.bmm(qf, kf[:, s:e].transpose(1, 2))
         blk_max = logits.amax(dim=-1)
         new_max = torch.maximum(run_max, blk_max)
-        # rescale what we already accumulated to the new max
         rescale = torch.exp(run_max - new_max).masked_fill(run_max == -float("inf"), 0.0)
         run_den = run_den * rescale
         for name in ranges:
@@ -62,12 +64,60 @@ def masses_online(q, k, ranges, block=4096):
 
     out = {}
     for name in ranges:
-        mass = (run_num[name] / run_den.clamp(min=1e-20))        # [B*H, Lq]
-        out[name] = mass.reshape(b, h, lq).mean(dim=(0, 2))      # [H]
+        mass = run_num[name] / run_den.clamp(min=1e-20)
+        out[name] = mass.reshape(b, h, lq).mean(dim=(0, 2))
     return out
 
 
-CAPTURE = None   # set to a dict by the patched attention to hand q/k over
+@torch.no_grad()
+def verify_against_fa2(q, k, v, atol=1e-2):
+    """Recomputed softmax(QK^T/sqrt(d))V must match what the model actually ran.
+
+    Guards against using the wrong tensors, a wrong scale, or an unexpected mask.
+    Done one head at a time so the probability matrix stays around 300 MB.
+    """
+    from wan.modules.attention import attention
+    ref = attention(q, k, v)                      # the FA2 path the model uses
+    b, lq, h, d = q.shape
+    scale = 1.0 / (d ** 0.5)
+    max_abs = 0.0
+    for hi in range(h):
+        qi = q[:, :, hi].float() * scale          # [B, Lq, D]
+        ki = k[:, :, hi].float()
+        vi = v[:, :, hi].float()
+        probs = torch.softmax(torch.bmm(qi, ki.transpose(1, 2)), dim=-1)
+        out = torch.bmm(probs, vi).to(ref.dtype)
+        max_abs = max(max_abs, (out - ref[:, :, hi]).abs().max().item())
+        del probs, out
+    return max_abs <= atol, max_abs
+
+
+def slot_ranges(window_len, chunk_tokens, sink_tokens, global_end):
+    """Token ranges for each cache slot, plus which global chunk each holds.
+
+    Before eviction the cache is just the prefix, so slot i holds global chunk i.
+    After eviction the sink region stays pinned to the first chunks while the
+    rest of the window slides, so the mapping has to be built from the window's
+    global end rather than assumed.
+    """
+    ranges, labels = {}, {}
+    n_slots = (window_len + chunk_tokens - 1) // chunk_tokens
+    n_sink_slots = sink_tokens // chunk_tokens
+    # global index of the token sitting at local position 0 of the rolling part
+    rolling_len = window_len - sink_tokens
+    rolling_global_start = global_end - rolling_len
+    for i in range(n_slots):
+        lo = i * chunk_tokens
+        hi = min(lo + chunk_tokens, window_len)
+        if hi <= lo:
+            continue
+        name = f"slot{i}"
+        ranges[name] = (lo, hi)
+        if i < n_sink_slots:
+            labels[name] = i                       # pinned sink chunk
+        else:
+            labels[name] = (rolling_global_start + (lo - sink_tokens)) // chunk_tokens
+    return ranges, labels
 
 
 def main():
@@ -81,13 +131,12 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--config_path", default="configs/gateA_A1.yaml")
     ap.add_argument("--checkpoint_path", default="checkpoints/self_forcing_dmd.pt")
-    ap.add_argument("--data_path", default="prompts/quant3/prompts3.txt")
+    ap.add_argument("--data_path", default="prompts/quant3/prompts10.txt")
     ap.add_argument("--tag", required=True)
     ap.add_argument("--num_output_frames", type=int, default=63)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--max_prompts", type=int, default=3)
-    ap.add_argument("--chunks", nargs="+", type=int, default=[6, 7, 14, 20],
-                    help="chunk indices at which to record")
+    ap.add_argument("--chunks", nargs="+", type=int, default=[6, 7, 14, 20])
     ap.add_argument("--kv_quant", default=None)
     ap.add_argument("--kv_bits", type=int, default=4)
     ap.add_argument("--kv_quant_repo", default=os.path.expanduser("~/gpu/kv-quant-longhorizon"))
@@ -128,33 +177,46 @@ def main():
     fsl = pipeline.frame_seq_length
     nfb = pipeline.num_frame_per_block
     las = pipeline.local_attn_size
-    sink_frames = getattr(pipeline.generator.model, "sink_size", 0)
+    sink_frames = int(getattr(pipeline.generator.model, "sink_size", 0) or 0)
     cache_tokens = las * fsl if las != -1 else 32760
     chunk_tokens = nfb * fsl
-    print(f"cache={cache_tokens} tokens, chunk={chunk_tokens}, "
-          f"sink={sink_frames} frames, capacity={cache_tokens // chunk_tokens} chunks")
+    sink_tokens = sink_frames * fsl
+    capacity = cache_tokens // chunk_tokens
+    print(f"cache={cache_tokens} tokens ({capacity} chunks), chunk={chunk_tokens}, "
+          f"sink={sink_frames} frames ({sink_tokens} tokens)")
+    print(f"baseline: one chunk is {100.0 / capacity:.1f}% of the cache; "
+          f"sink is {100.0 * sink_tokens / cache_tokens:.1f}%")
 
     records = []
+    state = {"verified": False, "verify_err": None}
 
-    def hook(q, k, current_start, local_end_index):
-        """Called from the patched attention with the post-RoPE q and cache k."""
-        cs_chunk = current_start // chunk_tokens
-        if cs_chunk not in args.chunks:
+    def hook(q, k, v, current_start, w0, local_end_index):
+        # One-time equivalence check before trusting any measurement.
+        if not state["verified"]:
+            ok, err = verify_against_fa2(q, k, v)
+            state["verified"], state["verify_err"] = True, err
+            print(f"[verify] recomputed softmax(QK^T/sqrt(d))V vs FA2: "
+                  f"max|diff|={err:.4e} -> {'PASS' if ok else 'FAIL'}")
+            if not ok:
+                raise SystemExit(f"FA2 equivalence check failed (max|diff|={err:.3e})")
+
+        cur_chunk = current_start // chunk_tokens
+        if cur_chunk not in args.chunks:
             return
-        n = int(local_end_index)
-        ranges = {
-            "slot0_chunk": (0, min(chunk_tokens, n)),
-            "sink": (0, min(sink_frames * fsl, n)) if sink_frames else (0, 0),
-            "newest_chunk": (max(0, n - chunk_tokens), n),
-            "all": (0, n),
-        }
-        ranges = {kk: vv for kk, vv in ranges.items() if vv[1] > vv[0]}
-        m = masses_online(q, k[:, :n], ranges)
+        window_len = int(local_end_index - w0)
+        global_end = int(local_end_index)   # local == global while the cache holds the prefix
+        ranges, labels = slot_ranges(window_len, chunk_tokens, sink_tokens,
+                                     global_end if w0 == 0 else int(current_start))
+        if not ranges:
+            return
+        m = masses_online(q, k, ranges)
         records.append({
-            "chunk": cs_chunk,
-            "tokens": n,
-            "slot0_share": min(chunk_tokens, n) / n,
-            **{f"{kk}_per_head": [float(x) for x in vv.cpu()] for kk, vv in m.items()},
+            "chunk": cur_chunk,
+            "window_len": window_len,
+            "slots": {name: {"mass_per_head": [float(x) for x in m[name].cpu()],
+                             "token_share": (ranges[name][1] - ranges[name][0]) / window_len,
+                             "global_chunk": labels[name]}
+                      for name in ranges},
         })
 
     cm.ATTN_MASS_HOOK = hook
@@ -165,45 +227,53 @@ def main():
                         generator=torch.Generator(device=device).manual_seed(args.seed * 1000003 + c),
                         device=device, dtype=torch.bfloat16)
             for c in range(args.num_output_frames // nfb)], dim=1)
-        cm.ATTN_MASS_PROMPT = pi
         try:
             pipeline.inference(noise=noise, text_prompts=[prompt],
                                return_latents=True, base_seed=args.seed)
         except torch.OutOfMemoryError:
             print("(VAE decode OOM ignored)")
-        print(f"prompt {pi}: {len(records)} records so far")
+        print(f"prompt {pi}: {len(records)} records")
         del noise
         torch.cuda.empty_cache()
 
     cm.ATTN_MASS_HOOK = None
 
-    # fold: mean over prompts and generator calls, keeping layer index
     by_chunk = defaultdict(list)
     for r in records:
         by_chunk[r["chunk"]].append(r)
+
     summary = {"tag": args.tag, "config": args.config_path,
-               "sink_frames": int(sink_frames), "cache_tokens": int(cache_tokens),
-               "chunk_tokens": int(chunk_tokens), "by_chunk": []}
+               "sink_frames": sink_frames, "cache_tokens": cache_tokens,
+               "chunk_tokens": chunk_tokens, "capacity_chunks": capacity,
+               "fa2_verify_max_abs_diff": state["verify_err"], "by_chunk": []}
     for c in sorted(by_chunk):
         rs = by_chunk[c]
-        entry = {"chunk": c, "n_records": len(rs),
-                 "slot0_token_share": sum(r["slot0_share"] for r in rs) / len(rs)}
-        for key in ("slot0_chunk", "sink", "newest_chunk"):
-            vals = [sum(r[f"{key}_per_head"]) / len(r[f"{key}_per_head"])
-                    for r in rs if f"{key}_per_head" in r]
-            if vals:
-                entry[f"{key}_mass_mean"] = sum(vals) / len(vals)
-                entry[f"{key}_mass_max"] = max(vals)
+        slots = defaultdict(list)
+        shares, gchunk = {}, {}
+        for r in rs:
+            for name, d in r["slots"].items():
+                slots[name].append(sum(d["mass_per_head"]) / len(d["mass_per_head"]))
+                shares[name] = d["token_share"]
+                gchunk[name] = d["global_chunk"]
+        entry = {"chunk": c, "n_records": len(rs), "slots": {}}
+        for name in sorted(slots, key=lambda x: int(x[4:])):
+            mean = sum(slots[name]) / len(slots[name])
+            entry["slots"][name] = {
+                "mass_mean": mean, "token_share": shares[name],
+                "ratio": mean / shares[name] if shares[name] else float("nan"),
+                "global_chunk": gchunk[name],
+            }
         summary["by_chunk"].append(entry)
 
     with open(os.path.join(out_dir, "attn_mass.json"), "w") as f:
         json.dump({"summary": summary, "records": records}, f)
-    print(f"wrote {out_dir}/attn_mass.json")
+    print(f"\nwrote {out_dir}/attn_mass.json")
     for e in summary["by_chunk"]:
-        share = e["slot0_token_share"]
-        mass = e.get("slot0_chunk_mass_mean", float("nan"))
-        print(f"  chunk {e['chunk']:2d}: first-chunk tokens {share*100:5.1f}% of cache, "
-              f"attention mass {mass*100:5.1f}%  (ratio {mass/share:.2f}x)")
+        print(f"\nchunk {e['chunk']} (window slots -> attention mass / token share):")
+        for name, d in e["slots"].items():
+            print(f"  {name:6s} gchunk={d['global_chunk']:2d}  "
+                  f"mass {d['mass_mean']*100:5.1f}%  share {d['token_share']*100:5.1f}%  "
+                  f"ratio {d['ratio']:.2f}x")
 
 
 if __name__ == "__main__":

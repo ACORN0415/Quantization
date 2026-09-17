@@ -1,5 +1,5 @@
 diff --git a/wan/modules/causal_model.py b/wan/modules/causal_model.py
-index 98e398a..572a0fb 100644
+index 98e398a..11d498f 100644
 --- a/wan/modules/causal_model.py
 +++ b/wan/modules/causal_model.py
 @@ -1,4 +1,18 @@
@@ -59,7 +59,7 @@ index 98e398a..572a0fb 100644
              num_new_tokens = roped_query.shape[1]
              if self.local_attn_size != -1 and (current_end > kv_cache["global_end_index"].item()) and (
                      num_new_tokens + kv_cache["local_end_index"].item() > kv_cache_size):
-@@ -210,29 +249,54 @@ class CausalWanSelfAttention(nn.Module):
+@@ -210,29 +249,58 @@ class CausalWanSelfAttention(nn.Module):
                  # Clone the source slice to avoid overlapping memory error
                  num_evicted_tokens = num_new_tokens + kv_cache["local_end_index"].item() - kv_cache_size
                  num_rolled_tokens = kv_cache["local_end_index"].item() - num_evicted_tokens - sink_tokens
@@ -88,7 +88,11 @@ index 98e398a..572a0fb 100644
 +                cache_k[:, local_start_index:local_end_index] = roped_key
 +                cache_v[:, local_start_index:local_end_index] = v
 +            if ATTN_MASS_HOOK is not None:
-+                ATTN_MASS_HOOK(roped_query, cache_k, current_start, local_end_index)
++                _w0 = max(0, local_end_index - self.max_attention_size)
++                ATTN_MASS_HOOK(roped_query,
++                               cache_k[:, _w0:local_end_index],
++                               cache_v[:, _w0:local_end_index],
++                               current_start, _w0, local_end_index)
 +
              x = attention(
                  roped_query,
