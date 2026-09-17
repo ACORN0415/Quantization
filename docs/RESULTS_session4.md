@@ -192,7 +192,67 @@ tools/  slot_contamination.py jensen_corr.py tum_correction.py attn_mass.py
 
 ---
 
-## 8. 절차 기록
+## 8. 검증 세션용 — 확인이 필요한 항목
+
+이 세션의 결과 중 **재확인이 필요한 것과 미측정으로 남긴 것**을 재현 방법과 함께 정리합니다. 확정된 것과 구분해서 보시라고 따로 뺐습니다.
+
+### A. 재확인 필요 — `freeze` 조작 이상치
+
+E2-d는 "재양자화가 멱등이므로 차이가 없어야 한다"는 내부 검증인데 **−5.38(t=−4.57)로 유의하게 나빠집니다.** 멱등성 자체는 세 경로로 독립 확인됐습니다(세션 1 in-situ 상수, E1의 고정 슬롯 0.064 불변, E2-c의 210/210 bit-exact). 따라서 **제 `freeze` 구현 문제일 가능성이 높습니다.**
+
+의심 지점은 `causal_model.py`의 `_apply_sink_mode`에서 layer id를 전역 카운터 `SINK_LAYER_COUNTER[0] % 30`으로 복원하는 부분입니다. 조작이 `current_end > cache_size`일 때만 증가하므로, 호출 패턴이 예상과 다르면 layer가 어긋나 **다른 레이어의 sink를 덮어쓸 수 있습니다.**
+
+```bash
+# 확인: layer id가 실제 레이어와 일치하는지
+#   _apply_sink_mode 안에서 layer_id와 cache_k.data_ptr()를 함께 찍어
+#   같은 layer_id가 항상 같은 텐서를 가리키는지 본다
+```
+
+### B. 미측정 — F2 (a) 보정 후 attention 분포
+
+§F2가 요구한 세 가지 중 (b) 지표 회복만 측정했습니다. **(a) 분포가 BF16 쪽으로 돌아오는지는 미측정**입니다 — `attn_mass.py`의 훅이 bias를 빼기 **전** logit을 재기 때문입니다.
+
+```bash
+# 필요한 수정: attn_mass.py의 masses_online에 delta_sq 인자를 받아
+#   logits = logits - bias 를 적용한 뒤 softmax
+# 그 후:
+python attn_mass.py --tag f2_int2_tum --kv_quant RTN --kv_bits 2 --tum_correct ...
+```
+
+예측: 보정이 self mass를 19.2% → BF16(47.8%) 쪽으로 되돌려야 하고, 되돌리는 정도가 MUSIQ 회복(+28.25)과 대응해야 합니다.
+
+### C. 미분리 — F1의 σ²
+
+제가 잰 σ²는 **양자화 오차와 궤적 드리프트의 합**이고, TUM 항이 쓰는 것은 양자화 스텝 Δ² 단독입니다. 상관(INT2에서 ρ=0.943)이 어느 쪽에서 오는지 분리되지 않았습니다.
+
+또한 E1은 최고령 슬롯의 **상대** 오차가 가장 낮다고 했는데 F1은 **절대** σ²가 가장 높다고 합니다. 키 크기가 슬롯마다 다르면 양립하지만 확인되지 않았습니다.
+
+```bash
+# jensen_corr.py에 delta_sq_from_quant_state로 Δ²만 따로 뽑아
+# Δ² vs Δmass 상관을 σ² vs Δmass와 나란히 비교
+```
+
+### D. 미실행
+
+- **4-3 Causal Forcing** — 착수하지 않음. 세션 2의 LongLive 이식이 1시간 반 걸렸으므로 비슷한 규모 예상
+- **Step K (Wan 14B outlier)** — H100 80GB 필요, 이 장비는 4090이라 불가
+
+### E. 확정된 것 (재확인 불필요)
+
+관문 통과 기록이 있는 항목들입니다.
+
+| 결과 | 근거 |
+|---|---|
+| self는 항상 BF16으로 읽힘 | 코드 경로 직접 확인 |
+| sink 효과는 내용 때문 | E2 조작, 노이즈 −12.37(t=−3.90) / INT2 오염 −0.15(t=−0.12) |
+| TUM 보정은 INT2에서만 유효 | +28.25(t=5.15), BF16 관문 210/210 bit-exact |
+| 붕괴는 chunk 1에서 시작 | G, 퇴출(chunk 7) 전 |
+| 키가 단독 원인 | K4V2 붕괴 없음 / K2V4 INT2와 동일 |
+| residual window는 품질 무효 | 4-1, t=0.96·1.15 모두 n.s. |
+
+---
+
+## 9. 절차 기록
 
 - E2 관문이 두 번 만에 통과(`local_end_index`가 퇴출 한 chunk 전 포화 → `current_end`로 교체).
 - `e2c` 초기 실패는 `causal_model.py`에 `os` 미import. 수정 후 재실행.
