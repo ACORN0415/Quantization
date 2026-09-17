@@ -1,0 +1,34 @@
+{
+  "gemm_tflops_per_chunk": 51.895074816,
+  "machine_balance_flops_per_byte": 163.88888888888889,
+  "attention": [
+    {
+      "cache_frames": 12,
+      "attn_tflops": 80.74100736,
+      "kv_read_gb": 16.0675048828125,
+      "arithmetic_intensity": 4680.0,
+      "bound": "compute"
+    },
+    {
+      "cache_frames": 21,
+      "attn_tflops": 141.29676288,
+      "kv_read_gb": 28.118133544921875,
+      "arithmetic_intensity": 4680.0,
+      "bound": "compute"
+    },
+    {
+      "cache_frames": 32,
+      "attn_tflops": 215.30935296,
+      "kv_read_gb": 42.8466796875,
+      "arithmetic_intensity": 4680.0,
+      "bound": "compute"
+    },
+    {
+      "cache_frames": 63,
+      "attn_tflops": 423.89028864,
+      "kv_read_gb": 84.35440063476562,
+      "arithmetic_intensity": 4680.0,
+      "bound": "compute"
+    }
+  ]
+}

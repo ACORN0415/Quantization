@@ -1,0 +1,42 @@
+{
+  "generator_gb": 2.6430875062942505,
+  "vae_gb": 0.23635575734078884,
+  "text_encoder_gb": 10.581520080566406,
+  "kv_by_cache_length": [
+    {
+      "cache_frames": 12,
+      "cache_tokens": 18720,
+      "kv_bytes": 3450470400,
+      "kv_gb": 3.2135009765625,
+      "kv_vs_generator": 1.2158133126163497
+    },
+    {
+      "cache_frames": 21,
+      "cache_tokens": 32760,
+      "kv_bytes": 6038323200,
+      "kv_gb": 5.623626708984375,
+      "kv_vs_generator": 2.127673297078612
+    },
+    {
+      "cache_frames": 32,
+      "cache_tokens": 49920,
+      "kv_bytes": 9201254400,
+      "kv_gb": 8.5693359375,
+      "kv_vs_generator": 3.2421688336435994
+    },
+    {
+      "cache_frames": 63,
+      "cache_tokens": 98280,
+      "kv_bytes": 18114969600,
+      "kv_gb": 16.870880126953125,
+      "kv_vs_generator": 6.383019891235836
+    },
+    {
+      "cache_frames": 126,
+      "cache_tokens": 196560,
+      "kv_bytes": 36229939200,
+      "kv_gb": 33.74176025390625,
+      "kv_vs_generator": 12.766039782471672
+    }
+  ]
+}
