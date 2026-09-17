@@ -240,9 +240,11 @@ def main():
         if cur_chunk not in args.chunks:
             return
         window_len = int(local_end_index - w0)
-        global_end = int(local_end_index)   # local == global while the cache holds the prefix
+        # The last token in the cache is the end of the current chunk, which is
+        # what anchors the slot -> global chunk mapping. Using local_end_index
+        # instead breaks once the cache is full and that pointer stops moving.
         ranges, labels = slot_ranges(window_len, chunk_tokens, sink_tokens,
-                                     global_end if w0 == 0 else int(current_start))
+                                     int(current_start) + chunk_tokens)
         if not ranges:
             return
         m = masses_online(q, k, ranges)
@@ -261,19 +263,53 @@ def main():
 
     cm.ATTN_MASS_HOOK = hook
 
+    # Drive the chunk loop directly with the pre-encoded conditioning: calling
+    # pipeline.inference() would re-encode the prompt and pull the text encoder
+    # back onto a device it is no longer on. No VAE decode either — only the
+    # attention distribution is wanted.
+    nblk = pipeline.num_transformer_blocks
+    cache_size = cache_tokens
     for pi, (prompt, cond) in enumerate(zip(prompts, conds)):
         noise = torch.cat([
             torch.randn([1, nfb, 16, 60, 104],
                         generator=torch.Generator(device=device).manual_seed(args.seed * 1000003 + c),
                         device=device, dtype=torch.bfloat16)
             for c in range(args.num_output_frames // nfb)], dim=1)
-        try:
-            pipeline.inference(noise=noise, text_prompts=[prompt],
-                               return_latents=True, base_seed=args.seed)
-        except torch.OutOfMemoryError:
-            print("(VAE decode OOM ignored)")
+        kv = [{
+            "k": torch.zeros([1, cache_size, 12, 128], dtype=torch.bfloat16, device=device),
+            "v": torch.zeros([1, cache_size, 12, 128], dtype=torch.bfloat16, device=device),
+            "global_end_index": torch.tensor([0], dtype=torch.long, device=device),
+            "local_end_index": torch.tensor([0], dtype=torch.long, device=device),
+            "quantizer": getattr(pipeline, "kv_quantizer", None), "quant_state": None,
+        } for _ in range(nblk)]
+        xattn = [{"k": torch.zeros([1, 512, 12, 128], dtype=torch.bfloat16, device=device),
+                  "v": torch.zeros([1, 512, 12, 128], dtype=torch.bfloat16, device=device),
+                  "is_init": False} for _ in range(nblk)]
+        start = 0
+        for c in range(args.num_output_frames // nfb):
+            g = torch.Generator(device=device)
+            g.manual_seed(args.seed * 1000003 + 7919 + c)
+            x = noise[:, start:start + nfb]
+            pred = None
+            for i, t in enumerate(pipeline.denoising_step_list):
+                ts = torch.ones([1, nfb], device=device, dtype=torch.int64) * t
+                _, pred = pipeline.generator(
+                    noisy_image_or_video=x, conditional_dict=cond, timestep=ts,
+                    kv_cache=kv, crossattn_cache=xattn, current_start=start * fsl)
+                if i < len(pipeline.denoising_step_list) - 1:
+                    flat = pred.flatten(0, 1)
+                    rn = torch.randn(flat.shape, generator=g, device=device, dtype=flat.dtype)
+                    x = pipeline.scheduler.add_noise(
+                        flat, rn,
+                        pipeline.denoising_step_list[i + 1] *
+                        torch.ones([nfb], device=device, dtype=torch.long)
+                    ).unflatten(0, pred.shape[:2])
+            ctx = torch.ones([1, nfb], device=device, dtype=torch.int64) * pipeline.args.context_noise
+            pipeline.generator(noisy_image_or_video=pred, conditional_dict=cond, timestep=ctx,
+                               kv_cache=kv, crossattn_cache=xattn, current_start=start * fsl)
+            start += nfb
         print(f"prompt {pi}: {len(records)} records")
-        del noise
+        del noise, kv, xattn
         torch.cuda.empty_cache()
 
     cm.ATTN_MASS_HOOK = None
