@@ -1,0 +1,1 @@
+../../결과서/S5_RESULTS_gates.md

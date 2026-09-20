@@ -1,0 +1,406 @@
+From f5cc7eddad719eac2dba0b742f4cd7abe70fecd9 Mon Sep 17 00:00:00 2001
+From: JunHyeong Park <acorn0415@naver.com>
+Date: Sun, 20 Sep 2026 23:10:34 +0900
+Subject: [PATCH] =?UTF-8?q?c1:=20=EC=88=98=EC=B9=98=20=EC=95=88=EC=A0=95?=
+ =?UTF-8?q?=ED=98=95=20exact=5Funiform=20+=20head=EB=B3=84=20attention=20m?=
+ =?UTF-8?q?ass=20=EA=B8=B0=EB=A1=9D?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- tum_correction.py: exact_uniform 을 log_sinh_over_x_stable 로 교체.
+  분기점을 1e-3 에서 1.0 으로 올리고(그 아래는 float64 8항 급수) 질의 청킹
+  (EXACT_QCHUNK=64)을 넣어 전 구간 절대오차 <=7.9e-6.
+  1e-3 분기 자체가 두 번째 결함이었다 — 1e-3~1 구간에서 상쇄로 1.4e-5.
+  **정확하지만 실행은 불가하다**: 3프롬프트에서 최소 30배 느려 프롬프트 0도
+  끝내지 못한다. 품질 런 금지는 유지(S7_C1_exact_uniform_cost.md).
+- tum_correction.py: TUM_MASS_PERHEAD 추가. head 평균 mass 로는 층 29의 outlier
+  head 가 나머지 11개에 묻혀 C6 판정이 불가능했다.
+- causal_model.py: per-head 기록에 layer/chunk 스탬프. 전용 카운터를 쓴다 —
+  _BIAS_DUMP_COUNTER 를 공유하면 소비자가 둘 이상일 때 레이어당 두 번 올라가
+  %30 매핑이 깨진다.
+- inference.py: --tum_mass_perhead
+---
+ gateC6_mass.py              | 107 ++++++++++++++++++++++++++++++++++++
+ inference.py                |  14 +++++
+ run_s7_C6.sh                |  37 +++++++++++++
+ tum_correction.py           |  94 ++++++++++++++++++++++++-------
+ wan/modules/causal_model.py |  13 +++++
+ 5 files changed, 245 insertions(+), 20 deletions(-)
+ create mode 100644 gateC6_mass.py
+ create mode 100755 run_s7_C6.sh
+
+diff --git a/gateC6_mass.py b/gateC6_mass.py
+new file mode 100644
+index 0000000..bad42c9
+--- /dev/null
++++ b/gateC6_mass.py
+@@ -0,0 +1,107 @@
++# -*- coding: utf-8 -*-
++"""C6 — 보정이 캐시 attention mass 를 실제로 억제하는가.
++
++주장 B10: "정확형에서 outlier head 의 b 가 ~177 이므로 캐시 logit 에 그만큼을 빼면
++exp(-177)≈0 이 되어 캐시가 사실상 꺼진다." 지금까지 **수식에서 유추**한 것이고
++측정된 적이 없다. 여기서 확정하거나 철회한다.
++
++읽는 값은 head 별 self / cached mass 다. head 평균이면 층 29의 한 head 가
++나머지 11개에 묻힌다 — 그 희석이 지금까지 이 주장을 확인하지 못한 이유다.
++
++판정:
++  억제가 사실이라면 exact 팔의 층 29 outlier head 에서 cached mass 가 lam0 대비
++  거의 0 으로 떨어져야 한다. 떨어지지 않으면 주장을 철회한다.
++"""
++import argparse, json, os, statistics as st
++
++
++def load(path):
++    d = json.load(open(path))
++    return d["records"]
++
++
++def main():
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--dir", required=True)
++    ap.add_argument("--out", required=True)
++    a = ap.parse_args()
++
++    arms = {}
++    for tag in ("lam0", "taylor", "exact"):
++        p = os.path.join(a.dir, f"{tag}.perhead.json")
++        if not os.path.exists(p):
++            print(f"없음: {p}")
++            continue
++        arms[tag] = load(p)
++    if "lam0" not in arms:
++        raise SystemExit("기준 팔(lam0)이 없다")
++
++    def by(recs, layer, chunk):
++        return {r["head"]: r for r in recs
++                if r.get("layer") == layer and r.get("chunk") == chunk}
++
++    layers = sorted({r["layer"] for r in arms["lam0"] if "layer" in r})
++    chunks = sorted({r["chunk"] for r in arms["lam0"] if "chunk" in r})
++    print(f"층 {layers} · chunk {chunks} · 팔 {list(arms)}")
++
++    rows = []
++    for c in chunks:
++        for l in layers:
++            base = by(arms["lam0"], l, c)
++            if not base:
++                continue
++            for tag in ("taylor", "exact"):
++                if tag not in arms:
++                    continue
++                cur = by(arms[tag], l, c)
++                for h, r0 in base.items():
++                    if h not in cur:
++                        continue
++                    rows.append({
++                        "chunk": c, "layer": l, "head": h, "arm": tag,
++                        "cached_lam0": r0.get("cached"),
++                        "cached": cur[h].get("cached"),
++                        "self_lam0": r0.get("self"),
++                        "self": cur[h].get("self"),
++                    })
++
++    print(f"\n{'chunk':>6}{'layer':>6}{'arm':>8}"
++          f"{'cached 최소(head)':>18}{'그 head':>8}{'lam0 값':>10}{'비':>8}")
++    verdict = {}
++    for c in chunks:
++        for l in layers:
++            for tag in ("taylor", "exact"):
++                sel = [r for r in rows if r["chunk"] == c and r["layer"] == l
++                       and r["arm"] == tag and r["cached"] is not None]
++                if not sel:
++                    continue
++                m = min(sel, key=lambda r: r["cached"])
++                ratio = m["cached"] / max(m["cached_lam0"], 1e-12)
++                print(f"{c:6d}{l:6d}{tag:>8}{m['cached']:18.6f}"
++                      f"{m['head']:8d}{m['cached_lam0']:10.6f}{ratio:8.4f}")
++                verdict[f"c{c}_l{l}_{tag}"] = {
++                    "min_cached_head": m["head"], "cached": m["cached"],
++                    "cached_lam0": m["cached_lam0"], "ratio": ratio}
++
++    # 억제 판정: exact 팔에서 lam0 대비 비가 0.01 미만인 (chunk, layer, head) 존재?
++    supp = [k for k, v in verdict.items() if k.endswith("_exact")
++            and v["ratio"] < 0.01]
++    print("\n판정:")
++    if supp:
++        print(f"  **억제 관측됨** — {supp}")
++    else:
++        worst = min((v["ratio"] for k, v in verdict.items()
++                     if k.endswith("_exact")), default=float("nan"))
++        print(f"  억제 관측되지 않음. exact 팔 최소 비 {worst:.4f} "
++              f"(0.01 미만이어야 '캐시가 꺼진다'는 서술이 성립)")
++        print("  → 주장 B10 은 **철회**한다.")
++
++    os.makedirs(os.path.dirname(a.out), exist_ok=True)
++    json.dump({"verdict_rows": verdict, "suppressed": supp,
++               "n_rows": len(rows), "rows": rows},
++              open(a.out + ".json", "w"), indent=1, ensure_ascii=False)
++    print(f"\nwrote {a.out}.json")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/inference.py b/inference.py
+index 79df407..83fbcd2 100644
+--- a/inference.py
++++ b/inference.py
+@@ -82,6 +82,9 @@ parser.add_argument("--tum_include_self", action="store_true",
+ parser.add_argument("--tum_flatten_slots", action="store_true",
+                     help="Gate H4 control: flatten the bias across cached keys "
+                          "(same mean down-weight, no slot/channel structure)")
++parser.add_argument("--tum_mass_perhead", type=str, default=None,
++                    help="C6: head 별 self/cached attention mass 를 이 JSON 에 "
++                         "쓴다. head 평균으로는 outlier head 를 볼 수 없다")
+ parser.add_argument("--tum_mass_chunks", type=int, nargs="*", default=None,
+                     help="Gate H4: record post-correction per-slot attention mass "
+                          "at these chunk indices (JSON next to stats_path)")
+@@ -221,6 +224,9 @@ if args.tum_correct:
+     if args.tum_mass_chunks:
+         _tc.TUM_MASS_LOG = []
+         _tc.TUM_MASS_CHUNKS = tuple(args.tum_mass_chunks)
++        if args.tum_mass_perhead:
++            _tc.TUM_MASS_PERHEAD = []
++            print("[tum] per-head mass 기록 ON (C6)")
+     print(f"[tum] Jensen-bias correction on (explicit attention path) "
+           f"mode={args.tum_mode} lambda={args.tum_lambda} "
+           f"exclude_self={not args.tum_include_self} flatten={args.tum_flatten_slots}")
+@@ -440,6 +446,14 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+                 output_path = os.path.join(args.output_folder, f'{prompt[:100]}-{seed_idx}.mp4')
+             write_video(output_path, video[seed_idx], fps=16)
+ 
++if args.tum_mass_perhead and local_rank == 0:
++    import tum_correction as _tcph
++    _ph = _tcph.TUM_MASS_PERHEAD or []
++    with open(args.tum_mass_perhead, "w") as f:
++        json.dump({"mode": args.tum_mode, "lambda": args.tum_lambda,
++                   "kv_bits": args.kv_bits, "records": _ph}, f)
++    print(f"[tum] per-head mass {len(_ph)}건 -> {args.tum_mass_perhead}")
++
+ if args.tum_mass_chunks and local_rank == 0:
+     import tum_correction as _tcm
+     if _tcm.TUM_MASS_LOG:
+diff --git a/run_s7_C6.sh b/run_s7_C6.sh
+new file mode 100755
+index 0000000..d68a540
+--- /dev/null
++++ b/run_s7_C6.sh
+@@ -0,0 +1,37 @@
++#!/usr/bin/env bash
++# C6 — "정확형 b≈177 이므로 exp(-177)≈0, 즉 캐시가 억제된다"(주장 B10) 검증.
++#
++# 이 주장은 지금까지 **수식에서 유추한 것**이고 측정된 적이 없어 claim_table 에
++# '불가'로 남아 있다. attention mass 를 직접 읽어 확정하거나 철회한다.
++#
++# head 평균 mass 로는 볼 수 없다 — 문제의 b≈177 은 층 29의 **한 head** 성질이다.
++# 그래서 per-head 기록을 새로 넣었다(--tum_mass_perhead).
++#
++# 세 팔, 같은 조건(INT2, 63프레임, seed 0):
++#   lam0    보정 없음(λ=0) — 기준 mass
++#   taylor  현재 경로
++#   exact   수치 안정형 정확형(C1) — 주장의 대상
++set -u
++cd ~/gpu/sf-c1
++. tools/runlib.sh 2>/dev/null || . ~/gpu/Self-Forcing/tools/runlib.sh
++PY=~/gpu/sf-venv/bin/python
++O=results/session7/c6
++mkdir -p $O
++
++arm () { tag="$1"; shift
++  s6_run "c6_$tag" $PY inference.py --config_path configs/gateA_A1.yaml \
++    --checkpoint_path checkpoints/self_forcing_dmd.pt \
++    --data_path prompts/quant3/prompts3.txt --output_folder $O/$tag/videos \
++    --stats_path $O/$tag.stats.json \
++    --num_output_frames 63 --seed 0 --use_ema --no_decode \
++    --kv_quant RTN --kv_bits 2 --tum_correct \
++    --tum_mass_chunks 1 6 20 --tum_mass_perhead $O/$tag.perhead.json "$@"; }
++
++arm lam0   --tum_mode taylor        --tum_lambda 0
++arm taylor --tum_mode taylor        --tum_lambda 1
++arm exact  --tum_mode exact_uniform --tum_lambda 1
++
++s6_run c6_analyse $PY gateC6_mass.py --dir $O \
++  --out ~/gpu/Self-Forcing/results/session6/gateC6_mass
++
++s6_verdict C6
+diff --git a/tum_correction.py b/tum_correction.py
+index 7faaf9a..71f6538 100644
+--- a/tum_correction.py
++++ b/tum_correction.py
+@@ -82,6 +82,10 @@ TUM_LAYER_COUNTER = [0]
+ # distribution the model actually used. inference.py sets this to a list; each
+ # entry is {"pos": (w, self_start, self_end, Lk), "mass": {...}} per call.
+ TUM_MASS_LOG = None
++# C6: head 평균 mass 로는 outlier head 를 볼 수 없다. 주장 B10("정확형 b≈177 이므로
++# exp(-177)≈0 이라 캐시가 억제된다")은 **한 head 의 성질**에 대한 것이므로
++# head 별로 따로 기록한다.
++TUM_MASS_PERHEAD = None
+ TUM_MASS_CHUNKS = ()      # global chunk indices to record
+ 
+ # log(sinh x / x) = sum_k COEF[k] * x^(2k+2) — bmm-able power series (radius pi).
+@@ -91,6 +95,9 @@ _LOG_SINH_COEFFS = (1.0 / 6, -1.0 / 180, 1.0 / 2835, -1.0 / 37800,
+                     1.0 / 467775, -1382.0 / 7662154500,
+                     2.0 / 127702575, -3617.0 / 5210265060000)
+ EXACT_X_TAIL = []
++# Query-chunk size for the stable exact_uniform path. Memory only; the value
++# does not change the result.
++EXACT_QCHUNK = 64
+ 
+ 
+ @torch.no_grad()
+@@ -174,6 +181,38 @@ def store_emp_var(quant_state, cache_k, k_hat, mode, block_size=16):
+     quant_state["emp"] = {"mode": mode, "var": var}
+ 
+ 
++def log_sinh_over_x_stable(a):
++    """log(sinh a / a), evaluated without a convergence radius. a >= 0.
++
++    The shipped `exact_uniform` used an 8-term power series, whose radius is pi.
++    Gate C2 measured |a| up to 192 on the layer-29 outlier head, where that
++    series diverges (max abs difference 2.3e+27 against this function). This is
++    the replacement: the small-a branch is the same series truncated where it is
++    accurate, the large-a branch is the closed form
++        log(sinh a / a) = a - log(2a) + log1p(-exp(-2a)),
++    which is stable for every a the cache produces.
++    """
++    # The branch point is 1, not something tiny: the closed form subtracts two
++    # nearly equal quantities as a -> 0 (a - log 2a and log1p(-e^-2a) are both
++    # ~6.2 at a = 1e-3 while their sum is ~1.7e-7), which costs ~7 digits in
++    # float32. The series is accurate to ~6e-10 below 1, the closed form to
++    # ~1e-7 above it, so switching at 1 keeps the whole range near 1e-7.
++    a = a.abs()
++    out = torch.empty_like(a)
++    small = a < 1.0
++    s_ = a[small].double()
++    s2 = s_ * s_
++    acc = torch.zeros_like(s_)
++    term = s2.clone()
++    for c in _LOG_SINH_COEFFS:
++        acc = acc + c * term
++        term = term * s2
++    out[small] = acc.to(out.dtype)
++    l_ = a[~small]
++    out[~small] = l_ - torch.log(2.0 * l_) + torch.log1p(-torch.exp(-2.0 * l_))
++    return out
++
++
+ def _log_sinh_x_over_x(x):
+     """log(sinh(x)/x), numerically stable. x >= 0.
+     small x: x^2/6 - x^4/180; large x: x - log(2x) + log1p(-exp(-2x))."""
+@@ -213,31 +252,34 @@ def corrected_attention(q, k, v, delta_sq=None, emp_var=None,
+             ds = delta_sq[:, :, hi].float()                         # [B, Lk, D]
+             bias = lam * torch.bmm(qi ** 2, ds.transpose(1, 2)) / (24.0 * d)
+         elif mode == "exact_uniform" and delta_sq is not None and lam != 0.0:
+-            # x_c = |q_c| Delta_c / (2 sqrt d); b = sum_c log(sinh x / x).
+-            # Computed as the bmm-able power series
+-            #   log(sinh x / x) = x^2/6 - x^4/180 + x^6/2835 - ...
+-            # (radius pi), each term sum_c coeff * (q_c^2/4d)^k (Delta_c^2)^k =
+-            # bmm(u^k, w^k^T). Exact wherever x < ~2.5 with 8 terms; the upper
+-            # bound on the violating fraction is tracked in EXACT_X_TAIL.
+-            ds = delta_sq[:, :, hi].float()                         # Delta^2 [B,Lk,D]
+-            u = (qi ** 2) * (0.25 / d)                              # [B, Lq, D]
+-            # Delta^2 is constant within each 16-token quant block, so run the
+-            # series on one row per block and expand. Block boundaries within
+-            # the sliced window fall every 16 tokens from block_offset.
++            # a_c = |q_c| Delta_c / (2 sqrt d);  b = sum_c log(sinh a_c / a_c).
++            #
++            # The previous implementation factorised this into bmm(u^k, w^k^T)
++            # over an 8-term series, which never materialises [Lq, nblk, D] but
++            # diverges past |a| = pi (gate C2: the layer-29 tail reaches 192 and
++            # the series returns ~1e27). The stable closed form is elementwise,
++            # so the big tensor is unavoidable -- it is built in query chunks
++            # instead. EXACT_QCHUNK trades memory for nothing else; the result
++            # does not depend on it.
++            ds = delta_sq[:, :, hi].float()                         # [B, Lk, D]
+             lk = ds.shape[1]
+             first = torch.arange(0, lk, 16, device=q.device)
+             counts = torch.full_like(first, 16)
+             counts[-1] = lk - first[-1]
+-            w = ds[:, first]                                        # [B, nblk, D]
+-            bias_blk = torch.zeros(b_, lq, w.shape[1], device=q.device)
+-            uk, wk = u, w
+-            for coef in _LOG_SINH_COEFFS:
+-                bias_blk = bias_blk + coef * torch.bmm(uk, wk.transpose(1, 2))
+-                uk, wk = uk * u, wk * w
++            w = ds[:, first].clamp(min=0).sqrt()                    # Delta [B,nb,D]
++            qa = qi.abs() * (0.5 / (d ** 0.5))                      # [B, Lq, D]
++            nb = w.shape[1]
++            bias_blk = torch.empty(b_, lq, nb, device=q.device)
++            for s0 in range(0, lq, EXACT_QCHUNK):
++                s1 = min(s0 + EXACT_QCHUNK, lq)
++                a = qa[:, s0:s1].unsqueeze(2) * w.unsqueeze(1)      # [B,c,nb,D]
++                bias_blk[:, s0:s1] = log_sinh_over_x_stable(a).sum(-1)
++                del a
+             bias = lam * torch.repeat_interleave(bias_blk, counts, dim=2)
+-            # convergence bound: x_ub per (channel, block) with the max |q|
+-            x2_ub = u.amax(1, keepdim=True) * w
+-            EXACT_X_TAIL.append(float((x2_ub > 6.25).float().mean().item()))
++            # kept for continuity with the old logs: fraction with a > 2.5,
++            # which is now a diagnostic rather than a validity bound
++            EXACT_X_TAIL.append(float(
++                ((qa.amax(1, keepdim=True) * w) > 2.5).float().mean().item()))
+         elif mode == "scalar" and lam != 0.0:
+             # one constant for every cached key; softmax only sees the gap
+             # between cached and self, so this is the minimal form of the
+@@ -299,6 +341,18 @@ def corrected_attention(q, k, v, delta_sq=None, emp_var=None,
+         if mass_ranges:
+             for name, (rs, re) in mass_ranges.items():
+                 mass_acc[name] += probs[:, :, rs:re].sum(-1).mean().item()
++            if TUM_MASS_PERHEAD is not None:
++                _rec = {"head": int(hi)}
++                for name, (rs, re) in mass_ranges.items():
++                    _rec[name] = float(probs[:, :, rs:re].sum(-1).mean().item())
++                if self_range is not None:
++                    _rec["self"] = float(
++                        probs[:, :, self_range[0]:self_range[1]].sum(-1)
++                        .mean().item())
++                    _cm = probs.sum(-1) - probs[
++                        :, :, self_range[0]:self_range[1]].sum(-1)
++                    _rec["cached"] = float(_cm.mean().item())
++                TUM_MASS_PERHEAD.append(_rec)
+         out[:, :, hi] = torch.bmm(probs, vi).to(q.dtype)
+         del logits, probs
+     if mass_ranges and TUM_MASS_LOG is not None:
+diff --git a/wan/modules/causal_model.py b/wan/modules/causal_model.py
+index b0c8a08..9168769 100644
+--- a/wan/modules/causal_model.py
++++ b/wan/modules/causal_model.py
+@@ -55,6 +55,7 @@ BIAS_DUMP_CHUNKS = ()
+ BIAS_DUMP_LAYERS = (0, 15, 29)
+ BIAS_DUMP_QSTRIDE = 512
+ _BIAS_DUMP_COUNTER = [0]
++_MASS_LAYER_COUNTER = [0]   # C6 per-head mass 전용
+ _BIAS_DUMP_SEEN = set()
+ 
+ 
+@@ -604,6 +605,8 @@ class CausalWanSelfAttention(nn.Module):
+                                      .to(torch.float16).cpu(),
+                         })
+                 _n_before = len(_tc.TUM_MASS_LOG) if _tc.TUM_MASS_LOG is not None else 0
++                _ph_before = (len(_tc.TUM_MASS_PERHEAD)
++                              if _tc.TUM_MASS_PERHEAD is not None else 0)
+                 x = corrected_attention(roped_query,
+                                         cache_k[:, _w:local_end_index],
+                                         cache_v[:, _w:local_end_index],
+@@ -618,6 +621,16 @@ class CausalWanSelfAttention(nn.Module):
+                         "window_len": int(local_end_index - _w),
+                         "self_rel": [int(_self[0]), int(_self[1])],
+                         "mass": _tc.TUM_MASS_LOG[-1]}
++                if (_tc.TUM_MASS_PERHEAD is not None
++                        and len(_tc.TUM_MASS_PERHEAD) > _ph_before):
++                    # layer id 는 여기서만 알 수 있다(레이어 순서 카운터).
++                    # 전용 카운터. _BIAS_DUMP_COUNTER 를 함께 쓰면 소비자가
++                    # 둘 이상일 때 레이어당 두 번 올라가 %30 매핑이 깨진다.
++                    _lid_m = _MASS_LAYER_COUNTER[0] % 30
++                    _MASS_LAYER_COUNTER[0] += 1
++                    for _e in _tc.TUM_MASS_PERHEAD[_ph_before:]:
++                        _e["layer"] = int(_lid_m)
++                        _e["chunk"] = int(current_start // num_new_tokens)
+             else:
+                 x = attention(
+                     roped_query,
+-- 
+2.34.1
+

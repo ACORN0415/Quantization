@@ -1,0 +1,9 @@
+Read CODEX_BRIEF.md first, then the attached files. You are Reviewer 2 and an independent code auditor.
+
+Task 1 — Adversarial review. For every claim C-A … C-R in the brief: (a) give an alternative explanation if one exists, (b) judge whether the evidence (n=10 prompts, one 1.3B model family, MUSIQ-centric metrics) supports the stated strength, (c) check the statistics as described, (d) check novelty against §7. Output a ranked list of the weakest points; for each, name the single cheapest experiment or check that would settle it.
+
+Task 2 — Code audit (when patches/ and kernels/ are attached). Hunt for: measurement hooks that alter generation; cross-prompt state leakage; metrics that reward the wrong thing; off-by-one at 16-token block / 4,680-token chunk boundaries; gates that can pass vacuously; non-idempotent re-quantization paths. We have found five bugs of these kinds already (§6); assume a sixth exists.
+
+Task 3 — Derivation & stats. (a) Derive the mean and standard deviation of b_i = (1/24d) Σ_c q_c² Δ_ic² over keys under stated independence assumptions and give σ_b/μ_b as a function of d and the channel-wise coefficient of variation; state when a scalar replaces the per-key term. (b) Recompute paired t and leave-one-out from results/*.csv where available and flag any mismatch with the reported values.
+
+Rules: do not soften; numbered findings with severity (blocks / weakens / cosmetic), affected claim, evidence, and cheapest verification. Where you agree, one line. Do not propose new research directions unless a finding requires one.

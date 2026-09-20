@@ -1,0 +1,1481 @@
+From 857416466091df181d368748d92c01c825393c45 Mon Sep 17 00:00:00 2001
+From: JunHyeong Park <acorn0415@naver.com>
+Date: Sun, 20 Sep 2026 23:11:03 +0900
+Subject: [PATCH] =?UTF-8?q?l1-attr-diag:=20P3=20=EA=B2=BD=EB=A1=9C=20?=
+ =?UTF-8?q?=EB=91=90=20=EA=B5=AC=EC=84=B1=EC=9A=94=EC=86=8C=EC=9D=98=20?=
+ =?UTF-8?q?=EB=8C=80=EC=9D=91=20=ED=99=95=EC=9D=B8?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+L1 을 낸 소스(e107a36 + diff 1abfaf01ab4b0f91)를 **건드리지 않으려고** 만든
+격리 워크트리다. 그 diff 는 Self-Forcing 쪽 results/session6/l1/ 에 패치로
+보존돼 있고, 진단 후 재확인 결과 본 트리 diff 는 여전히 1abfaf01 이다.
+
+계측
+- causal_model.py: ATTR_DUMP — 양자화 **직전**의 BF16 캐시와 Q 를 통째로 저장.
+  식별자에 prompt·seed·chunk·layer·step(호출 순번)·call_site 와 경계 정보를
+  모두 넣는다. (chunk, layer) 만으로는 같은 chunk 의 denoising step 마다 다시
+  호출되는 것을 구분하지 못해 앞선 중복 제거 문제를 되풀이한다.
+- inference.py: --attr_dump / --attr_points
+
+분석
+- gateL1_attr_diag.py: 같은 BF16 입력·같은 그룹 경계에서 두 양자화기를 비교.
+  packed byte 가 아니라 **unpack 한 코드**(부호 규약 정규화 후)·**scale**·
+  **복원 K/V** 를 각각 본다.
+- gateL1_quant_sensitivity.py: 완전 일치를 확인으로 읽기 전의 음성 대조.
+- gateL1_attn_diag.py: 같은 저장 상태·같은 Q 를 두 attention 경로에.
+- gateL1_ulp_dist.py: 출력 차이를 bf16 ULP 로. 기준값 0·서브노멀은 ULP 가
+  정의되지 않으므로 분포에서 제외하고 따로 센다(작은 수로 clamp 하지 않는다).
+
+결과 (시험한 두 상태 한정)
+- 양자화기: 코드·scale·복원 모두 0 불일치.
+- attention: **비트 단위로 일치하지 않는다** — 83~88% 비트 일치, 97~98.5%
+  <=1 ULP, 1~3% 가 그보다 크게 어긋난다. INT2·INT4 에서 오차 규모가 유사했으나
+  비트폭 독립성이 입증된 것은 아니고, **차이의 원인은 미확정**이다.
+- 이 상태는 캡처한 BF16 을 **다시 패킹해 재구성한 것**이며 생성 중 P3 가
+  보존하던 packed 상태 자체가 아니다.
+---
+ gateL1_attn_diag.py            | 108 +++++++++++++++++++++++
+ gateL1_attr_diag.py            | 119 +++++++++++++++++++++++++
+ gateL1_quant_sensitivity.py    |  80 +++++++++++++++++
+ gateL1_ulp_dist.py             | 125 ++++++++++++++++++++++++++
+ gateL3_concentration.py        |  85 +++++++++++++++---
+ inference.py                   |  62 ++++++++++++-
+ pipeline/causal_inference.py   |   6 ++
+ results/attn_diag.json         |  65 ++++++++++++++
+ results/attn_diag_int4.json    |  65 ++++++++++++++
+ results/attr_diag.json         | 157 +++++++++++++++++++++++++++++++++
+ results/quant_sensitivity.json |  32 +++++++
+ results/ulp_dist_int2.json     |  71 +++++++++++++++
+ results/ulp_dist_int4.json     |  71 +++++++++++++++
+ wan/modules/causal_model.py    | 119 ++++++++++++++++++++++++-
+ 14 files changed, 1146 insertions(+), 19 deletions(-)
+ create mode 100644 gateL1_attn_diag.py
+ create mode 100644 gateL1_attr_diag.py
+ create mode 100644 gateL1_quant_sensitivity.py
+ create mode 100644 gateL1_ulp_dist.py
+ create mode 100644 results/attn_diag.json
+ create mode 100644 results/attn_diag_int4.json
+ create mode 100644 results/attr_diag.json
+ create mode 100644 results/quant_sensitivity.json
+ create mode 100644 results/ulp_dist_int2.json
+ create mode 100644 results/ulp_dist_int4.json
+
+diff --git a/gateL1_attn_diag.py b/gateL1_attn_diag.py
+new file mode 100644
+index 0000000..2a7e435
+--- /dev/null
++++ b/gateL1_attn_diag.py
+@@ -0,0 +1,108 @@
++# -*- coding: utf-8 -*-
++"""L1 진단 (iii) — dequant→FA2 경로와 fused 경로에 **같은 저장 상태**를 먹인다.
++
++맞추는 것: 양자화 상태(같은 packed 세그먼트) · 현재 BF16 chunk · 토큰 순서 ·
++마스크 · 위치(캡처된 roped Q/K 를 그대로 쓴다) · 보정 설정(bias_lambda = 0).
++
++출력 오차는 **절대·상대를 함께** 기록한다. 이 값은 **MUSIQ 영향의 상한이 아니다** —
++한 상태에서의 대응 확인일 뿐이다.
++"""
++import argparse, glob, json, os, sys
++
++import torch
++
++sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
++sys.path.insert(0, os.path.join(os.path.abspath(os.path.dirname(__file__)), "kernels"))
++from kernels.triton_kv_quant import triton_quantize_kv, unpack_reference
++from kernels.triton_fused_lowbit_attn import fused_lowbit_attention_v2
++from wan.modules.attention import attention
++
++
++def run_point(rec, bits, dev):
++    src_k = rec["src_k"].to(dev)
++    src_v = rec["src_v"].to(dev)
++    q = rec["q"].to(dev)
++    s0, s1 = rec["self_rel"]
++    seg_len = int(rec["num_new_tokens"])
++    assert s1 - s0 == seg_len, (s0, s1, seg_len)
++
++    # 현재 chunk 는 BF16 self, 그 앞은 packed 세그먼트 — fused 경로의 상태 구성 그대로
++    self_k, self_v = src_k[:, s0:s1].contiguous(), src_v[:, s0:s1].contiguous()
++    segs = []
++    for a in range(0, s0, seg_len):
++        b = a + seg_len
++        pk, ks = triton_quantize_kv(src_k[:, a:b].contiguous(), bits)
++        pv, vs = triton_quantize_kv(src_v[:, a:b].contiguous(), bits)
++        segs.append((pk, ks, pv, vs))
++    assert segs, "캐시 세그먼트가 없다"
++
++    PK = torch.cat([s[0] for s in segs], dim=2)
++    KS = torch.cat([s[1] for s in segs], dim=2)
++    PV = torch.cat([s[2] for s in segs], dim=2)
++    VS = torch.cat([s[3] for s in segs], dim=2)
++    seg_nb = (seg_len + 15) // 16
++
++    # --- 경로 A: fused (보정 끔) ---
++    xa = fused_lowbit_attention_v2(
++        q, PK, KS, PV, VS, self_k, self_v,
++        key_bits=bits, value_bits=bits, bias_lambda=0.0,
++        seg_len=seg_len, seg_nb=seg_nb,
++        block_m=128, block_n=32, num_warps=4, num_stages=2)
++
++    # --- 경로 B: 같은 상태를 복원해 FA2 ---
++    dk = torch.cat([unpack_reference(s[0], s[1], bits) for s in segs], dim=1)
++    dv = torch.cat([unpack_reference(s[2], s[3], bits) for s in segs], dim=1)
++    K = torch.cat([dk, self_k], dim=1)
++    V = torch.cat([dv, self_v], dim=1)
++    xb = attention(q, K, V)
++
++    d = (xa.float() - xb.float()).abs()
++    den = xb.float().abs()
++    ok = den > 1e-6
++    rel = torch.zeros_like(d); rel[ok] = d[ok] / den[ok]
++    rs = rel[ok].flatten().sort().values
++    return {
++        "tokens": int(src_k.shape[1]), "cached_tokens": int(s0),
++        "self_tokens": seg_len, "n_segs": len(segs),
++        "abs": {"max": float(d.max()), "mean": float(d.mean()),
++                "p99": float(d.flatten().sort().values[int(0.99 * d.numel())])},
++        "rel_where_ref_gt_1e-6": {
++            "max": float(rs[-1]), "p99": float(rs[int(0.99 * len(rs))]),
++            "median": float(rs[len(rs) // 2]), "frac_defined": float(ok.float().mean())},
++        "ref_scale": {"mean_abs": float(den.mean()), "max_abs": float(den.max())},
++    }
++
++
++def main():
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--points", required=True)
++    ap.add_argument("--bits", type=int, default=2)
++    ap.add_argument("--out", default="results/attn_diag")
++    a = ap.parse_args()
++    rows = []
++    for f in sorted(glob.glob(os.path.join(a.points, "*.pt"))):
++        rec = torch.load(f, map_location="cpu", weights_only=False)
++        ident = {k: rec[k] for k in ("prompt", "seed", "chunk", "layer", "step",
++                                     "call_site")}
++        r = run_point(rec, a.bits, "cuda")
++        rows.append({"file": os.path.basename(f), "ident": ident, **r})
++        print(f"\n=== {os.path.basename(f)} ===")
++        print("  식별자:", json.dumps(ident, ensure_ascii=False))
++        print(f"  캐시 {r['cached_tokens']} 토큰 / 세그먼트 {r['n_segs']}개 "
++              f"+ self {r['self_tokens']}")
++        print(f"  절대오차  max {r['abs']['max']:.3e}  평균 {r['abs']['mean']:.3e}  "
++              f"p99 {r['abs']['p99']:.3e}")
++        print(f"  상대오차  max {r['rel_where_ref_gt_1e-6']['max']:.3e}  "
++              f"p99 {r['rel_where_ref_gt_1e-6']['p99']:.3e}  "
++              f"중앙 {r['rel_where_ref_gt_1e-6']['median']:.3e}")
++        print(f"  (기준 출력 크기: 평균|x| {r['ref_scale']['mean_abs']:.3e})")
++        del rec
++        torch.cuda.empty_cache()
++    os.makedirs(os.path.dirname(a.out) or ".", exist_ok=True)
++    json.dump({"note": "한 상태에서의 대응 확인. MUSIQ 영향의 상한이 아니다.",
++               "rows": rows}, open(a.out + ".json", "w"), indent=1, ensure_ascii=False)
++    print(f"\nwrote {a.out}.json")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/gateL1_attr_diag.py b/gateL1_attr_diag.py
+new file mode 100644
+index 0000000..9fcfda0
+--- /dev/null
++++ b/gateL1_attr_diag.py
+@@ -0,0 +1,119 @@
++# -*- coding: utf-8 -*-
++"""L1 진단 — P3 경로의 두 구성요소에서 **관측되는 불일치를 찾고 범위를 확인한다.**
++
++이 진단은 요인을 "닫지" 않는다. 생성에서 뽑은 **일부** 상태에 대한 대조이며,
++결론은 **"시험한 상태에서 대응을 확인했다"**까지다. 차이가 작거나 검출되지
++않더라도 +2.65 의 인과 귀속은 완결되지 않는다.
++
++(i) 양자화기 산술 — torch RTN vs Triton
++    같은 BF16 입력·같은 그룹 경계(block 16, 토큰 축)에서 비교하되
++    **packed byte 가 아니라**:
++      · unpack 한 **코드**(부호 규약을 맞춘 뒤)
++      · 대응 **scale**
++      · **복원 K/V**
++    셋을 각각 본다. 레이아웃·인코딩 차이를 수치 오류로 오인하지 않기 위해서다.
++      - RTN   : q 는 int8 [-2^(b-1), 2^(b-1)-1], 블록 [B, nb, 16, H, D]
++      - Triton: packed uint8, 코드 = q + 2^(b-1) (offset binary), [B, H, L, D/pack]
++
++(iii) attention 경로 — dequant→FA2 vs fused
++    **같은 저장 상태와 같은 Q** 를 두 경로에 넣는다. 토큰 순서·마스크·위치·
++    보정 설정을 맞추고, 출력은 **절대·상대 오차를 함께** 기록한다.
++    이 값을 MUSIQ 영향의 상한으로 쓰지 않는다.
++"""
++import argparse, glob, json, os, sys
++
++import torch
++
++sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
++sys.path.insert(0, os.path.expanduser("~/gpu/kv-quant-longhorizon"))
++from kv_quant.factory import create_quantizer
++from kernels.triton_kv_quant import triton_quantize_kv, unpack_reference, BLOCK_TOKENS
++
++
++def rtn_codes_scales(x, bits, block=16):
++    """RTN 의 q·scale 을 Triton 레이아웃 [B,H,L,D] / [B,H,nb,D] 으로 맞춰 돌려준다."""
++    from kv_quant.utils import _reshape_blocks, quantize_sym
++    xb, pad = _reshape_blocks(x, block)                  # [B, nb, 16, H, D]
++    q, sc = quantize_sym(xb, bits=bits, reduce_dims=(2,))  # q 같은 모양, sc [B,nb,1,H,D]
++    b, nb, bs, h, d = q.shape
++    q = q.permute(0, 3, 1, 2, 4).reshape(b, h, nb * bs, d)  # [B,H,L+pad,D]
++    sc = sc.squeeze(2).permute(0, 2, 1, 3)                  # [B,H,nb,D]
++    return q, sc, pad
++
++
++def cmp(a, b):
++    a, b = a.float(), b.float()
++    diff = (a - b).abs()
++    den = b.abs().clamp_min(1e-12)
++    return {"max_abs": float(diff.max()), "mean_abs": float(diff.mean()),
++            "max_rel": float((diff / den).max()),
++            "p99_rel": float((diff / den).flatten().sort().values[
++                int(0.99 * diff.numel())]),
++            "n_mismatch": int((a != b).sum()), "n": int(a.numel())}
++
++
++def diag_quantizer(rec, bits, tag, dev):
++    x = rec[f"src_{tag}"].to(dev)                       # [B, L, H, D] bf16
++    L = x.shape[1]
++    qr, scr, pad = rtn_codes_scales(x, bits)
++    packed, sct = triton_quantize_kv(x.contiguous(), bits)
++    # 코드: offset binary -> signed. 패딩 구간은 제외한다.
++    pack = 8 // bits
++    mask = (1 << bits) - 1
++    shifts = torch.arange(pack, device=dev, dtype=torch.uint8) * bits
++    codes = (packed.unsqueeze(-1) >> shifts) & mask
++    qt = codes.to(torch.int16).reshape(*packed.shape[:3], -1) - (1 << (bits - 1))
++    out = {
++        "tokens": L, "pad_len": pad, "bits": bits,
++        "codes": cmp(qr[:, :, :L].to(torch.int16), qt),
++        "scales": cmp(scr, sct),
++        "recon": cmp(
++            unpack_reference(packed, sct, bits).permute(0, 2, 1, 3),
++            (qr[:, :, :L].to(torch.bfloat16)
++             * scr.repeat_interleave(BLOCK_TOKENS, dim=2)[:, :, :L].to(torch.bfloat16))),
++    }
++    return out
++
++
++def main():
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--points", required=True)
++    ap.add_argument("--bits", type=int, default=2)
++    ap.add_argument("--out", default="results/attr_diag")
++    a = ap.parse_args()
++    dev = "cuda"
++    files = sorted(glob.glob(os.path.join(a.points, "*.pt")))
++    if not files:
++        raise SystemExit(f"덤프 없음: {a.points}")
++    res = []
++    for f in files:
++        rec = torch.load(f, map_location="cpu", weights_only=False)
++        ident = {k: rec[k] for k in ("prompt", "seed", "chunk", "layer", "step",
++                                     "call_site", "local_end_index",
++                                     "num_new_tokens", "sink_tokens",
++                                     "grid_align", "storage")}
++        print(f"\n=== {os.path.basename(f)} ===")
++        print("  식별자:", json.dumps(ident, ensure_ascii=False))
++        row = {"file": os.path.basename(f), "ident": ident, "quantizer": {}}
++        for tag in ("k", "v"):
++            d = diag_quantizer(rec, a.bits, tag, dev)
++            row["quantizer"][tag] = d
++            print(f"  [{tag.upper()}] tokens={d['tokens']} pad={d['pad_len']}")
++            print(f"    코드   불일치 {d['codes']['n_mismatch']:,} / "
++                  f"{d['codes']['n']:,}   max|Δ| {d['codes']['max_abs']:.0f}")
++            print(f"    scale  불일치 {d['scales']['n_mismatch']:,} / "
++                  f"{d['scales']['n']:,}   max|Δ| {d['scales']['max_abs']:.3e}")
++            print(f"    복원   max|Δ| {d['recon']['max_abs']:.3e}  "
++                  f"평균|Δ| {d['recon']['mean_abs']:.3e}  "
++                  f"p99 상대 {d['recon']['p99_rel']:.3e}")
++        res.append(row)
++        del rec
++        torch.cuda.empty_cache()
++    os.makedirs(os.path.dirname(a.out) or ".", exist_ok=True)
++    json.dump({"note": "시험한 상태에서의 대응 확인이며 MUSIQ 영향의 상한이 아니다",
++               "rows": res}, open(a.out + ".json", "w"), indent=1, ensure_ascii=False)
++    print(f"\nwrote {a.out}.json")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/gateL1_quant_sensitivity.py b/gateL1_quant_sensitivity.py
+new file mode 100644
+index 0000000..47ce835
+--- /dev/null
++++ b/gateL1_quant_sensitivity.py
+@@ -0,0 +1,80 @@
++# -*- coding: utf-8 -*-
++"""L1 진단 보조 — 양자화기 대조가 **차이를 검출할 수 있는지** 확인한다.
++
++완전 일치(0 불일치)를 확인으로 읽기 전에 필요한 음성 대조다(절차 규칙 7:
++"독립이어야 할 두 측정이 소수점까지 같으면 동일성을 의심한다").
++
++실행 조건은 결과 JSON 에 함께 기록한다.
++"""
++import argparse, json, os, sys
++
++import torch
++
++sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
++sys.path.insert(0, os.path.expanduser("~/gpu/kv-quant-longhorizon"))
++from gateL1_attr_diag import rtn_codes_scales
++from kernels.triton_kv_quant import triton_quantize_kv
++
++
++def tri_codes(x, bits):
++    p, sc = triton_quantize_kv(x, bits)
++    pack = 8 // bits
++    mask = (1 << bits) - 1
++    shifts = torch.arange(pack, device=x.device, dtype=torch.uint8) * bits
++    c = (p.unsqueeze(-1) >> shifts) & mask
++    return c.to(torch.int16).reshape(*p.shape[:3], -1) - (1 << (bits - 1)), sc
++
++
++def main():
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--point", required=True, help="캡처 .pt 파일")
++    ap.add_argument("--tokens", type=int, default=2048, help="앞에서 자를 토큰 수")
++    ap.add_argument("--bits", type=int, default=2)
++    ap.add_argument("--sigma", type=float, default=0.05)
++    ap.add_argument("--seed", type=int, default=0)
++    ap.add_argument("--out", default="results/quant_sensitivity")
++    a = ap.parse_args()
++
++    rec = torch.load(a.point, map_location="cpu", weights_only=False)
++    x = rec["src_k"][:, :a.tokens].cuda().contiguous()
++    qa, sa, _ = rtn_codes_scales(x, a.bits)
++    qa = qa[:, :, :x.shape[1]].to(torch.int16)
++
++    out = {"point": os.path.basename(a.point),
++           "ident": {k: rec[k] for k in ("prompt", "seed", "chunk", "layer",
++                                         "step", "call_site")},
++           "tokens": a.tokens, "bits": a.bits, "sigma": a.sigma,
++           "rng_seed": a.seed, "tensor": "src_k",
++           "n_codes": int(qa.numel()), "n_scales": int(sa.numel()), "cases": {}}
++
++    # 1) 동일 입력 — 일치해야 한다
++    qb, sb = tri_codes(x, a.bits)
++    out["cases"]["identical_input"] = {
++        "code_mismatch": int((qa != qb).sum()), "scale_mismatch": int((sa != sb).sum())}
++
++    # 2) 한쪽 입력만 섭동 — 불일치가 나와야 한다
++    g = torch.Generator(device="cuda").manual_seed(a.seed)
++    noise = (a.sigma * torch.randn(x.shape, generator=g, device="cuda",
++                                   dtype=torch.float32)).to(x.dtype)
++    qc, sc = tri_codes((x + noise).contiguous(), a.bits)
++    out["cases"]["perturbed_input"] = {
++        "code_mismatch": int((qa != qc).sum()), "scale_mismatch": int((sa != sc).sum())}
++
++    # 3) 블록 경계 1토큰 이동 — 불일치가 나와야 한다
++    qd, _ = tri_codes(x[:, 1:].contiguous(), a.bits)
++    n = min(qa.shape[2] - 1, qd.shape[2])
++    out["cases"]["shifted_grid_1token"] = {
++        "code_mismatch": int((qa[:, :, 1:1 + n] != qd[:, :, :n]).sum()),
++        "n_compared": int(qa[:, :, 1:1 + n].numel())}
++
++    for k, v in out["cases"].items():
++        print(f"{k:22s} {v}")
++    print("\n주의: INT2 에서 코드는 거친 비교자다 — 작은 섭동에 코드는 거의 안 바뀐다. "
++          "민감도는 scale 쪽이 담당한다.")
++    os.makedirs(os.path.dirname(a.out) or ".", exist_ok=True)
++    json.dump(out, open(a.out + ".json", "w"), indent=1, ensure_ascii=False)
++    print(f"wrote {a.out}.json")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/gateL1_ulp_dist.py b/gateL1_ulp_dist.py
+new file mode 100644
+index 0000000..3148c01
+--- /dev/null
++++ b/gateL1_ulp_dist.py
+@@ -0,0 +1,125 @@
++# -*- coding: utf-8 -*-
++"""L1 진단 보조 — 두 attention 경로 출력 차이를 **bf16 ULP 단위**로 센다.
++
++ULP 규칙 (명시): bf16 은 가수 7비트이므로 0 이 아닌 x 에 대해
++    ulp(x) = 2^(floor(log2|x|) - 7)
++기준값(dequant→FA2 출력) x_ref 를 기준으로 삼는다. **x_ref == 0 인 원소는 ULP 가
++정의되지 않으므로 분포에서 제외하고 따로 센다** — 그 칸은 "둘 다 0" 인지
++"한쪽만 0" 인지로만 보고한다. 서브노멀(|x| < 2^-126)도 같은 이유로 분리한다.
++기준값을 1e-30 따위로 clamp 해서 비율을 만들지 않는다 (그렇게 하면 0 근처에서
++무한대에 가까운 ULP 수가 생기고, 그것은 계산 인공물이다).
++"""
++import argparse, glob, json, os, sys
++
++import torch
++
++sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
++from kernels.triton_kv_quant import triton_quantize_kv, unpack_reference
++from kernels.triton_fused_lowbit_attn import fused_lowbit_attention_v2
++from wan.modules.attention import attention
++
++SUBNORMAL = 2.0 ** -126
++
++
++def both_paths(rec, bits, dev="cuda"):
++    sk, sv = rec["src_k"].to(dev), rec["src_v"].to(dev)
++    q = rec["q"].to(dev)
++    s0, s1 = rec["self_rel"]
++    L = int(rec["num_new_tokens"])
++    segs = []
++    for a in range(0, s0, L):
++        pk, ks = triton_quantize_kv(sk[:, a:a + L].contiguous(), bits)
++        pv, vs = triton_quantize_kv(sv[:, a:a + L].contiguous(), bits)
++        segs.append((pk, ks, pv, vs))
++    PK = torch.cat([s[0] for s in segs], 2); KS = torch.cat([s[1] for s in segs], 2)
++    PV = torch.cat([s[2] for s in segs], 2); VS = torch.cat([s[3] for s in segs], 2)
++    xa = fused_lowbit_attention_v2(
++        q, PK, KS, PV, VS, sk[:, s0:s1].contiguous(), sv[:, s0:s1].contiguous(),
++        key_bits=bits, value_bits=bits, bias_lambda=0.0,
++        seg_len=L, seg_nb=(L + 15) // 16,
++        block_m=128, block_n=32, num_warps=4, num_stages=2)
++    dk = torch.cat([unpack_reference(s[0], s[1], bits) for s in segs], 1)
++    dv = torch.cat([unpack_reference(s[2], s[3], bits) for s in segs], 1)
++    xb = attention(q, torch.cat([dk, sk[:, s0:s1]], 1),
++                   torch.cat([dv, sv[:, s0:s1]], 1))
++    return xa, xb, len(segs)
++
++
++def ulp_stats(xa, xb):
++    a, b = xa.float(), xb.float()
++    d = (a - b).abs()
++    tot = b.numel()
++    zero = b == 0
++    sub = (~zero) & (b.abs() < SUBNORMAL)
++    ok = ~(zero | sub)
++    e = torch.floor(torch.log2(b[ok].abs()))
++    n_ulp = d[ok] / torch.pow(2.0, e - 7)
++    out = {
++        "n_total": int(tot),
++        "n_ref_zero": int(zero.sum()),
++        "n_ref_zero_and_other_zero": int((zero & (a == 0)).sum()),
++        "n_ref_subnormal": int(sub.sum()),
++        "n_in_distribution": int(ok.sum()),
++        "frac_exact_overall": float((d == 0).float().mean()),
++    }
++    for t in (0, 1, 2, 4, 8):
++        out[f"frac_le_{t}_ulp"] = float((n_ulp <= t + 1e-6).float().mean())
++    out["max_ulp"] = float(n_ulp.max())
++    # 큰 ULP 수가 "기준값이 작아서" 생긴 것인지 밝힌다. 0 은 이미 제외했으므로
++    # 여기 남는 것은 정상수지만 매우 작은 값일 수 있다.
++    ref_ok = b[ok].abs()
++    i = int(torch.argmax(n_ulp))
++    out["ref_abs_at_max_ulp"] = float(ref_ok[i])
++    out["abs_diff_at_max_ulp"] = float(d[ok][i])
++    big = n_ulp > 8
++    out["n_gt_8_ulp"] = int(big.sum())
++    if int(big.sum()):
++        rb = ref_ok[big].sort().values
++        out["ref_abs_median_where_gt_8_ulp"] = float(rb[len(rb) // 2])
++        out["ref_abs_p90_where_gt_8_ulp"] = float(rb[int(0.9 * len(rb))])
++    out["ref_abs_median_all"] = float(ref_ok.median())
++    s = n_ulp.sort().values
++    out["p99_ulp"] = float(s[int(0.99 * len(s))])
++    out["p999_ulp"] = float(s[int(0.999 * len(s))])
++    return out
++
++
++def main():
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--points", required=True)
++    ap.add_argument("--bits", type=int, default=2)
++    ap.add_argument("--out", default="results/ulp_dist")
++    a = ap.parse_args()
++    rows = []
++    for f in sorted(glob.glob(os.path.join(a.points, "*.pt"))):
++        rec = torch.load(f, map_location="cpu", weights_only=False)
++        xa, xb, nseg = both_paths(rec, a.bits)
++        st = ulp_stats(xa, xb)
++        st.update({"file": os.path.basename(f), "bits": a.bits, "n_segs": nseg,
++                   "ident": {k: rec[k] for k in ("prompt", "seed", "chunk",
++                                                 "layer", "step", "call_site")}})
++        rows.append(st)
++        print(f"\n=== {st['file']}  bits={a.bits} ===")
++        print(f"  전체 {st['n_total']:,} · 기준 0 인 원소 {st['n_ref_zero']:,} "
++              f"(그중 양쪽 0 {st['n_ref_zero_and_other_zero']:,}) · "
++              f"서브노멀 {st['n_ref_subnormal']:,}")
++        print(f"  분포 대상 {st['n_in_distribution']:,}")
++        for t in (0, 1, 2, 4, 8):
++            print(f"    ≤{t} ULP : {100*st[f'frac_le_{t}_ulp']:7.4f}%")
++        print(f"    p99 {st['p99_ulp']:.1f} · p99.9 {st['p999_ulp']:.1f} · "
++              f"max {st['max_ulp']:.1f} ULP")
++        print(f"    >8 ULP 인 원소 {st['n_gt_8_ulp']:,}개 — 그 기준값 |x| 중앙 "
++              f"{st.get('ref_abs_median_where_gt_8_ulp', float('nan')):.3e} "
++              f"(전체 중앙 {st['ref_abs_median_all']:.3e})")
++        print(f"    max ULP 지점: 기준값 |x|={st['ref_abs_at_max_ulp']:.3e}, "
++              f"|Δ|={st['abs_diff_at_max_ulp']:.3e}")
++        del rec, xa, xb
++        torch.cuda.empty_cache()
++    os.makedirs(os.path.dirname(a.out) or ".", exist_ok=True)
++    json.dump({"ulp_rule": "ulp(x)=2^(floor(log2|x|)-7); 기준값 0·서브노멀은 분포에서 제외하고 따로 셈",
++               "rows": rows}, open(a.out + ".json", "w"), indent=1, ensure_ascii=False)
++    print(f"\nwrote {a.out}.json")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/gateL3_concentration.py b/gateL3_concentration.py
+index 233eca4..565a93b 100644
+--- a/gateL3_concentration.py
++++ b/gateL3_concentration.py
+@@ -42,7 +42,8 @@ def analyse_record(r, device="cpu"):
+     H, D = X.shape[1], X.shape[2]
+     w = (q ** 2) / (24.0 * D)                      # [nq, H, D]
+ 
+-    out = {"chunk": r["chunk"], "layer": r["layer"], "n_cached_blocks": nb_cached,
++    out = {"prompt": int(r.get("prompt", 0)),
++           "chunk": r["chunk"], "layer": r["layer"], "n_cached_blocks": nb_cached,
+            "heads": []}
+     for h in range(H):
+         Xh = X[:, h]                               # [nbc, D]
+@@ -86,7 +87,8 @@ def main():
+     rows = []
+     for x in res:
+         for hi, h in enumerate(x["heads"]):
+-            rows.append({"chunk": x["chunk"], "layer": x["layer"], "head": hi, **h})
++            rows.append({"prompt": x["prompt"], "chunk": x["chunk"],
++                         "layer": x["layer"], "head": hi, **h})
+ 
+     def col(k):
+         return sorted(r[k] for r in rows)
+@@ -106,14 +108,36 @@ def main():
+         print(f"{k:22s} {pct(v,0.5):10.4f} {sum(v)/len(v):12.4f} "
+               f"{pct(v,0.1):10.4f} {pct(v,0.9):10.4f} {v[-1]:12.4f}")
+ 
++    prompts = sorted({x["prompt"] for x in res})
++    print(f"\n프롬프트 {len(prompts)}개: {prompts}")
++
+     print("\nper (chunk, layer): spread of the per-head mean bias")
+-    print(f"{'chunk':>6} {'layer':>6} {'min':>10} {'median':>10} {'max':>12} "
+-          f"{'max/med':>10}")
+-    for x in res:
+-        ph = sorted(h["mu_b"] for h in x["heads"])
+-        md = ph[len(ph) // 2]
+-        print(f"{x['chunk']:6d} {x['layer']:6d} {ph[0]:10.3f} {md:10.3f} "
+-              f"{ph[-1]:12.1f} {ph[-1]/max(md,1e-9):10.0f}x")
++    if len(prompts) == 1:
++        print(f"{'chunk':>6} {'layer':>6} {'min':>10} {'median':>10} {'max':>12} "
++              f"{'max/med':>10}")
++        for x in res:
++            ph = sorted(h["mu_b"] for h in x["heads"])
++            md = ph[len(ph) // 2]
++            print(f"{x['chunk']:6d} {x['layer']:6d} {ph[0]:10.3f} {md:10.3f} "
++                  f"{ph[-1]:12.1f} {ph[-1]/max(md,1e-9):10.0f}x")
++    else:
++        # 프롬프트가 여럿이면 (chunk, layer)마다 프롬프트 간 변동을 함께 낸다.
++        # 프롬프트별 행을 그냥 나열하면 표가 10배로 늘고 군집 구조가 감춰진다.
++        print(f"{'chunk':>6} {'layer':>6} {'med(med)':>10} {'p간 min':>10} "
++              f"{'p간 max':>12} {'med(max/med)':>14}")
++        keys = sorted({(x["chunk"], x["layer"]) for x in res})
++        for c, l in keys:
++            meds, ratios = [], []
++            for x in res:
++                if (x["chunk"], x["layer"]) != (c, l):
++                    continue
++                ph = sorted(h["mu_b"] for h in x["heads"])
++                md = ph[len(ph) // 2]
++                meds.append(md)
++                ratios.append(ph[-1] / max(md, 1e-9))
++            meds.sort(); ratios.sort()
++            print(f"{c:6d} {l:6d} {meds[len(meds)//2]:10.3f} {meds[0]:10.3f} "
++                  f"{meds[-1]:12.3f} {ratios[len(ratios)//2]:13.0f}x")
+ 
+     # Session-7 C1: report per-observation agreement, not just the medians.
+     px = [r["pred_indep"] for r in rows]
+@@ -133,15 +157,50 @@ def main():
+     print(f"  Bland-Altman 한계    [{mr - 1.96 * sr:+.4f}, {mr + 1.96 * sr:+.4f}]")
+     print("  (중앙값 0.150/0.151의 근접은 주변분포 일치일 뿐 관측별 예측력의 근거가 아니다)")
+ 
+-    summary = {"row_matched": {"pearson_r": pearson, "resid_mean": mr,
++    # ---- 군집(프롬프트) 단위 통계 -------------------------------------------
++    # 행 1,080개는 독립이 아니다. 독립 단위는 프롬프트다(리뷰 P-1).
++    # 프롬프트마다 잔차 평균을 내고, 그 n=len(prompts)에 t 기반 CI를 준다.
++    cluster = None
++    if len(prompts) > 1:
++        import sys as _sys
++        _sys.path.insert(0, "/home/devel/gpu/Quantization/tools")
++        from s6stats import paired as _paired
++        per_p = []
++        for pid in prompts:
++            rr = [r["rel_spread"] - r["pred_indep"] for r in rows
++                  if r["prompt"] == pid]
++            per_p.append(sum(rr) / len(rr))
++        st = _paired(per_p, 0.95)
++        pear_p = []
++        for pid in prompts:
++            xs = [r["pred_indep"] for r in rows if r["prompt"] == pid]
++            ys = [r["rel_spread"] for r in rows if r["prompt"] == pid]
++            nn = len(xs); ax_ = sum(xs)/nn; ay_ = sum(ys)/nn
++            sxx = (sum((v-ax_)**2 for v in xs)/(nn-1))**0.5
++            syy = (sum((v-ay_)**2 for v in ys)/(nn-1))**0.5
++            cv = sum((u-ax_)*(v-ay_) for u, v in zip(xs, ys))/(nn-1)
++            pear_p.append(cv/(sxx*syy) if sxx and syy else float("nan"))
++        cluster = {"unit": "prompt", "n_clusters": len(prompts),
++                   "resid_mean_per_prompt": per_p,
++                   "resid_mean": st["mean"], "ci95": [st["lo"], st["hi"]],
++                   "t": st["t"], "pearson_per_prompt": pear_p}
++        print(f"\n군집 단위 = 프롬프트 (n={len(prompts)}):")
++        print(f"  잔차 평균  {st['mean']:+.4f}  95% CI "
++              f"[{st['lo']:+.4f}, {st['hi']:+.4f}]  t={st['t']:+.2f}")
++        print(f"  프롬프트별 Pearson r  min {min(pear_p):+.3f} / "
++              f"max {max(pear_p):+.3f}")
++        print("  (위 행 단위 n은 군집을 무시한 값이다. 결론은 이 줄로 낸다.)")
++
++    summary = {"n_prompts": len(prompts), "cluster": cluster,
++               "row_matched": {"pearson_r": pearson, "resid_mean": mr,
+                                "resid_sd": sr, "n": n},
+                "n_rows": len(rows),
+                "median": {k: pct(col(k), 0.5) for k in rows[0] if k not in
+-                          ("chunk", "layer", "head")},
++                          ("prompt", "chunk", "layer", "head")},
+                "p10": {k: pct(col(k), 0.1) for k in rows[0] if k not in
+-                       ("chunk", "layer", "head")},
++                       ("prompt", "chunk", "layer", "head")},
+                "p90": {k: pct(col(k), 0.9) for k in rows[0] if k not in
+-                       ("chunk", "layer", "head")},
++                       ("prompt", "chunk", "layer", "head")},
+                "per_row": rows}
+     if a.bias_scale_json and os.path.exists(a.bias_scale_json):
+         summary["in_flight"] = json.load(open(a.bias_scale_json))
+diff --git a/inference.py b/inference.py
+index 79df407..9ce4ade 100644
+--- a/inference.py
++++ b/inference.py
+@@ -128,6 +128,17 @@ parser.add_argument("--kv_grid_align", type=str, default="off",
+                     help="Gate K: 'segment' quantizes each chunk slot on its "
+                          "own block grid, so evictions move whole slots and "
+                          "re-quantization stays idempotent (no lineage error)")
++parser.add_argument("--attr_dump", type=str, default=None,
++                    help="L1 진단: 양자화 직전 BF16 캐시와 Q 를 이 디렉터리에 저장")
++parser.add_argument("--attr_points", type=str, default="6,15,0",
++                    help="캡처 지점 'chunk,layer,step' 을 ';' 로 구분")
++parser.add_argument("--kv_master_stats", type=str, default=None,
++                    help="master 모드 배선 검사 기록을 쓸 JSON 경로")
++parser.add_argument("--kv_storage", type=str, default="rolling",
++                    choices=["rolling", "master"],
++                    help="L1 저장 설계: 'rolling'=P1(복원값을 다시 양자화, BF16 "
++                         "미상주), 'master'=P4(원본 BF16을 남겨 그것에서 다시 "
++                         "양자화). 어텐션이 읽는 값은 둘 다 역양자화 결과다")
+ args = parser.parse_args()
+ 
+ # Initialize distributed inference
+@@ -236,6 +247,23 @@ if args.kv_eps_stats:
+     _cm5.EPS_STATS_CHUNKS = tuple(args.kv_eps_chunks)
+     print(f"[eps_stats] recording at chunks {args.kv_eps_chunks}")
+ 
++if args.attr_dump:
++    import wan.modules.causal_model as _cma
++    _cma.ATTR_DUMP = args.attr_dump
++    _cma.ATTR_DUMP_POINTS = tuple(
++        tuple(int(x) for x in grp.split(","))
++        for grp in args.attr_points.split(";") if grp.strip())
++    _cma.ATTR_SEED = args.seed
++    print(f"[attr_dump] {args.attr_dump} points={_cma.ATTR_DUMP_POINTS}")
++
++if args.kv_storage != "rolling":
++    import wan.modules.causal_model as _cm5
++    _cm5.KV_STORAGE = args.kv_storage
++    if os.environ.get("L1_MASTER_ASSERT") or args.kv_master_stats:
++        _cm5.KV_MASTER_ASSERT = True
++        _cm5.KV_MASTER_STATS = []
++        print("[kv_storage] master 배선 검사 ON")
++    print(f"[kv_storage] {args.kv_storage}")
+ if args.attn_backend != "auto":
+     import wan.modules.causal_model as _cm4
+     _cm4.ATTN_BACKEND = args.attn_backend
+@@ -314,6 +342,13 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+     import wan.modules.causal_model as _cm_reset
+     _cm_reset.SINK_TENSORS.clear()
+     _cm_reset.SINK_LAYER_COUNTER[0] = 0
++    # B3 FIX: the bias-dump dedup key must advance with the prompt. Keyed on
++    # (chunk, layer) only, prompts 1..9 were all skipped as "already seen".
++    _cm_reset.BIAS_DUMP_PROMPT[0] = i
++    _cm_reset._BIAS_DUMP_COUNTER[0] = 0
++    if _cm_reset.BIAS_DUMP is not None:
++        print(f"[bias_dump] prompt {i} start, records so far "
++              f"{len(_cm_reset.BIAS_DUMP)}", flush=True)
+     idx = batch_data['idx'].item()
+ 
+     # For DataLoader batch_size=1, the batch_data is already a single item, but in a batch container
+@@ -351,6 +386,18 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+             prompts = [prompt] * args.num_samples
+         initial_latent = None
+ 
++        # B1d: the released code draws the whole initial noise with one global
++        # torch.randn. Our per-chunk generators are a reproducibility choice,
++        # not an arithmetic change, but they DO change the trajectory -- so a
++        # comparison against the release has to suppress them too, not just
++        # base_seed. Default off.
++        if os.environ.get("S7_RELEASE_NOISE"):
++            sampled_noise = torch.randn(
++                [args.num_samples, args.num_output_frames, 16, 60, 104],
++                device=device, dtype=torch.bfloat16)
++            _release_noise = True
++        else:
++            _release_noise = False
+         # Per-chunk seeded noise: chunk c always gets the same noise regardless of
+         # what else consumed RNG, so quantized runs share BF16's trajectory.
+         num_frame_per_block = getattr(config, "num_frame_per_block", 1)
+@@ -363,7 +410,8 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+             noise_chunks.append(torch.randn(
+                 [args.num_samples, num_frame_per_block, 16, 60, 104],
+                 generator=g, device=device, dtype=torch.bfloat16))
+-        sampled_noise = torch.cat(noise_chunks, dim=1)
++        if not _release_noise:
++            sampled_noise = torch.cat(noise_chunks, dim=1)
+ 
+         if args.noise_perturb > 0:
+             pg = torch.Generator(device=device)
+@@ -387,7 +435,9 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+         return_latents=True,
+         initial_latent=initial_latent,
+         low_memory=low_memory,
+-        base_seed=args.seed,
++        # B1c: 릴리스 코드에는 base_seed 인자가 없다. 이 스위치로 억제해
++        # "우리/릴리스 차이가 시드 규약뿐인가"를 실행으로 가른다. 기본은 off.
++        base_seed=(None if os.environ.get("S7_SUPPRESS_BASE_SEED") else args.seed),
+         latent_dump_dir=latent_dump_dir,
+     )
+     torch.cuda.synchronize()
+@@ -440,6 +490,13 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+                 output_path = os.path.join(args.output_folder, f'{prompt[:100]}-{seed_idx}.mp4')
+             write_video(output_path, video[seed_idx], fps=16)
+ 
++if args.kv_master_stats and local_rank == 0:
++    import wan.modules.causal_model as _cmm
++    _st = _cmm.KV_MASTER_STATS or []
++    with open(args.kv_master_stats, "w") as f:
++        json.dump(_st, f)
++    print(f"[kv_storage] master 검사 {len(_st)}건 -> {args.kv_master_stats}")
++
+ if args.tum_mass_chunks and local_rank == 0:
+     import tum_correction as _tcm
+     if _tcm.TUM_MASS_LOG:
+@@ -537,6 +594,7 @@ if args.kv_bytes_report and local_rank == 0:
+         "kv_quant": args.kv_quant, "kv_bits": args.kv_bits,
+         "kv_key_bits": args.kv_key_bits, "kv_value_bits": args.kv_value_bits,
+         "kv_grid_align": args.kv_grid_align,
++        "kv_storage": args.kv_storage,
+         "tum_correct": bool(args.tum_correct), "tum_lambda": args.tum_lambda,
+         "fused_bias_lambda": args.fused_bias_lambda,
+         "config_path": args.config_path,
+diff --git a/pipeline/causal_inference.py b/pipeline/causal_inference.py
+index 00d389e..15d5665 100644
+--- a/pipeline/causal_inference.py
++++ b/pipeline/causal_inference.py
+@@ -147,6 +147,12 @@ class CausalInferencePipeline(torch.nn.Module):
+                 # prompt N-1's cache (same failure mode as the SINK_TENSORS leak
+                 # the audit found).
+                 self.kv_cache1[block_index].pop("fused", None)
++                # L1/P4: the BF16 master is new cache state, so it must be
++                # dropped here too. Leaving it would feed prompt N the master
++                # of prompt N-1 -- the same failure mode as the SINK_TENSORS
++                # leak and the fused-segment leak above.
++                self.kv_cache1[block_index].pop("k_master", None)
++                self.kv_cache1[block_index].pop("v_master", None)
+ 
+         # Step 2: Cache context feature
+         current_start_frame = 0
+diff --git a/results/attn_diag.json b/results/attn_diag.json
+new file mode 100644
+index 0000000..5c4735c
+--- /dev/null
++++ b/results/attn_diag.json
+@@ -0,0 +1,65 @@
++{
++ "note": "한 상태에서의 대응 확인. MUSIQ 영향의 상한이 아니다.",
++ "rows": [
++  {
++   "file": "p0_c20_l29_s0.pt",
++   "ident": {
++    "prompt": 0,
++    "seed": 0,
++    "chunk": 20,
++    "layer": 29,
++    "step": 0,
++    "call_site": "pre_quantize"
++   },
++   "tokens": 32760,
++   "cached_tokens": 28080,
++   "self_tokens": 4680,
++   "n_segs": 6,
++   "abs": {
++    "max": 0.0625,
++    "mean": 0.0003470400988589972,
++    "p99": 0.0078125
++   },
++   "rel_where_ref_gt_1e-6": {
++    "max": 284.3201599121094,
++    "p99": 0.012048192322254181,
++    "median": 0.0,
++    "frac_defined": 0.9911633133888245
++   },
++   "ref_scale": {
++    "mean_abs": 1.2353578805923462,
++    "max_abs": 9.3125
++   }
++  },
++  {
++   "file": "p0_c6_l15_s0.pt",
++   "ident": {
++    "prompt": 0,
++    "seed": 0,
++    "chunk": 6,
++    "layer": 15,
++    "step": 0,
++    "call_site": "pre_quantize"
++   },
++   "tokens": 32760,
++   "cached_tokens": 28080,
++   "self_tokens": 4680,
++   "n_segs": 6,
++   "abs": {
++    "max": 0.03125,
++    "mean": 0.00022671085025649518,
++    "p99": 0.00390625
++   },
++   "rel_where_ref_gt_1e-6": {
++    "max": 291.88134765625,
++    "p99": 0.023622047156095505,
++    "median": 0.0,
++    "frac_defined": 0.9999991655349731
++   },
++   "ref_scale": {
++    "mean_abs": 0.5063992738723755,
++    "max_abs": 6.5625
++   }
++  }
++ ]
++}
+\ No newline at end of file
+diff --git a/results/attn_diag_int4.json b/results/attn_diag_int4.json
+new file mode 100644
+index 0000000..a30e441
+--- /dev/null
++++ b/results/attn_diag_int4.json
+@@ -0,0 +1,65 @@
++{
++ "note": "한 상태에서의 대응 확인. MUSIQ 영향의 상한이 아니다.",
++ "rows": [
++  {
++   "file": "p0_c20_l29_s0.pt",
++   "ident": {
++    "prompt": 0,
++    "seed": 0,
++    "chunk": 20,
++    "layer": 29,
++    "step": 0,
++    "call_site": "pre_quantize"
++   },
++   "tokens": 32760,
++   "cached_tokens": 28080,
++   "self_tokens": 4680,
++   "n_segs": 6,
++   "abs": {
++    "max": 0.0625,
++    "mean": 0.00033724246895872056,
++    "p99": 0.0078125
++   },
++   "rel_where_ref_gt_1e-6": {
++    "max": 541.8450927734375,
++    "p99": 0.012048192322254181,
++    "median": 0.0,
++    "frac_defined": 0.9909233450889587
++   },
++   "ref_scale": {
++    "mean_abs": 1.218948245048523,
++    "max_abs": 9.3125
++   }
++  },
++  {
++   "file": "p0_c6_l15_s0.pt",
++   "ident": {
++    "prompt": 0,
++    "seed": 0,
++    "chunk": 6,
++    "layer": 15,
++    "step": 0,
++    "call_site": "pre_quantize"
++   },
++   "tokens": 32760,
++   "cached_tokens": 28080,
++   "self_tokens": 4680,
++   "n_segs": 6,
++   "abs": {
++    "max": 0.03125,
++    "mean": 0.0001876373717095703,
++    "p99": 0.00390625
++   },
++   "rel_where_ref_gt_1e-6": {
++    "max": 166.52610778808594,
++    "p99": 0.02185792289674282,
++    "median": 0.0,
++    "frac_defined": 0.9999984502792358
++   },
++   "ref_scale": {
++    "mean_abs": 0.44857096672058105,
++    "max_abs": 6.53125
++   }
++  }
++ ]
++}
+\ No newline at end of file
+diff --git a/results/attr_diag.json b/results/attr_diag.json
+new file mode 100644
+index 0000000..2161d1c
+--- /dev/null
++++ b/results/attr_diag.json
+@@ -0,0 +1,157 @@
++{
++ "note": "시험한 상태에서의 대응 확인이며 MUSIQ 영향의 상한이 아니다",
++ "rows": [
++  {
++   "file": "p0_c20_l29_s0.pt",
++   "ident": {
++    "prompt": 0,
++    "seed": 0,
++    "chunk": 20,
++    "layer": 29,
++    "step": 0,
++    "call_site": "pre_quantize",
++    "local_end_index": 32760,
++    "num_new_tokens": 4680,
++    "sink_tokens": 0,
++    "grid_align": "off",
++    "storage": "rolling"
++   },
++   "quantizer": {
++    "k": {
++     "tokens": 32760,
++     "pad_len": 8,
++     "bits": 2,
++     "codes": {
++      "max_abs": 0.0,
++      "mean_abs": 0.0,
++      "max_rel": 0.0,
++      "p99_rel": 0.0,
++      "n_mismatch": 0,
++      "n": 50319360
++     },
++     "scales": {
++      "max_abs": 0.0,
++      "mean_abs": 0.0,
++      "max_rel": 0.0,
++      "p99_rel": 0.0,
++      "n_mismatch": 0,
++      "n": 3145728
++     },
++     "recon": {
++      "max_abs": 0.0,
++      "mean_abs": 0.0,
++      "max_rel": 0.0,
++      "p99_rel": 0.0,
++      "n_mismatch": 0,
++      "n": 50319360
++     }
++    },
++    "v": {
++     "tokens": 32760,
++     "pad_len": 8,
++     "bits": 2,
++     "codes": {
++      "max_abs": 0.0,
++      "mean_abs": 0.0,
++      "max_rel": 0.0,
++      "p99_rel": 0.0,
++      "n_mismatch": 0,
++      "n": 50319360
++     },
++     "scales": {
++      "max_abs": 0.0,
++      "mean_abs": 0.0,
++      "max_rel": 0.0,
++      "p99_rel": 0.0,
++      "n_mismatch": 0,
++      "n": 3145728
++     },
++     "recon": {
++      "max_abs": 0.0,
++      "mean_abs": 0.0,
++      "max_rel": 0.0,
++      "p99_rel": 0.0,
++      "n_mismatch": 0,
++      "n": 50319360
++     }
++    }
++   }
++  },
++  {
++   "file": "p0_c6_l15_s0.pt",
++   "ident": {
++    "prompt": 0,
++    "seed": 0,
++    "chunk": 6,
++    "layer": 15,
++    "step": 0,
++    "call_site": "pre_quantize",
++    "local_end_index": 32760,
++    "num_new_tokens": 4680,
++    "sink_tokens": 0,
++    "grid_align": "off",
++    "storage": "rolling"
++   },
++   "quantizer": {
++    "k": {
++     "tokens": 32760,
++     "pad_len": 8,
++     "bits": 2,
++     "codes": {
++      "max_abs": 0.0,
++      "mean_abs": 0.0,
++      "max_rel": 0.0,
++      "p99_rel": 0.0,
++      "n_mismatch": 0,
++      "n": 50319360
++     },
++     "scales": {
++      "max_abs": 0.0,
++      "mean_abs": 0.0,
++      "max_rel": 0.0,
++      "p99_rel": 0.0,
++      "n_mismatch": 0,
++      "n": 3145728
++     },
++     "recon": {
++      "max_abs": 0.0,
++      "mean_abs": 0.0,
++      "max_rel": 0.0,
++      "p99_rel": 0.0,
++      "n_mismatch": 0,
++      "n": 50319360
++     }
++    },
++    "v": {
++     "tokens": 32760,
++     "pad_len": 8,
++     "bits": 2,
++     "codes": {
++      "max_abs": 0.0,
++      "mean_abs": 0.0,
++      "max_rel": 0.0,
++      "p99_rel": 0.0,
++      "n_mismatch": 0,
++      "n": 50319360
++     },
++     "scales": {
++      "max_abs": 0.0,
++      "mean_abs": 0.0,
++      "max_rel": 0.0,
++      "p99_rel": 0.0,
++      "n_mismatch": 0,
++      "n": 3145728
++     },
++     "recon": {
++      "max_abs": 0.0,
++      "mean_abs": 0.0,
++      "max_rel": 0.0,
++      "p99_rel": 0.0,
++      "n_mismatch": 0,
++      "n": 50319360
++     }
++    }
++   }
++  }
++ ]
++}
+\ No newline at end of file
+diff --git a/results/quant_sensitivity.json b/results/quant_sensitivity.json
+new file mode 100644
+index 0000000..daedbeb
+--- /dev/null
++++ b/results/quant_sensitivity.json
+@@ -0,0 +1,32 @@
++{
++ "point": "p0_c6_l15_s0.pt",
++ "ident": {
++  "prompt": 0,
++  "seed": 0,
++  "chunk": 6,
++  "layer": 15,
++  "step": 0,
++  "call_site": "pre_quantize"
++ },
++ "tokens": 2048,
++ "bits": 2,
++ "sigma": 0.05,
++ "rng_seed": 0,
++ "tensor": "src_k",
++ "n_codes": 3145728,
++ "n_scales": 196608,
++ "cases": {
++  "identical_input": {
++   "code_mismatch": 0,
++   "scale_mismatch": 0
++  },
++  "perturbed_input": {
++   "code_mismatch": 6,
++   "scale_mismatch": 190701
++  },
++  "shifted_grid_1token": {
++   "code_mismatch": 9088,
++   "n_compared": 3144192
++  }
++ }
++}
+\ No newline at end of file
+diff --git a/results/ulp_dist_int2.json b/results/ulp_dist_int2.json
+new file mode 100644
+index 0000000..8434206
+--- /dev/null
++++ b/results/ulp_dist_int2.json
+@@ -0,0 +1,71 @@
++{
++ "ulp_rule": "ulp(x)=2^(floor(log2|x|)-7); 기준값 0·서브노멀은 분포에서 제외하고 따로 셈",
++ "rows": [
++  {
++   "n_total": 7188480,
++   "n_ref_zero": 0,
++   "n_ref_zero_and_other_zero": 0,
++   "n_ref_subnormal": 0,
++   "n_in_distribution": 7188480,
++   "frac_exact_overall": 0.8804277181625366,
++   "frac_le_0_ulp": 0.8804277181625366,
++   "frac_le_1_ulp": 0.9853910207748413,
++   "frac_le_2_ulp": 0.9915371537208557,
++   "frac_le_4_ulp": 0.9953756332397461,
++   "frac_le_8_ulp": 0.9975553750991821,
++   "max_ulp": 982843.0,
++   "ref_abs_at_max_ulp": 5.73345459997654e-09,
++   "abs_diff_at_max_ulp": 2.8604496037587523e-05,
++   "n_gt_8_ulp": 17573,
++   "ref_abs_median_where_gt_8_ulp": 0.002349853515625,
++   "ref_abs_p90_where_gt_8_ulp": 0.0111083984375,
++   "ref_abs_median_all": 0.85546875,
++   "p99_ulp": 2.0,
++   "p999_ulp": 21.0,
++   "file": "p0_c20_l29_s0.pt",
++   "bits": 2,
++   "n_segs": 6,
++   "ident": {
++    "prompt": 0,
++    "seed": 0,
++    "chunk": 20,
++    "layer": 29,
++    "step": 0,
++    "call_site": "pre_quantize"
++   }
++  },
++  {
++   "n_total": 7188480,
++   "n_ref_zero": 0,
++   "n_ref_zero_and_other_zero": 0,
++   "n_ref_subnormal": 0,
++   "n_in_distribution": 7188480,
++   "frac_exact_overall": 0.8304847478866577,
++   "frac_le_0_ulp": 0.8304847478866577,
++   "frac_le_1_ulp": 0.9696903824806213,
++   "frac_le_2_ulp": 0.9823082089424133,
++   "frac_le_4_ulp": 0.9902792572975159,
++   "frac_le_8_ulp": 0.9948582649230957,
++   "max_ulp": 159999.0,
++   "ref_abs_at_max_ulp": 9.499490261077881e-07,
++   "abs_diff_at_max_ulp": 0.0005960427224636078,
++   "n_gt_8_ulp": 36961,
++   "ref_abs_median_where_gt_8_ulp": 0.002288818359375,
++   "ref_abs_p90_where_gt_8_ulp": 0.00775146484375,
++   "ref_abs_median_all": 0.375,
++   "p99_ulp": 4.0,
++   "p999_ulp": 43.5,
++   "file": "p0_c6_l15_s0.pt",
++   "bits": 2,
++   "n_segs": 6,
++   "ident": {
++    "prompt": 0,
++    "seed": 0,
++    "chunk": 6,
++    "layer": 15,
++    "step": 0,
++    "call_site": "pre_quantize"
++   }
++  }
++ ]
++}
+\ No newline at end of file
+diff --git a/results/ulp_dist_int4.json b/results/ulp_dist_int4.json
+new file mode 100644
+index 0000000..0b73093
+--- /dev/null
++++ b/results/ulp_dist_int4.json
+@@ -0,0 +1,71 @@
++{
++ "ulp_rule": "ulp(x)=2^(floor(log2|x|)-7); 기준값 0·서브노멀은 분포에서 제외하고 따로 셈",
++ "rows": [
++  {
++   "n_total": 7188480,
++   "n_ref_zero": 0,
++   "n_ref_zero_and_other_zero": 0,
++   "n_ref_subnormal": 0,
++   "n_in_distribution": 7188480,
++   "frac_exact_overall": 0.8812952041625977,
++   "frac_le_0_ulp": 0.8812952041625977,
++   "frac_le_1_ulp": 0.9854323863983154,
++   "frac_le_2_ulp": 0.9915385246276855,
++   "frac_le_4_ulp": 0.995352566242218,
++   "frac_le_8_ulp": 0.9975485801696777,
++   "max_ulp": 2228077.0,
++   "ref_abs_at_max_ulp": 8.556526154279709e-09,
++   "abs_diff_at_max_ulp": 0.00012969115050509572,
++   "n_gt_8_ulp": 17622,
++   "ref_abs_median_where_gt_8_ulp": 0.0023956298828125,
++   "ref_abs_p90_where_gt_8_ulp": 0.01116943359375,
++   "ref_abs_median_all": 0.84375,
++   "p99_ulp": 2.0,
++   "p999_ulp": 21.0,
++   "file": "p0_c20_l29_s0.pt",
++   "bits": 4,
++   "n_segs": 6,
++   "ident": {
++    "prompt": 0,
++    "seed": 0,
++    "chunk": 20,
++    "layer": 29,
++    "step": 0,
++    "call_site": "pre_quantize"
++   }
++  },
++  {
++   "n_total": 7188480,
++   "n_ref_zero": 0,
++   "n_ref_zero_and_other_zero": 0,
++   "n_ref_subnormal": 0,
++   "n_in_distribution": 7188480,
++   "frac_exact_overall": 0.8415488004684448,
++   "frac_le_0_ulp": 0.8415488004684448,
++   "frac_le_1_ulp": 0.9722376465797424,
++   "frac_le_2_ulp": 0.9837620258331299,
++   "frac_le_4_ulp": 0.9910711050033569,
++   "frac_le_8_ulp": 0.995286762714386,
++   "max_ulp": 333588.0,
++   "ref_abs_at_max_ulp": 1.0989606380462646e-07,
++   "abs_diff_at_max_ulp": 0.00015533901751041412,
++   "n_gt_8_ulp": 33881,
++   "ref_abs_median_where_gt_8_ulp": 0.0018768310546875,
++   "ref_abs_p90_where_gt_8_ulp": 0.006988525390625,
++   "ref_abs_median_all": 0.33984375,
++   "p99_ulp": 4.0,
++   "p999_ulp": 40.0,
++   "file": "p0_c6_l15_s0.pt",
++   "bits": 4,
++   "n_segs": 6,
++   "ident": {
++    "prompt": 0,
++    "seed": 0,
++    "chunk": 6,
++    "layer": 15,
++    "step": 0,
++    "call_site": "pre_quantize"
++   }
++  }
++ ]
++}
+\ No newline at end of file
+diff --git a/wan/modules/causal_model.py b/wan/modules/causal_model.py
+index b0c8a08..f1b954c 100644
+--- a/wan/modules/causal_model.py
++++ b/wan/modules/causal_model.py
+@@ -43,6 +43,29 @@ FUSED_BIAS_LAMBDA = 0.0  # >0: subtract the Taylor Jensen bias in-kernel
+ #               was first quantized on and re-quantization is exactly
+ #               idempotent. Same property the fused backend has by construction.
+ KV_GRID_ALIGN = "off"
++# L1 저장 설계 비교. "rolling" = P1(복원값을 다시 양자화, BF16 master 없음),
++# "master" = P4(LongLive식: 원본 BF16을 남겨 두고 **원본에서** 다시 양자화).
++# 어텐션이 읽는 값은 두 모드 모두 역양자화 결과다 — 바뀌는 것은 재양자화 **입력**과
++# BF16 상주 여부뿐이다.
++KV_STORAGE = "rolling"
++# ---- L1 귀속 진단용 캡처 -------------------------------------------------
++# 양자화 **직전**의 BF16 캐시와 Q 를 통째로 저장한다. 두 양자화기·두 attention
++# 경로에 **같은 입력**을 먹이기 위한 것이다.
++#
++# 식별자는 (chunk, layer) 로 부족하다 — 같은 chunk 에서 denoising step 마다
++# 다시 호출되므로, 그 둘만으로 중복 제거하면 세션 6 도구 버그 7 을 되풀이한다.
++# prompt · seed · chunk · step(호출 순번) · call_site · layer · K/V 를 모두 적는다.
++ATTR_DUMP = None            # 저장 경로 (None 이면 꺼짐)
++ATTR_DUMP_POINTS = ()       # ((chunk, layer, step), ...) 캡처할 지점
++ATTR_SEED = None
++_ATTR_CALLS = {}            # (prompt, chunk, layer) -> 지금까지의 호출 수
++_ATTR_LAYER_COUNTER = [0]   # 전용 레이어 카운터 (다른 소비자와 공유하지 않는다)
++_ATTR_SAVED = []
++# master 모드 배선 검사. 켜면 매 호출에서 방금 쓴 슬롯이 roped_key 와 비트 단위로
++# 같은지 확인한다 — master 가 역양자화 값에 오염되면 여기서 걸린다.
++# 검사만으로는 부족하다는 것이 세션 5의 교훈이라, 생성 경로에서 돌린다.
++KV_MASTER_ASSERT = False
++KV_MASTER_STATS = None
+ # Gate L: use the two-FA2-call scalar path instead of the explicit fp32 one.
+ TUM_SCALAR_FAST = False
+ 
+@@ -56,6 +79,10 @@ BIAS_DUMP_LAYERS = (0, 15, 29)
+ BIAS_DUMP_QSTRIDE = 512
+ _BIAS_DUMP_COUNTER = [0]
+ _BIAS_DUMP_SEEN = set()
++# B3: the dedup key must include the prompt. Keyed on (chunk, layer) alone it
++# recorded only the first prompt and silently skipped the other nine -- a
++# 10-prompt run produced the same 9 records as a 1-prompt run.
++BIAS_DUMP_PROMPT = [0]
+ 
+ 
+ # Addendum A'2(i): the mechanistic check that alignment does what it claims.
+@@ -494,6 +521,7 @@ class CausalWanSelfAttention(nn.Module):
+ 
+             current_end = current_start + roped_query.shape[1]
+             _audit_shift = 0
++            _evicted = _rolled = 0
+             sink_tokens = self.sink_size * frame_seqlen
+             # If we are using local attention and the current KV cache size is larger than the local attention size, we need to truncate the KV cache
+             kv_cache_size = cache_k.shape[1]
+@@ -506,6 +534,7 @@ class CausalWanSelfAttention(nn.Module):
+                 num_evicted_tokens = num_new_tokens + kv_cache["local_end_index"].item() - kv_cache_size
+                 num_rolled_tokens = kv_cache["local_end_index"].item() - num_evicted_tokens - sink_tokens
+                 _audit_shift = num_evicted_tokens // num_new_tokens
++                _evicted, _rolled = num_evicted_tokens, num_rolled_tokens
+                 cache_k[:, sink_tokens:sink_tokens + num_rolled_tokens] = \
+                     cache_k[:, sink_tokens + num_evicted_tokens:sink_tokens + num_evicted_tokens + num_rolled_tokens].clone()
+                 cache_v[:, sink_tokens:sink_tokens + num_rolled_tokens] = \
+@@ -522,6 +551,41 @@ class CausalWanSelfAttention(nn.Module):
+                 local_start_index = local_end_index - num_new_tokens
+                 cache_k[:, local_start_index:local_end_index] = roped_key
+                 cache_v[:, local_start_index:local_end_index] = v
++            # L1/P4: BF16 master 를 같은 방식으로 굴린다. 롤·삽입 인덱스는 위에서
++            # 계산된 것을 그대로 쓴다 — 로직을 복제하면 두 경로가 조용히 갈라진다.
++            _master = None
++            if KV_STORAGE == "master" and quantizer is not None:
++                _mk = kv_cache.get("k_master")
++                if not (isinstance(_mk, torch.Tensor) and _mk.shape == cache_k.shape):
++                    # 첫 호출: 아직 양자화 이력이 없으므로 현재 내용이 곧 원본이다.
++                    kv_cache["k_master"] = cache_k.clone()
++                    kv_cache["v_master"] = cache_v.clone()
++                else:
++                    _mk2, _mv2 = kv_cache["k_master"], kv_cache["v_master"]
++                    if _rolled > 0:
++                        _mk2[:, sink_tokens:sink_tokens + _rolled] = \
++                            _mk2[:, sink_tokens + _evicted:sink_tokens + _evicted + _rolled].clone()
++                        _mv2[:, sink_tokens:sink_tokens + _rolled] = \
++                            _mv2[:, sink_tokens + _evicted:sink_tokens + _evicted + _rolled].clone()
++                    _mk2[:, local_start_index:local_end_index] = roped_key
++                    _mv2[:, local_start_index:local_end_index] = v
++                _master = (kv_cache["k_master"], kv_cache["v_master"])
++                if KV_MASTER_ASSERT:
++                    _slot = _master[0][:, local_start_index:local_end_index]
++                    if not torch.equal(_slot, roped_key):
++                        raise AssertionError(
++                            "k_master 의 최신 슬롯이 roped_key 와 다르다 — "
++                            "master 가 오염됐다")
++                    if KV_MASTER_STATS is not None and local_end_index > num_new_tokens:
++                        # master(원본)와 cache_k(복원값)의 차이 = 누적 양자화 오차.
++                        # 0 이면 master 모드가 아무 일도 하지 않고 있다는 뜻이다.
++                        _n = local_end_index
++                        _d = (_master[0][:, :_n].float()
++                              - cache_k[:, :_n].float()).norm().item()
++                        KV_MASTER_STATS.append(
++                            {"tokens": int(_n),
++                             "master_minus_dequant_norm": _d})
++
+             # Only once the cache is full and actually evicting. Before that the
+             # sink is pinned in name only — A1 and A2 are bit-identical — so
+             # touching it earlier would conflate "chunk 0 was corrupted all
+@@ -536,6 +600,8 @@ class CausalWanSelfAttention(nn.Module):
+                 _lid = SINK_LAYER_COUNTER[0] % 30
+                 SINK_LAYER_COUNTER[0] += 1
+                 _apply_sink_mode(cache_k, cache_v, sink_tokens, _lid)
++                if _master is not None:
++                    _apply_sink_mode(_master[0], _master[1], sink_tokens, _lid)
+ 
+             if ATTN_MASS_HOOK is not None:
+                 _w0 = max(0, local_end_index - self.max_attention_size)
+@@ -587,12 +653,14 @@ class CausalWanSelfAttention(nn.Module):
+                 if BIAS_DUMP is not None:
+                     _lid = _BIAS_DUMP_COUNTER[0] % 30
+                     _BIAS_DUMP_COUNTER[0] += 1
+-                    _key = (int(current_start // num_new_tokens), int(_lid))
+-                    if (_key[0] in BIAS_DUMP_CHUNKS and _lid in BIAS_DUMP_LAYERS
++                    _key = (BIAS_DUMP_PROMPT[0],
++                            int(current_start // num_new_tokens), int(_lid))
++                    if (_key[1] in BIAS_DUMP_CHUNKS and _lid in BIAS_DUMP_LAYERS
+                             and _key not in _BIAS_DUMP_SEEN):
+                         _BIAS_DUMP_SEEN.add(_key)
+                         _dsw = _ds[:, _w:local_end_index]
+                         BIAS_DUMP.append({
++                            "prompt": int(BIAS_DUMP_PROMPT[0]),
+                             "chunk": int(current_start // num_new_tokens),
+                             "layer": int(_lid),
+                             "window_len": int(local_end_index - _w),
+@@ -631,11 +699,52 @@ class CausalWanSelfAttention(nn.Module):
+                 kv_cache["batch_size"] = int(cache_k.shape[0])
+                 kv_cache["num_heads"] = int(cache_k.shape[2])
+                 kv_cache["head_dim"] = int(cache_k.shape[3])
++                # P4: 재양자화 입력이 복원값이 아니라 보존된 원본 BF16 이다.
++                _sk, _sv = (_master if _master is not None else (cache_k, cache_v))
++                if ATTR_DUMP is not None:
++                    _alid = _ATTR_LAYER_COUNTER[0] % 30
++                    _ATTR_LAYER_COUNTER[0] += 1
++                    _ackey = (BIAS_DUMP_PROMPT[0],
++                              int(current_start // num_new_tokens), int(_alid))
++                    _astep = _ATTR_CALLS.get(_ackey, 0)
++                    _ATTR_CALLS[_ackey] = _astep + 1
++                    if (_ackey[1], _alid, _astep) in ATTR_DUMP_POINTS:
++                        import os as _os
++                        _n = int(local_end_index)
++                        _rec = {
++                            # ---- 식별자 (전부 적는다) ----
++                            "prompt": int(BIAS_DUMP_PROMPT[0]),
++                            "seed": ATTR_SEED,
++                            "chunk": _ackey[1],
++                            "layer": int(_alid),
++                            "step": int(_astep),
++                            "call_site": "pre_quantize",
++                            # ---- 형상·경계 ----
++                            "local_end_index": _n,
++                            "window_start": int(_w),
++                            "num_new_tokens": int(num_new_tokens),
++                            "sink_tokens": int(sink_tokens),
++                            "kv_cache_size": int(cache_k.shape[1]),
++                            "self_rel": [int(local_start_index - _w),
++                                         int(local_end_index - _w)],
++                            "grid_align": KV_GRID_ALIGN,
++                            "storage": KV_STORAGE,
++                            # ---- 실제 텐서 (양자화 입력 그대로) ----
++                            "src_k": _sk[:, :_n].detach().to("cpu").clone(),
++                            "src_v": _sv[:, :_n].detach().to("cpu").clone(),
++                            "q": roped_query.detach().to("cpu").clone(),
++                        }
++                        _f = f"{ATTR_DUMP}/p{_rec['prompt']}_c{_rec['chunk']}" \
++                             f"_l{_rec['layer']}_s{_rec['step']}.pt"
++                        _os.makedirs(ATTR_DUMP, exist_ok=True)
++                        torch.save(_rec, _f)
++                        _ATTR_SAVED.append(_f)
++                        print(f"[attr_dump] {_f}  tokens={_n}", flush=True)
+                 if KV_GRID_ALIGN == "segment":
+                     kv_cache["quant_state"] = _seg_quantize(
+-                        quantizer, cache_k, cache_v, num_new_tokens, v.dtype)
++                        quantizer, _sk, _sv, num_new_tokens, v.dtype)
+                 else:
+-                    kv_cache["quant_state"] = quantizer.quantize_kv(cache_k, cache_v, meta={"tensor_dtype": v.dtype})
++                    kv_cache["quant_state"] = quantizer.quantize_kv(_sk, _sv, meta={"tensor_dtype": v.dtype})
+                 if REQUANT_LOG is not None:
+                     _lid = _BIAS_DUMP_COUNTER[0] % 30
+                     _BIAS_DUMP_COUNTER[0] += 1
+@@ -694,6 +803,8 @@ class CausalWanSelfAttention(nn.Module):
+                         "tokens": int(_n),
+                     })
+                 # Drop persistent BF16 cache residency for quantized methods.
++                # P4 는 예외다 — master 를 남기는 것이 그 설계의 정의이고,
++                # 메모리 비용도 그래서 발생한다. 지우면 비교가 무의미해진다.
+                 kv_cache["k"] = cache_k.new_empty(0)
+                 kv_cache["v"] = cache_v.new_empty(0)
+ 
+-- 
+2.34.1
+

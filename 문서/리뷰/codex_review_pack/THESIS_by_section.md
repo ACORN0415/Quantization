@@ -1,0 +1,1 @@
+../../결과서/THESIS_by_section.md

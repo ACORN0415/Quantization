@@ -1,0 +1,431 @@
+{
+ "fig1": {
+  "int2": {
+   "alignment_only": {
+    "mean": 2.2821,
+    "lo": 0.23529999999999962,
+    "hi": 4.3289,
+    "t": 2.522,
+    "n": 10,
+    "sign": 8,
+    "src": "gateK_aligned.csv",
+    "label": "A1 INT2  align ON vs OFF"
+   },
+   "sink_only": {
+    "mean": -1.5425,
+    "lo": -3.1412,
+    "hi": 0.0562,
+    "t": -2.183,
+    "n": 10,
+    "sign": 8,
+    "src": "gateK3_interaction.csv",
+    "quantity": "simple: sink | align OFF"
+   },
+   "sum_predicted": {
+    "mean": 0.7396,
+    "lo": -2.7225,
+    "hi": 4.2018,
+    "t": 0.483,
+    "n": 10,
+    "sign": 7,
+    "src": "gateK3_interaction.csv",
+    "quantity": "sum of simple effects (if additive)"
+   },
+   "both": {
+    "mean": 9.9576,
+    "lo": 6.5415,
+    "hi": 13.3737,
+    "t": 6.594,
+    "n": 10,
+    "sign": 10,
+    "src": "gateK3_interaction.csv",
+    "quantity": "actual joint effect (ON,s3 - OFF,s0)"
+   },
+   "interaction": {
+    "mean": 9.218,
+    "lo": 5.8479,
+    "hi": 12.588,
+    "t": 6.188,
+    "n": 10,
+    "sign": 10,
+    "src": "gateK3_interaction.csv",
+    "quantity": "INTERACTION (align x sink)"
+   }
+  },
+  "int4": {
+   "alignment_only": {
+    "mean": 1.0809,
+    "lo": 0.5069,
+    "hi": 1.6549,
+    "t": 4.26,
+    "n": 10,
+    "sign": 9,
+    "src": "gateK_aligned.csv",
+    "label": "A1 INT4  align ON vs OFF"
+   },
+   "sink_only": {
+    "mean": 1.5229,
+    "lo": 0.8352,
+    "hi": 2.2107,
+    "t": 5.009,
+    "n": 10,
+    "sign": 10,
+    "src": "gateK3_interaction.csv",
+    "quantity": "simple: sink | align OFF"
+   },
+   "sum_predicted": {
+    "mean": 2.6038,
+    "lo": 1.5849,
+    "hi": 3.6228,
+    "t": 5.781,
+    "n": 10,
+    "sign": 9,
+    "src": "gateK3_interaction.csv",
+    "quantity": "sum of simple effects (if additive)"
+   },
+   "both": {
+    "mean": 2.1083,
+    "lo": 0.9824,
+    "hi": 3.2343,
+    "t": 4.236,
+    "n": 10,
+    "sign": 10,
+    "src": "gateK3_interaction.csv",
+    "quantity": "actual joint effect (ON,s3 - OFF,s0)"
+   },
+   "interaction": {
+    "mean": -0.4955,
+    "lo": -1.1225,
+    "hi": 0.1315,
+    "t": -1.788,
+    "n": 10,
+    "sign": 7,
+    "src": "gateK3_interaction.csv",
+    "quantity": "INTERACTION (align x sink)"
+   }
+  }
+ },
+ "fig2": {
+  "bits": 4,
+  "unit": "surviving-slot comparisons (K codes only)",
+  "axis": "no shift / shifted",
+  "align_off": {
+   "no_shift": 1350,
+   "shifted": 7560,
+   "no_shift_compared": 39690,
+   "shifted_compared": 7560,
+   "no_shift_rate": 0.034013605442176874,
+   "shifted_rate": 1.0,
+   "total": 8910,
+   "total_compared": 47250,
+   "src": "align_off.json"
+  },
+  "align_on": {
+   "no_shift": 0,
+   "shifted": 0,
+   "no_shift_compared": 39690,
+   "shifted_compared": 7560,
+   "no_shift_rate": 0.0,
+   "shifted_rate": 0.0,
+   "total": 0,
+   "total_compared": 47250,
+   "src": "align_on.json"
+  },
+  "a2_int2_sink_reference": {
+   "align_off": {
+    "sink_changed": 804,
+    "sink_compared": 9000,
+    "src": "a2_off.json"
+   },
+   "align_on": {
+    "sink_changed": 0,
+    "sink_compared": 9000,
+    "src": "a2_on.json"
+   }
+  },
+  "a2_note": "A2 는 INT2 실행이고 대상이 sink 슬롯 하나다. 비트폭이 다르므로 그림 2의 축에 올리지 않는다."
+ },
+ "fig3": {
+  "same_grid": {
+   "int4": 0.0,
+   "int2": 0.0
+  },
+  "shifted_grid": {
+   "int4": 0.054718710482120514,
+   "int2": 0.20082750916481018
+  },
+  "shift_mod_block": 8,
+  "src": "gateK1_bitdiff.json (gateK1_lineage.py)",
+  "layers": [
+   0,
+   15,
+   29
+  ],
+  "quantity": "relative L2 change of the reconstruction across re-quantization",
+  "zero_means": "idempotent (re-quantization did not change stored content)"
+ },
+ "fig4": {
+  "anchor_presence": {
+   "mean": 7.675492077782041,
+   "lo": 4.86330070346164,
+   "hi": 10.487683452102441,
+   "t": 6.174248858287801,
+   "n": 10,
+   "sign_pos": 10,
+   "per_prompt": [
+    1.78038624354771,
+    5.930059160505024,
+    6.038931982857839,
+    7.418646312895277,
+    13.046772638956703,
+    10.700902484712145,
+    4.911518641880583,
+    13.058442524501253,
+    10.312997273036416,
+    3.5562635149274513
+   ],
+   "src": "gateK0_anchor_control_per_prompt.json"
+  },
+  "anchor_budget_1to3": {
+   "mean": 3.5040341695149744,
+   "lo": 1.5072306445105037,
+   "hi": 5.500837694519445,
+   "t": 3.9696824931416663,
+   "n": 10,
+   "sign_pos": 9,
+   "per_prompt": [
+    -1.2584754398890894,
+    5.009693509056454,
+    1.6044600350516234,
+    3.875896635509669,
+    2.0082075936453663,
+    3.019366309756329,
+    9.293844041370207,
+    2.958580198742098,
+    5.675217219761436,
+    2.8535515921456494
+   ],
+   "src": "gateK0_anchor_control_per_prompt.json"
+  },
+  "adaptive_selection": {
+   "mean": 0.0,
+   "lo": 0.0,
+   "hi": 0.0,
+   "t": Infinity,
+   "n": 10,
+   "sign_pos": 0,
+   "per_prompt": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "src": "gateK0_anchor_control_per_prompt.json"
+  },
+  "total_oracle_vs_oldest": {
+   "mean": 11.179526247297016,
+   "lo": 7.594287177167977,
+   "hi": 14.764765317426054,
+   "t": 7.0538797784350065,
+   "n": 10,
+   "sign_pos": 10,
+   "per_prompt": [
+    0.5219108036586206,
+    10.939752669561479,
+    7.643392017909463,
+    11.294542948404946,
+    15.05498023260207,
+    13.720268794468474,
+    14.20536268325079,
+    16.01702272324335,
+    15.988214492797852,
+    6.409815107073101
+   ],
+   "src": "gateK0_anchor_control_per_prompt.json"
+  },
+  "order": [
+   "anchor_presence",
+   "anchor_budget_1to3",
+   "adaptive_selection"
+  ],
+  "adaptive_is_exact_zero": true
+ },
+ "fig6": {
+  "memory_bytes": {
+   "bf16": 6038323680,
+   "final": 1509857760,
+   "final_packed_segments": 646963200.0,
+   "final_bf16_pending": 862617600,
+   "residual": 276960
+  },
+  "peak_alloc_bytes": {
+   "bf16": 15326996480,
+   "final": 10814048256
+  },
+  "inference_s": {
+   "bf16": 465.6,
+   "final": 545.2
+  },
+  "provenance": {
+   "commit": "e107a361a4a8905a1d2039483b4b216fdef23a82",
+   "diff_sha256": "55426c6c178baa0d"
+  },
+  "src": [
+   "b2/final_perf.bytes.json",
+   "b2/bf16_perf.bytes.json",
+   "final_recipe_manifest.json"
+  ]
+ },
+ "fig5": {
+  "musiq": {
+   "0.5": {
+    "mean": 7.087746647426059,
+    "lo": 1.2568694983849173,
+    "hi": 12.9186237964672,
+    "t": 2.749774422808176,
+    "n": 10,
+    "sign_pos": 7
+   },
+   "1.0": {
+    "mean": 10.04414468946911,
+    "lo": 3.0960866799615463,
+    "hi": 16.992202698976676,
+    "t": 3.2701848232893305,
+    "n": 10,
+    "sign_pos": 8
+   },
+   "2.0": {
+    "mean": 9.329453958783828,
+    "lo": 5.430417679787226,
+    "hi": 13.22849023778043,
+    "t": 5.412796801114031,
+    "n": 10,
+    "sign_pos": 10
+   },
+   "4.0": {
+    "mean": 12.122400047665549,
+    "lo": 8.752430702057907,
+    "hi": 15.49236939327319,
+    "t": 8.137395710899227,
+    "n": 10,
+    "sign_pos": 10
+   },
+   "8.0": {
+    "mean": 11.158955583118253,
+    "lo": 7.454072280429306,
+    "hi": 14.863838885807201,
+    "t": 6.8135240006076545,
+    "n": 10,
+    "sign_pos": 10
+   }
+  },
+  "subject_consistency": {
+   "0.5": {
+    "mean": 0.07557712200758679,
+    "lo": 0.04376165999036004,
+    "hi": 0.10739258402481354,
+    "t": 5.373718219298181,
+    "n": 10,
+    "sign_pos": 10
+   },
+   "1.0": {
+    "mean": 0.073693530582222,
+    "lo": 0.0430044850053818,
+    "hi": 0.1043825761590622,
+    "t": 5.432112499073212,
+    "n": 10,
+    "sign_pos": 9
+   },
+   "2.0": {
+    "mean": -0.05413673506719211,
+    "lo": -0.1143547237965312,
+    "hi": 0.006081253662146978,
+    "t": -2.0337079598627676,
+    "n": 10,
+    "sign_pos": 2
+   },
+   "4.0": {
+    "mean": -0.16019054712134323,
+    "lo": -0.18002325455544094,
+    "hi": -0.14035783968724552,
+    "t": -18.27164520004176,
+    "n": 10,
+    "sign_pos": 0
+   },
+   "8.0": {
+    "mean": -0.15876991348266004,
+    "lo": -0.17823194423944852,
+    "hi": -0.13930788272587155,
+    "t": -18.4545231440068,
+    "n": 10,
+    "sign_pos": 0
+   }
+  },
+  "baseline_arm": "A1_int2 (무보정 INT2)",
+  "src": {
+   "musiq": "fig5_lambda_musiq_per_prompt.json (8팔 동시 평가)",
+   "subject_consistency": "vbench_lambda_per_prompt.json"
+  },
+  "note": "두 패널 모두 같은 비디오에서 나왔다. MUSIQ 는 λ 팔이 두 파일에 흩어져 있던 문제를 없애려고 한 번에 다시 평가한 것이다.",
+  "flat1": {
+   "musiq": {
+    "mean": 10.492502062661307,
+    "lo": 3.452581581795714,
+    "hi": 17.5324225435269,
+    "t": 3.3715847731269073,
+    "n": 10,
+    "sign_pos": 9
+   },
+   "subject_consistency": {
+    "mean": 0.07777693688629134,
+    "lo": 0.045047664664186166,
+    "hi": 0.11050620910839651,
+    "t": 5.375727687685758,
+    "n": 10,
+    "sign_pos": 9
+   }
+  },
+  "bf16_ref": {
+   "musiq": {
+    "mean": 29.22864990234375,
+    "lo": 24.39432394280298,
+    "hi": 34.06297586188452,
+    "t": 13.677149677226698,
+    "n": 10,
+    "sign_pos": 10
+   },
+   "subject_consistency": {
+    "mean": 0.2284330137209186,
+    "lo": 0.21567559435137612,
+    "hi": 0.24119043309046106,
+    "t": 40.505948989560984,
+    "n": 10,
+    "sign_pos": 10
+   }
+  },
+  "direct_lam0p5_minus_lam1": {
+   "musiq": {
+    "mean": -2.95639804204305,
+    "lo": -4.691663611466602,
+    "hi": -1.2211324726194983,
+    "t": -3.854071172101451,
+    "n": 10,
+    "sign_pos": 1
+   },
+   "subject_consistency": {
+    "mean": 0.0018835914253647833,
+    "lo": -0.005741013694765771,
+    "hi": 0.009508196545495336,
+    "t": 0.5588459687610089,
+    "n": 10,
+    "sign_pos": 5
+   }
+  }
+ }
+}

@@ -1,0 +1,1475 @@
+diff --git a/gateC2_summed.py b/gateC2_summed.py
+new file mode 100644
+index 0000000..83baef4
+--- /dev/null
++++ b/gateC2_summed.py
+@@ -0,0 +1,110 @@
++"""Session-7 C2 (합산) — 실제로 적용되는 보정량에서 Taylor가 충분한가.
++
++`gateC2_taylor.py`는 **채널별** a에서 Taylor 오차를 본다. 그러나 코드가 logit에
++더하는 양은 **128채널의 합**이다. 리뷰가 지적한 대로 둘은 다른 양이며, 합산하면
++채널별로는 작던 오차가 한쪽으로 쌓인다.
++
++  b_taylor = sum_c a_ic^2 / 6         (= (1/24d) sum_c q_c^2 Delta_ic^2)
++  b_exact  = sum_c log(sinh a_ic / a_ic)      a_ic = |q_c| Delta_ic / (2 sqrt d)
++
++기준은 **수치 안정형** log(sinh a/a)이고, 출하 급수의 오차는 세 번째 열로 따로 낸다.
++
++이 파일은 `gateC2_summed.json`을 만든 즉석 실행을 **복원**한 것이다. 원본이
++디스크에 없어 B7·B8 주장의 재현 경로가 없었다. 회귀: 1프롬프트 덤프에서 저장된
++JSON을 재현해야 한다(`--regress`).
++"""
++import argparse, json, math, os, sys
++
++import torch
++
++sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
++from gateC2_taylor import log_sinh_over_x, shipped_series, q
++
++
++def analyse(r, max_pairs=200_000, seed=0):
++    ds = r["delta_sq_blk"].double()          # [nb, H, D]
++    qs = r["q_sub"].double()                 # [nq, H, D]
++    D = ds.shape[-1]
++    nbc = (r["self_rel"][0] + 15) // 16
++    if nbc < 8:
++        return None
++    delta = ds[:nbc].clamp(min=0).sqrt()                     # [nbc, H, D]
++    # a[iq, ib, h, c]
++    aa = (qs.abs().unsqueeze(1) * delta.unsqueeze(0)) / (2.0 * math.sqrt(D))
++    aa = aa.reshape(-1, aa.shape[-1])                        # [pairs, D]
++    if aa.shape[0] > max_pairs:
++        g = torch.Generator().manual_seed(seed)
++        idx = torch.randperm(aa.shape[0], generator=g)[:max_pairs]
++        aa = aa[idx]
++    b_exact = log_sinh_over_x(aa).sum(-1)
++    b_taylor = (aa ** 2 / 6.0).sum(-1)
++    b_shipped = shipped_series(aa).sum(-1)
++    abs_err = (b_taylor - b_exact).abs()
++    ok = b_exact > 1e-6
++    rel = torch.zeros_like(b_exact)
++    rel[ok] = abs_err[ok] / b_exact[ok]
++    return {
++        "prompt": int(r.get("prompt", 0)),
++        "chunk": int(r["chunk"]), "layer": int(r["layer"]),
++        "b_exact_med": float(b_exact.median()),
++        "b_taylor_med": float(b_taylor.median()),
++        "rel_p50": q(rel[ok], (0.5,))["p50"] if ok.any() else float("nan"),
++        "rel_p95": q(rel[ok], (0.95,))["p95"] if ok.any() else float("nan"),
++        "rel_p99": q(rel[ok], (0.99,))["p99"] if ok.any() else float("nan"),
++        "rel_max": float(rel.max()),
++        "abs_p95": q(abs_err, (0.95,))["p95"],
++        "abs_max": float(abs_err.max()),
++        "shipped_max_abs": float((b_shipped - b_exact).abs().max()),
++    }
++
++
++def main():
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--dump", default="results/session6/l3_bias_dump.pt")
++    ap.add_argument("--out", default="results/session6/gateC2_summed")
++    ap.add_argument("--regress", default=None,
++                    help="이 JSON을 재현하는지 확인하고 종료")
++    a = ap.parse_args()
++
++    recs = torch.load(a.dump, map_location="cpu", weights_only=False)
++    rows = [x for x in (analyse(r) for r in recs) if x]
++    prompts = sorted({x["prompt"] for x in rows})
++    print(f"{len(recs)} records / {len(rows)} rows / prompts {prompts}")
++
++    if a.regress:
++        ref = json.load(open(a.regress))
++        keys = [k for k in ref[0]]
++        bad = 0
++        for x, y in zip(rows, ref):
++            for k in keys:
++                if abs(x[k] - y[k]) > 1e-9 * max(1.0, abs(y[k])):
++                    print(f"  차이 {k} chunk{x['chunk']} L{x['layer']}: "
++                          f"{x[k]!r} vs {y[k]!r}")
++                    bad += 1
++        print("재현 불일치" if bad else f"저장된 {len(ref)}행을 정확히 재현")
++        return
++
++    print(f"\n{'p':>2} {'chunk':>6} {'layer':>6} {'b_exact_med':>12} "
++          f"{'b_taylor_med':>13} {'rel_p95':>9} {'과대율(med)':>12}")
++    for x in rows:
++        over = x["b_taylor_med"] / max(x["b_exact_med"], 1e-12)
++        print(f"{x['prompt']:2d} {x['chunk']:6d} {x['layer']:6d} "
++              f"{x['b_exact_med']:12.4f} {x['b_taylor_med']:13.4f} "
++              f"{x['rel_p95']:9.4f} {over:11.2f}x")
++
++    if len(prompts) > 1:
++        print("\n(chunk, layer)별 프롬프트 간 변동 — 군집 단위는 프롬프트다")
++        print(f"{'chunk':>6} {'layer':>6} {'과대율 min':>11} {'med':>9} {'max':>9}")
++        for c, l in sorted({(x["chunk"], x["layer"]) for x in rows}):
++            o = sorted(x["b_taylor_med"] / max(x["b_exact_med"], 1e-12)
++                       for x in rows if (x["chunk"], x["layer"]) == (c, l))
++            print(f"{c:6d} {l:6d} {o[0]:10.2f}x {o[len(o)//2]:8.2f}x "
++                  f"{o[-1]:8.2f}x")
++
++    os.makedirs(os.path.dirname(a.out), exist_ok=True)
++    json.dump(rows, open(a.out + ".json", "w"), indent=1)
++    print(f"\nwrote {a.out}.json")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/gateC6_mass.py b/gateC6_mass.py
+new file mode 100644
+index 0000000..3e14d8e
+--- /dev/null
++++ b/gateC6_mass.py
+@@ -0,0 +1,162 @@
++# -*- coding: utf-8 -*-
++"""C6 — 보정이 캐시 attention mass 를 실제로 억제하는가 (주장 B10).
++
++B10: "정확형에서 층 29 outlier head 의 b 가 ~177 이므로, 캐시 logit 에서 그만큼을
++빼면 exp(-177)≈0 이 되어 그 head 의 캐시가 사실상 꺼진다." 지금까지 **수식에서
++유추**한 것이고 측정된 적이 없어 claim_table 에 '불가'로 남아 있었다.
++
++정확형은 생성으로 돌릴 수 없다(최소 30배 느려 실행 불가, S7_C1_exact_uniform_cost).
++그래서 **고정 logit 위의 반사실**로 답한다 — B10 은 즉각적인 softmax 효과에 대한
++주장이므로 이것이 오히려 정확한 검정이다.
++
++  보정 없음에서 캐시 mass c, self mass s=1-c 일 때, 캐시 logit 에서 상수 b 를 빼면
++      c'(b) = c e^{-b} / (s + c e^{-b})
++  (self 는 bias 0 이다 — TUM_EXCLUDE_SELF=True.)
++
++**공식을 먼저 정답이 알려진 경우로 검증한다**: b_taylor 를 넣어 나온 c' 가
++taylor 실행에서 **실제로 측정된** 캐시 mass 와 맞는지 본다. 맞으면 같은 공식에
++b_exact 를 넣은 값을 신뢰한다. 안 맞으면 반사실 자체를 쓰지 않는다.
++
++b 는 키마다 다르므로 대표값 두 개를 쓴다 — 중앙값과 p5(가장 덜 억제되는 키).
++살아남는 캐시 mass 는 b 가 작은 키가 지배하므로 p5 쪽이 보수적(억제에 불리)이다.
++"""
++import argparse, json, math, os, statistics as st, sys
++
++import torch
++
++sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
++from gateC2_taylor import log_sinh_over_x
++
++
++def head_bias(r, max_pairs=40_000, seed=0):
++    """레코드 하나에서 head 별 b 분포 요약 (taylor / exact)."""
++    ds = r["delta_sq_blk"].double()          # [nb, H, D]
++    qs = r["q_sub"].double()                 # [nq, H, D]
++    D = ds.shape[-1]
++    nbc = (r["self_rel"][0] + 15) // 16      # 캐시 블록 수
++    if nbc < 1:
++        return None
++    delta = ds[:nbc].clamp(min=0).sqrt()
++    out = {}
++    for h in range(ds.shape[1]):
++        # a[iq, ib, c]
++        aa = (qs[:, h].abs().unsqueeze(1) * delta[:, h].unsqueeze(0)) \
++             / (2.0 * math.sqrt(D))
++        aa = aa.reshape(-1, D)
++        if aa.shape[0] > max_pairs:
++            g = torch.Generator().manual_seed(seed)
++            aa = aa[torch.randperm(aa.shape[0], generator=g)[:max_pairs]]
++        bt = (aa ** 2 / 6.0).sum(-1)
++        be = log_sinh_over_x(aa).sum(-1)
++        sb_t, sb_e = bt.sort().values, be.sort().values
++        p5 = max(0, int(0.05 * len(sb_t)) - 1)
++        out[h] = {"b_taylor_med": float(sb_t[len(sb_t) // 2]),
++                  "b_taylor_p5": float(sb_t[p5]),
++                  "b_exact_med": float(sb_e[len(sb_e) // 2]),
++                  "b_exact_p5": float(sb_e[p5])}
++    return out
++
++
++def cf(c, b):
++    """상수 b 를 캐시 logit 에서 뺐을 때의 캐시 mass."""
++    if b > 700:            # exp 언더플로 방지. e^{-700} 이면 어차피 0 이다.
++        return 0.0
++    w = c * math.exp(-b)
++    return w / max(1.0 - c + w, 1e-300)
++
++
++def main():
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--lam0", required=True)
++    ap.add_argument("--taylor", required=True)
++    ap.add_argument("--dump", required=True)
++    ap.add_argument("--layers", type=int, nargs="*", default=[0, 15, 29])
++    ap.add_argument("--prompts", type=int, nargs="*", default=[0, 1, 2],
++                    help="mass 실행이 쓴 프롬프트 집합(prompts3 = prompts10 의 앞 3개)")
++    ap.add_argument("--out", default="results/session6/gateC6_mass")
++    a = ap.parse_args()
++
++    def mass(path):
++        recs = json.load(open(path))["records"]
++        agg = {}
++        for x in recs:
++            agg.setdefault((x["chunk"], x["layer"], x["head"]), []).append(x["cached"])
++        return {k: st.median(v) for k, v in agg.items()}
++
++    m0, mt = mass(a.lam0), mass(a.taylor)
++
++    recs = torch.load(a.dump, map_location="cpu", weights_only=False)
++    recs = [r for r in recs if int(r.get("prompt", 0)) in a.prompts
++            and int(r["layer"]) in a.layers]
++    bias = {}
++    for r in recs:
++        hb = head_bias(r)
++        if hb is None:
++            continue
++        for h, d in hb.items():
++            bias.setdefault((int(r["chunk"]), int(r["layer"]), h), []).append(d)
++    bias = {k: {kk: st.median([d[kk] for d in v]) for kk in v[0]}
++            for k, v in bias.items()}
++
++    rows = []
++    for k in sorted(bias):
++        if k not in m0 or k not in mt:
++            continue
++        c0 = m0[k]
++        b = bias[k]
++        rows.append({
++            "chunk": k[0], "layer": k[1], "head": k[2],
++            "cached_lam0": c0, "cached_taylor_measured": mt[k],
++            "cached_taylor_pred_med": cf(c0, b["b_taylor_med"]),
++            "cached_taylor_pred_p5": cf(c0, b["b_taylor_p5"]),
++            "cached_exact_pred_med": cf(c0, b["b_exact_med"]),
++            "cached_exact_pred_p5": cf(c0, b["b_exact_p5"]),
++            **b})
++
++    # ---- 검증: taylor 예측이 taylor 측정과 맞는가 --------------------------
++    err_med = [abs(r["cached_taylor_pred_med"] - r["cached_taylor_measured"])
++               for r in rows]
++    err_p5 = [abs(r["cached_taylor_pred_p5"] - r["cached_taylor_measured"])
++              for r in rows]
++    err_med.sort(); err_p5.sort()
++    def qq(v, p): return v[min(len(v) - 1, int(p * len(v)))]
++    print(f"검증 — taylor 반사실 vs taylor 실측 캐시 mass (n={len(rows)})")
++    print(f"  |차| 중앙 b 사용 : median {qq(err_med,.5):.4f}  p90 {qq(err_med,.9):.4f}")
++    print(f"  |차| p5 b 사용   : median {qq(err_p5,.5):.4f}  p90 {qq(err_p5,.9):.4f}")
++    valid = qq(err_med, .5) < 0.10 or qq(err_p5, .5) < 0.10
++    print("  → 반사실 공식 " + ("사용 가능" if valid else "**사용 불가**"))
++
++    print(f"\n{'chunk':>6}{'layer':>6}{'head':>5}"
++          f"{'b_exact(med)':>13}{'λ0 캐시':>9}{'taylor 실측':>12}"
++          f"{'정확형 예측':>12}")
++    for r in rows:
++        if r["layer"] != 29:
++            continue
++        print(f"{r['chunk']:6d}{r['layer']:6d}{r['head']:5d}"
++              f"{r['b_exact_med']:13.2f}{r['cached_lam0']:9.4f}"
++              f"{r['cached_taylor_measured']:12.4f}"
++              f"{r['cached_exact_pred_med']:12.4f}")
++
++    supp = [r for r in rows if r["cached_exact_pred_med"] < 0.01
++            and r["cached_lam0"] > 0.05]
++    print("\n판정 (정확형 반사실):")
++    if supp:
++        print(f"  **억제 관측됨** — {len(supp)}개 (chunk, layer, head)")
++        for r in supp[:10]:
++            print(f"    c{r['chunk']} L{r['layer']} h{r['head']}: "
++                  f"b_exact {r['b_exact_med']:.1f}, "
++                  f"{r['cached_lam0']:.4f} → {r['cached_exact_pred_med']:.2e}")
++    else:
++        print("  억제 없음 → B10 철회")
++
++    os.makedirs(os.path.dirname(a.out), exist_ok=True)
++    json.dump({"validation": {"abs_err_med_b": qq(err_med, .5),
++                              "abs_err_p5_b": qq(err_p5, .5),
++                              "usable": bool(valid)},
++               "n_suppressed": len(supp), "rows": rows},
++              open(a.out + ".json", "w"), indent=1, ensure_ascii=False)
++    print(f"\nwrote {a.out}.json")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/gateL3_concentration.py b/gateL3_concentration.py
+index 233eca4..565a93b 100644
+--- a/gateL3_concentration.py
++++ b/gateL3_concentration.py
+@@ -42,7 +42,8 @@ def analyse_record(r, device="cpu"):
+     H, D = X.shape[1], X.shape[2]
+     w = (q ** 2) / (24.0 * D)                      # [nq, H, D]
+ 
+-    out = {"chunk": r["chunk"], "layer": r["layer"], "n_cached_blocks": nb_cached,
++    out = {"prompt": int(r.get("prompt", 0)),
++           "chunk": r["chunk"], "layer": r["layer"], "n_cached_blocks": nb_cached,
+            "heads": []}
+     for h in range(H):
+         Xh = X[:, h]                               # [nbc, D]
+@@ -86,7 +87,8 @@ def main():
+     rows = []
+     for x in res:
+         for hi, h in enumerate(x["heads"]):
+-            rows.append({"chunk": x["chunk"], "layer": x["layer"], "head": hi, **h})
++            rows.append({"prompt": x["prompt"], "chunk": x["chunk"],
++                         "layer": x["layer"], "head": hi, **h})
+ 
+     def col(k):
+         return sorted(r[k] for r in rows)
+@@ -106,14 +108,36 @@ def main():
+         print(f"{k:22s} {pct(v,0.5):10.4f} {sum(v)/len(v):12.4f} "
+               f"{pct(v,0.1):10.4f} {pct(v,0.9):10.4f} {v[-1]:12.4f}")
+ 
++    prompts = sorted({x["prompt"] for x in res})
++    print(f"\n프롬프트 {len(prompts)}개: {prompts}")
++
+     print("\nper (chunk, layer): spread of the per-head mean bias")
+-    print(f"{'chunk':>6} {'layer':>6} {'min':>10} {'median':>10} {'max':>12} "
+-          f"{'max/med':>10}")
+-    for x in res:
+-        ph = sorted(h["mu_b"] for h in x["heads"])
+-        md = ph[len(ph) // 2]
+-        print(f"{x['chunk']:6d} {x['layer']:6d} {ph[0]:10.3f} {md:10.3f} "
+-              f"{ph[-1]:12.1f} {ph[-1]/max(md,1e-9):10.0f}x")
++    if len(prompts) == 1:
++        print(f"{'chunk':>6} {'layer':>6} {'min':>10} {'median':>10} {'max':>12} "
++              f"{'max/med':>10}")
++        for x in res:
++            ph = sorted(h["mu_b"] for h in x["heads"])
++            md = ph[len(ph) // 2]
++            print(f"{x['chunk']:6d} {x['layer']:6d} {ph[0]:10.3f} {md:10.3f} "
++                  f"{ph[-1]:12.1f} {ph[-1]/max(md,1e-9):10.0f}x")
++    else:
++        # 프롬프트가 여럿이면 (chunk, layer)마다 프롬프트 간 변동을 함께 낸다.
++        # 프롬프트별 행을 그냥 나열하면 표가 10배로 늘고 군집 구조가 감춰진다.
++        print(f"{'chunk':>6} {'layer':>6} {'med(med)':>10} {'p간 min':>10} "
++              f"{'p간 max':>12} {'med(max/med)':>14}")
++        keys = sorted({(x["chunk"], x["layer"]) for x in res})
++        for c, l in keys:
++            meds, ratios = [], []
++            for x in res:
++                if (x["chunk"], x["layer"]) != (c, l):
++                    continue
++                ph = sorted(h["mu_b"] for h in x["heads"])
++                md = ph[len(ph) // 2]
++                meds.append(md)
++                ratios.append(ph[-1] / max(md, 1e-9))
++            meds.sort(); ratios.sort()
++            print(f"{c:6d} {l:6d} {meds[len(meds)//2]:10.3f} {meds[0]:10.3f} "
++                  f"{meds[-1]:12.3f} {ratios[len(ratios)//2]:13.0f}x")
+ 
+     # Session-7 C1: report per-observation agreement, not just the medians.
+     px = [r["pred_indep"] for r in rows]
+@@ -133,15 +157,50 @@ def main():
+     print(f"  Bland-Altman 한계    [{mr - 1.96 * sr:+.4f}, {mr + 1.96 * sr:+.4f}]")
+     print("  (중앙값 0.150/0.151의 근접은 주변분포 일치일 뿐 관측별 예측력의 근거가 아니다)")
+ 
+-    summary = {"row_matched": {"pearson_r": pearson, "resid_mean": mr,
++    # ---- 군집(프롬프트) 단위 통계 -------------------------------------------
++    # 행 1,080개는 독립이 아니다. 독립 단위는 프롬프트다(리뷰 P-1).
++    # 프롬프트마다 잔차 평균을 내고, 그 n=len(prompts)에 t 기반 CI를 준다.
++    cluster = None
++    if len(prompts) > 1:
++        import sys as _sys
++        _sys.path.insert(0, "/home/devel/gpu/Quantization/tools")
++        from s6stats import paired as _paired
++        per_p = []
++        for pid in prompts:
++            rr = [r["rel_spread"] - r["pred_indep"] for r in rows
++                  if r["prompt"] == pid]
++            per_p.append(sum(rr) / len(rr))
++        st = _paired(per_p, 0.95)
++        pear_p = []
++        for pid in prompts:
++            xs = [r["pred_indep"] for r in rows if r["prompt"] == pid]
++            ys = [r["rel_spread"] for r in rows if r["prompt"] == pid]
++            nn = len(xs); ax_ = sum(xs)/nn; ay_ = sum(ys)/nn
++            sxx = (sum((v-ax_)**2 for v in xs)/(nn-1))**0.5
++            syy = (sum((v-ay_)**2 for v in ys)/(nn-1))**0.5
++            cv = sum((u-ax_)*(v-ay_) for u, v in zip(xs, ys))/(nn-1)
++            pear_p.append(cv/(sxx*syy) if sxx and syy else float("nan"))
++        cluster = {"unit": "prompt", "n_clusters": len(prompts),
++                   "resid_mean_per_prompt": per_p,
++                   "resid_mean": st["mean"], "ci95": [st["lo"], st["hi"]],
++                   "t": st["t"], "pearson_per_prompt": pear_p}
++        print(f"\n군집 단위 = 프롬프트 (n={len(prompts)}):")
++        print(f"  잔차 평균  {st['mean']:+.4f}  95% CI "
++              f"[{st['lo']:+.4f}, {st['hi']:+.4f}]  t={st['t']:+.2f}")
++        print(f"  프롬프트별 Pearson r  min {min(pear_p):+.3f} / "
++              f"max {max(pear_p):+.3f}")
++        print("  (위 행 단위 n은 군집을 무시한 값이다. 결론은 이 줄로 낸다.)")
++
++    summary = {"n_prompts": len(prompts), "cluster": cluster,
++               "row_matched": {"pearson_r": pearson, "resid_mean": mr,
+                                "resid_sd": sr, "n": n},
+                "n_rows": len(rows),
+                "median": {k: pct(col(k), 0.5) for k in rows[0] if k not in
+-                          ("chunk", "layer", "head")},
++                          ("prompt", "chunk", "layer", "head")},
+                "p10": {k: pct(col(k), 0.1) for k in rows[0] if k not in
+-                       ("chunk", "layer", "head")},
++                       ("prompt", "chunk", "layer", "head")},
+                "p90": {k: pct(col(k), 0.9) for k in rows[0] if k not in
+-                       ("chunk", "layer", "head")},
++                       ("prompt", "chunk", "layer", "head")},
+                "per_row": rows}
+     if a.bias_scale_json and os.path.exists(a.bias_scale_json):
+         summary["in_flight"] = json.load(open(a.bias_scale_json))
+diff --git a/inference.py b/inference.py
+index 79df407..b026dc4 100644
+--- a/inference.py
++++ b/inference.py
+@@ -128,6 +128,13 @@ parser.add_argument("--kv_grid_align", type=str, default="off",
+                     help="Gate K: 'segment' quantizes each chunk slot on its "
+                          "own block grid, so evictions move whole slots and "
+                          "re-quantization stays idempotent (no lineage error)")
++parser.add_argument("--kv_master_stats", type=str, default=None,
++                    help="master 모드 배선 검사 기록을 쓸 JSON 경로")
++parser.add_argument("--kv_storage", type=str, default="rolling",
++                    choices=["rolling", "master"],
++                    help="L1 저장 설계: 'rolling'=P1(복원값을 다시 양자화, BF16 "
++                         "미상주), 'master'=P4(원본 BF16을 남겨 그것에서 다시 "
++                         "양자화). 어텐션이 읽는 값은 둘 다 역양자화 결과다")
+ args = parser.parse_args()
+ 
+ # Initialize distributed inference
+@@ -236,6 +243,14 @@ if args.kv_eps_stats:
+     _cm5.EPS_STATS_CHUNKS = tuple(args.kv_eps_chunks)
+     print(f"[eps_stats] recording at chunks {args.kv_eps_chunks}")
+ 
++if args.kv_storage != "rolling":
++    import wan.modules.causal_model as _cm5
++    _cm5.KV_STORAGE = args.kv_storage
++    if os.environ.get("L1_MASTER_ASSERT") or args.kv_master_stats:
++        _cm5.KV_MASTER_ASSERT = True
++        _cm5.KV_MASTER_STATS = []
++        print("[kv_storage] master 배선 검사 ON")
++    print(f"[kv_storage] {args.kv_storage}")
+ if args.attn_backend != "auto":
+     import wan.modules.causal_model as _cm4
+     _cm4.ATTN_BACKEND = args.attn_backend
+@@ -314,6 +329,13 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+     import wan.modules.causal_model as _cm_reset
+     _cm_reset.SINK_TENSORS.clear()
+     _cm_reset.SINK_LAYER_COUNTER[0] = 0
++    # B3 FIX: the bias-dump dedup key must advance with the prompt. Keyed on
++    # (chunk, layer) only, prompts 1..9 were all skipped as "already seen".
++    _cm_reset.BIAS_DUMP_PROMPT[0] = i
++    _cm_reset._BIAS_DUMP_COUNTER[0] = 0
++    if _cm_reset.BIAS_DUMP is not None:
++        print(f"[bias_dump] prompt {i} start, records so far "
++              f"{len(_cm_reset.BIAS_DUMP)}", flush=True)
+     idx = batch_data['idx'].item()
+ 
+     # For DataLoader batch_size=1, the batch_data is already a single item, but in a batch container
+@@ -351,6 +373,18 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+             prompts = [prompt] * args.num_samples
+         initial_latent = None
+ 
++        # B1d: the released code draws the whole initial noise with one global
++        # torch.randn. Our per-chunk generators are a reproducibility choice,
++        # not an arithmetic change, but they DO change the trajectory -- so a
++        # comparison against the release has to suppress them too, not just
++        # base_seed. Default off.
++        if os.environ.get("S7_RELEASE_NOISE"):
++            sampled_noise = torch.randn(
++                [args.num_samples, args.num_output_frames, 16, 60, 104],
++                device=device, dtype=torch.bfloat16)
++            _release_noise = True
++        else:
++            _release_noise = False
+         # Per-chunk seeded noise: chunk c always gets the same noise regardless of
+         # what else consumed RNG, so quantized runs share BF16's trajectory.
+         num_frame_per_block = getattr(config, "num_frame_per_block", 1)
+@@ -363,7 +397,8 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+             noise_chunks.append(torch.randn(
+                 [args.num_samples, num_frame_per_block, 16, 60, 104],
+                 generator=g, device=device, dtype=torch.bfloat16))
+-        sampled_noise = torch.cat(noise_chunks, dim=1)
++        if not _release_noise:
++            sampled_noise = torch.cat(noise_chunks, dim=1)
+ 
+         if args.noise_perturb > 0:
+             pg = torch.Generator(device=device)
+@@ -387,7 +422,9 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+         return_latents=True,
+         initial_latent=initial_latent,
+         low_memory=low_memory,
+-        base_seed=args.seed,
++        # B1c: 릴리스 코드에는 base_seed 인자가 없다. 이 스위치로 억제해
++        # "우리/릴리스 차이가 시드 규약뿐인가"를 실행으로 가른다. 기본은 off.
++        base_seed=(None if os.environ.get("S7_SUPPRESS_BASE_SEED") else args.seed),
+         latent_dump_dir=latent_dump_dir,
+     )
+     torch.cuda.synchronize()
+@@ -440,6 +477,13 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
+                 output_path = os.path.join(args.output_folder, f'{prompt[:100]}-{seed_idx}.mp4')
+             write_video(output_path, video[seed_idx], fps=16)
+ 
++if args.kv_master_stats and local_rank == 0:
++    import wan.modules.causal_model as _cmm
++    _st = _cmm.KV_MASTER_STATS or []
++    with open(args.kv_master_stats, "w") as f:
++        json.dump(_st, f)
++    print(f"[kv_storage] master 검사 {len(_st)}건 -> {args.kv_master_stats}")
++
+ if args.tum_mass_chunks and local_rank == 0:
+     import tum_correction as _tcm
+     if _tcm.TUM_MASS_LOG:
+@@ -537,6 +581,7 @@ if args.kv_bytes_report and local_rank == 0:
+         "kv_quant": args.kv_quant, "kv_bits": args.kv_bits,
+         "kv_key_bits": args.kv_key_bits, "kv_value_bits": args.kv_value_bits,
+         "kv_grid_align": args.kv_grid_align,
++        "kv_storage": args.kv_storage,
+         "tum_correct": bool(args.tum_correct), "tum_lambda": args.tum_lambda,
+         "fused_bias_lambda": args.fused_bias_lambda,
+         "config_path": args.config_path,
+diff --git a/kernels/bench/b4_unified.py b/kernels/bench/b4_unified.py
+new file mode 100644
+index 0000000..b29daba
+--- /dev/null
++++ b/kernels/bench/b4_unified.py
+@@ -0,0 +1,67 @@
++"""Session-7 B4 — one harness for FA2 and fused v2, to end the +13.1% / +18.2% split.
++
++Two baselines were in circulation: the J0 micro-benchmark measured FA2 at
++6.913 ms, while the v2 sweep quoted "+13.1%" against something near 7.2 ms.
++Numbers taken from different harnesses cannot be divided by each other, so this
++measures every path in one process, one warm-up policy, one timing method.
++"""
++import json, os, sys, time
++import torch
++
++sys.path.insert(0, os.path.expanduser("~/gpu/Self-Forcing/kernels"))
++from triton_kv_quant import triton_quantize_kv
++from triton_fused_lowbit_attn import fused_lowbit_attention_v2
++import flash_attn
++
++B, H, D = 1, 12, 128
++CHUNK, WINDOW = 4680, 32760
++DEV = "cuda"
++WARM, ITER = 10, 30
++
++
++def timed(fn):
++    for _ in range(WARM):
++        fn()
++    torch.cuda.synchronize()
++    ev = [(torch.cuda.Event(True), torch.cuda.Event(True)) for _ in range(ITER)]
++    for a, b in ev:
++        a.record(); fn(); b.record()
++    torch.cuda.synchronize()
++    ms = sorted(a.elapsed_time(b) for a, b in ev)
++    return ms[len(ms) // 2]
++
++
++torch.manual_seed(0)
++q = torch.randn(B, CHUNK, H, D, device=DEV, dtype=torch.bfloat16)
++k = torch.randn(B, WINDOW, H, D, device=DEV, dtype=torch.bfloat16)
++v = torch.randn(B, WINDOW, H, D, device=DEV, dtype=torch.bfloat16)
++scale = 1.0 / D ** 0.5
++res = {}
++
++res["fa2_bf16"] = timed(lambda: flash_attn.flash_attn_func(q, k, v, softmax_scale=scale))
++
++for kb, vb, tag in ((4, 4, "int4"), (4, 2, "k4v2"), (2, 2, "int2")):
++    seg = WINDOW - CHUNK
++    pk, ks = triton_quantize_kv(k[:, :seg].contiguous(), kb)
++    pv, vs = triton_quantize_kv(v[:, :seg].contiguous(), vb)
++    sk, sv = k[:, seg:].contiguous(), v[:, seg:].contiguous()
++    nb = (CHUNK + 15) // 16
++    for lam, lt in ((0.0, ""), (1.0, "_bias")):
++        res[f"fused_{tag}{lt}"] = timed(
++            lambda kb=kb, vb=vb, lam=lam: fused_lowbit_attention_v2(
++                q, pk, ks, pv, vs, sk, sv, key_bits=kb, value_bits=vb,
++                bias_lambda=lam, seg_len=CHUNK, seg_nb=nb,
++                block_m=128, block_n=32, num_warps=4, num_stages=2))
++
++base = res["fa2_bf16"]
++print(f"{'path':22s} {'ms':>8s} {'vs FA2':>10s}")
++print("-" * 42)
++for kk, vv in res.items():
++    print(f"{kk:22s} {vv:8.3f} {100*vv/base-100:+9.1f}%")
++out = {"shapes": {"B": B, "H": H, "D": D, "chunk": CHUNK, "window": WINDOW},
++       "method": f"CUDA events, median of {ITER} after {WARM} warm-up, one process",
++       "commit": os.popen("git rev-parse HEAD").read().strip(),
++       "ms": res, "pct_vs_fa2": {k_: 100 * v_ / base - 100 for k_, v_ in res.items()}}
++json.dump(out, open(os.path.expanduser(
++    "~/gpu/Self-Forcing/results/session6/gateB4_kernel_unified.json"), "w"), indent=1)
++print("\nwrote results/session6/gateB4_kernel_unified.json")
+diff --git a/pipeline/causal_inference.py b/pipeline/causal_inference.py
+index 00d389e..15d5665 100644
+--- a/pipeline/causal_inference.py
++++ b/pipeline/causal_inference.py
+@@ -147,6 +147,12 @@ class CausalInferencePipeline(torch.nn.Module):
+                 # prompt N-1's cache (same failure mode as the SINK_TENSORS leak
+                 # the audit found).
+                 self.kv_cache1[block_index].pop("fused", None)
++                # L1/P4: the BF16 master is new cache state, so it must be
++                # dropped here too. Leaving it would feed prompt N the master
++                # of prompt N-1 -- the same failure mode as the SINK_TENSORS
++                # leak and the fused-segment leak above.
++                self.kv_cache1[block_index].pop("k_master", None)
++                self.kv_cache1[block_index].pop("v_master", None)
+ 
+         # Step 2: Cache context feature
+         current_start_frame = 0
+diff --git a/tools/b2_final_vs_bf16.py b/tools/b2_final_vs_bf16.py
+new file mode 100644
+index 0000000..148e868
+--- /dev/null
++++ b/tools/b2_final_vs_bf16.py
+@@ -0,0 +1,44 @@
++# -*- coding: utf-8 -*-
++"""B2 최종 경로 품질 대비: A4+K4V2+fused bias λ1  vs  릴리스 기본 BF16 (A1).
++
++두 팔은 **서로 다른 배치**에서 나왔다. 그 사실을 출력에 함께 적는다.
++프롬프트 단위 페어링(같은 프롬프트·같은 seed·같은 프레임 수), t 기반 CI.
++"""
++import json, sys, statistics as st
++sys.path.insert(0, "/home/devel/gpu/Quantization/tools")
++from s6stats import paired
++
++OURS = "results/session6/gateB2_final_musiq_per_prompt.json"
++BF16 = "results/session6/gateP0_musiq_per_prompt.json"
++
++def per_prompt(d, arm):
++    """청크 평균을 낸 프롬프트별 MUSIQ."""
++    chunks = d[arm]
++    n = len(chunks[next(iter(chunks))]["musiq"])
++    return [st.fmean(chunks[c]["musiq"][i] for c in chunks) for i in range(n)]
++
++a = per_prompt(json.load(open(OURS)), "final_quality")
++b = per_prompt(json.load(open(BF16)), "ours_bf16")
++assert len(a) == len(b) == 10, (len(a), len(b))
++
++diff = [x - y for x, y in zip(a, b)]
++r = paired(diff, 0.95)
++out = {
++    "arms": {
++        "ours_final": {"source": OURS, "config": "gateA_A4.yaml + fused K4V2 + in-kernel bias lambda=1",
++                       "batch": "run_s7_B234.sh", "mean_musiq": round(st.fmean(a), 4)},
++        "bf16": {"source": BF16, "config": "gateA_A1.yaml, no quantization (릴리스 기본 창)",
++                 "batch": "run_s7_B1_P0.sh", "mean_musiq": round(st.fmean(b), 4)},
++    },
++    "caveat": "두 팔은 같은 스크립트 실행이 아니다. 같은 커밋(e107a36)·같은 프롬프트·seed 0·63프레임이나, 배치가 다르다. 또한 캐시 구성이 A4 vs A1로 다르다 — 이것은 레시피의 일부이므로 의도된 비교이지만, '양자화만의 효과'가 아니다.",
++    "paired_diff_ours_minus_bf16": {
++        "mean": round(r["mean"], 4), "ci95": [round(r["lo"], 4), round(r["hi"], 4)],
++        "t": round(r["t"], 4), "n": r["n"],
++        "sign_agreeing": r["sign"],
++        "sign_positive": sum(d > 0 for d in diff),
++        "per_prompt": [round(d, 4) for d in diff],
++    },
++    "verdict": "차이 검출 안 됨 (CI가 0을 포함). 동등 아님 — TOST 미실시.",
++}
++json.dump(out, open("results/session6/gateB2_final_vs_bf16.json", "w"), indent=1, ensure_ascii=False)
++print(json.dumps(out, indent=1, ensure_ascii=False))
+diff --git a/tools/check_figures.py b/tools/check_figures.py
+new file mode 100644
+index 0000000..7be737a
+--- /dev/null
++++ b/tools/check_figures.py
+@@ -0,0 +1,60 @@
++# -*- coding: utf-8 -*-
++"""확인 절차 1 — figure_data.json 의 값을 claim_table 의 수치와 대조한다.
++
++claim_table 이 정본이다. 어긋나면 그림이 틀린 것이다.
++기대값은 claim_table 본문에서 사람이 옮긴 것이므로, 이 파일 자체가
++"손으로 옮긴 수치"다 — 그래서 **대조 전용**이고 그림 생성에는 쓰지 않는다.
++"""
++import json, os, sys
++
++D = json.load(open(os.path.expanduser("~/gpu/Self-Forcing/figs/figure_data.json")))
++
++CHECKS = [
++    # (설명, 실제값, 기대값, 허용오차)
++    ("Q1 정렬 A1 INT2 평균", D["fig1"]["int2"]["alignment_only"]["mean"], 2.28, 0.005),
++    ("Q1 정렬 A1 INT2 lo",   D["fig1"]["int2"]["alignment_only"]["lo"], 0.235, 0.005),
++    ("Q1 정렬 A1 INT2 hi",   D["fig1"]["int2"]["alignment_only"]["hi"], 4.329, 0.005),
++    ("Q3 sink|OFF INT2",     D["fig1"]["int2"]["sink_only"]["mean"], -1.54, 0.005),
++    ("Q5 상호작용 INT2",      D["fig1"]["int2"]["interaction"]["mean"], 9.22, 0.005),
++    ("Q5 상호작용 INT2 lo",   D["fig1"]["int2"]["interaction"]["lo"], 5.85, 0.005),
++    ("Q5 상호작용 INT2 hi",   D["fig1"]["int2"]["interaction"]["hi"], 12.59, 0.005),
++    ("Q6 상호작용 INT4",      D["fig1"]["int4"]["interaction"]["mean"], -0.50, 0.005),
++    ("가산 예측 INT2",         D["fig1"]["int2"]["sum_predicted"]["mean"], 0.74, 0.005),
++    ("실제 결합 INT2",         D["fig1"]["int2"]["both"]["mean"], 9.96, 0.005),
++    ("G3 정렬 ON 재양자화",    D["fig2"]["align_on"]["total"], 0, 0),
++    ("G3 비교 총수",           D["fig2"]["align_off"]["total_compared"], 47250, 0),
++    ("OFF 이동없음 검출",       D["fig2"]["align_off"]["no_shift"], 1350, 0),
++    ("OFF 이동없음 비교",       D["fig2"]["align_off"]["no_shift_compared"], 39690, 0),
++    ("OFF 이동있음 검출",       D["fig2"]["align_off"]["shifted"], 7560, 0),
++    ("OFF 이동있음 비교",       D["fig2"]["align_off"]["shifted_compared"], 7560, 0),
++    ("OFF 이동있음 비율",       D["fig2"]["align_off"]["shifted_rate"], 1.0, 0),
++    ("A2 sink 변화(INT2)",    D["fig2"]["a2_int2_sink_reference"]["align_off"]["sink_changed"], 804, 0),
++    ("A2 sink 비교(INT2)",    D["fig2"]["a2_int2_sink_reference"]["align_off"]["sink_compared"], 9000, 0),
++    ("G1 같은격자 INT2",       D["fig3"]["same_grid"]["int2"], 0.0, 0),
++    ("G2 밀린격자 INT2",       D["fig3"]["shifted_grid"]["int2"], 0.201, 0.0005),
++    ("G2 밀린격자 INT4",       D["fig3"]["shifted_grid"]["int4"], 0.0547, 0.0005),
++    ("Q8 앵커 존재",           D["fig4"]["anchor_presence"]["mean"], 7.68, 0.005),
++    ("Q8 예산 1→3",           D["fig4"]["anchor_budget_1to3"]["mean"], 3.50, 0.005),
++    ("Q7 적응 선택",           D["fig4"]["adaptive_selection"]["mean"], 0.00, 0),
++    ("M1 λ4 subj",           D["fig5"]["subject_consistency"]["4.0"]["mean"], -0.1602, 0.0005),
++    ("M2 λ0.5−λ1 subj lo",   D["fig5"]["direct_lam0p5_minus_lam1"]["subject_consistency"]["lo"], -0.0057, 0.0005),
++    ("M2 λ0.5−λ1 subj hi",   D["fig5"]["direct_lam0p5_minus_lam1"]["subject_consistency"]["hi"], 0.0095, 0.0005),
++    ("B1 보정 회복 λ1 MUSIQ", D["fig5"]["musiq"]["1.0"]["mean"], 10.04, 0.01),
++    ("B1 회복 lo",            D["fig5"]["musiq"]["1.0"]["lo"], 3.09, 0.01),
++    ("B1 회복 hi",            D["fig5"]["musiq"]["1.0"]["hi"], 16.99, 0.01),
++    ("S1 BF16 상주 GB",       D["fig6"]["memory_bytes"]["bf16"] / 1e9, 6.038, 0.001),
++    ("S1 최종 상주 GB",        D["fig6"]["memory_bytes"]["final"] / 1e9, 1.510, 0.001),
++    ("S3 pending 비율",        D["fig6"]["memory_bytes"]["final_bf16_pending"]
++                              / D["fig6"]["memory_bytes"]["final"], 0.571, 0.005),
++    ("S2 BF16 s",             D["fig6"]["inference_s"]["bf16"], 465.6, 0.05),
++    ("S2 최종 s",              D["fig6"]["inference_s"]["final"], 545.2, 0.05),
++]
++
++bad = 0
++for name, got, exp, tol in CHECKS:
++    ok = abs(got - exp) <= tol
++    if not ok:
++        bad += 1
++    print(f"  {'OK ' if ok else 'FAIL'} {name:24s} 값 {got!r:>24}  기대 {exp}")
++print(f"\n{len(CHECKS) - bad}/{len(CHECKS)} 일치" + ("" if not bad else "  ← 불일치 있음"))
++sys.exit(1 if bad else 0)
+diff --git a/tools/figure_data.py b/tools/figure_data.py
+new file mode 100644
+index 0000000..83cb182
+--- /dev/null
++++ b/tools/figure_data.py
+@@ -0,0 +1,196 @@
++# -*- coding: utf-8 -*-
++"""그림 수치를 **원자료에서만** 읽는다. 스크립트에 손으로 적지 않는다.
++
++본문 표를 CSV 에서 생성하는 것과 같은 이유다 — 손으로 옮기는 순간 정정이
++문서와 그림에서 따로 살아남는다(세션 6·7에서 실제로 그랬다).
++"""
++import csv, json, os, statistics as st, sys
++
++R = os.path.expanduser("~/gpu/Self-Forcing/results")
++S6 = f"{R}/session6"
++sys.path.insert(0, "/home/devel/gpu/Quantization/tools")
++from s6stats import paired
++
++
++def _rows(path):
++    with open(path) as f:
++        return list(csv.DictReader(f))
++
++
++def _k3(bits, quantity):
++    for r in _rows(f"{S6}/gateK3_interaction.csv"):
++        if r["bits"] == bits and r["quantity"] == quantity:
++            return {"mean": float(r["mean"]), "lo": float(r["lo"]),
++                    "hi": float(r["hi"]), "t": float(r["t"]),
++                    "n": int(r["n"]), "sign": int(r["sign"]),
++                    "src": "gateK3_interaction.csv", "quantity": quantity}
++    raise KeyError((bits, quantity))
++
++
++def _ka(label):
++    for r in _rows(f"{S6}/gateK_aligned.csv"):
++        if r["label"] == label:
++            m, ci = float(r["mean_delta"]), float(r["mean_ci95"])
++            return {"mean": m, "lo": m - ci, "hi": m + ci,
++                    "t": float(r["mean_t"]), "n": int(r["n"]),
++                    "sign": int(r["mean_sign"]),
++                    "src": "gateK_aligned.csv", "label": label}
++    raise KeyError(label)
++
++
++def _per_prompt(path, arm, key="musiq"):
++    ch = json.load(open(path))[arm]
++    n = len(ch[next(iter(ch))][key])
++    return [st.fmean(ch[c][key][i] for c in ch) for i in range(n)]
++
++
++def _contrast(a, b, src):
++    d = [x - y for x, y in zip(a, b)]
++    r = paired(d, 0.95)
++    return {"mean": r["mean"], "lo": r["lo"], "hi": r["hi"], "t": r["t"],
++            "n": r["n"], "sign_pos": sum(1 for v in d if v > 0),
++            "per_prompt": d, "src": src}
++
++
++# ---------------------------------------------------------------- 그림 1
++def fig1():
++    out = {"int2": {}, "int4": {}}
++    out["int2"]["alignment_only"] = _ka("A1 INT2  align ON vs OFF")
++    out["int2"]["sink_only"] = _k3("int2", "simple: sink | align OFF")
++    out["int2"]["sum_predicted"] = _k3("int2", "sum of simple effects (if additive)")
++    out["int2"]["both"] = _k3("int2", "actual joint effect (ON,s3 - OFF,s0)")
++    out["int2"]["interaction"] = _k3("int2", "INTERACTION (align x sink)")
++    out["int4"]["alignment_only"] = _ka("A1 INT4  align ON vs OFF")
++    out["int4"]["sink_only"] = _k3("int4", "simple: sink | align OFF")
++    out["int4"]["sum_predicted"] = _k3("int4", "sum of simple effects (if additive)")
++    out["int4"]["both"] = _k3("int4", "actual joint effect (ON,s3 - OFF,s0)")
++    out["int4"]["interaction"] = _k3("int4", "INTERACTION (align x sink)")
++    # 일관성 검사: 단순효과의 합이 실제로 합인가
++    for b in ("int2", "int4"):
++        s = out[b]["alignment_only"]["mean"] + out[b]["sink_only"]["mean"]
++        assert abs(s - out[b]["sum_predicted"]["mean"]) < 5e-4, (b, s)
++    return out
++
++
++# ---------------------------------------------------------------- 그림 2
++def fig2():
++    """A1 **INT4** 생성 실행 중 audit. 단위는 **생존 슬롯 비교**이고 비교 대상은
++    **K 코드만**이다(`_requant_audit` 는 state["k"]["q"] 만 본다).
++    x 축은 시간상의 퇴출 전/후가 아니라 그 비교에서 내용이 **이동했는가**다
++    (`shifted` 필드). A2 는 **INT2** 실행이라 같은 축에 올리지 않는다."""
++    out = {"bits": 4, "unit": "surviving-slot comparisons (K codes only)",
++           "axis": "no shift / shifted"}
++    for tag, path in (("align_off", f"{S6}/requant/align_off.json"),
++                      ("align_on", f"{S6}/requant/align_on.json")):
++        d = json.load(open(path))
++        rec = d["records"]
++        ns = sum(x["slots_requantized"] for x in rec if x["shifted"] == 0)
++        sh = sum(x["slots_requantized"] for x in rec if x["shifted"] > 0)
++        cns = sum(x["slots_compared"] for x in rec if x["shifted"] == 0)
++        csh = sum(x["slots_compared"] for x in rec if x["shifted"] > 0)
++        out[tag] = {"no_shift": ns, "shifted": sh,
++                    "no_shift_compared": cns, "shifted_compared": csh,
++                    "no_shift_rate": ns / cns, "shifted_rate": sh / csh if csh else 0.0,
++                    "total": d["total_slots_requantized"],
++                    "total_compared": d["total_slot_comparisons"],
++                    "src": os.path.basename(path)}
++        assert ns + sh == d["total_slots_requantized"]
++        assert cns + csh == d["total_slot_comparisons"]
++    # A2(INT2)는 참고용으로만 담는다 — 그림에 같은 축으로 올리지 않는다
++    a2 = {}
++    for tag, path in (("align_off", f"{S6}/requant_a2/a2_off.json"),
++                      ("align_on", f"{S6}/requant_a2/a2_on.json")):
++        d = json.load(open(path))
++        rec = d["records"]
++        a2[tag] = {"sink_changed": sum(1 for x in rec
++                                       for i in x.get("changed_slots", []) if i == 0),
++                   "sink_compared": sum(1 for x in rec if x["slots_compared"] >= 1),
++                   "src": os.path.basename(path)}
++    out["a2_int2_sink_reference"] = a2
++    out["a2_note"] = ("A2 는 INT2 실행이고 대상이 sink 슬롯 하나다. "
++                      "비트폭이 다르므로 그림 2의 축에 올리지 않는다.")
++    return out
++
++
++# ---------------------------------------------------------------- 그림 3
++def fig3():
++    """`gateK1_lineage.py` 의 멱등 probe. 재는 양은 **재양자화 전후 복원값의 상대
++    L2 차이**이지 최초 BF16 원본 대비 오차가 아니다 —
++    `same_grid = rel(d2, d1)` 에서 d1 은 1차 복원, d2 는 그것을 다시 양자화·복원한
++    값이다. 따라서 0 의 뜻은 "원본 오차 없음"이 아니라 **"재양자화가 저장 내용을
++    바꾸지 않았다(멱등)"**이다."""
++    d = json.load(open(f"{S6}/gateK1_bitdiff.json"))
++    out = {"same_grid": {}, "shifted_grid": {}, "shift_mod_block": d["shift_mod_block"],
++           "src": "gateK1_bitdiff.json (gateK1_lineage.py)", "layers": d["layers"],
++           "quantity": "relative L2 change of the reconstruction across re-quantization",
++           "zero_means": "idempotent (re-quantization did not change stored content)"}
++    for bits in d["bits"]:
++        runs = [r for r in d["runs"] if r["bits"] == bits]
++        out["same_grid"][f"int{bits}"] = max(r["same_grid_idempotence"] for r in runs)
++        out["shifted_grid"][f"int{bits}"] = max(r["shifted_grid_idempotence"] for r in runs)
++    return out
++
++
++# ---------------------------------------------------------------- 그림 4
++def fig4():
++    P = f"{S6}/gateK0_anchor_control_per_prompt.json"
++    oldest = _per_prompt(P, "k0_oldest")
++    fixed0 = _per_prompt(P, "k0_fixed0")
++    fixed012 = _per_prompt(P, "k0_fixed012")
++    oracle3 = _per_prompt(P, "k0_oracle3")
++    src = "gateK0_anchor_control_per_prompt.json"
++    out = {
++        "anchor_presence": _contrast(fixed0, oldest, src),
++        "anchor_budget_1to3": _contrast(fixed012, fixed0, src),
++        "adaptive_selection": _contrast(oracle3, fixed012, src),
++        "total_oracle_vs_oldest": _contrast(oracle3, oldest, src),
++        "order": ["anchor_presence", "anchor_budget_1to3", "adaptive_selection"],
++    }
++    # 적응 선택은 '구간'이 아니라 '선택이 동일했다'는 관측이다 — CI 를 그리지 않는다.
++    ad = out["adaptive_selection"]
++    out["adaptive_is_exact_zero"] = all(abs(v) == 0.0 for v in ad["per_prompt"])
++    return out
++
++
++# ---------------------------------------------------------------- 그림 6
++def fig6():
++    fin = json.load(open(f"{S6}/b2/final_perf.bytes.json"))
++    bf = json.load(open(f"{S6}/b2/bf16_perf.bytes.json"))
++    man = json.load(open(f"{S6}/final_recipe_manifest.json"))
++    dec = man["compression"]["decomposition_bytes"]
++    return {
++        "memory_bytes": {"bf16": bf["kv_resident_bytes"],
++                         "final": fin["kv_resident_bytes"],
++                         "final_packed_segments": dec["packed_segments"],
++                         "final_bf16_pending": dec["bf16_pending_chunk"],
++                         "residual": dec["residual"]},
++        "peak_alloc_bytes": {"bf16": bf["peak_allocated_bytes"],
++                             "final": fin["peak_allocated_bytes"]},
++        "inference_s": {"bf16": man["latency"]["inference_s"]["bf16"],
++                        "final": man["latency"]["inference_s"]["final"]},
++        "provenance": {"commit": fin["commit"], "diff_sha256": fin["diff_sha256"]},
++        "src": ["b2/final_perf.bytes.json", "b2/bf16_perf.bytes.json",
++                "final_recipe_manifest.json"],
++    }
++
++
++def collect(with_fig5=True):
++    data = {"fig1": fig1(), "fig2": fig2(), "fig3": fig3(),
++            "fig4": fig4(), "fig6": fig6()}
++    if with_fig5:
++        from figure_data_fig5 import fig5
++        data["fig5"] = fig5()
++    return data
++
++
++if __name__ == "__main__":
++    import argparse
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--no_fig5", action="store_true")
++    ap.add_argument("--out", default="figs/figure_data.json")
++    a = ap.parse_args()
++    d = collect(not a.no_fig5)
++    os.makedirs(os.path.dirname(a.out), exist_ok=True)
++    json.dump(d, open(a.out, "w"), indent=1, ensure_ascii=False)
++    print(json.dumps({k: list(v) for k, v in d.items()}, ensure_ascii=False, indent=1))
++    print(f"wrote {a.out}")
+diff --git a/tools/figure_data_fig5.py b/tools/figure_data_fig5.py
+new file mode 100644
+index 0000000..c9ee4d5
+--- /dev/null
++++ b/tools/figure_data_fig5.py
+@@ -0,0 +1,78 @@
++# -*- coding: utf-8 -*-
++"""그림 5 자료 — λ sweep, 두 지표.
++
++**한 배치·한 평가에서 읽는다.** 앞서 MUSIQ λ 값은 두 파일에 흩어져 있었다
++(`gateH_fr_musiq` 에 λ0.5·2·8, `gateH_pilot_musiq` 에 λ1·4, 공통 기준선 없음).
++그대로 이으면 배치 효과와 λ 반응을 구분할 수 없다. VBench 가 쓴 **같은 비디오**로
++MUSIQ 를 8팔 한 번에 다시 평가해(`fig5_lambda_musiq*`) 두 패널의 출처를 맞췄다.
++생성은 다시 하지 않았다 — 기존 비디오에 지표만 다시 걸었다.
++"""
++import json, os, statistics as st, sys
++
++S6 = os.path.expanduser("~/gpu/Self-Forcing/results/session6")
++sys.path.insert(0, "/home/devel/gpu/Quantization/tools")
++from s6stats import paired
++
++LAMS = [("lam0p5", 0.5), ("lam1", 1.0), ("lam2", 2.0), ("lam4", 4.0), ("lam8", 8.0)]
++
++
++def _pp(path, arm, key):
++    """프롬프트별 값. MUSIQ 는 chunk 별 dict, VBench 는 프롬프트 리스트다."""
++    a = json.load(open(path))[arm]
++    v = a[key] if isinstance(a, dict) and key in a else None
++    if isinstance(v, list):                       # VBench: 프롬프트 리스트
++        return list(v)
++    ch = a                                        # MUSIQ: {chunk: {key: [...]}}
++    n = len(ch[next(iter(ch))][key])
++    return [st.fmean(ch[c][key][i] for c in ch) for i in range(n)]
++
++
++def _c(a, b):
++    d = [x - y for x, y in zip(a, b)]
++    r = paired(d, 0.95)
++    return {"mean": r["mean"], "lo": r["lo"], "hi": r["hi"], "t": r["t"],
++            "n": r["n"], "sign_pos": sum(1 for v in d if v > 0)}
++
++
++def fig5():
++    MQ = f"{S6}/fig5_lambda_musiq_per_prompt.json"
++    VB = f"{S6}/vbench_lambda_per_prompt.json"
++    base_mq = _pp(MQ, "A1_int2", "musiq")
++    base_sc = _pp(VB, "A1_int2", "subject_consistency")
++    out = {"musiq": {}, "subject_consistency": {},
++           "baseline_arm": "A1_int2 (무보정 INT2)",
++           "src": {"musiq": "fig5_lambda_musiq_per_prompt.json (8팔 동시 평가)",
++                   "subject_consistency": "vbench_lambda_per_prompt.json"},
++           "note": "두 패널 모두 같은 비디오에서 나왔다. MUSIQ 는 λ 팔이 두 파일에 "
++                   "흩어져 있던 문제를 없애려고 한 번에 다시 평가한 것이다."}
++    for arm, lam in LAMS:
++        out["musiq"][str(lam)] = _c(_pp(MQ, arm, "musiq"), base_mq)
++        out["subject_consistency"][str(lam)] = _c(
++            _pp(VB, arm, "subject_consistency"), base_sc)
++    # flatten 은 λ 축 위의 점이 아니다 — 별도 마커
++    out["flat1"] = {
++        "musiq": _c(_pp(MQ, "flat1", "musiq"), base_mq),
++        "subject_consistency": _c(_pp(VB, "flat1", "subject_consistency"), base_sc)}
++    # BF16 참고선 (λ 축 밖)
++    out["bf16_ref"] = {
++        "musiq": _c(_pp(MQ, "A1_bf16", "musiq"), base_mq),
++        "subject_consistency": _c(_pp(VB, "A1_bf16", "subject_consistency"), base_sc)}
++    # 캡션이 인용하는 직접 대비
++    out["direct_lam0p5_minus_lam1"] = {
++        "musiq": _c(_pp(MQ, "lam0p5", "musiq"), _pp(MQ, "lam1", "musiq")),
++        "subject_consistency": _c(_pp(VB, "lam0p5", "subject_consistency"),
++                                  _pp(VB, "lam1", "subject_consistency"))}
++    return out
++
++
++if __name__ == "__main__":
++    d = fig5()
++    print(f"{'λ':>5} {'MUSIQ 차':>10} {'CI':>22}   {'subj 차':>10} {'CI':>22}")
++    for _, lam in LAMS:
++        m = d["musiq"][str(lam)]; s = d["subject_consistency"][str(lam)]
++        print(f"{lam:5.1f} {m['mean']:+10.3f} [{m['lo']:+8.3f},{m['hi']:+8.3f}]   "
++              f"{s['mean']:+10.4f} [{s['lo']:+8.4f},{s['hi']:+8.4f}]")
++    for k in ("flat1", "bf16_ref", "direct_lam0p5_minus_lam1"):
++        m = d[k]["musiq"]; s = d[k]["subject_consistency"]
++        print(f"{k:>26s} MUSIQ {m['mean']:+7.3f} [{m['lo']:+7.3f},{m['hi']:+7.3f}]  "
++              f"subj {s['mean']:+8.4f} [{s['lo']:+8.4f},{s['hi']:+8.4f}]")
+diff --git a/tools/make_figures.py b/tools/make_figures.py
+new file mode 100644
+index 0000000..a5b5108
+--- /dev/null
++++ b/tools/make_figures.py
+@@ -0,0 +1,320 @@
++# -*- coding: utf-8 -*-
++"""본문 그림 6장. 사양: 문서/지시서/FIGURES_spec.md
++
++수치는 전부 `figs/figure_data.json` 에서 읽는다 — 이 파일은 `tools/figure_data.py`
++가 원자료에서 생성한다. **스크립트에 손으로 적힌 수치는 없다.**
++
++전역 규칙(사양 §0): 벡터 + PNG 미리보기 · 흑백 안전(해치·마커 병용) ·
++이중 y축 금지 · 0 기준선 실선 · 점선 금지 · 선택적 직접 라벨 ·
++CI 가 0 을 포함하는 막대는 윤곽선만 · 계산값은 해치 + 라벨.
++"""
++import json, os, sys
++
++import matplotlib
++matplotlib.use("Agg")
++import matplotlib.pyplot as plt
++from matplotlib.patches import Patch
++from matplotlib.lines import Line2D
++
++FIGS = os.path.expanduser("~/gpu/Self-Forcing/figs")
++D = json.load(open(f"{FIGS}/figure_data.json"))
++
++GRID = "#c8c8c8"      # 배경에서 한 단계만 어두운 회색
++INK = "#1a1a1a"
++FILL = "#7f7f7f"      # 측정값 실채움
++plt.rcParams.update({
++    "figure.dpi": 110, "savefig.dpi": 200,
++    "font.size": 9, "axes.titlesize": 10, "axes.labelsize": 9,
++    "axes.edgecolor": INK, "axes.linewidth": 0.6,
++    "grid.color": GRID, "grid.linewidth": 0.5, "grid.linestyle": "-",
++    "xtick.direction": "out", "ytick.direction": "out",
++    "legend.frameon": False, "hatch.linewidth": 0.6,
++    "pdf.fonttype": 42, "ps.fonttype": 42,
++})
++
++
++def style_ax(ax, zero=True):
++    ax.set_axisbelow(True)
++    ax.yaxis.grid(True)
++    ax.xaxis.grid(False)
++    for sp in ("top", "right"):
++        ax.spines[sp].set_visible(False)
++    if zero:
++        ax.axhline(0, color=INK, lw=0.9, zorder=3)
++
++
++def save(fig, name):
++    fig.tight_layout()
++    fig.savefig(f"{FIGS}/{name}.pdf")
++    fig.savefig(f"{FIGS}/{name}.png")
++    plt.close(fig)
++    print(f"  wrote figs/{name}.pdf + .png")
++
++
++def bar_with_ci(ax, x, d, *, hatch=None, label=None, width=0.68):
++    """CI 가 0 을 포함하면 윤곽선만 — 이 논문 여러 곳의 요점이다."""
++    crosses = d["lo"] <= 0 <= d["hi"]
++    kw = dict(width=width, edgecolor=INK, linewidth=0.9, zorder=2)
++    if hatch:
++        ax.bar(x, d["mean"], facecolor="white", hatch=hatch, **kw)
++    elif crosses:
++        ax.bar(x, d["mean"], facecolor="white", **kw)
++    else:
++        ax.bar(x, d["mean"], facecolor=FILL, **kw)
++    ax.errorbar(x, d["mean"], yerr=[[d["mean"] - d["lo"]], [d["hi"] - d["mean"]]],
++                fmt="none", ecolor=INK, elinewidth=0.9, capsize=3, zorder=4)
++    return crosses
++
++
++# ------------------------------------------------------------------ 그림 1
++def fig1():
++    """막대 5개 — 상호작용을 **직접** 그린다. 가산 예측과 결합 효과의 CI 를 눈으로
++    비교하게 두면 독자가 상호작용 검정을 추론해야 한다. 상호작용은 그 자체로
++    추정량이고 CI 가 있다."""
++    f = D["fig1"]
++    keys = ["alignment_only", "sink_only", "sum_predicted", "both", "interaction"]
++    names = ["alignment\nonly", "sink\nonly", "sum\npredicted",
++             "both\nmeasured", "interaction"]
++    fig, axes = plt.subplots(1, 2, figsize=(8.2, 4.0), sharey=True)
++    for ax, bits, title in zip(axes, ("int2", "int4"), ("INT2", "INT4")):
++        crossed = []
++        for i, k in enumerate(keys):
++            h = "//////" if k == "sum_predicted" else (
++                "xxxxxx" if k == "interaction" else None)
++            crossed.append(bar_with_ci(ax, i, f[bits][k], hatch=h))
++        ax.set_xticks(range(len(keys)))
++        ax.set_xticklabels(names)
++        style_ax(ax)
++        ax.set_title(title)
++        for i, k in enumerate(keys):
++            d = f[bits][k]
++            if crossed[i] or k in ("sum_predicted", "interaction"):
++                lab = f"{d['mean']:+.2f}"
++                if crossed[i]:
++                    lab += "\nCI incl. 0"
++                ax.annotate(lab, (i, d["hi"]), textcoords="offset points",
++                            xytext=(0, 5), ha="center", fontsize=7.5)
++    axes[0].set_ylabel("MUSIQ difference")
++    fig.legend(handles=[
++        Patch(facecolor=FILL, edgecolor=INK, label="measured, CI excludes 0"),
++        Patch(facecolor="white", edgecolor=INK, label="measured, CI includes 0"),
++        Patch(facecolor="white", edgecolor=INK, hatch="//////",
++              label="computed (additivity assumption)"),
++        Patch(facecolor="white", edgecolor=INK, hatch="xxxxxx",
++              label="interaction estimate")],
++        loc="lower center", ncol=4, bbox_to_anchor=(0.5, -0.015), fontsize=7.5)
++    fig.subplots_adjust(bottom=0.30)
++    save(fig, "fig1_interaction")
++
++
++# ------------------------------------------------------------------ 그림 2
++def fig2():
++    """y 축은 **검출 비율**이다. 두 집단의 분모가 다르므로(39,690 vs 7,560)
++    원수치를 같은 높이 축에 올리면 "5.6배"로 오독된다."""
++    f = D["fig2"]
++    fig, ax = plt.subplots(figsize=(5.4, 3.6))
++    xs = [0, 1]
++    w = 0.36
++    off = [100 * f["align_off"]["no_shift_rate"], 100 * f["align_off"]["shifted_rate"]]
++    on = [100 * f["align_on"]["no_shift_rate"], 100 * f["align_on"]["shifted_rate"]]
++    raw_off = [(f["align_off"]["no_shift"], f["align_off"]["no_shift_compared"]),
++               (f["align_off"]["shifted"], f["align_off"]["shifted_compared"])]
++    raw_on = [(f["align_on"]["no_shift"], f["align_on"]["no_shift_compared"]),
++              (f["align_on"]["shifted"], f["align_on"]["shifted_compared"])]
++    ax.bar([x - w / 2 for x in xs], off, width=w, facecolor=FILL, edgecolor=INK,
++           linewidth=0.9, label="grid alignment OFF", zorder=2)
++    ax.bar([x + w / 2 for x in xs], on, width=w, facecolor="white", edgecolor=INK,
++           linewidth=0.9, hatch="\\\\\\", label="grid alignment ON", zorder=2)
++    for x, v, (a, b) in zip(xs, off, raw_off):
++        ax.annotate(f"{a:,} / {b:,}", (x - w / 2, v), textcoords="offset points",
++                    xytext=(0, 4), ha="center", fontsize=8)
++    for x, v, (a, b) in zip(xs, on, raw_on):
++        ax.annotate(f"{a} / {b:,}", (x + w / 2, v), textcoords="offset points",
++                    xytext=(0, 4), ha="center", fontsize=8, weight="bold")
++    ax.set_xticks(xs)
++    ax.set_xticklabels(["no shift", "shifted"])
++    ax.set_ylabel("surviving-slot comparisons with\nchanged K codes (%)")
++    ax.set_ylim(0, 118)
++    style_ax(ax, zero=False)
++    ax.legend(fontsize=8, loc="upper left")
++    save(fig, "fig2_requant_counts")
++
++
++# ------------------------------------------------------------------ 그림 3
++def fig3():
++    f = D["fig3"]
++    fig, ax = plt.subplots(figsize=(5.0, 3.3))
++    xs = [0, 1]
++    w = 0.36
++    same = [f["same_grid"]["int4"], f["same_grid"]["int2"]]
++    shift = [f["shifted_grid"]["int4"], f["shifted_grid"]["int2"]]
++    ax.bar([x - w / 2 for x in xs], same, width=w, facecolor=FILL,
++           edgecolor=INK, linewidth=0.9, label="same grid", zorder=2)
++    ax.bar([x + w / 2 for x in xs], shift, width=w, facecolor="white",
++           edgecolor=INK, linewidth=0.9, hatch="//////",
++           label=f"grid shifted by {f['shift_mod_block']} tokens", zorder=2)
++    for x in xs:
++        ax.annotate("0 (idempotent)", (x - w / 2, 0), textcoords="offset points",
++                    xytext=(0, 5), ha="center", fontsize=8, weight="bold")
++    for x, v in zip(xs, shift):
++        ax.annotate(f"{v:.3f}", (x + w / 2, v), textcoords="offset points",
++                    xytext=(0, 4), ha="center", fontsize=8)
++    ax.set_xticks(xs)
++    ax.set_xticklabels(["INT4", "INT2"])
++    ax.set_ylabel("relative L2 change of the reconstruction\nacross re-quantization")
++    ax.set_ylim(0, max(shift) * 1.20)
++    style_ax(ax, zero=False)
++    ax.legend(fontsize=8, loc="upper left")
++    save(fig, "fig3_idempotence")
++
++
++# ------------------------------------------------------------------ 그림 4
++def fig4():
++    """폭포(waterfall). 각 성분이 자기 행을 갖고 자기 CI 를 갖는다 — 누적 한 줄로
++    그리면 세 CI 가 한 축 위에 겹쳐 서로의 것으로 읽힌다."""
++    f = D["fig4"]
++    order = f["order"]
++    names = ["anchor presence\n(1 chunk pinned)", "anchor budget\n1 → 3 chunks",
++             "adaptive selection"]
++    hatches = [None, "//////", "xxxxxx"]
++    fig, ax = plt.subplots(figsize=(7.2, 4.1))
++    left = 0.0
++    rows = []
++    for i, (k, nm, h) in enumerate(zip(order, names, hatches)):
++        d = f[k]
++        y = len(order) - i
++        kw = dict(height=0.55, edgecolor=INK, linewidth=0.9, zorder=2)
++        if h:
++            ax.barh(y, d["mean"], left=left, facecolor="white", hatch=h, **kw)
++        else:
++            ax.barh(y, d["mean"], left=left, facecolor=FILL, **kw)
++        if k != "adaptive_selection":
++            ax.errorbar(left + d["mean"], y,
++                        xerr=[[d["mean"] - d["lo"]], [d["hi"] - d["mean"]]],
++                        fmt="none", ecolor=INK, elinewidth=0.9, capsize=3, zorder=4)
++            lab = f"{d['mean']:+.2f}  [{d['lo']:+.2f}, {d['hi']:+.2f}]"
++        else:
++            # 구간이 아니라 "선택이 동일했다"는 관측이다 — CI 를 그리지 않는다
++            lab = f"{d['mean']:+.2f}\nidentical selections (140/140), no interval drawn"
++            ax.plot([left], [y], marker="|", ms=14, color=INK, zorder=5)
++        if d["mean"]:
++            ax.annotate(lab, (left + d["mean"] / 2, y + 0.34), va="bottom",
++                        ha="center", fontsize=8)
++        else:   # 폭이 0 인 성분 — 마커 위에 가운데 정렬로 둔다
++            ax.annotate(lab, (left, y + 0.34), va="bottom", ha="center", fontsize=8)
++        rows.append((y, nm))
++        left += d["mean"]
++    # 누적 끝점의 CI 는 **개별 CI 의 합이 아니다** — 프롬프트별 총 대비에서
++    # 다시 계산한 것이다. 증분(위 세 행, 세그먼트 위 오차막대)과 구분되도록
++    # 끝점 CI 는 **두 겹 캡**으로 그리고 행도 굵은 윤곽으로 둔다.
++    tot = f["total_oracle_vs_oldest"]
++    ax.barh(0, tot["mean"], height=0.55, facecolor="white", edgecolor=INK,
++            linewidth=1.6, zorder=2)
++    ax.errorbar(tot["mean"], 0, xerr=[[tot["mean"] - tot["lo"]],
++                                      [tot["hi"] - tot["mean"]]],
++                fmt="none", ecolor=INK, elinewidth=1.4, capsize=6, zorder=4)
++    ax.annotate("cumulative CI — recomputed from the per-prompt total,\n"
++                "not the sum of the increment CIs",
++                (tot["hi"] + 0.3, -0.34), va="top", ha="left", fontsize=7,
++                style="italic")
++    ax.annotate(f"{tot['mean']:+.2f}  [{tot['lo']:+.2f}, {tot['hi']:+.2f}]",
++                (tot["mean"] / 2, 0.34), va="bottom", ha="center", fontsize=8,
++                weight="bold")
++    rows.append((0, "total\n(oracle − oldest)"))
++    ax.set_yticks([y for y, _ in rows])
++    ax.set_yticklabels([n for _, n in rows], fontsize=8)
++    ax.set_xlabel("MUSIQ difference   (components applied in this order, top to bottom)")
++    ax.set_xlim(0, 16.0)
++    ax.set_ylim(-1.15, len(order) + 0.95)
++    ax.set_axisbelow(True)
++    ax.xaxis.grid(True)
++    for sp in ("top", "right", "left"):
++        ax.spines[sp].set_visible(False)
++    ax.axvline(0, color=INK, lw=0.9, zorder=3)
++    save(fig, "fig4_anchor_decomposition")
++
++
++# ------------------------------------------------------------------ 그림 5
++def fig5():
++    f = D["fig5"]
++    lams = [0.5, 1.0, 2.0, 4.0, 8.0]
++    fig, axes = plt.subplots(2, 1, figsize=(5.6, 5.4), sharex=True)
++    for ax, key, ylab, mk in (
++            (axes[0], "musiq", "MUSIQ difference", "o"),
++            (axes[1], "subject_consistency", "subject_consistency\ndifference", "s")):
++        ys = [f[key][str(l)]["mean"] for l in lams]
++        lo = [f[key][str(l)]["mean"] - f[key][str(l)]["lo"] for l in lams]
++        hi = [f[key][str(l)]["hi"] - f[key][str(l)]["mean"] for l in lams]
++        ax.errorbar(lams, ys, yerr=[lo, hi], marker=mk, ms=5, color=INK,
++                    lw=1.1, capsize=3, zorder=4, mfc="white")
++        # flatten 은 λ 축 위의 점이 아니다 — 겹치지 않게 옆으로 뺀다
++        fl = f["flat1"][key]
++        ax.errorbar([1.30], [fl["mean"]], yerr=[[fl["mean"] - fl["lo"]],
++                                                [fl["hi"] - fl["mean"]]],
++                    marker="^", ms=6, color=INK, lw=0, capsize=3, zorder=5,
++                    mfc="white", label="flatten (λ=1, not a point on the λ axis)")
++        ax.axvline(1.0, color=GRID, lw=0.8, zorder=1)
++        style_ax(ax)
++        ax.set_xscale("log", base=2)
++        ax.set_xticks(lams)
++        ax.set_xticklabels([f"{l:g}" for l in lams])
++        ax.set_ylabel(ylab)
++        if key == "musiq":
++            ax.legend(fontsize=7.5, loc="upper left")
++    axes[1].set_xlabel("λ  (correction strength)")
++    d4 = f["subject_consistency"]["4.0"]
++    axes[1].annotate(f"λ=4 is below the uncorrected line ({d4['mean']:+.3f})",
++                     (4.0, d4["mean"]), textcoords="offset points",
++                     xytext=(-14, 42), ha="right", fontsize=7.5,
++                     arrowprops=dict(arrowstyle="-", lw=0.6, color=INK))
++    axes[0].set_title("difference vs uncorrected INT2 (λ=0), n=10", fontsize=9)
++    save(fig, "fig5_lambda_two_metrics")
++
++
++# ------------------------------------------------------------------ 그림 6
++def fig6():
++    f = D["fig6"]
++    GB = 1e9
++    m = f["memory_bytes"]
++    fig, axes = plt.subplots(1, 2, figsize=(6.8, 3.3))
++    ax = axes[0]
++    ax.bar(0, m["bf16"] / GB, width=0.55, facecolor=FILL, edgecolor=INK,
++           linewidth=0.9, zorder=2)
++    seg = m["final_packed_segments"] / GB
++    pend = m["final_bf16_pending"] / GB
++    ax.bar(1, seg, width=0.55, facecolor=FILL, edgecolor=INK, linewidth=0.9, zorder=2)
++    ax.bar(1, pend, bottom=seg, width=0.55, facecolor="white", edgecolor=INK,
++           linewidth=0.9, hatch="//////", zorder=2)
++    ax.annotate(f"{m['bf16']/GB:.3f}", (0, m["bf16"] / GB),
++                textcoords="offset points", xytext=(0, 4), ha="center", fontsize=8)
++    ax.annotate(f"{m['final']/GB:.3f}", (1, (seg + pend)),
++                textcoords="offset points", xytext=(0, 4), ha="center", fontsize=8)
++    # 범례를 두지 않는다 — BF16 막대가 "packed segments" 로 오독된다.
++    # 쌓기는 'final' 막대에만 해당하므로 그 막대에 직접 적는다.
++    ax.annotate(f"BF16 pending\n{pend:.3f} GB", (1.32, seg + pend / 2),
++                ha="left", va="center", fontsize=7.5)
++    ax.annotate(f"packed segments\n{seg:.3f} GB", (1.32, seg / 2),
++                ha="left", va="center", fontsize=7.5)
++    ax.set_xticks([0, 1]); ax.set_xticklabels(["BF16", "final"])
++    ax.set_ylabel("resident KV cache (GB)")
++    ax.set_xlim(-0.6, 2.6)
++    style_ax(ax, zero=False)
++    ax = axes[1]
++    t = f["inference_s"]
++    ax.bar([0, 1], [t["bf16"], t["final"]], width=0.55, facecolor=FILL,
++           edgecolor=INK, linewidth=0.9, zorder=2)
++    for x, k in ((0, "bf16"), (1, "final")):
++        ax.annotate(f"{t[k]:.1f}", (x, t[k]), textcoords="offset points",
++                    xytext=(0, 4), ha="center", fontsize=8)
++    ax.set_xticks([0, 1]); ax.set_xticklabels(["BF16", "final"])
++    ax.set_ylabel("inference() total (s)")
++    style_ax(ax, zero=False)
++    save(fig, "fig6_cost")
++
++
++if __name__ == "__main__":
++    which = sys.argv[1:] or ["1", "2", "3", "4", "5", "6"]
++    os.makedirs(FIGS, exist_ok=True)
++    for w in which:
++        print(f"fig{w}:")
++        globals()[f"fig{w}"]()
+diff --git a/wan/modules/causal_model.py b/wan/modules/causal_model.py
+index b0c8a08..6a51f0e 100644
+--- a/wan/modules/causal_model.py
++++ b/wan/modules/causal_model.py
+@@ -43,6 +43,16 @@ FUSED_BIAS_LAMBDA = 0.0  # >0: subtract the Taylor Jensen bias in-kernel
+ #               was first quantized on and re-quantization is exactly
+ #               idempotent. Same property the fused backend has by construction.
+ KV_GRID_ALIGN = "off"
++# L1 저장 설계 비교. "rolling" = P1(복원값을 다시 양자화, BF16 master 없음),
++# "master" = P4(LongLive식: 원본 BF16을 남겨 두고 **원본에서** 다시 양자화).
++# 어텐션이 읽는 값은 두 모드 모두 역양자화 결과다 — 바뀌는 것은 재양자화 **입력**과
++# BF16 상주 여부뿐이다.
++KV_STORAGE = "rolling"
++# master 모드 배선 검사. 켜면 매 호출에서 방금 쓴 슬롯이 roped_key 와 비트 단위로
++# 같은지 확인한다 — master 가 역양자화 값에 오염되면 여기서 걸린다.
++# 검사만으로는 부족하다는 것이 세션 5의 교훈이라, 생성 경로에서 돌린다.
++KV_MASTER_ASSERT = False
++KV_MASTER_STATS = None
+ # Gate L: use the two-FA2-call scalar path instead of the explicit fp32 one.
+ TUM_SCALAR_FAST = False
+ 
+@@ -56,6 +66,10 @@ BIAS_DUMP_LAYERS = (0, 15, 29)
+ BIAS_DUMP_QSTRIDE = 512
+ _BIAS_DUMP_COUNTER = [0]
+ _BIAS_DUMP_SEEN = set()
++# B3: the dedup key must include the prompt. Keyed on (chunk, layer) alone it
++# recorded only the first prompt and silently skipped the other nine -- a
++# 10-prompt run produced the same 9 records as a 1-prompt run.
++BIAS_DUMP_PROMPT = [0]
+ 
+ 
+ # Addendum A'2(i): the mechanistic check that alignment does what it claims.
+@@ -494,6 +508,7 @@ class CausalWanSelfAttention(nn.Module):
+ 
+             current_end = current_start + roped_query.shape[1]
+             _audit_shift = 0
++            _evicted = _rolled = 0
+             sink_tokens = self.sink_size * frame_seqlen
+             # If we are using local attention and the current KV cache size is larger than the local attention size, we need to truncate the KV cache
+             kv_cache_size = cache_k.shape[1]
+@@ -506,6 +521,7 @@ class CausalWanSelfAttention(nn.Module):
+                 num_evicted_tokens = num_new_tokens + kv_cache["local_end_index"].item() - kv_cache_size
+                 num_rolled_tokens = kv_cache["local_end_index"].item() - num_evicted_tokens - sink_tokens
+                 _audit_shift = num_evicted_tokens // num_new_tokens
++                _evicted, _rolled = num_evicted_tokens, num_rolled_tokens
+                 cache_k[:, sink_tokens:sink_tokens + num_rolled_tokens] = \
+                     cache_k[:, sink_tokens + num_evicted_tokens:sink_tokens + num_evicted_tokens + num_rolled_tokens].clone()
+                 cache_v[:, sink_tokens:sink_tokens + num_rolled_tokens] = \
+@@ -522,6 +538,41 @@ class CausalWanSelfAttention(nn.Module):
+                 local_start_index = local_end_index - num_new_tokens
+                 cache_k[:, local_start_index:local_end_index] = roped_key
+                 cache_v[:, local_start_index:local_end_index] = v
++            # L1/P4: BF16 master 를 같은 방식으로 굴린다. 롤·삽입 인덱스는 위에서
++            # 계산된 것을 그대로 쓴다 — 로직을 복제하면 두 경로가 조용히 갈라진다.
++            _master = None
++            if KV_STORAGE == "master" and quantizer is not None:
++                _mk = kv_cache.get("k_master")
++                if not (isinstance(_mk, torch.Tensor) and _mk.shape == cache_k.shape):
++                    # 첫 호출: 아직 양자화 이력이 없으므로 현재 내용이 곧 원본이다.
++                    kv_cache["k_master"] = cache_k.clone()
++                    kv_cache["v_master"] = cache_v.clone()
++                else:
++                    _mk2, _mv2 = kv_cache["k_master"], kv_cache["v_master"]
++                    if _rolled > 0:
++                        _mk2[:, sink_tokens:sink_tokens + _rolled] = \
++                            _mk2[:, sink_tokens + _evicted:sink_tokens + _evicted + _rolled].clone()
++                        _mv2[:, sink_tokens:sink_tokens + _rolled] = \
++                            _mv2[:, sink_tokens + _evicted:sink_tokens + _evicted + _rolled].clone()
++                    _mk2[:, local_start_index:local_end_index] = roped_key
++                    _mv2[:, local_start_index:local_end_index] = v
++                _master = (kv_cache["k_master"], kv_cache["v_master"])
++                if KV_MASTER_ASSERT:
++                    _slot = _master[0][:, local_start_index:local_end_index]
++                    if not torch.equal(_slot, roped_key):
++                        raise AssertionError(
++                            "k_master 의 최신 슬롯이 roped_key 와 다르다 — "
++                            "master 가 오염됐다")
++                    if KV_MASTER_STATS is not None and local_end_index > num_new_tokens:
++                        # master(원본)와 cache_k(복원값)의 차이 = 누적 양자화 오차.
++                        # 0 이면 master 모드가 아무 일도 하지 않고 있다는 뜻이다.
++                        _n = local_end_index
++                        _d = (_master[0][:, :_n].float()
++                              - cache_k[:, :_n].float()).norm().item()
++                        KV_MASTER_STATS.append(
++                            {"tokens": int(_n),
++                             "master_minus_dequant_norm": _d})
++
+             # Only once the cache is full and actually evicting. Before that the
+             # sink is pinned in name only — A1 and A2 are bit-identical — so
+             # touching it earlier would conflate "chunk 0 was corrupted all
+@@ -536,6 +587,8 @@ class CausalWanSelfAttention(nn.Module):
+                 _lid = SINK_LAYER_COUNTER[0] % 30
+                 SINK_LAYER_COUNTER[0] += 1
+                 _apply_sink_mode(cache_k, cache_v, sink_tokens, _lid)
++                if _master is not None:
++                    _apply_sink_mode(_master[0], _master[1], sink_tokens, _lid)
+ 
+             if ATTN_MASS_HOOK is not None:
+                 _w0 = max(0, local_end_index - self.max_attention_size)
+@@ -587,12 +640,14 @@ class CausalWanSelfAttention(nn.Module):
+                 if BIAS_DUMP is not None:
+                     _lid = _BIAS_DUMP_COUNTER[0] % 30
+                     _BIAS_DUMP_COUNTER[0] += 1
+-                    _key = (int(current_start // num_new_tokens), int(_lid))
+-                    if (_key[0] in BIAS_DUMP_CHUNKS and _lid in BIAS_DUMP_LAYERS
++                    _key = (BIAS_DUMP_PROMPT[0],
++                            int(current_start // num_new_tokens), int(_lid))
++                    if (_key[1] in BIAS_DUMP_CHUNKS and _lid in BIAS_DUMP_LAYERS
+                             and _key not in _BIAS_DUMP_SEEN):
+                         _BIAS_DUMP_SEEN.add(_key)
+                         _dsw = _ds[:, _w:local_end_index]
+                         BIAS_DUMP.append({
++                            "prompt": int(BIAS_DUMP_PROMPT[0]),
+                             "chunk": int(current_start // num_new_tokens),
+                             "layer": int(_lid),
+                             "window_len": int(local_end_index - _w),
+@@ -631,11 +686,13 @@ class CausalWanSelfAttention(nn.Module):
+                 kv_cache["batch_size"] = int(cache_k.shape[0])
+                 kv_cache["num_heads"] = int(cache_k.shape[2])
+                 kv_cache["head_dim"] = int(cache_k.shape[3])
++                # P4: 재양자화 입력이 복원값이 아니라 보존된 원본 BF16 이다.
++                _sk, _sv = (_master if _master is not None else (cache_k, cache_v))
+                 if KV_GRID_ALIGN == "segment":
+                     kv_cache["quant_state"] = _seg_quantize(
+-                        quantizer, cache_k, cache_v, num_new_tokens, v.dtype)
++                        quantizer, _sk, _sv, num_new_tokens, v.dtype)
+                 else:
+-                    kv_cache["quant_state"] = quantizer.quantize_kv(cache_k, cache_v, meta={"tensor_dtype": v.dtype})
++                    kv_cache["quant_state"] = quantizer.quantize_kv(_sk, _sv, meta={"tensor_dtype": v.dtype})
+                 if REQUANT_LOG is not None:
+                     _lid = _BIAS_DUMP_COUNTER[0] % 30
+                     _BIAS_DUMP_COUNTER[0] += 1
+@@ -694,6 +751,8 @@ class CausalWanSelfAttention(nn.Module):
+                         "tokens": int(_n),
+                     })
+                 # Drop persistent BF16 cache residency for quantized methods.
++                # P4 는 예외다 — master 를 남기는 것이 그 설계의 정의이고,
++                # 메모리 비용도 그래서 발생한다. 지우면 비교가 무의미해진다.
+                 kv_cache["k"] = cache_k.new_empty(0)
+                 kv_cache["v"] = cache_v.new_empty(0)
+ 

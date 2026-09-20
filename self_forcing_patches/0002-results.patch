@@ -1,0 +1,33 @@
+From c083af1a49ba8867d654b52a834ddae62b043b83 Mon Sep 17 00:00:00 2001
+From: JunHyeong Park <acorn0415@naver.com>
+Date: Sun, 20 Sep 2026 23:22:42 +0900
+Subject: [PATCH 2/2] =?UTF-8?q?=EC=8B=A4=ED=96=89=20=EC=82=B0=EC=B6=9C?=
+ =?UTF-8?q?=EB=AC=BC(results/)=EC=9D=84=20=EC=B6=94=EC=A0=81=EC=97=90?=
+ =?UTF-8?q?=EC=84=9C=20=EC=A0=9C=EC=99=B8?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+문서가 인용하는 원자료는 디스크와 /vfsdata 에 두고, 저장소에는 그것을 만드는
+코드만 둔다. 한 번 넣어 보니 141 MB 였고 대부분이 반복 실행 로그다.
+본문 그림(figs/)은 작으므로 유지한다.
+---
+ .gitignore | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/.gitignore b/.gitignore
+index f8d7b86..18b4da3 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -30,3 +30,8 @@ __pycache__/
+ # --- 모델·체크포인트 심볼릭 링크 ---
+ /checkpoints
+ /wan_models
++
++# --- 실행 산출물(데이터)은 추적하지 않는다 ---
++# 문서가 인용하는 원자료는 디스크와 /vfsdata 에 있고, 저장소에는 그것을 만드는
++# **코드**만 둔다. 한 번 넣어 보니 141 MB 였고 대부분이 반복 실행 로그다.
++results/
+-- 
+2.34.1
+
