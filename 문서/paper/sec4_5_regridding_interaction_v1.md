@@ -38,7 +38,7 @@ Those comparisons partition into two populations according to whether the grid t
 | grid alignment OFF, all | 47,250 | 8,910 | 18.86% |
 | grid alignment ON | 47,250 | **0** | 0% |
 
-The axis here is whether the grid moved, not when in the run the comparison occurred. Read this way the result is sharper than the pooled rate suggests: on a displaced grid **every** comparison found the key codes changed, while on an undisplaced grid they changed only where a partially filled boundary group was re-formed.
+The axis here is whether the grid moved, not when in the run the comparison occurred. Read this way the result is sharper than the pooled rate suggests: on a displaced grid **every** comparison found the key codes changed, while on an undisplaced grid a change was detected in 1,350 of 39,690 comparisons.
 
 Two distinct paths produce the changes, and they are not the same mechanism. **(A) Boundary-group rescaling at write time**: where a chunk boundary falls inside a group, the group's later members are filled by the next write; the group's extent does not move, but its shared scale is recomputed from the new members, so the codes of the earlier members can change. **(B) Grid displacement at eviction**: when the evicted span is not a multiple of the group size, group extents shift relative to surviving content and the groups re-form with different members. (A) needs only a chunk size that is not a multiple of the group size; (B) needs an eviction to occur at all. Alignment closes both. The 1,350 changed comparisons in the undisplaced population are **consistent with** write-time boundary rescaling (A) — the counter records that key codes changed on an undisplaced grid, not which group or scale changed, and we did not link the changed positions to write boundaries; the 7,560 in the displaced population are consistent with (B) but **we have not established that (A) is absent there**, and **we have not separated how much either path contributes to quality.**
 
@@ -57,7 +57,7 @@ Turning grid alignment on, with everything else fixed (n=10 prompts, paired):
 | A1, INT4 | +1.08 | [+0.51, +1.65] | +4.26 | 9/10 |
 | A4, INT4 | +1.08 | [+0.23, +1.92] | +2.89 | 10/10 |
 
-A control at 21 frames, where **no eviction occurs**, shows +0.06 (±0.46, t=0.29): no quality difference is detected. This condition excludes eviction-driven grid displacement (path B), but it does **not** exclude the difference in group partitioning or the write-time boundary rescaling of path A — alignment changes how groups are formed from the first write, before any eviction. The control therefore bounds what the eviction path contributes in this setting; it does not test path A.
+A control at 21 frames, where **no eviction occurs**, shows +0.06 (±0.46, t=0.29): no quality difference is detected. This condition excludes eviction-driven grid displacement (path B), but it does **not** exclude the difference in group partitioning or the write-time boundary rescaling of path A — alignment changes how groups are formed from the first write, before any eviction. What this result means is that no alignment ON−OFF quality difference was detected under the 21-frame condition. It does not isolate path A on its own, and it provides no bound on the quality contribution of path B in longer runs where eviction occurs — the interval is for the whole ON−OFF contrast at 21 frames, not for the eviction path.
 
 ---
 
@@ -79,7 +79,7 @@ At INT2 the two interventions measured one at a time, on the baseline configurat
 
 At INT4 **no interaction was detected in this sample**. We do not read this as additivity: the interval [−1.12, +0.13] is consistent with a small interaction of either sign, and we did not compare the statistical power of the two bit-widths.
 
-### 5.2 The sink effect changes sign
+### 5.2 The sink contrast depends on alignment
 
 The clearest consequence is that the measured value of one intervention depends on the storage condition under which it is measured:
 
@@ -123,3 +123,4 @@ All figures here are for the models, prompts (n=10), frame count (63) and quanti
 ### 검증 기록 (2026-09-21, 2차)
 - §4.4: "퇴출 없음 → 효과 없음이 예측" 삭제. 21프레임 대조는 경로 B(퇴출 격자 이동)만 제외하고 경로 A(쓰기 시 경계 재스케일)와 그룹 분할 차이는 제외하지 못한다 — §4.3 과 모순이었다.
 - §4.3: 1,350건을 "(A)에서만 올 수 있다" → "(A)와 부합한다". 카운터는 위치·scale·쓰기 경계를 연결하지 않는다.
+- (3차) §4.4 의 "bounds what the eviction path contributes" 삭제 — 제가 2차 수정에서 새로 넣은 과장이었다. 21프레임 CI 는 그 조건의 ON−OFF 전체 대비 구간이고 퇴출 경로의 상한이 아니다. §4.3 41행의 "only where a boundary group was re-formed" 를 관측(1,350/39,690)만으로. §5.2 제목을 "The sink contrast depends on alignment" 로.
