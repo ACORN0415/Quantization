@@ -99,7 +99,8 @@ CSV·JSON·latent·비디오는 코드가 읽는 경로에 그대로 있다.
 | 파일 | 내용 |
 |---|---|
 | **`paper/sec4_5_regridding_interaction_v1.md`** | **§4·§5 초고 (영문)** — 격자·상호작용. 확인 필요 1·2 는 원자료 대조로 해결 |
-| **`paper/sec1_2_6-11_remaining_v1.md`** | **§1·§2·§6~§11 초고 (영문)** — 2026-09-21 검증 기록 포함(§2 위치 설정, §6 +11.18, §7.4 λ 지표 한정 수정) |
+| **`paper/sec1_2_6-11_remaining_v2.md`** | **§1·§2·§6~§11 초고 v2 (영문, 현행)** — §7·§9 를 P3+λ1 기준선 중심으로 재구성, §9.2 같은-창 비교·§9.4 323 MB 신설 |
+| `paper/sec1_2_6-11_remaining_v1.md` | v1 — 이력 |
 | `paper/CITATIONS_verified_v1.md` | §2 인용 확인. **§5(공개 harness `b4c0936` 조사)가 §2 위치 설정 문장을 바꿨다** — 먼저 읽을 것 |
 | `paper/FIGURES_spec_v1.md` | 그림 사양(3판). 그림은 `Quantization/figs/`(원본 생성 `Self-Forcing/tools/make_figures.py`), 캡션 `figs/CAPTIONS.md` |
 | **미작성** | **§3 측정 프로토콜** |
