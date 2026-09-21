@@ -91,12 +91,15 @@ CSV·JSON·latent·비디오는 코드가 읽는 경로에 그대로 있다.
 **미커밋**: 위 도구와 세션 6 코드 변경은 아직 커밋되지 않았다
 (`결과서/S6_FINDINGS.md` §5.1 F4). `final_recipe_manifest.json`이 diff 해시로 추적 중.
 
-## 논문 초고·인용 검증 (`260920/`, `결과서/`)
+## 논문 (`paper/`)
+
+현행 판본만 둔다. 앞선 판본(`_1`~`_5`, `sec_remaining`, `_1`)은 `260920/`·`결과서/`에 이력으로 남겨 둔다.
+새 판은 `_v2`, `_v3`… 로 **파일을 새로 만들고** 덮어쓰지 않는다.
 
 | 파일 | 내용 |
 |---|---|
-| **`결과서/sec_remaining_2.md`** | **§1·§2·§6~§11 초고 v1 (영문)** — 2026-09-21 검증 기록 포함(§2 위치 설정, §6 +11.18, §7.4 λ 지표 한정 수정) |
-| **`260920/sec4_5_regridding_interaction_6.md`** | **§4·§5 초고 v1 (영문)** — 확인 필요 1·2 는 원자료 대조로 해결 |
-| `260920/CITATIONS_verified_2026-09-20_6.md` | §2 인용 확인. **§5(공개 harness `b4c0936` 조사)가 §2 위치 설정 문장을 바꿨다** — 먼저 읽을 것 |
-| `260920/FIGURES_spec_3.md` | 그림 사양 3판. 그림은 `Self-Forcing/figs/`(생성 `tools/make_figures.py`), 캡션 `figs/CAPTIONS.md` |
-| `260920/*_1~5.md` | 위 문서들의 앞선 판본. 이력용 |
+| **`paper/sec4_5_regridding_interaction_v1.md`** | **§4·§5 초고 (영문)** — 격자·상호작용. 확인 필요 1·2 는 원자료 대조로 해결 |
+| **`paper/sec1_2_6-11_remaining_v1.md`** | **§1·§2·§6~§11 초고 (영문)** — 2026-09-21 검증 기록 포함(§2 위치 설정, §6 +11.18, §7.4 λ 지표 한정 수정) |
+| `paper/CITATIONS_verified_v1.md` | §2 인용 확인. **§5(공개 harness `b4c0936` 조사)가 §2 위치 설정 문장을 바꿨다** — 먼저 읽을 것 |
+| `paper/FIGURES_spec_v1.md` | 그림 사양(3판). 그림은 `Quantization/figs/`(원본 생성 `Self-Forcing/tools/make_figures.py`), 캡션 `figs/CAPTIONS.md` |
+| **미작성** | **§3 측정 프로토콜** |
