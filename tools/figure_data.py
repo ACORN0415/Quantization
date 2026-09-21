@@ -47,9 +47,17 @@ def _per_prompt(path, arm, key="musiq"):
 def _contrast(a, b, src):
     d = [x - y for x, y in zip(a, b)]
     r = paired(d, 0.95)
-    return {"mean": r["mean"], "lo": r["lo"], "hi": r["hi"], "t": r["t"],
-            "n": r["n"], "sign_pos": sum(1 for v in d if v > 0),
-            "per_prompt": d, "src": src}
+    out = {"mean": r["mean"], "lo": r["lo"], "hi": r["hi"], "t": r["t"],
+           "n": r["n"], "sign_pos": sum(1 for v in d if v > 0),
+           "per_prompt": d, "src": src}
+    if r["se"] == 0:
+        # 모든 차이가 0 이면 t = 0/0 으로 정의되지 않는다. inf 를 그대로 두면
+        # 재현 자료를 읽는 쪽이 "무한히 유의"로 오독한다.
+        out["t"] = None
+        out["t_note"] = "all per-prompt differences are exactly 0; t is 0/0 (undefined), not infinite"
+        out["lo"] = out["hi"] = None
+        out["ci_note"] = "no interval: identical outcomes, not an estimate with uncertainty"
+    return out
 
 
 # ---------------------------------------------------------------- 그림 1

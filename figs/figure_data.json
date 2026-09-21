@@ -209,9 +209,9 @@
   },
   "adaptive_selection": {
    "mean": 0.0,
-   "lo": 0.0,
-   "hi": 0.0,
-   "t": Infinity,
+   "lo": null,
+   "hi": null,
+   "t": null,
    "n": 10,
    "sign_pos": 0,
    "per_prompt": [
@@ -226,7 +226,9 @@
     0.0,
     0.0
    ],
-   "src": "gateK0_anchor_control_per_prompt.json"
+   "src": "gateK0_anchor_control_per_prompt.json",
+   "t_note": "all per-prompt differences are exactly 0; t is 0/0 (undefined), not infinite",
+   "ci_note": "no interval: identical outcomes, not an estimate with uncertainty"
   },
   "total_oracle_vs_oldest": {
    "mean": 11.179526247297016,

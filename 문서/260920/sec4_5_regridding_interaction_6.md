@@ -55,7 +55,7 @@ Turning grid alignment on, with everything else fixed (n=10 prompts, paired):
 | A1, INT2 | +2.28 | [+0.23, +4.33] | +2.52 | 8/10 |
 | A2, INT2 | **+11.50** | [+8.36, +14.64] | +8.28 | 10/10 |
 | A1, INT4 | +1.08 | [+0.51, +1.65] | +4.26 | 9/10 |
-| A4, INT4 | +1.08 | [+0.24, +1.92] | +2.89 | 10/10 |
+| A4, INT4 | +1.08 | [+0.23, +1.92] | +2.89 | 10/10 |
 
 A control at 21 frames, where **no eviction occurs**, shows +0.06 (±0.46, t=0.29): no effect is detected. This is what the mechanism predicts — with no eviction there is no grid displacement, and the difference between the two settings is only how blocks are partitioned.
 
@@ -115,7 +115,7 @@ All figures here are for the models, prompts (n=10), frame count (63) and quanti
 
 ### 확인 필요
 
-1. **A1 INT4 / A4 INT4의 CI**를 ±0.57·±0.84에서 구간 표기로 바꿔 넣었다 — `gateK_aligned.csv` 원본과 대조할 것 `[간접]`.
-2. §4.3 카운터의 단위·대상 — **생존 슬롯 비교, K 코드**로 적었다. 계측 코드(`wan/modules/causal_model.py:89`)와 한 번 더 대조할 것.
+1. ~~**A1 INT4 / A4 INT4의 CI**~~ — **확인됨** (2026-09-21). `gateK_aligned.csv`: A1 INT4 1.0809±0.5740 → [+0.51, +1.65], t 4.260, 9/10; A4 INT4 1.0769±0.8432 → [+0.23, +1.92], t 2.889, 10/10. 본문 A4 하한 +0.24 는 반올림 경계(0.2337) — **+0.23** 이 맞다 `[확인]`.
+2. ~~§4.3 카운터의 단위·대상~~ — **확인됨.** `_requant_audit` 는 `causal_model.py:89` 에 정의되고 `state["k"]["q"]` 만 비교하며 단위는 `n_cmp`(생존 슬롯 비교). 804 = 이동 없음 306 + 이동 있음 498 도 원자료와 일치 `[확인]`.
 3. ~~A2의 804 단위~~ — **해결.** 같은 계측기의 sink 슬롯 K 코드 변화 검출 횟수이고 분모는 9,000(정렬 ON은 0/9,000). 이동 없음 306 + 이동 있음 498. **A2는 INT2 실행**이므로 INT4인 47,250 집계와 한 계열로 묶지 않는다 `[확인]`.
 4. 용어: "displaced grid" vs "misaligned grid" 중 하나로 통일.

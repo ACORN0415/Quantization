@@ -33,9 +33,9 @@ The consequence is not a small numerical residue. Measured under a displaced gri
 
 **Streaming video diffusion.** Self-Forcing and its successors generate chunk by chunk with a rolling KV cache; LongLive retrains for a short cache; Deep Forcing adjusts sink and window without retraining. These works set the cache configurations we vary.
 
-**KV-cache quantization.** KIVI quantizes keys per channel and values per token with a full-precision residual window. Quant VideoGen (QVG) quantizes a streaming video cache to 2 bits using learned codebooks with a fused dequantizing attention kernel. A recent study surveys 33 KV-compression methods and reports the transient BF16 reconstruction buffer as their dominant practical cost.
+**KV-cache quantization.** KIVI quantizes keys per channel and values per token with a full-precision residual window. Quant VideoGen (QVG) quantizes a streaming video cache to 2 bits with k-means centroids (K = 256, uint8 indices) and progressive residual quantization; its two settings use blocks of 64 (QVG) or 16 (QVG-Pro), and a fused kernel dequantizes and adds back the assigned centroids. It is not scalar RTN, so its quantizer differs from ours in kind, not only in bit-width. A 33-method empirical study on Self-Forcing reports that several methods compress the cache substantially yet still exceed BF16 peak VRAM, because the integration reconstructs dense BF16 tensors during attention reads and refresh.
 
-**Correction and bit allocation.** Prior work derives a bias correction for the softmax under key quantization and applies it in a score-modification kernel; separate work in the LLM setting argues keys require more bits than values. We use the former as the correction under study (§7) and the latter as background for our bit allocation.
+**Correction and bit allocation.** Tuncer et al. derive a bias correction for the softmax under key quantization and apply it in a score-modification kernel; separate work in the LLM setting argues keys require more bits than values. We use the former as the correction under study (§7) and the latter as background for our bit allocation. One contrast bears directly on this paper's condition: Tuncer et al. group channels within a token (g = 32), whereas we group along the token axis (16 tokens). A group that does not span tokens cannot be re-formed by eviction. This implication is our reading of their description; we located no public implementation to confirm it.
 
 ### 2.1 Storage behaviour of public implementations
 
@@ -50,13 +50,15 @@ Because our results turn on a storage property, we read the public code rather t
 
 Two conclusions follow, and the second is a limit on the first. **(a)** The failure mode is neither unknown nor universal: QVG names it and both implementations we could read avoid it. We therefore make no priority or novelty claim about identifying it. **(b)** Our survey verified the two implementations **statically**; we did not run them. For the correction work we could not locate a public implementation at all, and Deep Forcing was not examined.
 
-**Positioning.** What we contribute is not the observation that storage can drift, but a measurement of **how much a storage condition changes an evaluation's conclusion** in a setting where it was not controlled — including a sign change — together with the protocol needed to keep such conditions visible. We do not assert that published evaluations elsewhere are affected: within our survey the only path exhibiting the condition is the patch we used ourselves.
+**Positioning.** What we contribute is not the observation that storage can drift, but a measurement of **how much a storage condition changes an evaluation's conclusion** in a setting where it was not controlled — including a sign change — together with the protocol needed to keep such conditions visible.
+
+The public harness of the 33-method study (`b4c0936`) applies a patch whose path restores the whole cache, shifts it, and re-quantizes it, with no group-alignment code — the same **structure** as the P1 path we measured; our code differs from that patch by 498 added and 7 removed lines, so we neither use it unchanged nor introduced the structure. Whether the structure produces the condition depends on the driver as much as on the patch: that harness pre-extends the cache to at least the full output length before generation, so on the dependency we compared (`33593df`) its RTN path is statically traced **not to evict within the configured generation length**, and eviction-driven grid displacement does not occur there. What can occur is the write-time path (§4.3 A): a 4,680-token boundary falls inside a 16-token group on alternate chunks, and re-quantizing the whole cache after the next write can change the earlier members' codes — shown by a constructed CPU case with the public quantizer, not measured in a model run. We could not identify from the available materials which Self-Forcing commit the published runs used. We therefore assert neither that published evaluations are affected nor that the condition is unique to our patch; when comparing implementations, the **cache-capacity policy of the driver** must be recorded alongside the quantizer.
 
 ---
 
 ## 6 Decomposing the Anchor Effect
 
-An oracle that selects anchor chunks adaptively by a contamination criterion yields **+11.20** MUSIQ over the no-anchor baseline. In the runs we measured, that oracle selected **the same set as the fixed policy {0,1,2} in all 140 decisions**, and the two arms' per-prompt scores agree to the decimal.
+An oracle that selects anchor chunks adaptively by a contamination criterion yields **+11.18 [+7.59, +14.76]** MUSIQ over the no-anchor (`oldest`) baseline in the four-arm control run. In that run the oracle selected **the same set as the fixed policy {0,1,2} in all 140 decisions**, and the two arms' per-prompt scores agree to the decimal.
 
 | component | value | 95% CI / supporting evidence |
 |---|---|---|
@@ -64,7 +66,7 @@ An oracle that selects anchor chunks adaptively by a contamination criterion yie
 | anchor budget, 1 → 3 chunks | +3.50 | [+1.51, +5.50] |
 | **adaptive selection** | **+0.00** | not an interval: the two arms made identical selections on all 140 decisions observed |
 
-The components sum to +11.18 against the +11.20 measured for the oracle arm. The zero entry is not a non-detection: the selection histories match exactly on the 140 decisions we observed, so on these inputs the adaptive rule returned what the fixed rule returns. **This does not establish that adaptive selection is unnecessary on other inputs**, and we did not test inputs on which the two rules diverge.
+The components sum exactly to the +11.18 total of the same run, because the third component is identically zero. (An earlier oracle run against a different baseline gave +11.20; it is a separate comparison with a different baseline arm and is not the total of this decomposition.) The zero entry is not a non-detection: the selection histories match exactly on the 140 decisions we observed, so on these inputs the adaptive rule returned what the fixed rule returns. **This does not establish that adaptive selection is unnecessary on other inputs**, and we did not test inputs on which the two rules diverge.
 
 Because total capacity is held fixed, increasing the anchor budget necessarily shortens the recent context — so the +3.50 is an **allocation effect between anchors and recent context under a fixed budget**, not an effect of anchor count per se.
 
@@ -88,11 +90,11 @@ The prediction is nevertheless **systematically low**, and its mean bias and its
 
 ### 7.4 Correction strength
 
-λ = 1 is the theoretical default. In the direct contrast we ran, λ = 0.5 and λ = 1 were not distinguished ([−0.0057, +0.0095]); **the location of the optimum is undetermined** — we did not sweep finely enough to place it. Above λ = 1 the metrics disagree in **order**, not merely in magnitude: MUSIQ places λ = 4 at its point-estimate maximum while `subject_consistency` puts it **below the uncorrected baseline** (−0.1602, t = −18.27). A single metric is therefore not sufficient to select λ. We record the disagreement and its size and do not adjudicate between the metrics.
+λ = 1 is the theoretical default. In the direct contrast we ran, λ = 0.5 and λ = 1 were **not distinguished on `subject_consistency`** (+0.0019 [−0.0057, +0.0095]) but **were on MUSIQ**, where λ = 1 is higher (λ0.5 − λ1 = −2.96 [−4.69, −1.22]); **the location of the optimum is undetermined** — we did not sweep finely enough to place it, and the two metrics do not agree even on this pair. Above λ = 1 the disagreement is in **order**: the MUSIQ point estimate is highest at λ = 4, while `subject_consistency` at the same setting is **below the uncorrected baseline** (−0.1602, t = −18.27). A single metric is therefore not sufficient to select λ. We record the disagreement and its size and do not adjudicate between the metrics.
 
 ### 7.5 Where the derivation's premise fails
 
-In a **single-prompt diagnostic**, most channelwise terms had small approximation errors (|a| median 0.003–0.107; relative error below 1e−2 at the 95th percentile). **That percentile summary does not characterise the error in the summed correction** — the quantity actually subtracted from the logit is the sum over 128 channels, and a rare large term can dominate a sum whose 95th percentile is small.
+In a **single-prompt diagnostic**, most channelwise terms had small approximation errors (|a| median 0.002–0.107; relative error below 1e−2 at the 95th percentile). **That percentile summary does not characterise the error in the summed correction** — the quantity actually subtracted from the logit is the sum over 128 channels, and a rare large term can dominate a sum whose 95th percentile is small.
 
 Measured on the summed quantity across **all ten prompts**, the error is large in the sampled outlier heads: in layer 29 the relative error reaches a 95th percentile of 12.2–25.7 (median across prompts; full range 8.7–32.0), while layers 0 and 15 stay at 0.02–0.17. The two measurements have different scopes and we do not present them as one verification.
 
@@ -179,8 +181,18 @@ The quality cost of a low-bit KV cache is not a function of bit-width alone. In 
 ### 확인 필요 (집필 세션)
 
 1. **§2의 인용** — 각 선행연구를 arXiv 번호로 확정하고, KIVI·QVG 커밋 해시를 실제 조사표와 대조할 것. 본문의 `876b4d2`·`0601468`은 조사표 인용이다 `[간접]`.
-2. **§7.1의 34%** — 10.04/29.23 = 34.3% `[계산]`. subject_consistency 32%는 원자료 확인 필요 `[간접]`.
+2. ~~**§7.1의 34%**~~ — **확인됨.** 10.044/29.229 = 34.4%; subject_consistency 0.0737/0.2284 = **32.3%** (`figure_data.json` fig5, bf16_ref·λ1) `[확인]`.
 3. **§9.2의 peak reserved**를 표에서 뺐다(BF16 22.01 / 최종 16.55). 넣을지 결정할 것.
-4. **§10의 "일곱·넷"** — 부록 목록과 개수가 맞는지 대조.
+4. ~~**§10의 "일곱·넷"**~~ — **확인됨.** `S6_FINDINGS.md` §5.4 도구 버그 7항, §5.5 보고 오류 4항 `[확인]`.
 5. **§1 Figure 1 캡션**에 INT4 패널이 "상호작용 비검출"을 보이기 위한 것이며 INT4 주효과를 독립 결과로 읽지 말라는 문구를 넣을 것.
 6. 전체 용어 통일: displaced grid / storage path / cache residency / not detected vs equivalent / re-quantization.
+
+### 검증 기록 (2026-09-21, 결과 세션)
+
+본문 수치를 원자료와 대조했다. 위 본문에서 **고친 것**:
+- **§2** — QVG 설명·33-method 문장·Tuncer et al. 호칭·그룹 축 대조를 `CITATIONS_verified_6` §7 대로 교체. **"within our survey the only path exhibiting the condition is the patch we used ourselves" 삭제** — 공개 harness `b4c0936`의 패치가 같은 구조를 가진다(§5.1). 대체 문단은 §5.2 결론 문장을 따랐다.
+- **§6** — **+11.20 → +11.18 [+7.59, +14.76]**. +11.20은 `gateK_aligned`의 oracle(55.99) vs driver-oldest(44.79)이고, 분해 성분은 `gateK0` 네 팔(oracle3 55.44 vs k0_oldest 44.26)에서 나왔다. 다른 팔·다른 기준선이므로 "sum to +11.18 against the +11.20 measured"처럼 한 측정의 오차로 쓰면 안 된다.
+- **§7.4** — λ0.5 vs λ1 은 **subject_consistency 한정** 비검출이고 **MUSIQ 에서는 λ1 이 높다**(−2.96 [−4.69, −1.22]). "λ≥2에서 순서가 반대"를 구체 문장으로 교체.
+- **§7.5** — |a| 중앙 최솟값 0.003 → **0.002**(0.00229, chunk 1 layer 0).
+
+**대조해서 맞은 것**: §1·§4·§5·§7.1·§7.3·§7.5(나머지)·§7.6·§8·§9 의 모든 수치, §10 의 7·4 개수.
