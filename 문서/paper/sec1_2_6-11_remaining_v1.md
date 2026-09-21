@@ -13,11 +13,11 @@ In streaming video diffusion the key–value cache holds the context retained fo
 
 We study a rolling cache quantized with round-to-nearest in groups of 16 tokens. Because a chunk is 4,680 tokens — 292.5 groups — eviction displaces surviving content relative to the group boundaries, and the content is re-quantized on a grid it was not quantized on. In the implementation, dtype and grid configuration we tested, re-quantization on a fixed grid reproduces the stored content exactly, and re-quantization after the grid moves does not (§4.1).
 
-The consequence is not a small numerical residue. Measured under a displaced grid, a content sink shows a negative point estimate at INT2 whose interval includes zero; measured under an aligned grid, the same sink gives **+7.68 [+4.86, +10.49]** MUSIQ. In a full 2×2, grid alignment and the sink interact with a term of **+9.22 [+5.85, +12.59]**, larger than either main effect, while the two interventions measured one at a time sum to +0.74 with an interval spanning zero.
+The consequence is not a small numerical residue. Measured under a displaced grid, a content sink shows a negative point estimate at INT2 (−1.54) whose interval includes zero — no benefit and no degradation is detected; measured under an aligned grid, the same sink gives a detected benefit of **+7.68 [+4.86, +10.49]** MUSIQ. What changes between the two conditions is the sign of the point estimate and whether a benefit is detected, not a demonstrated reversal from harm to benefit. In a full 2×2, grid alignment and the sink interact with a term of **+9.22 [+5.85, +12.59]**, larger than either main effect, while the two interventions measured one at a time sum to +0.74 with an interval spanning zero.
 
 **Contributions.**
 1. We identify grid displacement in rolling group-quantized caches and characterise it at the level of stored codes, separating the re-quantization call, the code change, the change in dequantized value, and the change in error against the original (§4).
-2. We show that this storage condition changes what an evaluation concludes: the sink effect's sign, and an interaction larger than either main effect (§5).
+2. We show that this storage condition changes what an evaluation concludes: the sign of the sink's point estimate and whether its benefit is detected, and an interaction larger than either main effect (§5).
 3. We separate the size of the Jensen bias correction's benefit from the contribution of its per-key structure, and report where its derivation's premise fails (§7).
 4. We give a measurement protocol — random-number convention, storage path, memory accounting, statistical unit, provenance — with the scope of each verification stated (§3).
 
@@ -29,7 +29,7 @@ The consequence is not a small numerical residue. Measured under a displaced gri
 
 ## 2 Background and Related Work
 
-> **미완: 서지정보.** 이 절의 인용은 아직 저자·연도·arXiv 번호와 해당 주장을 뒷받침하는 위치가 붙지 않았다. **제출용 문장으로 확정하지 않는다.** 외부 논문 원문 재검증도 하지 않았다.
+> **인용 상태 (CITATIONS_verified_v1 기준).** `[확인]` 원문·저장소 직접 확인: QVG(2602.02958, `0601468`), UCSD 33-method(2603.27469, harness `b4c0936`), Tuncer et al.(2605.26266, 코드는 찾지 못함), KIVI(2402.02750, `876b4d2`). `[미확인]` 원문을 열지 않아 근거 위치가 없음: Self-Forcing, LongLive, Deep Forcing(2512.05081), KV-AdaQuant(2502.15075), SkyReels-V2, MAGI-1, VBench, MUSIQ, FlashAttention-2. 미확인 항목에 대한 진술("LongLive retrains for a short cache", "Deep Forcing adjusts sink and window without retraining")은 **제출용 문장으로 확정하지 않는다.**
 
 **Streaming video diffusion.** Self-Forcing and its successors generate chunk by chunk with a rolling KV cache; LongLive retrains for a short cache; Deep Forcing adjusts sink and window without retraining. These works set the cache configurations we vary.
 
@@ -59,6 +59,8 @@ The public harness of the 33-method study (`b4c0936`) applies a patch whose path
 ## 6 Decomposing the Anchor Effect
 
 An oracle that selects anchor chunks adaptively by a contamination criterion yields **+11.18 [+7.59, +14.76]** MUSIQ over the no-anchor (`oldest`) baseline in the four-arm control run. In that run the oracle selected **the same set as the fixed policy {0,1,2} in all 140 decisions**, and the two arms' per-prompt scores agree to the decimal.
+
+The table is an **ordered sequence of conditional contrasts** — each row is measured on top of the rows above it, in this order, and the values are not interchangeable main effects.
 
 | component | value | 95% CI / supporting evidence |
 |---|---|---|
@@ -174,7 +176,7 @@ The recommendation we can support is narrow and practical. **Report the storage 
 
 ## 11 Conclusion
 
-The quality cost of a low-bit KV cache is not a function of bit-width alone. In the implementation we studied, whether stored content is re-quantized on a moving grid changes the measured effect of a cache-configuration choice — including its sign — and produces an interaction larger than either intervention's individual effect. Storage conditions are part of the configuration being evaluated, and results that do not state them describe an experiment that cannot be identified.
+The quality cost of a low-bit KV cache is not a function of bit-width alone. In the implementation we studied, whether stored content is re-quantized on a moving grid changes the measured effect of a cache-configuration choice — the sign of its point estimate and whether a benefit is detected — and produces an interaction larger than either intervention's individual effect. Storage conditions are part of the configuration being evaluated, and results that do not state them describe an experiment that cannot be identified.
 
 ---
 
@@ -196,3 +198,8 @@ The quality cost of a low-bit KV cache is not a function of bit-width alone. In 
 - **§7.5** — |a| 중앙 최솟값 0.003 → **0.002**(0.00229, chunk 1 layer 0).
 
 **대조해서 맞은 것**: §1·§4·§5·§7.1·§7.3·§7.5(나머지)·§7.6·§8·§9 의 모든 수치, §10 의 7·4 개수.
+
+### 검증 기록 (2026-09-21, 2차)
+- §1·§11: "sink effect's sign / including its sign" → "점추정치의 부호와 이득 검출 여부". 정렬 OFF 의 −1.54 는 CI 가 0 을 포함하므로 악화의 증거가 아니다(§5.2 와 일치시킴).
+- §2 머리말: "외부 원문 재검증 안 함" → 확인/미확인 상태표.
+- §6: 표가 "순서를 정한 조건부 대비"임을 본문에 명시.

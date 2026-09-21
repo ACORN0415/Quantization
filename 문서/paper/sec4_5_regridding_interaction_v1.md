@@ -40,7 +40,7 @@ Those comparisons partition into two populations according to whether the grid t
 
 The axis here is whether the grid moved, not when in the run the comparison occurred. Read this way the result is sharper than the pooled rate suggests: on a displaced grid **every** comparison found the key codes changed, while on an undisplaced grid they changed only where a partially filled boundary group was re-formed.
 
-Two distinct paths produce the changes, and they are not the same mechanism. **(A) Boundary-group rescaling at write time**: where a chunk boundary falls inside a group, the group's later members are filled by the next write; the group's extent does not move, but its shared scale is recomputed from the new members, so the codes of the earlier members can change. **(B) Grid displacement at eviction**: when the evicted span is not a multiple of the group size, group extents shift relative to surviving content and the groups re-form with different members. (A) needs only a chunk size that is not a multiple of the group size; (B) needs an eviction to occur at all. Alignment closes both. The 1,350 changed comparisons in the undisplaced population can only come from (A); the 7,560 in the displaced population are consistent with (B) but **we have not established that (A) is absent there**, and **we have not separated how much either path contributes to quality.**
+Two distinct paths produce the changes, and they are not the same mechanism. **(A) Boundary-group rescaling at write time**: where a chunk boundary falls inside a group, the group's later members are filled by the next write; the group's extent does not move, but its shared scale is recomputed from the new members, so the codes of the earlier members can change. **(B) Grid displacement at eviction**: when the evicted span is not a multiple of the group size, group extents shift relative to surviving content and the groups re-form with different members. (A) needs only a chunk size that is not a multiple of the group size; (B) needs an eviction to occur at all. Alignment closes both. The 1,350 changed comparisons in the undisplaced population are **consistent with** write-time boundary rescaling (A) — the counter records that key codes changed on an undisplaced grid, not which group or scale changed, and we did not link the changed positions to write boundaries; the 7,560 in the displaced population are consistent with (B) but **we have not established that (A) is absent there**, and **we have not separated how much either path contributes to quality.**
 
 Position does not protect content. In a separate A2 INT2 generation audit, the positionally fixed sink slot's stored key codes changed in 804 of 9,000 comparisons with alignment OFF, versus 0 of 9,000 with alignment ON. These counts aggregate three prompts, 30 layers, and repeated generation calls. The mechanism is that 4,680 mod 16 = 8 leaves the 292nd block straddling the sink/rolling boundary, so a slot that never moves still sits in a group that re-forms.
 
@@ -57,7 +57,7 @@ Turning grid alignment on, with everything else fixed (n=10 prompts, paired):
 | A1, INT4 | +1.08 | [+0.51, +1.65] | +4.26 | 9/10 |
 | A4, INT4 | +1.08 | [+0.23, +1.92] | +2.89 | 10/10 |
 
-A control at 21 frames, where **no eviction occurs**, shows +0.06 (±0.46, t=0.29): no effect is detected. This is what the mechanism predicts — with no eviction there is no grid displacement, and the difference between the two settings is only how blocks are partitioned.
+A control at 21 frames, where **no eviction occurs**, shows +0.06 (±0.46, t=0.29): no quality difference is detected. This condition excludes eviction-driven grid displacement (path B), but it does **not** exclude the difference in group partitioning or the write-time boundary rescaling of path A — alignment changes how groups are formed from the first write, before any eviction. The control therefore bounds what the eviction path contributes in this setting; it does not test path A.
 
 ---
 
@@ -119,3 +119,7 @@ All figures here are for the models, prompts (n=10), frame count (63) and quanti
 2. ~~§4.3 카운터의 단위·대상~~ — **확인됨.** `_requant_audit` 는 `causal_model.py:89` 에 정의되고 `state["k"]["q"]` 만 비교하며 단위는 `n_cmp`(생존 슬롯 비교). 804 = 이동 없음 306 + 이동 있음 498 도 원자료와 일치 `[확인]`.
 3. ~~A2의 804 단위~~ — **해결.** 같은 계측기의 sink 슬롯 K 코드 변화 검출 횟수이고 분모는 9,000(정렬 ON은 0/9,000). 이동 없음 306 + 이동 있음 498. **A2는 INT2 실행**이므로 INT4인 47,250 집계와 한 계열로 묶지 않는다 `[확인]`.
 4. 용어: "displaced grid" vs "misaligned grid" 중 하나로 통일.
+
+### 검증 기록 (2026-09-21, 2차)
+- §4.4: "퇴출 없음 → 효과 없음이 예측" 삭제. 21프레임 대조는 경로 B(퇴출 격자 이동)만 제외하고 경로 A(쓰기 시 경계 재스케일)와 그룹 분할 차이는 제외하지 못한다 — §4.3 과 모순이었다.
+- §4.3: 1,350건을 "(A)에서만 올 수 있다" → "(A)와 부합한다". 카운터는 위치·scale·쓰기 경계를 연결하지 않는다.
