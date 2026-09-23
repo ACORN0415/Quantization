@@ -243,6 +243,36 @@ pending 0.863 GB 를 포함하면(A1 W=7, 닫힌식):
 **순서**: B 구현 → G1~G5 → 프롬프트 3~9 탐색 rollout(A1·63f·seed 0, 비교 팔 = 기존 P3 fused INT2 λ1·K4V2 λ1) →
 MUSIQ·subject_consistency·temporal_flickering 세 지표의 **프롬프트별 차이**를 함께 보고.
 
+## 7. 설계 B 백엔드 관문 결과 (2026-09-23)
+
+구현: `--attn_backend lowrank` (커밋 `9ac2d41`→`ea05ca7`). fused 와 같은 once-per-chunk 세그먼트 구조에 head 별
+SVD → int8 인자(+fp16 열 scale) 저장, 읽을 때 bf16 복원 → 표준 attention, 보정 없음. **품질 확인용 복원 경로.**
+
+**1차 실행 (프롬프트 0~2 · 63f · `LR_ASSERT=1`, `run_s8_B_gates.sh`)**
+
+| 관문 | 결과 | 통과의 뜻 (좁힘) |
+|---|---|---|
+| G1 (1차) | 덤프 인자 → 참고 코드 복원 vs 백엔드 K̂·V̂: rel 0 · 같은 K̂V̂Q 의 `attention` 출력 bit-exact (2지점) | **재현성 확인**이다. 백엔드가 덤프한 세그먼트 목록을 그대로 믿으므로 세그먼트 집합 오류·self 중복은 잡지 못한다 → 2차에서 구조 검사로 보완 |
+| G2 | chunk 0 vs BF16 무압축(세션 3 latent) **3/3 bit-exact**, chunk 1~20 **60/60 상이** | 과거 세그먼트가 없는 chunk 0 에서 같은 실행 경로와 일치 |
+| G3 | `LR_ASSERT` 아래 63f 완주, 예외 없음 | 생성 후 세그먼트 인자(int8 코드·fp16 scale 체크섬) 불변 |
+| G4 (1차) | chunk 0 일치에 의존 | **불충분** — 읽지 않았다는 것이지 남지 않았다는 증거가 아니다 → 2차에서 pop 직접 로그 + chunk 0 시작 시 빈 상태 assert |
+| G5 | 상주 **1,819.6 MB vs 닫힌식 과거 957 + pending 863 = 1,820 MB (차 +0.0)** · dtype A/B int8, As/Bs fp16 · peak 11.11 GB | 저장량이 계산과 일치. **peak 는 복원 버퍼 포함이라 비교 대상 아님** |
+
+**2차 실행 (프롬프트 0~1 · 27f — 창 채움(chunk 6)·첫 퇴출(7)·반복 퇴출(8), `run_s8_B_gates2.sh`) — 진행 중.**
+21f 로는 퇴출을 검사할 수 없다는 지적을 받아 27f 로 잡았다. 보완 내용:
+- 인자에 출처 `chunk_id` 기록, K/V 출처 일치를 생성 시와 매 호출 검사. `(fK, fV)` 튜플은 함께 이동한다는
+  보장이지 같은 chunk 에서 왔다는 보장이 아니었다.
+- 덤프에 `chunk_ids`·`pending_chunk`·`cap` 추가 → **독립 기대값** `range(max(0, cur−(cap−1)), cur)`, 길이
+  `min(cur, cap−1)` 과 대조(캐시 자기 기록이 아니라 드라이버 chunk 번호·용량 규칙에서 계산).
+- G1 v2 — 정밀도를 나눈 세 비교: (a) 인자 직접 계산 ↔ **fp32 복원**(bf16 반올림 없음) attention, rel ≤ 1e-4;
+  (b) 백엔드 bf16 K̂·V̂ ↔ 같은 fp32 복원에 독립 bf16 반올림, ≤ 1e-6; (c) 실제 FA2 출력 ↔ 같은 bf16 K̂V̂Q 의
+  fp32 attention — 커널 수치차, **사전 기준 rel ≤ 2e-2** (결과 보기 전에 정함).
+- G4 — 리셋에서 pop 직전 세그먼트 수·상주 바이트 기록 + pop 뒤 부재 assert; chunk 0 호출 시 상태가 비어
+  있음을 assert(플래그가 아니라 chunk 번호로 독립 판정). **참조 제거 검사이며 allocator reserved 감소를
+  뜻하지 않는다.**
+- 순서 불변성: RoPE 적용된 K 와 대응 V 를 함께 순열하면 attention 은 수학적으로 같다(비트 일치는 아님).
+  순서가 FIFO 퇴출에 쓰이므로 구조 검사에서 목록 순서도 본다.
+
 ## 3. 선행연구 (리뷰가 준 목록 — 원문 미확인)
 
 Palu(ICLR'25)·ReCalKV·MatryoshkaKV(투영 weight 오프라인 SVD, 채널 축), STAR-KV(2606.08382,
