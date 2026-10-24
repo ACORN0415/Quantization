@@ -1,0 +1,182 @@
+=== NOQUANT 01:16 ===
+Free VRAM 20.37335205078125 GB
+KV inference with 3 frames per block
+[kv_quant] RTN_INT2 block_size=16
+[psac] rank=0 bias=none lambda=1.0 noquant=True log_points=((1, 0), (6, 15), (10, 29), (20, 29))
+[attn_backend] psac bias_lambda=0.0
+Number of prompts: 1
+0it [00:00, ?it/s]1it [03:40, 220.36s/it]1it [03:40, 220.36s/it]
+Moving DynamicSwap_WanTextEncoder to cuda:0 with preserved memory: 22.37870168685913 GB
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+[stats] prompt 0: 218.8s, peak_alloc 13.15 GB, peak_reserved 16.03 GB
+[psac] state log 20 records -> results/session9/psac_gates/NOQUANT.state.json
+[stats] wrote results/session9/psac_gates/NOQUANT.stats.json
+NOQUANT ok
+=== gates 01:22 ===
+G1(원안) NOQUANT vs BF16 rollout latent chunk 별 상대오차: 0.0e+00 6.6e-03 8.1e-03 8.5e-03 8.7e-03 1.0e-02 1.1e-02 1.1e-02 1.2e-02 1.4e-02 2.6e-02 3.3e-02 2.5e-02 2.7e-02 2.8e-02 2.9e-02 3.6e-02 4.3e-02 4.3e-02 5.1e-02 6.2e-02
+   max 6.16e-02 → FAIL (원안 기준 ≤1e-2; rollout 누적은 수치 발산을 포함 — 2026-10-25 프로토콜 변경 기록 참조)
+G1' 한 호출 명시적 vs FA2 (같은 입력, 20 지점): max 1.35e-03 → PASS (기준 ≤1e-2)
+G2 chunk0 bit-exact: 팔 사이 [True, True], NOQUANT 대비 True → PASS
+참고: BF16 대비 chunk1+ 상대오차 평균 PSAC8 0.454 INT2L1 0.862 K4V2L1 0.252 (카오스 포화 — 품질 지표 아님)
+G3 NOQUANT: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 NOQUANT: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 NOQUANT: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 NOQUANT: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 NOQUANT: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 NOQUANT: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 NOQUANT: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 NOQUANT: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 NOQUANT: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 NOQUANT: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 NOQUANT: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 NOQUANT: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 NOQUANT: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 NOQUANT: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 NOQUANT: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 PSAC8: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 PSAC8: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 PSAC8: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 PSAC8: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 PSAC8: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 PSAC8: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 PSAC8: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 PSAC8: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 PSAC8: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 PSAC8: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 PSAC8: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 PSAC8: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 PSAC8: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 PSAC8: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 PSAC8: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 INT2L1: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 INT2L1: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 INT2L1: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 INT2L1: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 INT2L1: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 INT2L1: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 INT2L1: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 INT2L1: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 INT2L1: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 INT2L1: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 INT2L1: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 INT2L1: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 INT2L1: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 INT2L1: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 INT2L1: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 K4V2L1: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 K4V2L1: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 K4V2L1: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 K4V2L1: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 K4V2L1: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 K4V2L1: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 K4V2L1: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 K4V2L1: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 K4V2L1: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 K4V2L1: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 K4V2L1: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 K4V2L1: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 K4V2L1: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 K4V2L1: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 K4V2L1: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 세그먼트 수·연속성 → PASS
+G4 PSAC8 세그먼트 구성 (dtype, shape, 실제 storage bytes):
+   k: {'q': ['torch.int8', [1, 293, 16, 12, 128], 7200768], 'scale': ['torch.float16', [1, 293, 1, 12, 128], 900096]}
+   v: {'q': ['torch.int8', [1, 293, 16, 12, 128], 7200768], 'scale': ['torch.float16', [1, 293, 1, 12, 128], 900096]}
+   U: ['torch.float16', [12, 128, 8], 24576]
+   C: ['torch.int8', [4680, 12, 8], 449280]
+   Cs: ['torch.float16', [1, 12, 8], 192]
+   var: ['torch.float16', [12, 128], 3072]
+   해석식 K bytes/chunk (12 head, packed 2bit): 3,174,336 = 12 × 264,528  (문서 264,528 × 12 = 3,174,336)
+   형상 {'U': (12, 128, 8), 'C': (4680, 12, 8), 'Cs': (1, 12, 8), 'var': (12, 128), 'kq': (1, 293, 16, 12, 128), 'kscale': (1, 293, 1, 12, 128)} → PASS
+속도 BF16: 51.4 s/프롬프트, peak 13.15 GB
+속도 NOQUANT: 218.8 s/프롬프트, peak 13.15 GB
+속도 PSAC8: 282.0 s/프롬프트, peak 11.15 GB
+속도 INT2L1: 345.7 s/프롬프트, peak 11.05 GB
+속도 K4V2L1: 345.8 s/프롬프트, peak 11.05 GB
+GATES PASS
+gates ok
+--- steps: NOQUANT:0 gates:0
+PSAC_GATES_RERUN DONE — all steps succeeded

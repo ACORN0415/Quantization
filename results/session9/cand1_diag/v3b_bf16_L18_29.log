@@ -1,0 +1,9 @@
+[cand1_diag] root=/vfsdata/gpu_data/attr_dump/consec/points prompts=[0, 1, 2] layers=[18, 29] ranks=[8, 16] variants=['E'] → /home/devel/Quantization/results/session9/cand1_diag/v3b_bf16_L18_29.json
+[cand1_diag] bytes K head·chunk: INT2 224,768 | K4 374,528 | INT2+PSAC8 264,272 (71% of K4) | INT2+PSAC16 303,776 (81% of K4)
+[1/6] p0 L18 | E0 var/uniform 0.24 effrank 98.9 | R0 0.7110 K4_R1s 0.5210 R2_r8_E 0.5920 R2_r16_E 0.5627 R4d_r8_E 0.5641 R4d_r16_E 0.5524 | chk 1.4e-06 | 5s peak 5.4GB
+[2/6] p1 L18 | E0 var/uniform 0.24 effrank 98.3 | R0 0.7535 K4_R1s 0.5613 R2_r8_E 0.6276 R2_r16_E 0.5993 R4d_r8_E 0.5919 R4d_r16_E 0.5813 | chk 9.5e-07 | 5s peak 5.4GB
+[3/6] p2 L18 | E0 var/uniform 0.24 effrank 98.6 | R0 0.6928 K4_R1s 0.4603 R2_r8_E 0.5447 R2_r16_E 0.5118 R4d_r8_E 0.5099 R4d_r16_E 0.4940 | chk 9.5e-07 | 5s peak 5.4GB
+[4/6] p0 L29 | E0 var/uniform 0.24 effrank 42.5 | R0 0.7167 K4_R1s 0.3828 R2_r8_E 0.3350 R2_r16_E 0.3247 R4d_r8_E 0.3284 R4d_r16_E 0.3238 | chk 1.5e-05 | 5s peak 5.4GB
+[5/6] p1 L29 | E0 var/uniform 0.25 effrank 50.5 | R0 0.6296 K4_R1s 0.2840 R2_r8_E 0.2811 R2_r16_E 0.2742 R4d_r8_E 0.2768 R4d_r16_E 0.2739 | chk 1.3e-05 | 5s peak 5.4GB
+[6/6] p2 L29 | E0 var/uniform 0.25 effrank 43.7 | R0 0.6075 K4_R1s 0.2602 R2_r8_E 0.2722 R2_r16_E 0.2652 R4d_r8_E 0.2680 R4d_r16_E 0.2644 | chk 1.3e-05 | 5s peak 5.4GB
+[cand1_diag] DONE 6/6 → /home/devel/Quantization/results/session9/cand1_diag/v3b_bf16_L18_29.json

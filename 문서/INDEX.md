@@ -32,6 +32,8 @@
 | `S6_HANDOFF_rev1_M1a_P0.md` | 세션 6 지시서 **개정판** (191줄, M1-a·P0 추가) — **세션 중 이쪽으로 전환** |
 | `S7_corrections_v1.md` → `v2` → `v2_1` → `v2_2` | 세션 7 정정 지시, v2_2가 최신 |
 | `HANDOFF_kernel_track.md` | 커널 트랙 |
+| `HANDOFF_method_candidates_2026-10-24.md` / `_r2.md` | 방법 후보 인계 r1(Codex) / **r2.1(리뷰 6회 반영, §9·§10 실행 기록)** — 후보 1 PSAC+잔여분산 보정, 후보 2 calibration, 후보 3 분해 비용 |
+| `S9_PSAC8_quality_prereg.md` | 균일 PSAC8 참고 백엔드 품질 실험 **사전 등록**(한계·관문·시간 상한, §6 프로토콜 변경 기록) |
 
 **주의**: `S6_HANDOFF_rev0`과 `rev1`은 같은 이름으로 존재하던 **다른 개정판**이다.
 세션 6은 rev0으로 시작해 도중에 rev1(M1-a·P0 우선)으로 전환했다.
@@ -50,6 +52,7 @@
 
 | 파일 | 내용 |
 |---|---|
+| `S9_cand1_diag.md` | **세션 9** 후보 1 진단(캡처 R0~R4, 온라인 scope, 층별 배분) + §6 PSAC8 품질 실험 **FAIL**(사전 등록 비열등성 미달; INT2 λ1 대비 subj +0.053 은 확인) |
 | `S1_RESULTS_4090.md` ~ `S4_RESULTS.md` | 세션 1~4 |
 | `S5_RESULTS.md`, `S5_RESULTS_gates.md`, `S5_NOTES.md`, `S5_STATUS_2026-09-18.md` | 세션 5 |
 | **`S6_FINDINGS.md`** | **세션 6 진입점** |

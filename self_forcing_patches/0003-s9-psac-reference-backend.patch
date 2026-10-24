@@ -1,0 +1,255 @@
+diff --git a/inference.py b/inference.py
+index bee2173..9a18640 100644
+--- a/inference.py
++++ b/inference.py
+@@ -102,7 +102,7 @@ parser.add_argument("--kv_quant_repo", type=str,
+                     default=os.path.expanduser("~/gpu/kv-quant-longhorizon"),
+                     help="Path to the kv-quant-longhorizon checkout")
+ parser.add_argument("--attn_backend", type=str, default="auto",
+-                    choices=["auto", "fused", "lowrank", "mixed"],
++                    choices=["auto", "fused", "lowrank", "mixed", "psac"],
+                     help="Gate J3: 'fused' = packed streaming cache + Triton "
+                          "fused low-bit attention (no BF16 reconstruction)")
+ parser.add_argument("--fused_bias_lambda", type=float, default=0.0,
+@@ -130,6 +130,12 @@ parser.add_argument("--kv_grid_align", type=str, default="off",
+                          "re-quantization stays idempotent (no lineage error)")
+ parser.add_argument("--lr_layers", type=str, default="0,1,2,4,5,27,28,29",
+                     help="설계 A(mixed): 저랭크를 쓸 층 인덱스(쉼표). 나머지는 fused K4V2 + fused_bias_lambda")
++parser.add_argument("--psac_rank", type=int, default=8, help="S9 psac 백엔드: 자기 query 기저 rank (0 = 방향 보존 없음)")
++parser.add_argument("--psac_bias", type=str, default="r4d", choices=["r4d", "delta", "none"],
++                    help="S9 psac 백엔드: 세그먼트 키 bias — r4d 잔여 대각 분산 / delta Δ=scale Taylor λ / none")
++parser.add_argument("--psac_lambda", type=float, default=1.0, help="S9 psac 백엔드 delta 모드 λ (Δ=scale 기준)")
++parser.add_argument("--psac_log_points", type=str, default="", help="G3/G4 상태 기록 지점 'chunk,layer;...'")
++parser.add_argument("--psac_state_log", type=str, default=None, help="G3/G4 상태 기록 JSON 경로")
+ parser.add_argument("--kv_lowrank_rank", type=int, default=46,
+                     help="S8 설계 B: 저랭크 백엔드 rank (K,V 동일, int8 인자)")
+ parser.add_argument("--lr_gate_dump", type=str, default=None,
+@@ -277,6 +283,12 @@ if args.attn_backend != "auto":
+             _cm4.LR_GATE_DUMP = args.lr_gate_dump
+             _cm4.LR_GATE_POINTS = tuple(tuple(int(x) for x in g.split(",")) for g in args.lr_gate_points.split(";") if g.strip())
+         print(f"[lowrank] rank={args.kv_lowrank_rank} assert={_cm4.LR_ASSERT} gate_dump={args.lr_gate_dump}")
++    if args.attn_backend == "psac":
++        _cm4.PSAC_RANK = args.psac_rank; _cm4.PSAC_BIAS = args.psac_bias; _cm4.PSAC_LAMBDA = args.psac_lambda
++        _cm4.PSAC_NOQUANT = bool(os.environ.get("PSAC_NOQUANT"))
++        if args.psac_log_points:
++            _cm4.PSAC_LOG_POINTS = tuple(tuple(int(x) for x in g.split(",")) for g in args.psac_log_points.split(";") if g.strip())
++        print(f"[psac] rank={args.psac_rank} bias={args.psac_bias} lambda={args.psac_lambda} noquant={_cm4.PSAC_NOQUANT} log_points={_cm4.PSAC_LOG_POINTS}")
+     _cm4.FUSED_BIAS_LAMBDA = args.fused_bias_lambda
+     print(f"[attn_backend] {args.attn_backend} bias_lambda={args.fused_bias_lambda}")
+ 
+@@ -579,6 +591,12 @@ if args.tum_correct and (args.tum_bias_diag or args.tum_bias_dump) and local_ran
+               f"{(_tcb.BIAS_SPREAD_ACC[0]/max(_tcb.BIAS_SPREAD_ACC[1],1)):.5f}) "
+               f"over {_n} calls")
+ 
++if args.attn_backend == "psac" and args.psac_state_log and local_rank == 0:
++    import json as _json_psac
++    _cmP = __import__("wan.modules.causal_model", fromlist=["x"])
++    os.makedirs(os.path.dirname(os.path.abspath(args.psac_state_log)), exist_ok=True)
++    _json_psac.dump(_cmP.PSAC_STATE_LOG, open(args.psac_state_log, "w"), indent=1)
++    print(f"[psac] state log {len(_cmP.PSAC_STATE_LOG)} records -> {args.psac_state_log}")
+ if args.kv_bytes_report and local_rank == 0:
+     # Session-7 B2. The first version keyed dedup on t.data_ptr(), which is the
+     # VIEW pointer: offset views of one storage counted twice, and narrow views
+@@ -621,6 +639,9 @@ if args.kv_bytes_report and local_rank == 0:
+         "lowrank_dtypes": (__import__("wan.modules.causal_model", fromlist=["x"]).LR_DTYPE_LOG or [None])[0] if args.attn_backend == "lowrank" else None,
+         "tum_correct": bool(args.tum_correct), "tum_lambda": args.tum_lambda,
+         "fused_bias_lambda": args.fused_bias_lambda,
++        "psac": {"rank": args.psac_rank, "bias": args.psac_bias, "lambda": args.psac_lambda,
++                 "noquant": bool(os.environ.get("PSAC_NOQUANT")),
++                 "note": "참고 백엔드는 코드를 int8 로 들고 있어 resident 는 packed 상주가 아니다"} if args.attn_backend == "psac" else None,
+         "config_path": args.config_path,
+     }
+     os.makedirs(os.path.dirname(os.path.abspath(args.kv_bytes_report)), exist_ok=True)
+diff --git a/pipeline/causal_inference.py b/pipeline/causal_inference.py
+index a10f9df..7f62140 100644
+--- a/pipeline/causal_inference.py
++++ b/pipeline/causal_inference.py
+@@ -148,6 +148,7 @@ class CausalInferencePipeline(torch.nn.Module):
+                 # prompt N-1's cache (same failure mode as the SINK_TENSORS leak
+                 # the audit found).
+                 self.kv_cache1[block_index].pop("fused", None)
++                self.kv_cache1[block_index].pop("psac", None)   # S9 참고 백엔드 상태도 프롬프트마다 새로
+                 # S8 설계 B: 저랭크 세그먼트도 새 캐시 상태다 — 같은 이유로 여기서 버린다.
+                 # G4 직접 검사: pop 전 세그먼트 수·상주 바이트를 기록하고, pop 뒤 부재를 확인한다.
+                 _lr = self.kv_cache1[block_index].pop("lowrank", None)
+diff --git a/wan/modules/causal_model.py b/wan/modules/causal_model.py
+index 405a362..4a4c34c 100644
+--- a/wan/modules/causal_model.py
++++ b/wan/modules/causal_model.py
+@@ -278,6 +278,161 @@ def _lowrank_attention(roped_query, roped_key, v, kv_cache,
+     return x
+ 
+ 
++# ---------------------------------------------------------------------------
++# S9 후보 1 참고 백엔드 (`--attn_backend psac`): 사전 등록 문서
++# Quantization/문서/지시서/S9_PSAC8_quality_prereg.md.
++#   저장(chunk 확정 시 1회): K → RTN INT{key_bits} (chunk-local group 16) + [rank>0] 자기 query 2차 모멘트의
++#   상위 r 고유벡터(fp16)에 잔차 E=K−K̂0 를 투영한 계수(int8, 열 scale fp16, chunk 별) + 잔여 대각 분산(fp16, head 당 D).
++#   V → RTN INT{value_bits}.  pending(현재 chunk)은 BF16 (fused/lowrank 와 같은 성질).
++#   읽기: K̂ = dequant + E_keep (bf16), V̂ = dequant, [세그먼트… | BF16 self] 위에서 fp32 명시적 softmax,
++#   세그먼트 키에만 per-key bias:  PSAC_BIAS="r4d": (1/2d)Σ q_c² Var_c · "delta": λ(1/24d)Σ q_c² Δ_tc² (Δ=scale) · "none".
++#   세 양자화 팔(PSAC8 / INT2 λ1 / K4V2 λ1)이 모두 이 경로를 쓰므로 실행 경로 차이가 통제된다. 속도·peak 는 주장하지 않는다.
++PSAC_RANK = 8
++PSAC_BIAS = "r4d"          # r4d | delta | none
++PSAC_LAMBDA = 1.0          # delta 모드 배수 (Δ=scale 기준; 2·scale 가 아니다)
++PSAC_NOQUANT = False       # G1: 세그먼트에 BF16 K/V 그대로, 보정 없음 → 기본 경로와 대조
++PSAC_QCHUNK = 468
++PSAC_STATE_LOG = []        # G3/G4: (layer, chunk, n_segs, chunk_ids, seg 구성 요소 형상·dtype) 기록
++PSAC_LOG_POINTS = ()       # ((chunk, layer), ...)
++
++
++def _psac_quant(quantizer, x, bits):
++    st = quantizer._quantize_tensor(x, bits); st["tensor_dtype"] = x.dtype
++    return st
++
++
++def _psac_dequant(quantizer, st):
++    return quantizer._dequantize_tensor(st)
++
++
++def _psac_finalize(quantizer, K, V, qstat, kb, vb, r):
++    """K, V [B,L,H,D] bf16 (chunk 의 마지막 쓰기 = context refresh). qstat [H,D,D] fp32 (자기 query 2차 모멘트 합) or None."""
++    assert K.shape[0] == 1, "psac 백엔드는 B=1 만 지원한다"
++    if PSAC_NOQUANT:
++        return {"Kraw": K, "Vraw": V, "L": int(K.shape[1])}
++    kst = _psac_quant(quantizer, K, kb); vst = _psac_quant(quantizer, V, vb)
++    seg = {"k": kst, "v": vst, "L": int(K.shape[1])}
++    K0 = _psac_dequant(quantizer, kst).to(K.dtype)
++    E = (K.float() - K0.float())[0]                                   # [L,H,D]
++    if r > 0 and qstat is not None:
++        _w, Vec = torch.linalg.eigh(qstat.float())                    # 오름차순
++        U16 = Vec[:, :, -r:].flip(2).to(torch.float16)                # [H,D,r]
++        C = torch.einsum("lhd,hdr->lhr", E, U16.float())              # [L,H,r]
++        Cs = (C.abs().amax(0, keepdim=True) / 127.0).clamp_min(1e-12).to(torch.float16)   # [1,H,r]
++        Cq = torch.round(C / Cs.float()).clamp(-127, 127).to(torch.int8)
++        Ek = torch.einsum("lhr,hdr->lhd", (Cq.to(torch.bfloat16) * Cs.to(torch.bfloat16)).float(), U16.float())
++        seg.update({"U": U16, "C": Cq, "Cs": Cs})
++        E = E - Ek
++    seg["var"] = E.var(0, unbiased=False).to(torch.float16)           # [H,D]  잔여(또는 전체) 대각 분산
++    return seg
++
++
++def _psac_khat(quantizer, seg, dtype):
++    if "Kraw" in seg:
++        return seg["Kraw"].to(dtype)
++    K0 = _psac_dequant(quantizer, seg["k"]).to(dtype)                 # [B,L,H,D]
++    if "U" in seg:
++        Ek = torch.einsum("lhr,hdr->lhd", (seg["C"].to(torch.bfloat16) * seg["Cs"].to(torch.bfloat16)).float(), seg["U"].float())
++        K0 = (K0.float() + Ek.unsqueeze(0)).to(dtype)
++    return K0
++
++
++def _psac_vhat(quantizer, seg, dtype):
++    if "Vraw" in seg:
++        return seg["Vraw"].to(dtype)
++    return _psac_dequant(quantizer, seg["v"]).to(dtype)
++
++
++def _psac_step_sq(seg, like):
++    """delta 모드: per-token Δ² (Δ = 저장 scale) [B,L,H,D] — Self-Forcing tum_correction 과 같은 정의."""
++    k = seg["k"]; scale = k["scale"].float()                          # [B, nb, 1, H, D]
++    b, nb, _, h, d = scale.shape; blk = int(k.get("block_size", 16))
++    step = scale.expand(b, nb, blk, h, d).reshape(b, nb * blk, h, d)
++    pad = int(k.get("pad_len", 0))
++    if pad:
++        step = step[:, :step.shape[1] - pad]
++    return (step ** 2).to(like.dtype)
++
++
++def _psac_attention(roped_query, roped_key, v, kv_cache, current_start, sink_tokens, max_attention_size, layer_idx=None):
++    quantizer = kv_cache["quantizer"]
++    st = kv_cache.setdefault("psac", {"segs": [], "chunk_ids": [], "pending": None, "pending_chunk": -1, "qstat": None})
++    for _key in ("k", "v"):
++        if isinstance(kv_cache.get(_key), torch.Tensor) and kv_cache[_key].numel():
++            kv_cache[_key] = kv_cache[_key].new_empty(0)
++    chunk_tokens = roped_query.shape[1]
++    cur_chunk = current_start // chunk_tokens
++    kb = int(getattr(quantizer, "key_bits", getattr(quantizer, "bits", 2)))
++    vb = int(getattr(quantizer, "value_bits", getattr(quantizer, "bits", 2)))
++
++    if st["pending"] is not None and cur_chunk != st["pending_chunk"]:
++        seg = _psac_finalize(quantizer, st["pending"][0], st["pending"][1], st["qstat"], kb, vb, PSAC_RANK)
++        seg["chunk_id"] = int(st["pending_chunk"])
++        st["segs"].append(seg); st["chunk_ids"].append(int(st["pending_chunk"]))
++        st["pending"] = None; st["qstat"] = None
++        cap_chunks = max_attention_size // chunk_tokens
++        n_sink = sink_tokens // chunk_tokens
++        while len(st["segs"]) > cap_chunks - 1:
++            st["segs"].pop(n_sink); st["chunk_ids"].pop(n_sink)
++    if PSAC_RANK > 0 and not PSAC_NOQUANT:
++        qf = roped_query[0].float()
++        qs = torch.einsum("lhd,lhe->hde", qf, qf) / qf.shape[0]
++        st["qstat"] = qs if st["qstat"] is None else st["qstat"] + qs
++    st["pending"] = (roped_key, v); st["pending_chunk"] = int(cur_chunk)
++
++    _log_here = bool(PSAC_LOG_POINTS) and layer_idx is not None and (int(cur_chunk), int(layer_idx)) in PSAC_LOG_POINTS
++    if _log_here:
++        comp = {}
++        if st["segs"]:
++            def _shape(o):
++                if isinstance(o, torch.Tensor): return (str(o.dtype), tuple(o.shape), int(o.untyped_storage().nbytes()))
++                if isinstance(o, dict): return {k: _shape(t) for k, t in o.items() if isinstance(t, (torch.Tensor, dict))}
++                return None
++            comp = _shape(st["segs"][-1])
++        PSAC_STATE_LOG.append({"layer": int(layer_idx), "chunk": int(cur_chunk), "n_segs": len(st["segs"]),
++                               "chunk_ids": list(st["chunk_ids"]), "cap_chunks": int(max_attention_size // chunk_tokens),
++                               "last_seg": comp})
++
++    segs = st["segs"]
++    if not segs:
++        return attention(roped_query, roped_key, v)
++    Kh = [_psac_khat(quantizer, s, roped_key.dtype) for s in segs]
++    Vh = [_psac_vhat(quantizer, s, v.dtype) for s in segs]
++    Kall = torch.cat(Kh + [roped_key], 1); Vall = torch.cat(Vh + [v], 1)
++    B, Lq, H, D = roped_query.shape
++    kt = Kall.float().permute(0, 2, 3, 1)                             # [B,H,D,Lk]
++    vv = Vall.float().permute(0, 2, 1, 3)                             # [B,H,Lk,D]
++    use_bias = (not PSAC_NOQUANT) and PSAC_BIAS != "none"
++    if use_bias and PSAC_BIAS == "r4d":
++        var_segs = [s["var"].float() for s in segs]                   # [H,D]
++    if use_bias and PSAC_BIAS == "delta":
++        d2_segs = [_psac_step_sq(s, roped_query).float() for s in segs]   # [B,L,H,D]
++    out = torch.empty_like(roped_query)
++    sc = 1.0 / math.sqrt(D)
++    _fa2_ref = attention(roped_query, Kall, Vall) if (_log_here and PSAC_NOQUANT) else None   # G1': 같은 입력에서 FA2 경로와 한 호출 비교
++    for s0 in range(0, Lq, PSAC_QCHUNK):
++        qq = roped_query[:, s0:s0 + PSAC_QCHUNK].float()              # [B,q,H,D]
++        logits = torch.matmul(qq.permute(0, 2, 1, 3), kt) * sc        # [B,H,q,Lk]
++        if use_bias:
++            off = 0
++            q2 = qq ** 2
++            for i, s in enumerate(segs):
++                L = s["L"]
++                if PSAC_BIAS == "r4d":
++                    b = torch.einsum("bqhd,hd->bhq", q2, var_segs[i]) / (2.0 * D)           # [B,H,q]
++                    logits[:, :, :, off:off + L] -= b.unsqueeze(-1)
++                else:
++                    b = torch.einsum("bqhd,bthd->bhqt", q2, d2_segs[i]) * (PSAC_LAMBDA / (24.0 * D))
++                    logits[:, :, :, off:off + L] -= b
++                off += L
++        P = torch.softmax(logits, dim=-1)
++        out[:, s0:s0 + PSAC_QCHUNK] = torch.matmul(P, vv).permute(0, 2, 1, 3).to(roped_query.dtype)
++        del logits, P
++    if _fa2_ref is not None:
++        PSAC_STATE_LOG[-1]["fa2_rel"] = ((out.float() - _fa2_ref.float()).norm() / _fa2_ref.float().norm().clamp_min(1e-12)).item()
++    return out
++
++
+ def _fused_quantized_attention(roped_query, roped_key, v, kv_cache,
+                                current_start, sink_tokens, max_attention_size):
+     """Gate J: attention over [packed segments | BF16 self], streaming.
+@@ -593,6 +748,14 @@ class CausalWanSelfAttention(nn.Module):
+             roped_key = causal_rope_apply(
+                 k, grid_sizes, freqs, start_frame=current_start_frame).type_as(v)
+             quantizer = kv_cache.get("quantizer", None)
++            if quantizer is not None and ATTN_BACKEND == "psac":
++                x = _psac_attention(roped_query, roped_key, v, kv_cache, current_start,
++                                    self.sink_size * frame_seqlen, self.max_attention_size,
++                                    layer_idx=getattr(self, "layer_idx", None))
++                _cur_end = current_start + roped_query.shape[1]
++                kv_cache["global_end_index"].fill_(_cur_end)
++                kv_cache["local_end_index"].fill_(min(_cur_end, self.max_attention_size))
++                return self.o(x.flatten(2))
+             if quantizer is not None and ATTN_BACKEND in ("fused", "lowrank", "mixed"):
+                 # Gate J3: packed streaming cache — no BF16/int8 master copy.
+                 # S8 설계 B: 같은 저장 구조(once-per-chunk 세그먼트)에 저랭크 인자 + 복원 읽기.

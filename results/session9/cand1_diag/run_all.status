@@ -1,0 +1,19 @@
+START 2026-10-24 19:34:51 HEAD=71e5b30 sf-tools@5741aef
+consec  EXIT=0 19:52:54
+consec2 EXIT=1 19:52:56
+ALL_DONE 2026-10-24 19:52:56
+consec2(rerun, 파일 인덱스 0~2 = prompts 3~5) EXIT=143 19:55:28
+consec2 rerun KILLED (팔 보강 후 재실행) 19:55:30
+START v2(팔 보강: R1_lλ, R4d0/R4f0, 변형 N) 2026-10-24 19:56:46 HEAD=71e5b30 sf-tools@5741aef
+consec  EXIT=0 20:20:25
+consec2(파일 p0~2 = prompts 3~5) EXIT=0 20:44:05
+ALL_DONE 2026-10-24 20:44:05
+k4 consec  EXIT=0 20:49:19
+k4 consec2 EXIT=0 20:53:37
+K4_DONE 20:53:37
+START v3 2026-10-24 22:22:56 HEAD=71e5b30
+v3 chunk20 consec EXIT=0 22:45:01
+v3 chunk20 consec2 EXIT=0 23:07:43
+v3 all consec EXIT=0 23:24:08
+v3 all consec2 EXIT=0 23:40:29
+V3_DONE 2026-10-24 23:40:29

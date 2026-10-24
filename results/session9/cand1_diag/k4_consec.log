@@ -1,0 +1,33 @@
+[cand1_diag] root=/vfsdata/gpu_data/attr_dump/consec/points prompts=[0, 1, 2] layers=[0, 3, 6, 9, 12, 15, 18, 22, 26, 29] ranks=[8] variants=['E'] → /home/devel/Quantization/results/session9/cand1_diag/k4_consec.json
+[cand1_diag] bytes K head·chunk: INT2 224,768 | K4 374,528 | INT2+PSAC8 264,272 (71% of K4)
+[1/30] p0 L 0 | E0 var/uniform 0.24 effrank 25.6 | R0 0.3960 R1_l0.25 0.2093 K4_R0 0.0668 K4_R1s 0.0654 | chk 1.8e-07 | 10s peak 4.4GB
+[2/30] p1 L 0 | E0 var/uniform 0.24 effrank 22.9 | R0 0.2990 R1_l0.25 0.1667 K4_R0 0.0810 K4_R1s 0.0793 | chk 1.5e-07 | 9s peak 4.4GB
+[3/30] p2 L 0 | E0 var/uniform 0.22 effrank 22.7 | R0 0.3155 R1_l0.25 0.1739 K4_R0 0.0753 K4_R1s 0.0737 | chk 1.5e-07 | 9s peak 4.4GB
+[4/30] p0 L 3 | E0 var/uniform 0.25 effrank 77.1 | R0 0.4781 R1_l0.25 0.2310 K4_R0 0.0846 K4_R1s 0.0836 | chk 1.1e-05 | 9s peak 4.4GB
+[5/30] p1 L 3 | E0 var/uniform 0.25 effrank 73.3 | R0 0.3767 R1_l0.25 0.2284 K4_R0 0.0812 K4_R1s 0.0806 | chk 2.7e-05 | 9s peak 4.4GB
+[6/30] p2 L 3 | E0 var/uniform 0.25 effrank 75.0 | R0 0.5048 R1_l0.25 0.2183 K4_R0 0.0849 K4_R1s 0.0831 | chk 2.7e-05 | 9s peak 4.4GB
+[7/30] p0 L 6 | E0 var/uniform 0.25 effrank 96.5 | R0 0.3399 R1_l0.25 0.2352 K4_R0 0.0971 K4_R1s 0.0951 | chk 8.3e-07 | 9s peak 4.4GB
+[8/30] p1 L 6 | E0 var/uniform 0.25 effrank 95.3 | R0 0.3254 R1_l0.25 0.2490 K4_R0 0.1030 K4_R1s 0.1018 | chk 6.0e-07 | 9s peak 4.4GB
+[9/30] p2 L 6 | E0 var/uniform 0.25 effrank 95.9 | R0 0.3212 R1_l0.25 0.2399 K4_R0 0.1051 K4_R1s 0.1031 | chk 6.0e-07 | 9s peak 4.4GB
+[10/30] p0 L 9 | E0 var/uniform 0.24 effrank 68.9 | R0 0.5243 R1_l0.25 0.4183 K4_R0 0.1309 K4_R1s 0.1292 | chk 3.8e-06 | 9s peak 4.4GB
+[11/30] p1 L 9 | E0 var/uniform 0.25 effrank 68.2 | R0 0.5147 R1_l0.25 0.4434 K4_R0 0.1636 K4_R1s 0.1614 | chk 1.9e-06 | 9s peak 4.4GB
+[12/30] p2 L 9 | E0 var/uniform 0.25 effrank 68.2 | R0 0.4668 R1_l0.25 0.3985 K4_R0 0.1449 K4_R1s 0.1431 | chk 1.9e-06 | 9s peak 4.4GB
+[13/30] p0 L12 | E0 var/uniform 0.24 effrank 77.4 | R0 0.3808 R1_l0.25 0.2258 K4_R0 0.0795 K4_R1s 0.0779 | chk 1.2e-06 | 9s peak 4.4GB
+[14/30] p1 L12 | E0 var/uniform 0.25 effrank 80.1 | R0 0.4034 R1_l0.25 0.2619 K4_R0 0.0961 K4_R1s 0.0944 | chk 9.5e-07 | 9s peak 4.4GB
+[15/30] p2 L12 | E0 var/uniform 0.25 effrank 78.2 | R0 0.3602 R1_l0.25 0.2476 K4_R0 0.0914 K4_R1s 0.0897 | chk 9.5e-07 | 9s peak 4.4GB
+[16/30] p0 L15 | E0 var/uniform 0.24 effrank 93.2 | R0 0.4418 R1_l0.25 0.3999 K4_R0 0.1688 K4_R1s 0.1683 | chk 7.2e-07 | 5s peak 4.4GB
+[17/30] p1 L15 | E0 var/uniform 0.25 effrank 92.9 | R0 0.4345 R1_l0.25 0.4087 K4_R0 0.1630 K4_R1s 0.1625 | chk 4.8e-07 | 3s peak 4.4GB
+[18/30] p2 L15 | E0 var/uniform 0.25 effrank 86.6 | R0 0.4223 R1_l0.25 0.3847 K4_R0 0.1493 K4_R1s 0.1488 | chk 4.8e-07 | 3s peak 4.4GB
+[19/30] p0 L18 | E0 var/uniform 0.24 effrank 98.9 | R0 0.6749 R1_l0.25 0.6211 K4_R0 0.3083 K4_R1s 0.3077 | chk 1.4e-06 | 3s peak 4.4GB
+[20/30] p1 L18 | E0 var/uniform 0.24 effrank 98.3 | R0 0.6530 R1_l0.25 0.6477 K4_R0 0.3277 K4_R1s 0.3275 | chk 9.5e-07 | 3s peak 4.4GB
+[21/30] p2 L18 | E0 var/uniform 0.24 effrank 98.6 | R0 0.6360 R1_l0.25 0.5856 K4_R0 0.2948 K4_R1s 0.2940 | chk 9.5e-07 | 3s peak 4.4GB
+[22/30] p0 L22 | E0 var/uniform 0.24 effrank 94.6 | R0 0.5662 R1_l0.25 0.4812 K4_R0 0.2455 K4_R1s 0.2448 | chk 1.9e-06 | 3s peak 4.4GB
+[23/30] p1 L22 | E0 var/uniform 0.25 effrank 94.6 | R0 0.5527 R1_l0.25 0.5222 K4_R0 0.2846 K4_R1s 0.2842 | chk 1.9e-06 | 3s peak 4.4GB
+[24/30] p2 L22 | E0 var/uniform 0.25 effrank 92.6 | R0 0.5049 R1_l0.25 0.4476 K4_R0 0.2321 K4_R1s 0.2314 | chk 1.9e-06 | 3s peak 4.4GB
+[25/30] p0 L26 | E0 var/uniform 0.25 effrank 83.0 | R0 0.5419 R1_l0.25 0.2849 K4_R0 0.1475 K4_R1s 0.1446 | chk 6.0e-07 | 3s peak 4.4GB
+[26/30] p1 L26 | E0 var/uniform 0.25 effrank 86.1 | R0 0.4433 R1_l0.25 0.3124 K4_R0 0.1740 K4_R1s 0.1712 | chk 4.8e-07 | 3s peak 4.4GB
+[27/30] p2 L26 | E0 var/uniform 0.25 effrank 84.9 | R0 0.4600 R1_l0.25 0.2929 K4_R0 0.1624 K4_R1s 0.1586 | chk 3.6e-07 | 3s peak 4.4GB
+[28/30] p0 L29 | E0 var/uniform 0.24 effrank 42.5 | R0 0.8821 R1_l0.25 0.3976 K4_R0 0.4512 K4_R1s 0.3705 | chk 1.5e-05 | 3s peak 4.4GB
+[29/30] p1 L29 | E0 var/uniform 0.25 effrank 50.5 | R0 0.7565 R1_l0.25 0.2951 K4_R0 0.4069 K4_R1s 0.2699 | chk 1.3e-05 | 3s peak 4.4GB
+[30/30] p2 L29 | E0 var/uniform 0.25 effrank 43.7 | R0 0.7220 R1_l0.25 0.2737 K4_R0 0.4247 K4_R1s 0.2470 | chk 1.3e-05 | 3s peak 4.4GB
+[cand1_diag] DONE 30/30 → /home/devel/Quantization/results/session9/cand1_diag/k4_consec.json

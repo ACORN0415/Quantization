@@ -1,0 +1,569 @@
+=== BF16 00:43 ===
+Free VRAM 20.37335205078125 GB
+KV inference with 3 frames per block
+Number of prompts: 1
+0it [00:00, ?it/s]1it [00:53, 53.23s/it]1it [00:53, 53.23s/it]
+Moving DynamicSwap_WanTextEncoder to cuda:0 with preserved memory: 22.37870168685913 GB
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+[stats] prompt 0: 51.4s, peak_alloc 13.15 GB, peak_reserved 17.36 GB
+[stats] wrote results/session9/psac_gates/BF16.stats.json
+BF16 ok
+=== NOQUANT 00:47 ===
+Free VRAM 20.37335205078125 GB
+KV inference with 3 frames per block
+[kv_quant] RTN_INT2 block_size=16
+[psac] rank=0 bias=none lambda=1.0 noquant=True log_points=((1, 0), (6, 15), (10, 29), (20, 29))
+[attn_backend] psac bias_lambda=0.0
+Number of prompts: 1
+0it [00:00, ?it/s]1it [03:45, 225.18s/it]1it [03:45, 225.18s/it]
+Moving DynamicSwap_WanTextEncoder to cuda:0 with preserved memory: 22.37870168685913 GB
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+[stats] prompt 0: 223.0s, peak_alloc 13.15 GB, peak_reserved 16.03 GB
+[psac] state log 20 records -> results/session9/psac_gates/NOQUANT.state.json
+Traceback (most recent call last):
+  File "/vfsdata/gpu_data/gpu/Self-Forcing/inference.py", line 650, in <module>
+    print(f"[kv_bytes] cache resident {_rep['kv_resident_bytes']/1e9:.3f} GB "
+NameError: name '_rep' is not defined
+!! NOQUANT FAILED rc=1
+=== PSAC8 00:54 ===
+Free VRAM 20.37335205078125 GB
+KV inference with 3 frames per block
+[kv_quant] RTN_INT2 block_size=16
+[psac] rank=8 bias=r4d lambda=1.0 noquant=False log_points=((1, 0), (6, 15), (10, 29), (20, 29))
+[attn_backend] psac bias_lambda=0.0
+Number of prompts: 1
+0it [00:00, ?it/s]1it [04:43, 283.36s/it]1it [04:43, 283.36s/it]
+Moving DynamicSwap_WanTextEncoder to cuda:0 with preserved memory: 22.37870168685913 GB
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+[stats] prompt 0: 282.0s, peak_alloc 11.15 GB, peak_reserved 13.96 GB
+[psac] state log 20 records -> results/session9/psac_gates/PSAC8.state.json
+[kv_bytes] cache resident 3.888 GB (not a peak) | peak alloc 11.97 GB | peak reserved 14.99 GB
+[stats] wrote results/session9/psac_gates/PSAC8.stats.json
+PSAC8 ok
+=== INT2L1 01:00 ===
+Free VRAM 20.37335205078125 GB
+KV inference with 3 frames per block
+[kv_quant] RTN_INT2 block_size=16
+[psac] rank=0 bias=delta lambda=1.0 noquant=False log_points=((1, 0), (6, 15), (10, 29), (20, 29))
+[attn_backend] psac bias_lambda=0.0
+Number of prompts: 1
+0it [00:00, ?it/s]1it [05:47, 347.24s/it]1it [05:47, 347.24s/it]
+Moving DynamicSwap_WanTextEncoder to cuda:0 with preserved memory: 22.37870168685913 GB
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+[stats] prompt 0: 345.7s, peak_alloc 11.05 GB, peak_reserved 13.80 GB
+[psac] state log 20 records -> results/session9/psac_gates/INT2L1.state.json
+[kv_bytes] cache resident 3.779 GB (not a peak) | peak alloc 11.86 GB | peak reserved 14.82 GB
+[stats] wrote results/session9/psac_gates/INT2L1.stats.json
+INT2L1 ok
+=== K4V2L1 01:07 ===
+Free VRAM 20.37335205078125 GB
+KV inference with 3 frames per block
+[kv_quant] RTN_K4_V2 block_size=16
+[psac] rank=0 bias=delta lambda=1.0 noquant=False log_points=((1, 0), (6, 15), (10, 29), (20, 29))
+[attn_backend] psac bias_lambda=0.0
+Number of prompts: 1
+0it [00:00, ?it/s]1it [05:47, 347.21s/it]1it [05:47, 347.21s/it]
+Moving DynamicSwap_WanTextEncoder to cuda:0 with preserved memory: 22.37870168685913 GB
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+[stats] prompt 0: 345.8s, peak_alloc 11.05 GB, peak_reserved 13.80 GB
+[psac] state log 20 records -> results/session9/psac_gates/K4V2L1.state.json
+[kv_bytes] cache resident 3.779 GB (not a peak) | peak alloc 11.86 GB | peak reserved 14.82 GB
+[stats] wrote results/session9/psac_gates/K4V2L1.stats.json
+K4V2L1 ok
+=== gates 01:14 ===
+G1 NOQUANT vs BF16: chunk 상대오차 max 6.16e-02 (chunk0 0.00e+00, 마지막 6.16e-02) → FAIL (기준 ≤1e-2)
+G2 chunk0 bit-exact: 팔 사이 [True, True], NOQUANT 대비 True → PASS
+참고: BF16 대비 chunk1+ 상대오차 평균 PSAC8 0.454 INT2L1 0.862 K4V2L1 0.252 (카오스 포화 — 품질 지표 아님)
+G3 NOQUANT: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 NOQUANT: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 NOQUANT: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 NOQUANT: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 NOQUANT: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 NOQUANT: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 NOQUANT: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 NOQUANT: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 NOQUANT: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 NOQUANT: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 NOQUANT: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 NOQUANT: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 NOQUANT: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 NOQUANT: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 NOQUANT: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 PSAC8: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 PSAC8: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 PSAC8: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 PSAC8: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 PSAC8: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 PSAC8: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 PSAC8: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 PSAC8: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 PSAC8: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 PSAC8: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 PSAC8: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 PSAC8: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 PSAC8: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 PSAC8: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 PSAC8: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 INT2L1: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 INT2L1: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 INT2L1: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 INT2L1: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 INT2L1: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 INT2L1: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 INT2L1: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 INT2L1: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 INT2L1: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 INT2L1: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 INT2L1: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 INT2L1: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 INT2L1: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 INT2L1: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 INT2L1: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 K4V2L1: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 K4V2L1: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 K4V2L1: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 K4V2L1: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 K4V2L1: chunk 1 layer 0 segs 1 ids [0] cap 7 → ok
+G3 K4V2L1: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 K4V2L1: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 K4V2L1: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 K4V2L1: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 K4V2L1: chunk 10 layer 29 segs 6 ids [4, 5, 6, 7, 8, 9] cap 7 → ok
+G3 K4V2L1: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 K4V2L1: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 K4V2L1: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 K4V2L1: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 K4V2L1: chunk 20 layer 29 segs 6 ids [14, 15, 16, 17, 18, 19] cap 7 → ok
+G3 세그먼트 수·연속성 → PASS
+G4 PSAC8 세그먼트 구성 (dtype, shape, 실제 storage bytes):
+   k: {'q': ['torch.int8', [1, 293, 16, 12, 128], 7200768], 'scale': ['torch.float16', [1, 293, 1, 12, 128], 900096]}
+   v: {'q': ['torch.int8', [1, 293, 16, 12, 128], 7200768], 'scale': ['torch.float16', [1, 293, 1, 12, 128], 900096]}
+   U: ['torch.float16', [12, 128, 8], 24576]
+   C: ['torch.int8', [4680, 12, 8], 449280]
+   Cs: ['torch.float16', [1, 12, 8], 192]
+   var: ['torch.float16', [12, 128], 3072]
+   해석식 K bytes/chunk (12 head, packed 2bit): 3,174,336 = 12 × 264,528  (문서 264,528 × 12 = 3,174,336)
+   형상 {'U': [12, 128, 8], 'C': [4680, 12, 8], 'Cs': [1, 12, 8], 'var': [12, 128], 'kq': [1, 293, 16, 12, 128], 'kscale': [1, 293, 1, 12, 128]} → FAIL
+속도 BF16: 51.4 s/프롬프트, peak 13.15 GB
+Traceback (most recent call last):
+  File "/home/devel/Quantization/tools/psac_gates.py", line 59, in <module>
+    s = json.load(open(f"{O}/{a}.stats.json"))["runs"][0]
+FileNotFoundError: [Errno 2] No such file or directory: 'results/session9/psac_gates/NOQUANT.stats.json'
+!! gates FAILED rc=1
+--- steps: BF16:0 NOQUANT:1 PSAC8:0 INT2L1:0 K4V2L1:0 gates:1
+PSAC_GATES INCOMPLETE — 2 step(s) failed. Results are NOT citable.
