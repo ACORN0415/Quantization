@@ -43,6 +43,7 @@
 
 | 파일 | 내용 |
 |---|---|
+| [REVIEW_S9_profile_v2_group16_2026-10-25.md](리뷰/REVIEW_S9_profile_v2_group16_2026-10-25.md) | S9 프로파일 v2 리뷰: 주장 범위·잔존 과장·group-16 bias 재사용의 출력/비용 검증 순서 |
 | `AUDIT_REPORT.md` | 세션 5 감사 |
 | `CODEX_REVIEW_HANDOFF_2026-09-19.md` | 코덱스 리뷰 인계 |
 | `rw_D_novelty_check.md` | 선행연구 대비 신규성 점검 |
