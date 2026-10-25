@@ -34,6 +34,7 @@
 | `HANDOFF_kernel_track.md` | 커널 트랙 |
 | `HANDOFF_method_candidates_2026-10-24.md` / `_r2.md` | 방법 후보 인계 r1(Codex) / **r2.1(리뷰 6회 반영, §9·§10 실행 기록)** — 후보 1 PSAC+잔여분산 보정, 후보 2 calibration, 후보 3 분해 비용 |
 | `S9_PSAC8_quality_prereg.md` | 균일 PSAC8 참고 백엔드 품질 실험 **사전 등록**(한계·관문·시간 상한, §6 프로토콜 변경 기록) |
+| `S9_C1_lambda_prereg.md` / `S9_latency_window_prereg.md` / `S9_profile_prereg.md` | 세션 9 사전 등록: P3 λ 응답(C1 1단계) · 창 길이별 fused 오버헤드 · 프로파일 1~3부 (각 §4 에 결과 전 해석 범위·순서 기록) |
 
 **주의**: `S6_HANDOFF_rev0`과 `rev1`은 같은 이름으로 존재하던 **다른 개정판**이다.
 세션 6은 rev0으로 시작해 도중에 rev1(M1-a·P0 우선)으로 전환했다.
