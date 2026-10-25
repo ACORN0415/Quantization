@@ -1,0 +1,46 @@
+{
+  "torch": "2.6.0+cu124",
+  "cuda": "12.4",
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "seed": 0,
+  "num_output_frames": 63,
+  "num_frame_per_block": 3,
+  "local_attn_size": 12,
+  "denoising_step_list": [
+    1000,
+    750,
+    500,
+    250
+  ],
+  "fakequant": "bf16",
+  "fakequant_group": 128,
+  "kv_quant": "bf16",
+  "kv_bits": 4,
+  "kv_key_bits": null,
+  "kv_value_bits": null,
+  "kv_block_size": 16,
+  "noise_perturb": 0.0,
+  "runs": [
+    {
+      "idx": 0,
+      "seconds": 40.95917868614197,
+      "num_latent_frames": 63,
+      "peak_vram_gb": 10.737987518310547,
+      "peak_vram_reserved_gb": 14.9765625
+    },
+    {
+      "idx": 1,
+      "seconds": 39.556403398513794,
+      "num_latent_frames": 63,
+      "peak_vram_gb": 10.751503944396973,
+      "peak_vram_reserved_gb": 16.93359375
+    },
+    {
+      "idx": 2,
+      "seconds": 39.607911825180054,
+      "num_latent_frames": 63,
+      "peak_vram_gb": 10.751503944396973,
+      "peak_vram_reserved_gb": 17.013671875
+    }
+  ]
+}

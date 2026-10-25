@@ -1,0 +1,9 @@
+W12f (18720 tok): fa2_bf16 4.088 | pack_write_chunk_int2 0.032 | pack_write_chunk_int4 0.032 | fused_int2_l0 4.901 | fused_int2_l1 9.330 | dequant_int2_torch 1.205 | fa2_after_dequant_int2 4.087 | dequant_plus_fa2_int2 5.291 | fused_k4v2_l0 5.046 | fused_k4v2_l1 9.506 | dequant_k4v2_torch 1.207 | fa2_after_dequant_k4v2 3.767 | dequant_plus_fa2_k4v2 4.975
+   정확도 fused λ0 vs 복원→FA2: int2 nan k4v2 4.38e-01
+W21f (32760 tok): fa2_bf16 6.583 | pack_write_chunk_int2 0.032 | pack_write_chunk_int4 0.032 | fused_int2_l0 8.153 | fused_int2_l1 16.766 | dequant_int2_torch 2.773 | fa2_after_dequant_int2 6.580 | dequant_plus_fa2_int2 9.353 | fused_k4v2_l0 8.470 | fused_k4v2_l1 17.350 | dequant_k4v2_torch 2.783 | fa2_after_dequant_k4v2 6.591 | dequant_plus_fa2_k4v2 9.374
+   정확도 fused λ0 vs 복원→FA2: int2 5.36e-01 k4v2 2.99e+00
+W36f (56160 tok): fa2_bf16 11.288 | pack_write_chunk_int2 0.031 | pack_write_chunk_int4 0.031 | fused_int2_l0 13.652 | fused_int2_l1 29.680 | dequant_int2_torch 5.271 | fa2_after_dequant_int2 11.286 | dequant_plus_fa2_int2 16.556 | fused_k4v2_l0 14.472 | fused_k4v2_l1 30.535 | dequant_k4v2_torch 5.276 | fa2_after_dequant_k4v2 11.292 | dequant_plus_fa2_k4v2 16.567
+   정확도 fused λ0 vs 복원→FA2: int2 nan k4v2 nan
+W63f (98280 tok): fa2_bf16 19.747 | pack_write_chunk_int2 0.032 | pack_write_chunk_int4 0.032 | fused_int2_l0 23.888 | fused_int2_l1 52.697 | dequant_int2_torch 9.560 | fa2_after_dequant_int2 19.736 | dequant_plus_fa2_int2 29.296 | fused_k4v2_l0 25.602 | fused_k4v2_l1 54.470 | dequant_k4v2_torch 9.572 | fa2_after_dequant_k4v2 19.825 | dequant_plus_fa2_k4v2 29.397
+   정확도 fused λ0 vs 복원→FA2: int2 nan k4v2 6.85e+00
+→ results/session9/profile/b9_kernel_sweep.json

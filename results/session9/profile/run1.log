@@ -1,0 +1,243 @@
+=== bf16 20:27 ===
+Free VRAM 20.37335205078125 GB
+KV inference with 3 frames per block
+Number of prompts: 1
+0it [00:00, ?it/s]Moving DynamicSwap_WanTextEncoder to cuda:0 with preserved memory: 22.376688480377197 GB
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+[profile] 156 kernels, device total 57889 ms -> results/session9/profile/prof_bf16.json
+1it [01:06, 66.55s/it]1it [01:06, 66.55s/it]
+[stats] prompt 0: 65.2s, peak_alloc 12.88 GB, peak_reserved 15.17 GB
+[stats] wrote results/session9/profile/bf16.stats.json
+bf16 ok
+=== int2_l0 20:30 ===
+Free VRAM 20.37335205078125 GB
+KV inference with 3 frames per block
+[kv_quant] RTN_INT2 block_size=16
+[attn_backend] fused bias_lambda=0.0
+Number of prompts: 1
+0it [00:00, ?it/s]Moving DynamicSwap_WanTextEncoder to cuda:0 with preserved memory: 22.376688480377197 GB
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+[profile] 163 kernels, device total 51871 ms -> results/session9/profile/prof_int2_l0.json
+1it [01:02, 62.73s/it]1it [01:02, 62.73s/it]
+[stats] prompt 0: 61.8s, peak_alloc 8.98 GB, peak_reserved 11.68 GB
+[kv_bytes] cache resident 1.834 GB (not a peak) | peak alloc 9.64 GB | peak reserved 12.54 GB
+[stats] wrote results/session9/profile/int2_l0.stats.json
+int2_l0 ok
+=== int2_l1 20:32 ===
+Free VRAM 20.37335205078125 GB
+KV inference with 3 frames per block
+[kv_quant] RTN_INT2 block_size=16
+[attn_backend] fused bias_lambda=1.0
+Number of prompts: 1
+0it [00:00, ?it/s]Moving DynamicSwap_WanTextEncoder to cuda:0 with preserved memory: 22.376688480377197 GB
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+[profile] 161 kernels, device total 62946 ms -> results/session9/profile/prof_int2_l1.json
+1it [01:12, 72.51s/it]1it [01:12, 72.51s/it]
+[stats] prompt 0: 71.7s, peak_alloc 8.98 GB, peak_reserved 11.68 GB
+[kv_bytes] cache resident 1.834 GB (not a peak) | peak alloc 9.65 GB | peak reserved 12.54 GB
+[stats] wrote results/session9/profile/int2_l1.stats.json
+int2_l1 ok
+=== k4v2_l1 20:34 ===
+Free VRAM 20.37335205078125 GB
+KV inference with 3 frames per block
+[kv_quant] RTN_K4_V2 block_size=16
+[attn_backend] fused bias_lambda=1.0
+Number of prompts: 1
+0it [00:00, ?it/s]Moving DynamicSwap_WanTextEncoder to cuda:0 with preserved memory: 22.376688480377197 GB
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+current_timestep: 1000.0
+current_timestep: 937.5
+current_timestep: 833.3333129882812
+current_timestep: 625.0
+[profile] 162 kernels, device total 64459 ms -> results/session9/profile/prof_k4v2_l1.json
+1it [01:14, 74.06s/it]1it [01:14, 74.06s/it]
+[stats] prompt 0: 73.2s, peak_alloc 9.28 GB, peak_reserved 11.68 GB
+[kv_bytes] cache resident 2.157 GB (not a peak) | peak alloc 9.97 GB | peak reserved 12.54 GB
+[stats] wrote results/session9/profile/k4v2_l1.stats.json
+k4v2_l1 ok
+--- steps: bf16:0 int2_l0:0 int2_l1:0 k4v2_l1:0
+PROFILE1 DONE — all steps succeeded

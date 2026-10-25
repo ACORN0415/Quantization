@@ -1,0 +1,95 @@
+{
+  "torch": "2.6.0+cu124",
+  "cuda": "12.4",
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "seed": 0,
+  "num_output_frames": 63,
+  "num_frame_per_block": 3,
+  "local_attn_size": 21,
+  "denoising_step_list": [
+    1000,
+    750,
+    500,
+    250
+  ],
+  "fakequant": "bf16",
+  "fakequant_group": 128,
+  "kv_quant": "RTN",
+  "kv_bits": 4,
+  "kv_key_bits": 4,
+  "kv_value_bits": 2,
+  "kv_block_size": 16,
+  "noise_perturb": 0.0,
+  "runs": [
+    {
+      "idx": 0,
+      "seconds": 75.72921895980835,
+      "num_latent_frames": 63,
+      "peak_vram_gb": 9.54992389678955,
+      "peak_vram_reserved_gb": 14.66796875
+    },
+    {
+      "idx": 1,
+      "seconds": 73.59443402290344,
+      "num_latent_frames": 63,
+      "peak_vram_gb": 9.562378883361816,
+      "peak_vram_reserved_gb": 16.625
+    },
+    {
+      "idx": 2,
+      "seconds": 73.58815264701843,
+      "num_latent_frames": 63,
+      "peak_vram_gb": 9.562542915344238,
+      "peak_vram_reserved_gb": 17.001953125
+    },
+    {
+      "idx": 3,
+      "seconds": 73.59680151939392,
+      "num_latent_frames": 63,
+      "peak_vram_gb": 9.562542915344238,
+      "peak_vram_reserved_gb": 17.66796875
+    },
+    {
+      "idx": 4,
+      "seconds": 73.61086416244507,
+      "num_latent_frames": 63,
+      "peak_vram_gb": 9.562542915344238,
+      "peak_vram_reserved_gb": 17.91015625
+    },
+    {
+      "idx": 5,
+      "seconds": 73.6059079170227,
+      "num_latent_frames": 63,
+      "peak_vram_gb": 9.562542915344238,
+      "peak_vram_reserved_gb": 17.91015625
+    },
+    {
+      "idx": 6,
+      "seconds": 73.60012888908386,
+      "num_latent_frames": 63,
+      "peak_vram_gb": 9.563146591186523,
+      "peak_vram_reserved_gb": 17.91015625
+    },
+    {
+      "idx": 7,
+      "seconds": 73.63229298591614,
+      "num_latent_frames": 63,
+      "peak_vram_gb": 9.563146591186523,
+      "peak_vram_reserved_gb": 17.91015625
+    },
+    {
+      "idx": 8,
+      "seconds": 73.609703540802,
+      "num_latent_frames": 63,
+      "peak_vram_gb": 9.563146591186523,
+      "peak_vram_reserved_gb": 17.91015625
+    },
+    {
+      "idx": 9,
+      "seconds": 73.59779024124146,
+      "num_latent_frames": 63,
+      "peak_vram_gb": 9.563146591186523,
+      "peak_vram_reserved_gb": 17.91015625
+    }
+  ]
+}
