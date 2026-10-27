@@ -9,6 +9,7 @@ from pipeline import CausalInferencePipeline
 from utils.misc import set_seed
 from demo_utils.memory import gpu,DynamicSwapInstaller
 from kvq import Quantizer
+from anchor_identity_gate import IdentityQuantizer
 from kvq.lockstep import bf16_cache,cross_cache,plain_snapshot,compressed_cache,chunk_noise,run_chunk,relative
 
 
@@ -17,6 +18,7 @@ def source_hash():
     for folder in ('kvq','pipeline','wan','utils'):
         for p in sorted((ROOT/folder).rglob('*.py')):h.update(p.read_bytes())
     h.update(Path(__file__).read_bytes())
+    h.update(Path(__file__).with_name('anchor_identity_gate.py').read_bytes())
     h.update((ROOT/'experiments/P3_TF_FR_PILOT.md').read_bytes())
     return h.hexdigest()
 
@@ -46,14 +48,15 @@ def trajectory(pipe,cond,frames,seed,bits,folder,expected=None):
     ref=bf16_cache(pipe,gpu)
     fr=compressed_cache(pipe,Quantizer('rtn',bits,bits),gpu) if bits else None
     rx,tx,fx=(cross_cache(pipe,gpu) for _ in range(3))
-    quantizer=Quantizer('rtn',bits,bits) if bits else None
+    quantizer=Quantizer('rtn',bits,bits) if bits else IdentityQuantizer()
     outputs={k:[] for k in ('bf16','tf','fr') if k!='fr' or bits}
     rows=[];work=None;chunks=frames//pipe.num_frame_per_block
     for c in range(chunks):
         work=None  # free the previous snapshot before allocating another
-        work=compressed_cache(pipe,quantizer,gpu,reference=ref) if bits else plain_snapshot(ref)
+        work=compressed_cache(pipe,quantizer,gpu,reference=ref)
         r=run_chunk(pipe,ref,rx,cond,noise,c,seed)
         t=run_chunk(pipe,work,tx,cond,noise,c,seed)
+        if not bits and c and quantizer.encode_calls==0:raise RuntimeError('anchor encoding path not exercised')
         if not bits and not torch.equal(r,t):raise RuntimeError(f'no-quant TF gate failed at chunk {c}')
         if expected is not None:
             old=torch.load(expected/f'chunk_{c:04d}.pt',map_location='cpu',weights_only=True)['latent']
@@ -98,8 +101,7 @@ def quality(pipe,folder):
         pipe.vae.model.clear_cache();del video,pixels,latent;torch.cuda.empty_cache()
         print('QUALITY',name,result[name]['musiq_mean'],flush=True)
     (folder/'quality.json').write_text(json.dumps(result,indent=2))
-    (folder/'cleanup.json').write_text(json.dumps(cleanup,indent=2))
-    for item in cleanup:(folder/item['path']).unlink()
+    (folder/'latent_manifest.json').write_text(json.dumps({'retained':True,'artifacts':cleanup},indent=2))
     pipe.vae.to('cpu');del metric;torch.cuda.empty_cache()
 
 
@@ -118,7 +120,11 @@ def main():
     if args.mode=='pilot':
         folder=args.out/f'p{args.prompt_index}_s{args.seed}_int{args.bits}'
         done=folder/'complete.json'
-        if done.exists() and json.loads(done.read_text())['source_sha256']==source_hash():
+        if done.exists():
+            if json.loads(done.read_text())['source_sha256']!=source_hash():
+                raise RuntimeError('existing case belongs to another source version; use a new --out directory')
+            if not all((folder/f'{name}.pt').exists() for name in ('bf16','tf','fr')):
+                raise RuntimeError('completed case lacks research tensors; restore them before reuse')
             print('REUSE COMPLETE',folder,flush=True);return
     pipe=build(args.seed)
     if args.mode=='gate':
@@ -126,7 +132,7 @@ def main():
         for i,cond in enumerate(conds):
             meta=trajectory(pipe,cond,63,args.seed,0,args.out/f'gate_prompt{i}',
                             expected=Path.home()/f'sfq_data/verify/g3_base/latents/prompt{i:03d}')
-            records.append({'prompt':i,'chunks':len(meta['rows']),'max_tf_rel':max(r['tf_rel'] for r in meta['rows'])})
+            records.append({'prompt':i,'chunks':len(meta['rows']),'max_tf_rel':max(r['tf_rel'] for r in meta['rows']),'path':'anchor_store_identity'})
         if source_hash()!=started_fingerprint:raise RuntimeError('source changed during model gates')
         (args.out/'gates.json').write_text(json.dumps({'pass':True,'records':records,'source_sha256':source_hash()},indent=2))
         print('GATES PASS',flush=True)
