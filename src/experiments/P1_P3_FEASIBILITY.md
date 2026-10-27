@@ -40,3 +40,5 @@ Stage summaries: `~/sfq_data/WORK_STATUS.md`.
 Commit the development protocol and code before model execution. Publish
 feasibility evidence separately from historical pilot results. Fix the final
 control definition, sample, primary endpoint and analysis before the main study.
+
+Measured development results: [RESULTS.md](policy_feasibility_results/RESULTS.md).
