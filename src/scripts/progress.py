@@ -8,7 +8,7 @@ def show():
     if a.watch:print('\033[2J\033[H',end='')
     print(time.strftime('%Y-%m-%d %H:%M:%S'),'— Quantization progress')
     print('Local data:',a.data)
-    for name in ('WORK_STATUS.md','policy_study.log','policy_study_tests.log','feasibility.log','feasibility_tests.log','anchor_validity.log','latent_recovery.log','validity_followup_tests.log','review_tests_final.log','review_identity.log','p3_gate_final.log','p3_queue.log'):
+    for name in ('WORK_STATUS.md','policy_study.log','policy_study_pipeline.log','policy_study_tests.log','feasibility.log','feasibility_tests.log','anchor_validity.log','latent_recovery.log','validity_followup_tests.log','review_tests_final.log','review_identity.log','p3_gate_final.log','p3_queue.log'):
         path=a.data/name
         if not path.exists():continue
         print('\n'+name+' ['+time.strftime('%H:%M:%S',time.localtime(path.stat().st_mtime))+']')
