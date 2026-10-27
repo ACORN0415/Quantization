@@ -68,7 +68,8 @@ for metric in ('latent','musiq'):
     fig.tight_layout();fig.savefig(out/f'{metric}.png',dpi=160);fig.savefig(out/f'{metric}.pdf');plt.close(fig)
 lines=['# P3 TF/FR pilot results','','Fixed protocol: [P3_TF_FR_PILOT.md](../P3_TF_FR_PILOT.md).',
        'Two new prompts, seed 0, 126 latent frames, RTN P3 group 16, no sink/bias.',
-       'All source-bound no-quantization and reference gates passed before measurement.','',
+       'Original BF16 gates passed before measurement; see evidence for the exact teacher-cache path.',
+       'A matching post-pilot anchor identity check, when present, is recorded separately.','',
        '| Bits | Prompt | Late TF rel | Late FR rel | Late TF−BF16 MUSIQ | Late FR−BF16 MUSIQ |',
        '|---|---|---|---|---|---|']
 for r in records:

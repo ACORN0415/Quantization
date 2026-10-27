@@ -2,7 +2,9 @@
 
 Fixed protocol: [P3_TF_FR_PILOT.md](../P3_TF_FR_PILOT.md).
 Two new prompts, seed 0, 126 latent frames, RTN P3 group 16, no sink/bias.
-All source-bound no-quantization and reference gates passed before measurement.
+The original BF16/plain-snapshot gates passed before measurement. The actual
+`anchor_store` identity path was validated retrospectively after the pilot,
+passing all 42 TF and reference comparisons; see [anchor_validity.json](anchor_validity.json).
 
 | Bits | Prompt | Late TF rel | Late FR rel | Late TF−BF16 MUSIQ | Late FR−BF16 MUSIQ |
 |---|---|---|---|---|---|
@@ -42,6 +44,7 @@ all values are finite, each case exports three 501-frame videos, and the two
 bit-width arms have identical BF16 latent-file hashes and BF16 quality arrays
 for each prompt. See [consistency.json](consistency.json).
 
-Successful exports removed **704,489,580 bytes** of derived latent tensors,
-including the redundant no-quantization gate tensors. Videos and compact
-measurements remain preserved. No memory-saving claim follows from this cleanup.
+The initial export removed **704,489,580 bytes**, including redundant gate
+tensors. This historical cleanup is preserved in the record. Final research
+latents are being restored against their original file hashes and will be
+retained; this is artifact recovery, not a memory-saving result.
