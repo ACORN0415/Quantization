@@ -67,14 +67,23 @@ class RollingStore:
     def attend(self, query, key, value, start, attention, *, local=True, record=None):
         k, v = self.write(key, value, start, local=local, track_source=record is not None)
         lo = max(0, self.local_end - self.capacity)
+        if record is not None:
+            history_end=self.local_end-key.shape[1]
+            ke=relative(k[:,lo:history_end],self.source[0][:,lo:history_end])
+            ve=relative(v[:,lo:history_end],self.source[1][:,lo:history_end])
+            record.update(k_rel=ke,v_rel=ve,read_history_k_rel=ke,read_history_v_rel=ve,
+                          read_history_tokens=history_end-lo,read_current_tokens=key.shape[1],
+                          kv_error_phase='pre_attention_history',kv_error_reference='insertion_bf16_history',
+                          kv_error_schema=2)
         out = attention(query, k[:, lo:self.local_end], v[:, lo:self.local_end])
         self.commit(k, v)
         if record is not None:
             kr, vr = self.restore(key)
-            record.update(k_rel=relative(kr[:, :self.local_end], k[:, :self.local_end]),
-                          v_rel=relative(vr[:, :self.local_end], v[:, :self.local_end]),
+            record.update(legacy_post_k_rel=relative(kr[:, :self.local_end], k[:, :self.local_end]),
+                          legacy_post_v_rel=relative(vr[:, :self.local_end], v[:, :self.local_end]),
                           tokens=self.local_end,
-                          kv_error_reference='pre_requantization_buffer',
+                          legacy_post_reference='pre_requantization_buffer',
+                          source_error_phase='post_storage',
                           source_k_rel=relative(kr[:, :self.local_end],self.source[0][:, :self.local_end]),
                           source_v_rel=relative(vr[:, :self.local_end],self.source[1][:, :self.local_end]),
                           source_reference='insertion_bf16',
@@ -130,7 +139,7 @@ class ChunkStore:
         v = torch.cat([p[1] for p in pairs] + [value], 1)
         self.global_end, self.local_end = start + count, k.shape[1]
         if record is not None:
-            errors=[0.,0.]; norms=[key.float().square().sum().item(),value.float().square().sum().item()]
+            errors=[0.,0.]; norms=[0.,0.]
             for seg in self.segments:
                 if seg["state"] is None:
                     for index,x in enumerate(seg["raw"]): norms[index]+=x.float().square().sum().item()
@@ -139,8 +148,14 @@ class ChunkStore:
                         errors[index]+=error;norms[index]+=norm
             ke=math.sqrt(errors[0])/max(math.sqrt(norms[0]),1e-12)
             ve=math.sqrt(errors[1])/max(math.sqrt(norms[1]),1e-12)
+            stored_norms=[norms[0]+key.float().square().sum().item(),
+                          norms[1]+value.float().square().sum().item()]
             record.update(tokens=k.shape[1], segment_starts=[s["start"] for s in self.segments],
-                          k_rel=ke,v_rel=ve,source_k_rel=ke,source_v_rel=ve,
-                          kv_error_reference='insertion_bf16',source_reference='insertion_bf16',
-                          diagnostic_bf16_bytes=0)
+                          k_rel=ke,v_rel=ve,read_history_k_rel=ke,read_history_v_rel=ve,
+                          read_history_tokens=k.shape[1]-count,read_current_tokens=count,
+                          source_k_rel=math.sqrt(errors[0])/max(math.sqrt(stored_norms[0]),1e-12),
+                          source_v_rel=math.sqrt(errors[1])/max(math.sqrt(stored_norms[1]),1e-12),
+                          kv_error_phase='pre_attention_history',kv_error_reference='insertion_bf16_history',
+                          kv_error_schema=2,source_error_phase='post_storage',
+                          source_reference='insertion_bf16',diagnostic_bf16_bytes=0)
         return attention(query, k, v)
