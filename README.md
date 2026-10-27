@@ -1,3 +1,5 @@
+> Current P1/P3 development checks: [feasibility protocol](src/experiments/P1_P3_FEASIBILITY.md).
+> Live local progress: `bash tools/watch_progress.sh` (or append `0` for one snapshot).
 > New P3 TF/FR pilot: [results and limits](src/experiments/p3_pilot_results/RESULTS.md).
 > Current executable reconstruction: [src/README.md](src/README.md).
 > Verified reconstruction results: [src/docs/VERIFY.md](src/docs/VERIFY.md).
