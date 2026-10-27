@@ -112,7 +112,13 @@ def main():
     if args.mode=='pilot':
         gate=args.out/'gates.json'
         if not gate.exists() or not json.loads(gate.read_text())['pass']:raise RuntimeError('passed model gates required')
+        if json.loads(gate.read_text())['source_sha256']!=source_hash():raise RuntimeError('model gate source fingerprint differs')
         if args.bits is None:raise ValueError('--bits required')
+    if args.mode=='pilot':
+        folder=args.out/f'p{args.prompt_index}_s{args.seed}_int{args.bits}'
+        done=folder/'complete.json'
+        if done.exists() and json.loads(done.read_text())['source_sha256']==source_hash():
+            print('REUSE COMPLETE',folder,flush=True);return
     pipe=build(args.seed)
     if args.mode=='gate':
         texts=(Path.home()/'sfq_data/verify/prompts2.txt').read_text().splitlines();conds=encode(pipe,texts);records=[]
@@ -125,7 +131,11 @@ def main():
     else:
         texts=(ROOT/'experiments/p3_pilot_prompts.txt').read_text().splitlines();text=texts[args.prompt_index]
         cond=encode(pipe,[text])[0];folder=args.out/f'p{args.prompt_index}_s{args.seed}_int{args.bits}'
-        meta=trajectory(pipe,cond,126,args.seed,args.bits,folder)
+        previous=folder/'sampling.json'
+        if previous.exists() and json.loads(previous.read_text())['source_sha256']==source_hash():
+            meta=json.loads(previous.read_text());print('REUSE SAMPLING',folder,flush=True)
+        else:
+            meta=trajectory(pipe,cond,126,args.seed,args.bits,folder)
         quality(pipe,folder)
         meta.update(prompt=text,prompt_index=args.prompt_index,prompt_sha256=hashlib.sha256(text.encode()).hexdigest())
         (folder/'complete.json').write_text(json.dumps(meta,indent=2));print('CASE COMPLETE',folder,flush=True)
