@@ -98,3 +98,8 @@ This is a validity check performed after pilot results, not a changed analysis.
 New schema-2 KV diagnostics also align the time and historical-token mask.
 The legacy post-write injection aliases remain exact against the legacy source
 in integration tests; they are separate from the common read-time diagnostics.
+
+
+The post-pilot validity follow-up also passed all 24 current component tests.
+All 12 pilot tensor SHA256 values and all 168 latent rows matched on recovery;
+research tensors are retained. See `../experiments/p3_pilot_results/validity_followup.json`.

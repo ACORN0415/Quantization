@@ -979,6 +979,53 @@
       "sha256": "af7be2969d5d70ec8c536ada0ab7c45841898311b891893d64586d5688f9193d"
     }
   ],
-  "checkpoint_note": "Completed individual pilot case; all four preregistered cases now complete.",
-  "videos": "${DATA_ROOT}/p3_pilot/p1_s0_int2"
+  "checkpoint_note": "Completed original pilot case; latent tensors restored and retained after exact hash verification.",
+  "videos": "${DATA_ROOT}/p3_pilot/p1_s0_int2",
+  "restoration": {
+    "state": "RESTORED",
+    "source_commit": "caf0b4b",
+    "source_sha256": "dd873cab38ee5acfe45d856f4f478409b80dd3e981ebe9092399c3fe0347ca27",
+    "latent_rows_bitexact": true,
+    "files": [
+      {
+        "path": "bf16.pt",
+        "bytes": 50320525,
+        "sha256": "0680a61be0df7f20b9c9816146076e7b5986554421eb45e6484136e84ff9d256",
+        "sha256_match": true
+      },
+      {
+        "path": "tf.pt",
+        "bytes": 50320515,
+        "sha256": "ac5e79fb53daddb8a532938884eac8be87bf1eb00bc9a4cd92528292eae102db",
+        "sha256_match": true
+      },
+      {
+        "path": "fr.pt",
+        "bytes": 50320515,
+        "sha256": "af7be2969d5d70ec8c536ada0ab7c45841898311b891893d64586d5688f9193d",
+        "sha256_match": true
+      }
+    ],
+    "retained": true
+  },
+  "latent_manifest": {
+    "retained": true,
+    "artifacts": [
+      {
+        "path": "bf16.pt",
+        "bytes": 50320525,
+        "sha256": "0680a61be0df7f20b9c9816146076e7b5986554421eb45e6484136e84ff9d256"
+      },
+      {
+        "path": "tf.pt",
+        "bytes": 50320515,
+        "sha256": "ac5e79fb53daddb8a532938884eac8be87bf1eb00bc9a4cd92528292eae102db"
+      },
+      {
+        "path": "fr.pt",
+        "bytes": 50320515,
+        "sha256": "af7be2969d5d70ec8c536ada0ab7c45841898311b891893d64586d5688f9193d"
+      }
+    ]
+  }
 }

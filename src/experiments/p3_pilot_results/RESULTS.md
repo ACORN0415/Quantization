@@ -46,5 +46,30 @@ for each prompt. See [consistency.json](consistency.json).
 
 The initial export removed **704,489,580 bytes**, including redundant gate
 tensors. This historical cleanup is preserved in the record. Final research
-latents are being restored against their original file hashes and will be
+latents have now been restored: all **12/12 SHA256 values** match, and all
+**168/168 latent-distance rows** match. The 603,846,220 bytes of tensors are
 retained; this is artifact recovery, not a memory-saving result.
+
+
+## Follow-up validation and retention
+
+The actual identity-quantizer anchoring gate passed on the unchanged original
+pilot implementation: **42/42 teacher and reference comparisons**, with the
+segment encoding path exercised. This retrospective validation does not alter
+the registered analysis or turn the pilot into a confirmatory study.
+
+All twelve original tensors were regenerated with the original source/inputs
+and matched their archived SHA256 exactly. Quality/video records were preserved.
+The published window CSV is byte-identical to `caf0b4b`. Final tensors now remain
+local for lossless re-decoding and subsequent metrics. Current exporters retain
+them by default and protect archived cases from another source version.
+
+Twenty-four component tests passed after the fixes. New schema-2 KV diagnostics
+measure historical tokens immediately before attention, excluding current BF16
+tokens for both policies. Post-storage and historical injection values are
+separate fields. These diagnostics were not retroactively substituted into the
+original pilot measurements.
+
+Evidence: [validity_followup.json](validity_followup.json),
+[latent_restoration.json](latent_restoration.json), and the generated
+[SUMMARY.md](SUMMARY.md). Original scope limitations still apply.
