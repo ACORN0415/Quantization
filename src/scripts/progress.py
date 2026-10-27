@@ -11,6 +11,13 @@ def show():
     print('Local data:',a.data)
     current=a.data/'policy_study/status.json'
     if current.exists() and not a.history:
+        request=a.data/'policy_study/pause_request.json'
+        if request.exists():
+            try:
+                r=json.loads(request.read_text())
+                print('PAUSE CONTROL:',r['state'],'— requested boundary:',r['target_cases'],'completed cases')
+                if r['state']=='paused':print('Resume: bash ~/Quantization/tools/resume_policy_study.sh')
+            except json.JSONDecodeError:pass
         try:
             for label,value in json.loads(current.read_text()).items():
                 print('\n'+label.upper(),value.get('state','?'),value.get('detail',''))
@@ -18,6 +25,10 @@ def show():
                 if 'completed_cases' in value:
                     print('Cases:',value['completed_cases'],'/',value.get('total_cases',80),
                           'remaining hours (rough):',value.get('eta_hours_rough','not measured yet'))
+                    if request.exists():
+                        r=json.loads(request.read_text())
+                        if r['state']=='armed':
+                            print('Cases remaining until requested pause:',max(0,r['target_cases']-value['completed_cases']))
                 if value.get('state')=='running' and value.get('pid'):
                     try:os.kill(value['pid'],0);print('Process:',value['pid'],'alive')
                     except ProcessLookupError:print('ATTENTION: recorded process has stopped; inspect failure log')
