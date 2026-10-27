@@ -1,3 +1,5 @@
+# Modified from Self-Forcing 33593df; see vendor/UPSTREAM.md
+import os
 from typing import List, Optional
 import torch
 
@@ -52,6 +54,10 @@ class CausalInferencePipeline(torch.nn.Module):
         return_latents: bool = False,
         profile: bool = False,
         low_memory: bool = False,
+        base_seed: Optional[int] = None,
+        latent_dump_dir: Optional[str] = None,
+        drain_rng: bool = False,
+        prompt_index: int = 0,
     ) -> torch.Tensor:
         """
         Perform inference on the given noise and text prompts.
@@ -131,6 +137,10 @@ class CausalInferencePipeline(torch.nn.Module):
                 self.kv_cache1[block_index]["local_end_index"] = torch.tensor(
                     [0], dtype=torch.long, device=noise.device)
 
+        for cache in self.kv_cache1:
+            if "store" in cache:
+                cache["store"].reset()
+
         # Step 2: Cache context feature
         current_start_frame = 0
         if initial_latent is not None:
@@ -177,7 +187,15 @@ class CausalInferencePipeline(torch.nn.Module):
         all_num_frames = [self.num_frame_per_block] * num_blocks
         if self.independent_first_frame and initial_latent is None:
             all_num_frames = [1] + all_num_frames
-        for current_num_frames in all_num_frames:
+        if latent_dump_dir:
+            os.makedirs(latent_dump_dir, exist_ok=True)
+        for chunk_idx, current_num_frames in enumerate(all_num_frames):
+            if drain_rng:
+                torch.randn(7777, device=noise.device)
+            renoise_gen = None
+            if base_seed is not None:
+                renoise_gen = torch.Generator(device=noise.device).manual_seed(
+                    base_seed * 1000003 + 7919 + chunk_idx)
             if profile:
                 block_start.record()
 
@@ -186,7 +204,9 @@ class CausalInferencePipeline(torch.nn.Module):
 
             # Step 3.1: Spatial denoising loop
             for index, current_timestep in enumerate(self.denoising_step_list):
-                print(f"current_timestep: {current_timestep}")
+                for cache in self.kv_cache1:
+                    cache["call_meta"] = {"prompt": prompt_index, "chunk": chunk_idx,
+                                          "call_phase": f"denoise_{index}"}
                 # set current timestep
                 timestep = torch.ones(
                     [batch_size, current_num_frames],
@@ -203,9 +223,13 @@ class CausalInferencePipeline(torch.nn.Module):
                         current_start=current_start_frame * self.frame_seq_length
                     )
                     next_timestep = self.denoising_step_list[index + 1]
+                    flat_pred = denoised_pred.flatten(0, 1)
+                    renoise = (torch.randn(flat_pred.shape, generator=renoise_gen,
+                                           device=flat_pred.device, dtype=flat_pred.dtype)
+                               if renoise_gen is not None else torch.randn_like(flat_pred))
                     noisy_input = self.scheduler.add_noise(
-                        denoised_pred.flatten(0, 1),
-                        torch.randn_like(denoised_pred.flatten(0, 1)),
+                        flat_pred,
+                        renoise,
                         next_timestep * torch.ones(
                             [batch_size * current_num_frames], device=noise.device, dtype=torch.long)
                     ).unflatten(0, denoised_pred.shape[:2])
@@ -222,6 +246,15 @@ class CausalInferencePipeline(torch.nn.Module):
 
             # Step 3.2: record the model's output
             output[:, current_start_frame:current_start_frame + current_num_frames] = denoised_pred
+
+            if latent_dump_dir:
+                torch.save({"latent": denoised_pred.detach().float().cpu(),
+                            "chunk_idx": chunk_idx, "start_frame": current_start_frame,
+                            "num_frames": current_num_frames},
+                           os.path.join(latent_dump_dir, f"chunk_{chunk_idx:04d}.pt"))
+            for cache in self.kv_cache1:
+                cache["call_meta"] = {"prompt": prompt_index, "chunk": chunk_idx,
+                                      "call_phase": "refresh"}
 
             # Step 3.3: rerun with timestep zero to update KV cache using clean context
             context_timestep = torch.ones_like(timestep) * self.args.context_noise
@@ -295,6 +328,13 @@ class CausalInferencePipeline(torch.nn.Module):
                 "local_end_index": torch.tensor([0], dtype=torch.long, device=device)
             })
 
+        if getattr(self, "store_factory", None) is not None:
+            for layer, cache in enumerate(kv_cache1):
+                cache["store"] = self.store_factory(kv_cache_size)
+                cache["layer"] = layer
+                cache["records"] = getattr(self, "kv_records", None)
+                cache["k"] = cache["k"].new_empty(0)
+                cache["v"] = cache["v"].new_empty(0)
         self.kv_cache1 = kv_cache1  # always store the clean cache
 
     def _initialize_crossattn_cache(self, batch_size, dtype, device):

@@ -1,3 +1,4 @@
+# Modified from Self-Forcing 33593df; see vendor/UPSTREAM.md
 from wan.modules.attention import attention
 from wan.modules.model import (
     WanRMSNorm,
@@ -197,6 +198,22 @@ class CausalWanSelfAttention(nn.Module):
                 q, grid_sizes, freqs, start_frame=current_start_frame).type_as(v)
             roped_key = causal_rope_apply(
                 k, grid_sizes, freqs, start_frame=current_start_frame).type_as(v)
+
+            if "store" in kv_cache:
+                store = kv_cache["store"]
+                record = None
+                if kv_cache.get("records") is not None:
+                    record = dict(kv_cache.get("call_meta", {}), layer=kv_cache["layer"])
+                x = store.attend(roped_query, roped_key, v, current_start,
+                                 attention, local=self.local_attn_size != -1,
+                                 record=record)
+                kv_cache["global_end_index"].fill_(store.global_end)
+                kv_cache["local_end_index"].fill_(store.local_end)
+                if record is not None:
+                    kv_cache["records"].append(record)
+                kv_cache["k"] = v.new_empty(0)
+                kv_cache["v"] = v.new_empty(0)
+                return self.o(x.flatten(2))
 
             current_end = current_start + roped_query.shape[1]
             sink_tokens = self.sink_size * frame_seqlen
