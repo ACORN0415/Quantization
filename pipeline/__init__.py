@@ -1,13 +1,4 @@
-from .bidirectional_diffusion_inference import BidirectionalDiffusionInferencePipeline
-from .bidirectional_inference import BidirectionalInferencePipeline
-from .causal_diffusion_inference import CausalDiffusionInferencePipeline
+# Modified from Self-Forcing 33593df; see vendor/UPSTREAM.md
 from .causal_inference import CausalInferencePipeline
-from .self_forcing_training import SelfForcingTrainingPipeline
 
-__all__ = [
-    "BidirectionalDiffusionInferencePipeline",
-    "BidirectionalInferencePipeline",
-    "CausalDiffusionInferencePipeline",
-    "CausalInferencePipeline",
-    "SelfForcingTrainingPipeline"
-]
+__all__ = ["CausalInferencePipeline"]
