@@ -116,6 +116,11 @@ patch 17 applied **alone**. Do not copy its unlicensed source into this repo.
 The legacy Self-Forcing checkout is pinned `33593df` plus cumulative patches
 01, 02 and 16; do not apply 03, 09, 15 and 16 sequentially.
 
+Prepare/check the pinned local reference copies using
+`~/sfq_data/py scripts/prepare_references.py` (add `--check` for a read-only check).
+This requires the original upstream clones under `~/sfq_data/upstream` and the
+historical patches in `~/Quantization`; it does not fetch or publish code.
+
 Once downloads report `DL_DONE` and the DMD hash is verified:
 
 ```bash
