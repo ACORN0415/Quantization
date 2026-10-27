@@ -38,7 +38,10 @@ parser.add_argument("--value_bits", type=int)
 parser.add_argument("--group", type=int, default=16)
 parser.add_argument("--storage", choices=["rolling", "chunk"], default="rolling")
 parser.add_argument("--residual_tokens", type=int, default=0)
-parser.add_argument("--unsigned_codes", action="store_true", help="Use uint8 KIVI codes instead of historical int8")
+codes = parser.add_mutually_exclusive_group()
+codes.add_argument("--legacy_unsigned_int8", action="store_true", help="Reproduce historical signed-int8 KIVI 8-bit wraparound")
+codes.add_argument("--unsigned_codes", dest="legacy_unsigned_int8", action="store_false", help=argparse.SUPPRESS)
+parser.set_defaults(legacy_unsigned_int8=False)
 parser.add_argument("--latent_dump_root")
 parser.add_argument("--kv_error_log")
 parser.add_argument("--stats_path")
@@ -69,7 +72,7 @@ if args.kv_method:
     from kvq import Quantizer, RollingStore, ChunkStore
     quantizer = Quantizer(args.kv_method, args.kv_bits if args.key_bits is None else args.key_bits,
                           args.kv_bits if args.value_bits is None else args.value_bits, args.group,
-                          legacy_unsigned_int8=not args.unsigned_codes)
+                          legacy_unsigned_int8=args.legacy_unsigned_int8)
     store_cls = RollingStore if args.storage == "rolling" else ChunkStore
     sink = int(getattr(config.model_kwargs, "sink_size", 0)) * pipeline.frame_seq_length
     pipeline.store_factory = lambda capacity: store_cls(quantizer, capacity, sink, args.residual_tokens)
@@ -172,6 +175,7 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
         cache_memory = memory_report([
             {"state": getattr(c["store"], "state", None),
              "residual": getattr(c["store"], "residual", None),
+             "diagnostic_source": getattr(c["store"], "source", None),
              "segments": getattr(c["store"], "segments", None),
              "pending": getattr(c["store"], "pending", None)}
             for c in pipeline.kv_cache1])

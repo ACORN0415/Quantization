@@ -42,7 +42,12 @@ def anchor_store(reference, quantizer, capacity, chunk_tokens, sink_tokens=0):
         if i==count-1:
             store.pending=(k.clone(),v.clone());store.pending_start=idx*chunk_tokens
         else:
-            store.segments.append({'start':idx*chunk_tokens,'raw':None,'state':quantizer.encode_pair(k,v)})
+            state=quantizer.encode_pair(k,v)
+            stats=[]
+            for original,encoded in zip((k,v),state):
+                x=original.float()
+                stats.append(((encoded.restore().float()-x).square().sum().item(),x.square().sum().item()))
+            store.segments.append({'start':idx*chunk_tokens,'raw':None,'state':state,'error_stats':stats})
     return store
 
 

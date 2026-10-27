@@ -9,6 +9,10 @@ ap.add_argument('reference', type=Path)
 ap.add_argument('--output', type=Path, required=True)
 a = ap.parse_args()
 raw = json.loads(a.raw.read_text())
+if any(r.get('kv_error_reference','pre_requantization_buffer') != 'pre_requantization_buffer' for r in raw):
+    raise SystemExit('Historical comparison requires rolling pre-requantization errors. For policy-neutral diagnostics compare source_k_rel/source_v_rel instead.')
+if any('k_rel' not in r or 'v_rel' not in r for r in raw):
+    raise SystemExit('Raw records are missing k_rel/v_rel; regenerate with KV logging enabled.')
 rows, pending = [], []
 for r in raw:
     pending.append(r)

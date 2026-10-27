@@ -14,7 +14,7 @@ class QuantTests(unittest.TestCase):
 
     def test_unsigned_eight_bits(self):
         x = torch.linspace(-1, 1, 16).reshape(1, 16, 1, 1).bfloat16()
-        q = Quantizer("kivi", 8, 8, legacy_unsigned_int8=False).encode(x)
+        q = Quantizer("kivi", 8, 8).encode(x)
         self.assertEqual(q.codes.dtype, torch.uint8)
         self.assertGreater(q.restore().max().item(), 0.9)
 
@@ -27,7 +27,7 @@ class QuantTests(unittest.TestCase):
         for method in ("rtn", "kivi"):
             for bits in (2, 3, 4, 8):
                 ref = create_quantizer(method.upper(), bits=bits, block_size=16)
-                ours = Quantizer(method, bits, bits)
+                ours = Quantizer(method, bits, bits, legacy_unsigned_int8=True)
                 for length in (32, 4680, 32760):
                     for case in ("random", "constant", "positive", "zero"):
                         with self.subTest(method=method, bits=bits, length=length, case=case, device=device):
@@ -43,7 +43,7 @@ class QuantTests(unittest.TestCase):
                 ref = create_quantizer(method.upper(), bits=bits, key_bits=bits, value_bits=2, block_size=16)
                 x = torch.randn((1, 33, 12, 128), generator=generator, device=device, dtype=torch.bfloat16)
                 kr, vr = ref.dequantize_kv(ref.quantize_kv(x, x))
-                k, v = Quantizer(method, bits, 2).encode_pair(x, x)
+                k, v = Quantizer(method, bits, 2, legacy_unsigned_int8=True).encode_pair(x, x)
                 self.assertTrue(torch.equal(k.restore(), kr))
                 self.assertTrue(torch.equal(v.restore(), vr))
 

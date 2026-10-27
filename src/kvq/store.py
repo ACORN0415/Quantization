@@ -1,4 +1,5 @@
 """Per-layer storage. No global state; new prompts reset each store."""
+import math
 import torch
 
 
@@ -16,7 +17,7 @@ class RollingStore:
         self.reset()
 
     def reset(self):
-        self.state = self.residual = None
+        self.state = self.residual = self.source = None
         self.global_end = self.local_end = 0
 
     def restore(self, like):
@@ -28,8 +29,13 @@ class RollingStore:
             k[:, lo:hi], v[:, lo:hi] = kr, vr
         return k, v
 
-    def write(self, key, value, start, *, local=True):
+    def write(self, key, value, start, *, local=True, track_source=False):
+        track_source = track_source or self.source is not None
         k, v = self.restore(key)
+        if track_source and self.source is None:
+            if self.state is not None:
+                raise ValueError('source logging must start at the first cache write')
+            self.source = (torch.zeros_like(k), torch.zeros_like(v))
         count = key.shape[1]
         end = start + count
         evict = 0
@@ -38,13 +44,15 @@ class RollingStore:
             rolled = self.local_end - evict - self.sink_tokens
             if rolled < 0:
                 raise ValueError("chunk and sink exceed cache capacity")
-            for buf in (k, v):
+            for buf in ((k, v) + self.source if track_source else (k, v)):
                 buf[:, self.sink_tokens:self.sink_tokens + rolled] = buf[:, self.sink_tokens + evict:self.sink_tokens + evict + rolled].clone()
         last = self.local_end + end - self.global_end - evict
         first = last - count
         if first < 0 or last > self.capacity:
             raise ValueError("cache write out of bounds")
         k[:, first:last], v[:, first:last] = key, value
+        if track_source:
+            self.source[0][:, first:last], self.source[1][:, first:last] = key, value
         self.global_end, self.local_end = end, last
         return k, v
 
@@ -57,7 +65,7 @@ class RollingStore:
         self.state = self.quantizer.encode_pair(k, v)
 
     def attend(self, query, key, value, start, attention, *, local=True, record=None):
-        k, v = self.write(key, value, start, local=local)
+        k, v = self.write(key, value, start, local=local, track_source=record is not None)
         lo = max(0, self.local_end - self.capacity)
         out = attention(query, k[:, lo:self.local_end], v[:, lo:self.local_end])
         self.commit(k, v)
@@ -65,7 +73,12 @@ class RollingStore:
             kr, vr = self.restore(key)
             record.update(k_rel=relative(kr[:, :self.local_end], k[:, :self.local_end]),
                           v_rel=relative(vr[:, :self.local_end], v[:, :self.local_end]),
-                          tokens=self.local_end)
+                          tokens=self.local_end,
+                          kv_error_reference='pre_requantization_buffer',
+                          source_k_rel=relative(kr[:, :self.local_end],self.source[0][:, :self.local_end]),
+                          source_v_rel=relative(vr[:, :self.local_end],self.source[1][:, :self.local_end]),
+                          source_reference='insertion_bf16',
+                          diagnostic_bf16_bytes=sum(t.numel()*t.element_size() for t in self.source))
         return out
 
 
@@ -107,11 +120,27 @@ class ChunkStore:
         for seg in self.segments:
             if seg["state"] is None and seg["start"] + count <= cutoff:
                 seg["state"] = self.quantizer.encode_pair(*seg["raw"])
+                seg["error_stats"] = []
+                for original, encoded in zip(seg["raw"],seg["state"]):
+                    x=original.float(); restored=encoded.restore().float()
+                    seg["error_stats"].append(((restored-x).square().sum().item(),x.square().sum().item()))
                 seg["raw"] = None
         pairs = [s["raw"] if s["state"] is None else tuple(q.restore() for q in s["state"]) for s in self.segments]
         k = torch.cat([p[0] for p in pairs] + [key], 1)
         v = torch.cat([p[1] for p in pairs] + [value], 1)
         self.global_end, self.local_end = start + count, k.shape[1]
         if record is not None:
-            record.update(tokens=k.shape[1], segment_starts=[s["start"] for s in self.segments])
+            errors=[0.,0.]; norms=[key.float().square().sum().item(),value.float().square().sum().item()]
+            for seg in self.segments:
+                if seg["state"] is None:
+                    for index,x in enumerate(seg["raw"]): norms[index]+=x.float().square().sum().item()
+                else:
+                    for index,(error,norm) in enumerate(seg["error_stats"]):
+                        errors[index]+=error;norms[index]+=norm
+            ke=math.sqrt(errors[0])/max(math.sqrt(norms[0]),1e-12)
+            ve=math.sqrt(errors[1])/max(math.sqrt(norms[1]),1e-12)
+            record.update(tokens=k.shape[1], segment_starts=[s["start"] for s in self.segments],
+                          k_rel=ke,v_rel=ve,source_k_rel=ke,source_v_rel=ve,
+                          kv_error_reference='insertion_bf16',source_reference='insertion_bf16',
+                          diagnostic_bf16_bytes=0)
         return attention(query, k, v)

@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 import unittest
 import torch
-from kvq import Quantizer, RollingStore
+from kvq import Quantizer, RollingStore, ChunkStore
 from wan.modules.causal_model import CausalWanSelfAttention, rope_params
 
 
@@ -78,6 +78,35 @@ class AttentionTests(unittest.TestCase):
                         k, v = a['store'].restore(x.reshape(1,4,1,8))
                         self.assertTrue(torch.equal(k, kr))
                         self.assertTrue(torch.equal(v, vr))
+
+
+    @unittest.skipUnless(os.environ.get('SF_REF_REPO'), 'set SF_REF_REPO')
+    def test_large_residual_matches_pristine(self):
+        spec=importlib.util.spec_from_file_location('identity_reference',Path(os.environ['SF_REF_REPO'])/'wan/modules/causal_model.py')
+        reference=importlib.util.module_from_spec(spec);spec.loader.exec_module(reference)
+        from wan.modules import attention as backend
+        previous=backend.FLASH_ATTN_2_AVAILABLE,backend.FLASH_ATTN_3_AVAILABLE
+        backend.FLASH_ATTN_2_AVAILABLE=backend.FLASH_ATTN_3_AVAILABLE=False
+        try:
+            for policy in (RollingStore,ChunkStore):
+                for sink in (0,1):
+                    torch.manual_seed(51)
+                    ours=CausalWanSelfAttention(8,1,local_attn_size=4,sink_size=sink).bfloat16().eval()
+                    ref=reference.CausalWanSelfAttention(8,1,local_attn_size=4,sink_size=sink).bfloat16().eval()
+                    ref.load_state_dict(ours.state_dict())
+                    def cache():
+                        return {'k':torch.zeros(1,4,1,8,dtype=torch.bfloat16),'v':torch.zeros(1,4,1,8,dtype=torch.bfloat16),
+                                'global_end_index':torch.tensor([0]),'local_end_index':torch.tensor([0])}
+                    a,b=cache(),cache();a.update(store=policy(Quantizer(),4,sink,residual_tokens=1000000),layer=0)
+                    for frame in range(10):
+                        for call in range(5):
+                            x=torch.randn(1,1,8).bfloat16()
+                            args=dict(seq_lens=torch.tensor([1]),grid_sizes=torch.tensor([[1,1,1]]),
+                                      freqs=rope_params(64,8),block_mask=None,current_start=frame)
+                            with torch.no_grad():ya,yb=ours(x,kv_cache=a,**args),ref(x,kv_cache=b,**args)
+                            self.assertTrue(torch.equal(ya,yb),(policy.__name__,sink,frame,call))
+        finally:
+            backend.FLASH_ATTN_2_AVAILABLE,backend.FLASH_ATTN_3_AVAILABLE=previous
 
 
 if __name__ == '__main__':

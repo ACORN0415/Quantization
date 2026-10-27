@@ -1,7 +1,7 @@
 """Reproducible, resumable full-model gates. Run with the isolated interpreter.
 
 Requires completed downloads and local pristine/patched reference checkouts.
-Outputs and large latents stay in DATA/verify; only docs/VERIFY.md is tracked.
+Outputs and large latents stay in DATA/verify; live progress is DATA/verify/progress.md; curated docs/VERIFY.md is preserved.
 """
 import argparse
 import hashlib
@@ -13,6 +13,8 @@ import sys
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT))
+from kvq.verification import write_progress
 ap = argparse.ArgumentParser()
 ap.add_argument('--data', type=Path, default=Path.home()/'sfq_data')
 ap.add_argument('--history', type=Path, default=Path.home()/'Quantization')
@@ -31,14 +33,8 @@ for gate in ('G1','G1b','G2','G3','G4','G5'):
 
 def save():
     state_path.write_text(json.dumps(status, indent=2))
-    lines = ['# Verification results', '', 'Live record; PASS requires completed checks. See `docs/HANDOFF_codex.md` for fixed criteria.', '',
-             '| Gate | State | Evidence |', '|---|---|---|']
-    for gate, rec in status.items():
-        lines.append(f"| {gate} | {rec['state']} | {rec.get('detail','')} |")
-    lines += ['', f'Logs, exact commands and machine-readable reports: `{OUT}`.',
-              '', 'The signed-int8 KIVI 8-bit compatibility test reproduces historical wraparound;',
-              '`--unsigned_codes` uses uint8 to avoid that behavior.', '']
-    (ROOT/'docs/VERIFY.md').write_text('\n'.join(lines))
+    write_progress(status, OUT)
+
 
 
 def command(label, argv, cwd=ROOT):
@@ -89,7 +85,7 @@ def command(label, argv, cwd=ROOT):
     print(f'DONE {label} {record["seconds"]:.1f}s', flush=True)
 
 
-def own(label, *, frames=63, rng='chunk', method=None, bits=4, prompts='prompts2.txt', drain=False, storage='rolling'):
+def own(label, *, frames=63, rng='chunk', method=None, bits=4, prompts='prompts2.txt', drain=False, storage='rolling', residual=0, record_errors=True):
     args = [PY, str(ROOT/'inference.py'), '--config_path',
             str(ROOT/('configs/self_forcing_dmd.yaml' if frames == 21 else 'configs/a1.yaml')),
             '--checkpoint_path', str(DATA/'ckpt/checkpoints/self_forcing_dmd.pt'),
@@ -99,7 +95,8 @@ def own(label, *, frames=63, rng='chunk', method=None, bits=4, prompts='prompts2
             '--stats_path', str(OUT/label/'stats.json')]
     if method:
         args += ['--kv_method', method, '--kv_bits', str(bits), '--storage', storage,
-                 '--kv_error_log', str(OUT/label/'raw_errors.json')]
+                 '--residual_tokens',str(residual)]
+        if record_errors: args += ['--kv_error_log',str(OUT/label/'raw_errors.json')]
     if drain:
         args += ['--drain_rng']
     command(label, args)
@@ -183,6 +180,16 @@ for gate in a.gates:
                                      str(HISTORY/'results/kivi_rw/kivi4_rw0_kv_err.json'),
                                      '--output', str(OUT/'g5_comparison.json')])
             detail = '210 historical rows within relative 1e-6; g5_comparison.json'
+        elif gate == 'IDENTITY':
+            # Existing verified BF16 captures are the fixed reference; do not
+            # replace them with a newly changed pipeline's output.
+            if not (OUT/'g3_base/latents/prompt001/chunk_0020.pt').exists():
+                raise RuntimeError('verified g3_base captures required for identity gate')
+            for policy in ('rolling','chunk'):
+                label='identity_'+policy
+                own(label,method='rtn',storage=policy,residual=1000000,record_errors=False)
+                compare('identity_comparison_'+policy,'g3_base',label)
+            detail='Both policies, residual 1000000: 2 prompts × 21 chunks bit-exact with verified BF16'
         elif gate == 'CHUNK':
             own('chunk_ours', method='rtn', storage='chunk')
             reference = OUT/'g4_ours_rtn4/latents'

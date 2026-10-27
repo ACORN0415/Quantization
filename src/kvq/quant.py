@@ -1,9 +1,8 @@
-"""Independent tensor implementation of the quantization equations in HANDOFF.
+"""Independent tensor implementation of the quantization equations in the reconstruction protocol.
 
 Arithmetic deliberately stays in the input dtype. Codes are simulated in byte
-containers, not packed. By default KIVI retains the historical signed-int8
-behavior, including 8-bit wraparound. Set legacy_unsigned_int8=False for uint8
-codes that correctly represent 128..255.
+containers, not packed. KIVI uses unsigned byte codes by default. Historical signed-int8 wraparound
+is available only through the explicit legacy_unsigned_int8 compatibility flag.
 """
 from dataclasses import dataclass
 import math
@@ -36,7 +35,7 @@ class Quantized:
 
 class Quantizer:
     def __init__(self, method="rtn", key_bits=4, value_bits=4, group=16,
-                 legacy_unsigned_int8=True):
+                 legacy_unsigned_int8=False):
         self.method = method.lower()
         if self.method not in ("rtn", "kivi"):
             raise ValueError("method must be rtn or kivi")
