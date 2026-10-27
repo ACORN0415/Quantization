@@ -1,5 +1,5 @@
 """Serial pilot queue; no concurrent GPU models; per-case durable progress."""
-import argparse,json,subprocess,sys,time
+import argparse,hashlib,json,subprocess,sys,time
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'scripts'))
@@ -11,6 +11,14 @@ gates=a.out/'gates.json'
 if not gates.exists():raise SystemExit('Run p3_tf_fr.py --mode gate first')
 g=json.loads(gates.read_text())
 if not g['pass'] or g['source_sha256']!=source_hash():raise SystemExit('Current-source gates required')
+cleanup=[]
+for folder in sorted(a.out.glob('gate_prompt*')):
+    for path in sorted(folder.glob('*.pt')):
+        cleanup.append({'path':str(path.relative_to(a.out)),'bytes':path.stat().st_size,
+                        'sha256':hashlib.sha256(path.read_bytes()).hexdigest()})
+if cleanup:
+    (a.out/'gate_cleanup.json').write_text(json.dumps(cleanup,indent=2))
+    for rec in cleanup:(a.out/rec['path']).unlink()
 state_file=a.out/'queue.json'
 state=json.loads(state_file.read_text()) if state_file.exists() else {}
 for bits in (4,2):
