@@ -18,7 +18,9 @@ and gates G1–G5; no TF/FR experiments, LongLive port or GitHub push.
 - G1 CPU/CUDA reference comparisons PASS; G1b synthetic tests PASS.
 - Actual attention compared against pristine and patched legacy source on
   small CPU inputs: PASS, including rolling eviction and sinks.
-- All 11 tests PASS; full-model G2–G5 still required.
+- 11 component tests plus 2 storage-accounting tests PASS.
+- Full-model G2 PASS: all 3 release-mode final latents bit-exact.
+- G3/G4/G5/CHUNK queue is running; consult live status before restarting.
 
 ## Local paths
 
@@ -35,8 +37,9 @@ and gates G1–G5; no TF/FR experiments, LongLive port or GitHub push.
 
 ## Next action
 
-1. Check download completion. Do not start full-model gates before `DL_DONE`.
-2. Run `~/sfq_data/py scripts/verify.py --gates G2 G3 G4 G5 CHUNK`.
+1. Downloads completed (`DL_DONE`); DMD MD5 and byte count matched.
+2. Monitor the already running verification queue; do not launch a second GPU queue.
+   After failure/exit, resume only necessary gates with `scripts/verify.py`.
 3. Monitor `~/sfq_data/verify/status.json`, per-run logs and `docs/VERIFY.md`.
 4. Diagnose any failure before changing criteria; scripts stop on failure and
    fingerprint completed runs for reuse.

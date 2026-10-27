@@ -53,6 +53,16 @@ def command(label, argv, cwd=ROOT):
             source.update(f.read_bytes())
     source.update((ROOT/'inference.py').read_bytes())
     source.update(json.dumps(argv).encode())
+    # Inputs and the called checker matter even when their filenames stay fixed.
+    for index, arg in enumerate(argv):
+        candidate = Path(arg)
+        if candidate.is_file() and candidate.suffix == '.py':
+            source.update(candidate.read_bytes())
+        if arg in ('--data_path', '--config_path'):
+            source.update(Path(argv[index + 1]).read_bytes())
+    if label.startswith('g1_'):
+        for test in sorted((ROOT/'tests').glob('test_*.py')):
+            source.update(test.read_bytes())
     environment = dict(os.environ, PYTHONUNBUFFERED='1',
                        KVQ_REF_REPO=str(DATA/'kv-reference'),
                        SF_REF_REPO=str(DATA/'sf-pristine'),
