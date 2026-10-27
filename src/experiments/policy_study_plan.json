@@ -1,0 +1,23 @@
+{
+  "id": "p1_p3_main_v1",
+  "prompts": 10,
+  "seeds": [101, 202],
+  "bits": [4, 2],
+  "policies": ["rolling", "chunk"],
+  "frames": 126,
+  "context_frames": 21,
+  "group": 16,
+  "sink_frames": 0,
+  "residual_tokens": 0,
+  "late_chunks": [21, 42],
+  "primary": "late raw-frame MUSIQ: P3 FR minus P1 FR, averaged within seed then prompt",
+  "primary_bits": [4, 2],
+  "bootstrap_replicates": 20000,
+  "analysis_seed": 872341,
+  "noise_seed_base": 1000000,
+  "noise_support": "quantization_error",
+  "noise_target": "per-encode K/V FP32 error norm Q(x)-x on the control arm own input",
+  "multiplicity": "two-sided exact paired sign-flip p values, Holm across two bit widths",
+  "primary_ci": "97.5 percent prompt-cluster percentile bootstrap; both seeds retained together",
+  "retry_infrastructure": 2
+}

@@ -60,4 +60,16 @@ class ReplayTests(unittest.TestCase):
         identity=StorageNoiseQuantizer(Identity())
         self.assertTrue(torch.equal(identity.encode_pair(x,x)[0].restore(),x))
 
+    def test_error_support_preserves_exact_coordinates_and_padding(self):
+        torch.manual_seed(11)
+        x=torch.randn(1,16,2,8).bfloat16();x[:,8:]=0
+        q=Quantizer(group=4)
+        target=q.encode_pair(x,x)[0].restore()
+        noise=StorageNoiseQuantizer(q,support='quantization_error')
+        state=noise.encode_pair(x,x)[0].restore()
+        exact=target==x
+        self.assertTrue(torch.equal(state[exact],x[exact]))
+        self.assertTrue(torch.equal(state[:,8:],x[:,8:]))
+        self.assertLess(abs(noise.records[0]['actual_norm']/noise.records[0]['target_norm']-1),.05)
+
 if __name__=='__main__': unittest.main()
