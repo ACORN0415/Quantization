@@ -112,6 +112,9 @@ def main():
     ap.add_argument('--prompt_index',type=int,default=0);args=ap.parse_args()
     torch.set_grad_enabled(False);torch.set_num_threads(4);args.out.mkdir(parents=True,exist_ok=True)
     started_fingerprint=source_hash()
+    for existing in args.out.glob('p*_s*_int*/complete.json'):
+        if json.loads(existing.read_text())['source_sha256']!=started_fingerprint:
+            raise RuntimeError('output contains archived cases from another source; use a new --out directory')
     if args.mode=='pilot':
         gate=args.out/'gates.json'
         if not gate.exists() or not json.loads(gate.read_text())['pass']:raise RuntimeError('passed model gates required')

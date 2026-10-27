@@ -25,3 +25,13 @@ class HistoryMetricsTests(unittest.TestCase):
             else:self.assertNotIn('legacy_post_k_rel',record)
 
 if __name__=='__main__':unittest.main()
+
+class CurrentTokenExclusionTests(unittest.TestCase):
+    def test_rolling_current_quantization_does_not_enter_read_error(self):
+        torch.manual_seed(90)
+        x=torch.randn(1,4,1,4).bfloat16();record={}
+        store=RollingStore(Quantizer(key_bits=2,value_bits=2,group=4),12)
+        store.attend(x,x,x,0,lambda q,k,v:k,record=record)
+        self.assertEqual(record['k_rel'],0.)
+        self.assertGreater(record['legacy_post_k_rel'],0.)
+        self.assertGreater(record['source_k_rel'],0.)

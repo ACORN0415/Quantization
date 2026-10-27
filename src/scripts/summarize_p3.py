@@ -5,7 +5,8 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 from kvq.verification import public_snapshot
 ap=argparse.ArgumentParser();ap.add_argument('--data',type=Path,default=Path.home()/'sfq_data/p3_pilot')
-a=ap.parse_args();out=ROOT/'experiments/p3_pilot_results';out.mkdir(parents=True,exist_ok=True)
+ap.add_argument('--report_dir',type=Path)
+a=ap.parse_args();out=a.report_dir or ROOT/'experiments'/f'{a.data.name}_results';out.mkdir(parents=True,exist_ok=True)
 records=[];cases={};commands={}
 for bits in (4,2):
     for prompt in (0,1):
@@ -13,7 +14,8 @@ for bits in (4,2):
         complete=json.loads((folder/'complete.json').read_text())
         quality=json.loads((folder/'quality.json').read_text())
         cases[name]={'sampling':complete,'quality':quality,
-                     'cleanup':json.loads((folder/'cleanup.json').read_text())}
+                     'cleanup':json.loads((folder/'cleanup.json').read_text()) if (folder/'cleanup.json').exists() else [],
+                     'latent_manifest':json.loads((folder/'latent_manifest.json').read_text()) if (folder/'latent_manifest.json').exists() else {'retained':False}}
         for phase,lo,hi in [('early',1,7),('middle',7,21),('late',21,42)]:
             rows=complete['rows'][lo:hi]
             row={'case':name,'prompt':prompt,'bits':bits,'phase':phase,'first_chunk':lo,'last_chunk':hi-1}
@@ -36,6 +38,12 @@ artifact={'gates':json.loads((a.data/'gates.json').read_text()),
                          'Byte-code simulation, no packed low-bit kernel',
                          'Sampling peak includes concurrent reference/TF/FR caches; no per-policy memory savings claim']}
 artifact=public_snapshot(artifact,home=Path.home(),project=ROOT,data=a.data.parent)
+validity=a.data.parent/'anchor_validity/result.json'
+if validity.exists():
+    check=json.loads(validity.read_text())
+    fingerprints={case['sampling']['source_sha256'] for case in cases.values()}
+    if check.get('pass') and fingerprints=={check.get('tested_source_sha256')}:
+        artifact['post_pilot_anchor_validity']=check
 (out/'evidence.json').write_text(json.dumps(artifact,indent=2))
 import matplotlib
 matplotlib.use('Agg')
@@ -72,6 +80,6 @@ lines += ['', 'Late = chunks 21–41. All window summaries exclude chunk 0.',
           'Sampling peak includes concurrent reference/TF/FR caches and is not a per-policy memory comparison.', '',
           '![Latent distances](latent.png)','![MUSIQ](musiq.png)','',
           'Per-window values: [windows.csv](windows.csv). Full compact evidence: [evidence.json](evidence.json).',
-          f'Videos remain outside Git at `{a.data}`. Derived latent tensors were removed only after successful video/metric export; hashes and removed byte counts are preserved.','']
+          f'Videos remain outside Git at `{a.data}`. Final latent tensors are retained or hash-verified after recovery; historical cleanup records remain separate.','']
 lines=public_snapshot(lines,home=Path.home(),project=ROOT,data=a.data.parent)
-(out/'RESULTS.md').write_text('\n'.join(lines));print('\n'.join(lines[:14]))
+(out/'SUMMARY.md').write_text('\n'.join(lines));print('\n'.join(lines[:14]))
