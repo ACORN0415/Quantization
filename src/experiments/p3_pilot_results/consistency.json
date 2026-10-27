@@ -1,0 +1,38 @@
+{
+  "source_matches_gate": true,
+  "bf16_reference_equal_across_bits": {
+    "0": true,
+    "1": true
+  },
+  "cases": {
+    "p0_s0_int4": {
+      "chunks": 42,
+      "videos": 3,
+      "pixel_frames_per_video": 501,
+      "complete": true
+    },
+    "p0_s0_int2": {
+      "chunks": 42,
+      "videos": 3,
+      "pixel_frames_per_video": 501,
+      "complete": true
+    },
+    "p1_s0_int4": {
+      "chunks": 42,
+      "videos": 3,
+      "pixel_frames_per_video": 501,
+      "complete": true
+    },
+    "p1_s0_int2": {
+      "chunks": 42,
+      "videos": 3,
+      "pixel_frames_per_video": 501,
+      "complete": true
+    }
+  },
+  "removed_bytes": 704489580,
+  "bf16_quality_equal_across_bits": {
+    "0": true,
+    "1": true
+  }
+}

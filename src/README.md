@@ -147,3 +147,21 @@ Logs, commands, captured latents and resumable completion records live in
 command fingerprints. A failed gate stops the queue for diagnosis; its fixed
 criterion is not automatically relaxed. `scripts/reference_run.py` captures
 reference outputs without changing sampling operations.
+
+
+## P3 TF/FR pilot
+
+The completed [126-frame pilot](experiments/p3_pilot_results/RESULTS.md) covers
+two newly authored prompts, seed 0, and RTN INT4/INT2. Its protocol was committed
+before measurements. Each case retains source hashes, window summaries and
+quality diagnostics. This is preliminary evidence, not a multi-seed study.
+
+With verified `g3_base` captures already available under `~/sfq_data/verify`:
+
+```bash
+~/sfq_data/py scripts/p3_tf_fr.py --mode gate
+~/sfq_data/py scripts/run_p3_pilot.py
+~/sfq_data/py scripts/summarize_p3.py
+```
+
+Review follow-up validation and identity results are in `docs/VERIFY.md`.
