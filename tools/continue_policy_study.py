@@ -85,6 +85,12 @@ def main():
     gates=json.loads(gate_path.read_text())
     if not gates.get('passed') or gates['source_sha256']!=expected or study.source_hash()!=expected:
         raise RuntimeError('gate source mismatch; held-out measurements remain disabled')
+    # The gate writes its result before Python tears down GPU model state.
+    # Wait for that process to exit before loading the study model.
+    while True:
+        proc=Path(f'/proc/{args.gate_pid}/cmdline')
+        if not proc.exists() or b'policy_study.py' not in proc.read_bytes():break
+        time.sleep(1)
     if subprocess.check_output(['git','branch','--show-current'],cwd=REPO,text=True).strip()!='main':
         raise RuntimeError('publication coordinator requires the authorized main branch')
     registration=SRC/'experiments/policy_study_registration.json'
