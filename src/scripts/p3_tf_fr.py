@@ -109,6 +109,7 @@ def main():
     ap.add_argument('--seed',type=int,default=0);ap.add_argument('--bits',type=int,choices=[2,4])
     ap.add_argument('--prompt_index',type=int,default=0);args=ap.parse_args()
     torch.set_grad_enabled(False);torch.set_num_threads(4);args.out.mkdir(parents=True,exist_ok=True)
+    started_fingerprint=source_hash()
     if args.mode=='pilot':
         gate=args.out/'gates.json'
         if not gate.exists() or not json.loads(gate.read_text())['pass']:raise RuntimeError('passed model gates required')
@@ -126,6 +127,7 @@ def main():
             meta=trajectory(pipe,cond,63,args.seed,0,args.out/f'gate_prompt{i}',
                             expected=Path.home()/f'sfq_data/verify/g3_base/latents/prompt{i:03d}')
             records.append({'prompt':i,'chunks':len(meta['rows']),'max_tf_rel':max(r['tf_rel'] for r in meta['rows'])})
+        if source_hash()!=started_fingerprint:raise RuntimeError('source changed during model gates')
         (args.out/'gates.json').write_text(json.dumps({'pass':True,'records':records,'source_sha256':source_hash()},indent=2))
         print('GATES PASS',flush=True)
     else:
@@ -138,6 +140,7 @@ def main():
             meta=trajectory(pipe,cond,126,args.seed,args.bits,folder)
         quality(pipe,folder)
         meta.update(prompt=text,prompt_index=args.prompt_index,prompt_sha256=hashlib.sha256(text.encode()).hexdigest())
+        if source_hash()!=started_fingerprint:raise RuntimeError('source changed during pilot')
         (folder/'complete.json').write_text(json.dumps(meta,indent=2));print('CASE COMPLETE',folder,flush=True)
 
 if __name__=='__main__':main()
