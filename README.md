@@ -124,7 +124,7 @@ historical patches in `~/Quantization`; it does not fetch or publish code.
 Once downloads report `DL_DONE` and the DMD hash is verified:
 
 ```bash
-~/sfq_data/py scripts/verify.py --gates G2 G3 G4 G5 CHUNK
+~/sfq_data/py scripts/verify.py --gates G1 G2 G3 G4 G5 CHUNK
 ```
 
 Logs, commands, captured latents and resumable completion records live in

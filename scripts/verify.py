@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ap = argparse.ArgumentParser()
 ap.add_argument('--data', type=Path, default=Path.home()/'sfq_data')
 ap.add_argument('--history', type=Path, default=Path.home()/'Quantization')
-ap.add_argument('--gates', nargs='+', default=['G2','G3','G4','G5'])
+ap.add_argument('--gates', nargs='+', default=['G1','G2','G3','G4','G5'])
 a = ap.parse_args()
 DATA, HISTORY = a.data.resolve(), a.history.resolve()
 OUT = DATA/'verify'
@@ -24,10 +24,9 @@ OUT.mkdir(exist_ok=True)
 PY = str(DATA/'py')
 state_path = OUT/'status.json'
 status = json.loads(state_path.read_text()) if state_path.exists() else {}
-status.update({
-    'G1': {'state':'PASS', 'detail':'CPU and CUDA reference equality: RTN/KIVI × bits 2,3,4,8 × lengths 32,4680,32760 × random/constant/positive/zero; unit.log and unit_cuda.log'},
-    'G1b': {'state':'PASS', 'detail':'Synthetic storage eviction/sink/reset/segment immutability/residual checks; unit.log; legacy attention comparison: integration.log'}
-})
+for gate in ('G1','G1b','G2','G3','G4','G5'):
+    status.setdefault(gate, {'state':'PENDING'})
+
 
 
 def save():
@@ -54,6 +53,13 @@ def command(label, argv, cwd=ROOT):
             source.update(f.read_bytes())
     source.update((ROOT/'inference.py').read_bytes())
     source.update(json.dumps(argv).encode())
+    environment = dict(os.environ, PYTHONUNBUFFERED='1',
+                       KVQ_REF_REPO=str(DATA/'kv-reference'),
+                       SF_REF_REPO=str(DATA/'sf-pristine'),
+                       LEGACY_REF_REPO=str(DATA/'sf-legacy'))
+    if label == 'g1_cuda': environment['TEST_DEVICE'] = 'cuda'
+    else: environment['TEST_DEVICE'] = 'cpu'
+
     digest = source.hexdigest()
     marker = OUT/f'{label}.done.json'
     if marker.exists() and json.loads(marker.read_text()).get('digest') == digest:
@@ -63,7 +69,7 @@ def command(label, argv, cwd=ROOT):
     print(f'RUN {label}: {json.dumps(argv)}', flush=True)
     started = time.time()
     with log.open('w') as stream:
-        result = subprocess.run(argv, cwd=cwd, stdout=stream, stderr=subprocess.STDOUT)
+        result = subprocess.run(argv, cwd=cwd, env=environment, stdout=stream, stderr=subprocess.STDOUT)
     record = {'argv': argv, 'cwd': str(cwd), 'exit_code': result.returncode,
               'seconds': time.time()-started, 'digest': digest}
     (OUT/f'{label}.command.json').write_text(json.dumps(record, indent=2))
@@ -129,7 +135,12 @@ for gate in a.gates:
     status[gate] = {'state':'RUNNING'}
     save()
     try:
-        if gate == 'G2':
+        if gate == 'G1':
+            command('g1_cpu', [PY, '-m', 'unittest', 'discover', '-s', 'tests', '-v'])
+            command('g1_cuda', [PY, '-m', 'unittest', 'discover', '-s', 'tests', '-p', 'test_quant.py', '-v'])
+            status['G1b'] = {'state':'PASS', 'detail':'Store and attention integration assertions passed in g1_cpu.log'}
+            detail = 'CPU suite and CUDA numerical reference suite passed; g1_cpu.log and g1_cuda.log'
+        elif gate == 'G2':
             label = 'g2_pristine'
             command(label, [PY, str(ROOT/'scripts/reference_run.py'), str(DATA/'sf-pristine'),
                             str(OUT/label/'latents'), '--', '--config_path', str(ROOT/'configs/self_forcing_dmd.yaml'),
