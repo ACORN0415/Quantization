@@ -67,8 +67,8 @@ if args.checkpoint_path:
 
 if args.kv_method:
     from kvq import Quantizer, RollingStore, ChunkStore
-    quantizer = Quantizer(args.kv_method, args.key_bits or args.kv_bits,
-                          args.value_bits or args.kv_bits, args.group,
+    quantizer = Quantizer(args.kv_method, args.kv_bits if args.key_bits is None else args.key_bits,
+                          args.kv_bits if args.value_bits is None else args.value_bits, args.group,
                           legacy_unsigned_int8=not args.unsigned_codes)
     store_cls = RollingStore if args.storage == "rolling" else ChunkStore
     sink = int(getattr(config.model_kwargs, "sink_size", 0)) * pipeline.frame_seq_length
@@ -115,9 +115,10 @@ for i, batch_data in tqdm(enumerate(dataloader), disable=(local_rank != 0)):
     extended_prompt = batch['extended_prompts'][0] if 'extended_prompts' in batch else None
     prompts = [extended_prompt if extended_prompt is not None else prompt] * args.num_samples
     initial_latent = None
-    sampled_noise = torch.randn(
-        [args.num_samples, args.num_output_frames, 16, 60, 104], device=device, dtype=torch.bfloat16
-    )
+    if args.rng == "release":
+        sampled_noise = torch.randn(
+            [args.num_samples, args.num_output_frames, 16, 60, 104], device=device, dtype=torch.bfloat16
+        )
 
     if args.rng == "chunk":
         n = pipeline.num_frame_per_block
