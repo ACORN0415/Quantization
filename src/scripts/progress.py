@@ -8,10 +8,10 @@ def show():
     if a.watch:print('\033[2J\033[H',end='')
     print(time.strftime('%Y-%m-%d %H:%M:%S'),'— Quantization progress')
     print('Local data:',a.data)
-    for name in ('WORK_STATUS.md','review_tests.log','review_identity.log','p3_gate_final.log','p3_queue.log'):
+    for name in ('WORK_STATUS.md','review_tests_final.log','review_identity.log','p3_gate_final.log','p3_queue.log'):
         path=a.data/name
         if not path.exists():continue
-        print('\n'+name)
+        print('\n'+name+' ['+time.strftime('%H:%M:%S',time.localtime(path.stat().st_mtime))+']')
         lines=path.read_text(errors='replace').replace('\r','\n').splitlines()
         print('\n'.join(lines[-8:]))
     for pattern in ('verify/identity_*.log','p3_pilot/*.log'):
