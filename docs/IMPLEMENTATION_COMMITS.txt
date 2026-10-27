@@ -1,0 +1,13 @@
+61cdd92 docs: handoff for reimplementation and verification
+34b3872 Prepare standalone inference imports and record implementation handoff
+8708cce Implement quantization simulation, rolling and chunk stores with seeded inference
+20ba8ee Add resumable model validation gates, provenance notices and usage documentation
+834e2b6 Record passed component checks and pending full-model gates
+155368a Preserve disabled eviction semantics and pin validation environment
+23fe4f1 Verify storage deduplication and distinguish packed estimates
+bbe1f02 Avoid unused global RNG draws in chunk mode and validate explicit bit widths
+0ba0c66 Make pinned local reference setup reproducible without redistributing source
+4c9ef8b Require executed unit gates instead of prepopulated pass statuses
+c1e5a2f Fingerprint validation inputs and record full release-equivalence pass
+ca96431 Archive compact verification evidence and implementation history
+3ab96ad Capture reference revisions and runtime log hashes in evidence
