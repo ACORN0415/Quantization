@@ -97,6 +97,7 @@ def own(label, *, frames=63, rng='chunk', method=None, bits=4, prompts='prompts2
         args += ['--kv_method', method, '--kv_bits', str(bits), '--storage', storage,
                  '--residual_tokens',str(residual)]
         if record_errors: args += ['--kv_error_log',str(OUT/label/'raw_errors.json')]
+        if method=='kivi' and label.startswith(('g4_','g5_')):args += ['--legacy_unsigned_int8']
     if drain:
         args += ['--drain_rng']
     command(label, args)

@@ -1,7 +1,9 @@
 """Create descriptive tables and scientific plots after all pilot cases finish."""
-import argparse,csv,json
+import argparse,csv,json,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT))
+from kvq.verification import public_snapshot
 ap=argparse.ArgumentParser();ap.add_argument('--data',type=Path,default=Path.home()/'sfq_data/p3_pilot')
 a=ap.parse_args();out=ROOT/'experiments/p3_pilot_results';out.mkdir(parents=True,exist_ok=True)
 records=[];cases={};commands={}
@@ -31,7 +33,9 @@ artifact={'gates':json.loads((a.data/'gates.json').read_text()),
           'limitations':['n=2 prompts; one seed','No inferential or equivalence test',
                          'No BF16 noise control or subject-consistency metric',
                          'Latent-distance difference includes chaotic divergence',
-                         'Byte-code simulation, no packed low-bit kernel']}
+                         'Byte-code simulation, no packed low-bit kernel',
+                         'Sampling peak includes concurrent reference/TF/FR caches; no per-policy memory savings claim']}
+artifact=public_snapshot(artifact,home=Path.home(),project=ROOT,data=a.data.parent)
 (out/'evidence.json').write_text(json.dumps(artifact,indent=2))
 import matplotlib
 matplotlib.use('Agg')
@@ -64,8 +68,10 @@ for r in records:
 lines += ['', 'Late = chunks 21–41. All window summaries exclude chunk 0.',
           'These are descriptive observations from n=2, not evidence of equivalence or generalization.',
           'FR−TF distances are not an additive causal decomposition; chaotic divergence is included.',
-          'MUSIQ and the motion proxy do not establish subject/identity preservation.', '',
+          'MUSIQ and the motion proxy do not establish subject/identity preservation.',
+          'Sampling peak includes concurrent reference/TF/FR caches and is not a per-policy memory comparison.', '',
           '![Latent distances](latent.png)','![MUSIQ](musiq.png)','',
           'Per-window values: [windows.csv](windows.csv). Full compact evidence: [evidence.json](evidence.json).',
           f'Videos remain outside Git at `{a.data}`. Derived latent tensors were removed only after successful video/metric export; hashes and removed byte counts are preserved.','']
+lines=public_snapshot(lines,home=Path.home(),project=ROOT,data=a.data.parent)
 (out/'RESULTS.md').write_text('\n'.join(lines));print('\n'.join(lines[:14]))
