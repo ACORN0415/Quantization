@@ -97,6 +97,8 @@ class ChunkStore:
                 raise ValueError("chunks must arrive in order")
             self.segments.append({"start": self.pending_start, "raw": self.pending, "state": None})
             while len(self.segments) >= self.capacity // count:
+                if not local:
+                    raise ValueError("cache capacity exceeded with local eviction disabled")
                 self.segments.pop(self.sink_tokens // count)
         self.pending_start, self.pending = start, (key.clone(), value.clone())
         # Complete recent chunks can remain BF16 for a residual window. Encode
