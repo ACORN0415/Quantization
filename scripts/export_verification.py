@@ -29,6 +29,13 @@ artifact = {'status':status,
             'implementation_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
             'checkpoint':json.loads((out/'checkpoint.json').read_text()),
             'commands':{},'comparisons':{},'logs':{},'source_sha256':{},'input_sha256':{}}
+artifact['references'] = {}
+for name in ('sf-pristine','sf-legacy','kv-reference'):
+    repo = data/name
+    revision = subprocess.check_output(['git','rev-parse','HEAD'],cwd=repo,text=True).strip()
+    diff = subprocess.check_output(['git','diff','--binary','HEAD'],cwd=repo)
+    artifact['references'][name] = {'commit':revision,'diff_sha256':hashlib.sha256(diff).hexdigest()}
+artifact['runtime_log_sha256'] = {p.name:sha(p) for p in sorted(out.glob('*.log'))}
 for p in sorted(out.glob('*.command.json')):
     artifact['commands'][p.stem] = json.loads(p.read_text())
 for p in sorted(out.glob('*comparison*.json')):
