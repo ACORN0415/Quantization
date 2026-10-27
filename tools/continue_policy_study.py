@@ -21,6 +21,24 @@ def run(command,**kwargs):
     subprocess.run(list(map(str,command)),cwd=REPO,check=True,**kwargs)
 
 
+def finalize_artifacts(data,results):
+    # Live status changes during publication and is not research evidence.
+    # Exclude it rather than publish a hash that becomes stale immediately.
+    path=results/'evidence.json';value=json.loads(path.read_text())
+    value['artifacts']=[r for r in value['artifacts'] if r['path']!='status.json']
+    value['artifact_note']='Live status.json is mutable and excluded from the research manifest.'
+    costs=[]
+    for folder in sorted((data/'cases').iterdir()):
+        if not (folder/'complete.json').exists():continue
+        c=json.loads((folder/'complete.json').read_text())
+        stages={a:json.loads((folder/f'{a}_sampling.json').read_text()) for a in ('tf','fr','noise')}
+        costs.append(dict(case=c['case'],seconds=c['seconds'],policy=c['policy'],bits=c['bits'],
+                          peak_allocated_gib=max(s['peak_allocated_gib'] for s in stages.values()),
+                          max_noise_norm_relative_mismatch=c['max_noise_norm_relative_mismatch']))
+    value['case_costs']=costs
+    path.write_text(json.dumps(value,indent=2)+'\n')
+
+
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--gate-pid',type=int,required=True)
     ap.add_argument('--data',type=Path,default=Path.home()/'sfq_data/policy_study')
@@ -64,6 +82,7 @@ def main():
             stdout=log,stderr=subprocess.STDOUT,env=env)
     results=SRC/'experiments/policy_study_results'
     if not (results/'RESULTS.md').exists():raise RuntimeError('final analysis missing')
+    finalize_artifacts(data,results)
     readme=REPO/'README.md';s=readme.read_text()
     link='> Completed registered P1/P3 study: [results and limits](src/experiments/policy_study_results/RESULTS.md).\n'
     if link not in s:readme.write_text(link+s)
