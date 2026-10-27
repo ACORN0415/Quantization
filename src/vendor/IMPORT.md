@@ -2,7 +2,7 @@
 
 The user requested that executable code live under `Quantization/src` in their
 own `ACORN0415/Quantization` repository. The local import used git subtree from
-`/home/acorn0415/sf-kvquant` at `03380e2b85365357310c61dc868cfb84eadf5fc8`.
+`${RECONSTRUCTION_SNAPSHOT}` at `03380e2b85365357310c61dc868cfb84eadf5fc8`.
 No Self-Forcing or other upstream remote was added. Upstream attribution and
 licenses remain in this directory and its parent README/NOTICE.
 

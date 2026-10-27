@@ -17,7 +17,7 @@ excluded. The historical experimental archive remains in `../Quantization`.
 The current machine uses Python 3.10 in `~/sfq_data/env`. Invoke it through
 `~/sfq_data/py`, which sets `PYTHONNOUSERSITE=1` to exclude unrelated packages in
 `~/.local`. Torch 2.6.0+cu124 and flash-attn 2.7.4.post1 match the historical
-inference environment. See [docs/HANDOFF_codex.md](docs/HANDOFF_codex.md) for the
+inference environment. See [docs/RECONSTRUCTION_PROTOCOL.md](docs/RECONSTRUCTION_PROTOCOL.md) for the
 reconstruction specification and historical environment differences.
 
 For another machine, create an isolated Python 3.10 environment and install:
@@ -76,9 +76,8 @@ Storage policies:
 
 RTN and KIVI-style keys/values accept separate widths (`--key_bits`,
 `--value_bits`, 2..8). KIVI stores group minima instead of clamped zero points.
-The default retains historical signed-int8 codes for compatibility; at **8 bits
-this reproduces unsigned-code wraparound**. Use `--unsigned_codes` for correct
-uint8 KIVI codes when conducting new experiments.
+KIVI defaults to uint8 codes, including at 8 bits. `--legacy_unsigned_int8`
+explicitly enables historical signed-int8 wraparound for reference comparisons.
 
 `--residual_tokens N` preserves the newest live tokens in the rolling buffer,
 including before the cache fills. This deliberately fixes the historical
@@ -89,10 +88,26 @@ BF16 until the entire chunk leaves it, so the BF16 window can exceed N tokens.
 
 Statistics distinguish actual tensor storage from hypothetical packed bytes.
 Transient reconstruction buffers and model weights are not included in the
-cache-only storage count; CUDA peak memory is reported separately. The raw
+cache-only storage count. CUDA peak memory includes reconstruction and diagnostic
+buffers; it is not evidence of packed-cache memory savings. The raw
 rolling KV error measures re-quantization injection against the current buffer,
 not cumulative error against an unquantized trajectory. It is retained only
 for historical validation and must not be used to infer propagation.
+
+With `--kv_error_log`, both policies report `source_k_rel/source_v_rel`: stored
+cache error against insertion-time BF16 originals from their own trajectory.
+Chunk uses segment statistics; rolling retains additional BF16 diagnostic
+buffers (`diagnostic_bf16_bytes`). Chunk's `k_rel/v_rel` alias its source error;
+rolling's legacy columns retain the pre-requantization definition. Do not mix
+those legacy columns across policies. Historical comparison rejects other
+metric scopes with a clear message.
+
+Rolling quantizes unused zeros too. Since 4680 is not divisible by 16, boundary
+groups mix live values and zeros. This intentional compatibility behavior differs
+from chunk-local grouping.
+
+Live CLI: `~/sfq_data/py scripts/progress.py --watch`. Generated gate progress
+is `~/sfq_data/verify/progress.md`; curated VERIFY.md is preserved.
 
 ## Verification
 

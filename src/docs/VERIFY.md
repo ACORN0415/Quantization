@@ -1,6 +1,6 @@
 # Verification results
 
-Verified 2026-10-27 (Asia/Seoul). Fixed criteria: [HANDOFF_codex.md](HANDOFF_codex.md).
+Verified 2026-10-27 (Asia/Seoul). Fixed criteria: [RECONSTRUCTION_PROTOCOL.md](RECONSTRUCTION_PROTOCOL.md).
 All required gates passed; no acceptance threshold was relaxed.
 
 | Gate | Result | Measured evidence |
@@ -40,7 +40,7 @@ are preserved in [verification-evidence.json](verification-evidence.json).
 The implementation commit list is [IMPLEMENTATION_COMMITS.txt](IMPLEMENTATION_COMMITS.txt).
 
 Large latent captures, raw records and full runtime logs stay outside Git at
-`/home/acorn0415/sfq_data/verify`. The compact evidence above is tracked.
+`${DATA_ROOT}/verify`. The compact evidence above is tracked.
 
 ## Scope and limits
 
@@ -49,8 +49,8 @@ Large latent captures, raw records and full runtime logs stay outside Git at
   unit tests and model-rollout sanity checks, with no historical ground truth.
 - Codes reside in byte tensors. Hypothetical packed bytes are distinct from
   actual tensor storage; this is not a low-bit kernel performance benchmark.
-- Historical signed-int8 KIVI 8-bit wraparound is preserved by default for
-  compatibility. Use `--unsigned_codes` for uint8 in new experiments.
+- KIVI now defaults to uint8. Reference tests explicitly enable historical
+  signed-int8 behavior. Original G1–G5 measurements are preserved as historical evidence.
 - Residual windows intentionally fix the old physical-tail bug. Rolling mode
   retains a BF16 override alongside full quantized codes; chunk mode keeps
   whole recent chunks in BF16 and may exceed the requested token count.
@@ -60,3 +60,26 @@ Large latent captures, raw records and full runtime logs stay outside Git at
   [environment-frozen.txt](environment-frozen.txt).
 - LongLive, TF/FR experiments, new quality measurements and GitHub publication
   were excluded by the handoff. No upstream remote is attached to this repo.
+
+
+## Reconstruction review follow-up (2026-10-27)
+
+- All 20 current CPU component tests passed (41.503 s).
+- CUDA quantizer/reference suite passed, with signed historical compatibility
+  explicitly enabled only inside the reference comparison.
+- Full-model residual identity: rolling **42/42**, chunk **42/42**, both bit-exact
+  with the fixed previously verified BF16 baseline (two prompts, 63 frames).
+- Large-residual attention unit checks cover both policies, sink 0/1, ten frames,
+  and five calls per frame. These replace output-difference-only validation as
+  the identity check; output difference remains a separate sanity observation.
+- `source_k_rel/source_v_rel` share an insertion-time-original definition across
+  policies. Historical `k_rel/v_rel` scopes remain labeled and are not pooled.
+- `verify.py` now writes generated progress outside curated documentation.
+- Published source/evidence contain no machine-specific account home path.
+  Internal handoff/session notes are archived locally. Prior Git history is
+  preserved; no history rewrite was performed.
+
+New evidence: [review-evidence.json](review-evidence.json). The original G1–G5
+measurements above remain archived historical measurements; this review did not
+repeat the entire ten-prompt G5 GPU run, whose raw records were independently
+confirmed by the reviewer. New defaults do not change RTN or KIVI 2/4-bit math.

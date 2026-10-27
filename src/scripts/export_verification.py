@@ -4,8 +4,11 @@ import hashlib
 import json
 from pathlib import Path
 import subprocess
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT))
+from kvq.verification import public_snapshot
 ap = argparse.ArgumentParser()
 ap.add_argument('--data', type=Path, default=Path.home()/'sfq_data')
 a = ap.parse_args()
@@ -53,6 +56,8 @@ for p in sorted(out.glob('prompts*.txt')):
     artifact['input_sha256'][p.name] = sha(p)
 weights = data/'weights_manifest.json'
 if weights.exists(): artifact['weights'] = json.loads(weights.read_text())
+artifact['publication_note']='Paths use portable placeholders. Digests describe raw archived files before substitution.'
+artifact=public_snapshot(artifact,home=Path.home(),project=ROOT,data=data)
 (ROOT/'docs/verification-evidence.json').write_text(json.dumps(artifact,indent=2))
 commits = subprocess.check_output(['git','log','--reverse','--format=%h %s','da5438c..HEAD'],cwd=ROOT,text=True)
 (ROOT/'docs/IMPLEMENTATION_COMMITS.txt').write_text(commits)

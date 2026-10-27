@@ -1,0 +1,525 @@
+{
+  "component_log": "test_large_residual_matches_pristine (test_integration.AttentionTests) ... ok\ntest_plain_path_matches_upstream (test_integration.AttentionTests) ... ok\ntest_rolling_attention_matches_legacy (test_integration.AttentionTests) ... ok\ntest_anchor_eviction_and_no_alias (test_lockstep.AnchoringTests) ... ok\ntest_anchor_sink_and_snapshot (test_lockstep.AnchoringTests) ... ok\ntest_packed_is_separate_from_actual (test_memory.MemoryTests) ... ok\ntest_views_share_storage (test_memory.MemoryTests) ... ok\ntest_chunk_rng_drain (test_pipeline.PipelineTests) ... ok\ntest_reference (test_quant.QuantTests) ... ok\ntest_unsigned_eight_bits (test_quant.QuantTests) ... ok\ntest_validation (test_quant.QuantTests) ... ok\ntest_path_substitution_preserves_numbers_and_digests (test_review_regressions.PublicEvidenceTests) ... ok\ntest_common_source_errors_match_actual_originals (test_review_regressions.ReviewRegressions) ... ok\ntest_curated_report_is_preserved (test_review_regressions.ReviewRegressions) ... ok\ntest_default_unsigned_and_explicit_legacy (test_review_regressions.ReviewRegressions) ... ok\ntest_chunk_immutable_and_sink (test_store.StoreTests) ... ok\ntest_chunk_residual (test_store.StoreTests) ... ok\ntest_invalid_chunk_geometry (test_store.StoreTests) ... ok\ntest_residual_live_prefix (test_store.StoreTests) ... ok\ntest_rolling_eviction_and_sink (test_store.StoreTests) ... ok\n\n----------------------------------------------------------------------\nRan 20 tests in 41.503s\n\nOK\nKV inference with 3 frames per block\n",
+  "cuda_log": "test_reference (test_quant.QuantTests) ... ok\ntest_unsigned_eight_bits (test_quant.QuantTests) ... ok\ntest_validation (test_quant.QuantTests) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.625s\n\nOK\n",
+  "identity": {
+    "rolling": {
+      "pass": true,
+      "comparisons": [
+        {
+          "file": "prompt000/chunk_0000.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0001.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0002.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0003.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0004.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0005.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0006.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0007.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0008.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0009.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0010.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0011.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0012.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0013.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0014.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0015.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0016.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0017.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0018.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0019.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0020.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0000.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0001.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0002.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0003.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0004.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0005.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0006.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0007.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0008.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0009.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0010.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0011.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0012.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0013.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0014.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0015.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0016.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0017.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0018.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0019.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0020.pt",
+          "equal": true,
+          "max_abs": 0.0
+        }
+      ]
+    },
+    "chunk": {
+      "pass": true,
+      "comparisons": [
+        {
+          "file": "prompt000/chunk_0000.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0001.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0002.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0003.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0004.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0005.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0006.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0007.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0008.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0009.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0010.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0011.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0012.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0013.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0014.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0015.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0016.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0017.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0018.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0019.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt000/chunk_0020.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0000.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0001.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0002.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0003.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0004.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0005.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0006.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0007.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0008.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0009.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0010.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0011.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0012.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0013.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0014.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0015.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0016.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0017.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0018.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0019.pt",
+          "equal": true,
+          "max_abs": 0.0
+        },
+        {
+          "file": "prompt001/chunk_0020.pt",
+          "equal": true,
+          "max_abs": 0.0
+        }
+      ]
+    }
+  },
+  "commands": {
+    "rolling": {
+      "argv": [
+        "${DATA_ROOT}/py",
+        "${PROJECT_ROOT}/inference.py",
+        "--config_path",
+        "${PROJECT_ROOT}/configs/a1.yaml",
+        "--checkpoint_path",
+        "${DATA_ROOT}/ckpt/checkpoints/self_forcing_dmd.pt",
+        "--data_path",
+        "${DATA_ROOT}/verify/prompts2.txt",
+        "--output_folder",
+        "${DATA_ROOT}/verify/identity_rolling/videos",
+        "--num_output_frames",
+        "63",
+        "--use_ema",
+        "--seed",
+        "0",
+        "--save_with_index",
+        "--rng",
+        "chunk",
+        "--latent_dump_root",
+        "${DATA_ROOT}/verify/identity_rolling/latents",
+        "--no_video",
+        "--stats_path",
+        "${DATA_ROOT}/verify/identity_rolling/stats.json",
+        "--kv_method",
+        "rtn",
+        "--kv_bits",
+        "4",
+        "--storage",
+        "rolling",
+        "--residual_tokens",
+        "1000000"
+      ],
+      "cwd": "${PROJECT_ROOT}",
+      "exit_code": 0,
+      "seconds": 181.80714774131775,
+      "digest": "55e1b75342a267d4cbeccac05ca7588a0acd0476a851789e6b63fc995e462ea6"
+    },
+    "chunk": {
+      "argv": [
+        "${DATA_ROOT}/py",
+        "${PROJECT_ROOT}/inference.py",
+        "--config_path",
+        "${PROJECT_ROOT}/configs/a1.yaml",
+        "--checkpoint_path",
+        "${DATA_ROOT}/ckpt/checkpoints/self_forcing_dmd.pt",
+        "--data_path",
+        "${DATA_ROOT}/verify/prompts2.txt",
+        "--output_folder",
+        "${DATA_ROOT}/verify/identity_chunk/videos",
+        "--num_output_frames",
+        "63",
+        "--use_ema",
+        "--seed",
+        "0",
+        "--save_with_index",
+        "--rng",
+        "chunk",
+        "--latent_dump_root",
+        "${DATA_ROOT}/verify/identity_chunk/latents",
+        "--no_video",
+        "--stats_path",
+        "${DATA_ROOT}/verify/identity_chunk/stats.json",
+        "--kv_method",
+        "rtn",
+        "--kv_bits",
+        "4",
+        "--storage",
+        "chunk",
+        "--residual_tokens",
+        "1000000"
+      ],
+      "cwd": "${PROJECT_ROOT}",
+      "exit_code": 0,
+      "seconds": 160.02552795410156,
+      "digest": "5b1e6fab8b4c9cc6262fc18e6335eec412c9c89d062ea11459c4a7acea7c185e"
+    }
+  },
+  "scope_guard": "chunk records rejected by historical rolling aggregator with explanatory error, no KeyError",
+  "changes": [
+    "curated VERIFY preserved",
+    "common insertion-source KV errors",
+    "unit/full-model identity gates",
+    "unsigned KIVI default; explicit historical reference mode",
+    "memory/grouping documentation",
+    "portable published evidence; internal notes archived locally"
+  ]
+}
