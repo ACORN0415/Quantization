@@ -39,6 +39,17 @@ def finalize_artifacts(data,results):
     path.write_text(json.dumps(value,indent=2)+'\n')
 
 
+def push_with_retry(command,data):
+    for attempt in range(60):
+        try:run(command);return
+        except subprocess.CalledProcessError:
+            if attempt==59:raise
+            path=data/'status.json';value=json.loads(path.read_text())
+            value['publication']=dict(state='retrying',detail=f'GitHub push retry {attempt+1}/60; local work retained')
+            path.write_text(json.dumps(value,indent=2)+'\n')
+            time.sleep(60)
+
+
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--gate-pid',type=int,required=True)
     ap.add_argument('--data',type=Path,default=Path.home()/'sfq_data/policy_study')
@@ -75,11 +86,12 @@ def main():
         run(['git','commit','-m','Seal main-study preregistration after all development gates pass','--',relative])
     helper=data.parent/'git_with_ide.py'
     push=[sys.executable,helper,'push','origin','main'] if helper.exists() else ['git','push','origin','main']
-    run(push)
+    push_with_retry(push,data)
     env=dict(os.environ,TZ='Asia/Seoul',PYTHONUNBUFFERED='1')
     with (data.parent/'policy_study.log').open('a') as log:
         run([sys.executable,SRC/'scripts/policy_study.py','--mode','study','--data',data],
             stdout=log,stderr=subprocess.STDOUT,env=env)
+    if study.source_hash()!=expected:raise RuntimeError('source changed during measurement/analysis; publication disabled')
     results=SRC/'experiments/policy_study_results'
     if not (results/'RESULTS.md').exists():raise RuntimeError('final analysis missing')
     finalize_artifacts(data,results)
@@ -89,7 +101,7 @@ def main():
     paths=['README.md',str(results.relative_to(REPO))]
     run(['git','add','--',*paths])
     run(['git','commit','-m','Publish complete registered P1 P3 study and prompt-paired analysis','--',*paths])
-    run(push)
+    push_with_retry(push,data)
     head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=REPO,text=True).strip()
     value=json.loads((data/'status.json').read_text())
     value['publication']=dict(state='pass',detail='all measurements, analysis, final commit and GitHub push complete',
@@ -102,4 +114,8 @@ def main():
     print('PIPELINE COMPLETE',head,flush=True)
 
 
-if __name__=='__main__':main()
+if __name__=='__main__':
+    try:main()
+    except Exception as exc:
+        print('PIPELINE FAILED',type(exc).__name__,str(exc),flush=True)
+        raise
