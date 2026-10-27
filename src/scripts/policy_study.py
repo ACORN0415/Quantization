@@ -374,7 +374,9 @@ def study(pipe):
 def main():
     global DATA,FROZEN
     ap=argparse.ArgumentParser();ap.add_argument('--mode',choices=['gates','study','analyze'],required=True)
-    ap.add_argument('--data',type=Path,default=DATA);args=ap.parse_args();DATA=args.data
+    ap.add_argument('--data',type=Path,default=DATA);args=ap.parse_args();DATA=args.data.resolve()
+    # Upstream model constructors resolve checkpoint directories from cwd.
+    os.chdir(ROOT)
     DATA.mkdir(parents=True,exist_ok=True);FROZEN=source_hash()
     torch.set_grad_enabled(False);torch.set_num_threads(4)
     try:
