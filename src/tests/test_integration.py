@@ -64,7 +64,8 @@ class AttentionTests(unittest.TestCase):
                             'v': torch.zeros(1, 12, 1, 8, dtype=torch.bfloat16),
                             'global_end_index': torch.tensor([0]), 'local_end_index': torch.tensor([0])}
                 a, b = cache(), cache()
-                a.update(store=RollingStore(Quantizer(method, bits, bits), 12, sink*4), layer=0)
+                a.update(store=RollingStore(Quantizer(method, bits, bits), 12, sink*4), layer=0, records=[])
+                legacy.KV_ERR_LOG=[]
                 b.update(quantizer=create_quantizer(method.upper(), bits=bits, block_size=16), quant_state=None)
                 for chunk in range(8):
                     for phase in range(5):
@@ -78,6 +79,9 @@ class AttentionTests(unittest.TestCase):
                         k, v = a['store'].restore(x.reshape(1,4,1,8))
                         self.assertTrue(torch.equal(k, kr))
                         self.assertTrue(torch.equal(v, vr))
+                        self.assertEqual(a['records'][-1]['legacy_post_k_rel'],legacy.KV_ERR_LOG[-1]['k_rel'])
+                        self.assertEqual(a['records'][-1]['legacy_post_v_rel'],legacy.KV_ERR_LOG[-1]['v_rel'])
+                        self.assertEqual(a['records'][-1]['kv_error_phase'],'pre_attention_history')
 
 
     @unittest.skipUnless(os.environ.get('SF_REF_REPO'), 'set SF_REF_REPO')
