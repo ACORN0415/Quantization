@@ -26,6 +26,8 @@ for bits in (4,2):
         name=f'p{prompt}_s0_int{bits}';folder=a.out/name
         done=folder/'complete.json'
         if done.exists() and json.loads(done.read_text())['source_sha256']==source_hash():
+            if not all((folder/f'{arm}.pt').exists() for arm in ('bf16','tf','fr')):
+                raise RuntimeError(f'{name}: completed case lacks retained tensors; restore before reuse')
             state[name]={'state':'PASS','reused':True};continue
         argv=[sys.executable,'-u',str(ROOT/'scripts/p3_tf_fr.py'),'--mode','pilot',
               '--out',str(a.out),'--bits',str(bits),'--prompt_index',str(prompt)]
