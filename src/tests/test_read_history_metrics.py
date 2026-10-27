@@ -24,7 +24,6 @@ class HistoryMetricsTests(unittest.TestCase):
             if policy is RollingStore:self.assertIn('legacy_post_k_rel',record)
             else:self.assertNotIn('legacy_post_k_rel',record)
 
-if __name__=='__main__':unittest.main()
 
 class CurrentTokenExclusionTests(unittest.TestCase):
     def test_rolling_current_quantization_does_not_enter_read_error(self):
@@ -35,3 +34,5 @@ class CurrentTokenExclusionTests(unittest.TestCase):
         self.assertEqual(record['k_rel'],0.)
         self.assertGreater(record['legacy_post_k_rel'],0.)
         self.assertGreater(record['source_k_rel'],0.)
+
+if __name__=='__main__':unittest.main()

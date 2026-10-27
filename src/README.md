@@ -94,13 +94,19 @@ rolling KV error measures re-quantization injection against the current buffer,
 not cumulative error against an unquantized trajectory. It is retained only
 for historical validation and must not be used to infer propagation.
 
-With `--kv_error_log`, both policies report `source_k_rel/source_v_rel`: stored
-cache error against insertion-time BF16 originals from their own trajectory.
-Chunk uses segment statistics; rolling retains additional BF16 diagnostic
-buffers (`diagnostic_bf16_bytes`). Chunk's `k_rel/v_rel` alias its source error;
-rolling's legacy columns retain the pre-requantization definition. Do not mix
-those legacy columns across policies. Historical comparison rejects other
-metric scopes with a clear message.
+With `--kv_error_log`, schema 2 uses `k_rel/v_rel` (also named
+`read_history_k_rel/read_history_v_rel`) for **pre-attention history only**.
+Both policies exclude the current BF16 chunk and use insertion-time BF16
+originals for exactly the historical tokens being read. `read_history_tokens`
+and `kv_error_phase` record the mask and timing.
+
+`source_k_rel/source_v_rel` remain explicitly post-storage diagnostics over the
+whole active cache, including current tokens; they are not the read-time metric.
+Rolling's old injection values live in `legacy_post_k_rel/legacy_post_v_rel`.
+The historical export script selects those aliases or accepts old raw logs;
+it never silently interprets schema-2 read errors as historical injection.
+Rolling source diagnostics retain extra BF16 originals, reported separately as
+`diagnostic_bf16_bytes`.
 
 Rolling quantizes unused zeros too. Since 4680 is not divisible by 16, boundary
 groups mix live values and zeros. This intentional compatibility behavior differs
@@ -159,9 +165,16 @@ quality diagnostics. This is preliminary evidence, not a multi-seed study.
 With verified `g3_base` captures already available under `~/sfq_data/verify`:
 
 ```bash
-~/sfq_data/py scripts/p3_tf_fr.py --mode gate
-~/sfq_data/py scripts/run_p3_pilot.py
-~/sfq_data/py scripts/summarize_p3.py
+~/sfq_data/py scripts/p3_tf_fr.py --mode gate --out "$HOME/sfq_data/p3_followup"
+~/sfq_data/py scripts/run_p3_pilot.py --out "$HOME/sfq_data/p3_followup"
+~/sfq_data/py scripts/summarize_p3.py --data "$HOME/sfq_data/p3_followup"
 ```
 
 Review follow-up validation and identity results are in `docs/VERIFY.md`.
+
+
+The missing actual-anchor identity validation is recorded in
+[the follow-up](experiments/P3_VALIDITY_FOLLOWUP.md). Final `bf16/tf/fr.pt`
+files are retained by default. Old cases are protected from a different source
+version; use an explicit versioned output directory for new experiments.
+Generated summaries are `SUMMARY.md`; curated `RESULTS.md` is preserved.

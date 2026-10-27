@@ -83,3 +83,18 @@ New evidence: [review-evidence.json](review-evidence.json). The original G1–G5
 measurements above remain archived historical measurements; this review did not
 repeat the entire ten-prompt G5 GPU run, whose raw records were independently
 confirmed by the reviewer. New defaults do not change RTN or KIVI 2/4-bit math.
+
+
+## Actual anchoring-path validity check (post-pilot)
+
+The previous no-quantization teacher gate used `plain_snapshot`, which did not
+validate the quantized teacher's `anchor_store` path. A separate retrospective
+gate now tests the original `caf0b4b` implementation using an identity quantizer
+through `compressed_cache(reference=...)`, hence `anchor_store` and `ChunkStore`.
+All **42/42 teacher outputs and reference comparisons passed bit-exactly**.
+The encoded-segment path was exercised (3,570 encode-pair calls per prompt).
+This is a validity check performed after pilot results, not a changed analysis.
+
+New schema-2 KV diagnostics also align the time and historical-token mask.
+The legacy post-write injection aliases remain exact against the legacy source
+in integration tests; they are separate from the common read-time diagnostics.

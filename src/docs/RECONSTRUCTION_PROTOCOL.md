@@ -30,11 +30,12 @@ Release mode retains the upstream global noise stream and DynamicSwap behavior.
 | G2 | Original release, seed 0, 21 frames, three prompts: final latents bit-exact. |
 | G3 | Chunk RNG, 63 frames, two prompts: with/without 7777 global CUDA draws per chunk, bit-exact. |
 | G4 | Legacy reconstruction vs rolling BF16/RTN4/RTN2/KIVI4 residual 0, 63 frames, two prompts each: every chunk bit-exact. |
+| ANCHOR_IDENTITY | Original pilot code with an identity quantizer through `anchor_store` and `ChunkStore`: 42 TF/reference chunks bit-exact; segment encoding must be exercised. |
 | G5 | Ten historical prompts, KIVI4 residual 0: all 210 rows within relative 1e-6, including historical record counts and active-token counts. |
 | IDENTITY | Both storage policies with a residual large enough to bypass compression, two 63-frame prompts: all 42 chunks per policy bit-exact with previously verified BF16 captures. Unit counterpart includes both policies, sink 0/1, ten frames and five calls/frame. |
 
 The old KV error aggregation is retained only for reproducing historical rows.
-Insertion-source error fields support comparable storage diagnostics; those
+Schema-2 k_rel/v_rel compare only historical tokens immediately before attention; their
 originals belong to each trajectory and do not measure an independent BF16
 counterfactual. Peak CUDA allocation includes temporary reconstruction and
 logging buffers. Neither it nor byte-container size establishes packed-kernel
