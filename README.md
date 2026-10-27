@@ -1,3 +1,9 @@
+> Current executable reconstruction: [src/README.md](src/README.md).
+> Verified reconstruction results: [src/docs/VERIFY.md](src/docs/VERIFY.md).
+> Current research conclusions and corrections: [S6_FINDINGS](문서/결과서/S6_FINDINGS.md)
+> and [corrections](문서/리뷰/CORRECTIONS_2026-09-19.md).
+> The historical narrative below predates those corrections.
+
 # Quantization error propagation in causal video diffusion
 
 Does low-precision quantization error **accumulate along the frame axis** through the KV cache of a streaming (causal) video diffusion model?

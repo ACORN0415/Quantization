@@ -4,7 +4,7 @@ A standalone inference subset for reconstructing and validating historical KV
 cache quantization experiments on **Wan2.1-T2V-1.3B / Self-Forcing**. This is an
 independent Git repository. Source attribution and pinned upstream revisions are
 in [vendor/UPSTREAM.md](vendor/UPSTREAM.md); original licenses and [NOTICE](NOTICE)
-are preserved. `git diff da5438c -- <file>` shows changes from the pristine import.
+are preserved. The standalone import history is preserved locally; see [vendor/IMPORT.md](vendor/IMPORT.md) for the `src/` relocation and comparison paths.
 
 This implementation simulates quantization with byte codes and BF16 attention.
 It does not provide packed low-bit kernels or claim a speedup. Model dimensions
