@@ -1,0 +1,15 @@
+This work includes code from Self-Forcing (guandeh17/Self-Forcing), commit
+33593df3e81fa3ec10239271dd2c100facac6de1, under the Apache License 2.0.
+The wan/ code included by that project originates from Wan2.1 (Wan-Video/Wan2.1).
+Original source notices and LICENSE are preserved. See vendor/UPSTREAM.md.
+
+Files modified in this repository:
+- inference.py
+- pipeline/__init__.py
+- pipeline/causal_inference.py
+- wan/__init__.py
+- wan/modules/causal_model.py
+
+The kvq/ package and verification scripts are new local implementations.
+kv-quant-longhorizon source is not distributed in this repository. A separately
+provided local checkout may be used as a numerical compatibility reference.
