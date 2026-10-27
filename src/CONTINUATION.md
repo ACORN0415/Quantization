@@ -1,4 +1,35 @@
-# Implementation continuation
+# Active continuation — 2026-10-27
+
+The user explicitly authorized GitHub publication and new experiments after the
+original reconstruction handoff was completed. Canonical active code is now
+`/home/acorn0415/Quantization/src`, imported with full local Git history.
+The old `/home/acorn0415/sf-kvquant` is the preserved reconstruction snapshot.
+
+GitHub destination: `ACORN0415/Quantization`, `main`. Existing VS Code Git
+askpass authentication works; `gh` is unnecessary. The shell does not inherit
+the IDE bridge automatically. Local helper `~/sfq_data/git_with_ide.py` bridges
+the current VS Code socket without storing credentials. Initial publication
+through `d64c633` succeeded; subsequent implementation commits are pushed at
+work boundaries. No upstream Git remote was attached.
+
+New experiment: fixed pilot in `experiments/P3_TF_FR_PILOT.md` (2 new prompts,
+seed 0, 126 frames, RTN INT4/INT2 P3, TF/FR/BF16, no bias/sink). This pilot does
+not replace the multi-seed/20-prompt study. Gate/queue logs are
+`~/sfq_data/p3_gate_final.log` and `~/sfq_data/p3_queue.log`; durable cases and
+progress live in `~/sfq_data/p3_pilot`. Do not launch a duplicate GPU queue.
+
+The initial independent-loop/no-quant TF model gate passed all 42 chunks.
+Final source-frozen gate is running before the four measured cases. The serial
+queue starts automatically after gate success. Source changes during a case
+prevent completion. Keep the model runner and kvq helpers unchanged while the
+queue is active. Analyze with `scripts/summarize_p3.py` after all cases complete.
+
+Commit completed work units and push using existing IDE authentication. Remove
+only verified derived temporary tensors, retaining videos, metrics, source
+hashes and cleanup manifests. Do not delete weights or historical raw evidence.
+
+## Reconstruction reference (completed)
+
 
 Updated: 2026-10-27 (Asia/Seoul).
 
