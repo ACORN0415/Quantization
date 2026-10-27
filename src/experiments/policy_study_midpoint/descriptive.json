@@ -1,0 +1,54 @@
+{
+  "completed_cases": 40,
+  "independent_prompts": 5,
+  "inference": "none; registered full-sample analysis deferred",
+  "source_sha256": "cff6ee0daf6d164e2a1be3605e33f5c70aeec2c9055c0fa1d77ed1dceb97c7d4",
+  "summary": [
+    {
+      "bits": 4,
+      "prompts": 5,
+      "seeds": [
+        101,
+        202
+      ],
+      "means": {
+        "rolling": {
+          "bf16": 73.83688810439337,
+          "tf": 73.42115231468564,
+          "fr": 63.19986695789155,
+          "noise": 73.30418261573428
+        },
+        "chunk": {
+          "bf16": 73.83688810439337,
+          "tf": 73.54804173424131,
+          "fr": 68.22071505955287,
+          "noise": 73.10546050298781
+        }
+      },
+      "paired_prompt_mean_p3_minus_p1_fr_musiq": 5.020848101661319
+    },
+    {
+      "bits": 2,
+      "prompts": 5,
+      "seeds": [
+        101,
+        202
+      ],
+      "means": {
+        "rolling": {
+          "bf16": 73.83688810439337,
+          "tf": 68.9818385532924,
+          "fr": 19.8259950365339,
+          "noise": 45.42827828725179
+        },
+        "chunk": {
+          "bf16": 73.83688810439337,
+          "tf": 70.04700985863096,
+          "fr": 29.830077997843425,
+          "noise": 64.66708028884162
+        }
+      },
+      "paired_prompt_mean_p3_minus_p1_fr_musiq": 10.004082961309521
+    }
+  ]
+}
