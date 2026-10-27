@@ -17,7 +17,7 @@ from anchor_identity_gate import IdentityQuantizer
 from kvq import Quantizer
 from kvq.lockstep import relative
 from kvq.memory import memory_report
-from kvq.replay import ReferenceReplay,StorageNoiseQuantizer,RawState,make_store,store_cache
+from kvq.replay import ReferenceReplay,StorageNoiseQuantizer,RecordingQuantizer,NonfiniteControlError,RawState,make_store,store_cache
 
 PLAN_PATH=ROOT/'experiments/policy_study_plan.json'
 PROMPTS_PATH=ROOT/'experiments/policy_study_prompts.txt'
@@ -51,7 +51,8 @@ def source_hash():
         files.extend((ROOT/folder).rglob('*.py'))
     files.extend(ROOT/p for p in ('scripts/policy_study.py','scripts/analyze_policy_study.py',
         'scripts/p3_tf_fr.py','scripts/anchor_identity_gate.py','configs/a1.yaml','configs/default_config.yaml',
-        'experiments/policy_study_plan.json','experiments/policy_study_prompts.txt','experiments/P1_P3_MAIN_STUDY.md'))
+        'experiments/policy_study_plan.json','experiments/policy_study_prompts.txt','experiments/P1_P3_MAIN_STUDY.md',
+        'experiments/P1_P3_CONTROL_AMENDMENT.md'))
     h=hashlib.sha256()
     for p in sorted(files):h.update(str(p.relative_to(ROOT)).encode());h.update(p.read_bytes())
     return h.hexdigest()
@@ -177,34 +178,57 @@ def standalone(pipe,cond,folder,reference_folder,policy,bits,seed,frames,prompt,
     if cached is not None:return cached
     release();torch.cuda.reset_peak_memory_stats();started=time.monotonic()
     quantizers=[]
+    schedules=None
+    if control:
+        calibration=load_stage(folder,'fr')
+        if calibration is None:raise RuntimeError('quantized FR calibration must precede noise control')
+        schedules=[[r['norm'] for r in calibration['innovation_norms'] if r['layer']==i]
+                   for i in range(pipe.num_transformer_blocks)]
     for layer in range(pipe.num_transformer_blocks):
         q=IdentityQuantizer() if bits==0 else Quantizer('rtn',bits,bits,PLAN['group'])
         if control:q=StorageNoiseQuantizer(q,PLAN['noise_seed_base']+prompt*10000+seed*100+layer,
-                                           support=PLAN['noise_support'])
+                                           support=PLAN['noise_support'],target_norms=schedules[layer])
+        else:q=RecordingQuantizer(q)
         quantizers.append(q)
     cache=store_cache([make_store(policy,q,pipe.local_attn_size*pipe.frame_seq_length) for q in quantizers],pilot.gpu)
     records=[]
     for c in cache:c['records']=records
     xc=pilot.cross_cache(pipe,pilot.gpu);noise=pilot.chunk_noise(pipe,frames,seed,pilot.gpu)
     reference=torch.load(reference_folder/'bf16.pt',map_location='cpu',weights_only=True)['latent']
-    outputs=[];rows=[]
+    outputs=[];rows=[];numerical_failure=None
     for chunk in range(frames//3):
         for c in cache:c['call_meta']=dict(chunk=chunk)
-        value=pilot.run_chunk(pipe,cache,xc,cond,noise,chunk,seed)
-        if not torch.isfinite(value).all():raise RuntimeError(f'nonfinite {name}')
+        try:
+            value=pilot.run_chunk(pipe,cache,xc,cond,noise,chunk,seed)
+        except NonfiniteControlError as exc:
+            if not control or bits==0:raise
+            numerical_failure=dict(chunk=chunk,reason=str(exc));break
+        if not torch.isfinite(value).all():
+            if not control or bits==0:raise RuntimeError(f'nonfinite {name} at chunk {chunk}')
+            numerical_failure=dict(chunk=chunk,reason='nonfinite noise latent')
+            torch.save({'latent':value.cpu()},folder/f'noise_nonfinite_chunk_{chunk:04d}.pt')
+            break
         cpu=value.cpu();ref=reference[:,chunk*3:(chunk+1)*3]
         if not bits and not torch.equal(cpu,ref):raise RuntimeError('zero-noise/FR identity gate failed')
         outputs.append(cpu);rows.append(dict(chunk=chunk,rel=relative(cpu,ref)))
         status(case,name.upper(),f'chunk {chunk+1}/{frames//3}')
     torch.cuda.synchronize()
-    norms=[dict(layer=i,**r) for i,q in enumerate(quantizers) for r in getattr(q,'records',[])]
+    observations=[dict(layer=i,**r) for i,q in enumerate(quantizers) for r in q.records]
+    norms=observations if control else []
+    if control and numerical_failure is None and any(len(q.records)!=len(schedules[i]) for i,q in enumerate(quantizers)):
+        raise RuntimeError('noise calibration event count mismatch')
     ratios=[abs(r['actual_norm']/r['target_norm']-1) for r in norms if r['target_norm']]
     meta=dict(policy=policy,bits=bits,seed=seed,frames=frames,rows=rows,history=records,noise_norms=norms,
+              state='nonfinite' if numerical_failure else 'finite',numerical_failure=numerical_failure,
+              innovation_norms=observations if not control else [],
               max_noise_norm_relative_mismatch=max(ratios,default=0),seconds=time.monotonic()-started,
               peak_allocated_gib=torch.cuda.max_memory_allocated()/2**30,
               peak_reserved_gib=torch.cuda.max_memory_reserved()/2**30,cache_state=cache_size(cache),
               reference_latent_sha256=tensor_hash(reference))
-    persist_stage(folder,name,torch.cat(outputs,1),meta);return meta
+    if numerical_failure:
+        status(case,'CONTROL_INSTABILITY',f'chunk {numerical_failure["chunk"]}: {numerical_failure["reason"]}; retained, no replacement')
+    partial=torch.cat(outputs,1) if outputs else reference[:,:0].clone()
+    persist_stage(folder,name,partial,meta);return meta
 
 
 def quality(pipe,folder,name,case):
@@ -257,15 +281,22 @@ def run_case(pipe,cond,folder,ref_folder,policy,bits,seed,frames,prompt,case,dec
     noise=standalone(pipe,cond,folder,ref_folder,policy,bits,seed,frames,prompt,case,control=True);release()
     if decode:
         quality(pipe,ref_folder,'bf16',case)
-        for name in ('tf','fr','noise'):quality(pipe,folder,name,case)
+        for name in ('tf','fr','noise'):
+            if name=='noise' and noise['state']=='nonfinite':
+                save_json(folder/'noise_quality.json',dict(source_sha256=FROZEN,
+                    latent_file_sha256=noise['latent_file_sha256'],state='nonfinite',
+                    numerical_failure=noise['numerical_failure'],per_chunk=[]))
+            else:quality(pipe,folder,name,case)
     check_frozen()
     meta=dict(source_sha256=FROZEN,case=case,prompt_index=prompt,seed=seed,policy=policy,bits=bits,
               frames=frames,seconds=time.monotonic()-started,decoded=decode,
+              noise_nonfinite=noise['state']=='nonfinite',
               tf_seconds=tf['seconds'],fr_seconds=fr['seconds'],noise_seconds=noise['seconds'],
               max_noise_norm_relative_mismatch=noise['max_noise_norm_relative_mismatch'])
     save_json(folder/'latent_manifest.json',{'retained':True,'artifacts':[
         dict(path=f'{n}.pt',bytes=(folder/f'{n}.pt').stat().st_size,sha256=file_hash(folder/f'{n}.pt')) for n in ('tf','fr','noise')]})
-    save_json(done,meta);status(case,'COMPLETE',f'{meta["seconds"]:.1f}s',state='pass');return meta
+    detail=f'{meta["seconds"]:.1f}s'+('; secondary noise numerically unstable, retained' if meta['noise_nonfinite'] else '')
+    save_json(done,meta);status(case,'COMPLETE',detail,state='pass');return meta
 
 
 def gates(pipe):

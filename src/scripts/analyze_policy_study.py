@@ -55,6 +55,9 @@ def window(case,phase,lo,hi):
     row=dict(case=case['name'],prompt=case['prompt'],seed=case['seed'],policy=case['policy'],bits=case['bits'],
              phase=phase,first_chunk=lo,last_chunk=hi-1)
     for arm in ('bf16','tf','fr','noise'):
+        if arm=='noise' and case['sampling']['noise'].get('state')=='nonfinite':
+            for key in ('musiq','rel','read_history_k_rel','read_history_v_rel'):row['noise_'+key]=None
+            continue
         values=case['quality'][arm]['per_chunk']
         row[arm+'_musiq']=mean([v['musiq'] for v in values if lo<=v['chunk']<hi])
         if arm=='bf16':continue
@@ -64,8 +67,9 @@ def window(case,phase,lo,hi):
         history=[r for r in sampling['history'] if lo<=r['chunk']<hi and r['read_history_tokens']>0]
         for kind in ('k','v'):
             row[f'{arm}_read_history_{kind}_rel']=mean([r[f'read_history_{kind}_rel'] for r in history])
-    for arm in ('tf','fr','noise'):row[arm+'_minus_bf16_musiq']=row[arm+'_musiq']-row['bf16_musiq']
-    row['fr_minus_noise_musiq']=row['fr_musiq']-row['noise_musiq']
+    for arm in ('tf','fr','noise'):
+        row[arm+'_minus_bf16_musiq']=None if row[arm+'_musiq'] is None else row[arm+'_musiq']-row['bf16_musiq']
+    row['fr_minus_noise_musiq']=None if row['noise_musiq'] is None else row['fr_musiq']-row['noise_musiq']
     return row
 
 
@@ -90,12 +94,20 @@ def analyze(data,out):
                     sampling={a:read(folder/f'{a}_sampling.json') for a in ('tf','fr','noise')}
                     for arm,meta in sampling.items():
                         if meta['reference_latent_sha256']!=reference['latent_sha256']:raise RuntimeError('reference tensor mismatch')
-                        if len(meta['rows'])!=42 or len(meta['history'])!=42*5*30:raise RuntimeError('missing calls or chunks')
+                        unstable=arm=='noise' and meta.get('state')=='nonfinite'
+                        if unstable:
+                            if len(meta['rows'])!=meta['numerical_failure']['chunk'] or len(meta['history'])>42*5*30:
+                                raise RuntimeError('invalid noise instability record')
+                        elif len(meta['rows'])!=42 or len(meta['history'])!=42*5*30:raise RuntimeError('missing calls or chunks')
                         if meta['source_sha256']!=seal['source_sha256']:raise RuntimeError('stage source mismatch')
                         if file_hash(folder/f'{arm}.pt')!=meta['latent_file_sha256']:raise RuntimeError('tensor file altered')
                     quality={a:read((ref if a=='bf16' else folder)/f'{a}_quality.json') for a in ('bf16','tf','fr','noise')}
                     for a,q in quality.items():
-                        if len(q['per_chunk'])!=42 or q['source_sha256']!=seal['source_sha256']:raise RuntimeError('incomplete quality')
+                        unstable=a=='noise' and sampling[a].get('state')=='nonfinite'
+                        if unstable:
+                            if q.get('state')!='nonfinite' or q['per_chunk']:raise RuntimeError('invalid unstable-control quality')
+                        elif len(q['per_chunk'])!=42:raise RuntimeError('incomplete quality')
+                        if q['source_sha256']!=seal['source_sha256']:raise RuntimeError('quality source mismatch')
                         if q['latent_file_sha256']!=(reference if a=='bf16' else sampling[a])['latent_file_sha256']:
                             raise RuntimeError('quality/latent mismatch')
                     cases.append(dict(name=name,prompt=prompt,seed=seed,bits=bits,policy=policy,
@@ -109,6 +121,12 @@ def analyze(data,out):
         primary.append(dict(bits=bits,contrast='P3 FR minus P1 FR late MUSIQ',
                             **paired_inference(d,plan['bootstrap_replicates'],plan['analysis_seed'],.975)))
         for policy in plan['policies']:
+            failures=sum(late[p,s,bits,policy]['noise_musiq'] is None for p in range(plan['prompts']) for s in plan['seeds'])
+            if failures:
+                secondary.append(dict(bits=bits,policy=policy,state='undefined',noise_failed_cases=failures,
+                    planned_cases=plan['prompts']*len(plan['seeds']),mean=None,ci_low=None,ci_high=None,
+                    contrast='quantized FR minus storage-noise FR late MUSIQ'))
+                continue
             differences=[mean([late[p,s,bits,policy]['fr_minus_noise_musiq'] for s in plan['seeds']])
                          for p in range(plan['prompts'])]
             result=paired_inference(differences,plan['bootstrap_replicates'],plan['analysis_seed'],.95)
@@ -126,12 +144,14 @@ def analyze(data,out):
     for bits in plan['bits']:
         for policy in plan['policies']:
             subset=[r for r in windows if r['phase']=='late' and r['bits']==bits and r['policy']==policy]
-            arm_summary.append(dict(bits=bits,policy=policy,**{key:mean([r[key] for r in subset]) for key in subset[0]
+            arm_summary.append(dict(bits=bits,policy=policy,**{key:None if any(r[key] is None for r in subset) else mean([r[key] for r in subset]) for key in subset[0]
                 if key not in ('case','prompt','seed','policy','bits','phase','first_chunk','last_chunk')}))
     for p in sorted(data.rglob('*')):
         if p.is_file() and p.suffix in ('.json','.pt'):
             artifacts.append(dict(path=str(p.relative_to(data)),bytes=p.stat().st_size,sha256=file_hash(p)))
     stats=dict(registration=seal,complete_cases=expected,primary=primary,secondary=secondary,
+               noise_instability=[dict(case=c['name'],policy=c['policy'],bits=c['bits'],
+                   **c['sampling']['noise']['numerical_failure']) for c in cases if c['sampling']['noise'].get('state')=='nonfinite'],
                late_arm_summary=arm_summary,local_artifact_root='${HOME}/sfq_data/policy_study',
                artifacts=artifacts)
     (out/'evidence.json').write_text(json.dumps(stats,indent=2)+'\n')
@@ -148,12 +168,18 @@ def analyze(data,out):
     lines+=['','The sign-flip test assumes exchangeability/symmetry of paired differences under the null. Bootstrap coverage is approximate at n=10.','',
             '## Late arm scores (descriptive)','',
             '| Bits | Policy | BF16 | TF | FR | Noise FR |','|---|---|---:|---:|---:|---:|']
-    for r in arm_summary:lines.append(f'| {r["bits"]} | {r["policy"]} | {r["bf16_musiq"]:.2f} | {r["tf_musiq"]:.2f} | {r["fr_musiq"]:.2f} | {r["noise_musiq"]:.2f} |')
+    for r in arm_summary:
+        scores=['undefined' if r[a+'_musiq'] is None else f'{r[a+"_musiq"]:.2f}' for a in ('bf16','tf','fr','noise')]
+        lines.append(f'| {r["bits"]} | {r["policy"]} | '+ ' | '.join(scores)+' |')
     lines+=['','## Storage-noise contrast (secondary)','',
             '| Bits | Policy | Quantized FR−noise FR MUSIQ | Exploratory 95% CI |',
             '|---|---|---:|---|']
-    for r in secondary:lines.append(f'| {r["bits"]} | {r["policy"]} | {r["mean"]:+.3f} | [{r["ci_low"]:+.3f}, {r["ci_high"]:+.3f}] |')
-    lines+=['','The noise control matches per-encode error support and norm on its own trajectory before BF16 rounding. It does not match accumulated read errors or establish a chaos baseline.','',
+    for r in secondary:
+        if r['mean'] is None:
+            lines.append(f'| {r["bits"]} | {r["policy"]} | undefined | {r["noise_failed_cases"]}/{r["planned_cases"]} controls numerically unstable |')
+        else:lines.append(f'| {r["bits"]} | {r["policy"]} | {r["mean"]:+.3f} | [{r["ci_low"]:+.3f}, {r["ci_high"]:+.3f}] |')
+    lines+=['','The noise control replays fixed per-encode absolute innovation norms recorded from paired quantized FR; eligible support comes from the control input. It does not match accumulated read errors or establish a chaos baseline.',
+            f'Numerically unstable noise controls: {len(stats["noise_instability"])}/{expected}. Per the preregistered rule, no finite-only quality contrasts or imputed scores are reported. Primary TF/FR completeness remains mandatory.','',
             '## Scope and limitations','',
             '- Same nominal bit widths, not equal memory budgets; byte-container simulation with BF16 attention. No packed-kernel speed or memory claim.',
             '- Policy changes include grouping, padding, current-chunk precision and re-quantization. This does not isolate one mechanism or establish a new method.',

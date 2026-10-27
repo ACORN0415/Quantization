@@ -1,4 +1,10 @@
-# P1/P3 main study v1 — fixed before held-out measurements
+# P1/P3 main study v2 — fixed before held-out measurements
+
+Version 1 failed a development gate before any held-out sampling: own-state
+INT2 P1 noise became nonfinite at chunk 19 (zero-indexed). Version 2 fixes the
+control amplitude schedule to the paired quantized FR's actual innovations.
+Primary endpoints, prompts, seeds and analysis are unchanged. See
+[P1_P3_CONTROL_AMENDMENT.md](P1_P3_CONTROL_AMENDMENT.md).
 
 ## Question and scope
 
@@ -19,7 +25,7 @@ All previously generated prompts are development-only and excluded.
 ## Arms and teacher forcing
 
 For each prompt/seed/bit/policy, run BF16 reference, replay-TF, quantized FR and
-storage-noise FR. There are 80 policy cases, 240 TF/FR/noise final tensors and
+storage-noise FR. There are 80 policy cases, 240 TF/FR/noise tensor artifacts and
 20 shared BF16 references. BF16 is recomputed for replay in each case and must
 match the saved reference bit-exactly; its decoding/quality is reused.
 
@@ -38,11 +44,14 @@ layers/calls; report macro averages over the specified chunks, layers and calls.
 
 ## Noise control
 
-At each encode event on the noise arm's own input x, compute e = Q(x)-x,
-separately for K and V. Draw an independent Gaussian direction, set entries
-with e=0 to zero, normalize to the FP32 norm of e, add to x and cast to BF16.
-Keep the result under the same storage policy. This preserves the event's error
-support and total norm before rounding; record the actual rounded norm.
+First record the absolute FP32 innovation norm at every actual encode event
+of the paired quantized FR, separately for K and V. On the noise arm's own
+input x compute e = Q(x)-x to determine eligible coordinates only. Draw an
+independent Gaussian direction, set entries with e=0 to zero, normalize to
+the corresponding **recorded FR norm**, add to x and cast to BF16.
+Keep the result under the same storage policy. This preserves the control
+input's eligible error support and the paired FR's absolute innovation norm
+before rounding; record the actual rounded norm.
 The direction is isotropic on that support with fixed norm, not an unnormalized
 Gaussian perturbation. Each layer uses a private RNG with seed
 1000000 + prompt_index*10000 + generation_seed*100 + layer_index.
@@ -51,10 +60,22 @@ This differs from the earlier development control that perturbed every tensor
 coordinate. A development gate must verify the new support mask, RNG isolation,
 zero-error identity, end-to-end feasibility and rounded norms before held-out
 measurements. The target is not a held-out quality-tuned quantity: Q and the norm
-rule are fixed before measurements. The norm is evaluated on each control arm's
-own trajectory. This is neither matched accumulated read-error nor an initial
+rule are fixed before measurements. The absolute norm schedule is calibrated
+from the paired FR before its quality is inspected and never scaled using the
+control's growing state. Eligible support is determined on the control input,
+not matched coordinate-for-coordinate to FR. This is neither matched accumulated read-error nor an initial
 BF16 perturbation chaos baseline. It cannot by itself establish a unique cause
 for large FR distances.
+
+Predeclared instability handling: a nonfinite noise latent, K/V input or
+would-be support quantization is a secondary control instability outcome.
+Retain its finite prefix and failure location. Do not replace the seed or
+shrink its amplitude. Report the count out of all 20 prompt/seed controls per
+policy/bit cell. If any control in that cell fails, its full-sample noise MUSIQ
+mean and quantized-minus-noise quality contrast are undefined; do not report
+a selected finite-only contrast or impute a quality score. This rule is fixed
+before held-out sampling. Zero-noise identity and calibration validity are
+still mandatory; any nonfinite primary TF/FR or invalid calibration halts.
 
 ## Endpoints and analysis
 
@@ -87,7 +108,7 @@ proxy, not a temporal quality score. No FR-minus-TF causal decomposition.
 Before any held-out case: pass CPU/reference tests, full-model replay/zero-noise
 identity on development prompts, exact INT4 compatibility with the prior
 feasibility tensors, and 126-frame INT2 smoke tests for both policies including
-the final noise definition. Decode and score development outputs to measure
+the final noise definition and numerical-outcome handling. Decode and score finite development outputs to measure
 end-to-end cost. Commit the registration seal containing source, plan, prompt
 and gate hashes before held-out sampling. Gates are prerequisites, not study data.
 
@@ -100,16 +121,17 @@ the displayed ETA from elapsed completed cases, without changing sample size.
 
 Infrastructure failures may be retried twice with identical parameters and
 frozen code. Never drop a numerically bad case or silently replace a prompt.
-Record failures; nonfinite outputs or failure of a validity gate halt the study
+Record failures; nonfinite primary outputs or failure of a validity gate halt the study
 as invalid pending an explicit documented amendment and new registration.
 Resume only completed matching-source stages. Keep every final latent tensor,
 raw per-call metrics, quality values and source fingerprints outside Git;
-publish compact evidence, CSVs, plots and conclusions. Keep licenses and source
+publish compact evidence, CSVs, plots and conclusions. Secondary noise instability
+is reported under the rule above and never silently excluded. Keep licenses and source
 attribution. Do not publish partial quality conclusions before gates pass.
 
 ## Visibility
 
 `bash tools/watch_progress.sh` shows current case/stage and queue completion.
-`tail -f ~/sfq_data/policy_study.log` shows the live log. Machine-readable state
+`tail -F ~/sfq_data/policy_study.log` shows the live log. Machine-readable state
 is `~/sfq_data/policy_study/status.json`. The runner proceeds through all cases
 and writes the final analysis without a manual handoff.

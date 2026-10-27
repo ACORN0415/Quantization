@@ -2,7 +2,7 @@ import unittest
 import torch
 from kvq import Quantizer
 from kvq.lockstep import anchor_store
-from kvq.replay import ReferenceReplay, StorageNoiseQuantizer, RawState, make_store
+from kvq.replay import ReferenceReplay, StorageNoiseQuantizer, RecordingQuantizer, RawState, make_store
 
 
 class Identity:
@@ -71,5 +71,24 @@ class ReplayTests(unittest.TestCase):
         self.assertTrue(torch.equal(state[exact],x[exact]))
         self.assertTrue(torch.equal(state[:,8:],x[:,8:]))
         self.assertLess(abs(noise.records[0]['actual_norm']/noise.records[0]['target_norm']-1),.05)
+
+    def test_recorded_fr_amplitudes_prevent_own_state_recalibration(self):
+        torch.manual_seed(77)
+        inputs=[torch.randn(1,16,2,8).bfloat16() for _ in range(42*5)]
+        recorder=RecordingQuantizer(Quantizer(key_bits=2,value_bits=2))
+        reference=make_store('rolling',recorder,112)
+        for i,x in enumerate(inputs):reference.attend(x,x,x,(i//5)*16,lambda q,k,v: None)
+        targets=[r['norm'] for r in recorder.records]
+        noise=StorageNoiseQuantizer(Quantizer(key_bits=2,value_bits=2),support='quantization_error',target_norms=targets)
+        control=make_store('rolling',noise,112)
+        for i,x in enumerate(inputs):control.attend(x,x,x,(i//5)*16,lambda q,k,v: None)
+        state=control.restore(inputs[-1])[0].float()
+        self.assertTrue(torch.isfinite(state).all())
+        self.assertLess(state.norm().item(),3*reference.restore(inputs[-1])[0].float().norm().item())
+        self.assertEqual(len(noise.records),len(targets))
+        for r,target in zip(noise.records,targets):
+            self.assertAlmostEqual(r['target_norm'],target,places=5)
+        zero=StorageNoiseQuantizer(Quantizer(),target_norms=[0.,0.])
+        self.assertTrue(torch.equal(zero.encode_pair(inputs[0],inputs[0])[0].restore(),inputs[0]))
 
 if __name__=='__main__': unittest.main()

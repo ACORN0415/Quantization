@@ -1,5 +1,5 @@
 {
-  "id": "p1_p3_main_v1",
+  "id": "p1_p3_main_v2",
   "prompts": 10,
   "seeds": [101, 202],
   "bits": [4, 2],
@@ -16,7 +16,8 @@
   "analysis_seed": 872341,
   "noise_seed_base": 1000000,
   "noise_support": "quantization_error",
-  "noise_target": "per-encode K/V FP32 error norm Q(x)-x on the control arm own input",
+  "noise_target": "fixed per-event absolute K/V innovation norm recorded from the paired quantized FR trajectory; no control-state amplitude recalibration",
+  "noise_nonfinite": "record secondary instability outcome and retain partial tensors; full-sample noise quality contrasts undefined if any paired control fails; primary TF/FR must remain finite",
   "multiplicity": "two-sided exact paired sign-flip p values, Holm across two bit widths",
   "primary_ci": "97.5 percent prompt-cluster percentile bootstrap; both seeds retained together",
   "retry_infrastructure": 2

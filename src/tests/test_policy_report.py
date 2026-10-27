@@ -50,6 +50,17 @@ class ReportTests(unittest.TestCase):
                 self.assertTrue(all(r['n_prompts']==10 for r in result['primary']))
                 self.assertEqual(len((out/'windows.csv').read_text().splitlines()),241)
                 self.assertTrue((out/'RESULTS.md').exists())
+                bad=data/'cases'/f'p00_s{plan["seeds"][0]}_rolling_int4'
+                m=json.loads((bad/'noise_sampling.json').read_text())
+                m.update(state='nonfinite',numerical_failure={'chunk':3,'reason':'fixture'},
+                         rows=m['rows'][:3],history=m['history'][:450])
+                put(bad/'noise_sampling.json',m)
+                put(bad/'noise_quality.json',dict(base,state='nonfinite',per_chunk=[]))
+                unstable=report.analyze(data,out)
+                self.assertEqual([r['mean'] for r in unstable['primary']],[2.,-1.])
+                self.assertEqual(len(unstable['noise_instability']),1)
+                contrast=next(r for r in unstable['secondary'] if r['bits']==4 and r['policy']=='rolling')
+                self.assertIsNone(contrast['mean']);self.assertEqual(contrast['noise_failed_cases'],1)
                 first=data/'reference'/f'p00_s{plan["seeds"][0]}'/'bf16.pt'
                 first.write_bytes(b'altered')
                 with self.assertRaisesRegex(RuntimeError,'BF16 tensor file altered'):
