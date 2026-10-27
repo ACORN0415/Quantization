@@ -8,7 +8,7 @@ def show():
     if a.watch:print('\033[2J\033[H',end='')
     print(time.strftime('%Y-%m-%d %H:%M:%S'),'— Quantization progress')
     print('Local data:',a.data)
-    for name in ('WORK_STATUS.md','anchor_validity.log','latent_recovery.log','validity_followup_tests.log','review_tests_final.log','review_identity.log','p3_gate_final.log','p3_queue.log'):
+    for name in ('WORK_STATUS.md','feasibility.log','feasibility_tests.log','anchor_validity.log','latent_recovery.log','validity_followup_tests.log','review_tests_final.log','review_identity.log','p3_gate_final.log','p3_queue.log'):
         path=a.data/name
         if not path.exists():continue
         print('\n'+name+' ['+time.strftime('%H:%M:%S',time.localtime(path.stat().st_mtime))+']')
@@ -18,7 +18,7 @@ def show():
         for path in sorted(a.data.glob(pattern)):
             print('\n'+str(path.relative_to(a.data)))
             print('\n'.join(path.read_text(errors='replace').replace('\r','\n').splitlines()[-4:]))
-    for relative in ('verify/status.json','latent_recovery/status.json','p3_pilot/queue.json'):
+    for relative in ('feasibility/status.json','verify/status.json','latent_recovery/status.json','p3_pilot/queue.json'):
         path=a.data/relative
         if not path.exists():continue
         print('\n'+relative)

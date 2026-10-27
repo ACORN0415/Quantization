@@ -215,6 +215,11 @@ class CausalWanSelfAttention(nn.Module):
                 kv_cache["v"] = v.new_empty(0)
                 return self.o(x.flatten(2))
 
+            # Optional development replay observer sees every raw reference
+            # write without participating in attention or modifying its inputs.
+            if kv_cache.get('write_observer') is not None:
+                kv_cache['write_observer'](roped_key, v, current_start,
+                                           local=self.local_attn_size != -1)
             current_end = current_start + roped_query.shape[1]
             sink_tokens = self.sink_size * frame_seqlen
             # If we are using local attention and the current KV cache size is larger than the local attention size, we need to truncate the KV cache

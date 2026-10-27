@@ -75,6 +75,9 @@ class RollingStore:
                           read_history_tokens=history_end-lo,read_current_tokens=key.shape[1],
                           kv_error_phase='pre_attention_history',kv_error_reference='insertion_bf16_history',
                           kv_error_schema=2)
+        if getattr(self, 'history_observer', None) is not None:
+            self.history_observer(k[:, lo:self.local_end-key.shape[1]],
+                                  v[:, lo:self.local_end-key.shape[1]])
         out = attention(query, k[:, lo:self.local_end], v[:, lo:self.local_end])
         self.commit(k, v)
         if record is not None:
@@ -158,4 +161,6 @@ class ChunkStore:
                           kv_error_phase='pre_attention_history',kv_error_reference='insertion_bf16_history',
                           kv_error_schema=2,source_error_phase='post_storage',
                           source_reference='insertion_bf16',diagnostic_bf16_bytes=0)
+        if getattr(self, 'history_observer', None) is not None:
+            self.history_observer(k[:, :-count], v[:, :-count])
         return attention(query, k, v)
