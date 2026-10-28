@@ -8,6 +8,10 @@
 0을 포함하고, INT2의 전체 표본 잔차 비교는 유효 대응 영역이 없는 한 건 때문에 미정의다.
 INT2는 두 정책 모두 심각한 품질 손상을 보이므로 P3의 상대적 우위를 실용적 품질로 해석하면 안 된다.
 
+[자체 리뷰와 미해결 검증 범위](../policy_supplement_results/SELF_REVIEW_KO.md): 시간 진단은
+청크 경계 전환을 포함하지 않으며, DINO는 추적한 객체의 동일성 지표가 아니다.
+집계 재검사는 외부 독립 검증 또는 공식 VBench와의 수치 대조를 의미하지 않는다.
+
 ## 완료 상태
 
 2026-10-29 02:33 KST에 사전 등록한 80개 실험과 최종 분석을 완료했다.
@@ -129,8 +133,10 @@ INT2 P3의 추정 움직임은 0.196픽셀로 P1의 0.549, BF16의 0.648보다 �
 총 21,840개 프레임 쌍 중 1개(`p04_s101_rolling_int2_fr`, 청크 41)에 유효 대응 영역이 없었다.
 해당 영상을 제외하거나 임계값을 완화하지 않았다. 그 영상과 영향을 받는 전체 표본의
 잔차 비교는 미정의로 남겼고, 다른 지표에는 모든 영상을 포함했다.
-독립 검증으로 영상 260개의 SHA256, 10,920개 청크 기록, 21,840개 쌍 기록,
-표본 균형과 결측을 포함한 집계 규칙을 확인했다.
+별도 감사 코드로 영상 260개의 SHA256, 10,920개 청크 기록, 21,840개 쌍 기록,
+정확한 프롬프트/시드 집합, 결측을 포함한 집계와 부트스트랩 구간을 다시 계산했다.
+작성자가 동일하므로 외부 독립 검증이 아니며 지표 자체의 타당성을 증명하지 않는다.
+총 120개 탐색 대조에 다중 비교 보정을 하지 않았고, DINO의 구간을 확증 발견으로 해석하지 않는다.
 
 ![프레임 품질·특징·시간·움직임 통합 그래프](../policy_supplement_results/diagnostics.png)
 
@@ -140,6 +146,6 @@ INT2의 심한 손상은 확인할 수 있지만 정지 이미지로 시간 품�
 
 ![고정한 프롬프트와 시드의 영상 예시](../policy_supplement_results/fixed_example.png)
 
-[독립 검증 기록](../policy_supplement_results/audit.json) · [정책별 후반 평균](../policy_supplement_results/late_arm_means.csv)
+[집계 감사 기록](../policy_supplement_results/audit.json) · [정책별 후반 평균](../policy_supplement_results/late_arm_means.csv)
 
 [추가 평가 상세 결과](../policy_supplement_results/REPORT_KO.md) · [고정한 평가 방식과 출처](../POLICY_STUDY_SUPPLEMENT.md)

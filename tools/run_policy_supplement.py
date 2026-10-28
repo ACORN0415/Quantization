@@ -23,6 +23,12 @@ def status(detail,state='running'):
 
 
 def main():
+    # Published reports contain reviewed interpretation beyond generated tables.
+    # Do not recreate them when the coordinator is invoked again.
+    if (OUT/'summary.json').exists():
+        print('Published supplementary results already exist. No reports changed. '
+              'Use tools/reanalyze_policy_supplement.py for a read-only recomputation.',flush=True)
+        return
     DATA.mkdir(parents=True,exist_ok=True)
     status('추가 평가 모델 로딩 및 260개 영상 처리 시작')
     run(sys.executable,ROOT/'tools/evaluate_policy_supplement.py','--mode','run','--data',DATA)

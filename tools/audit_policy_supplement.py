@@ -1,10 +1,12 @@
-"""Independent standard-library audit of supplementary evidence and aggregation."""
+"""Separate artifact/aggregation audit; not independent validation of the metrics."""
 import collections
 import hashlib
 import json
 import math
 from pathlib import Path
 import statistics
+
+import numpy as np
 
 ROOT=Path(__file__).resolve().parents[1]
 DATA=Path.home()/'sfq_data/policy_supplement'
@@ -30,7 +32,31 @@ def equal(a,b):
     return a is None and b is None or a is not None and b is not None and math.isclose(a,b,abs_tol=1e-12,rel_tol=1e-10)
 
 
+def check_interval(diffs, contrast):
+    # Reuse the specified PCG64 draws, but independently sum resampled prompts
+    # with Python arithmetic and interpolate percentile endpoints explicitly.
+    draws=np.random.default_rng(872341).integers(0,10,(20000,10))
+    boot=sorted(sum(diffs[int(i)] for i in row)/10 for row in draws)
+    def percentile(q):
+        position=q*(len(boot)-1);lo=math.floor(position);hi=math.ceil(position)
+        return boot[lo]+(position-lo)*(boot[hi]-boot[lo])
+    assert equal(percentile(.025),contrast['ci_low'])
+    assert equal(percentile(.975),contrast['ci_high'])
+
+
+def interval_mutation_test():
+    diffs=list(range(10))
+    draws=np.random.default_rng(872341).integers(0,10,(20000,10))
+    lo,hi=np.quantile(np.asarray(diffs)[draws].mean(1),[.025,.975])
+    check_interval(diffs,dict(ci_low=float(lo),ci_high=float(hi)))
+    try:check_interval(diffs,dict(ci_low=float(lo)+.1,ci_high=float(hi)))
+    except AssertionError:return
+    raise RuntimeError('audit failed to detect altered confidence interval')
+
+
 def main():
+    if not __debug__:raise RuntimeError('Audit requires assertions; do not run Python with -O')
+    interval_mutation_test()
     summary=read(OUT/'summary.json');gate=read(DATA/'gates.json')
     assert summary['provenance']==gate['provenance']
     assert sha(ROOT/'tools/evaluate_policy_supplement.py')==gate['provenance']['evaluator_sha256']
@@ -61,7 +87,10 @@ def main():
     assert counts[(0,'reference','bf16')]==20 and len(counts)==13
     for bits in (4,2):
         for policy in ('rolling','chunk'):
-            for arm in ('fr','tf','noise'):assert counts[(bits,policy,arm)]==20
+            for arm in ('fr','tf','noise'):
+                assert counts[(bits,policy,arm)]==20
+                assert {(r['prompt'],r['seed']) for r in records if (r['bits'],r['policy'],r['arm'])==(bits,policy,arm)}=={(p,s) for p in range(10) for s in (101,202)}
+    assert {(r['prompt'],r['seed']) for r in records if r['arm']=='bf16'}=={(p,s) for p in range(10) for s in (101,202)}
     for c in summary['contrasts']:
         selected=[r for r in records if r['bits']==c['bits'] and r['arm']==c['arm']]
         metric=c['metric'];window=c['window']
@@ -77,10 +106,13 @@ def main():
                 diffs.append(statistics.mean(seeds))
             assert equal(statistics.mean(diffs),c['mean'])
             assert all(equal(a,b) for a,b in zip(diffs,c['prompt_differences']))
+            check_interval(diffs,c)
     result=dict(passed=True,verified_video_records=260,verified_input_videos=260,
                 pair_records=260*84,chunk_records=260*42,contrast_records=len(summary['contrasts']),
                 empty_mask_pairs=empty,source_and_protocol_hashes_match=True,
                 no_finite_only_contrasts=True,balanced_cells=True)
+    result.update(bootstrap_intervals_recomputed=True,altered_interval_detected=True,
+                  scope='Separate implementation of artifact and aggregation checks; not an external review or official metric differential test')
     (OUT/'audit.json').write_text(json.dumps(result,indent=2)+'\n')
     print('AUDIT PASS',len(records),'videos,',len(empty),'empty-mask pairs retained')
 

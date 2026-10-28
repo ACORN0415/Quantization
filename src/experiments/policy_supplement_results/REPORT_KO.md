@@ -39,4 +39,8 @@ INT2 P3의 추정 움직임도 낮아, 단순 일관성 점수를 품질 향상�
 
 ![통합 진단](diagnostics.png)
 
-[정책별 후반 평균](late_arm_means.csv) · [독립 검증](audit.json) · [고정 예시](fixed_example.png)
+[정책별 후반 평균](late_arm_means.csv) · [집계 감사](audit.json) · [고정 예시](fixed_example.png)
+
+[자체 리뷰](SELF_REVIEW_KO.md): 집계 감사는 외부 검증이나 공식 VBench와의 수치 대조가 아니다.
+신뢰구간도 별도 산술로 재계산했지만, 120개 탐색 대조의 다중 비교를 보정하지 않았으므로
+새로운 확증 발견으로 해석하지 않는다. 평가 방식과 원래 수치는 유지했다.
