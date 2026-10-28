@@ -5,11 +5,11 @@ Session 5 showed MUSIQ is blind in exactly the region the correction moves
 move), so every headline table needs a second opinion. Three VBench dimensions
 are computed here with VBench's own code:
 
-  subject_consistency   DINO ViT-B/16 feature cosine across frames (identity
-                        drift -- the failure long-horizon KV quantization is
-                        supposed to cause)
-  temporal_flickering   mean absolute difference between adjacent frames on
-                        static regions (MUSIQ reads one frame and cannot see it)
+  subject_consistency   DINO ViT-B/16 whole-frame feature similarity; an
+                        appearance proxy, not tracked-object identity
+  temporal_flickering   mean absolute difference between adjacent full frames;
+                        requires static videos, with no static-region mask or
+                        motion compensation (do not treat as motion quality)
   imaging_quality       MUSIQ-based; included because VBench tables report it,
                         but it is NOT independent evidence from our own MUSIQ
 
