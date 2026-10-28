@@ -9,6 +9,23 @@ def show():
     if a.watch:print('\033[2J\033[H',end='')
     print(time.strftime('%Y-%m-%d %H:%M:%S'),'— Quantization progress')
     print('Local data:',a.data)
+    supplement=a.data/'policy_supplement/status.json'
+    if supplement.exists() and not a.history:
+        try:
+            value=json.loads(supplement.read_text())
+            print('\nSUPPLEMENT',value.get('state'),value.get('detail'))
+            print('Videos:',value.get('completed',0),'/',value.get('total',260),'ETA hours:',value.get('eta_hours'))
+            print('Updated UTC:',value.get('updated_utc'))
+            if value.get('state')=='running' and value.get('pid'):
+                try:os.kill(value['pid'],0);print('Process:',value['pid'],'alive')
+                except ProcessLookupError:print('ATTENTION: evaluation process stopped')
+            gpu=subprocess.run(['nvidia-smi','--query-gpu=utilization.gpu,memory.used','--format=csv,noheader'],capture_output=True,text=True,timeout=2)
+            print('GPU:',gpu.stdout.strip())
+            log=a.data/'policy_supplement.log'
+            if log.exists():print('\n'.join(log.read_text(errors='replace').splitlines()[-8:]))
+            print('Integrated report: Quantization/src/experiments/policy_study_results/REPORT_KO.md')
+        except (json.JSONDecodeError,OSError,subprocess.TimeoutExpired):print('Supplement status updating…')
+        return
     current=a.data/'policy_study/status.json'
     if current.exists() and not a.history:
         request=a.data/'policy_study/pause_request.json'
