@@ -26,7 +26,8 @@ def main():
             for policy in ('reference','rolling','chunk'):
                 if metric=='musiq':
                     r=[v for v in musiq if int(v['bits'])==bits and v['policy']=='rolling' and v['phase']=='late'] if policy=='reference' else [v for v in musiq if int(v['bits'])==bits and v['policy']==policy and v['phase']=='late']
-                    values.append(float(np.mean([float(v['bf16_musiq'] if policy=='reference' else 'fr_musiq']) for v in r])))
+                    key='bf16_musiq' if policy=='reference' else 'fr_musiq'
+                    values.append(float(np.mean([float(v[key]) for v in r])))
                 else:
                     r=[v for v in rows if v['window']=='late' and ((v['arm']=='bf16') if policy=='reference' else (int(v['bits'])==bits and v['policy']==policy and v['arm']=='fr'))]
                     values.append(float(np.mean([float(v[metric]) for v in r])))
