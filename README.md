@@ -1,3 +1,4 @@
+> Completed registered P1/P3 study: [results and limits](src/experiments/policy_study_results/RESULTS.md).
 > P1/P3 engineering checks completed: [gates, execution costs and limits](src/experiments/policy_feasibility_results/RESULTS.md).
 > Current P1/P3 development checks: [feasibility protocol](src/experiments/P1_P3_FEASIBILITY.md).
 > Live local progress: `bash tools/watch_progress.sh` (or append `0` for one snapshot).
