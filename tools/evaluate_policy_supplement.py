@@ -60,8 +60,8 @@ def temporal(a, b, forward, backward):
     consistent = (forward+back_at).square().sum(1) <= .01*(forward.square().sum(1)+back_at.square().sum(1))+.5
     mask = inside & consistent
     count = mask.sum((1, 2))
-    if (count==0).any(): raise RuntimeError('empty temporal correspondence mask')
-    err = ((warped-a).abs().mean(1)*mask).sum((1, 2))/count
+    err = ((warped-a).abs().mean(1)*mask).sum((1, 2))/count.clamp_min(1)
+    err = torch.where(count>0, err, torch.full_like(err,float('nan')))
     return dict(warp_error=err, coverage=mask.float().mean((1, 2)),
                 flow_pixels=forward.square().sum(1).sqrt().mean((1, 2)),
                 raw_difference=(a-b).abs().mean((1, 2, 3)))
@@ -81,11 +81,10 @@ def self_tests():
     assert abs(r['coverage'].item()-22/24)<1e-6
     zero = torch.zeros_like(f)
     assert temporal(a, a, zero, zero)['warp_error'].item()<1e-6
-    try: temporal(a, b, f+1000, -f)
-    except RuntimeError: pass
-    else: raise AssertionError('empty mask accepted')
+    missing=temporal(a, b, f+1000, -f)
+    assert torch.isnan(missing['warp_error']).all() and (missing['coverage']==0).all()
     assert torch.allclose(subject_values(torch.ones(5, 4)),torch.ones(4))
-    print('PASS synthetic warp direction, identity, coverage, empty-mask rejection, subject identity', flush=True)
+    print('PASS synthetic warp direction, identity, coverage, empty-mask undefined outcome, subject identity', flush=True)
 
 
 def inputs(base):
@@ -161,21 +160,28 @@ class Evaluator:
             result = temporal(a,b,flows[:n],flows[n:])
             for z,(c,i,j) in enumerate(group):
                 row = dict(chunk=c,first_frame=i,last_frame=j)
-                row.update({k:float(v[z]) for k,v in result.items()}); rows.append(row)
+                for k,v in result.items():
+                    value=float(v[z])
+                    row[k]=None if k=='warp_error' and row.get('coverage',float(result['coverage'][z]))==0 else value
+                    if row[k] is not None and not np.isfinite(row[k]):raise RuntimeError('unexpected nonfinite pair metric')
+                rows.append(row)
         chunks = []
         for c in range(42):
             lo = max(1,0 if c==0 else 12*c-3); hi = 12*c+9
             row = dict(chunk=c,subject=float(subjects[lo-1:hi-1].mean()),subject_transitions=hi-lo)
-            for metric in METRICS[1:]:row[metric]=float(np.mean([r[metric] for r in rows if r['chunk']==c]))
+            for metric in METRICS[1:]:
+                values=[r[metric] for r in rows if r['chunk']==c]
+                row[metric]=None if any(v is None for v in values) else float(np.mean(values))
             chunks.append(row)
         windows = {}
         for name,(lo,hi) in WINDOWS.items():
             window = [c for c in chunks if lo<=c['chunk']<hi]
-            windows[name] = {k:float(np.average([c[k] for c in window],
+            windows[name] = {k:None if any(c[k] is None for c in window) else float(np.average([c[k] for c in window],
                               weights=[c['subject_transitions'] if k=='subject' else 1 for c in window])) for k in METRICS}
-        if not np.isfinite([v for r in windows.values() for v in r.values()]).all():
+        if not np.isfinite([v for r in windows.values() for v in r.values() if v is not None]).all():
             raise RuntimeError('nonfinite video metric')
         return dict(frames=index,windows=windows,chunks=chunks,pairs=rows,
+                    empty_mask_pairs=sum(r['coverage']==0 for r in rows),
                     feature_sha256=hashlib.sha256(features.numpy().tobytes()).hexdigest())
 
 
@@ -208,6 +214,11 @@ def analyze(data, out):
             for window in WINDOWS:
                 selected=[r for r in rows if r['bits']==bits and r['arm']==arm and r['window']==window]
                 for metric in METRICS:
+                    if any(r[metric] is None for r in selected):
+                        contrasts.append(dict(bits=bits,arm=arm,window=window,metric=metric,mean=None,
+                            ci_low=None,ci_high=None,n_prompts=10,undefined_videos=sum(r[metric] is None for r in selected),
+                            reason='Full-sample contrast undefined; no finite-only subset'))
+                        continue
                     diffs=[]
                     for prompt in range(10):
                         byseed=[]
@@ -221,6 +232,7 @@ def analyze(data, out):
                     contrasts.append(dict(bits=bits,arm=arm,window=window,metric=metric,mean=float(np.mean(diffs)),
                                           ci_low=float(lo),ci_high=float(hi),n_prompts=10,prompt_differences=diffs))
     save(out/'summary.json',dict(posthoc=True,provenance=gate['provenance'],videos=260,contrasts=contrasts,
+         empty_mask_videos=sum(r['empty_mask_pairs']>0 for r in records),empty_mask_pairs=sum(r['empty_mask_pairs'] for r in records),
          artifacts=[dict(path=f'videos/{r["key"]}.json',sha256=digest(data/'videos'/f'{r["key"]}.json'),video=r['path'],video_sha256=r['video_sha256']) for r in records]))
     lines=['# 주체·시간 진단 추가 평가 (사후 탐색 분석)','',
       '기존 MP4 260개를 평가했다. 새 생성 실험 없이 전체 결과를 포함했다.',
@@ -228,12 +240,14 @@ def analyze(data, out):
       '', '| 비트 | 지표 | P3−P1 FR 후반 차이 | 탐색적 95% 구간 |','|---|---|---:|---|']
     for r in contrasts:
         if r['arm']=='fr' and r['window']=='late':
-            lines.append(f'| {r["bits"]} | {r["metric"]} | {r["mean"]:+.6f} | [{r["ci_low"]:+.6f}, {r["ci_high"]:+.6f}] |')
+            if r['mean'] is None:lines.append(f'| {r["bits"]} | {r["metric"]} | 측정 불가 | 빈 유효 영역이 있는 영상 {r["undefined_videos"]}개; 전체 표본 비교 미정의 |')
+            else:lines.append(f'| {r["bits"]} | {r["metric"]} | {r["mean"]:+.6f} | [{r["ci_low"]:+.6f}, {r["ci_high"]:+.6f}] |')
     lines += ['', 'subject는 높을수록 프레임 간 특징이 비슷하다. 전체 프레임 특징이며 객체 추적 지표가 아니다.',
       'warp_error는 낮을수록 움직임 보정 후 잔차가 작다. flow_pixels(움직임)와 coverage(유효 영역)를 함께 해석해야 한다.',
       '정지·동작 소실·부정확한 optical flow도 점수에 영향을 준다. raw_difference는 단순 픽셀 차이이며 품질 점수가 아니다.',
       'TF는 이어 붙인 반사실적 영상이므로 FR과 같은 의미의 시간 일관성으로 해석하지 않는다.',
       '본 지표는 압축 MP4를 사용하므로 원본 프레임 MUSIQ와 입력 단계가 다르다.',
+      f'전체 260개 중 빈 대응 영역을 포함한 영상 {sum(r["empty_mask_pairs"]>0 for r in records)}개, 해당 프레임 쌍 {sum(r["empty_mask_pairs"] for r in records)}개를 모두 보존했다. 유효한 영상만 선택한 잔차 평균은 보고하지 않는다.',
       '', '[프로토콜·출처](../POLICY_STUDY_SUPPLEMENT.md) · [전체 구간](windows.csv) · [집계와 무결성](summary.json)',
       '공식 VBench 벤치마크 실행이나 새 방법의 입증을 의미하지 않는다.']
     (out/'REPORT_KO.md').write_text('\n'.join(lines)+'\n')

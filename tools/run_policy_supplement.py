@@ -40,7 +40,8 @@ def main():
       '', '| 비트 | 지표 | 후반 P3−P1 FR 차이 | 탐색적 95% 구간 |','|---|---|---:|---|']
     for r in summary['contrasts']:
         if r['arm']=='fr' and r['window']=='late':
-            lines.append(f'| {r["bits"]} | {r["metric"]} | {r["mean"]:+.6f} | [{r["ci_low"]:+.6f}, {r["ci_high"]:+.6f}] |')
+            if r['mean'] is None:lines.append(f'| {r["bits"]} | {r["metric"]} | 측정 불가 | 빈 대응 영역이 있는 영상 {r["undefined_videos"]}개; 전체 표본 비교 미정의 |')
+            else:lines.append(f'| {r["bits"]} | {r["metric"]} | {r["mean"]:+.6f} | [{r["ci_low"]:+.6f}, {r["ci_high"]:+.6f}] |')
     lines += ['',
       'subject는 높을수록 프레임 간 특징이 비슷하고, warp_error는 낮을수록 움직임 보정 후 잔차가 작다.',
       '두 값 모두 주체 유지나 시간 품질의 완전한 척도는 아니다. 움직임(flow_pixels)과 유효 영역(coverage)을 함께 봐야 한다.',

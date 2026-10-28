@@ -30,13 +30,14 @@ def main():
                     values.append(float(np.mean([float(v[key]) for v in r])))
                 else:
                     r=[v for v in rows if v['window']=='late' and ((v['arm']=='bf16') if policy=='reference' else (int(v['bits'])==bits and v['policy']==policy and v['arm']=='fr'))]
-                    values.append(float(np.mean([float(v[metric]) for v in r])))
+                    values.append(float('nan') if any(v[metric]=='' for v in r) else float(np.mean([float(v[metric]) for v in r])))
             ax=axes[row,col];ax.bar(['BF16','P1 FR','P3 FR'],values,color=['#777777','#d98c4b','#387cac'])
             ax.set_title(title,fontsize=10);ax.set_ylabel(f'INT{bits} / late chunks 21-41' if col==0 else '')
             ax.tick_params(axis='x',labelsize=9);ax.grid(axis='y',alpha=.2)
-            for x,v in enumerate(values):ax.text(x,v,f'{v:.3f}',ha='center',va='bottom',fontsize=8)
+            for x,v in enumerate(values):
+                ax.text(x,v if np.isfinite(v) else 0,f'{v:.3f}' if np.isfinite(v) else 'undefined',ha='center',va='bottom',fontsize=8)
             ax.margins(y=.2)
-            cells.extend(dict(bits=bits,policy=p,metric=metric,mean=v) for p,v in zip(('reference','rolling','chunk'),values))
+            cells.extend(dict(bits=bits,policy=p,metric=metric,mean=v if np.isfinite(v) else None) for p,v in zip(('reference','rolling','chunk'),values))
     fig.suptitle('Exploratory video diagnostics: interpret appearance and residual together with motion and coverage',fontsize=12)
     fig.tight_layout(rect=(0,.03,1,.94))
     fig.text(.5,.01,'20 prompt/seed videos per cell. Supplement uses compressed MP4; MUSIQ uses original raw frames. No temporal-quality composite.',ha='center',fontsize=9)

@@ -31,8 +31,28 @@ mean flow magnitude and unwarped frame difference. Residual lower is better
 only conditional on motion/coverage; static or collapsed videos can score well.
 No claims of official VBench motion-smoothness or temporal-flickering scores.
 VBench temporal-flickering assumes static video and is not suitable as a
-standalone quality measure here. Empty masks, missing files, wrong dimensions,
+standalone quality measure here. Missing files, wrong dimensions, unexpected
 nonfinite values or source/input hash changes halt rather than dropping rows.
+Empty masks follow the v2 undefined-outcome rule below.
+
+### v2 amendment after an empty-mask halt
+
+The v1 batch halted at the 113th video, `p04_s101_rolling_int2_fr`, because a
+sampled pair had no forward/backward-consistent in-bounds pixels. The preceding
+112 video records and failure log are preserved under
+`${HOME}/sfq_data/policy_supplement_v1_empty_mask`. No thresholds, pair locations,
+models or eligibility rules change. This amendment is made after observing that
+failure, before inspection of aggregate policy rankings, and is also post-hoc.
+
+In v2, an empty mask is a measured zero-coverage outcome, not a fabricated
+residual or excluded video. Its pair warp residual is null. If any sampled
+pair in a chunk/window is undefined, that entire chunk/window warp residual
+is null. If any of the 20 prompt/seed videos in a policy/bit/arm/window cell
+has an undefined warp residual, the full-cell mean and full-sample P3−P1 warp
+contrast for that window are undefined. Do not average a selected finite subset,
+impute a score or relax the threshold. Report empty pair/video counts and all
+coverage, motion, raw-difference and subject outcomes. All 260 videos are rerun
+with the v2 source; no v1 results are silently reused.
 
 For each chunk c, pixel range is [0,9) for c=0 and [12c−3,12c+9) otherwise.
 Assign subject transitions by destination frame, keeping the first-frame anchor
@@ -50,7 +70,7 @@ the central policy contrast; TF/noise and BF16-relative scores are descriptive.
 ## Gates and provenance
 
 Before the batch, test warp direction with translated synthetic frames, exact
-identity and empty-mask handling; verify identical feature vectors score one.
+identity and empty-mask null/zero-coverage handling; verify identical feature vectors score one.
 Smoke-test a complete old development video, finite metrics and GPU cost.
 Resume only artifacts matching evaluator, protocol, model and video hashes.
 Write progress after each video, atomic JSON and a detached completion pipeline
