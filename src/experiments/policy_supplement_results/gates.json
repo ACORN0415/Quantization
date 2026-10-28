@@ -1,0 +1,57 @@
+{
+  "passed": true,
+  "provenance": {
+    "evaluator_sha256": "ab815c8f6dbafcf1655e34f3ecd7fa7798a3d0d39d40bbfdfa7bf8a83ad03ee9",
+    "protocol_sha256": "1f9a89cd84b0a9e909ae88a06ccdaf68d2db7d8be99aee6d3b4f3e9b03be88d7",
+    "dino_commit": "7c446df5b9f45747937fb0d72314eb9f7b66930a",
+    "checkpoints": {
+      "dino_vitbase16_pretrain.pth": "bf34ad0f424b9029b593e8dc3ed553bf26e88bcba0d32bf3e62a6209cb64c85e",
+      "raft_small_C_T_V2-01064c6d.pth": "01064c6dba73b0fc9fc8edf772248560a00a3acfd62ac6677e9eeebad9680e27"
+    },
+    "torch": "2.6.0+cu124",
+    "torchvision": "0.21.0+cu124",
+    "opencv": "4.11.0"
+  },
+  "seconds": 2.127519956091419,
+  "dino_batch_max_abs_diff": 1.0967254638671875e-05,
+  "smoke_video_sha256": "abb9367fded0e0fe8e7577343a2a3b9b30a5858abbe7ea90e6161e4f1fee78a8",
+  "windows": {
+    "whole": {
+      "subject": 0.9036278276443481,
+      "warp_error": 0.01902832493319043,
+      "coverage": 0.953900125055086,
+      "flow_pixels": 0.8211537668747562,
+      "raw_difference": 0.03150075981171713
+    },
+    "early": {
+      "subject": 0.934289405743281,
+      "warp_error": 0.02428373647853732,
+      "coverage": 0.9111858904361725,
+      "flow_pixels": 2.0858559707800546,
+      "raw_difference": 0.0614212267100811
+    },
+    "middle": {
+      "subject": 0.9311005941459111,
+      "warp_error": 0.01820882805623114,
+      "coverage": 0.9429455591099603,
+      "flow_pixels": 1.0212414541414805,
+      "raw_difference": 0.03395511582493782
+    },
+    "late": {
+      "subject": 0.8743183783122471,
+      "warp_error": 0.017993210726195856,
+      "coverage": 0.9727688147908166,
+      "flow_pixels": 0.29662031609387624,
+      "raw_difference": 0.020628177361296757
+    }
+  },
+  "posthoc_failure_regression": {
+    "video_sha256": "195c73e06132cd238a02d7db152d817ecc808d8e533d44647339dd7f1a073cfd",
+    "empty_mask_pairs": 1,
+    "undefined_chunks": [
+      41
+    ],
+    "subject_finite": true,
+    "whole_warp_undefined": true
+  }
+}

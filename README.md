@@ -1,3 +1,4 @@
+> 주체·시간 진단 추가 평가 완료: [사후 탐색 결과와 한계](src/experiments/policy_supplement_results/REPORT_KO.md).
 > Completed registered P1/P3 study: [results and limits](src/experiments/policy_study_results/RESULTS.md) · [한글 최종 보고](src/experiments/policy_study_results/REPORT_KO.md).
 > P1/P3 engineering checks completed: [gates, execution costs and limits](src/experiments/policy_feasibility_results/RESULTS.md).
 > Current P1/P3 development checks: [feasibility protocol](src/experiments/P1_P3_FEASIBILITY.md).
