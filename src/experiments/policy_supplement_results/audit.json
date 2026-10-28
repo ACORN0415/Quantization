@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "verified_video_records": 260,
+  "verified_input_videos": 260,
+  "pair_records": 21840,
+  "chunk_records": 10920,
+  "contrast_records": 120,
+  "empty_mask_pairs": [
+    {
+      "video": "p04_s101_rolling_int2_fr",
+      "chunk": 41,
+      "first_frame": 494,
+      "last_frame": 495
+    }
+  ],
+  "source_and_protocol_hashes_match": true,
+  "no_finite_only_contrasts": true,
+  "balanced_cells": true
+}

@@ -25,3 +25,18 @@ TF는 이어 붙인 반사실적 영상이므로 FR과 같은 의미의 시간 �
 
 [프로토콜·출처](../POLICY_STUDY_SUPPLEMENT.md) · [전체 구간](windows.csv) · [집계와 무결성](summary.json)
 공식 VBench 벤치마크 실행이나 새 방법의 입증을 의미하지 않는다.
+
+## 해석과 통합 보고
+
+P3의 DINO 특징 일관성은 INT4/INT2 모두 P1보다 높았다. 원래 주지표인 MUSIQ의
+개선과 함께 볼 수 있는 보조 근거지만, 추적한 객체의 동일성이나 시간 품질의 확증은 아니다.
+INT4 잔차 차이는 0을 포함하는 구간이며, INT2 잔차 비교는 미정의다.
+INT2 P3의 추정 움직임도 낮아, 단순 일관성 점수를 품질 향상으로 해석할 수 없다.
+
+시간 잔차는 각 청크 가운데 인접 쌍의 진단이며 청크 경계 전환 전체를 검사하지 않는다.
+심하게 손상된 영상에서는 optical flow 추정 자체도 부정확할 수 있다.
+정책 비교의 전체 결과와 한계는 [한글 통합 보고서](../policy_study_results/REPORT_KO.md)에 모았다.
+
+![통합 진단](diagnostics.png)
+
+[정책별 후반 평균](late_arm_means.csv) · [독립 검증](audit.json) · [고정 예시](fixed_example.png)
