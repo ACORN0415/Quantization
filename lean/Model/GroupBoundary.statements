@@ -1,0 +1,91 @@
+{
+  "format": 1,
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "module": "Model.GroupBoundary",
+  "declarations": [
+    {
+      "name": "GroupBoundary.SameGroup",
+      "kind": "definition",
+      "type": "Nat → Nat → Nat → Prop",
+      "typeHash": "8795ed3430fb1f6e4ed6029df8ccdd9de9f599246798054aaa130324a755b9a3",
+      "valueHash": "0e7ec29afc40d53b0fa243be0ec2aa3eb381b80a62103fc3ceb66b6531042f1a"
+    },
+    {
+      "name": "GroupBoundary.aligned_group_index",
+      "kind": "theorem",
+      "type": "∀ (group blocks position : Nat), 0 < group → GroupBoundary.groupIndex group (GroupBoundary.shiftedPosition group blocks position) = GroupBoundary.groupIndex group position + blocks",
+      "typeHash": "cd827e9b79bb5d88dce59e9eddddd366d53c0ec67403d4c407088d7201d03364",
+      "valueHash": null
+    },
+    {
+      "name": "GroupBoundary.aligned_membership",
+      "kind": "theorem",
+      "type": "∀ (group blocks p q : Nat), 0 < group → (GroupBoundary.SameGroup group p q ↔ GroupBoundary.SameGroup group (GroupBoundary.shiftedPosition group blocks p) (GroupBoundary.shiftedPosition group blocks q))",
+      "typeHash": "98a7220ca9bf923bd3049ef2f82cb373f75155e89130f425563c936f0f8de828",
+      "valueHash": null
+    },
+    {
+      "name": "GroupBoundary.aligned_offset",
+      "kind": "theorem",
+      "type": "∀ (group blocks position : Nat), 0 < group → GroupBoundary.groupOffset group (GroupBoundary.shiftedPosition group blocks position) = GroupBoundary.groupOffset group position",
+      "typeHash": "eeb98135f052360af97b2076561998645e0c486cdbcbf7915cf7f3924d158e66",
+      "valueHash": null
+    },
+    {
+      "name": "GroupBoundary.badInputs",
+      "kind": "definition",
+      "type": "List (Nat × Nat × Nat)",
+      "typeHash": "6af7935ec7e0bfb761bda01786cb141911e1959f37acfab1c603b60db7e59124",
+      "valueHash": "1246df43f2dd29ee84efe718518c45f507f13468dae93f9cf610795ef12700a8"
+    },
+    {
+      "name": "GroupBoundary.badInputs.match_1",
+      "kind": "definition",
+      "type": "(motive : Nat × Nat × Nat → Sort u_1) → (x : Nat × Nat × Nat) → ((g k p : Nat) → motive (g, k, p)) → motive x",
+      "typeHash": "6591eca7563edfc31018814a308b111e7031a7f02cdbe71817314fdba56c4a94",
+      "valueHash": "ed603fd439937c821fb53a2b2adc3e74d43c7666841c56de985bdf7a2faac134"
+    },
+    {
+      "name": "GroupBoundary.groupIndex",
+      "kind": "definition",
+      "type": "Nat → Nat → Nat",
+      "typeHash": "57dfea5b36930e82d980441beb67e2ef9e50b6f34211b2fb6577a488c0deee8d",
+      "valueHash": "ca65a60cb21bda4ba837c471d832fbc7e1ba25a673a0abd76bfd817fe07299e9"
+    },
+    {
+      "name": "GroupBoundary.groupOffset",
+      "kind": "definition",
+      "type": "Nat → Nat → Nat",
+      "typeHash": "57dfea5b36930e82d980441beb67e2ef9e50b6f34211b2fb6577a488c0deee8d",
+      "valueHash": "6d3f6235eba5fa4cff4ce8d97e25f685f42f591561770b3d981fdc3c40e90dfb"
+    },
+    {
+      "name": "GroupBoundary.instDecidableSameGroup",
+      "kind": "definition",
+      "type": "(group p q : Nat) → Decidable (GroupBoundary.SameGroup group p q)",
+      "typeHash": "6d0c06fec78a6067e9d0337e3a8d7649459080927d7fcb25a7e0b39c8d585d10",
+      "valueHash": "ec74426582234f6eb6c1ea4ded51d989ec890a4ee4c0baf2157e35b8aacb1c03"
+    },
+    {
+      "name": "GroupBoundary.shiftedPosition",
+      "kind": "definition",
+      "type": "Nat → Nat → Nat → Nat",
+      "typeHash": "e9a40975e95b641c9b5f3984cc1642900bf2779a33d7620c9a999e567a8c963a",
+      "valueHash": "9ad2322bbbc0c4d8c5f427219e1a1bebc290afbdcc42c44aa23b268a2d0e99d8"
+    },
+    {
+      "name": "GroupBoundary.smallInputs",
+      "kind": "definition",
+      "type": "List (Nat × Nat × Nat)",
+      "typeHash": "6af7935ec7e0bfb761bda01786cb141911e1959f37acfab1c603b60db7e59124",
+      "valueHash": "2ffc8f78a18adfb5a68bae4ca5a9c833c314a80bc85d78d69e90144928b84196"
+    },
+    {
+      "name": "GroupBoundary.vectorInputs",
+      "kind": "definition",
+      "type": "List (Nat × Nat)",
+      "typeHash": "f36ec9eb1a6a03a4acca1f7bda790d433ce7445fb9242f15bbbbd83596b845d6",
+      "valueHash": "5bed2bcd325620861e0acd74687eac9ab851e36002ecac64b90db8b3944e814d"
+    }
+  ]
+}

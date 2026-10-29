@@ -1,0 +1,11 @@
+mutation use the wrong group size for group membership
+- def groupIndex (group position : Nat) : Nat := position / group
++ def groupIndex (group position : Nat) : Nat := position / (group + 1)
+
+mutation shift one token beyond the aligned block displacement
+- def shiftedPosition (group blocks position : Nat) : Nat := position + blocks * group
++ def shiftedPosition (group blocks position : Nat) : Nat := position + blocks * group + 1
+
+mutation use the wrong group size for offsets
+- def groupOffset (group position : Nat) : Nat := position % group
++ def groupOffset (group position : Nat) : Nat := position % (group + 1)

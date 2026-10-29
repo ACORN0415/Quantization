@@ -1,0 +1,98 @@
+{
+  "lean_vectors_matched": 24,
+  "native_encode_calls_for_vectors": 48,
+  "integer_domains": "Lean Nat and Python arbitrary precision; tested tensor lengths <=37440",
+  "rational_examples": [
+    {
+      "name": "increase",
+      "source": [
+        "49/100",
+        "49/100",
+        "1",
+        "49/100"
+      ],
+      "quantized": [
+        "49/100",
+        "49/100",
+        "1",
+        "3/7"
+      ],
+      "shifted": [
+        "49/100",
+        "1",
+        "3/7"
+      ],
+      "requantized": [
+        "3/7",
+        "1",
+        "3/7"
+      ],
+      "before_sse": "1849/490000",
+      "after_sse": "1849/245000"
+    },
+    {
+      "name": "decrease",
+      "source": [
+        "1",
+        "4/5",
+        "3/2",
+        "2"
+      ],
+      "quantized": [
+        "1",
+        "6/7",
+        "10/7",
+        "2"
+      ],
+      "shifted": [
+        "6/7",
+        "10/7",
+        "2"
+      ],
+      "requantized": [
+        "40/49",
+        "10/7",
+        "2"
+      ],
+      "before_sse": "41/4900",
+      "after_sse": "1289/240100"
+    }
+  ],
+  "native_synthetic_examples": [
+    {
+      "name": "increase",
+      "shape": [
+        1,
+        32760,
+        1,
+        1
+      ],
+      "group": 16,
+      "shift": 4680,
+      "bits": 4,
+      "dtype": "bfloat16",
+      "before_sse": 0.058624267578125,
+      "after_sse": 0.08984375,
+      "changed_tokens": 8,
+      "scope": "Production quantizer on synthetic buffers; actual Wan activation reachability not established"
+    },
+    {
+      "name": "decrease",
+      "shape": [
+        1,
+        32760,
+        1,
+        1
+      ],
+      "group": 16,
+      "shift": 4680,
+      "bits": 4,
+      "dtype": "bfloat16",
+      "before_sse": 0.115478515625,
+      "after_sse": 0.0926513671875,
+      "changed_tokens": 8,
+      "scope": "Production quantizer on synthetic buffers; actual Wan activation reachability not established"
+    }
+  ],
+  "scope": "Geometry proof and human-readable ideal-arithmetic RTN proof have different scope. No formal BF16, CUDA, or video-quality proof."
+}
