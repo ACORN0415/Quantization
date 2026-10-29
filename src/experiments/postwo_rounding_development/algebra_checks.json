@@ -1,0 +1,45 @@
+{
+  "passed": true,
+  "device": "cpu",
+  "dtype": "float64",
+  "seed": 20261030,
+  "objective_gradient_cases": 128,
+  "max_absolute_objective_difference": 9.094947017729282e-13,
+  "max_absolute_gradient_difference": 3.979039320256561e-13,
+  "head_sign_counterexample": {
+    "same_head_norms": true,
+    "full_plus": 10.375,
+    "full_minus": 0.375,
+    "scalar_plus": 5.375,
+    "scalar_minus": 5.375,
+    "base_metric_rank": 1,
+    "transition_metric_rank": 2
+  },
+  "equal_head_factor_special_case_passed": true,
+  "block_diagonal_metric_special_case_passed": true,
+  "rounding_candidates": 16,
+  "direct_and_full_metric_same_selection": true,
+  "direct_best": [
+    0.0,
+    1.0,
+    1.0,
+    0.0
+  ],
+  "head_local_best": [
+    1.0,
+    1.0,
+    0.0,
+    0.0
+  ],
+  "head_local_selection_differs": true,
+  "fixed_old_offset_cases": 4,
+  "max_absolute_offset_objective_difference": 5.684341886080802e-14,
+  "conclusion": "post-W_O transition objective is a full quadratic metric; head-local scalar weights are generally insufficient",
+  "limits": [
+    "CPU synthetic property checks, not a model experiment or formal verification",
+    "quadratic-metric equivalence alone establishes neither novelty nor lack of utility",
+    "no real W_O, queries, cache tensors, GPU, or video quality were tested",
+    "fixed keys/queries and deletion-only new-V error; full old-error offset needs extra information",
+    "changing head signs is a constructed example, not evidence of harmful real-model cancellation"
+  ]
+}

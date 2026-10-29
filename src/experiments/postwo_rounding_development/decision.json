@@ -1,0 +1,228 @@
+{
+  "source_sha256": "1ed69ee3256a9436fd9cd2fdee3ef2a3f45a911a4363ba47fb2f7c84fdd1f94b",
+  "advance": false,
+  "decisions": [
+    {
+      "prompt": 0,
+      "means": {
+        "rtn": {
+          "mean_error_sq": 0.0009350901301432814,
+          "transition_error_sq": 0.000114402710930032
+        },
+        "full_mean": {
+          "mean_error_sq": 0.0009347154118586332,
+          "transition_error_sq": 0.00011439141639534176
+        },
+        "full_transition": {
+          "mean_error_sq": 0.0009347990368648121,
+          "transition_error_sq": 0.0001144083456286656
+        },
+        "headlocal_transition": {
+          "mean_error_sq": 0.0009348922434987293,
+          "transition_error_sq": 0.00011440823997569775
+        }
+      },
+      "baseline_jump_valid": true,
+      "jump_reduction": -0.0001479939129813701,
+      "mean_damage_ratio": 1.0000894657401793,
+      "passes": false
+    },
+    {
+      "prompt": 4,
+      "means": {
+        "rtn": {
+          "mean_error_sq": 0.0005571902891258813,
+          "transition_error_sq": 0.0001223894589656993
+        },
+        "full_mean": {
+          "mean_error_sq": 0.0005570717168868416,
+          "transition_error_sq": 0.0001223831089747465
+        },
+        "full_transition": {
+          "mean_error_sq": 0.0005571444053202868,
+          "transition_error_sq": 0.00012238643191469438
+        },
+        "headlocal_transition": {
+          "mean_error_sq": 0.0005570169515623194,
+          "transition_error_sq": 0.0001223836208939449
+        }
+      },
+      "baseline_jump_valid": true,
+      "jump_reduction": -2.715194911884211e-05,
+      "mean_damage_ratio": 1.0001304830800806,
+      "passes": false
+    }
+  ],
+  "captures": [
+    {
+      "prompt": 0,
+      "seed": 101,
+      "source_sha256": "1ed69ee3256a9436fd9cd2fdee3ef2a3f45a911a4363ba47fb2f7c84fdd1f94b",
+      "model_source_sha256": "e916506f6085f9c050cbd44b7e1b79d4a8aae9d77379fe5e2384fee5bad5a758",
+      "teacher_bitexact_chunks": 8,
+      "artifacts": [
+        {
+          "file": "p00_s101/l00_c6.pt",
+          "bytes": 119834819,
+          "sha256": "e8b43440ec4d2255b27414217f42fd466dbb50c9f22edddc34cb344e25d1fa20",
+          "layer": 0,
+          "chunk": 6,
+          "call": 4
+        },
+        {
+          "file": "p00_s101/l14_c6.pt",
+          "bytes": 119834819,
+          "sha256": "e45e17dea33ea8e3e2c47ed5507bf6ba69fbf2fcb2628d1a78fd8a8d928cb339",
+          "layer": 14,
+          "chunk": 6,
+          "call": 4
+        },
+        {
+          "file": "p00_s101/l29_c6.pt",
+          "bytes": 119834819,
+          "sha256": "6c3642bce17712c5e827af1fbded32da695e4e24beab3d708f532d3690f09074",
+          "layer": 29,
+          "chunk": 6,
+          "call": 4
+        },
+        {
+          "file": "p00_s101/l00_c7.pt",
+          "bytes": 99922,
+          "sha256": "71524328fb9c2d0cea1ac02bcbe87e09303335c844cc949a40c5cb9ef688b2b6",
+          "layer": 0,
+          "chunk": 7,
+          "call": 0
+        },
+        {
+          "file": "p00_s101/l14_c7.pt",
+          "bytes": 99922,
+          "sha256": "be8247e3b49082e948ac0f83c6b7eb1e6135ebd7b6443656b4f62bf35c2f485c",
+          "layer": 14,
+          "chunk": 7,
+          "call": 0
+        },
+        {
+          "file": "p00_s101/l29_c7.pt",
+          "bytes": 99922,
+          "sha256": "04e815b08fae6a3b93b3e6dbabe6f59c19854f1f999b7c14dd25411ad7f14935",
+          "layer": 29,
+          "chunk": 7,
+          "call": 0
+        }
+      ],
+      "seconds": 58.608717610826716,
+      "peak_allocated_bytes": 9274616320,
+      "peak_reserved_bytes": 9705619456,
+      "cpu_high_water_bytes": 35620974592
+    },
+    {
+      "prompt": 4,
+      "seed": 101,
+      "source_sha256": "1ed69ee3256a9436fd9cd2fdee3ef2a3f45a911a4363ba47fb2f7c84fdd1f94b",
+      "model_source_sha256": "e916506f6085f9c050cbd44b7e1b79d4a8aae9d77379fe5e2384fee5bad5a758",
+      "teacher_bitexact_chunks": 8,
+      "artifacts": [
+        {
+          "file": "p04_s101/l00_c6.pt",
+          "bytes": 119834819,
+          "sha256": "95a0caddfbc23192b029686a884799eb3e62f20f96bee9c7d067bded703c930b",
+          "layer": 0,
+          "chunk": 6,
+          "call": 4
+        },
+        {
+          "file": "p04_s101/l14_c6.pt",
+          "bytes": 119834819,
+          "sha256": "2ed8de85024287707a53417c31addc3a6929b482806ccd09ff04a8bdc15c217d",
+          "layer": 14,
+          "chunk": 6,
+          "call": 4
+        },
+        {
+          "file": "p04_s101/l29_c6.pt",
+          "bytes": 119834819,
+          "sha256": "9c2988169716e6f5224de7da122facace3cc398ea39c5c6b7c95796e81adb018",
+          "layer": 29,
+          "chunk": 6,
+          "call": 4
+        },
+        {
+          "file": "p04_s101/l00_c7.pt",
+          "bytes": 99922,
+          "sha256": "71524328fb9c2d0cea1ac02bcbe87e09303335c844cc949a40c5cb9ef688b2b6",
+          "layer": 0,
+          "chunk": 7,
+          "call": 0
+        },
+        {
+          "file": "p04_s101/l14_c7.pt",
+          "bytes": 99922,
+          "sha256": "6e71992faea63d60655ad3c9c5957e4c95a459592c7343e785a6562d0a447911",
+          "layer": 14,
+          "chunk": 7,
+          "call": 0
+        },
+        {
+          "file": "p04_s101/l29_c7.pt",
+          "bytes": 99922,
+          "sha256": "ee44da06a637811eca07b47ef62956aef516d2938498adaefe75980614d1e58e",
+          "layer": 29,
+          "chunk": 7,
+          "call": 0
+        }
+      ],
+      "seconds": 58.7692457952071,
+      "peak_allocated_bytes": 9274616320,
+      "peak_reserved_bytes": 9705619456,
+      "cpu_high_water_bytes": 35625644032
+    }
+  ],
+  "preparation": [
+    {
+      "prompt": 0,
+      "layer": 0,
+      "probability_seconds": 0.07427074783481658,
+      "wo_spectral_seconds": 0.14730855589732528,
+      "wo_norm_sq": 16.483112335205078
+    },
+    {
+      "prompt": 0,
+      "layer": 14,
+      "probability_seconds": 0.0023911590687930584,
+      "wo_spectral_seconds": 0.09596052812412381,
+      "wo_norm_sq": 13.84008502960205
+    },
+    {
+      "prompt": 0,
+      "layer": 29,
+      "probability_seconds": 0.0023347940295934677,
+      "wo_spectral_seconds": 0.09532092115841806,
+      "wo_norm_sq": 25.035188674926758
+    },
+    {
+      "prompt": 4,
+      "layer": 0,
+      "probability_seconds": 0.002278698841109872,
+      "wo_spectral_seconds": 0.09279879601672292,
+      "wo_norm_sq": 16.483112335205078
+    },
+    {
+      "prompt": 4,
+      "layer": 14,
+      "probability_seconds": 0.0023412660229951143,
+      "wo_spectral_seconds": 0.09594993805512786,
+      "wo_norm_sq": 13.84008502960205
+    },
+    {
+      "prompt": 4,
+      "layer": 29,
+      "probability_seconds": 0.002337699057534337,
+      "wo_spectral_seconds": 0.09537826804444194,
+      "wo_norm_sq": 25.035188674926758
+    }
+  ],
+  "seconds": 3.8403473880607635,
+  "peak_allocated_bytes": 695966208,
+  "peak_reserved_bytes": 828375040,
+  "scope": "new-V-only incremental FP32 post-Wo attention; teacher future-Q and counterfactual deletion, not FR"
+}

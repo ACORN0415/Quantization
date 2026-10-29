@@ -1,0 +1,215 @@
+{
+  "passed": true,
+  "rows": 24,
+  "capture_artifacts_verified": 12,
+  "code_files_verified": 24,
+  "search_files_verified": 24,
+  "source_sha256": "1ed69ee3256a9436fd9cd2fdee3ef2a3f45a911a4363ba47fb2f7c84fdd1f94b",
+  "advance": false,
+  "recomputed": [
+    {
+      "prompt": 0,
+      "means": {
+        "rtn": {
+          "mean_error_sq": 0.0009350901301432814,
+          "transition_error_sq": 0.000114402710930032
+        },
+        "full_mean": {
+          "mean_error_sq": 0.0009347154118586332,
+          "transition_error_sq": 0.00011439141639534176
+        },
+        "full_transition": {
+          "mean_error_sq": 0.0009347990368648121,
+          "transition_error_sq": 0.0001144083456286656
+        },
+        "headlocal_transition": {
+          "mean_error_sq": 0.0009348922434987293,
+          "transition_error_sq": 0.00011440823997569775
+        }
+      },
+      "baseline_jump_valid": true,
+      "jump_reduction": -0.0001479939129813701,
+      "mean_damage_ratio": 1.0000894657401793,
+      "passes": false
+    },
+    {
+      "prompt": 4,
+      "means": {
+        "rtn": {
+          "mean_error_sq": 0.0005571902891258813,
+          "transition_error_sq": 0.0001223894589656993
+        },
+        "full_mean": {
+          "mean_error_sq": 0.0005570717168868416,
+          "transition_error_sq": 0.0001223831089747465
+        },
+        "full_transition": {
+          "mean_error_sq": 0.0005571444053202868,
+          "transition_error_sq": 0.00012238643191469438
+        },
+        "headlocal_transition": {
+          "mean_error_sq": 0.0005570169515623194,
+          "transition_error_sq": 0.0001223836208939449
+        }
+      },
+      "baseline_jump_valid": true,
+      "jump_reduction": -2.715194911884211e-05,
+      "mean_damage_ratio": 1.0001304830800806,
+      "passes": false
+    }
+  ],
+  "optimizer_activity": [
+    {
+      "prompt": 0,
+      "layer": 0,
+      "arm": "full_mean",
+      "changed_codes": 119,
+      "training_objective_fraction": 0.9579057922451225,
+      "accepted_updates": 29
+    },
+    {
+      "prompt": 0,
+      "layer": 0,
+      "arm": "full_transition",
+      "changed_codes": 119,
+      "training_objective_fraction": 0.9579039020635123,
+      "accepted_updates": 29
+    },
+    {
+      "prompt": 0,
+      "layer": 0,
+      "arm": "headlocal_transition",
+      "changed_codes": 35,
+      "training_objective_fraction": 0.9925852418139304,
+      "accepted_updates": 18
+    },
+    {
+      "prompt": 0,
+      "layer": 14,
+      "arm": "full_mean",
+      "changed_codes": 76,
+      "training_objective_fraction": 0.9472393123021673,
+      "accepted_updates": 24
+    },
+    {
+      "prompt": 0,
+      "layer": 14,
+      "arm": "full_transition",
+      "changed_codes": 74,
+      "training_objective_fraction": 0.9476625278981624,
+      "accepted_updates": 22
+    },
+    {
+      "prompt": 0,
+      "layer": 14,
+      "arm": "headlocal_transition",
+      "changed_codes": 53,
+      "training_objective_fraction": 0.9651224364350449,
+      "accepted_updates": 20
+    },
+    {
+      "prompt": 0,
+      "layer": 29,
+      "arm": "full_mean",
+      "changed_codes": 89,
+      "training_objective_fraction": 0.967043941780541,
+      "accepted_updates": 27
+    },
+    {
+      "prompt": 0,
+      "layer": 29,
+      "arm": "full_transition",
+      "changed_codes": 69,
+      "training_objective_fraction": 0.9752428601117319,
+      "accepted_updates": 26
+    },
+    {
+      "prompt": 0,
+      "layer": 29,
+      "arm": "headlocal_transition",
+      "changed_codes": 20,
+      "training_objective_fraction": 0.9942441299894882,
+      "accepted_updates": 12
+    },
+    {
+      "prompt": 4,
+      "layer": 0,
+      "arm": "full_mean",
+      "changed_codes": 201,
+      "training_objective_fraction": 0.954326867820093,
+      "accepted_updates": 28
+    },
+    {
+      "prompt": 4,
+      "layer": 0,
+      "arm": "full_transition",
+      "changed_codes": 199,
+      "training_objective_fraction": 0.9549148500624407,
+      "accepted_updates": 28
+    },
+    {
+      "prompt": 4,
+      "layer": 0,
+      "arm": "headlocal_transition",
+      "changed_codes": 58,
+      "training_objective_fraction": 0.9915498384345836,
+      "accepted_updates": 23
+    },
+    {
+      "prompt": 4,
+      "layer": 14,
+      "arm": "full_mean",
+      "changed_codes": 19,
+      "training_objective_fraction": 0.9901574235298957,
+      "accepted_updates": 9
+    },
+    {
+      "prompt": 4,
+      "layer": 14,
+      "arm": "full_transition",
+      "changed_codes": 19,
+      "training_objective_fraction": 0.9901539039481245,
+      "accepted_updates": 9
+    },
+    {
+      "prompt": 4,
+      "layer": 14,
+      "arm": "headlocal_transition",
+      "changed_codes": 11,
+      "training_objective_fraction": 0.9950529606755748,
+      "accepted_updates": 7
+    },
+    {
+      "prompt": 4,
+      "layer": 29,
+      "arm": "full_mean",
+      "changed_codes": 85,
+      "training_objective_fraction": 0.9667545806935449,
+      "accepted_updates": 27
+    },
+    {
+      "prompt": 4,
+      "layer": 29,
+      "arm": "full_transition",
+      "changed_codes": 70,
+      "training_objective_fraction": 0.9716858247372144,
+      "accepted_updates": 26
+    },
+    {
+      "prompt": 4,
+      "layer": 29,
+      "arm": "headlocal_transition",
+      "changed_codes": 25,
+      "training_objective_fraction": 0.991626089106367,
+      "accepted_updates": 14
+    }
+  ],
+  "tensors_checked": true,
+  "limits": [
+    "same-author read-only audit, not external independent validation",
+    "model identity, attention probabilities, optimization and reported objectives not independently rerun",
+    "new-V-only incremental error; no full old quantization error or FR claims",
+    "same-query counterfactual deletion and teacher future-Q are not actual compressed rollout",
+    "actual uint8 container and hypothetical packed bytes differ; no deployment efficiency claim"
+  ]
+}
