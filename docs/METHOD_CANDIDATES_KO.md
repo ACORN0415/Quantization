@@ -5,15 +5,15 @@
 (2) 우리 설정에서 이득을 만들 구체적인 수학적·계산적 조건이 있는가.
 검색에서 찾지 못한 것은 미사용 증명이 아니다. 아래 적용 설계는 우리의 가설이다.
 
-## 보관하는 기존 후보
+## 보관 후보 (실행 순서는 방법 1 → 2 → 3 → 4)
 
-### 방법 1: 압축 상태로 KV를 저장하고 계산 때 복원
+### 방법 3: 압축 상태로 KV를 저장하고 계산 때 복원
 
 공간 절감에는 타당하지만 CacheGen, SplitZip, ZipFusion과 큰 틀에서 중복.
 실용 구현 후보이며 원안의 신규성은 낮다. BF16 원본을 GPU에 함께 유지하거나
 전체 복원 버퍼를 상주시킨다면 공간 절감 주장을 별도로 제한해야 한다.
 
-### 방법 2: 무작위 다단계 attention 보정
+### 방법 4: 무작위 다단계 attention 보정
 
 Rhee–Glynn 불편 추정 원리는 기존이다. 저비트 출력에 드문 고정밀 차이를
 역확률 보정하는 정확한 KV 적용은 이번 조사에서 확인하지 못했다.
@@ -25,7 +25,7 @@ src/experiments/RANDOMIZED_CORRECTION_DEVELOPMENT.md.
 
 ## 최근 수학 논문에서 가져온 잠정 후보
 
-### 후보 A: 공통 인덱스 tensor cross 압축 (우선 작은 저장 진단)
+### 방법 1: 공통 인덱스 tensor cross 압축 (먼저 실행)
 
 - 원 논문: Akdodshoev, Leplat, Ahmadi-Asl,
   Adaptive Randomized Pivoting for Tensor Cross Approximation in the T-Product Framework.
@@ -51,7 +51,7 @@ src/experiments/RANDOMIZED_CORRECTION_DEVELOPMENT.md.
 - 주의: 논문의 frequency-alignment와 rank-growth 가정은 자동 성립하지 않는다.
   해당 정리는 attention/긴 생성 품질 보장이 아니다. 현재 효과 미측정.
 
-### 후보 B: 이력에 따라 정밀 계산 대상을 순환시키기 (방법 2 보완 가능성)
+### 방법 2: 이력에 따라 정밀 계산 대상을 순환시키기 (방법 4 보완 가능성)
 
 - 원 논문: Markovian Compression: Looking to the Past Helps Accelerate the Future,
   2026-01, math.OC preprint. https://arxiv.org/abs/2601.05398
@@ -69,7 +69,7 @@ src/experiments/RANDOMIZED_CORRECTION_DEVELOPMENT.md.
   최종 latent 손상을 추정하지 않는다.
 - 위험: 분산학습의 수렴 정리는 frozen 생성 추론에 직접 적용되지 않는다.
   정상분포에서 균일 선택도 adaptive query에 대한 조건부 불편성을 보장하지 않는다.
-  고정밀 refinement 저장량과 비용 문제는 방법 2와 마찬가지로 남는다.
+  고정밀 refinement 저장량과 비용 문제는 방법 4와 마찬가지로 남는다.
 
 ### 도구 후보 C: AeroSketch로 sliding-window 통계를 싸게 유지
 
@@ -95,5 +95,6 @@ src/experiments/RANDOMIZED_CORRECTION_DEVELOPMENT.md.
 - 행렬 ODE용 dynamical low-rank integrator를 KV에 바로 대입: 필요한 저렴한
   변화 연산자 F와 low-rank 조건이 확보되지 않아 우선 후보에서 제외.
 
-현재 두 기준을 확정 통과한 새 방법은 없다. A는 구체적 저장 진단 후보,
-B는 방법 2 보완 후보, C는 보조 도구 후보이다. GPU 실험은 시작하지 않았다.
+현재 두 기준을 확정 통과한 새 방법은 없다. 사용자 지정 순서대로 방법 1부터
+개발 진단한다. 방법 2는 방법 4의 보완 가능성도 가지며 C는 보조 도구이다.
+방법 1 계획: src/experiments/TENSOR_CROSS_DEVELOPMENT.md.
