@@ -17,11 +17,19 @@ def run(*args):
 
 def main():
     DATA.mkdir(parents=True,exist_ok=True)
+    sys.path.insert(0,str(ROOT/'tools'));import mechanism_run as d
     for mode in ('gates','diagnose','decision'):
         if mode=='gates' and (DATA/'gates.json').exists():
             sys.path.insert(0,str(ROOT/'tools'));import mechanism_run as d
             gate=d.read(DATA/'gates.json')
             if gate['passed'] and gate['source_sha256']==d.fingerprint():continue
+        if mode=='diagnose' and (DATA/'decision.json').exists():
+            old=d.read(DATA/'decision.json')
+            expected={f'p{p:02d}_s{s}_g{g}_l{lo:02d}.json' for p in (0,4) for s in (101,202) for g in (16,24,32) for lo in range(0,30,6)}
+            actual={p.name for p in (DATA/'replay').glob('*.json')}
+            if old['source_sha256']==d.fingerprint() and expected<=actual:
+                print('REUSE all 60 matching replay blocks; decision will be recomputed without model loading',flush=True)
+                continue
         run(sys.executable,ROOT/'tools/mechanism_run.py','--mode',mode)
     result=json.loads((DATA/'decision.json').read_text())
     if result['advance']:

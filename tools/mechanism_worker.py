@@ -48,12 +48,27 @@ def strict_mean(values):
     return None if any(v is None for v in values) else sum(values)/len(values)
 
 
+def auxiliary_evaluator():
+    """DINO's unqualified imports must not resolve to Self-Forcing utils."""
+    from evaluate_policy_supplement import Evaluator
+    names=('utils','vision_transformer')
+    saved={name:sys.modules.get(name) for name in names};old_path=list(sys.path)
+    for name in names:sys.modules.pop(name,None)
+    sys.path.insert(0,str(Path.home()/'sfq_data/eval_models/dino'))
+    try:return Evaluator()
+    finally:
+        sys.path[:]=old_path
+        for name in names:
+            sys.modules.pop(name,None)
+            if saved[name] is not None:sys.modules[name]=saved[name]
+
+
 @torch.inference_mode()
 def raw_auxiliary(pixels):
     import cv2
     import numpy as np
-    from evaluate_policy_supplement import Evaluator,subject_values,temporal
-    evaluator=Evaluator();images=pixels.numpy();features=[]
+    from evaluate_policy_supplement import subject_values,temporal
+    evaluator=auxiliary_evaluator();images=pixels.numpy();features=[]
     for lo in range(0,len(images),16):features.append(evaluator.features(list(images[lo:lo+16])))
     scores=subject_values(torch.cat(features)).numpy()
     pairs=[dict(kind='inside',chunk=c,i=12*c+o,j=12*c+o+1) for c in range(42) for o in (2,3)]
