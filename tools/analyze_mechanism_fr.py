@@ -12,6 +12,15 @@ import mechanism_run as d
 from mechanism_worker import source_hash,sha
 
 
+def infer(differences):
+    x=np.asarray(differences,dtype=np.float64)
+    if x.shape!=(12,) or not np.isfinite(x).all():raise ValueError('exactly twelve finite prompt-level differences required')
+    observed=float(x.mean());signs=np.asarray(list(itertools.product((-1.,1.),repeat=12)))
+    p=float(np.mean(np.abs((signs*x).mean(1))>=abs(observed)-1e-12))
+    boot=x[np.random.default_rng(872341).integers(0,12,(20000,12))].mean(1);lo,hi=np.quantile(boot,[.025,.975])
+    return observed,float(lo),float(hi),p
+
+
 def main():
     data=Path.home()/'sfq_data/mechanism';seal=d.read(ROOT/'src/experiments/mechanism_fr_registration.json')
     if source_hash()!=seal['source_sha256']:raise RuntimeError('registered FR source changed')
@@ -38,9 +47,7 @@ def main():
             c={r['arm']:r['late_raw_musiq'] for r in rows if r['prompt']==prompt and r['seed']==seed}
             values.append(c['C_repeat']-c['L'])
         differences.append(float(np.mean(values)))
-    x=np.asarray(differences);observed=float(x.mean());signs=np.asarray(list(itertools.product((-1.,1.),repeat=12)))
-    p=float(np.mean(np.abs((signs*x).mean(1))>=abs(observed)-1e-12))
-    boot=x[np.random.default_rng(872341).integers(0,12,(20000,12))].mean(1);lo,hi=np.quantile(boot,[.025,.975])
+    observed,lo,hi,p=infer(differences)
     out=ROOT/'src/experiments/mechanism_fr_results';out.mkdir(parents=True,exist_ok=True)
     result=dict(registration=seal,complete_trajectories=72,n_prompts=12,primary='C-repeat16 minus L16 late all-raw-frame MUSIQ',
                 mean=observed,ci95=[float(lo),float(hi)],exact_two_sided_sign_flip_p=p,prompt_differences=differences,artifacts=artifacts)
