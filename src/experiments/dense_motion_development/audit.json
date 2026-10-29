@@ -1,0 +1,57 @@
+{
+  "passed": true,
+  "rows": 120,
+  "costs": 40,
+  "maps": 8,
+  "coefficient_files": 2,
+  "capture_artifacts_verified": 24,
+  "source_sha256": "7076fa107c0d6e3df55b3fdf4d475bc3010337f81cae4309d800a2553cfdf680",
+  "advance": false,
+  "recomputed": [
+    {
+      "prompt": 0,
+      "means": {
+        "direct": 0.06512565802161892,
+        "same_position": 0.04192960782287022,
+        "affine_same": 0.038542086336140834,
+        "dense_same": 0.04052305989898741,
+        "dense_affine": 0.03766650640560935
+      },
+      "relative_error_reduction": 0.02271750218437074,
+      "payload_overhead": 9.584984899957405e-05,
+      "passes": false
+    },
+    {
+      "prompt": 4,
+      "means": {
+        "direct": 0.06048967518533269,
+        "same_position": 0.04792979006500294,
+        "affine_same": 0.041473719504817076,
+        "dense_same": 0.04597145578979204,
+        "dense_affine": 0.040181766846217215
+      },
+      "relative_error_reduction": 0.031151116273759882,
+      "payload_overhead": 9.584984899957405e-05,
+      "passes": false
+    }
+  ],
+  "tensor_files_checked": [
+    "p00_c6_pair0_map.pt",
+    "p00_c6_pair1_map.pt",
+    "p00_c7_pair0_map.pt",
+    "p00_c7_pair1_map.pt",
+    "p04_c6_pair0_map.pt",
+    "p04_c6_pair1_map.pt",
+    "p04_c7_pair0_map.pt",
+    "p04_c7_pair1_map.pt",
+    "p00_coefficients.pt",
+    "p04_coefficients.pt"
+  ],
+  "limits": [
+    "same-author arithmetic/hash audit, not external independent validation",
+    "no model gates or codec numerical reconstruction independently rerun",
+    "development chunks6/7 previously observed; not held-out confirmation",
+    "per-token KV correspondence is not certified physical motion",
+    "byte-container payload and hypothetical packing are distinct; inference throughput unmeasured"
+  ]
+}
