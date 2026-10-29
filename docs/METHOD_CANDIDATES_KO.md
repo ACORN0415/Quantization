@@ -113,3 +113,11 @@ Algorithm 8 기반 선택(5개 고정 시드)과 adaptive argmax, RTN2/static/SV
 encode도 SVD보다 느려 현재 rank22 공통 열 구성은 보류한다. SVD의 2비트
 가능성과 모든 tensor 압축의 실패를 혼동하지 않는다. 방법 2는 아직 미실행.
 [후속 결과](../src/experiments/tensor_adaptive_development/REPORT_KO.md).
+
+### 방법 1 선양자화 순서 비교
+
+2/3/4비트 각각 원본→RTN→방법 vs 원본→RTN만을 162행 측정했다.
+T-ARP 최종 D 비율은 2.45–2.54 / 14.43–16.05 / 57.33–69.88이었다.
+SVD도 모든 비트에서 악화. 최종 payload 차이 0.83–2.61%로 작다.
+현재 순서/표현 보류 판단을 유지한다. 모든 수학적 압축의 불가능성은 아님.
+[상세 비교](../src/experiments/tensor_prequant_comparison/REPORT_KO.md).
