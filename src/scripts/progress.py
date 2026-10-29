@@ -9,6 +9,21 @@ def show():
     if a.watch:print('\033[2J\033[H',end='')
     print(time.strftime('%Y-%m-%d %H:%M:%S'),'— Quantization progress')
     print('Local data:',a.data)
+    postwo=a.data/'postwo_rounding/status.json'
+    if postwo.exists() and not a.history:
+        try:
+            v=json.loads(postwo.read_text())
+            print('\nPOST-WO ROUNDING DEVELOPMENT',v.get('state'),v.get('detail'))
+            print('Updated UTC:',v.get('updated_utc'))
+            print('Capture prompts:',len(list((a.data/'postwo_rounding').glob('p*/manifest.json'))),'/ 2')
+            if v.get('state')=='running':
+                try:os.kill(v['pid'],0);print('Process:',v['pid'],'alive')
+                except ProcessLookupError:print('ATTENTION: worker stopped or stage handoff')
+            print('Report: Quantization/src/experiments/postwo_rounding_development/REPORT_KO.md')
+            log=a.data/'postwo_rounding.log'
+            if log.exists():print('\n'.join(log.read_text(errors='replace').splitlines()[-8:]))
+        except (OSError,json.JSONDecodeError):print('Post-Wo status updating…')
+        return
     transition=a.data/'transition_rounding/status.json'
     if transition.exists() and not a.history:
         try:
