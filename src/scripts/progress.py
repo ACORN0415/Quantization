@@ -13,7 +13,8 @@ def show():
     if mechanism.exists() and not a.history:
         try:
             v=json.loads(mechanism.read_text());print('\nMECHANISM',v.get('state'),v.get('detail'))
-            print('Completed:',v.get('completed','?'),'/',v.get('total','?'),'ETA hours:',v.get('eta_hours_rough','measuring'))
+            if 'completed' in v:print('Completed:',v['completed'],'/',v.get('total','?'),'ETA hours:',v.get('eta_hours_rough','measuring'))
+            else:print('Setup or validity gate in progress; replay ETA follows its first complete block.')
             print('Updated UTC:',v.get('updated_utc'))
             if v.get('state')=='running' and v.get('pid'):
                 try:os.kill(v['pid'],0);print('Process:',v['pid'],'alive')

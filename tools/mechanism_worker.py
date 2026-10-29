@@ -1,5 +1,6 @@
 """Separate GPU process for diagnostic-free timing, generation and raw scoring."""
 import argparse
+import atexit
 import gc
 import hashlib
 import json
@@ -95,8 +96,12 @@ class Telemetry:
                     self.rows.append(dict(wall=time.time(),gpu_memory_mib=values[0],gpu_utilization=values[1],temperature_c=values[2],sm_clock_mhz=values[3],power_w=values[4],rss_bytes=rss))
                 except (ValueError,StopIteration):pass
         self.thread=threading.Thread(target=loop,daemon=True);self.thread.start()
+        atexit.register(self.stop)
     def stop(self):
-        if self.proc is not None:self.proc.terminate();self.proc.wait();self.thread.join(timeout=2)
+        if self.proc is not None:
+            if self.proc.poll() is None:self.proc.terminate()
+            self.proc.wait();self.thread.join(timeout=2);self.proc=None
+            atexit.unregister(self.stop)
 
 
 def memory():return dict(allocated=torch.cuda.memory_allocated(),reserved=torch.cuda.memory_reserved())
