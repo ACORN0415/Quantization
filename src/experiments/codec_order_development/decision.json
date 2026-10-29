@@ -1,0 +1,22 @@
+{
+  "quality_candidates": [
+    {
+      "bits": 2,
+      "method": "tsvd",
+      "order": "method_only"
+    },
+    {
+      "bits": 2,
+      "method": "tucker",
+      "order": "method_only"
+    },
+    {
+      "bits": 2,
+      "method": "tt",
+      "order": "method_only"
+    }
+  ],
+  "compression_candidates": [],
+  "quantization_combination_candidates": [],
+  "proceed_method2": true
+}
