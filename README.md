@@ -1,186 +1,301 @@
-> 메커니즘 개발 게이트·재생 실행: [현재 상태 확인 방법](src/experiments/MECHANISM_RUN_STATUS.md) · [실행 전 고정한 v0.3 계획](src/experiments/P1_P3_MECHANISM_PLAN_v0_3.md).
-> 주체·시간 진단 추가 평가 완료: [사후 탐색 결과와 한계](src/experiments/policy_supplement_results/REPORT_KO.md).
-> Completed registered P1/P3 study: [results and limits](src/experiments/policy_study_results/RESULTS.md) · [한글 최종 보고](src/experiments/policy_study_results/REPORT_KO.md).
-> P1/P3 engineering checks completed: [gates, execution costs and limits](src/experiments/policy_feasibility_results/RESULTS.md).
-> Current P1/P3 development checks: [feasibility protocol](src/experiments/P1_P3_FEASIBILITY.md).
-> Live local progress: `bash tools/watch_progress.sh` (or append `0` for one snapshot).
-> New P3 TF/FR pilot: [results and limits](src/experiments/p3_pilot_results/RESULTS.md).
-> Current executable reconstruction: [src/README.md](src/README.md).
-> Verified reconstruction results: [src/docs/VERIFY.md](src/docs/VERIFY.md).
-> Current research conclusions and corrections: [S6_FINDINGS](문서/결과서/S6_FINDINGS.md)
-> and [corrections](문서/리뷰/CORRECTIONS_2026-09-19.md).
-> The historical narrative below predates those corrections.
+# 영상 생성 KV 캐시 양자화: 실험 경과와 현재 결론
 
-# Quantization error propagation in causal video diffusion
+이 저장소는 **인과적 영상 생성 모델에서 KV 캐시를 저비트로 저장할 때, 시간이 지나며 품질이 왜 나빠지고 어떤 저장 방식이 이를 줄이는지** 연구한 코드·실험·검증 기록이다. 주 대상은 Wan2.1-T2V-1.3B 기반 Self-Forcing이며, 단일 RTX 4090 24GB에서 측정했다. 초기에는 LongLive와 가중치·활성 양자화도 비교했으나, 이후에는 KV 저장 정책과 오차의 생성 피드백에 집중했다.
 
-Does low-precision quantization error **accumulate along the frame axis** through the KV cache of a streaming (causal) video diffusion model?
+**정리 기준: 2026-10-29.** 초기 탐색부터 재구현, 본 실험, 메커니즘 진단 순서로 설명한다. 과거 문서는 당시의 판단을 보존하므로, 철회된 문장이 있는 경우 아래 해석과 연결된 정정 문서를 함께 읽어야 한다. 현재 실행 가능한 코드는 [`src/`](src/README.md)에 있다.
 
-Two sessions of measurements on [Self-Forcing](https://github.com/guandeh17/Self-Forcing) and [LongLive](https://github.com/NVlabs/LongLive) (both Wan2.1-T2V-1.3B based), using the KV-cache quantizers from [kv-quant-longhorizon](https://github.com/suraj-ranganath/kv-quant-longhorizon). Single RTX 4090 (24 GB).
+## 먼저 읽을 현재 결론
 
----
+| 질문 | 현재 답 | 근거의 범위 |
+|---|---|---|
+| 같은 명목 비트폭에서 어떤 정책이 품질을 더 잘 유지하는가? | **P3 chunk가 P1 rolling보다 후반 프레임 MUSIQ가 높았다.** INT4 +7.69점, INT2 +7.05점 | 사전 등록한 새 프롬프트 10개 × 시드 2개. 두 비트폭 모두 프롬프트별 차이 10/10 양수 |
+| P3면 BF16 수준의 품질인가? | 아니다. 본 실험 INT4 P3도 BF16보다 약 7.81점 낮다. INT2 P3는 심하게 손상됐다 | 같은 본 실험의 후반 표본 프레임 MUSIQ |
+| 오차 크기만 작으면 되는가? | **크기만으로는 결과를 설명하기 어렵다.** 저장 이벤트의 오차 노름을 맞춘 무작위 방향 잡음이 실제 양자화보다 덜 해로웠다 | 누적 읽기 오차·방향·궤적까지 일치시킨 대조군은 아니다 |
+| 왜 P1이 불리한가? | **그룹 재편이 유력한 후보**다. 개발 재생 진단에서 그룹이 맞는 g=24에서는 L과 C-repeat 차이가 0, g=16에서는 차이가 났다 | 프롬프트 2개 × 시드 2개. 보류 데이터의 후속 생성 실험은 작성 시점 진행 중 |
+| 한 번만 양자화하는 방식이 항상 좋은가? | 고정 그룹의 이상적 RTN은 멱등이다. 하지만 **그룹 재편이 항상 원본 대비 오차를 늘린다는 명제는 반례가 있다** | 정리·형식 증명·실제 BF16 합성 반례를 구분해 검증 |
+| 속도·메모리도 P3가 우수한가? | 최근 개발 벤치에서 C-once는 L16보다 생성 시간이 짧았지만, **상주 캐시는 더 컸다** | 동일 개발 입력, 3회 측정. 현재 구현은 바이트 코드와 BF16 attention을 사용 |
 
-## Answer
+가장 확실한 성과는 **저장 정책에 따라 품질이 달라진다는 재현 가능한 비교 결과**다. 같은 메모리 예산에서의 우위, 모든 모델에 대한 일반화, 시간 품질·객체 유지의 개선, 새 알고리즘의 신규성은 아직 입증하지 않았다.
 
-**Yes, it accumulates — and an attention sink stops it.**
+빠른 진입점: [본 실험 한글 보고](src/experiments/policy_study_results/REPORT_KO.md) · [재생 진단](src/experiments/mechanism_diagnostic_results/REPORT_KO.md) · [수학적 근거](src/experiments/mechanism_diagnostic_results/THEORY_KO.md) · [현재 실행 확인](src/experiments/MECHANISM_RUN_STATUS.md).
 
-Getting there required discarding the first session's conclusion, because the metric it rested on cannot measure accumulation.
+## 용어와 비교 대상
 
-| | Self-Forcing (no sink) | LongLive (sink 3 + window 9) |
-|---|---:|---:|
-| eviction starts at chunk | 7 | 4 |
-| KV INT4 — cache error (key) | 0.0278 | **0.0640** |
-| KV INT4 — MUSIQ change over rollout | **−11.0** | **−0.3** |
-| KV INT2 — damage above own chaos floor | **2.51×** | **1.12×** |
+- **BF16**: KV를 BF16으로 유지하는 기준 실행. 출력 품질의 절대적인 정답 영상이라는 뜻은 아니다.
+- **RTN**: 그룹별 scale을 사용해 가장 가까운 정수로 반올림하는 양자화. K/V는 각각 key/value다. K4V2는 key 4비트·value 2비트다.
+- **P1 / L / rolling**: 물리 버퍼를 밀고 현재 K/V를 쓴 뒤, attention 이후 버퍼 전체를 다시 양자화한다. 다음 호출에서 복원한다.
+- **P3 / C-once / chunk**: 현재 청크는 BF16으로 유지하고, 확정된 과거 청크를 한 번 양자화해 보존한다. 과거 청크를 다시 encode하지 않는다.
+- **C-repeat**: 청크별 그룹을 유지하면서 과거를 반복 encode하는 진단용 정책. L과 C-once 사이의 차이를 더 잘 나누기 위해 추가했다.
+- **TF**: BF16 기준 생성이 쓴 K/V를 사용하되 대상 정책의 저장 이력을 재생하는 대조 실행. **FR**은 자신의 생성 결과를 다음 생성에 계속 사용하는 실행이다. 초기 TF는 재고정 방식이었고, 이후 P1의 저장 이력을 보존하는 replay-TF로 보강했다.
+- **MUSIQ**: 개별 프레임의 무참조 품질 점수. 높을수록 좋지만 움직임, 객체 동일성, 프롬프트 충실도까지 평가하지는 않는다.
+- **g**: 토큰 축 양자화 그룹 크기. 현재 설정은 청크당 4,680토큰이므로 `4680 % 16 = 8`, `4680 % 24 = 0`이다.
 
-LongLive takes **2.3× more quantization error into its cache** and ends up essentially lossless at INT4. The sink does not reduce how much error is injected; it stops that error from compounding.
+과거 P3 fused 경로와 현재 `src/`의 chunk 모사는 같은 구현이 아니다. **과거 fused 커널의 압축률·속도와 현재 모사의 품질 수치를 합쳐 하나의 시스템 성능으로 제시하지 않는다.**
 
-And the protection comes from the sink's **position being preserved**, not from its numerical precision — quantizing the sink slots to INT2 costs nothing measurable (1.11× vs 1.12×).
+## 실험은 어떤 순서로 진행됐는가
 
----
+### 1. 초기 재현과 첫 오판 — S1, 2026-09-16
 
-## Why the first session got it wrong
+**질문:** 저비트 KV 오차가 프레임 축으로 누적되는가?
 
-Session 1 concluded "no accumulation" from two observations, both of which turned out to be artifacts:
+Self-Forcing 실행 환경과 긴 출력 경로를 준비하고 RTN/KIVI 등을 비교했다. 청크별 독립 난수 스트림을 도입해 양자화 코드의 추가 난수 소비가 생성 궤적을 바꾸지 않도록 했으며, BF16 재실행·추가 난수 소비·패치 전후 일치를 확인했다.
 
-1. **In-situ cache error is flat across chunks.** True, but that measures *injection*, not *propagation*. RTN rounding is near-idempotent, so re-quantizing a cache every chunk does not compound — yet the downstream consequence still grows.
-2. **The latent L2 curve against BF16 tracks the control.** The latent metric saturates: a 4-step distilled sampler nudged early lands on a *different but equally valid* sample, so the error rises to a chaotic-divergence ceiling and stops discriminating.
+처음에는 캐시 오차가 평평하고 BF16 대비 latent 거리가 대조군과 비슷하다는 이유로 “누적 없음, INT4는 안전”이라고 판단했다. **이 결론은 이후 철회했다.** 재양자화 직전·직후의 차이는 원본 대비 누적 손상을 측정하지 못한다. BF16과 다른 궤적이 됐다는 사실도 곧 품질 저하를 뜻하지 않는다.
 
-The second point is worth stating sharply, because it is easy to repeat:
+**남은 가치:** 재현 가능한 생성·난수 통제·잠재 텐서 저장 기반을 만들었고, latent L2 단독 평가의 한계를 발견했다. [S1 기록](문서/결과서/S1_RESULTS_4090.md)
 
-> The chaos floor (BF16 + a 0.1 % noise perturbation) reaches rel_err **0.738** at chunk 20 while its MUSIQ **improves by +4.3**. Fixed KIVI INT4 sits at rel_err **0.753** — statistically the same distance from BF16 — with MUSIQ **−10.3**. Two runs equidistant from the reference, opposite quality outcomes.
+### 2. TF/FR과 sink 가설 검증 — S2–S3, 2026-09-16
 
-The converse also happens: a *buggy* KIVI run reached rel_err 1.277 (far past "uncorrelated") with MUSIQ only −3.4, because it produced a sharp, high-contrast, entirely different scene. Neither metric alone is sufficient.
+**질문:** 한 청크의 직접 손상과 계속 생성할 때의 손상이 다른가? 첫 청크를 보존하면 도움이 되는가?
 
-### What fixed the measurement
+TF/FR 비교와 MUSIQ를 추가하자 작은 캐시 오차와 큰 후반 품질 저하가 함께 나타났다. Self-Forcing과 LongLive 차이를 보고 한때 “attention sink가 누적을 차단한다”고 해석했다.
 
-**Teacher-forced / free-running separation.** At every chunk, a reference BF16 pass and a quantized pass run over the *same* context in lockstep, so the quantized error at that chunk is the error injected there alone:
+같은 Self-Forcing 가중치에서 창 길이와 고정 청크를 바꿔 다시 확인한 결과, 첫 청크가 attention을 유난히 많이 받는다는 설명은 지지되지 않았다. INT2에서 현재 청크에 대한 attention 비중이 줄고 과거 캐시에 대한 비중이 커지는 현상은 관측했다.
 
-```
-e_inj[t]       = teacher-forced error   (context re-anchored to BF16 each chunk)
-e_total[t]     = free-running error
-propagation[t] = e_total[t] − e_inj[t]
-```
+**남은 가치:** attention 분포와 생성 품질을 함께 봐야 한다는 점. **버린 해석:** 서로 다른 모델·학습·창 길이의 비교만으로 sink의 단독 인과 효과를 확정하는 것, `FR−TF`를 순수 전파량으로 부르는 것. [S2](문서/결과서/S2_RESULTS.md) · [S3](문서/결과서/S3_RESULTS.md)
 
-Injection turns out flat; propagation grows monotonically for **all five** configurations tested, INT4 included.
+### 3. 앵커 내용, K/V 민감도, 보정과 KIVI — S4–S5, 2026-09-17–18
 
-**A reference-free quality metric** (MUSIQ, via `pyiqa`) alongside it, since latent L2 saturates at the chaos floor.
+**질문:** 과거 내용을 보존하는 효과와 양자화 오차의 구조를 활용할 수 있는가?
 
-Caveat carried through the results: `FR − TF` includes chaotic divergence as well as cache propagation. FP8 W8A8 has *larger* propagation than RTN INT4 (0.875 vs 0.591) yet **no** quality loss (MUSIQ +1.4 vs −11.0). Propagation and a reference-free metric must be read together.
+고정 앵커 내용을 바꾸는 실험, K/V 비트폭 분리, TUM 계열 attention bias 보정, KIVI residual window, 긴 출력 실험을 진행했다. KIVI 경로에서는 zero-point clamp와 수치 안정성 문제 등을 찾아 수정했다.
 
----
+당시 10프롬프트 비교에서 수정한 KIVI는 같은 비트폭 RTN보다 평균 MUSIQ가 높았다(INT4 +2.60, INT2 +13.32). 반면 residual window 추가 이득은 작거나 명확하지 않았다. 현재 청크를 BF16으로 읽는 이 실행 구조에 한정한 결과다.
 
-## Other findings
+**남은 가치:** 양자화기 구현과 K/V 배분, attention 보정이 실제 품질에 영향을 준다는 근거. **축소한 주장:** “key만 원인”, “key 오차는 항상 9배 비싸다”, “Jensen bias 하나로 붕괴를 설명한다”는 일반화는 하지 않는다. 이후 저장 격자와 오차 계측 문제도 발견됐다. [S4](문서/결과서/S4_RESULTS.md) · [S5](문서/결과서/S5_RESULTS.md)
 
-### Key error costs ~9× more than value error
+### 4. 계측·저장 격자·압축 주장 재감사 — S6–S7, 2026-09-18–20
 
-Controlled experiment, same quantizer, only the bit allocation differs:
+**질문:** 지금 측정하는 오차와 메모리, 개선 원인이 실제로 주장한 대상인가?
 
-| config | key error | value error | MUSIQ change |
+재감사에서 중요한 정정이 나왔다.
+
+| 당시 해석 | 확인 후 정리 |
+|---|---|
+| 비-self 슬롯 오차가 0이므로 원본 손상이 없다 | 측정한 것은 `Q(x̂)−x̂`였다. 같은 격자에서 멱등이면 0일 수 있지만 최초 오차 `x̂−x`는 남는다 |
+| INT2에서는 앵커가 도움이 안 된다 | 격자를 정렬하자 효과가 달라졌다. 앵커와 정렬 사이의 상호작용을 무시할 수 없다 |
+| 오라클의 적응 선택이 품질을 높였다 | 시험한 140회 선택이 고정 정책과 모두 같았다. 적응 선택의 추가 기여는 0이었다 |
+| 최종 구성이 8배 압축한다 | 이론 payload, 창 축소, 현재 청크 BF16 버퍼가 섞였다. 당시 수정된 실측 상주 절감은 4.00배였고 해당 구성에 한정된다 |
+| 정확 보정으로 거의 비용 없이 바꿀 수 있다 | 기존 급수는 꼬리에서 발산했다. 안정형은 별도 실행에서 최소 25배 이상 느려 중단했다 |
+
+P1/P2/P3/P4의 과거 저장·실행 경로도 비교했다. 초기 P3는 양자화 커널과 attention 경로까지 달라 **품질 차이를 저장 정책 하나로 귀속할 수 없었다.** 일부 대응 진단을 추가했지만 시험한 입력의 일치를 모든 생성 호출의 보증으로 확대하지 않았다.
+
+**이 단계는 유의미한 부정 결과다.** 성능 과장과 잘못된 오차 정의를 걷어냈고, 현재 재구현과 새 본 실험이 필요한 이유가 됐다. [정정 대조표](문서/리뷰/CORRECTIONS_2026-09-19.md) · [L1 정정](문서/리뷰/CORRECTIONS_L1_2026-09-20_r2.md) · [L1 대응 진단](문서/결과서/L1_attr_diagnostic.md) · [정확 보정 비용](문서/결과서/S7_C1_exact_uniform_cost.md)
+
+### 5. 저랭크 압축과 잔차 선택 — S8, 2026-09-23–24
+
+**질문:** 같은 저장 바이트에서 숫자의 개수를 줄이는 표현이 단순 저비트 양자화보다 나은가?
+
+SVD·부분 Tucker·층별 혼합과 선택적 잔차 보존을 시험했다. 이미 양자화된 복원값을 다시 비교하던 초기 진단은 편향 때문에 버리고, 깨끗한 BF16 입력과 실제 저장 dtype·scale 바이트로 다시 측정했다.
+
+- **전층 저랭크 B:** 일부 attention 오차와 MUSIQ는 좋아졌지만, K4V2 기준보다 프레임 특징 일관성이 낮았다. 국소 attention 오차의 우위가 전체 품질을 보장하지 않았다.
+- **8층 저랭크 혼합 A:** 새 프롬프트 10개에서 K4V2 대비 MUSIQ +0.586, 95% 구간 [+0.133, +1.039]. 다른 두 지표는 차이 비검출이었다. 세 지표에 대한 다중 비교 보정은 하지 않았다.
+- **실용성:** A는 상주 캐시 약 90MB·4.2% 절감에 실행 시간 약 6.9% 증가가 따랐고 의미 있는 peak 메모리 이득은 관측되지 않았다.
+- **중단한 가설:** 시험한 21프레임 축을 rank 3–4로 줄여 에너지 95%를 보존한다는 목표는 실패했다. 잔차 선택 후보도 사전 안정성 기준 8/10에 못 미치는 7/10으로 중단했다.
+
+**판단:** 저랭크가 불가능하다는 결과가 아니다. 현재 후보의 작고 비싼 메모리 절감을 우수한 새 방법으로 권하기 어렵다는 결과다. [S8 전체 결과와 정정](문서/결과서/S8_lowrank_diag.md)
+
+### 6. PSAC·잔여 오차 보정·λ와 커널 비용 — S9, 2026-10-24–25
+
+**질문:** 중요한 query 방향을 보존하거나 보정 강도를 조절해 INT2를 더 실용적으로 만들 수 있는가?
+
+캡처 진단 뒤 별도 영상 실험과 비용 측정을 진행했다.
+
+| 실험 | 결과 | 판단 |
+|---|---|---|
+| PSAC8 참고 백엔드, 새 프롬프트 10개 | INT2+보정보다 특징 일관성 +0.0532. 그러나 K4V2 대비 특징 일관성·flickering의 사전 비열등성 기준 실패 | 부분 회복은 유의미하지만 후보의 fused 구현 투자는 종료 |
+| P3 INT2 보정 강도 λ=0.5/1/2/4 | λ2−λ1: MUSIQ −11.4, 특징 일관성 −0.166. 캡처 오차로 유리해 보인 λ가 영상에서는 불리했다 | λ1을 기준으로 유지. 국소 오차 최적화가 영상 최적화라는 가정은 실패 |
+| 창 길이별 fused 비용 | INT2 λ1의 BF16 대비 종단 오버헤드가 12/21/36프레임 창에서 약 +36/+52/+74% | 긴 창에서 저비트 읽기의 이점으로 비용이 상쇄된다는 가설은 이 커널에서 실패 |
+| 초기 BF16 버퍼 선할당 제거 | BF16이 OOM 난 63프레임 창에서 fused 생성 완료 | 실행 가능성 개선. 그 긴 창의 품질이나 유용성은 미측정 |
+| 커널 프로파일 | 시험한 조건에서 보정 attention 구간이 큰 비용 요인. 잘못된 scale 배치의 v1 벤치를 고쳐 v2 재측정 | 그룹별 bias 재사용은 후속 최적화 후보. 개선된 속도를 이미 얻었다고 쓰지 않음 |
+
+**남은 가치:** 개발 지표와 영상 품질의 불일치, 현재 커널의 비용, 실제 실패한 후보를 명확히 남겼다. 과거 fused 실험과 아래의 새 바이트 코드 모사 실험은 구현이 다르므로 속도를 직접 비교하지 않는다. [S9 결과](문서/결과서/S9_cand1_diag.md) · [프로파일 해석 범위](문서/리뷰/REVIEW_S9_profile_v2_group16_2026-10-25.md)
+
+### 7. 실행 코드 재구현과 과거 결과 재현 — 2026-10-27
+
+**질문:** 누적된 패치와 외부 경로에 의존하지 않고, 수정·검증·공개 가능한 코드로 과거 결과를 재현할 수 있는가?
+
+Self-Forcing 추론 부분을 고정 revision에서 가져오고, RTN/KIVI 계열 양자화와 저장 정책을 정리해 현재의 `src/`로 통합했다. 원본 라이선스·출처를 보존했으며 사용자 저장소에서 변경을 관리한다.
+
+| 검증 | 결과 |
+|---|---|
+| 원본 release 난수 방식 BF16 | 최종 잠재 텐서 3/3 비트 일치 |
+| 청크별 추가 전역 난수 7,777개 소비 | 42/42 청크 비트 일치 |
+| BF16·RTN INT4/INT2·KIVI INT4의 과거 경로 비교 | 168/168 청크 비트 일치 |
+| 과거 KIVI 오차 집계 | 210/210행 일치, 최대 상대 차이 0 |
+| 양자화를 없앤 두 저장 정책 | 정책별 42/42 청크 BF16과 비트 일치 |
+
+KIVI 8비트 기본 코드는 uint8로 바꿨다. 과거 signed-int8 wraparound는 재현 검증에서만 명시적으로 켠다. 자동 검증 진행 표는 데이터 폴더에 쓰고, 정리한 검증 문서를 덮어쓰지 않도록 고쳤다.
+
+**판단:** 수치 호환성과 작업 기반을 확보한 결과다. 재현 게이트 통과 자체가 새 품질 개선이나 저비트 커널의 효율을 입증하지는 않는다. [재구현 명세](src/docs/RECONSTRUCTION_PROTOCOL.md) · [검증과 후속 리뷰 기록](src/docs/VERIFY.md)
+
+### 8. P3 TF/FR 파일럿과 실제 anchoring 검증 — 2026-10-27
+
+개발 프롬프트 2개·시드 1개·INT4/INT2에서 P3만 측정했다. 후반 MUSIQ는 INT4에서 BF16 약 65.4/72.6 → P3 FR 57.3/60.3, INT2에서는 24.6/23.5로 떨어졌다. TF의 손상은 FR보다 작았다.
+
+리뷰에서 양자화 없는 TF 게이트가 실제 `anchor_store`를 우회한다는 점을 발견했다. **파일럿 공개 후** identity quantizer로 실제 경로를 검증해 42/42 청크 비트 일치를 확인했다. 삭제됐던 파일럿 텐서도 재생성해 기존 해시와 일치를 확인하고 복구했다. 이후 최종 텐서는 보관한다.
+
+**판단:** 다음 실험을 설계하는 개발 자료다. 표본이 2개이고 P1 비교가 없으므로 정책 우위의 확증 근거로 쓰지 않는다. 사후 검증을 사전 게이트처럼 표현하지 않는다. [파일럿 결과·유효성 후속 검사](src/experiments/p3_pilot_results/RESULTS.md)
+
+### 9. replay-TF·공통 KV 지표·잡음 대조군 개발 — 2026-10-27–28
+
+P1 TF를 매 청크 BF16에서 한 번만 양자화하면 P1의 저장 이력이 지워진다. 이를 고쳐 **BF16 기준 쓰기를 같은 순서로 지속적인 store에 재생하고, 대상 청크 시작 전 상태를 복제하는 replay-TF**를 만들었다.
+
+두 정책의 KV 오차도 attention 직전의 과거 토큰만 대상으로, 삽입 당시 BF16 원본 대비 상대 L2로 맞췄다. 현재 청크를 한 정책에서만 오차 0으로 포함하던 불공정한 비교를 없앴다. 원본 shadow가 필요한 진단은 생성 성능 측정과 분리했다. 양자화 없는 전체 모델 게이트 84/84 청크와 계측 ON/OFF 출력 일치를 확인했다.
+
+잡음 대조군 v1은 INT2 개발 실행에서 불안정해 중단했다. 본 실험 전에 v2로 수정하고 경위를 기록했다. v2는 양자화 FR의 각 저장 이벤트에서 측정한 **절대 FP32 오차 노름**을 고정해 무작위 방향 잡음으로 재생한다. re-noise 시드를 바꾸는 대조군으로 대체하지 않았다. [실행 가능성 결과](src/experiments/policy_feasibility_results/RESULTS.md) · [대조군 수정 기록](src/experiments/P1_P3_CONTROL_AMENDMENT.md)
+
+### 10. P1/P3 본 실험 — 2026-10-28–29, 완료
+
+**질문:** 같은 모델·명목 비트폭·생성 조건에서 P3가 P1보다 후반 프레임 품질을 잘 유지하는가?
+
+새 프롬프트 10개 × 시드 2개 × INT4/INT2 × P1/P3로 **80개 정책 케이스**를 실행했다. 각 케이스의 TF·FR·잡음 FR 240개와 공유 BF16 20개, 총 **260개 생성 궤적**이다. 계획 봉인을 본 실험 측정보다 먼저 커밋했다. 40개에서의 중단은 사용자 요청이었으며 중간 유의성 검정은 하지 않았다. 이후 전체를 완료했다.
+
+설정은 sink 0, residual 0, RTN g=16, 21잠재프레임 문맥, 총 126잠재프레임·42청크·501출력프레임이다. 주지표는 **후반 청크 21–41의 가운데 원본 디코딩 프레임 각 1개**에 대한 MUSIQ 평균이다. 두 시드를 프롬프트 안에서 평균한 후 프롬프트 10개를 분석 단위로 삼았다.
+
+| 비트 | BF16 | P1 FR | P3 FR | P3−P1 | 프롬프트 부트스트랩 97.5% 구간 |
+|---|---:|---:|---:|---:|---|
+| INT4 | 71.44 | 55.94 | 63.63 | **+7.69** | [+5.62, +9.92] |
+| INT2 | 71.44 | 20.28 | 27.33 | **+7.05** | [+3.33, +11.14] |
+
+두 비트폭 모두 10/10 프롬프트에서 P3가 높았다. 사전 등록한 양측 부호 반전 검정의 Holm 보정 p값은 각각 **0.00390625**다. 이 검정에는 귀무가설 아래 짝지은 차이의 교환 가능성·대칭성 가정이 있으며, 작은 표본의 부트스트랩 구간도 근사적이다.
+
+| 후반 MUSIQ | P1 TF | P3 TF | P1 잡음 FR | P3 잡음 FR |
+|---|---:|---:|---:|---:|
+| INT4 | 70.35 | 70.71 | 71.71 | 71.53 |
+| INT2 | 65.11 | 66.16 | 41.88 | 59.68 |
+
+**유의미한 결과:** 이 설정에서 P3의 후반 표본 프레임 품질 우위와, 동일 이벤트 오차 노름만으로 설명되지 않는 손상 차이다. TF보다 FR에서 큰 손상은 생성 피드백과 일치하는 패턴이다.
+
+**이 결과에 붙이지 않는 해석:** `FR−TF`가 순수 전파 효과라는 가산 분해, 잡음 대조군이 카오스나 특정 편향을 단독 입증했다는 설명, 같은 메모리 예산의 우위. 그룹 경계·패딩·현재 청크 BF16 유지·encode 횟수가 함께 달라지는 정책 비교다. 주지표는 전체 프레임·청크 경계 품질을 측정한 것도 아니다.
+
+[한글 최종 보고·그림](src/experiments/policy_study_results/REPORT_KO.md) · [사전 등록](src/experiments/P1_P3_MAIN_STUDY.md) · [프롬프트별 차이](src/experiments/policy_study_results/paired_primary.csv) · [산출물 해시](src/experiments/policy_study_results/evidence.json)
+
+### 11. 기존 영상의 DINO·RAFT 추가 평가 — 2026-10-29, 완료
+
+260개 영상을 다시 생성하지 않고, 압축 MP4에서 DINO 프레임 특징 유사도와 RAFT 움직임 진단을 추가했다. **결과를 본 뒤 정한 탐색 분석**이며 공식 VBench 구현과의 수치 일치를 입증한 평가는 아니다.
+
+- 후반 DINO P3−P1은 INT4 +0.0638, INT2 +0.0383이었다. 전체 프레임 특징 유사도 결과이며 추적한 객체의 동일성을 뜻하지 않는다.
+- INT2 P3의 추정 움직임은 0.196픽셀로 BF16 0.648, P1 0.549보다 작았다. 정적인 출력이 높은 DINO에 기여했을 수 있고, 심한 영상 손상으로 flow가 부정확할 수도 있다.
+- INT4 움직임 보정 잔차는 개선 근거가 없었다. INT2는 유효 대응 영역이 없는 영상 1건 때문에 전체 표본 잔차 비교를 미정의로 남겼다. 그 영상을 빼고 유리한 평균을 만들지 않았다.
+- 시간 진단은 청크 내부 84쌍으로 전체 500개 전환의 일부이며 경계를 포함하지 않았다. MUSIQ는 원본 프레임, 이 보조 평가는 압축 MP4라 측정 단계도 다르다.
+
+**판단:** P3의 프레임 특징 일관성에 대한 보조 근거는 있지만, 시간 품질·동작·주체 유지가 전반적으로 개선됐다는 결론은 내리지 않는다. [탐색 평가](src/experiments/policy_supplement_results/REPORT_KO.md) · [자체 리뷰와 미해결 범위](src/experiments/policy_supplement_results/SELF_REVIEW_KO.md)
+
+### 12. 그룹 재편 메커니즘 진단 — 2026-10-29, 완료
+
+**질문:** 반복 encode 횟수와 그룹 재편 중 무엇이 저장 오차 차이에 연결되는가?
+
+이미 개발에 쓴 프롬프트 2개 × 시드 2개에서 BF16 쓰기를 재생했다. L·C-repeat·C-once를 g=16/24/32로 비교했다. 전체 모델 identity·과거 출력 대응 게이트 뒤, 60개 층/그룹 묶음의 진단을 완료했다.
+
+진행 기준은 진단 전에 고정했다. 청크 7–41의 attention 직전 과거 K/V 상대 L2를 층·호출로 평균한 뒤 `E=(E_K+E_V)/2`, `Dg=E_L,g−E_C-repeat,g`로 정의했다. 네 사례 모두 `D16>10⁻⁶`, `D16−D24>10⁻⁶`이고 게이트를 통과할 때만 후속 FR로 진행한다.
+
+| 개발 사례 | D16 | D24 | 판정 |
+|---|---:|---:|---|
+| p0 / seed101 | 0.018996 | 0 | 통과 |
+| p0 / seed202 | 0.018861 | 0 | 통과 |
+| p4 / seed101 | 0.018645 | 0 | 통과 |
+| p4 / seed202 | 0.018811 | 0 | 통과 |
+
+네 사례 모두 **GO**였다. C-repeat와 C-once의 요약 오차는 세 그룹 크기 모두에서 같았다. 별도 개발 생성 한 사례에서도 둘의 최종 잠재 텐서 해시가 같았다. 이는 시험한 조건에서 고정 그룹 반복 encode가 추가 손상을 만들지 않는다는 설명을 지지한다.
+
+**제한:** 그룹 크기를 16→24로 바꾸면 양자화 그룹의 통계와 메타데이터도 바뀐다. 이 진단만으로 g=24의 영상 품질 우위나 그룹 재편 하나의 기여율을 확정하지 않는다. query 방향 오차도 아직 미측정이다. [진단 결과](src/experiments/mechanism_diagnostic_results/REPORT_KO.md) · [고정 계획](src/experiments/P1_P3_MECHANISM_PLAN_v0_3.md) · [측정 정의](src/experiments/MECHANISM_MEASUREMENT_SPEC.md)
+
+### 13. 속도·메모리 실측과 수학적 근거 — 2026-10-29, 완료
+
+최근 성능 측정은 동일 개발 프롬프트·시드에서 **8청크 워밍업 후 정책별 3회**, 순서를 바꿔 실행했다. 생성 시간은 GPU 동기화를 포함하며 모델 로딩·텍스트 인코딩·VAE 디코딩·영상 저장·품질 평가는 제외한다. 아래는 126잠재프레임 생성 시간의 중앙값, 상주 캐시 텐서 바이트, 생성 중 peak allocated다.
+
+| 정책 | 생성 시간 중앙값 | 상주 캐시 | 생성 peak allocated |
 |---|---:|---:|---:|
-| INT4 baseline | 0.0278 | 0.0369 | −11.0 |
-| K4V2 (good keys, bad values) | 0.0280 | **0.1788** | −13.8 |
-| K2V4 (bad keys, good values) | **0.1291** | 0.0358 | −36.9 |
+| BF16 | 68.25초 | 5.624 GiB | 8.659 GiB |
+| L / rolling, g=16 | 90.49초 | 3.164 GiB | 6.611 GiB |
+| C-repeat, g=16 | 82.06초 | 3.519 GiB | 6.814 GiB |
+| C-once / chunk, g=16 | 72.19초 | 3.519 GiB | 6.788 GiB |
+| L / rolling, g=24 | 87.18초 | 3.046 GiB | 6.396 GiB |
 
-Keys pass through the softmax and are exponentially sensitive; values contribute linearly. Key error changes *which* tokens are attended to, value error only blurs *what* is retrieved.
+C-once는 이 벤치에서 L16보다 생성 시간이 약 **20.2% 짧았다**. C-repeat와 같은 개발 출력을 내면서도 반복 encode 비용을 줄였다. 반면 BF16 pending 때문에 **상주 캐시는 L16보다 컸고**, BF16보다 생성이 빠르지도 않았다. g=24는 scale 메타데이터가 적고 패딩이 없어 L16보다 상주량이 작았다.
 
-This also explains Wan's design: `norm_q`/`norm_k` apply RMSNorm to queries and keys while **values have no normalization**, which keeps key error low at a given bit-width — fortunate, given keys are the sensitive side. Spend bits on keys.
+이 값은 **현재 바이트 코드 모사의 실측**이다. “INT4”라도 코드를 4비트로 패킹하지 않으며, 가상 packed bytes와 실제 텐서 저장량은 별도로 기록한다. peak는 복원 버퍼 등을 포함하고 allocator reserved·GPU 전체 사용량과도 다르다. 한 개발 입력의 측정이므로 배포 시스템의 보편적 속도나 같은 메모리 예산의 우위로 확대하지 않는다. 별도 5개 프로파일과 계측 ON/OFF 출력 일치 검사도 완료했다. [원본 성능·바이트·프로파일 기록](src/experiments/mechanism_diagnostic_results/performance.json)
 
-### There is no collapse threshold
+수학적으로는 다음을 구분했다.
 
-Session 1 reported a knee between "2.8 % cache error is safe" and "13 % collapses". There isn't one. Raising key error from 0.0278 to 0.0418 (via coarser block size) leaves latent rel_err unchanged at ~0.81 — but MUSIQ moves −11.0 → −14.5. The apparent knee was the latent metric's ceiling. Damage is continuous and near-monotonic in key error.
+1. **직접 증명:** 정확한 실수 연산·고정 그룹·지정한 nearest rounding의 RTN은 `Q(Q(x))=Q(x)`다. 최초 오차가 없어지는 것은 아니다.
+2. **Lean 형식 증명:** 그룹 크기의 정수배만큼 이동하면 그룹 내부 위치와 같은 그룹 관계가 보존된다. `4680=195×24`는 정렬되지만 g=16은 그렇지 않다.
+3. **반례 검증:** 그룹 재편 후 원본 대비 오차가 증가하는 예와 감소하는 예가 모두 있다. 실제 BF16 구현의 합성 버퍼에서도 재현했다.
+4. **미증명:** 실제 BF16/CUDA 전체 구현의 멱등성, 모든 입력에서 C-once의 오차 우위, 최종 영상 품질의 보편적 우위. Lean 증명의 범위는 그룹 위치 산술이다.
 
-### Two bugs in the upstream KV-quantization code
+[수식·증명·반례와 범위](src/experiments/mechanism_diagnostic_results/THEORY_KO.md) · [Lean 대상](lean/TARGETS.md) · [검사 코드](tools/check_quantizer_theory.py)
 
-Filed as `issue/ISSUE_zp_clamp.md` with a runnable reproduction. Not yet posted upstream.
+### 14. 조건부 후속 FR — 작성 시점 진행 중
 
-**Bug 1 — the zero point is clamped into the quantized range.** `quantize_asym` does `zp = round(qmin − x_min/scale).clamp(qmin, qmax)`. The zero point is an *offset*, not a code; clamping collapses any group that does not straddle zero. Post-RoPE keys hit this constantly. On an all-positive group: asymmetric INT4 gives rel_err **0.9296** versus symmetric INT4's **0.0399** — 23× worse, with 100 % of groups affected. `RTNQuantizer` uses `quantize_sym` and is unaffected, which is exactly why RTN looked fine and KIVI looked broken.
+개발 진단의 GO와 성능·평가 게이트를 통과한 뒤, **새 프롬프트 12개 × 시드 2개 × BF16/L16/C-repeat16 = 72개 궤적**의 계획을 봉인하고 실행했다. 주 대비는 C-repeat−L, 주지표는 **후반 원본 프레임 252개 전체의 MUSIQ**다. 프롬프트 단위로 짝지어 분석하며, 경계 프레임 품질과 경계 전환 진단도 보조 지표에 넣었다.
 
-**Bug 2 — revealed only by fixing the first.** `EPS = 1e-8` underflows to zero in the fp16 the scale is stored in, while `zp = −x_min/1e-8` overflows to `inf`, so dequantization yields `(q − inf) × 0 = NaN`. With the original clamp in place this never surfaced — the group silently dequantized to zero instead. Whole 63-frame runs came back NaN once the clamp was removed.
+이 실험은 현재 청크 BF16 처리와 저장 호출 일정을 맞춘 조건에서 그룹 구성 차이에 더 가까이 접근하려는 후속 비교다. “그룹 재편이 유일한 원인”이라는 결론을 미리 전제하지 않는다. **작성 시점에는 최종 품질 결과를 확정하지 않았다.** 완료된 개발 진단의 GO를 보류 표본에서의 품질 검정 통과로 읽지 않는다.
 
-The fix stores the group minimum instead of a zero-point code (same storage, numerically safe). After it, KIVI INT4's key error drops **0.1841 → 0.0176**, now *better* than RTN INT4's 0.0278 — the expected ordering for asymmetric vs symmetric at equal bit-width. **The session-1 result "KIVI is worse than RTN" was entirely an implementation bug.**
+[등록 봉인](src/experiments/mechanism_fr_registration.json) · [설계와 분석 규칙](src/experiments/P1_P3_MECHANISM_PLAN_v0_3.md) · [실행 확인 방법](src/experiments/MECHANISM_RUN_STATUS.md)
 
-A third, unrelated bug: `create_quantizer` references `key_bits`/`value_bits`/`name` without binding them from `**kwargs`, so every RTN and KIVI construction raises `NameError`.
+## 유의미한 결과와 결론에 쓰지 않는 결과
 
----
+실험이 실패했다고 그 기록이 무의미한 것은 아니다. **후속 투자를 줄인 부정 결과**와 **잘못된 측정·과잉 해석**을 구분한다.
 
-## Repository layout
+| 구분 | 해당 결과 | 앞으로의 용도 |
+|---|---|---|
+| 주 결론의 근거 | 새 본 실험의 P3 후반 MUSIQ 우위, 사전 등록과 프롬프트 단위 대응 분석 | 저장 정책이 중요한 실험 요인임을 보고 |
+| 메커니즘 후보의 근거 | 이벤트 노름을 맞춘 잡음 대비, 그룹 재생 진단, 정렬 산술 증명 | 오차 구조·그룹 재편 가설을 구체화. 특정 구조의 단독 인과는 추가 검증 |
+| 재현 기반 | BF16·난수·과거 기록 비트 일치, 실제 anchoring·저장 경로 identity | 새로운 비교를 신뢰할 수 있게 하는 검증 |
+| 유의미한 부정 결과 | 전층 저랭크의 특징 일관성 손실, PSAC 비열등성 실패, λ2/4 악화, 안정형 exact_uniform의 비용 | 같은 후보를 좋은 결과가 나올 때까지 반복하지 않고 투자 종료·범위 제한 |
+| 부분 이득이지만 실용 우위는 약함 | 선택적 저랭크의 90MB 절감과 약 7% 시간 증가, 후보 PSAC의 INT2 부분 회복 | 효과와 비용을 함께 보존. K4V2보다 우수한 배포법이라고 권하지 않음 |
+| 결론 근거에서 제외 | 초기 “누적 없음”, 원본 대신 재양자화 차이를 잰 계측, 잘못된 패킹의 v1 벤치, 동일 선택의 오라클 적응 효과 | 오류·정정 이력으로만 보존 |
+| 미확인 | 시간 품질·객체 유지, 같은 메모리 예산의 우위, 다른 모델·긴 학습 문맥으로의 일반화, 후속 FR 최종 결과 | 완료된 것처럼 서술하지 않음 |
 
-```
-docs/     handoffs, results reports, environment notes
-patches/  diffs against each upstream repo, plus the configs and sweep drivers
-tools/    measurement and instrumentation scripts
-results/  per-chunk CSVs and figures
-issue/    upstream bug report draft + minimal reproduction
-```
+## 그래서 지금 무엇이 좋은 선택인가
 
-Large artifacts are not in git: per-chunk latents (~2.2 GB) and generated videos live outside the repo.
+**현재 재구현에서 품질과 반복 encode 비용을 함께 보려면 P3/C-once가 우선 비교 대상**이다. 본 실험에서 P1보다 후반 MUSIQ가 높았고, 별도 개발 벤치에서는 생성 시간이 짧았다. 다만 이 둘은 각각 본 실험과 개발 성능 측정의 결과이며, P3가 모든 입력에서 최적이라는 뜻은 아니다. 상주량은 오히려 P1보다 클 수 있다.
 
-### Documents
+**BF16은 손실을 확인하는 기준**, **INT4는 INT2보다 현실적인 저비트 출발점**이다. 본 실험의 INT2는 두 정책 모두 심한 손상을 보였으므로 P3의 상대적 우위만으로 사용을 권하지 않는다. 과거 K4V2+보정은 강한 내부 기준선이지만 구성·커널·평가가 달라 최근 무보정 INT4 표와 직접 순위를 매기지 않는다.
 
-| file | what |
-|---|---|
-| `docs/RESULTS_4090_session.md` | session 1 — reproduction, first error curves, the metric problem |
-| `docs/RESULTS_session2.md` | session 2 — TF/FR separation, KIVI bugs, sink experiments, threshold sweep |
-| `docs/NOTES_session1.md` | session 1 working notes (English) |
-| `docs/SETUP.md` | environment reproduction (venv, not conda) |
-| `docs/env.txt` | exact versions, checkpoint hashes, config values |
-| `docs/HANDOFF_*.md` | the instructions each session worked from |
+**rolling을 유지한다면 그룹 정렬과 실제 저장 바이트를 먼저 확인할 가치가 있다.** g=24는 개발 진단에서 정렬에 따른 동일성 게이트를 통과했고 메타데이터도 적었다. 그러나 아직 g=24가 영상 품질까지 더 좋다는 권고는 하지 않는다. 모델의 청크 토큰 수가 바뀌면 정렬 조건도 다시 계산해야 한다.
 
-### Key figures
+**새 방법 후보는 프레임 품질만 좋아지는지로 채택하지 않는다.** 움직임·특징 일관성, 상주량·peak, 생성 시간, 난수·입력·실행 경로 통제를 함께 확인한다. “차이 비검출”을 “동등 품질”로 바꾸지 않으며, 비열등성이 필요하면 한계를 측정 전에 정한다.
 
-| file | shows |
-|---|---|
-| `results/propagation.png` | TF (injection) / FR / propagation, three panels |
-| `results/longlive_vs_selfforcing.png` | both models plus damage above each one's own chaos floor |
-| `results/threshold.png` | cache error vs rollout damage, keys and values separated |
-| `results/kv_cache_error.png` | in-situ cache error is flat along the chunk axis |
-| `results/iq_*.png` | MUSIQ curves |
+## 실행·진행 확인과 자료 위치
 
----
+설치, 가중치 다운로드, 추론 명령, 저장 정책·오차 로그 정의는 [실행 코드 README](src/README.md)를 따른다. 이 문서는 연구 경과의 진입점이며 실행 명세를 중복 관리하지 않는다.
 
-## Reproducing
-
-Full setup in `docs/SETUP.md`. Short version:
+진행 중인 실험은 로컬 터미널에서 확인할 수 있다.
 
 ```bash
-# Self-Forcing at 33593df, kv-quant-longhorizon at b4c0936, LongLive at v1.0 (e52d9ef)
-git apply patches/self-forcing/0{1,2,3}_*.patch          # in the Self-Forcing checkout
-git apply patches/kv-quant-longhorizon/0{5,8}_*.patch    # in the kv-quant checkout
-git apply patches/longlive/07_longlive_port.patch        # in the LongLive checkout
-cp tools/*.py <checkout>/                                # measurement scripts
+# 한 번만 현황 확인
+bash ~/Quantization/tools/watch_progress.sh 0
+
+# 계속 갱신되는 현황
+bash ~/Quantization/tools/watch_progress.sh
+
+# 현재 메커니즘 실행 로그
+tail -F ~/sfq_data/mechanism.log
 ```
 
-Two things that will bite you:
-
-- **`local_attn_size` defaults to `-1`**, which disables rolling eviction — but the cache buffer is sized to exactly 21 latent frames, so anything longer dies with a shape mismatch. `patches/self-forcing/self_forcing_dmd_long.yaml` sets it to 21. With 3 frames per chunk, eviction then begins at chunk 7.
-- **`requirements.txt` pulls tensorrt, pycuda, onnx, CLIP, wandb and flask**, none of which the inference path imports; `docs/requirements-infer.txt` is the trimmed set. But `lmdb` *is* required (`utils/dataset.py` imports it unconditionally) and is easy to miss.
-
-### Reproducibility gates
-
-Every experiment is gated on bit-exactness before any quantized run:
-
-| gate | why it matters |
+| 위치 | 내용 |
 |---|---|
-| same seed, run twice | baseline determinism |
-| same seed, global CUDA RNG drained by 7777 draws per chunk | the pipeline calls `torch.randn_like` on the **global** RNG once per denoising step; any quantizer that consumes RNG would silently shift the whole trajectory |
-| before vs after applying the upstream KV-quant patch | the patch must be a no-op without a quantizer attached |
-| lockstep reference trajectory vs the plain free-running BF16 run | otherwise `FR − TF` subtracts across different references |
+| [`src/`](src/README.md) | 현재 실행 가능한 추론·양자화·저장 정책과 검증 |
+| [`src/experiments/`](src/experiments/) | 파일럿·본 실험·진단의 계획, 등록, 결과, 해시 |
+| [`문서/`](문서/INDEX.md) | 초기 S1–S9 결과·리뷰·논문 초안. 색인의 “현재” 표시는 해당 작성 시점 기준 |
+| [`tools/`](tools/) | 연구 분석·진행 표시·평가·검증 도구 |
+| [`lean/`](lean/TARGETS.md) | 그룹 정렬 산술의 형식 증명과 검사 대상 |
+| [`patches/`](patches/), [`self_forcing_patches/`](self_forcing_patches/) | 과거 외부 소스 변경·재현 패치 |
+| `~/sfq_data/` | 현재 머신의 가중치·환경·원본 잠재 텐서·영상·대형 로그. Git에 포함하지 않음 |
 
-The second gate is the one that matters. Plain re-run determinism does not prove what is needed.
+소스·계획·작은 결과표·검증 해시는 Git으로 관리한다. 최종 연구 텐서는 재평가를 위해 보관하고, 대형 가중치와 중간 캡처를 README의 숫자와 혼동하지 않는다. 문서만 수정할 때 완료된 대규모 GPU 실험을 다시 돌릴 필요는 없다.
 
-Seeding uses two independent per-chunk generator streams so neither depends on execution history:
+## 출처와 공개 범위
 
-```
-initial chunk noise :  seed * 1000003 + chunk_idx
-re-noising          :  seed * 1000003 + 7919 + chunk_idx
-```
+이 저장소의 연구 변경은 사용자 저장소에서 관리한다. 외부 코드를 가져왔다는 사실과 원본 라이선스는 유지한다.
 
----
+- [Self-Forcing](https://github.com/guandeh17/Self-Forcing): 현재 추론 부분의 고정 원본 revision과 가져온 범위는 [`src/vendor/UPSTREAM.md`](src/vendor/UPSTREAM.md)에 기록했다.
+- [Wan2.1](https://github.com/Wan-Video/Wan2.1): 기반 모델 코드. Self-Forcing에 포함된 부분을 사용한다.
+- [kv-quant-longhorizon](https://github.com/suraj-ranganath/kv-quant-longhorizon): 초기 실험과 로컬 수치 대조의 참조. **현재 `src/kvq`는 독립 재구현**이며 라이선스가 없는 참조 저장소 코드를 그 안에 재배포하지 않는다.
+- [LongLive](https://github.com/NVlabs/LongLive): 초기 비교 대상. 현재 Self-Forcing 결과와 학습·캐시 설정이 같다고 가정하지 않는다.
 
-## Open questions
+[원본 라이선스](src/LICENSE) · [NOTICE](src/NOTICE) · [출처와 revision](src/vendor/UPSTREAM.md) · [현재 저장소로의 통합 기록](src/vendor/IMPORT.md)
 
-1. **Sink size vs residual sensitivity.** Pinning chunk 0 removes 67–94 % of the chunk-7 sensitivity step, but a small residual remains. Sweeping sink size (6, 9) would separate what is left from the RoPE-position hypothesis.
-2. **KIVI's residual window.** The upstream implementation has none, so these numbers are "KIVI-style", not KIVI. Implementing it would allow a real comparison.
-3. **Longer rollouts.** Propagation had not flattened by chunk 20 in Self-Forcing.
-4. **A reference-based perceptual metric** (LPIPS against BF16) to triangulate — MUSIQ can reward a divergent but punchy output, as the buggy-KIVI case showed.
-5. **Wan 14B / LongLive-2.0-5B activation outliers** — needs an 80 GB GPU; 1.3B has none (row max/median 1.2–4.6×, versus the 50–1000× that signals a real outlier problem).
+문헌 조사·기존 방법과의 관계는 [방법 후보와 선행 근거 정리](문서/지시서/HANDOFF_method_candidates_2026-10-24_r2.md)에 남아 있다. 기존 chunk 저장을 새 이름으로 부르는 것만으로 신규성이 생기지는 않는다. 현재 성과는 **저장 정책 비교, 엄격한 대조와 재현, 오차 구조·그룹 재편에 대한 분석**으로 제시한다.
