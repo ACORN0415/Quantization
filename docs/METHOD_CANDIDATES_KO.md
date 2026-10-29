@@ -98,3 +98,10 @@ src/experiments/RANDOMIZED_CORRECTION_DEVELOPMENT.md.
 현재 두 기준을 확정 통과한 새 방법은 없다. 사용자 지정 순서대로 방법 1부터
 개발 진단한다. 방법 2는 방법 4의 보완 가능성도 가지며 C는 보조 도구이다.
 방법 1 계획: src/experiments/TENSOR_CROSS_DEVELOPMENT.md.
+
+### 방법 1 첫 실행 결과
+
+개발 54행 + 사후 평균 보완/SVD 참고 36행 완료. 공통 열 근사는 실패,
+SVD 참고는 2비트 예산에서만 양 프롬프트 출력 오차 19.56–22.74% 개선.
+T-ARP 구현은 아직 아니며 열 선택 개선과 기존 SVD 대비 이득을 다음 과제로 남김.
+[결과](../src/experiments/tensor_cross_development/REPORT_KO.md).
