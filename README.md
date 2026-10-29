@@ -1,4 +1,4 @@
-> 다음 메커니즘 실험: [v0.2 재생 진단 우선 — 미실행·미등록](src/experiments/P1_P3_MECHANISM_PLAN_v0_2.md).
+> 다음 메커니즘 실험: [v0.3 진행 조건 고정 — 미실행·미등록](src/experiments/P1_P3_MECHANISM_PLAN_v0_3.md).
 > 주체·시간 진단 추가 평가 완료: [사후 탐색 결과와 한계](src/experiments/policy_supplement_results/REPORT_KO.md).
 > Completed registered P1/P3 study: [results and limits](src/experiments/policy_study_results/RESULTS.md) · [한글 최종 보고](src/experiments/policy_study_results/REPORT_KO.md).
 > P1/P3 engineering checks completed: [gates, execution costs and limits](src/experiments/policy_feasibility_results/RESULTS.md).
