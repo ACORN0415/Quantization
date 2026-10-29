@@ -9,6 +9,17 @@ def show():
     if a.watch:print('\033[2J\033[H',end='')
     print(time.strftime('%Y-%m-%d %H:%M:%S'),'— Quantization progress')
     print('Local data:',a.data)
+    transition=a.data/'transition_rounding/status.json'
+    if transition.exists() and not a.history:
+        try:
+            v=json.loads(transition.read_text())
+            print('\nTRANSITION ROUNDING FEASIBILITY',v.get('state'),v.get('detail'))
+            print('Updated UTC:',v.get('updated_utc'))
+            print('GPU model experiment: not started; algebra/property gate only')
+            print('Report: Quantization/src/experiments/transition_rounding_development/REPORT_KO.md')
+            print('Property checks:',v.get('property_checks'))
+        except (OSError,json.JSONDecodeError):print('Transition status updating…')
+        return
     dense=a.data/'dense_motion/status.json'
     if dense.exists() and not a.history:
         try:
