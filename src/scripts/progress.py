@@ -9,6 +9,21 @@ def show():
     if a.watch:print('\033[2J\033[H',end='')
     print(time.strftime('%Y-%m-%d %H:%M:%S'),'— Quantization progress')
     print('Local data:',a.data)
+    motion=a.data/'motion_codec/status.json'
+    if motion.exists() and not a.history:
+        try:
+            v=json.loads(motion.read_text())
+            print('\nMOTION CODEC DEVELOPMENT',v.get('state'),v.get('detail'))
+            print('BF16 capture prompts:',len(list((a.data/'motion_codec').glob('p*/manifest.json'))),'/ 2')
+            print('Updated UTC:',v.get('updated_utc'))
+            if v.get('state')=='running':
+                try:os.kill(v['pid'],0);print('Process:',v['pid'],'alive')
+                except ProcessLookupError:print('ATTENTION: no motion codec process alive')
+            print('Report: Quantization/src/experiments/motion_codec_development/REPORT_KO.md')
+            log=a.data/'motion_codec.log'
+            if log.exists():print('\n'.join(log.read_text(errors='replace').splitlines()[-8:]))
+        except (OSError,json.JSONDecodeError):print('Motion status updating…')
+        return
     cross=a.data/'quantizer_policy_cross/status.json'
     if cross.exists() and not a.history:
         try:
