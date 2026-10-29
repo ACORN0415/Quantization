@@ -18,7 +18,7 @@ import policy_study as original
 from anchor_identity_gate import IdentityQuantizer
 from kvq import Quantizer
 from kvq.replay import store_cache
-from mechanism_core import make,RawHistory,state_bytes,histories
+from mechanism_core import make,RawHistory,state_bytes,histories,region_layout
 from test_mechanism_core import run as synthetic_gates
 
 DATA=Path.home()/'sfq_data/mechanism'
@@ -86,12 +86,25 @@ class ReplayLayer:
         rawk,rawv=self.raw.write(k,v,start,local=local);self.raw.commit(rawk,rawv)
         n=self.raw.local_end-k.shape[1];expected=(rawk[:,:n],rawv[:,:n])
         norms=[x.float().norm().clamp_min(1e-12) for x in expected]
+        ref_sse=[x.float().square().sum((0,2,3)) for x in expected]
+        layouts={arm:region_layout(arm,self.group,chunk,call,n) for arm in ARMS}
+        common=layouts['L'][0]['internal']&layouts['C_repeat'][0]['internal']&layouts['C_once'][0]['internal']
         seen={};counts={}
         for arm,store in self.stores.items():
             q=store.quantizer;q.events.clear()
             def attend(query,ak,av,arm=arm,store=store):
-                values=(ak[:,:n],av[:,:n]);errs=[]
-                for actual,ref,norm in zip(values,expected,norms):errs.append(float((actual.float()-ref.float()).norm()/norm) if n else 0.)
+                values=(ak[:,:n],av[:,:n]);errs=[];per_token=[]
+                for actual,ref,norm in zip(values,expected,norms):
+                    diff=actual.float()-ref.float();errs.append(float(diff.norm()/norm) if n else 0.)
+                    per_token.append(diff.square().sum((0,2,3)))
+                regional={}
+                for name,mask in dict(layouts[arm][0],common_interior=common).items():
+                    tokens=int(mask.sum());device_mask=mask.to(k.device)
+                    regional[name]=dict(tokens=tokens)
+                    for index,kind in enumerate(('k','v')):
+                        numerator=per_token[index][device_mask].sum().sqrt()
+                        denominator=ref_sse[index][device_mask].sum().sqrt().clamp_min(1e-12)
+                        regional[name][kind+'_rel']=float(numerator/denominator) if tokens else None
                 seen[arm]=tuple(t.clone() for t in values) if self.group==24 and arm=='L' else None
                 if self.group==24 and arm=='C_repeat':
                     if not all(torch.equal(a,b) for a,b in zip(values,seen['L'])):raise RuntimeError(f'g24 read identity failed layer{self.layer} chunk{chunk} call{call}')
@@ -100,7 +113,8 @@ class ReplayLayer:
                     raise RuntimeError('aligned retained-token encode count mismatch')
                 row=dict(chunk=chunk,call=call,layer=self.layer,group=self.group,arm=arm,
                          history_tokens=n,k_rel=errs[0],v_rel=errs[1],reference_k_norm=float(norms[0]),reference_v_norm=float(norms[1]),
-                         history_chunk_starts=list(counts[arm]),history_encode_counts=list(counts[arm].values()))
+                         history_chunk_starts=list(counts[arm]),history_encode_counts=list(counts[arm].values()),
+                         regions=regional,group_support_sha256=layouts[arm][1])
                 self.rows.append(row)
             store.attend(k,k,v,start,attend,local=local)
             self.rows[-1]['encode_events']=list(q.events)

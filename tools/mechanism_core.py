@@ -1,9 +1,32 @@
 """New storage adapters; the registered kvq implementation stays unchanged."""
 import math
+import hashlib
+from functools import lru_cache
 import torch
 from kvq.store import RollingStore, ChunkStore
 from kvq.quant import Quantizer, Quantized
 from kvq.memory import memory_report
+
+
+@lru_cache(maxsize=2048)
+def region_layout(arm,group,chunk,call,n):
+    """Structural masks from IDs only; no selection on error magnitudes."""
+    count=4680;first=chunk*count-n;ids=torch.arange(first,chunk*count,dtype=torch.long)
+    if arm=='L':
+        origin=max(0,(chunk-(7 if call==0 else 6))*count)
+        end=(chunk+(0 if call==0 else 1))*count
+        lo=origin+torch.div(ids-origin,group,rounding_mode='floor')*group
+        support_lo=lo.clamp_min(origin);support_hi=(lo+group).clamp_max(end)
+        cut=support_lo<first;mixed=support_hi>chunk*count;padded=lo+group>end
+    else:
+        parent=torch.div(ids,count,rounding_mode='floor')*count
+        lo=parent+torch.div(ids-parent,group,rounding_mode='floor')*group
+        support_lo=lo;support_hi=torch.minimum(lo+group,parent+count)
+        cut=torch.zeros_like(ids,dtype=torch.bool);mixed=cut.clone();padded=lo+group>parent+count
+    masks=dict(cut_group=cut,mixed_current_group=mixed&~cut,padded_group=padded&~cut&~mixed,
+               internal=~(cut|mixed|padded))
+    signature=hashlib.sha256(torch.stack((lo,support_lo,support_hi)).numpy().tobytes()).hexdigest()
+    return masks,signature
 
 
 class BorrowedState:

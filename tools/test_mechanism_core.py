@@ -7,11 +7,20 @@ import torch
 from anchor_identity_gate import IdentityQuantizer
 from kvq import Quantizer
 from kvq.store import ChunkStore
-from mechanism_core import make,state_bytes,histories
+from mechanism_core import make,state_bytes,histories,region_layout
 
 
 def run():
     torch.manual_seed(872341);torch.set_num_threads(2)
+    for chunk in (1,6,7,8,41):
+        n=min(chunk,6)*4680
+        for group in (16,24,32):
+            for call in (0,1,4):
+                layouts={a:region_layout(a,group,chunk,call,n) for a in ('L','C_repeat','C_once')}
+                for masks,signature in layouts.values():
+                    assert (sum(m.int() for m in masks.values())==1).all()
+                if group==24:assert len({v[1] for v in layouts.values()})==1
+                assert not layouts['C_once'][0]['mixed_current_group'].any()
     records=[]
     for group in (16,24,32):
         stores={a:make(a,group,capacity=168) for a in ('L','C_repeat','C_once')}
