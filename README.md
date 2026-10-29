@@ -244,7 +244,7 @@ C-once는 이 벤치에서 L16보다 생성 시간이 약 **20.2% 짧았다**. C
 
 [최종 한글 보고](src/experiments/mechanism_fr_results/REPORT_KO.md) · [프롬프트·시드별 전체 결과](src/experiments/mechanism_fr_results/windows.csv) · [등록·통계·산출물 해시](src/experiments/mechanism_fr_results/evidence.json) · [경계·움직임 보조 결과](src/experiments/mechanism_fr_results/auxiliary.json)
 
-다음 단계는 RTN/KIVI 계열 × rolling/C-repeat의 작은 교차 비교다. 저장 정책을 통제할 때 양자화기 간 품질 차이가 달라지는지 개발 입력으로 먼저 확인하며, 기존 KIVI 논문 전체 방법의 재현이나 같은 메모리 예산의 비교로 부르지 않는다. 새 보류 데이터 측정은 구현·개발 게이트와 별도 계획 고정 뒤에만 진행한다.
+다음 단계는 [RTN/KIVI 계열 × rolling/C-repeat의 작은 개발 교차 비교](src/experiments/QUANTIZER_POLICY_CROSS_DEVELOPMENT.md)다. 기존 프롬프트 2개×4팔의 8개 생성으로, 저장 정책을 통제할 때 양자화기 간 품질 차이가 달라지는지 먼저 확인한다. KIVI의 고유 축과 offset을 유지하고 실제 저장 바이트를 센다. 기존 KIVI 논문 전체 방법의 재현이나 같은 메모리 예산의 비교로 부르지 않는다. 새 보류 데이터 측정은 구현·개발 게이트와 별도 계획 고정 뒤에만 진행한다.
 
 ## 유의미한 결과와 결론에 쓰지 않는 결과
 
@@ -285,6 +285,9 @@ bash ~/Quantization/tools/watch_progress.sh
 
 # 현재 메커니즘 실행 로그
 tail -F ~/sfq_data/mechanism.log
+
+# 새 양자화기 × 저장 정책 개발 비교 로그
+tail -F ~/sfq_data/quantizer_policy_cross.log
 ```
 
 | 위치 | 내용 |

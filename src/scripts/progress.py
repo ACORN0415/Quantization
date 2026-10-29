@@ -9,6 +9,34 @@ def show():
     if a.watch:print('\033[2J\033[H',end='')
     print(time.strftime('%Y-%m-%d %H:%M:%S'),'— Quantization progress')
     print('Local data:',a.data)
+    cross=a.data/'quantizer_policy_cross/status.json'
+    if cross.exists() and not a.history:
+        try:
+            v=json.loads(cross.read_text())
+            print('\nQUANTIZER × POLICY DEVELOPMENT',v.get('state'),v.get('detail'))
+            base=a.data/'quantizer_policy_cross'
+            print('Full-model gates:', 'available' if (base/'gates.json').exists() else 'pending')
+            print('BF16 replay prompts:',len(list((base/'replay').glob('*.json'))),'/ 2; six diagnostic layers')
+            print('Development generation:',len(list((base/'development').glob('*/sampling.json'))),'/ 8')
+            print('Raw evaluation:',len(list((base/'development').glob('*/quality_resource.json'))),'/ 8')
+            print('Fresh held-out generation: not started; separate registration required')
+            print('Updated UTC:',v.get('updated_utc'))
+            targets=[Path(__file__).resolve().parents[2]/'tools'/name for name in
+                     ('quantizer_policy_worker.py','quantizer_policy_study.py')]
+            active=[]
+            for proc in Path('/proc').glob('[0-9]*/cmdline'):
+                try:argv=proc.read_bytes().split(b'\0')
+                except (OSError,PermissionError):continue
+                for target in targets:
+                    if str(target).encode() in argv:active.append((int(proc.parent.name),target.name));break
+            print('Active processes:',active or 'none')
+            if v.get('state')=='running' and not active:print('ATTENTION: no cross-study worker/coordinator found')
+            gpu=subprocess.run(['nvidia-smi','--query-gpu=utilization.gpu,memory.used','--format=csv,noheader'],capture_output=True,text=True,timeout=2)
+            print('GPU:',gpu.stdout.strip())
+            log=a.data/'quantizer_policy_cross.log'
+            if log.exists():print('\n'.join(log.read_text(errors='replace').splitlines()[-8:]))
+        except (OSError,json.JSONDecodeError,subprocess.TimeoutExpired):print('Cross-study status updating…')
+        return
     mechanism=a.data/'mechanism/status.json'
     if mechanism.exists() and not a.history:
         try:
