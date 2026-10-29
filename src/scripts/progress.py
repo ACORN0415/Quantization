@@ -13,12 +13,44 @@ def show():
     if mechanism.exists() and not a.history:
         try:
             v=json.loads(mechanism.read_text());print('\nMECHANISM',v.get('state'),v.get('detail'))
+            decision=a.data/'mechanism/decision.json'
+            if decision.exists():
+                d=json.loads(decision.read_text())
+                print('Replay:',len(list((a.data/'mechanism/replay').glob('*.json'))),'/ 60 — decision:', 'GO' if d.get('advance') else 'NO-GO')
+            performance=[]
+            for path in (a.data/'mechanism/performance').glob('*/sampling.json'):
+                try:
+                    meta=json.loads(path.read_text())
+                    if str(meta.get('rep')) in ('0','1','2'):performance.append(meta)
+                except json.JSONDecodeError:pass
+            print('Performance repetitions complete:',len(performance),'/ 15 (identity/profile runs counted separately)')
+            fr=a.data/'mechanism/fr'
+            print('Held-out generation:',len(list(fr.glob('*/sampling.json'))),'/ 72; raw quality:',len(list(fr.glob('*/quality.json'))),'/ 72')
             if 'completed' in v:print('Completed:',v['completed'],'/',v.get('total','?'),'ETA hours:',v.get('eta_hours_rough','measuring'))
-            else:print('Setup or validity gate in progress; replay ETA follows its first complete block.')
+            elif v.get('state')=='failed':print('STOPPED: inspect current error; no background progress is assumed.')
+            else:print('Phase status; performance mode omits per-chunk logging to avoid timing overhead.')
             print('Updated UTC:',v.get('updated_utc'))
             if v.get('state')=='running' and v.get('pid'):
-                try:os.kill(v['pid'],0);print('Process:',v['pid'],'alive')
-                except ProcessLookupError:print('ATTENTION: recorded process stopped')
+                active_pid=v['pid']
+                try:os.kill(active_pid,0);print('Process:',active_pid,'alive')
+                except ProcessLookupError:
+                    # Status belongs to the previous stage until a new worker
+                    # finishes model loading. Find exact script argv tokens;
+                    # a coordinator handoff is not a stopped experiment.
+                    targets=[Path(__file__).resolve().parents[2]/'tools'/name for name in
+                             ('mechanism_worker.py','mechanism_followup.py','mechanism_run.py','mechanism_pipeline.py')]
+                    candidates=[]
+                    for proc in Path('/proc').glob('[0-9]*/cmdline'):
+                        try:argv=proc.read_bytes().split(b'\0')
+                        except (OSError,PermissionError):continue
+                        for rank,target in enumerate(targets):
+                            if str(target).encode() in argv:candidates.append((rank,int(proc.parent.name),target.name));break
+                    if candidates:
+                        rank,active_pid,name=min(candidates)
+                        print('Stage handoff: previous PID exited; active',name,'PID',active_pid)
+                    else:print('ATTENTION: no mechanism worker/coordinator found');active_pid=None
+                info=subprocess.run(['ps','-p',str(active_pid or 0),'-o','etime=,%cpu=,rss='],capture_output=True,text=True,timeout=2)
+                print('Process elapsed / CPU % / RSS KiB:',info.stdout.strip())
             gpu=subprocess.run(['nvidia-smi','--query-gpu=utilization.gpu,memory.used','--format=csv,noheader'],capture_output=True,text=True,timeout=2)
             print('GPU:',gpu.stdout.strip())
             log=a.data/'mechanism.log'
