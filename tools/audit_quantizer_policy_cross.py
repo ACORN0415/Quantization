@@ -27,6 +27,14 @@ def audit(data, results):
         folder = data/'development'/f"p{int(r['prompt']):02d}_s101_{r['method']}_{r['arm']}"
         s = read(folder/'sampling.json'); q = read(folder/'quality.json'); resource = read(folder/'quality_resource.json')
         assert all(v['source_sha256'] == source for v in (s, q, resource))
+        assert (s['prompt'], s['seed'], s['method'], s['arm']) == (
+            int(r['prompt']), int(r['seed']), r['method'], r['arm'])
+        assert s['group'] == 16 and s['bits'] == 4
+        assert q['latent_file_sha256'] == s['latent_file_sha256']
+        # A cached evaluation must not replace the actual measured resources
+        # with the cost of returning already-computed scores.
+        measured_quality_phases = sum(q[name] for name in ('vae_decode_s', 'quality_eval_s', 'mp4_encode_s'))
+        assert resource['seconds'] + 1e-6 >= measured_quality_phases
         scores = q['per_frame_musiq']
         assert len(scores) == 501 and all(math.isfinite(v) for v in scores)
         assert abs(statistics.mean(scores[249:501])-float(r['late_raw_musiq'])) < 1e-10
@@ -66,12 +74,25 @@ def audit(data, results):
         for row in replay['rows']:
             assert row['history_tokens'] == min(row['chunk'],6)*4680
             assert all(math.isfinite(row[key]) for key in ('k_rel','v_rel'))
+        for method, arm in itertools.product(('rtn', 'kivi'), ('L', 'C_repeat')):
+            selected = [r for r in replay['rows'] if r['method'] == method and r['arm'] == arm and r['chunk'] >= 7]
+            assert len(selected) == 6*35*5
+            summary = [r for r in decision['replay_summary'] if
+                       r['prompt'] == prompt and r['method'] == method and r['arm'] == arm]
+            assert len(summary) == 1 and summary[0]['layers'] == replay['layers']
+            for key in ('k_rel', 'v_rel'):
+                assert abs(statistics.mean(r[key] for r in selected)-summary[0][key]) < 1e-12
     effect_pass = interactions[0]*interactions[1] > 0 and all(abs(v) >= 1 for v in interactions)
     assert decision['effect_pass'] == effect_pass
     assert decision['resource_pass'] == all(budgets)
     assert decision['advance'] == (effect_pass and all(budgets))
     assert decision['gates']['passed']
     assert [r['bitexact_chunks'] for r in decision['gates']['full_model']] == [42,42]
+    expected_artifacts = {f"development/p{prompt:02d}_s101_{method}_{arm}/{name}"
+        for prompt, method, arm, name in itertools.product((0,4), ('rtn','kivi'), ('L','C_repeat'),
+            ('latent.pt','sampling.json','quality.json','quality_resource.json','video.mp4'))}
+    assert len(decision['artifacts']) == 40
+    assert {item['path'] for item in decision['artifacts']} == expected_artifacts
     for item in decision['artifacts']:
         path = data/item['path']
         assert path.stat().st_size == item['bytes']
