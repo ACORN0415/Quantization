@@ -1,0 +1,881 @@
+{
+  "source_sha256": "d92ed3093cabcf978649d58cb3a30c7ead4f00856a4208f2c4a245a1988ecd44",
+  "advance": false,
+  "decisions": [
+    {
+      "space": "common_pool",
+      "prompt": 0,
+      "means": {
+        "mean": {
+          "d": 0.0009347154118586332,
+          "j": 0.00011439141639534176
+        },
+        "transition": {
+          "d": 0.0009347154118586332,
+          "j": 0.00011439141639534176
+        }
+      },
+      "baseline_jump_valid": true,
+      "jump_reduction": 0.0,
+      "mean_damage_ratio": 1.0,
+      "passes": false
+    },
+    {
+      "space": "common_pool",
+      "prompt": 4,
+      "means": {
+        "mean": {
+          "d": 0.0005570717168868416,
+          "j": 0.0001223831089747465
+        },
+        "transition": {
+          "d": 0.0005570717168868416,
+          "j": 0.0001223831089747465
+        }
+      },
+      "baseline_jump_valid": true,
+      "jump_reduction": 0.0,
+      "mean_damage_ratio": 1.0,
+      "passes": false
+    },
+    {
+      "space": "exact16",
+      "prompt": 0,
+      "means": {
+        "mean": {
+          "d": 0.000935085496166721,
+          "j": 0.00011440278523069638
+        },
+        "transition": {
+          "d": 0.000935085496166721,
+          "j": 0.00011440278523069638
+        }
+      },
+      "baseline_jump_valid": true,
+      "jump_reduction": 0.0,
+      "mean_damage_ratio": 1.0,
+      "passes": false
+    },
+    {
+      "space": "exact16",
+      "prompt": 4,
+      "means": {
+        "mean": {
+          "d": 0.0005571715171552367,
+          "j": 0.00012238914935854459
+        },
+        "transition": {
+          "d": 0.0005571715171552367,
+          "j": 0.00012238914935854459
+        }
+      },
+      "baseline_jump_valid": true,
+      "jump_reduction": 0.0,
+      "mean_damage_ratio": 1.0,
+      "passes": false
+    }
+  ],
+  "cells": [
+    {
+      "prompt": 0,
+      "layer": 0,
+      "pool_slots": 97,
+      "unique_pool_codes": 49,
+      "common_pool_seconds": 1.40016745403409,
+      "exact_seconds": 0.0980167358648032,
+      "exact_patterns": 65536,
+      "exact_file": "p00_l00_exact.pt",
+      "exact_sha256": "f13ae80f2f30aefbc7599f00333f02e8b9910f6de752f250d725c62b005c9788",
+      "selected_coordinates": [
+        [
+          2114,
+          5,
+          20
+        ],
+        [
+          3372,
+          11,
+          127
+        ],
+        [
+          4678,
+          4,
+          94
+        ],
+        [
+          2113,
+          5,
+          20
+        ],
+        [
+          0,
+          5,
+          20
+        ],
+        [
+          3621,
+          4,
+          42
+        ],
+        [
+          52,
+          11,
+          94
+        ],
+        [
+          2114,
+          5,
+          122
+        ],
+        [
+          1307,
+          1,
+          42
+        ],
+        [
+          1661,
+          5,
+          20
+        ],
+        [
+          1307,
+          1,
+          103
+        ],
+        [
+          1660,
+          5,
+          20
+        ],
+        [
+          4127,
+          11,
+          123
+        ],
+        [
+          2867,
+          1,
+          42
+        ],
+        [
+          2867,
+          1,
+          103
+        ],
+        [
+          3321,
+          5,
+          20
+        ]
+      ],
+      "baseline_quadratic_d": 0.0010174734288059958,
+      "baseline_quadratic_j": 1.9030280981986892e-07
+    },
+    {
+      "prompt": 0,
+      "layer": 14,
+      "pool_slots": 97,
+      "unique_pool_codes": 57,
+      "common_pool_seconds": 0.9629619668703526,
+      "exact_seconds": 0.018719858955591917,
+      "exact_patterns": 65536,
+      "exact_file": "p00_l14_exact.pt",
+      "exact_sha256": "f98e06e1f828ccbc92e789e2c678162d8870b5aca1067654a09baf946cd09c29",
+      "selected_coordinates": [
+        [
+          3669,
+          4,
+          121
+        ],
+        [
+          3721,
+          4,
+          121
+        ],
+        [
+          2160,
+          4,
+          27
+        ],
+        [
+          3721,
+          4,
+          13
+        ],
+        [
+          3721,
+          4,
+          81
+        ],
+        [
+          3872,
+          4,
+          27
+        ],
+        [
+          3872,
+          4,
+          38
+        ],
+        [
+          2160,
+          4,
+          110
+        ],
+        [
+          3820,
+          4,
+          38
+        ],
+        [
+          3820,
+          4,
+          27
+        ],
+        [
+          3772,
+          0,
+          33
+        ],
+        [
+          2212,
+          4,
+          110
+        ],
+        [
+          3772,
+          0,
+          2
+        ],
+        [
+          3872,
+          4,
+          107
+        ],
+        [
+          3771,
+          0,
+          2
+        ],
+        [
+          3721,
+          4,
+          1
+        ]
+      ],
+      "baseline_quadratic_d": 0.00022285835973449158,
+      "baseline_quadratic_j": 1.2593673220286935e-06
+    },
+    {
+      "prompt": 0,
+      "layer": 29,
+      "pool_slots": 97,
+      "unique_pool_codes": 58,
+      "common_pool_seconds": 0.9631316468585283,
+      "exact_seconds": 0.018701183144003153,
+      "exact_patterns": 65536,
+      "exact_file": "p00_l29_exact.pt",
+      "exact_sha256": "369e342598633212dbbd37c556e2ffcb6ae02416d25f78cb3e1b7ec6b2e97dca",
+      "selected_coordinates": [
+        [
+          1760,
+          9,
+          78
+        ],
+        [
+          251,
+          9,
+          89
+        ],
+        [
+          1911,
+          9,
+          80
+        ],
+        [
+          251,
+          9,
+          15
+        ],
+        [
+          2666,
+          9,
+          13
+        ],
+        [
+          2666,
+          9,
+          85
+        ],
+        [
+          2817,
+          9,
+          117
+        ],
+        [
+          402,
+          9,
+          108
+        ],
+        [
+          402,
+          9,
+          33
+        ],
+        [
+          251,
+          9,
+          54
+        ],
+        [
+          4378,
+          0,
+          71
+        ],
+        [
+          251,
+          9,
+          88
+        ],
+        [
+          1005,
+          9,
+          11
+        ],
+        [
+          4076,
+          0,
+          28
+        ],
+        [
+          4227,
+          0,
+          51
+        ],
+        [
+          2566,
+          0,
+          17
+        ]
+      ],
+      "baseline_quadratic_d": 0.0067198322847648,
+      "baseline_quadratic_j": 5.001437985553589e-05
+    },
+    {
+      "prompt": 4,
+      "layer": 0,
+      "pool_slots": 97,
+      "unique_pool_codes": 56,
+      "common_pool_seconds": 0.9651900019962341,
+      "exact_seconds": 0.0188041259534657,
+      "exact_patterns": 65536,
+      "exact_file": "p04_l00_exact.pt",
+      "exact_sha256": "5ce43ea47e49db1e662016e97bb98e4daff794b6990c945c189e15e5d98ba246",
+      "selected_coordinates": [
+        [
+          2666,
+          1,
+          24
+        ],
+        [
+          4226,
+          1,
+          24
+        ],
+        [
+          1,
+          5,
+          123
+        ],
+        [
+          4127,
+          11,
+          7
+        ],
+        [
+          4127,
+          11,
+          94
+        ],
+        [
+          0,
+          5,
+          123
+        ],
+        [
+          1156,
+          1,
+          24
+        ],
+        [
+          2716,
+          1,
+          24
+        ],
+        [
+          3321,
+          5,
+          123
+        ],
+        [
+          2919,
+          11,
+          90
+        ],
+        [
+          3019,
+          5,
+          33
+        ],
+        [
+          3321,
+          5,
+          20
+        ],
+        [
+          4226,
+          1,
+          18
+        ],
+        [
+          2666,
+          1,
+          18
+        ],
+        [
+          806,
+          11,
+          59
+        ],
+        [
+          1259,
+          11,
+          90
+        ]
+      ],
+      "baseline_quadratic_d": 0.0007664175860401182,
+      "baseline_quadratic_j": 1.0580671299810452e-07
+    },
+    {
+      "prompt": 4,
+      "layer": 14,
+      "pool_slots": 97,
+      "unique_pool_codes": 20,
+      "common_pool_seconds": 0.9611809961497784,
+      "exact_seconds": 0.01877656509168446,
+      "exact_patterns": 65536,
+      "exact_file": "p04_l14_exact.pt",
+      "exact_sha256": "dbaf96f641d0ea77f95aa0d595dfe4e8bbd88b06a5a95c9f68c6db896faf5e41",
+      "selected_coordinates": [
+        [
+          1053,
+          0,
+          88
+        ],
+        [
+          2212,
+          4,
+          0
+        ],
+        [
+          4226,
+          2,
+          50
+        ],
+        [
+          2604,
+          2,
+          41
+        ],
+        [
+          4112,
+          2,
+          60
+        ],
+        [
+          2605,
+          2,
+          80
+        ],
+        [
+          4112,
+          2,
+          71
+        ],
+        [
+          1052,
+          0,
+          88
+        ],
+        [
+          1056,
+          2,
+          41
+        ],
+        [
+          2604,
+          2,
+          89
+        ],
+        [
+          1156,
+          4,
+          99
+        ],
+        [
+          1458,
+          4,
+          63
+        ],
+        [
+          1156,
+          4,
+          38
+        ],
+        [
+          2513,
+          4,
+          70
+        ],
+        [
+          4225,
+          1,
+          40
+        ],
+        [
+          1460,
+          4,
+          63
+        ]
+      ],
+      "baseline_quadratic_d": 0.00017689549975653072,
+      "baseline_quadratic_j": 9.831472402244553e-07
+    },
+    {
+      "prompt": 4,
+      "layer": 29,
+      "pool_slots": 97,
+      "unique_pool_codes": 55,
+      "common_pool_seconds": 0.9633007971569896,
+      "exact_seconds": 0.02310178498737514,
+      "exact_patterns": 65536,
+      "exact_file": "p04_l29_exact.pt",
+      "exact_sha256": "2c0aa11fa01982ab287c1a56a2677844eb0fe30e3a4f079b0238610fd0c0d9d4",
+      "selected_coordinates": [
+        [
+          2213,
+          9,
+          28
+        ],
+        [
+          2364,
+          9,
+          40
+        ],
+        [
+          1057,
+          0,
+          104
+        ],
+        [
+          2717,
+          0,
+          107
+        ],
+        [
+          906,
+          0,
+          46
+        ],
+        [
+          2062,
+          9,
+          125
+        ],
+        [
+          4227,
+          0,
+          46
+        ],
+        [
+          553,
+          9,
+          121
+        ],
+        [
+          2364,
+          9,
+          121
+        ],
+        [
+          854,
+          9,
+          73
+        ],
+        [
+          1057,
+          0,
+          17
+        ],
+        [
+          553,
+          9,
+          41
+        ],
+        [
+          3774,
+          0,
+          79
+        ],
+        [
+          2364,
+          9,
+          122
+        ],
+        [
+          3925,
+          0,
+          82
+        ],
+        [
+          1911,
+          9,
+          90
+        ]
+      ],
+      "baseline_quadratic_d": 0.0040865249420384405,
+      "baseline_quadratic_j": 2.9877596753283204e-05
+    }
+  ],
+  "trace_parity": [
+    {
+      "prompt": 0,
+      "layer": 0,
+      "arm": "full_mean",
+      "bitexact_codes": true,
+      "bitexact_history": true
+    },
+    {
+      "prompt": 0,
+      "layer": 0,
+      "arm": "full_transition",
+      "bitexact_codes": true,
+      "bitexact_history": true
+    },
+    {
+      "prompt": 0,
+      "layer": 0,
+      "arm": "headlocal_transition",
+      "bitexact_codes": true,
+      "bitexact_history": true
+    },
+    {
+      "prompt": 0,
+      "layer": 14,
+      "arm": "full_mean",
+      "bitexact_codes": true,
+      "bitexact_history": true
+    },
+    {
+      "prompt": 0,
+      "layer": 14,
+      "arm": "full_transition",
+      "bitexact_codes": true,
+      "bitexact_history": true
+    },
+    {
+      "prompt": 0,
+      "layer": 14,
+      "arm": "headlocal_transition",
+      "bitexact_codes": true,
+      "bitexact_history": true
+    },
+    {
+      "prompt": 0,
+      "layer": 29,
+      "arm": "full_mean",
+      "bitexact_codes": true,
+      "bitexact_history": true
+    },
+    {
+      "prompt": 0,
+      "layer": 29,
+      "arm": "full_transition",
+      "bitexact_codes": true,
+      "bitexact_history": true
+    },
+    {
+      "prompt": 0,
+      "layer": 29,
+      "arm": "headlocal_transition",
+      "bitexact_codes": true,
+      "bitexact_history": true
+    },
+    {
+      "prompt": 4,
+      "layer": 0,
+      "arm": "full_mean",
+      "bitexact_codes": true,
+      "bitexact_history": true
+    },
+    {
+      "prompt": 4,
+      "layer": 0,
+      "arm": "full_transition",
+      "bitexact_codes": true,
+      "bitexact_history": true
+    },
+    {
+      "prompt": 4,
+      "layer": 0,
+      "arm": "headlocal_transition",
+      "bitexact_codes": true,
+      "bitexact_history": true
+    },
+    {
+      "prompt": 4,
+      "layer": 14,
+      "arm": "full_mean",
+      "bitexact_codes": true,
+      "bitexact_history": true
+    },
+    {
+      "prompt": 4,
+      "layer": 14,
+      "arm": "full_transition",
+      "bitexact_codes": true,
+      "bitexact_history": true
+    },
+    {
+      "prompt": 4,
+      "layer": 14,
+      "arm": "headlocal_transition",
+      "bitexact_codes": true,
+      "bitexact_history": true
+    },
+    {
+      "prompt": 4,
+      "layer": 29,
+      "arm": "full_mean",
+      "bitexact_codes": true,
+      "bitexact_history": true
+    },
+    {
+      "prompt": 4,
+      "layer": 29,
+      "arm": "full_transition",
+      "bitexact_codes": true,
+      "bitexact_history": true
+    },
+    {
+      "prompt": 4,
+      "layer": 29,
+      "arm": "headlocal_transition",
+      "bitexact_codes": true,
+      "bitexact_history": true
+    }
+  ],
+  "captures": [
+    {
+      "file": "p00_s101/l00_c6.pt",
+      "bytes": 119834819,
+      "sha256": "e8b43440ec4d2255b27414217f42fd466dbb50c9f22edddc34cb344e25d1fa20",
+      "layer": 0,
+      "chunk": 6,
+      "call": 4
+    },
+    {
+      "file": "p00_s101/l14_c6.pt",
+      "bytes": 119834819,
+      "sha256": "e45e17dea33ea8e3e2c47ed5507bf6ba69fbf2fcb2628d1a78fd8a8d928cb339",
+      "layer": 14,
+      "chunk": 6,
+      "call": 4
+    },
+    {
+      "file": "p00_s101/l29_c6.pt",
+      "bytes": 119834819,
+      "sha256": "6c3642bce17712c5e827af1fbded32da695e4e24beab3d708f532d3690f09074",
+      "layer": 29,
+      "chunk": 6,
+      "call": 4
+    },
+    {
+      "file": "p00_s101/l00_c7.pt",
+      "bytes": 99922,
+      "sha256": "71524328fb9c2d0cea1ac02bcbe87e09303335c844cc949a40c5cb9ef688b2b6",
+      "layer": 0,
+      "chunk": 7,
+      "call": 0
+    },
+    {
+      "file": "p00_s101/l14_c7.pt",
+      "bytes": 99922,
+      "sha256": "be8247e3b49082e948ac0f83c6b7eb1e6135ebd7b6443656b4f62bf35c2f485c",
+      "layer": 14,
+      "chunk": 7,
+      "call": 0
+    },
+    {
+      "file": "p00_s101/l29_c7.pt",
+      "bytes": 99922,
+      "sha256": "04e815b08fae6a3b93b3e6dbabe6f59c19854f1f999b7c14dd25411ad7f14935",
+      "layer": 29,
+      "chunk": 7,
+      "call": 0
+    },
+    {
+      "file": "p04_s101/l00_c6.pt",
+      "bytes": 119834819,
+      "sha256": "95a0caddfbc23192b029686a884799eb3e62f20f96bee9c7d067bded703c930b",
+      "layer": 0,
+      "chunk": 6,
+      "call": 4
+    },
+    {
+      "file": "p04_s101/l14_c6.pt",
+      "bytes": 119834819,
+      "sha256": "2ed8de85024287707a53417c31addc3a6929b482806ccd09ff04a8bdc15c217d",
+      "layer": 14,
+      "chunk": 6,
+      "call": 4
+    },
+    {
+      "file": "p04_s101/l29_c6.pt",
+      "bytes": 119834819,
+      "sha256": "9c2988169716e6f5224de7da122facace3cc398ea39c5c6b7c95796e81adb018",
+      "layer": 29,
+      "chunk": 6,
+      "call": 4
+    },
+    {
+      "file": "p04_s101/l00_c7.pt",
+      "bytes": 99922,
+      "sha256": "71524328fb9c2d0cea1ac02bcbe87e09303335c844cc949a40c5cb9ef688b2b6",
+      "layer": 0,
+      "chunk": 7,
+      "call": 0
+    },
+    {
+      "file": "p04_s101/l14_c7.pt",
+      "bytes": 99922,
+      "sha256": "6e71992faea63d60655ad3c9c5957e4c95a459592c7343e785a6562d0a447911",
+      "layer": 14,
+      "chunk": 7,
+      "call": 0
+    },
+    {
+      "file": "p04_s101/l29_c7.pt",
+      "bytes": 99922,
+      "sha256": "ee44da06a637811eca07b47ef62956aef516d2938498adaefe75980614d1e58e",
+      "layer": 29,
+      "chunk": 7,
+      "call": 0
+    }
+  ],
+  "legacy_decision_sha256": "39bf4e863aa5c375fb11a8d6bcf7887332f6db25cebbcc23b46fabd7e2a5b80b",
+  "seconds": 7.405175250023603,
+  "peak_allocated_bytes": 1272429568,
+  "peak_reserved_bytes": 1723858944,
+  "scope": "reused development data; shared pool and chosen D-selected16bit block; no global optimum/video claim"
+}

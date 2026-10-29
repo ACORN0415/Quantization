@@ -1,0 +1,133 @@
+{
+  "passed": true,
+  "candidate_rows": 582,
+  "selection_rows": 24,
+  "trace_parity_records": 18,
+  "exact_cells_verified": 6,
+  "selected_states_verified": 24,
+  "input_legacy_audit_passed": true,
+  "source_sha256": "d92ed3093cabcf978649d58cb3a30c7ead4f00856a4208f2c4a245a1988ecd44",
+  "advance": false,
+  "recomputed": [
+    {
+      "space": "common_pool",
+      "prompt": 0,
+      "jump_reduction": 0.0,
+      "mean_damage_ratio": 1.0,
+      "passes": false
+    },
+    {
+      "space": "common_pool",
+      "prompt": 4,
+      "jump_reduction": 0.0,
+      "mean_damage_ratio": 1.0,
+      "passes": false
+    },
+    {
+      "space": "exact16",
+      "prompt": 0,
+      "jump_reduction": 0.0,
+      "mean_damage_ratio": 1.0,
+      "passes": false
+    },
+    {
+      "space": "exact16",
+      "prompt": 4,
+      "jump_reduction": 0.0,
+      "mean_damage_ratio": 1.0,
+      "passes": false
+    }
+  ],
+  "fp32_vs_quadratic_precision": [
+    {
+      "prompt": 0,
+      "layer": 0,
+      "selector": "mean",
+      "relative_d_difference": 1.4506488598022725e-08,
+      "relative_j_difference": 3.327644115859278e-07
+    },
+    {
+      "prompt": 0,
+      "layer": 0,
+      "selector": "transition",
+      "relative_d_difference": 1.4506488598022725e-08,
+      "relative_j_difference": 3.327644115859278e-07
+    },
+    {
+      "prompt": 0,
+      "layer": 14,
+      "selector": "mean",
+      "relative_d_difference": 5.383587094651404e-08,
+      "relative_j_difference": 6.206180924003678e-07
+    },
+    {
+      "prompt": 0,
+      "layer": 14,
+      "selector": "transition",
+      "relative_d_difference": 5.383587094651404e-08,
+      "relative_j_difference": 6.206180924003678e-07
+    },
+    {
+      "prompt": 0,
+      "layer": 29,
+      "selector": "mean",
+      "relative_d_difference": 3.9258617089731456e-08,
+      "relative_j_difference": 1.1761295365488241e-07
+    },
+    {
+      "prompt": 0,
+      "layer": 29,
+      "selector": "transition",
+      "relative_d_difference": 3.9258617089731456e-08,
+      "relative_j_difference": 1.1761295365488241e-07
+    },
+    {
+      "prompt": 4,
+      "layer": 0,
+      "selector": "mean",
+      "relative_d_difference": 3.5174485616500874e-08,
+      "relative_j_difference": 1.1151918861314261e-07
+    },
+    {
+      "prompt": 4,
+      "layer": 0,
+      "selector": "transition",
+      "relative_d_difference": 3.5174485616500874e-08,
+      "relative_j_difference": 1.1151918861314261e-07
+    },
+    {
+      "prompt": 4,
+      "layer": 14,
+      "selector": "mean",
+      "relative_d_difference": 8.845336212302649e-08,
+      "relative_j_difference": 4.9868156153884185e-08
+    },
+    {
+      "prompt": 4,
+      "layer": 14,
+      "selector": "transition",
+      "relative_d_difference": 8.845336212302649e-08,
+      "relative_j_difference": 4.9868156153884185e-08
+    },
+    {
+      "prompt": 4,
+      "layer": 29,
+      "selector": "mean",
+      "relative_d_difference": 2.4176053903427165e-08,
+      "relative_j_difference": 1.2923263882983466e-08
+    },
+    {
+      "prompt": 4,
+      "layer": 29,
+      "selector": "transition",
+      "relative_d_difference": 2.4176053903427165e-08,
+      "relative_j_difference": 1.2923263882983466e-08
+    }
+  ],
+  "limits": [
+    "same-author read-only hash/arithmetic audit, not external independent validation",
+    "model, attention metrics, optimizer histories and training coordinate ranking are not rerun here",
+    "quadratic enumeration exactness is restricted to selected16 binary coordinates and FP64 surrogate",
+    "existing query/input data are development data; not global optimum or video-quality evidence"
+  ]
+}
