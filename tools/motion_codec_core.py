@@ -71,6 +71,15 @@ def make_anchor(x, bits=4, group=16):
     return TensorCode(codes, scale16, shape, x.dtype, bits, group)
 
 
+def _validate_translation(reference, height, width, dy, dx):
+    _validate(reference)
+    if (type(height) is not int or type(width) is not int or height <= 0
+            or width <= 0 or height*width != reference.shape[1]):
+        raise ValueError("height*width must equal spatial token count")
+    if any(type(v) is not int or not -32768 <= v <= 32767 for v in (dy, dx)):
+        raise ValueError("translation must fit signed int16")
+
+
 def translate_reference(reference, height, width, dy=0, dx=0):
     """Source coordinate for destination (y,x) is (y-dy,x-dx).
 
@@ -78,12 +87,7 @@ def translate_reference(reference, height, width, dy=0, dx=0):
     absolute values. The validity mask is derived from dimensions/translation
     and therefore needs no stored mask. Original token ordering is unchanged.
     """
-    _validate(reference)
-    if (type(height) is not int or type(width) is not int or height <= 0
-            or width <= 0 or height*width != reference.shape[1]):
-        raise ValueError("height*width must equal spatial token count")
-    if any(type(v) is not int or not -32768 <= v <= 32767 for v in (dy, dx)):
-        raise ValueError("translation must fit signed int16")
+    _validate_translation(reference, height, width, dy, dx)
     b, _, heads, dim = reference.shape
     src = reference.reshape(b, height, width, heads, dim)
     dst = torch.zeros_like(src)
@@ -91,6 +95,27 @@ def translate_reference(reference, height, width, dy=0, dx=0):
     x0, x1 = max(0, dx), min(width, width+dx)
     if y1 > y0 and x1 > x0:
         dst[:, y0:y1, x0:x1] = src[:, y0-dy:y1-dy, x0-dx:x1-dx]
+    return dst.reshape_as(reference)
+
+
+def matched_border_reference(reference, height, width, dy=0, dx=0):
+    """Same-position predictor with exactly a translated predictor's zero border.
+
+    Interior values do not move. This control separates correspondence changes
+    from disabling prediction in newly visible border regions. The mask is
+    inferred from an externally persisted (dy,dx) int16 pair (4 bytes); callers
+    must count that metadata in addition to any residual-code metadata.
+    """
+    # Validate geometry without data-dependent validity tests: true zero features
+    # must not be mistaken for invalid tokens.
+    _validate_translation(reference, height, width, dy, dx)
+    b, _, heads, dim = reference.shape
+    src = reference.reshape(b, height, width, heads, dim)
+    dst = torch.zeros_like(src)
+    y0, y1 = max(0, dy), min(height, height+dy)
+    x0, x1 = max(0, dx), min(width, width+dx)
+    if y1 > y0 and x1 > x0:
+        dst[:, y0:y1, x0:x1] = src[:, y0:y1, x0:x1]
     return dst.reshape_as(reference)
 
 

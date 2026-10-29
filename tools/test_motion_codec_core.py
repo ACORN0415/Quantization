@@ -4,7 +4,7 @@ import unittest
 import torch
 
 from motion_codec_core import (decode_residual, encode_residual, make_anchor,
-                               translate_reference)
+                               translate_reference, matched_border_reference)
 
 
 class MotionCodecTests(unittest.TestCase):
@@ -44,6 +44,18 @@ class MotionCodecTests(unittest.TestCase):
         self.assertTrue(torch.equal(warped[:, :, -2:], torch.zeros_like(warped[:, :, -2:])))
         source = self.reconstructed.reshape(1, 8, 8, 2, 4)
         self.assertTrue(torch.equal(warped[:, 1:, :-2], source[:, :-1, 2:]))
+
+    def test_matched_border_preserves_interior_without_translation(self):
+        # Positive numbered tokens make accidental relocation visible.
+        source = torch.arange(1, 65).reshape(1, 64, 1, 1).float()
+        for dy, dx in ((1, -2), (-2, 1), (0, 0), (9, 0)):
+            matched = matched_border_reference(source, 8, 8, dy, dx)
+            warped = translate_reference(source, 8, 8, dy, dx)
+            valid = warped != 0
+            self.assertTrue(torch.equal(matched != 0, valid))
+            self.assertTrue(torch.equal(matched[valid], source[valid]))
+            self.assertTrue(torch.equal(matched[~valid], torch.zeros_like(matched[~valid])))
+        self.assertTrue(torch.equal(matched_border_reference(source, 8, 8), source))
 
     def test_closed_loop_reference_is_required_and_not_retained(self):
         target = self.reference + torch.tensor(.5, dtype=torch.bfloat16)

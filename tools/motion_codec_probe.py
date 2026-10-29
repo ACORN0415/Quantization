@@ -13,7 +13,7 @@ import time
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'tools'), str(ROOT/'src'), str(ROOT/'src/scripts')]
 import torch
-from motion_codec_core import make_anchor, encode_residual, decode_residual, translate_reference
+from motion_codec_core import make_anchor, encode_residual, decode_residual, translate_reference, matched_border_reference
 
 DATA = Path.home()/'sfq_data/motion_codec'
 RESULT = ROOT/'src/experiments/motion_codec_development'
@@ -52,6 +52,7 @@ def capture(prompt):
     import mechanism_worker as common
     import wan.modules.causal_model as model
     frozen = source_hash()
+    model_frozen = common.pilot.source_hash()
     out = DATA/f'p{prompt:02d}_s101'
     if out.exists(): raise RuntimeError('refuse to overwrite capture directory')
     out.mkdir(parents=True)
@@ -121,13 +122,14 @@ def capture(prompt):
         model.causal_rope_apply = original
     if any(n != 40 for n in counts.values()) or len(artifacts) != 12:
         raise RuntimeError('capture incomplete')
-    if source_hash() != frozen: raise RuntimeError('diagnostic source changed')
+    if source_hash() != frozen or pilot.source_hash() != model_frozen:
+        raise RuntimeError('diagnostic/model source changed')
     save(out/'manifest.json', dict(prompt=prompt, seed=101, source_sha256=frozen,
         teacher_bitexact_chunks=8, rope_identity_records=12, artifacts=artifacts,
         seconds=time.monotonic()-started, peak_allocated_bytes=torch.cuda.max_memory_allocated(),
         peak_reserved_bytes=torch.cuda.max_memory_reserved(),
         cpu_high_water_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,
-        source_model_sha256=pilot.source_hash(), domain='pre-RoPE K / unchanged V; refresh only'))
+        source_model_sha256=model_frozen, domain='pre-RoPE K / unchanged V; refresh only'))
 
 
 def relative(x, ref):
@@ -181,7 +183,8 @@ def analyze():
                     torch.cuda.synchronize() if device == 'cuda' else None
                     oracle_search_s = time.monotonic()-begin
                     for arm, shift in (('direct',None),('same_position',(0,0)),
-                                       ('shared_translation',shared),('per_layer_translation',oracle)):
+                                       ('shared_translation',shared),('matched_border_same_position',shared),
+                                       ('per_layer_translation',oracle)):
                         row = dict(prompt=prompt, chunk=chunk, pair=pair, layer=layer, arm=arm,
                                    dy=None if shift is None else shift[0], dx=None if shift is None else shift[1],
                                    search_s=shared_search_s if arm=='shared_translation' else
@@ -194,9 +197,15 @@ def analyze():
                             if shift is None:
                                 code=make_anchor(target); restored=code.restore()
                             else:
-                                code=encode_residual(target, reference,height=height,width=width,
-                                                     dy=shift[0],dx=shift[1])
-                                restored=decode_residual(code,reference)
+                                if arm == 'matched_border_same_position':
+                                    active_reference = matched_border_reference(reference,height,width,*shift)
+                                    coded_shift = (0,0)
+                                else:
+                                    active_reference = reference
+                                    coded_shift = shift
+                                code=encode_residual(target, active_reference,height=height,width=width,
+                                                     dy=coded_shift[0],dx=coded_shift[1])
+                                restored=decode_residual(code,active_reference)
                             row[kind+'_rel']=relative(restored,target)
                             if kind == 'k':
                                 position = samples[layer]['start_frame']+pair+1
@@ -207,23 +216,30 @@ def analyze():
                                 row['k_post_rope_rel']=relative(actual_post,target_post)
                             resident += code.bytes()['resident']+anchor.bytes()['resident']
                             packed += code.bytes()['packed_estimate']+anchor.bytes()['packed_estimate']
+                            if arm == 'matched_border_same_position':
+                                # Additional int16 dy/dx mask geometry; zero translation remains explicit.
+                                border_metadata = torch.tensor(shift,dtype=torch.int16,device=device)
+                                resident += border_metadata.numel()*border_metadata.element_size()
+                                packed += border_metadata.numel()*border_metadata.element_size()
                         torch.cuda.synchronize() if device=='cuda' else None
                         row.update(error_mean=(row['k_rel']+row['v_rel'])/2,
                             pair_resident_payload_bytes=resident,pair_packed_estimate_bytes=packed,
                             anchor_resident_bytes=anchor_bytes,reference_restore_workspace_bytes=workspace,
                             encode_decode_metric_wall_s=time.monotonic()-begin)
                         rows.append(row)
-            status(f'ANALYZE p{prompt} c{chunk}: {len(rows)}/192 rows')
+            status(f'ANALYZE p{prompt} c{chunk}: {len(rows)}/240 rows')
     decisions=[]
     for prompt in (0,4):
         means={arm:sum(r['error_mean'] for r in rows if r['prompt']==prompt and r['arm']==arm)/24
-               for arm in ('direct','same_position','shared_translation','per_layer_translation')}
+               for arm in ('direct','same_position','shared_translation','matched_border_same_position','per_layer_translation')}
         improvement=1-means['shared_translation']/means['same_position']
+        border_improvement=1-means['shared_translation']/means['matched_border_same_position']
         decisions.append(dict(prompt=prompt,means=means,shared_vs_same_relative_reduction=improvement,
-                              passes=improvement>=.05))
+                              shared_vs_matched_border_relative_reduction=border_improvement,
+                              passes=improvement>=.05 and border_improvement>=.05))
     if any(not math.isfinite(r[k]) for r in rows for k in ('k_rel','v_rel','k_post_rope_rel')):
         raise RuntimeError('nonfinite diagnostic metric')
-    if len(rows)!=192 or source_hash()!=frozen: raise RuntimeError('analysis incomplete/source changed')
+    if len(rows)!=240 or source_hash()!=frozen: raise RuntimeError('analysis incomplete/source changed')
     RESULT.mkdir(parents=True,exist_ok=True)
     with (RESULT/'rows.csv').open('w') as f:
         writer=csv.DictWriter(f,fieldnames=list(rows[0]));writer.writeheader();writer.writerows(rows)
