@@ -1,0 +1,34 @@
+{
+  "id": "p1_p3_group_mechanism_v0_1",
+  "status": "draft_not_registered_not_started",
+  "development": {"previous_study_prompt_ids": [0, 4], "seeds": [101, 202], "bits": [4, 2]},
+  "heldout": {
+    "prompt_file": "mechanism_prompts_v0.txt",
+    "prompts": 12,
+    "seeds": [303, 404],
+    "arms": ["bf16", "legacy_physical_rolling", "absolute_origin_rolling", "chunk_once"],
+    "trajectories": 96,
+    "bits": 4,
+    "latent_frames": 126,
+    "context_frames": 21,
+    "chunk_tokens": 4680,
+    "capacity_tokens": 32760,
+    "group": 16,
+    "sink_tokens": 0,
+    "residual_tokens": 0
+  },
+  "primary_contrast": "absolute_origin_rolling minus legacy_physical_rolling",
+  "co_primary": [
+    {"name": "all_late_raw_frame_MUSIQ", "pixel_frames_inclusive": [249, 500], "count": 252},
+    {"name": "late_boundary_neighborhood_raw_frame_MUSIQ", "chunks_inclusive": [21, 41], "boundary_frame": "12*c-3", "offsets_inclusive": [-2, 2], "count": 105}
+  ],
+  "independent_unit": "prompt; average two seeds within prompt",
+  "test": "exact two-sided paired sign-flip over 4096 signs; Holm across two primary endpoints at .05",
+  "interval": {"method": "prompt-cluster percentile bootstrap", "level": 0.975, "replicates": 20000, "seed": 872341},
+  "temporal": {"boundary_chunks_inclusive": [1, 41], "boundary_pair": "12*c-4 -> 12*c-3", "within_pairs": ["12*c+2 -> 12*c+3", "12*c+3 -> 12*c+4"], "empty_mask": "retain zero coverage and null residual; full affected cell/window residual mean and paired contrast undefined"},
+  "infrastructure_retries": 2,
+  "primary_nonfinite": "halt as invalid pending review; no replacement or amplitude tuning",
+  "heldout_access_requires": "frozen implementation, analysis, protocol, prompt and passed-gate hashes committed before any held-out BF16 generation",
+  "runtime_estimate_status": "unmeasured budget only; measure all arms before final registration",
+  "noise_structure_controls": "deferred separate protocol; not part of 96 trajectories"
+}
