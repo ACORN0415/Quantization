@@ -16,6 +16,12 @@ import mechanism_worker as worker
 DATA=Path.home()/'sfq_data/mechanism'
 
 
+def performance_record(s,arm,group,rep):
+    if (s['arm'],s['group'],str(s['rep']))!=(arm,group,str(rep)):
+        raise RuntimeError('performance metadata identifies a different run')
+    return dict(s)
+
+
 def run(*args):
     print('RUN',*map(str,args),flush=True)
     subprocess.run(list(map(str,args)),cwd=ROOT,check=True)
@@ -57,7 +63,7 @@ def main():
         for arm,group in order:
             launch(arm,group,str(rep),warmup=True)
             folder=DATA/'performance'/f'{arm}_g{group}_r{rep}'
-            s=d.read(folder/'sampling.json');performance.append(dict(arm=arm,group=group,rep=rep,**s))
+            s=d.read(folder/'sampling.json');performance.append(performance_record(s,arm,group,rep))
             if arm in ('BF16','L','C_once') and group==16:
                 old=Path.home()/'sfq_data/policy_study'/('reference/p00_s101/bf16.pt' if arm=='BF16' else f'cases/p00_s101_{"rolling" if arm=="L" else "chunk"}_int4/fr.pt')
                 latent=torch.load(folder/'latent.pt',map_location='cpu',weights_only=True)['latent']

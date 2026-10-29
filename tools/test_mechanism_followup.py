@@ -5,9 +5,15 @@ import numpy as np
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 from analyze_mechanism_fr import infer
 from mechanism_worker import strict_mean
+from mechanism_followup import performance_record
 
 
 def main():
+    sample=dict(arm='BF16',group=16,rep='0',generation_s=1.25)
+    assert performance_record(sample,'BF16',16,0)==sample
+    try:performance_record(sample,'L',16,0)
+    except RuntimeError:pass
+    else:raise AssertionError('performance metadata mismatch accepted')
     mean,lo,hi,p=infer([1.]*12)
     assert (mean,lo,hi)==(1.,1.,1.) and p==2/4096
     mean,lo,hi,p=infer([1.,-1.]*6)

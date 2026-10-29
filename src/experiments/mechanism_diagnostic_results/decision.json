@@ -1,0 +1,948 @@
+{
+  "source_sha256": "8843001b6ec0b0895293583510b84c11dd65cb7dd6e4cd5885067038530c996f",
+  "advance": true,
+  "cases": [
+    {
+      "prompt": 0,
+      "seed": 101,
+      "D16": 0.01899569543663944,
+      "D24": 0.0,
+      "D32": 0.027486572156349823,
+      "H": 0.01899569543663944,
+      "passes": true
+    },
+    {
+      "prompt": 0,
+      "seed": 202,
+      "D16": 0.01886122250131199,
+      "D24": 0.0,
+      "D32": 0.027163574635272927,
+      "H": 0.01886122250131199,
+      "passes": true
+    },
+    {
+      "prompt": 4,
+      "seed": 101,
+      "D16": 0.018644599143947865,
+      "D24": 0.0,
+      "D32": 0.02746311195975258,
+      "H": 0.018644599143947865,
+      "passes": true
+    },
+    {
+      "prompt": 4,
+      "seed": 202,
+      "D16": 0.018810785424851234,
+      "D24": 0.0,
+      "D32": 0.027858519749272434,
+      "H": 0.018810785424851234,
+      "passes": true
+    }
+  ],
+  "summaries": [
+    {
+      "prompt": 0,
+      "seed": 101,
+      "group": 16,
+      "arm": "C_once",
+      "k": 0.06460594050586224,
+      "v": 0.08139295653218315,
+      "e": 0.0729994485190227
+    },
+    {
+      "prompt": 0,
+      "seed": 101,
+      "group": 16,
+      "arm": "C_repeat",
+      "k": 0.06460594050586224,
+      "v": 0.08139295653218315,
+      "e": 0.0729994485190227
+    },
+    {
+      "prompt": 0,
+      "seed": 101,
+      "group": 16,
+      "arm": "L",
+      "k": 0.0814644177385739,
+      "v": 0.10252587017275039,
+      "e": 0.09199514395566213
+    },
+    {
+      "prompt": 0,
+      "seed": 101,
+      "group": 24,
+      "arm": "C_once",
+      "k": 0.06893790893966244,
+      "v": 0.08857567065528461,
+      "e": 0.07875678979747353
+    },
+    {
+      "prompt": 0,
+      "seed": 101,
+      "group": 24,
+      "arm": "C_repeat",
+      "k": 0.06893790893966244,
+      "v": 0.08857567065528461,
+      "e": 0.07875678979747353
+    },
+    {
+      "prompt": 0,
+      "seed": 101,
+      "group": 24,
+      "arm": "L",
+      "k": 0.06893790893966244,
+      "v": 0.08857567065528461,
+      "e": 0.07875678979747353
+    },
+    {
+      "prompt": 0,
+      "seed": 101,
+      "group": 32,
+      "arm": "C_once",
+      "k": 0.0718952052295208,
+      "v": 0.09354066086666925,
+      "e": 0.08271793304809502
+    },
+    {
+      "prompt": 0,
+      "seed": 101,
+      "group": 32,
+      "arm": "C_repeat",
+      "k": 0.0718952052295208,
+      "v": 0.09354066086666925,
+      "e": 0.08271793304809502
+    },
+    {
+      "prompt": 0,
+      "seed": 101,
+      "group": 32,
+      "arm": "L",
+      "k": 0.09503182588872455,
+      "v": 0.12537718452016514,
+      "e": 0.11020450520444484
+    },
+    {
+      "prompt": 0,
+      "seed": 202,
+      "group": 16,
+      "arm": "C_once",
+      "k": 0.06387230710969084,
+      "v": 0.08014420285820961,
+      "e": 0.07200825498395022
+    },
+    {
+      "prompt": 0,
+      "seed": 202,
+      "group": 16,
+      "arm": "C_repeat",
+      "k": 0.06387230710969084,
+      "v": 0.08014420285820961,
+      "e": 0.07200825498395022
+    },
+    {
+      "prompt": 0,
+      "seed": 202,
+      "group": 16,
+      "arm": "L",
+      "k": 0.08060329632035323,
+      "v": 0.10113565865017118,
+      "e": 0.09086947748526221
+    },
+    {
+      "prompt": 0,
+      "seed": 202,
+      "group": 24,
+      "arm": "C_once",
+      "k": 0.06822214463991778,
+      "v": 0.08738239296845027,
+      "e": 0.07780226880418403
+    },
+    {
+      "prompt": 0,
+      "seed": 202,
+      "group": 24,
+      "arm": "C_repeat",
+      "k": 0.06822214463991778,
+      "v": 0.08738239296845027,
+      "e": 0.07780226880418403
+    },
+    {
+      "prompt": 0,
+      "seed": 202,
+      "group": 24,
+      "arm": "L",
+      "k": 0.06822214463991778,
+      "v": 0.08738239296845027,
+      "e": 0.07780226880418403
+    },
+    {
+      "prompt": 0,
+      "seed": 202,
+      "group": 32,
+      "arm": "C_once",
+      "k": 0.07115630480150381,
+      "v": 0.09240028191890036,
+      "e": 0.08177829336020209
+    },
+    {
+      "prompt": 0,
+      "seed": 202,
+      "group": 32,
+      "arm": "C_repeat",
+      "k": 0.07115630480150381,
+      "v": 0.09240028191890036,
+      "e": 0.08177829336020209
+    },
+    {
+      "prompt": 0,
+      "seed": 202,
+      "group": 32,
+      "arm": "L",
+      "k": 0.09401134308392094,
+      "v": 0.1238723929070291,
+      "e": 0.10894186799547502
+    },
+    {
+      "prompt": 4,
+      "seed": 101,
+      "group": 16,
+      "arm": "C_once",
+      "k": 0.06220426234106223,
+      "v": 0.0771234893160207,
+      "e": 0.06966387582854147
+    },
+    {
+      "prompt": 4,
+      "seed": 101,
+      "group": 16,
+      "arm": "C_repeat",
+      "k": 0.06220426234106223,
+      "v": 0.0771234893160207,
+      "e": 0.06966387582854147
+    },
+    {
+      "prompt": 4,
+      "seed": 101,
+      "group": 16,
+      "arm": "L",
+      "k": 0.07887628973594733,
+      "v": 0.09774066020903133,
+      "e": 0.08830847497248934
+    },
+    {
+      "prompt": 4,
+      "seed": 101,
+      "group": 24,
+      "arm": "C_once",
+      "k": 0.06648185793842588,
+      "v": 0.08414531484955833,
+      "e": 0.0753135863939921
+    },
+    {
+      "prompt": 4,
+      "seed": 101,
+      "group": 24,
+      "arm": "C_repeat",
+      "k": 0.06648185793842588,
+      "v": 0.08414531484955833,
+      "e": 0.0753135863939921
+    },
+    {
+      "prompt": 4,
+      "seed": 101,
+      "group": 24,
+      "arm": "L",
+      "k": 0.06648185793842588,
+      "v": 0.08414531484955833,
+      "e": 0.0753135863939921
+    },
+    {
+      "prompt": 4,
+      "seed": 101,
+      "group": 32,
+      "arm": "C_once",
+      "k": 0.06931307754701092,
+      "v": 0.08890839056599707,
+      "e": 0.079110734056504
+    },
+    {
+      "prompt": 4,
+      "seed": 101,
+      "group": 32,
+      "arm": "C_repeat",
+      "k": 0.06931307754701092,
+      "v": 0.08890839056599707,
+      "e": 0.079110734056504
+    },
+    {
+      "prompt": 4,
+      "seed": 101,
+      "group": 32,
+      "arm": "L",
+      "k": 0.09253335822551023,
+      "v": 0.12061433380700293,
+      "e": 0.10657384601625658
+    },
+    {
+      "prompt": 4,
+      "seed": 202,
+      "group": 16,
+      "arm": "C_once",
+      "k": 0.06217469784120719,
+      "v": 0.07672817422520546,
+      "e": 0.06945143603320633
+    },
+    {
+      "prompt": 4,
+      "seed": 202,
+      "group": 16,
+      "arm": "C_repeat",
+      "k": 0.06217469784120719,
+      "v": 0.07672817422520546,
+      "e": 0.06945143603320633
+    },
+    {
+      "prompt": 4,
+      "seed": 202,
+      "group": 16,
+      "arm": "L",
+      "k": 0.0790764265663567,
+      "v": 0.09744801634975842,
+      "e": 0.08826222145805757
+    },
+    {
+      "prompt": 4,
+      "seed": 202,
+      "group": 24,
+      "arm": "C_once",
+      "k": 0.06653821959027222,
+      "v": 0.08384409803010169,
+      "e": 0.07519115881018695
+    },
+    {
+      "prompt": 4,
+      "seed": 202,
+      "group": 24,
+      "arm": "C_repeat",
+      "k": 0.06653821959027222,
+      "v": 0.08384409803010169,
+      "e": 0.07519115881018695
+    },
+    {
+      "prompt": 4,
+      "seed": 202,
+      "group": 24,
+      "arm": "L",
+      "k": 0.06653821959027222,
+      "v": 0.08384409803010169,
+      "e": 0.07519115881018695
+    },
+    {
+      "prompt": 4,
+      "seed": 202,
+      "group": 32,
+      "arm": "C_once",
+      "k": 0.06948554060998417,
+      "v": 0.08871293689523424,
+      "e": 0.07909923875260921
+    },
+    {
+      "prompt": 4,
+      "seed": 202,
+      "group": 32,
+      "arm": "C_repeat",
+      "k": 0.06948554060998417,
+      "v": 0.08871293689523424,
+      "e": 0.07909923875260921
+    },
+    {
+      "prompt": 4,
+      "seed": 202,
+      "group": 32,
+      "arm": "L",
+      "k": 0.09318440883642151,
+      "v": 0.12073110816734178,
+      "e": 0.10695775850188165
+    }
+  ],
+  "memory": [
+    {
+      "prompt": 0,
+      "seed": 101,
+      "group": 16,
+      "arm": "L",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3397386240,
+        "hypothetical_packed_bytes": 1887436800,
+        "valid_code_bytes": 3019161600,
+        "padding_code_bytes": 737280,
+        "scale_bytes": 377487360,
+        "bf16_pending_bytes": 0,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3397386240
+    },
+    {
+      "prompt": 0,
+      "seed": 101,
+      "group": 16,
+      "arm": "C_repeat",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3778928640,
+        "hypothetical_packed_bytes": 2482790400,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 4423680,
+        "scale_bytes": 324034560,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3778928640
+    },
+    {
+      "prompt": 0,
+      "seed": 101,
+      "group": 16,
+      "arm": "C_once",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3778928640,
+        "hypothetical_packed_bytes": 2482790400,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 4423680,
+        "scale_bytes": 324034560,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3778928640
+    },
+    {
+      "prompt": 0,
+      "seed": 101,
+      "group": 24,
+      "arm": "L",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3270758400,
+        "hypothetical_packed_bytes": 1761177600,
+        "valid_code_bytes": 3019161600,
+        "padding_code_bytes": 0,
+        "scale_bytes": 251596800,
+        "bf16_pending_bytes": 0,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3270758400
+    },
+    {
+      "prompt": 0,
+      "seed": 101,
+      "group": 24,
+      "arm": "C_repeat",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3666124800,
+        "hypothetical_packed_bytes": 2372198400,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 0,
+        "scale_bytes": 215654400,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3666124800
+    },
+    {
+      "prompt": 0,
+      "seed": 101,
+      "group": 24,
+      "arm": "C_once",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3666124800,
+        "hypothetical_packed_bytes": 2372198400,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 0,
+        "scale_bytes": 215654400,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3666124800
+    },
+    {
+      "prompt": 0,
+      "seed": 101,
+      "group": 32,
+      "arm": "L",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3208642560,
+        "hypothetical_packed_bytes": 1698693120,
+        "valid_code_bytes": 3019161600,
+        "padding_code_bytes": 737280,
+        "scale_bytes": 188743680,
+        "bf16_pending_bytes": 0,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3208642560
+    },
+    {
+      "prompt": 0,
+      "seed": 101,
+      "group": 32,
+      "arm": "C_repeat",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3626311680,
+        "hypothetical_packed_bytes": 2325749760,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 13271040,
+        "scale_bytes": 162570240,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3626311680
+    },
+    {
+      "prompt": 0,
+      "seed": 101,
+      "group": 32,
+      "arm": "C_once",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3626311680,
+        "hypothetical_packed_bytes": 2325749760,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 13271040,
+        "scale_bytes": 162570240,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3626311680
+    },
+    {
+      "prompt": 0,
+      "seed": 202,
+      "group": 16,
+      "arm": "L",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3397386240,
+        "hypothetical_packed_bytes": 1887436800,
+        "valid_code_bytes": 3019161600,
+        "padding_code_bytes": 737280,
+        "scale_bytes": 377487360,
+        "bf16_pending_bytes": 0,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3397386240
+    },
+    {
+      "prompt": 0,
+      "seed": 202,
+      "group": 16,
+      "arm": "C_repeat",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3778928640,
+        "hypothetical_packed_bytes": 2482790400,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 4423680,
+        "scale_bytes": 324034560,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3778928640
+    },
+    {
+      "prompt": 0,
+      "seed": 202,
+      "group": 16,
+      "arm": "C_once",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3778928640,
+        "hypothetical_packed_bytes": 2482790400,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 4423680,
+        "scale_bytes": 324034560,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3778928640
+    },
+    {
+      "prompt": 0,
+      "seed": 202,
+      "group": 24,
+      "arm": "L",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3270758400,
+        "hypothetical_packed_bytes": 1761177600,
+        "valid_code_bytes": 3019161600,
+        "padding_code_bytes": 0,
+        "scale_bytes": 251596800,
+        "bf16_pending_bytes": 0,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3270758400
+    },
+    {
+      "prompt": 0,
+      "seed": 202,
+      "group": 24,
+      "arm": "C_repeat",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3666124800,
+        "hypothetical_packed_bytes": 2372198400,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 0,
+        "scale_bytes": 215654400,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3666124800
+    },
+    {
+      "prompt": 0,
+      "seed": 202,
+      "group": 24,
+      "arm": "C_once",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3666124800,
+        "hypothetical_packed_bytes": 2372198400,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 0,
+        "scale_bytes": 215654400,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3666124800
+    },
+    {
+      "prompt": 0,
+      "seed": 202,
+      "group": 32,
+      "arm": "L",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3208642560,
+        "hypothetical_packed_bytes": 1698693120,
+        "valid_code_bytes": 3019161600,
+        "padding_code_bytes": 737280,
+        "scale_bytes": 188743680,
+        "bf16_pending_bytes": 0,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3208642560
+    },
+    {
+      "prompt": 0,
+      "seed": 202,
+      "group": 32,
+      "arm": "C_repeat",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3626311680,
+        "hypothetical_packed_bytes": 2325749760,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 13271040,
+        "scale_bytes": 162570240,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3626311680
+    },
+    {
+      "prompt": 0,
+      "seed": 202,
+      "group": 32,
+      "arm": "C_once",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3626311680,
+        "hypothetical_packed_bytes": 2325749760,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 13271040,
+        "scale_bytes": 162570240,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3626311680
+    },
+    {
+      "prompt": 4,
+      "seed": 101,
+      "group": 16,
+      "arm": "L",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3397386240,
+        "hypothetical_packed_bytes": 1887436800,
+        "valid_code_bytes": 3019161600,
+        "padding_code_bytes": 737280,
+        "scale_bytes": 377487360,
+        "bf16_pending_bytes": 0,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3397386240
+    },
+    {
+      "prompt": 4,
+      "seed": 101,
+      "group": 16,
+      "arm": "C_repeat",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3778928640,
+        "hypothetical_packed_bytes": 2482790400,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 4423680,
+        "scale_bytes": 324034560,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3778928640
+    },
+    {
+      "prompt": 4,
+      "seed": 101,
+      "group": 16,
+      "arm": "C_once",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3778928640,
+        "hypothetical_packed_bytes": 2482790400,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 4423680,
+        "scale_bytes": 324034560,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3778928640
+    },
+    {
+      "prompt": 4,
+      "seed": 101,
+      "group": 24,
+      "arm": "L",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3270758400,
+        "hypothetical_packed_bytes": 1761177600,
+        "valid_code_bytes": 3019161600,
+        "padding_code_bytes": 0,
+        "scale_bytes": 251596800,
+        "bf16_pending_bytes": 0,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3270758400
+    },
+    {
+      "prompt": 4,
+      "seed": 101,
+      "group": 24,
+      "arm": "C_repeat",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3666124800,
+        "hypothetical_packed_bytes": 2372198400,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 0,
+        "scale_bytes": 215654400,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3666124800
+    },
+    {
+      "prompt": 4,
+      "seed": 101,
+      "group": 24,
+      "arm": "C_once",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3666124800,
+        "hypothetical_packed_bytes": 2372198400,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 0,
+        "scale_bytes": 215654400,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3666124800
+    },
+    {
+      "prompt": 4,
+      "seed": 101,
+      "group": 32,
+      "arm": "L",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3208642560,
+        "hypothetical_packed_bytes": 1698693120,
+        "valid_code_bytes": 3019161600,
+        "padding_code_bytes": 737280,
+        "scale_bytes": 188743680,
+        "bf16_pending_bytes": 0,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3208642560
+    },
+    {
+      "prompt": 4,
+      "seed": 101,
+      "group": 32,
+      "arm": "C_repeat",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3626311680,
+        "hypothetical_packed_bytes": 2325749760,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 13271040,
+        "scale_bytes": 162570240,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3626311680
+    },
+    {
+      "prompt": 4,
+      "seed": 101,
+      "group": 32,
+      "arm": "C_once",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3626311680,
+        "hypothetical_packed_bytes": 2325749760,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 13271040,
+        "scale_bytes": 162570240,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3626311680
+    },
+    {
+      "prompt": 4,
+      "seed": 202,
+      "group": 16,
+      "arm": "L",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3397386240,
+        "hypothetical_packed_bytes": 1887436800,
+        "valid_code_bytes": 3019161600,
+        "padding_code_bytes": 737280,
+        "scale_bytes": 377487360,
+        "bf16_pending_bytes": 0,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3397386240
+    },
+    {
+      "prompt": 4,
+      "seed": 202,
+      "group": 16,
+      "arm": "C_repeat",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3778928640,
+        "hypothetical_packed_bytes": 2482790400,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 4423680,
+        "scale_bytes": 324034560,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3778928640
+    },
+    {
+      "prompt": 4,
+      "seed": 202,
+      "group": 16,
+      "arm": "C_once",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3778928640,
+        "hypothetical_packed_bytes": 2482790400,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 4423680,
+        "scale_bytes": 324034560,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3778928640
+    },
+    {
+      "prompt": 4,
+      "seed": 202,
+      "group": 24,
+      "arm": "L",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3270758400,
+        "hypothetical_packed_bytes": 1761177600,
+        "valid_code_bytes": 3019161600,
+        "padding_code_bytes": 0,
+        "scale_bytes": 251596800,
+        "bf16_pending_bytes": 0,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3270758400
+    },
+    {
+      "prompt": 4,
+      "seed": 202,
+      "group": 24,
+      "arm": "C_repeat",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3666124800,
+        "hypothetical_packed_bytes": 2372198400,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 0,
+        "scale_bytes": 215654400,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3666124800
+    },
+    {
+      "prompt": 4,
+      "seed": 202,
+      "group": 24,
+      "arm": "C_once",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3666124800,
+        "hypothetical_packed_bytes": 2372198400,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 0,
+        "scale_bytes": 215654400,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3666124800
+    },
+    {
+      "prompt": 4,
+      "seed": 202,
+      "group": 32,
+      "arm": "L",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3208642560,
+        "hypothetical_packed_bytes": 1698693120,
+        "valid_code_bytes": 3019161600,
+        "padding_code_bytes": 737280,
+        "scale_bytes": 188743680,
+        "bf16_pending_bytes": 0,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3208642560
+    },
+    {
+      "prompt": 4,
+      "seed": 202,
+      "group": 32,
+      "arm": "C_repeat",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3626311680,
+        "hypothetical_packed_bytes": 2325749760,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 13271040,
+        "scale_bytes": 162570240,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3626311680
+    },
+    {
+      "prompt": 4,
+      "seed": 202,
+      "group": 32,
+      "arm": "C_once",
+      "post_refresh_chunk41": {
+        "resident_tensor_bytes": 3626311680,
+        "hypothetical_packed_bytes": 2325749760,
+        "valid_code_bytes": 2587852800,
+        "padding_code_bytes": 13271040,
+        "scale_bytes": 162570240,
+        "bf16_pending_bytes": 862617600,
+        "bf16_residual_bytes": 0
+      },
+      "max_resident_tensor_bytes": 3626311680
+    }
+  ],
+  "query_probe": "not checked",
+  "note": "Development decision, not a generalization test"
+}
