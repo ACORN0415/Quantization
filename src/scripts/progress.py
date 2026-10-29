@@ -9,6 +9,20 @@ def show():
     if a.watch:print('\033[2J\033[H',end='')
     print(time.strftime('%Y-%m-%d %H:%M:%S'),'— Quantization progress')
     print('Local data:',a.data)
+    change=a.data/'change_mixed/status.json'
+    if change.exists() and not a.history:
+        try:
+            v=json.loads(change.read_text())
+            print('\nCHANGE-BASED MIXED PRECISION',v.get('state'),v.get('detail'))
+            print('Updated UTC:',v.get('updated_utc'))
+            if v.get('state')=='running':
+                try:os.kill(v['pid'],0);print('Process:',v['pid'],'alive')
+                except ProcessLookupError:print('ATTENTION: worker stopped')
+            print('Report: Quantization/src/experiments/change_mixed_development/REPORT_KO.md')
+            log=a.data/'change_mixed.log'
+            if log.exists():print('\n'.join(log.read_text(errors='replace').splitlines()[-8:]))
+        except (OSError,json.JSONDecodeError):print('Change mixed status updating…')
+        return
     search=a.data/'rounding_search_quality/status.json'
     if search.exists() and not a.history:
         try:
