@@ -1,0 +1,22 @@
+{
+  "latents": 26,
+  "all_source_reference_artifact_hashes_pass": true,
+  "mask_reproduction_pass": true,
+  "cpu_float64_recomputed": true,
+  "max_nmse_relative_difference": 7.778641055658286e-08,
+  "model_gates": [
+    {
+      "prompt": 0,
+      "prefix_chunks_bitexact": 7,
+      "target_bitexact": true,
+      "all_high_hook_bitexact": true
+    },
+    {
+      "prompt": 4,
+      "prefix_chunks_bitexact": 7,
+      "target_bitexact": true,
+      "all_high_hook_bitexact": true
+    }
+  ],
+  "external_independent": false
+}

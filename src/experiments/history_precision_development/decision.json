@@ -1,0 +1,32 @@
+{
+  "primary_gate": false,
+  "summary": [
+    {
+      "prompt": 0,
+      "means": {
+        "low_only": 0.0009321603265067808,
+        "fixed": 0.000703309597512806,
+        "independent": 0.0006858392434094863,
+        "banlast1": 0.0007076401396621942,
+        "roundrobin": 0.0006948621025040125
+      },
+      "banlast_over_independent": 1.031787181124734,
+      "roundrobin_over_independent": 1.013155938773161,
+      "fixed_over_independent": 1.0254729577976174
+    },
+    {
+      "prompt": 4,
+      "means": {
+        "low_only": 0.0408496545598798,
+        "fixed": 0.017600730541444325,
+        "independent": 0.015154136514081457,
+        "banlast1": 0.016575012556469503,
+        "roundrobin": 0.015039564498423062
+      },
+      "banlast_over_independent": 1.0937615971103167,
+      "roundrobin_over_independent": 0.9924395549986017,
+      "fixed_over_independent": 1.161447273824507
+    }
+  ],
+  "scope": "one actual target chunk; three layers; one past V chunk; fixed BF16 prefix"
+}

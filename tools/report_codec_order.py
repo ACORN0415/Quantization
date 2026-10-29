@@ -53,7 +53,7 @@ def main():
  '| 비트 | 방법 | 방법만(FP16) | 양자화→방법 | 방법→양자화 같은 rank | 방법→양자화 같은 예산 |','|---|---|---:|---:|---:|---:|']
  for b in (2,3,4):
   for m in methods:t.append(f'| {b} | {m} | '+' | '.join(interval(group(b,m,o)) for o in orders)+' |')
- t+=['','## 실제 저장량과 rank','',
+ t+=['','![전체 비교 그림](comparison.png)','', '셀은 p0/p4의 D 비율, 색은 두 값 중 큰 값이다. 녹색은 직접 RTN보다 작은 오차다.','', '## 실제 저장량과 rank','',
  '한 층 V tensor payload: 인자 코드/scale/index 포함. 원본·중간/전체 복원 버퍼·파일 header·allocator는 별도. 디스크 artifact 크기와 GPU 상주 payload를 혼동하지 않는다. 정수 rank/표현 상한 때문에 남는 예산은 쓰지 않았다.','',
  '| 비트 | 방법 | FP16 rank/bytes | 같은 rank 양자화 bytes | 같은 예산 양자화 rank/bytes |','|---|---|---:|---:|---:|']
  for b in (2,3,4):

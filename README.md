@@ -439,6 +439,26 @@ squared 출력 오차는 직접 양자화의 2비트 **2.45–2.54배**, 3비트
 
 [순서·추가 오차·바이트·시간·원본 입력 비교 보고서](src/experiments/tensor_prequant_comparison/REPORT_KO.md).
 
+### 6개 방법의 양자화 순서 비교와 방법 2 (2026-10-30)
+
+T-ARP·t-SVD·피벗 QR·무작위 부분공간·Tucker·Tensor Train을 2/3/4비트에서
+방법만/선양자화/후양자화 동일 rank/후양자화 동일 예산으로 **450행** 비교했다.
+양자화 결합 경로에는 사전 개발 기준을 통과한 후보가 없었다. 다만 원본을
+FP16 인자로 저장하는 2비트 예산에서는 Tucker의 D가 RTN의0.562–0.661배,
+TT가0.544–0.645배로 작았다. 이 관찰은 기존 분해 활용 가능성이며 양자화
+결합 성공 또는 새 알고리즘 기여가 아니다.
+
+[6개 방법 전체 표·그림·비용](src/experiments/codec_order_development/REPORT_KO.md).
+
+이어서 방법 2의 실제 target chunk 생성24개+low baseline2개를 수행했다.
+4회 denoise마다 직전 V의25%를 BF16로 읽되 스케줄만 바꿨다.
+BanLast의 최종 latent NMSE는 독립 선택보다 두 프롬프트에서 **3.18%, 9.38%
+높아** 진행 기준을 통과하지 못했다. Round-robin도 일관된 이득이 없었다.
+BF16 prefix/target 및 all-high 개입 경로는 정확히 재현됐다. 전체 BF16 참조를
+유지하는 가능성 검사라 메모리 절감 주장은 하지 않는다.
+
+[방법 2 실제 생성·검증·한계](src/experiments/history_precision_development/REPORT_KO.md).
+
 ## 출처와 공개 범위
 
 이 저장소의 연구 변경은 사용자 저장소에서 관리한다. 외부 코드를 가져왔다는 사실과 원본 라이선스는 유지한다.
