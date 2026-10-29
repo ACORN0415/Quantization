@@ -2,6 +2,7 @@
   "id": "p1_p3_group_diagnostic_v0_3",
   "status": "draft_decision_rule_fixed_before_diagnostics_not_registered_not_started",
   "protocol": "P1_P3_MECHANISM_PLAN_v0_3.md",
+  "measurement_spec": "MECHANISM_MEASUREMENT_SPEC.md",
   "development_prompt_ids": [0, 4],
   "development_seeds": [101, 202],
   "decision_bits": 4,
@@ -24,7 +25,37 @@
     "record_at_matched_call_and_live_token_count": true,
     "resident_components": ["valid_code_bytes", "padding_code_bytes", "scale_bytes", "bf16_pending_bytes", "bf16_residual_bytes", "other_resident_tensor_bytes"],
     "separate": ["hypothetical_packed_bytes_including_metadata", "diagnostic_reference_bytes", "temporary_restore_bytes", "peak_gpu_memory", "peak_cpu_memory"],
-    "padding_must_not_be_double_counted": true
+    "padding_must_not_be_double_counted": true,
+    "deduplicate_shared_storage": true,
+    "gpu_allocator": ["baseline_allocated", "baseline_reserved", "peak_allocated", "peak_reserved"],
+    "external_device_memory_sampling_hz": 10,
+    "cpu_memory": ["lifetime_RSS_high_water", "phase_sampled_RSS_max"],
+    "cpu_sampling_hz": 10,
+    "state_sampling": "matched post-refresh states and maximum resident state; distinguish logical payload and backing allocation"
+  },
+  "performance": {
+    "mode": "diagnostic_off_separate_from_accuracy_and_operator_profiling",
+    "access": "only after all implementation gates and the fixed diagnostic GO condition pass; otherwise no performance-generation repetitions",
+    "gate": "bit-exact final latent versus diagnostic-on on the same development input",
+    "development_prompt_id": 0,
+    "seed": 101,
+    "arms": ["BF16", "L_g16", "C_repeat_g16", "C_once_g16", "L_g24"],
+    "warmup_chunks_each_process": 8,
+    "reset_cache_and_rng_after_warmup": true,
+    "measured_trajectories_per_arm": 3,
+    "total_measured_trajectories": 15,
+    "round_order_left_rotation": [0, 2, 4],
+    "fresh_process_each_arm_repetition": true,
+    "generation_wall": "synchronized start/end, model and condition embedding ready; include empty-cache initialization, noise setup, 42 chunks and output assembly; exclude VAE, MP4, metrics, disk I/O, final D2H",
+    "other_times": ["model_load_s", "text_encode_s", "latent_d2h_s", "vae_decode_s", "mp4_encode_s", "artifact_write_s", "quality_eval_s", "video_ready_wall_s"],
+    "profiling_only": ["first_chunk_latent_ready", "chunk_latency_pre_eviction", "chunk_latency_post_eviction", "encode", "restore", "eviction_copy", "concat", "attention", "logical_copy_bytes"],
+    "throughput_units": ["latent_frames_per_generation_second", "chunks_per_generation_second", "pixel_frames_per_video_ready_second"],
+    "reported_as": "byte-container simulation implementation cost; not packed INT4 kernel speed"
+  },
+  "explanatory_diagnostics": {
+    "fixed_summary_and_advance_rule_unchanged": true,
+    "required": ["initial_encode_error", "incremental_encode_change", "insertion_BF16_read_error", "reference_norm", "token_chunk_age", "encode_count", "group_membership", "scale_summary", "zero_scale_count", "zero_code_fraction"],
+    "query_probe": {"status": "development_only_subject_to_identity_and_cost_gate", "layers": [0, 7, 14, 22, 29], "call": "context_refresh", "query_positions": [0, 1170, 2340, 3510, 4679], "measure": "RMS(q dot delta_K / sqrt(128)) using the same teacher query", "full_matrix_dump": false}
   },
   "conditional_fr_candidate": {
     "access": "forbidden until advance condition, full development gates, cost validation, and final registration seal",
