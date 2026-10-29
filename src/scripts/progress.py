@@ -9,6 +9,20 @@ def show():
     if a.watch:print('\033[2J\033[H',end='')
     print(time.strftime('%Y-%m-%d %H:%M:%S'),'— Quantization progress')
     print('Local data:',a.data)
+    dense=a.data/'dense_motion/status.json'
+    if dense.exists() and not a.history:
+        try:
+            v=json.loads(dense.read_text())
+            print('\nLOCAL KV CORRESPONDENCE DEVELOPMENT',v.get('state'),v.get('detail'))
+            print('Updated UTC:',v.get('updated_utc'))
+            if v.get('state')=='running':
+                try:os.kill(v['pid'],0);print('Process:',v['pid'],'alive')
+                except ProcessLookupError:print('ATTENTION: no dense motion process alive')
+            print('Report: Quantization/src/experiments/dense_motion_development/REPORT_KO.md')
+            log=a.data/'dense_motion.log'
+            if log.exists():print('\n'.join(log.read_text(errors='replace').splitlines()[-8:]))
+        except (OSError,json.JSONDecodeError):print('Local correspondence status updating…')
+        return
     motion=a.data/'motion_codec/status.json'
     if motion.exists() and not a.history:
         try:
