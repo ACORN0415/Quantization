@@ -105,3 +105,11 @@ src/experiments/RANDOMIZED_CORRECTION_DEVELOPMENT.md.
 SVD 참고는 2비트 예산에서만 양 프롬프트 출력 오차 19.56–22.74% 개선.
 T-ARP 구현은 아직 아니며 열 선택 개선과 기존 SVD 대비 이득을 다음 과제로 남김.
 [결과](../src/experiments/tensor_cross_development/REPORT_KO.md).
+
+### 방법 1 적응적 선택 후속 결과
+
+Algorithm 8 기반 선택(5개 고정 시드)과 adaptive argmax, RTN2/static/SVD를
+총 54행 비교했다. 랜덤 평균 D는 RTN의 1.804/1.837배, SVD의 2.335/2.284배.
+encode도 SVD보다 느려 현재 rank22 공통 열 구성은 보류한다. SVD의 2비트
+가능성과 모든 tensor 압축의 실패를 혼동하지 않는다. 방법 2는 아직 미실행.
+[후속 결과](../src/experiments/tensor_adaptive_development/REPORT_KO.md).
