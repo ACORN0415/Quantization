@@ -1,0 +1,31 @@
+{
+  "passed": true,
+  "device": "cpu",
+  "dtype": "float64",
+  "seed": 20261029,
+  "random_objective_gradient_cases": 128,
+  "neighbor_rounding_candidates": 16,
+  "same_candidate_selected": true,
+  "max_absolute_objective_difference": 3.552713678800501e-15,
+  "max_absolute_gradient_difference": 1.5543122344752192e-15,
+  "full_old_error_counterexample_nonproportional_norm": 0.3616662736386098,
+  "full_prefix_shifted_objective_cases": 4,
+  "max_absolute_shifted_objective_difference": 2.220446049250313e-16,
+  "conclusion": "new-V-only, same-query cache deletion transition objective equals query-weighted output error",
+  "limits": [
+    "floating property checks, not a formal proof",
+    "pre-W_O headwise AV squared loss; post-W_O head mixing is outside the scalar-weight identity",
+    "does not rule out changing queries, quantized keys, old-error side information, or different code objectives",
+    "full old-V BF16 error adds offsets unavailable to a codec that discards original old V"
+  ],
+  "source_sha256": {
+    "tools/transition_equivalence_gate.py": "230e4688b34d683ba02117c35ba7c594a62695908f23f5ee6fd5cd3861211aad",
+    "tools/transition_round_core.py": "af09b11a2d261fc2ae3446e85364885d4ec348ad511bc91ddd59a4871698c41b",
+    "tools/test_transition_round_core.py": "caefa20dc59d40249e1e69376251f1370dbb0ddbf612b19f88edb22d1fff9da9",
+    "src/experiments/TRANSITION_EQUIVALENCE_GATE_KO.md": "e06ae2e33fcafc615844cc9279fb8916b300d05669e15f43d41d988cfa696514"
+  },
+  "implementation_commit": "1bb1669",
+  "scope_clarification_commit": "36f268d",
+  "gpu_experiments_started": false,
+  "research_captures_used": false
+}
