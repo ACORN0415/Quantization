@@ -105,6 +105,7 @@ def check():
         full_prefix_shifted_objective_cases=shifted_cases,max_absolute_shifted_objective_difference=largest_shifted_error,
         conclusion='new-V-only, same-query cache deletion transition objective equals query-weighted output error',
         limits=['floating property checks, not a formal proof',
+                'pre-W_O headwise AV squared loss; post-W_O head mixing is outside the scalar-weight identity',
                 'does not rule out changing queries, quantized keys, old-error side information, or different code objectives',
                 'full old-V BF16 error adds offsets unavailable to a codec that discards original old V'])
 
