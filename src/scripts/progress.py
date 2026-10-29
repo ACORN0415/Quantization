@@ -9,6 +9,21 @@ def show():
     if a.watch:print('\033[2J\033[H',end='')
     print(time.strftime('%Y-%m-%d %H:%M:%S'),'— Quantization progress')
     print('Local data:',a.data)
+    mechanism=a.data/'mechanism/status.json'
+    if mechanism.exists() and not a.history:
+        try:
+            v=json.loads(mechanism.read_text());print('\nMECHANISM',v.get('state'),v.get('detail'))
+            print('Completed:',v.get('completed','?'),'/',v.get('total','?'),'ETA hours:',v.get('eta_hours_rough','measuring'))
+            print('Updated UTC:',v.get('updated_utc'))
+            if v.get('state')=='running' and v.get('pid'):
+                try:os.kill(v['pid'],0);print('Process:',v['pid'],'alive')
+                except ProcessLookupError:print('ATTENTION: recorded process stopped')
+            gpu=subprocess.run(['nvidia-smi','--query-gpu=utilization.gpu,memory.used','--format=csv,noheader'],capture_output=True,text=True,timeout=2)
+            print('GPU:',gpu.stdout.strip())
+            log=a.data/'mechanism.log'
+            if log.exists():print('\n'.join(log.read_text(errors='replace').splitlines()[-8:]))
+        except (OSError,json.JSONDecodeError,subprocess.TimeoutExpired):print('Mechanism status updating…')
+        return
     supplement=a.data/'policy_supplement/status.json'
     if supplement.exists() and not a.history:
         try:
