@@ -1,0 +1,74 @@
+{
+  "passed": true,
+  "rows": 66,
+  "cost_rows": 22,
+  "masks": 16,
+  "input_artifacts_verified": 18,
+  "packed_state_files_verified": 22,
+  "source_sha256": "8db4e6609ba59d1a8555091e7fb8b12da8b01a853bcd1719165f5c0eaaf98255",
+  "advance": false,
+  "recomputed": [
+    {
+      "prompt": 0,
+      "means": {
+        "uniform2": 0.048901831110318504,
+        "uniform3": 0.005112565368310445,
+        "uniform4": 0.0009366207264570727,
+        "change_high": 0.022847797411183514,
+        "change_low": 0.026501295984619196,
+        "magnitude_high": 0.01591270028923949,
+        "random_9101": 0.023719143846796617,
+        "random_9102": 0.02865879475656483,
+        "random_9103": 0.02854625352968772,
+        "random_9104": 0.03164899307820532,
+        "random_9105": 0.02809550499336587
+      },
+      "random_mean": 0.02813373804092407,
+      "random_min": 0.023719143846796617,
+      "random_max": 0.03164899307820532,
+      "high_vs_random_reduction": 0.1878861821366038,
+      "high_vs_inverse_reduction": 0.13786112858616795,
+      "high_over_uniform3": 4.468949688702768,
+      "v_payload_overhead": 5.423029688178538e-05,
+      "passes": false
+    },
+    {
+      "prompt": 4,
+      "means": {
+        "uniform2": 0.03349426264564196,
+        "uniform3": 0.0032187779175324575,
+        "uniform4": 0.000558393742216544,
+        "change_high": 0.009619775228202343,
+        "change_low": 0.023625472767485514,
+        "magnitude_high": 0.013637020873526733,
+        "random_9101": 0.01507062092423439,
+        "random_9102": 0.020567385893728998,
+        "random_9103": 0.01759582654469543,
+        "random_9104": 0.019657769964800943,
+        "random_9105": 0.01942843881746133
+      },
+      "random_mean": 0.018464008428984217,
+      "random_min": 0.01507062092423439,
+      "random_max": 0.020567385893728998,
+      "high_vs_random_reduction": 0.4789985465397901,
+      "high_vs_inverse_reduction": 0.5928218951266224,
+      "high_over_uniform3": 2.98864211035005,
+      "v_payload_overhead": 5.423029688178538e-05,
+      "passes": false
+    }
+  ],
+  "tensor_checks": {
+    "packed_state_files": 22,
+    "reconstructed_tensors": 132,
+    "original_groups_preserved": true,
+    "actual_shared_masks": true,
+    "score_and_masks_recomputed": true,
+    "crosscapture_v_equal": true
+  },
+  "limits": [
+    "same-author verification, not external independent validation",
+    "attention D/J and K/RoPE/same-bit model gates are not independently re-executed by this audit",
+    "primary is V-only incremental FP32 post-Wo teacher-query error, not full KV/FR/video quality",
+    "actual packed payload excludes temporary reconstruction and full inference peak"
+  ]
+}
