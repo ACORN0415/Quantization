@@ -1,0 +1,46 @@
+{
+  "exploratory": true,
+  "raw_input": true,
+  "arm_means": [
+    {
+      "arm": "BF16",
+      "subject_late": 0.8550376941760381,
+      "empty_pairs": 0,
+      "boundary_warp_error": 0.013278736618332683,
+      "boundary_coverage": 0.9708133860831222,
+      "boundary_flow_pixels": 0.33084019872226883,
+      "boundary_raw_difference": 0.013967879082349735,
+      "inside_warp_error": 0.008742328302884872,
+      "inside_coverage": 0.9787180098512817,
+      "inside_flow_pixels": 0.3103225019257811,
+      "inside_raw_difference": 0.009967304240692304
+    },
+    {
+      "arm": "L",
+      "subject_late": 0.7231022665898005,
+      "empty_pairs": 0,
+      "boundary_warp_error": 0.01924388368414449,
+      "boundary_coverage": 0.960398431571703,
+      "boundary_flow_pixels": 0.4498300241927306,
+      "boundary_raw_difference": 0.02022581255351681,
+      "inside_warp_error": 0.012318177207831354,
+      "inside_coverage": 0.9721858817197028,
+      "inside_flow_pixels": 0.42882901743527446,
+      "inside_raw_difference": 0.013826961782234276
+    },
+    {
+      "arm": "C_repeat",
+      "subject_late": 0.7780676210920016,
+      "empty_pairs": 0,
+      "boundary_warp_error": 0.018673197146401636,
+      "boundary_coverage": 0.9446894224319192,
+      "boundary_flow_pixels": 0.6360032802802466,
+      "boundary_raw_difference": 0.01991918067344361,
+      "inside_warp_error": 0.011865678966546151,
+      "inside_coverage": 0.9602332408170379,
+      "inside_flow_pixels": 0.6749387330094737,
+      "inside_raw_difference": 0.014068210087042112
+    }
+  ],
+  "note": "All 24 prompt/seed videos per arm included; full-cell residual undefined if any window is undefined; no finite-only subset"
+}
