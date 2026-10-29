@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "rows": 240,
+  "development_prompts": 2,
+  "per_prompt_arm_cells": 24,
+  "artifacts_verified": 24,
+  "source_sha256": "2059a606879e1176b8312cc3a5e17a53c0d035bb2dc92b2d682627c86ee9d6f4",
+  "model_source_sha256": "e916506f6085f9c050cbd44b7e1b79d4a8aae9d77379fe5e2384fee5bad5a758",
+  "advance_restricted_variant": false,
+  "recomputed": [
+    {
+      "prompt": 0,
+      "means": {
+        "direct": 0.06494230086294313,
+        "same_position": 0.04701801292443027,
+        "shared_translation": 0.04701801292443027,
+        "matched_border_same_position": 0.04701801292443027,
+        "per_layer_translation": 0.04701801292443027
+      },
+      "shared_vs_same_relative_reduction": 0.0,
+      "shared_vs_matched_border_relative_reduction": 0.0,
+      "passes": false
+    },
+    {
+      "prompt": 4,
+      "means": {
+        "direct": 0.06059882704478999,
+        "same_position": 0.047342144816260166,
+        "shared_translation": 0.047342144816260166,
+        "matched_border_same_position": 0.047342144816260166,
+        "per_layer_translation": 0.047342144816260166
+      },
+      "shared_vs_same_relative_reduction": 0.0,
+      "shared_vs_matched_border_relative_reduction": 0.0,
+      "passes": false
+    }
+  ],
+  "limits": [
+    "same-author read-only arithmetic/hash audit; not external independent validation",
+    "capture gates are manifest claims; raw numerical gates are not re-executed here",
+    "actual uint8 tensor payload differs from hypothetical packed bytes; no deployment savings claim",
+    "K primary metric is pre-RoPE reconstruction, not attention/output or video quality",
+    "unwarmed codec+metric timing excludes anchor encoding and reference restore; not throughput",
+    "global +/-2 translation probe does not test dense motion or reproduce TempoKV"
+  ]
+}

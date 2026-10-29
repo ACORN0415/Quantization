@@ -1,0 +1,238 @@
+{
+  "source_sha256": "2059a606879e1176b8312cc3a5e17a53c0d035bb2dc92b2d682627c86ee9d6f4",
+  "advance_restricted_variant": false,
+  "decisions": [
+    {
+      "prompt": 0,
+      "means": {
+        "direct": 0.06494230086294313,
+        "same_position": 0.04701801292443027,
+        "shared_translation": 0.04701801292443027,
+        "matched_border_same_position": 0.04701801292443027,
+        "per_layer_translation": 0.04701801292443027
+      },
+      "shared_vs_same_relative_reduction": 0.0,
+      "shared_vs_matched_border_relative_reduction": 0.0,
+      "passes": false
+    },
+    {
+      "prompt": 4,
+      "means": {
+        "direct": 0.06059882704478999,
+        "same_position": 0.047342144816260166,
+        "shared_translation": 0.047342144816260166,
+        "matched_border_same_position": 0.047342144816260166,
+        "per_layer_translation": 0.047342144816260166
+      },
+      "shared_vs_same_relative_reduction": 0.0,
+      "shared_vs_matched_border_relative_reduction": 0.0,
+      "passes": false
+    }
+  ],
+  "analysis_seconds": 1.4891687748022377,
+  "scope": "development only; global translations +/-2; NOT a TempoKV comparison or dense-motion rejection",
+  "timing_scope": "unwarmed instrumented codec+metric wall; not deployment throughput; shared search repeated in rows",
+  "byte_scope": "pair anchor+target tensor payload; maps duplicated per K/V/layer; restore workspace separate; packed hypothetical",
+  "captures": [
+    {
+      "prompt": 0,
+      "seed": 101,
+      "source_sha256": "2059a606879e1176b8312cc3a5e17a53c0d035bb2dc92b2d682627c86ee9d6f4",
+      "teacher_bitexact_chunks": 8,
+      "rope_identity_records": 12,
+      "artifacts": [
+        {
+          "file": "p00_s101/c00_l00.pt",
+          "sha256": "e8a839f7ae651ecb571f58d5c55d5a738bd19105fcc75b59baec95de73bf1325",
+          "bytes": 29804180,
+          "layer": 0,
+          "chunk": 0
+        },
+        {
+          "file": "p00_s101/c00_l14.pt",
+          "sha256": "f4a626a50fb22ad90a1b7f370e4aeb7ef54b890e317a39c01bce9b11537da784",
+          "bytes": 29804180,
+          "layer": 14,
+          "chunk": 0
+        },
+        {
+          "file": "p00_s101/c00_l29.pt",
+          "sha256": "b6790fea395d7fd2c7991e892a53246178084fb3203c65914221221b849e2a69",
+          "bytes": 29804180,
+          "layer": 29,
+          "chunk": 0
+        },
+        {
+          "file": "p00_s101/c01_l00.pt",
+          "sha256": "b73f032f844dc661149b0d371ccb76204a7e8f1d8facd98d8a8cbaba5fe94ee2",
+          "bytes": 29804180,
+          "layer": 0,
+          "chunk": 1
+        },
+        {
+          "file": "p00_s101/c01_l14.pt",
+          "sha256": "a1ada5b9e62ad7c65397365f83352aafbd231397221d59783e1fc12655cb65c6",
+          "bytes": 29804180,
+          "layer": 14,
+          "chunk": 1
+        },
+        {
+          "file": "p00_s101/c01_l29.pt",
+          "sha256": "fdefc5772132b5077c045cbd488cf0045dd93d5be10756922e9accf767174027",
+          "bytes": 29804180,
+          "layer": 29,
+          "chunk": 1
+        },
+        {
+          "file": "p00_s101/c06_l00.pt",
+          "sha256": "5838ba8dc83393e7105e7d85aa32e2dc239aadf3c4aef9cc59fc7da3729abf14",
+          "bytes": 29804180,
+          "layer": 0,
+          "chunk": 6
+        },
+        {
+          "file": "p00_s101/c06_l14.pt",
+          "sha256": "ce39b305cd3e495309867d4602c9ff85b32c2abca20bdc1aafecaea302d878c5",
+          "bytes": 29804180,
+          "layer": 14,
+          "chunk": 6
+        },
+        {
+          "file": "p00_s101/c06_l29.pt",
+          "sha256": "99948503b9fd915d9947470d375fbf254190b52721fb2339dfcd871d6fdb727d",
+          "bytes": 29804180,
+          "layer": 29,
+          "chunk": 6
+        },
+        {
+          "file": "p00_s101/c07_l00.pt",
+          "sha256": "dcc0df7beb03ec18e4fe6414aafbb185512050a2090d844ab03d99e15d7c8cc5",
+          "bytes": 29804180,
+          "layer": 0,
+          "chunk": 7
+        },
+        {
+          "file": "p00_s101/c07_l14.pt",
+          "sha256": "83f48a98bf309bb08b8e4d66141e6825bbc19f7c568e504961f0fcc3ea60dd57",
+          "bytes": 29804180,
+          "layer": 14,
+          "chunk": 7
+        },
+        {
+          "file": "p00_s101/c07_l29.pt",
+          "sha256": "51703d2f68cfea60442b95ddbb598521f142fbb823e128a3f52c40e6a8aa7522",
+          "bytes": 29804180,
+          "layer": 29,
+          "chunk": 7
+        }
+      ],
+      "seconds": 59.59158424590714,
+      "peak_allocated_bytes": 9312963584,
+      "peak_reserved_bytes": 9705619456,
+      "cpu_high_water_bytes": 35621433344,
+      "source_model_sha256": "e916506f6085f9c050cbd44b7e1b79d4a8aae9d77379fe5e2384fee5bad5a758",
+      "domain": "pre-RoPE K / unchanged V; refresh only"
+    },
+    {
+      "prompt": 4,
+      "seed": 101,
+      "source_sha256": "2059a606879e1176b8312cc3a5e17a53c0d035bb2dc92b2d682627c86ee9d6f4",
+      "teacher_bitexact_chunks": 8,
+      "rope_identity_records": 12,
+      "artifacts": [
+        {
+          "file": "p04_s101/c00_l00.pt",
+          "sha256": "7e2da36b76726c11fcf33c73d1e890df2a8f163fc8fb3bf6248ea1c577ec1544",
+          "bytes": 29804180,
+          "layer": 0,
+          "chunk": 0
+        },
+        {
+          "file": "p04_s101/c00_l14.pt",
+          "sha256": "df7f4a9599d83455d2c5548b429686874d21b6c890bfcd300e232a8c4d1df4e2",
+          "bytes": 29804180,
+          "layer": 14,
+          "chunk": 0
+        },
+        {
+          "file": "p04_s101/c00_l29.pt",
+          "sha256": "2347fab9cb78a19afe0894151d6432797dc2562dc61c12a0d3fc8e5706089f6f",
+          "bytes": 29804180,
+          "layer": 29,
+          "chunk": 0
+        },
+        {
+          "file": "p04_s101/c01_l00.pt",
+          "sha256": "833181600089fa4addc05213981c182158313764722639afc067ea0b9c629b9a",
+          "bytes": 29804180,
+          "layer": 0,
+          "chunk": 1
+        },
+        {
+          "file": "p04_s101/c01_l14.pt",
+          "sha256": "a26daac5aa209912b5349de721046a1c1cb7f81eb0f79f6f47c0ac3fa157a89a",
+          "bytes": 29804180,
+          "layer": 14,
+          "chunk": 1
+        },
+        {
+          "file": "p04_s101/c01_l29.pt",
+          "sha256": "b67a18c2adb00b0eb49a086f46ec34d349eb23145482b5a0818a324949e77774",
+          "bytes": 29804180,
+          "layer": 29,
+          "chunk": 1
+        },
+        {
+          "file": "p04_s101/c06_l00.pt",
+          "sha256": "a79019f6220daf3669c290ed53236262a7f27546bc364765d955fbf16b952f2d",
+          "bytes": 29804180,
+          "layer": 0,
+          "chunk": 6
+        },
+        {
+          "file": "p04_s101/c06_l14.pt",
+          "sha256": "a53b1a604dec0568cce759a2696d042830b3c3a22ba7c770ea9d5e1af36b2de2",
+          "bytes": 29804180,
+          "layer": 14,
+          "chunk": 6
+        },
+        {
+          "file": "p04_s101/c06_l29.pt",
+          "sha256": "79b6126e59c7bf3e13012eb98b222a281485404607f2aabd9ae8518894436e50",
+          "bytes": 29804180,
+          "layer": 29,
+          "chunk": 6
+        },
+        {
+          "file": "p04_s101/c07_l00.pt",
+          "sha256": "ab106fa9e158a70bf903c97cd212c32077c991f08e06c191b641aee6469192f5",
+          "bytes": 29804180,
+          "layer": 0,
+          "chunk": 7
+        },
+        {
+          "file": "p04_s101/c07_l14.pt",
+          "sha256": "c34d91813dd9cd6e46636358451d0e86e69d90de01a796b35248f6e264945019",
+          "bytes": 29804180,
+          "layer": 14,
+          "chunk": 7
+        },
+        {
+          "file": "p04_s101/c07_l29.pt",
+          "sha256": "95750f8e10fd7e686be6dba0197247c6bb28fa1fc1e1d55faf6338a97beffb76",
+          "bytes": 29804180,
+          "layer": 29,
+          "chunk": 7
+        }
+      ],
+      "seconds": 59.03380304691382,
+      "peak_allocated_bytes": 9312963584,
+      "peak_reserved_bytes": 9705619456,
+      "cpu_high_water_bytes": 35621351424,
+      "source_model_sha256": "e916506f6085f9c050cbd44b7e1b79d4a8aae9d77379fe5e2384fee5bad5a758",
+      "domain": "pre-RoPE K / unchanged V; refresh only"
+    }
+  ],
+  "analysis_peak_allocated_bytes": 243772928,
+  "analysis_peak_reserved_bytes": 325058560
+}
