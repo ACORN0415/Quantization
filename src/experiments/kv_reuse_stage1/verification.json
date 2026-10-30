@@ -1,0 +1,25 @@
+{
+  "completed_cases": [
+    "gate_U",
+    "gate_B",
+    "gate_R",
+    "profile_B",
+    "warm_B",
+    "warm_R",
+    "pair1_B",
+    "pair1_R",
+    "pair2_R",
+    "pair2_B",
+    "pair3_B",
+    "pair3_R"
+  ],
+  "direct_latent_byte_comparisons_including_reference": 12,
+  "attention_tape_records": 5400,
+  "attention_raw_bytes_per_gate": 362299392000,
+  "attention_tape_sha256": "6afe1109a8e4c7268cbc089513577f27ea910e1f0915d236a2f0eb5816a9e4c3",
+  "attention_index_sha256": "056b8955958b164f04003df0f756fa38eadec8397fddaa9c4fac1ad228d97846",
+  "own_source_files": 6,
+  "upstream_source_files": 81,
+  "scope": "CPU recheck of saved evidence. Counters are stored aggregates; no GPU replay or second full attention-input comparison.",
+  "seconds_since_stage_start": 2143.1171247959137
+}

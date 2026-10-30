@@ -8,11 +8,16 @@
 
 [현재 원고·연산 도식](문서/paper/analysis_manuscript_ko.md) · [마지막 검증 보고](src/experiments/repeat_once_final/REPORT_KO.md) · [K+V TT 종료 보고](src/experiments/tt_kv_final/REPORT_KO.md)
 
-**별도 새 주제의 실행 가능성 확인 (2026-10-31):** 위 연구의 종료 상태를 유지한 채
-QVG packed KV의 복원값 재사용 진단을 시작했다. 공식 커널의 합성 입력 실행·바이트
-동등성·실제 호출 수 검사는 통과했다. 전체 생성 가속과 비용 모델 예측은 아직 측정하지
-않았다. [실행 가능성 보고](src/experiments/kv_reuse_preflight/REPORT_KO.md) ·
-[후속 측정 설계](src/experiments/kv_reuse_preflight/MEASUREMENT_PLAN_KO.md).
+**별도 새 주제의 단계1 진단 완료 (2026-10-31):** QVG packed KV의 복원값 재사용을
+12회 생성·약 34분 49초 안에 검증했다. 중복 복원 제거와 1 GiB 보관 경로는 각각
+실제 attention 입력 5,400개와 최종 latent가 기준 경로와 원소 바이트 단위로 같았다.
+주 비교에서 실제 메모리는 1 GiB 증가했지만, 세 대응 쌍의 생성 시간 감소는
+0.099–0.312%(중앙값 0.113%)였다. 사전 5% 진행 기준에 못 미쳐 **이 조건의 복잡한
+선택기 연구를 종료하며 H2를 실행하지 않는다.** 작은 시간 차이를 유의한 가속으로
+주장하지 않으며, 다른 조건·fused attention의 우위는 미검증이다.
+[단계1 결과와 판단](src/experiments/kv_reuse_stage1/REPORT_KO.md) ·
+[실행 가능성 보고](src/experiments/kv_reuse_preflight/REPORT_KO.md) ·
+[사전 측정 설계](src/experiments/kv_reuse_preflight/MEASUREMENT_PLAN_KO.md).
 
 ## 먼저 읽을 현재 결론
 

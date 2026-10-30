@@ -1,0 +1,31 @@
+{
+  "passed": true,
+  "shape": [
+    1,
+    12,
+    37440,
+    128
+  ],
+  "checks": [
+    "full/partial read 0:37440",
+    "full/partial read 1560:35880",
+    "full/partial read 0:37440",
+    "in-place tensor mutation invalidates version",
+    "state replacement invalidates held span",
+    "insufficient pair budget falls back without truncating context",
+    "new raw chunk concatenation",
+    "unsupported partial span overwrite rejected before mutation",
+    "partial eviction retains a still-live native span",
+    "full eviction and reinsert",
+    "full overwrite invalidation"
+  ],
+  "pool_stats": {
+    "capacity_bytes": 1073741824,
+    "reserved_pair_bytes": 230031360,
+    "requests": 11,
+    "hits": 6,
+    "misses": 5,
+    "invalidations": 4,
+    "pairs": 1
+  }
+}

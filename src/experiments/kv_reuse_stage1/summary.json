@@ -1,0 +1,141 @@
+{
+  "reason": "complete",
+  "decision": "stop_performance_policy_for_this_setting",
+  "pairs": [
+    {
+      "pair": 1,
+      "B_s": 24.589139199000783,
+      "R_s": 24.512378816005366,
+      "reduction_fraction": 0.0031217189985461857
+    },
+    {
+      "pair": 2,
+      "B_s": 24.58616023999639,
+      "R_s": 24.56184039299842,
+      "reduction_fraction": 0.0009891681645516348
+    },
+    {
+      "pair": 3,
+      "B_s": 24.594477742997697,
+      "R_s": 24.566766869997082,
+      "reduction_fraction": 0.00112671117842722
+    }
+  ],
+  "optimistic": {
+    "decoder_fraction": 0.010566046849243985,
+    "decode_layout_fraction": 0.023457238723157914,
+    "retained_call_fraction": 0.12666666666666668,
+    "scaled_decode_layout_fraction": 0.0029712502382666693,
+    "interpretation": "rough optimistic estimate under uniform decoder cost; not a rigorous upper bound"
+  },
+  "completed": 12,
+  "budget": {
+    "start_unix": 1793394137.693786,
+    "started": "2026-10-31T06:02:17+09:00",
+    "wall_limit_s": 7200,
+    "max_generations": 12,
+    "attempts": [
+      {
+        "name": "gate_U",
+        "arm": "U",
+        "mode": "verify",
+        "started": "2026-10-31T06:03:31+09:00",
+        "status": "valid"
+      },
+      {
+        "name": "gate_B",
+        "arm": "B",
+        "mode": "verify",
+        "started": "2026-10-31T06:13:45+09:00",
+        "status": "valid"
+      },
+      {
+        "name": "gate_R",
+        "arm": "R",
+        "mode": "verify",
+        "started": "2026-10-31T06:23:56+09:00",
+        "status": "valid"
+      },
+      {
+        "name": "profile_B",
+        "arm": "B",
+        "mode": "profile",
+        "started": "2026-10-31T06:33:22+09:00",
+        "status": "valid"
+      },
+      {
+        "name": "warm_B",
+        "arm": "B",
+        "mode": "warmup",
+        "started": "2026-10-31T06:33:47+09:00",
+        "status": "valid"
+      },
+      {
+        "name": "warm_R",
+        "arm": "R",
+        "mode": "warmup",
+        "started": "2026-10-31T06:34:12+09:00",
+        "status": "valid"
+      },
+      {
+        "name": "pair1_B",
+        "arm": "B",
+        "mode": "timed",
+        "started": "2026-10-31T06:34:37+09:00",
+        "status": "valid"
+      },
+      {
+        "name": "pair1_R",
+        "arm": "R",
+        "mode": "timed",
+        "started": "2026-10-31T06:35:02+09:00",
+        "status": "valid"
+      },
+      {
+        "name": "pair2_R",
+        "arm": "R",
+        "mode": "timed",
+        "started": "2026-10-31T06:35:27+09:00",
+        "status": "valid"
+      },
+      {
+        "name": "pair2_B",
+        "arm": "B",
+        "mode": "timed",
+        "started": "2026-10-31T06:35:52+09:00",
+        "status": "valid"
+      },
+      {
+        "name": "pair3_B",
+        "arm": "B",
+        "mode": "timed",
+        "started": "2026-10-31T06:36:17+09:00",
+        "status": "valid"
+      },
+      {
+        "name": "pair3_R",
+        "arm": "R",
+        "mode": "timed",
+        "started": "2026-10-31T06:36:42+09:00",
+        "status": "valid"
+      }
+    ],
+    "elapsed_s": 2089.2664289474487,
+    "reported": "2026-10-31T06:37:06+09:00"
+  },
+  "results": [
+    "gate_U",
+    "gate_B",
+    "gate_R",
+    "profile_B",
+    "warm_B",
+    "warm_R",
+    "pair1_B",
+    "pair1_R",
+    "pair2_R",
+    "pair2_B",
+    "pair3_B",
+    "pair3_R"
+  ],
+  "scope": "one input, QVG materialized path; no fused comparison, no H2 fit"
+}

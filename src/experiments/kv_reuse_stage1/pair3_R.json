@@ -1,0 +1,278 @@
+{
+  "name": "pair3_R",
+  "arm": "R",
+  "mode": "timed",
+  "status": "valid",
+  "generation_s": 24.566766869997082,
+  "time_scope": "pool/cache init through final latent, excludes model/text/VAE/file IO",
+  "latent_equal_to_U": true,
+  "latent_sha256": "86234d9f45d46ffc820305e3c5f7d219a79c941c54d42581cbf3d5df30dce435",
+  "tape": null,
+  "counts": {
+    "arm": "R",
+    "decode_calls": 1048,
+    "read_calls": 3660,
+    "event_seconds": {},
+    "event_interpretation": "nested GPU intervals, not additive or an upper bound",
+    "pool": {
+      "capacity_bytes": 1073741824,
+      "reserved_pair_bytes": 920125440,
+      "requests": 1200,
+      "hits": 152,
+      "misses": 1048,
+      "invalidations": 0,
+      "pairs": 4
+    }
+  },
+  "schedule": [
+    {
+      "forward": 0,
+      "start": 0
+    },
+    {
+      "forward": 1,
+      "start": 0
+    },
+    {
+      "forward": 2,
+      "start": 0
+    },
+    {
+      "forward": 3,
+      "start": 0
+    },
+    {
+      "forward": 4,
+      "start": 0
+    },
+    {
+      "forward": 5,
+      "start": 4680
+    },
+    {
+      "forward": 6,
+      "start": 4680
+    },
+    {
+      "forward": 7,
+      "start": 4680
+    },
+    {
+      "forward": 8,
+      "start": 4680
+    },
+    {
+      "forward": 9,
+      "start": 4680
+    },
+    {
+      "forward": 10,
+      "start": 9360
+    },
+    {
+      "forward": 11,
+      "start": 9360
+    },
+    {
+      "forward": 12,
+      "start": 9360
+    },
+    {
+      "forward": 13,
+      "start": 9360
+    },
+    {
+      "forward": 14,
+      "start": 9360
+    },
+    {
+      "forward": 15,
+      "start": 14040
+    },
+    {
+      "forward": 16,
+      "start": 14040
+    },
+    {
+      "forward": 17,
+      "start": 14040
+    },
+    {
+      "forward": 18,
+      "start": 14040
+    },
+    {
+      "forward": 19,
+      "start": 14040
+    },
+    {
+      "forward": 20,
+      "start": 18720
+    },
+    {
+      "forward": 21,
+      "start": 18720
+    },
+    {
+      "forward": 22,
+      "start": 18720
+    },
+    {
+      "forward": 23,
+      "start": 18720
+    },
+    {
+      "forward": 24,
+      "start": 18720
+    },
+    {
+      "forward": 25,
+      "start": 23400
+    },
+    {
+      "forward": 26,
+      "start": 23400
+    },
+    {
+      "forward": 27,
+      "start": 23400
+    },
+    {
+      "forward": 28,
+      "start": 23400
+    },
+    {
+      "forward": 29,
+      "start": 23400
+    },
+    {
+      "forward": 30,
+      "start": 28080
+    },
+    {
+      "forward": 31,
+      "start": 28080
+    },
+    {
+      "forward": 32,
+      "start": 28080
+    },
+    {
+      "forward": 33,
+      "start": 28080
+    },
+    {
+      "forward": 34,
+      "start": 28080
+    },
+    {
+      "forward": 35,
+      "start": 32760
+    },
+    {
+      "forward": 36,
+      "start": 32760
+    },
+    {
+      "forward": 37,
+      "start": 32760
+    },
+    {
+      "forward": 38,
+      "start": 32760
+    },
+    {
+      "forward": 39,
+      "start": 32760
+    },
+    {
+      "forward": 40,
+      "start": 37440
+    },
+    {
+      "forward": 41,
+      "start": 37440
+    },
+    {
+      "forward": 42,
+      "start": 37440
+    },
+    {
+      "forward": 43,
+      "start": 37440
+    },
+    {
+      "forward": 44,
+      "start": 37440
+    },
+    {
+      "forward": 45,
+      "start": 42120
+    },
+    {
+      "forward": 46,
+      "start": 42120
+    },
+    {
+      "forward": 47,
+      "start": 42120
+    },
+    {
+      "forward": 48,
+      "start": 42120
+    },
+    {
+      "forward": 49,
+      "start": 42120
+    },
+    {
+      "forward": 50,
+      "start": 46800
+    },
+    {
+      "forward": 51,
+      "start": 46800
+    },
+    {
+      "forward": 52,
+      "start": 46800
+    },
+    {
+      "forward": 53,
+      "start": 46800
+    },
+    {
+      "forward": 54,
+      "start": 46800
+    },
+    {
+      "forward": 55,
+      "start": 51480
+    },
+    {
+      "forward": 56,
+      "start": 51480
+    },
+    {
+      "forward": 57,
+      "start": 51480
+    },
+    {
+      "forward": 58,
+      "start": 51480
+    },
+    {
+      "forward": 59,
+      "start": 51480
+    }
+  ],
+  "peak_allocated": 12322001408,
+  "peak_reserved": 15250489344,
+  "process_sample_peak": 15745417216,
+  "process_peak_note": "0.5-second NVML sampled maximum, not a continuous peak",
+  "temp_min": 63,
+  "temp_max": 78,
+  "clock_min": 2670,
+  "clock_max": 2685,
+  "finished": "2026-10-31T06:37:06+09:00"
+}

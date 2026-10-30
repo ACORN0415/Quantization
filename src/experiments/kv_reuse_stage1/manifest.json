@@ -1,0 +1,171 @@
+{
+  "created": "2026-10-31T06:02:17+09:00",
+  "own_files": {
+    "tools/kv_reuse_core.py": "15a9ba893f389a694c181b6b85bad37c68bf2a0dc8841c720e0364d49a9ae752",
+    "tools/kv_reuse_tape.py": "b7b1c34242405bbe033d8d07528e7b8d22e790254cfe3b0269c1c86ce8d07bb9",
+    "tools/test_kv_reuse_core.py": "c183032e49e4379e49307409f786e62c6bfe193e42c10e06ac6fb676b1cdd91e",
+    "tools/kv_reuse_stage1.py": "e070ce3d54eeb08bc167165b8bd3855ec0bdeb75b8ed64136c553bad06afa48c",
+    "src/experiments/kv_reuse_preflight/MEASUREMENT_PLAN_KO.md": "dc7b8f768be579dc7e987fbcbd00b0408179aac44c918b15f2d64af23167fd5d",
+    "src/experiments/kv_reuse_stage1/REGISTRATION_KO.md": "34c708f0b1bb093cca70b780aea13fa65c5932ae7a859e1849e9a53cabefefd7"
+  },
+  "upstream_files": {
+    "quant_videogen/__init__.py": "eca58f95dc0c100e8a04216ecb8f4693139de8df1d25b54fc93a4ed520a7669f",
+    "quant_videogen/compress.py": "f0a6342cbd8f6d7457b888bc19f827bf71a64632972d17fc2b756e14360a7935",
+    "quant_videogen/functions.py": "279dbef15b7c1e1ca07b191ba75de6b90570b97ba78d4f51d0298328f8b2e4c5",
+    "quant_videogen/kernels/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "quant_videogen/kernels/triton/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "quant_videogen/kernels/triton/permute.py": "247ca6a168efe68a863bb88de396c79e669c26e37ab26b51604dc0c6e4fe1387",
+    "quant_videogen/kernels/triton/rope.py": "fb48e66ed46c2699de8f9f6058b3ee47c36c78c11e89e8046def57d813967b15",
+    "quant_videogen/kmeans/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "quant_videogen/kmeans/centroid_update.py": "3ddb1e2183f00a0ef994661ad71ea23e8b3bfecc2cc9a3be2204113d9c2a6393",
+    "quant_videogen/kmeans/euclid_assign.py": "a2659492c4d1a8853ccfb6cf9128d97031fc19779298ff08e94de9677287b6ce",
+    "quant_videogen/kmeans/kmeans_euclid.py": "1e527b33d2394dba9740a42757c8eabd8cb30b223ad3d18d80ad94cd7a7ff526",
+    "quant_videogen/kmeans/utils.py": "b7151f8eda1c0095498f793bc631abc0118c17ba23aeffb58ba18d46ec74681b",
+    "quant_videogen/kv_cache.py": "e6f03b8223833021c4ff6bbe16d73ee555e1f2ecdf0d0770b565c7b5b17e6963",
+    "quant_videogen/logger.py": "7606a4f7de4ef9e7a74c014e09345664badb6698c5f31844cf6868149149f768",
+    "quant_videogen/misc.py": "b96bdbdf86d35c0f21e78f83eccf87c890de9c0c9210afbbb0fd44a524ce1525",
+    "quant_videogen/real/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "quant_videogen/real/accumulate.py": "11a583e0c343276d101cb27a2452476a2888d3930676bce0600cf52f37918518",
+    "quant_videogen/real/prq.py": "a52c23d2a073815121facaed29a4540e642a082dd558854509a4f4c1c86b7ba4",
+    "quant_videogen/real/quant_pack.py": "f13aa498f063398b4f57bd3cef2838a4ab8ef1e033b06caaa671fef9225d034e",
+    "quant_videogen/real/smooth.py": "e7c2bd78177aa44cc5970eea8df69ac5f156eb1c5fd88e7cce31a6adeaf26f00",
+    "quant_videogen/sim/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "quant_videogen/sim/quant/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "quant_videogen/sim/quant/lowbit_quantize.py": "42c7b3d5f79c3b9c96fc0265a19a97cc1146b06a17b2237409db1c8bc168f96e",
+    "quant_videogen/sim/quant/quantize_config.py": "d26b99e7836d60e6e8929f7a50474c6a62e8adbcbf6a70d72fbe50fb447df5bc",
+    "quant_videogen/timer.py": "81db81e4cecdae18b0bbdc4c668af19adc504a50c8f0806739832b4e0c8c97f7",
+    "quant_videogen/uncompress.py": "7cc222039764e58479e3721214fec5df7afc17f70a74c3fa1682cf07d395385c",
+    "experiments/Self-Forcing/demo_utils/constant.py": "d1c53d7d5209bd5065bf566948333849a3bf9c71d151a0d7325acf67f46cb3d9",
+    "experiments/Self-Forcing/demo_utils/memory.py": "ca0b31c93019f802e1312d512591ae6bea35b450064cdde19b6202779f50bb7f",
+    "experiments/Self-Forcing/demo_utils/taehv.py": "865b1dd0516682c02352bd76bce2ad0472588330ea9fab30ca0895630f263244",
+    "experiments/Self-Forcing/demo_utils/utils.py": "f539911c5317323e24cdbcb331dc66645f6e7a1e6c68aa8ed4bb24effefa9843",
+    "experiments/Self-Forcing/demo_utils/vae.py": "0b938e1e356a221b8c9ac1c64e554bfd01016b609752ab760805829303deb034",
+    "experiments/Self-Forcing/demo_utils/vae_block3.py": "2a9a50fd1731992a32232a79bf0457d50c12d12db1ea9c14d9adb4201816e0f4",
+    "experiments/Self-Forcing/demo_utils/vae_torch2trt.py": "8a267d73ac8a506a402c340726c6dbcdeca3328a909ce61922114bbe3fcb7068",
+    "experiments/Self-Forcing/inference.py": "3dc3765638afb3f53af2bc0bcd1390d558c622ba37ab98504eb3ad34f61f5940",
+    "experiments/Self-Forcing/model/__init__.py": "2c22d7df9de307a7b3d8e6ef69c0cf2cf5c47590d0cd2386d33f87b494c5a378",
+    "experiments/Self-Forcing/model/base.py": "3e39cd61b25a753cf064101e8ffca653d6cce07a7c60a50fd8e3475425362d4f",
+    "experiments/Self-Forcing/model/causvid.py": "870beb90c2af5233a19c733c4cbd72f79b9ef03fae5a2915e37b94f4355c0000",
+    "experiments/Self-Forcing/model/diffusion.py": "e4bbae3554722cac0e2ce6709f287c088d95cd96da2c3a89683188b6df232528",
+    "experiments/Self-Forcing/model/dmd.py": "7b8dd78a48220e6868956a7cd639215756747b7b8e58c07f27e50090c4291e19",
+    "experiments/Self-Forcing/model/gan.py": "da30e3ff2d770646643b4994fa1607581851a39ee28b9ab70460a71ca4125b1a",
+    "experiments/Self-Forcing/model/ode_regression.py": "3a581d436a1ebc8c7bc9191fef203784008cec313827ea0afe6ed961810dac20",
+    "experiments/Self-Forcing/model/sid.py": "4b6536ec27b1f3a555169b8c887190f06aaa9f929c2d7f9fcd8c289d819973ba",
+    "experiments/Self-Forcing/pipeline/__init__.py": "deb77d9f0f8175067cb9feb939c60b29bd68bc9130fd2b1b0019148c29b9fa6a",
+    "experiments/Self-Forcing/pipeline/bidirectional_diffusion_inference.py": "8a5f9daee9e0274aeb4ac3a69ddf7a0f84ca1aa19d4e3df30eab6b8cec712248",
+    "experiments/Self-Forcing/pipeline/bidirectional_inference.py": "675a723275359d579749250b5651180e46249c5269c783e7e49c4fab14c5d90d",
+    "experiments/Self-Forcing/pipeline/causal_diffusion_inference.py": "3d0f2c509bfb39409b3b2d2322cf7b879502226c7e8af375f064082486f5d4f3",
+    "experiments/Self-Forcing/pipeline/causal_inference.py": "824d8cfbd2985a042e253648c2aaaa06f25cb40d62be504a6330c80242caedba",
+    "experiments/Self-Forcing/pipeline/self_forcing_training.py": "0fbef7cae39a13338ae555acc2f114dc28a0e15f4dfcf4303640192e42ab7e96",
+    "experiments/Self-Forcing/utils/dataset.py": "2ced021a06123db94204bd2c7a915cf39b19d7220c62a4fad6c5e14725ff640d",
+    "experiments/Self-Forcing/utils/distributed.py": "8560b35c3e5fa77ff7f98c54344775393b1cd3c1ed37740f6284b27aad4f0ba7",
+    "experiments/Self-Forcing/utils/lmdb.py": "d8bfb912cd75a947a8214955b1022662c99d4b23ff882d6e68bb717faafe8b1e",
+    "experiments/Self-Forcing/utils/loss.py": "5a08ba589ef54d5deb50d1ff1984f2969b1fdc2f03c53751167eb23a7082ecfe",
+    "experiments/Self-Forcing/utils/misc.py": "610bead16d50d99fabdccb2e9ce3c20fa1fa1cd3bdf735d7ff7ffda978bfe195",
+    "experiments/Self-Forcing/utils/scheduler.py": "4194ef1324bb06527621749c7f9a82f431ccf011823aa65099cb7bdf116b642e",
+    "experiments/Self-Forcing/utils/wan_wrapper.py": "21727964b1de52b44c8ab8cf4187f1cb54088b7b8d9727476dffd34414ab9970",
+    "experiments/Self-Forcing/wan/__init__.py": "d9390f993a448bd679ac8d5254620ca6b5d2bc450f65bbf5f4a64c82cb4f4a99",
+    "experiments/Self-Forcing/wan/configs/__init__.py": "7b782183abca0e09c3efbc8ff02ab12c50c023d59642f6077cc16d1a23fa8bac",
+    "experiments/Self-Forcing/wan/configs/shared_config.py": "e3785cd01cff5763f83159ccc242f2d17435ba8dcef99f4a70db958c88e7f5ab",
+    "experiments/Self-Forcing/wan/configs/wan_i2v_14B.py": "2d5a3ff4326a5b1c1c8d564f8a8829fe30879cb99fe0ad1b18c236ecb43aac54",
+    "experiments/Self-Forcing/wan/configs/wan_t2v_14B.py": "a1d8f5f876fa20c4f58c5ee5433ca0d5e2cdf37accef7c97bc0c5aee7ba8db8c",
+    "experiments/Self-Forcing/wan/configs/wan_t2v_1_3B.py": "28dea1d8ef2095d7ddd1e2506e7b498ba698b32e962bdbc79d6d7da3ca5a6d0c",
+    "experiments/Self-Forcing/wan/distributed/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "experiments/Self-Forcing/wan/distributed/fsdp.py": "a20cbd8ea747db64226eb21e5e848c44cc2ccf95a76efbf13956efe8e9f900a3",
+    "experiments/Self-Forcing/wan/distributed/xdit_context_parallel.py": "b3b16b38dd08b0e857d90e4c97c7a41a06368be477abafa460ce3a44ea596474",
+    "experiments/Self-Forcing/wan/image2video.py": "46348294457e81210c70d40c6a1be6e24e5b749a48bf4aaac3febb6bd8e155ee",
+    "experiments/Self-Forcing/wan/modules/__init__.py": "6cba8c084de01455a914a3b5620e0a286d4dee2c39143b6508bb8fac87e71b4b",
+    "experiments/Self-Forcing/wan/modules/attention.py": "02ad719a76e6bdec79d18fc62b094ef2ad7c28b2d593c9f395ae1226041b7c9d",
+    "experiments/Self-Forcing/wan/modules/causal_model.py": "c3575f16dcd50bd0a492b38b3ce9f299f03180f3719115115e1c5a27ed386375",
+    "experiments/Self-Forcing/wan/modules/clip.py": "2ab8672603a998422defb897e16531608750737ab8d631520b055bda93aba35c",
+    "experiments/Self-Forcing/wan/modules/model.py": "f15214485a5297e6f9e79684bbad80acbcdc88c3272596b256a739a734529449",
+    "experiments/Self-Forcing/wan/modules/t5.py": "8b0cebf3192c542f92a344255a06c203df3ba24160715899a055cc8de0cd930f",
+    "experiments/Self-Forcing/wan/modules/tokenizers.py": "cf5b189c1ae017326efadab2fc6380ba223fa7a59d0be6464bd264db53c76934",
+    "experiments/Self-Forcing/wan/modules/vae.py": "a4c1d9362f25a1bef463ac51caed4097317c007d4d87887b02a3a733fdbc48d5",
+    "experiments/Self-Forcing/wan/modules/xlm_roberta.py": "7e27d93573b5fb0fef1c9db9205264453bd30dcb1404c38031f24ed9c84b8d4a",
+    "experiments/Self-Forcing/wan/text2video.py": "ca344c0f24d3d305dd93a0433dc88a212e5d815bb8a784f8f54fc9fa98ff06c1",
+    "experiments/Self-Forcing/wan/utils/__init__.py": "4a8d71cd9feefa65d51770ee8351a07cd6ebe82f9b75fef1ddaf0f30b4db502c",
+    "experiments/Self-Forcing/wan/utils/fm_solvers.py": "f7254e3ac5c6c6715317cdf991d927cde61c1400ad73851be41fc51ce5ecba5d",
+    "experiments/Self-Forcing/wan/utils/fm_solvers_unipc.py": "de622aced9aa5022622509295e5a0e40589b53f59ce13cf64061af9e99af5f66",
+    "experiments/Self-Forcing/wan/utils/prompt_extend.py": "f00f7f03ed5dc6d7648290c3d9b0f80b33d71692958542c447d722acc42dcbd6",
+    "experiments/Self-Forcing/wan/utils/qwen_vl_utils.py": "9ae8190bdb0c6ad5b283fd9fecae65f3adfe45bc90326d3851fb5c8d777995c9",
+    "experiments/Self-Forcing/wan/utils/utils.py": "ebf33b0c4dc69a62faca6243d58bfa890ea4fb9c056e7c1ef0fa501cbbe22566"
+  },
+  "revision": "0601468f2dbba6a17ac7086faec6d41527cad188",
+  "checkpoint_hashes": {
+    "src/checkpoints/self_forcing_dmd.pt": "a0413986d9734e02c09504e1520f5697ba6df731bb2f0f35577485e9cc8f56a3",
+    "src/wan_models/Wan2.1-T2V-1.3B/models_t5_umt5-xxl-enc-bf16.pth": "7cace0da2b446bbbbc57d031ab6cf163a3d59b366da94e5afe36745b746fd81d",
+    "src/wan_models/Wan2.1-T2V-1.3B/diffusion_pytorch_model.safetensors": "96b6b242ca1c2f24e9d02cd6596066fab6d310e2d7538f33ae267cb18d957e8f"
+  },
+  "prompt_file": "/home/acorn0415/Quantization/src/experiments/policy_study_prompts.txt",
+  "prompt_file_sha256": "a53cd787f52b3901cc626b621f2473071e40d3fb3b3bf83d619df1e49e26984f",
+  "prompt": "An orange tabby cat steps along a sunlit windowsill, pauses to watch a butterfly outside, and gently turns its head. A continuous close shot with a quiet garden in the background.",
+  "seed": 303,
+  "latent_frames": 36,
+  "source": "/home/acorn0415/sfq_data/qvg-reuse-reference",
+  "sequence": [
+    [
+      "gate_U",
+      "U",
+      "verify"
+    ],
+    [
+      "gate_B",
+      "B",
+      "verify"
+    ],
+    [
+      "gate_R",
+      "R",
+      "verify"
+    ],
+    [
+      "profile_B",
+      "B",
+      "profile"
+    ],
+    [
+      "warm_B",
+      "B",
+      "warmup"
+    ],
+    [
+      "warm_R",
+      "R",
+      "warmup"
+    ],
+    [
+      "pair1_B",
+      "B",
+      "timed"
+    ],
+    [
+      "pair1_R",
+      "R",
+      "timed"
+    ],
+    [
+      "pair2_R",
+      "R",
+      "timed"
+    ],
+    [
+      "pair2_B",
+      "B",
+      "timed"
+    ],
+    [
+      "pair3_B",
+      "B",
+      "timed"
+    ],
+    [
+      "pair3_R",
+      "R",
+      "timed"
+    ]
+  ],
+  "process_limit_bytes": 21474836480,
+  "allocator_limit_bytes": 19327352832,
+  "retention_pool_bytes": 1073741824
+}
