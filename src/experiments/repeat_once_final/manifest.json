@@ -1,0 +1,266 @@
+{
+  "original_source_sha256": "48285b2d2c4eadd25461b2f2970b9e65afb3780dd806bbd36b669cc1ffe80c9a",
+  "registered": {
+    "id": "group_rule_fr_v0_3",
+    "source_sha256": "48285b2d2c4eadd25461b2f2970b9e65afb3780dd806bbd36b669cc1ffe80c9a",
+    "diagnostic_sha256": "8843001b6ec0b0895293583510b84c11dd65cb7dd6e4cd5885067038530c996f",
+    "development_gates_passed": true,
+    "gate_sha256": "9494a0f32282ef73085932c1c6814e19edce9706904fc8f3a1a1fe0f0445bc22",
+    "prompt_sha256": "5d08b52d18e88318da7b268f7ff9364e20621ee2b79107b3f776d60bddbc4783",
+    "planned_trajectories": 72,
+    "primary": "C-repeat16 minus L16; mean raw MUSIQ frames 249..500",
+    "registered_utc": "2026-10-29T06:31:07Z",
+    "held_out_measurements_started": false
+  },
+  "archive": [
+    {
+      "path": "fr/p00_s303_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "8cb0b238ca2bfdb21a12bf5722d05f04fb1e51ec6b0c955b78c68d8999ed9635"
+    },
+    {
+      "path": "fr/p00_s303_C_repeat/sampling.json",
+      "bytes": 1406,
+      "sha256": "5f9009245621d486e373b191b44001f59b6f29677a67d3167e4c919b4c61b3ce"
+    },
+    {
+      "path": "fr/p00_s404_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "7cb8dbc0eff16541cd66071e9e66ea47f35e5a09b430aa778bb449557fd0921b"
+    },
+    {
+      "path": "fr/p00_s404_C_repeat/sampling.json",
+      "bytes": 1406,
+      "sha256": "7e4382202034f1c1742aa618f40547de06a8469128691e0ede538bbe17b3ff16"
+    },
+    {
+      "path": "fr/p01_s303_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "f4b98f4ad19f40a1f9a9d53ba0ec870ddc0a22b72bd3e2fbccea29403c7c39c4"
+    },
+    {
+      "path": "fr/p01_s303_C_repeat/sampling.json",
+      "bytes": 1403,
+      "sha256": "942b9af533edfd125df7072b1747fa87bbd1d920fac1fe3062a5acfafd6b2092"
+    },
+    {
+      "path": "fr/p01_s404_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "9da16947bb47322e2b882a768ef0440e1b88b980ff1e2d338c3602b6e9f1286d"
+    },
+    {
+      "path": "fr/p01_s404_C_repeat/sampling.json",
+      "bytes": 1403,
+      "sha256": "e4e0d0f82ed232ffda4a23f11d91921e21f3642a9e7829618e3fd8e500f7085f"
+    },
+    {
+      "path": "fr/p02_s303_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "68b9e84994b0c627f2ca4727fa1bc9d5e456f95454ef0dabe3cd6d7e1631c592"
+    },
+    {
+      "path": "fr/p02_s303_C_repeat/sampling.json",
+      "bytes": 1405,
+      "sha256": "0655898866c05ccd55a10272171f9a6a04c99be2a7d85e561b72ac3392c783c1"
+    },
+    {
+      "path": "fr/p02_s404_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "15ccba666f7b33b77a84e90c4d9ad33b1e8fe9639ad14ac629ef629db09f15e0"
+    },
+    {
+      "path": "fr/p02_s404_C_repeat/sampling.json",
+      "bytes": 1400,
+      "sha256": "06983c6991efabc63de3f880997976be095a1368b7880642880abcc8f6da3cba"
+    },
+    {
+      "path": "fr/p03_s303_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "23e87bd1de5aeb8a2be468bd384b48c4f45d4b033074ad1c1cd0f4d28b5b01ad"
+    },
+    {
+      "path": "fr/p03_s303_C_repeat/sampling.json",
+      "bytes": 1404,
+      "sha256": "ece68aeb3863e35bd466b07242f4acca407f5e98d8d7f6747210c9f782f70a31"
+    },
+    {
+      "path": "fr/p03_s404_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "81fb6c11af86b65ba380dfd29a2e1b4458269c7a8f75bd68594d90329785cce8"
+    },
+    {
+      "path": "fr/p03_s404_C_repeat/sampling.json",
+      "bytes": 1405,
+      "sha256": "c6ad1f59a28e610d1294b62fb42a449e09f2c63d48db31c9755e8fb3c5ef9e41"
+    },
+    {
+      "path": "fr/p04_s303_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "507fef591f57667e3309976ce28d4db196deb5fc5a37dab3a3d72b1bb8ec4705"
+    },
+    {
+      "path": "fr/p04_s303_C_repeat/sampling.json",
+      "bytes": 1402,
+      "sha256": "f6ae3ae46e8ce5689b8a7a52cf6418fd53f4503656fcd46e6a0395cbbb371d50"
+    },
+    {
+      "path": "fr/p04_s404_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "b0b6dadaf54c898efbdf7d91e5177a95a0f8362e5a724b41121f74a0e046fa14"
+    },
+    {
+      "path": "fr/p04_s404_C_repeat/sampling.json",
+      "bytes": 1402,
+      "sha256": "53b2d4a5ce3325c7d90284978e3378ec998b384f3ba8dba14ae9ea23949b2f68"
+    },
+    {
+      "path": "fr/p05_s303_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "63eb546ed50bc569842a092b75add4d57e7dd65a1e59e3748698fc9aeb3eb5fc"
+    },
+    {
+      "path": "fr/p05_s303_C_repeat/sampling.json",
+      "bytes": 1402,
+      "sha256": "35cd2f3dbcd660ded1da7c7bb0000d99d09aa4ef8723d16d69384b673088676c"
+    },
+    {
+      "path": "fr/p05_s404_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "2f352ae43eace2927935272d1ca12a69950744bfe8340c4598a3d0ee215d576b"
+    },
+    {
+      "path": "fr/p05_s404_C_repeat/sampling.json",
+      "bytes": 1405,
+      "sha256": "9d03aa0760b42c6759008d7ada34ee7dd5469de778e08d8d00ee1caf0e3f43fd"
+    },
+    {
+      "path": "fr/p06_s303_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "c1a07942c85e4f89b10126c774fb8f503be5ef318ee790a9c5e13cd4deeb9941"
+    },
+    {
+      "path": "fr/p06_s303_C_repeat/sampling.json",
+      "bytes": 1400,
+      "sha256": "3080411e8a77627d05fc464db689e9658c520bf20b2141e9f5d3ebaa95392a9b"
+    },
+    {
+      "path": "fr/p06_s404_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "93a885e3121da81ae7a41109843f2b8ae784de19cfe4342ff06c6abd0f3ab029"
+    },
+    {
+      "path": "fr/p06_s404_C_repeat/sampling.json",
+      "bytes": 1402,
+      "sha256": "aa2679fdbda454577889c12cd9423d672639143ed9e6d006d5b292de66ef9f5b"
+    },
+    {
+      "path": "fr/p07_s303_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "39f4bfe0ad9f952a37e2c0febb55b8d206a8ec2a8057af1f9898678f27a933f8"
+    },
+    {
+      "path": "fr/p07_s303_C_repeat/sampling.json",
+      "bytes": 1405,
+      "sha256": "dad4a008f035d053cc43e929c88a8d4d112295b6e259e5e4b59a859ba61579ec"
+    },
+    {
+      "path": "fr/p07_s404_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "a67371e1ebc705d4283362a717cb36f3c246a1ccb984f05e178c8d870a882793"
+    },
+    {
+      "path": "fr/p07_s404_C_repeat/sampling.json",
+      "bytes": 1404,
+      "sha256": "1e049e86f4eb996b31bc0cad5a56ec577a189f83a705d9d25d4169eca974ae6a"
+    },
+    {
+      "path": "fr/p08_s303_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "67abd21f9fc8c70c04da1f630c5bdcaf691d75691405f543248ddbddc7427dba"
+    },
+    {
+      "path": "fr/p08_s303_C_repeat/sampling.json",
+      "bytes": 1403,
+      "sha256": "fe5fa451c931bdcdb1a69efcc999b4ab3f74e7aa260726038965b8d0e2c26169"
+    },
+    {
+      "path": "fr/p08_s404_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "e84d28e342632bdfc04f53478ea877e4717e812e843ec60e15a601ae8d35045d"
+    },
+    {
+      "path": "fr/p08_s404_C_repeat/sampling.json",
+      "bytes": 1404,
+      "sha256": "dc40bc29ecea88f09820835b86be1b5469e413bf29f81ee6b68aed3eeaa8f863"
+    },
+    {
+      "path": "fr/p09_s303_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "b1b01561f28ad69cd968fad71d1b9116eb8d95aaaf187b2f56ac155decfbd92b"
+    },
+    {
+      "path": "fr/p09_s303_C_repeat/sampling.json",
+      "bytes": 1401,
+      "sha256": "9798c8bc38aa05a365ed236f9499b50010cdcf04a5fcaef5f9fecf791eab324b"
+    },
+    {
+      "path": "fr/p09_s404_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "03fb2c9fed123ebb0beb9f49ee20fa0e8b1561bd93cab7f37e30aea1da9644af"
+    },
+    {
+      "path": "fr/p09_s404_C_repeat/sampling.json",
+      "bytes": 1405,
+      "sha256": "b1e73dbf9fec7ab9ab1506f16c8026cdca810a06d61a2fb1017b3508363a2a15"
+    },
+    {
+      "path": "fr/p10_s303_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "c3217f6a9766a1a78ab6538a6b027d86f7fdd760ad1299ed5051a3943309fc74"
+    },
+    {
+      "path": "fr/p10_s303_C_repeat/sampling.json",
+      "bytes": 1405,
+      "sha256": "e0afd10b78471e8564ad535fa63eb15b9b7b9b8782e49206d0cf5f3f4e468b79"
+    },
+    {
+      "path": "fr/p10_s404_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "c10aa914c684ee8cd1f176b6c882684d26a61dffcf7811d7d4e305eab0bac2dd"
+    },
+    {
+      "path": "fr/p10_s404_C_repeat/sampling.json",
+      "bytes": 1406,
+      "sha256": "230f0c66f8b33e9732dcae5be175f5dc4836546f5ccb5a8fa12b636a72843723"
+    },
+    {
+      "path": "fr/p11_s303_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "3372f27cbc1067c32c178bbd0219b9d0b0a151f56fe8c8fad0d1b3ffca210f7b"
+    },
+    {
+      "path": "fr/p11_s303_C_repeat/sampling.json",
+      "bytes": 1404,
+      "sha256": "91bce04b4bbf1a8f9e0e6f8df9149703d50ec5c1584e773735b91c2cd94e69ba"
+    },
+    {
+      "path": "fr/p11_s404_C_repeat/latent.pt",
+      "bytes": 25160855,
+      "sha256": "c50284785be23f5113f7dfb59e97f3ec14d5e5446d23698874aaf84eccd8a2a9"
+    },
+    {
+      "path": "fr/p11_s404_C_repeat/sampling.json",
+      "bytes": 1403,
+      "sha256": "3c319b66fd6789e592aeeb52550c18a767abe2ac486c30c19c9dbf13d1ceffa3"
+    }
+  ],
+  "new_source_sha256": {
+    "tools/repeat_once_final.py": "fd45913138ca76dfb393aea2aff969b1e668f030a1a071fadc4e4d6331eed731",
+    "tools/repeat_once_audit.py": "90483b348156cac54dabc52253a8a0e63c12b897e00e9ef6f77ee0d6292d6654",
+    "tools/test_repeat_once_final.py": "a865255af6a825ff942853daeee29d0d9cea6f87ad059e2cb9ae60493f80f004",
+    "tools/repeat_once_paper.py": "b4e9e9220c9fffdff5c56e26c8671a93d642be1e6214dfea1f49805546106fd0",
+    "src/experiments/REPEAT_ONCE_FINAL.md": "c8e1adc3036f6dc50642b0d98edf767e01439f4ed95b5fc713e68d7e14618b64"
+  },
+  "verified_kst": "2026-10-31T01:03:13+09:00",
+  "environment_command": "Sat Oct 31 01:03:14 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 615.71.09              KMD Version: 615.71.09     CUDA UMD Version: 13.4     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 4090        Off |   00000000:01:00.0 Off |                  Off |\n| 31%   48C    P8             12W /  450W |       4MiB /  24564MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+\n"
+}

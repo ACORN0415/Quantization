@@ -14,9 +14,13 @@
 
 | | 파일 |
 |---|---|
-| **결과 진입점** | `결과서/S6_FINDINGS.md` — 확정된 것 / 철회한 것 / 확정되지 않은 것 / **다음에 할 것** |
-| 가장 최근 지시 | `지시서/S7_corrections_v2_2.md` |
-| 리뷰 지적 대조표 | `리뷰/CORRECTIONS_2026-09-19.md` — claim ID별 철회·축소 |
+| **현재 원고 (2026-10-31)** | [분석 논문 원고](paper/analysis_manuscript_ko.md) — 품질 개입→실제 연산 검증→조건과 한계 |
+| **전체 결과 진입점** | [저장소 README](../README.md) — TT·마지막 검증까지 완료, 추가 후보 탐색 종료 |
+| 마지막 구현 검증 | [보고서](../src/experiments/repeat_once_final/REPORT_KO.md), [실행 계획](../src/experiments/REPEAT_ONCE_FINAL.md) |
+| TT 종료 결과 | [K+V TT 최종 보고](../src/experiments/tt_kv_final/REPORT_KO.md) |
+| 과거 S6 결과 진입점 | `결과서/S6_FINDINGS.md` — 해당 세션의 확정·철회·미확인 기록 |
+| 과거 S7 지시 | `지시서/S7_corrections_v2_2.md` |
+| 과거 리뷰 대조표 | `리뷰/CORRECTIONS_2026-09-19.md` — claim ID별 철회·축소 |
 
 ---
 
