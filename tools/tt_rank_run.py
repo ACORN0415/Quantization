@@ -36,8 +36,8 @@ def run(pipe,cond,p,b,r,n,source,reference,folder=None,identity=False):
  CURRENT_RANK=r
  base.VCodec=(lambda arm,bits: OriginalCodec('identity',bits)) if identity else (lambda arm,bits: FixedRankVCodec(bits,r))
  result=base.trajectory(pipe,cond,p,b,'identity' if identity else 'tt_quant',n,source,reference,folder,base.pilot.source_hash())
+ result.update(rank=r,bond_ranks=[r,min(r,128)])
  if folder:
-  result.update(rank=r,bond_ranks=[r,min(r,128)])
   base.util.save(folder/'sampling.json',result)
  return result
 OriginalCodec=base.VCodec
@@ -81,7 +81,9 @@ def main():
    status('GATES PASS',phase='gates_pass')
   else:
    g=json.loads((DATA/'gates.json').read_text())
-   if g['source_sha256']!=sig or g['pass_all'] is not True or len(g['records'])!=10:raise RuntimeError('invalid gates')
+   expected={(0,0,64,'identity')}|{(0,b,r,'tt_quant') for b in (2,3,4) for r in (299,64,192)}
+   actual={(x['prompt'],x['bits'],x['rank'],x['arm']) for x in g['records']}
+   if g['source_sha256']!=sig or g['pass_all'] is not True or actual!=expected or any(len(x['chunks'])!=8 for x in g['records']):raise RuntimeError('invalid gates')
   if args.mode!='gate':
    for p,b,r in CASES:
     folder=DATA/key(p,b,r)
