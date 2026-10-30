@@ -1,0 +1,265 @@
+{
+  "attempt": 1,
+  "scope": "synthetic codec/read/attention compatibility only",
+  "source_revision": "0601468f2dbba6a17ac7086faec6d41527cad188",
+  "generation_count": 0,
+  "performance_claim": false,
+  "source": "/home/acorn0415/sfq_data/qvg-reuse-reference",
+  "status": "pass",
+  "environment": {
+    "torch": "2.6.0+cu124",
+    "triton": "3.2.0",
+    "flash_attn": "2.7.4.post1",
+    "cuda": "12.4",
+    "gpu": "NVIDIA GeForce RTX 4090",
+    "capability": [
+      8,
+      9
+    ]
+  },
+  "source_sha256": {
+    "quant_videogen/__init__.py": "eca58f95dc0c100e8a04216ecb8f4693139de8df1d25b54fc93a4ed520a7669f",
+    "quant_videogen/compress.py": "f0a6342cbd8f6d7457b888bc19f827bf71a64632972d17fc2b756e14360a7935",
+    "quant_videogen/functions.py": "279dbef15b7c1e1ca07b191ba75de6b90570b97ba78d4f51d0298328f8b2e4c5",
+    "quant_videogen/kernels/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "quant_videogen/kernels/triton/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "quant_videogen/kernels/triton/permute.py": "247ca6a168efe68a863bb88de396c79e669c26e37ab26b51604dc0c6e4fe1387",
+    "quant_videogen/kernels/triton/rope.py": "fb48e66ed46c2699de8f9f6058b3ee47c36c78c11e89e8046def57d813967b15",
+    "quant_videogen/kmeans/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "quant_videogen/kmeans/centroid_update.py": "3ddb1e2183f00a0ef994661ad71ea23e8b3bfecc2cc9a3be2204113d9c2a6393",
+    "quant_videogen/kmeans/euclid_assign.py": "a2659492c4d1a8853ccfb6cf9128d97031fc19779298ff08e94de9677287b6ce",
+    "quant_videogen/kmeans/kmeans_euclid.py": "1e527b33d2394dba9740a42757c8eabd8cb30b223ad3d18d80ad94cd7a7ff526",
+    "quant_videogen/kmeans/utils.py": "b7151f8eda1c0095498f793bc631abc0118c17ba23aeffb58ba18d46ec74681b",
+    "quant_videogen/kv_cache.py": "e6f03b8223833021c4ff6bbe16d73ee555e1f2ecdf0d0770b565c7b5b17e6963",
+    "quant_videogen/logger.py": "7606a4f7de4ef9e7a74c014e09345664badb6698c5f31844cf6868149149f768",
+    "quant_videogen/misc.py": "b96bdbdf86d35c0f21e78f83eccf87c890de9c0c9210afbbb0fd44a524ce1525",
+    "quant_videogen/real/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "quant_videogen/real/accumulate.py": "11a583e0c343276d101cb27a2452476a2888d3930676bce0600cf52f37918518",
+    "quant_videogen/real/prq.py": "a52c23d2a073815121facaed29a4540e642a082dd558854509a4f4c1c86b7ba4",
+    "quant_videogen/real/quant_pack.py": "f13aa498f063398b4f57bd3cef2838a4ab8ef1e033b06caaa671fef9225d034e",
+    "quant_videogen/real/smooth.py": "e7c2bd78177aa44cc5970eea8df69ac5f156eb1c5fd88e7cce31a6adeaf26f00",
+    "quant_videogen/sim/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "quant_videogen/sim/quant/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "quant_videogen/sim/quant/lowbit_quantize.py": "42c7b3d5f79c3b9c96fc0265a19a97cc1146b06a17b2237409db1c8bc168f96e",
+    "quant_videogen/sim/quant/quantize_config.py": "d26b99e7836d60e6e8929f7a50474c6a62e8adbcbf6a70d72fbe50fb447df5bc",
+    "quant_videogen/timer.py": "81db81e4cecdae18b0bbdc4c668af19adc504a50c8f0806739832b4e0c8c97f7",
+    "quant_videogen/uncompress.py": "7cc222039764e58479e3721214fec5df7afc17f70a74c3fa1682cf07d395385c"
+  },
+  "probe_sha256": "5f4864059649cc7aa003811f4bb174f8eeeae44cf956f622732731205347b0f8",
+  "plan_sha256": "62483dc84771328647719bbacb97b98ffda7bb9b53d210aae8fc02c94b667669",
+  "codec_config": {
+    "quant_type": "triton-nstages-kmeans-int2",
+    "cache_num_k_centroids": 256,
+    "cache_num_v_centroids": 256,
+    "kmeans_max_iters": 2,
+    "quant_block_size": 64,
+    "num_prq_stages": 1,
+    "asymmetric": false,
+    "quant_factor": 8,
+    "quant_keep_recent_chunks": 0,
+    "quant_sink_keep_chunks": 0
+  },
+  "input_shape_bhsd": [
+    1,
+    12,
+    4680,
+    128
+  ],
+  "payload_tensors": [
+    {
+      "name": "/0/centroids_list/0",
+      "shape": [
+        1,
+        12,
+        256,
+        128
+      ],
+      "dtype": "torch.bfloat16",
+      "storage_bytes": 786432
+    },
+    {
+      "name": "/0/cluster_ids_list/0",
+      "shape": [
+        1,
+        12,
+        4680
+      ],
+      "dtype": "torch.uint8",
+      "storage_bytes": 56160
+    },
+    {
+      "name": "/0/residual_quant",
+      "shape": [
+        1,
+        12,
+        4680,
+        32
+      ],
+      "dtype": "torch.uint8",
+      "storage_bytes": 1797120
+    },
+    {
+      "name": "/0/scales",
+      "shape": [
+        1,
+        12,
+        4680,
+        2
+      ],
+      "dtype": "torch.float8_e4m3fn",
+      "storage_bytes": 112320
+    },
+    {
+      "name": "/1/centroids_list/0",
+      "shape": [
+        1,
+        12,
+        256,
+        128
+      ],
+      "dtype": "torch.bfloat16",
+      "storage_bytes": 786432
+    },
+    {
+      "name": "/1/cluster_ids_list/0",
+      "shape": [
+        1,
+        12,
+        4680
+      ],
+      "dtype": "torch.uint8",
+      "storage_bytes": 56160
+    },
+    {
+      "name": "/1/residual_quant",
+      "shape": [
+        1,
+        12,
+        4680,
+        32
+      ],
+      "dtype": "torch.uint8",
+      "storage_bytes": 1797120
+    },
+    {
+      "name": "/1/scales",
+      "shape": [
+        1,
+        12,
+        4680,
+        2
+      ],
+      "dtype": "torch.float8_e4m3fn",
+      "storage_bytes": 112320
+    }
+  ],
+  "packed_pair_storage_bytes": 5504064,
+  "bf16_pair_bytes": 28753920,
+  "independent_decode_byte_equal": true,
+  "reads": [
+    {
+      "step": 0,
+      "arm": "upstream",
+      "kv_byte_equal": true,
+      "attention_byte_equal": true
+    },
+    {
+      "step": 0,
+      "arm": "single_decode",
+      "kv_byte_equal": true,
+      "attention_byte_equal": true
+    },
+    {
+      "step": 0,
+      "arm": "retain",
+      "kv_byte_equal": true,
+      "attention_byte_equal": true
+    },
+    {
+      "step": 1,
+      "arm": "upstream",
+      "kv_byte_equal": true,
+      "attention_byte_equal": true
+    },
+    {
+      "step": 1,
+      "arm": "single_decode",
+      "kv_byte_equal": true,
+      "attention_byte_equal": true
+    },
+    {
+      "step": 1,
+      "arm": "retain",
+      "kv_byte_equal": true,
+      "attention_byte_equal": true
+    },
+    {
+      "step": 2,
+      "arm": "upstream",
+      "kv_byte_equal": true,
+      "attention_byte_equal": true
+    },
+    {
+      "step": 2,
+      "arm": "single_decode",
+      "kv_byte_equal": true,
+      "attention_byte_equal": true
+    },
+    {
+      "step": 2,
+      "arm": "retain",
+      "kv_byte_equal": true,
+      "attention_byte_equal": true
+    },
+    {
+      "step": 3,
+      "arm": "upstream",
+      "kv_byte_equal": true,
+      "attention_byte_equal": true
+    },
+    {
+      "step": 3,
+      "arm": "single_decode",
+      "kv_byte_equal": true,
+      "attention_byte_equal": true
+    },
+    {
+      "step": 3,
+      "arm": "retain",
+      "kv_byte_equal": true,
+      "attention_byte_equal": true
+    },
+    {
+      "step": 4,
+      "arm": "upstream",
+      "kv_byte_equal": true,
+      "attention_byte_equal": true
+    },
+    {
+      "step": 4,
+      "arm": "single_decode",
+      "kv_byte_equal": true,
+      "attention_byte_equal": true
+    },
+    {
+      "step": 4,
+      "arm": "retain",
+      "kv_byte_equal": true,
+      "attention_byte_equal": true
+    }
+  ],
+  "actual_decode_calls": {
+    "reference_validation": 2,
+    "upstream": 20,
+    "single_decode": 10,
+    "retain": 2
+  },
+  "packed_payload_unchanged": true,
+  "payload_sha256": "c54d86c160a9078ba629b3e25bc1002b95f9864be2c6f0e50becf29ec4bc9cad",
+  "max_allocated_bytes": 329617408,
+  "max_reserved_bytes": 589299712,
+  "memory_scope": "whole synthetic probe incl. correctness temporaries; not an arm comparison",
+  "full_generation_latent_validated": false,
+  "elapsed_s": 22.47698163986206,
+  "completed_unix": 1793393116.5727592
+}

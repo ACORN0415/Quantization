@@ -8,6 +8,12 @@
 
 [현재 원고·연산 도식](문서/paper/analysis_manuscript_ko.md) · [마지막 검증 보고](src/experiments/repeat_once_final/REPORT_KO.md) · [K+V TT 종료 보고](src/experiments/tt_kv_final/REPORT_KO.md)
 
+**별도 새 주제의 실행 가능성 확인 (2026-10-31):** 위 연구의 종료 상태를 유지한 채
+QVG packed KV의 복원값 재사용 진단을 시작했다. 공식 커널의 합성 입력 실행·바이트
+동등성·실제 호출 수 검사는 통과했다. 전체 생성 가속과 비용 모델 예측은 아직 측정하지
+않았다. [실행 가능성 보고](src/experiments/kv_reuse_preflight/REPORT_KO.md) ·
+[후속 측정 설계](src/experiments/kv_reuse_preflight/MEASUREMENT_PLAN_KO.md).
+
 ## 먼저 읽을 현재 결론
 
 | 질문 | 현재 답 | 근거의 범위 |
