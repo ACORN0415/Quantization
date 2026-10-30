@@ -209,6 +209,7 @@ def report(rows,contrasts,complete):
            '',
            '각 비트는 직접 V 양자화의 실제 저장 예산이다. TT만/양자화→TT의 rank는60/77/94, TT→양자화는 같은 예산에서 rank299를 사용한다. 이 표는 같은 rank 순서 효과와 구분한다. 인자 코드·scale은 실제 패킹했고 정수 rank로 남는 예산은 실제 바이트로 보고한다.',
            '',
+           '**양자화 기준의 정확한 의미:** 기존 고정 symmetric RTN은 qmax=2^(b−1)−1, 코드 범위[−qmax,qmax]를 쓴다. 따라서2비트는 실제2비트 패킹 안에 −1/0/1의 **3수준(ternary)**을 저장하며4수준 전체를 쓰지 않는다. 3/4비트도 각각7/15수준이다. TT의 비교 이득은 이 고정 기준선에 대한 결과이며 최적2비트 양자화기나 모든 저비트 방식에 대한 우위로 일반화하지 않는다. 결과를 본 뒤 양자화기를 바꾸지 않았다.', '',
            '## 영상 품질·오차·속도·메모리 종합','',
            '아래는 두 프롬프트 개발 평균이다. 불완전 상태에서 한 프롬프트만 끝난 조건은 n=1로 표시한다. MUSIQ는 raw RGB8 전프레임, 후반은249..500이다. latent NMSE는 같은 BF16 생성과의 궤적 거리이지 시각적 품질 점수가 아니다. 캐시는 K+V+pending tensor payload이며 peak는 모델/작업 버퍼를 포함한다.',
            '',
@@ -226,6 +227,22 @@ def report(rows,contrasts,complete):
             '|---|---|---|---:|---:|---:|---:|']
     for c in contrasts:
         lines.append(f'| {c["bits"]} | {LABELS[c["arm"]]} | p{c["prompt"]} | {fmt(c["late_musiq_difference"])} | {fmt(c["boundary_musiq_difference"])} | {fmt(c["generation_time_ratio"])} | {fmt(c["cache_byte_ratio"])} |')
+    if complete:
+        lines+=['','## 개발 결과의 해석','']
+        for bits in (2,3,4):
+            values=[c for c in contrasts if c['bits']==bits and c['arm']=='tt']
+            if len(values)!=2:continue
+            diffs=[c['late_musiq_difference'] for c in values]
+            if all(v>0 for v in diffs):direction='두 개발 프롬프트 모두 후반 MUSIQ가 높았다'
+            elif all(v<0 for v in diffs):direction='두 개발 프롬프트 모두 후반 MUSIQ가 낮았다'
+            else:direction='후반 MUSIQ 차이의 방향이 프롬프트에 따라 같지 않았다'
+            times=[c['generation_time_ratio'] for c in values]
+            lines.append(f'- **{bits}비트 예산의 TT만:** {direction}. 직접 양자화 대비 차이는 p0 {fmt(values[0]["late_musiq_difference"])}점, p4 {fmt(values[1]["late_musiq_difference"])}점, 생성 시간은 각각 {fmt(times[0])}/{fmt(times[1])}배였다. 이 비교는 개발 표본2개이며 보류 데이터의 확증 결과가 아니다.')
+            for arm in ('quant_tt','tt_quant'):
+                group=[c for c in contrasts if c['bits']==bits and c['arm']==arm]
+                if len(group)==2:
+                    lines.append(f'  - {LABELS[arm]}의 직접 양자화 대비 후반 MUSIQ 차이는 p0 {fmt(group[0]["late_musiq_difference"])}점, p4 {fmt(group[1]["late_musiq_difference"])}점이다. TT만의 효과를 이 결합 경로로 자동 확장하지 않는다.')
+        lines+=['','속도·오차·메모리·움직임을 종합해야 하므로 단일 지표로 최종 승자를 선언하지 않는다. TT 분해 자체가 좋은 경우와 저비트 인자 양자화까지 결합해 좋은 경우를 분리한다.']
     lines+=['','## 움직임·일관성·경계','',
             'DINO는 프레임 특징 일관성 proxy다. 움직임이 줄거나 화면이 정지하면 높아질 수 있으므로 flow magnitude를 함께 본다. RAFT warp residual도 움직임/가림/대응 영역에 영향을 받는다. 전체 subject identity 또는 시간 품질을 이 숫자만으로 확정하지 않는다. 빈 대응 영역이 있으면 warp를 미정의로 유지한다.','',
             '| 예산 | 경로 | 후반 DINO | 후반 내부 flow px | 후반 경계 flow px | 후반 내부 warp | 후반 경계 warp |',

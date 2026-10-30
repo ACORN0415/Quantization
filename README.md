@@ -459,6 +459,19 @@ BF16 prefix/target 및 all-high 개입 경로는 정확히 재현됐다. 전체 
 
 [방법 2 실제 생성·검증·한계](src/experiments/history_precision_development/REPORT_KO.md).
 
+### 진행 중: TT 실제 영상 4경로 비교
+
+2/3/4비트 저장 예산에서 TT만 / 양자화만 / 양자화→TT / TT→양자화를
+개발 프롬프트2개, seed101, 42청크(501영상프레임)로 비교한다. BF16 기준2개를
+포함해26영상. 30층의 과거 V만 압축하고 K와 현재청크는BF16이다.
+영상품질·latent오차·생성시간·실제 K/V payload·generation peak를 함께 기록한다.
+현재는 실행 중이며 결과 결론이 아니다.
+
+[고정 계획](src/experiments/TT_VIDEO_DEVELOPMENT.md).
+로컬 로그 `tail -f ~/sfq_data/tt_video/run.log`,
+현황 재작성 `python tools/tt_video_sampling_progress.py`.
+생성 후 raw프레임 품질평가와 감사/보고서 작성이 자동으로 이어진다.
+
 ## 출처와 공개 범위
 
 이 저장소의 연구 변경은 사용자 저장소에서 관리한다. 외부 코드를 가져왔다는 사실과 원본 라이선스는 유지한다.
