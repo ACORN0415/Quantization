@@ -459,18 +459,19 @@ BF16 prefix/target 및 all-high 개입 경로는 정확히 재현됐다. 전체 
 
 [방법 2 실제 생성·검증·한계](src/experiments/history_precision_development/REPORT_KO.md).
 
-### 진행 중: TT 실제 영상 4경로 비교
+### 완료: TT 실제 영상 4경로 비교
 
-2/3/4비트 저장 예산에서 TT만 / 양자화만 / 양자화→TT / TT→양자화를
-개발 프롬프트2개, seed101, 42청크(501영상프레임)로 비교한다. BF16 기준2개를
-포함해26영상. 30층의 과거 V만 압축하고 K와 현재청크는BF16이다.
-영상품질·latent오차·생성시간·실제 K/V payload·generation peak를 함께 기록한다.
-현재는 실행 중이며 결과 결론이 아니다.
+2/3/4비트 저장 예산에서 TT만 / 양자화만 / 양자화→TT / TT→양자화를 개발 프롬프트2개, seed101, 42청크(501영상프레임)로 비교했다. BF16 포함26영상 생성·raw 품질평가·감사가 완료됐다. 과거 V만 압축했고 K와 현재 청크는 BF16이다.
 
-[고정 계획](src/experiments/TT_VIDEO_DEVELOPMENT.md).
-로컬 로그 `tail -f ~/sfq_data/tt_video/run.log`,
-현황 재작성 `python tools/tt_video_sampling_progress.py`.
-생성 후 raw프레임 품질평가와 감사/보고서 작성이 자동으로 이어진다.
+직접 양자화 대비 TT만의 후반 MUSIQ 평균 차이는 2/3/4비트에서 −5.25/−6.35/−4.96점이다. TT→양자화는 +1.10/+0.09/−1.18점이며, 2비트는 움직임·warp 변화도 커서 품질 우위로 해석하지 않는다. TT 경로는 같은 캐시 예산에서 약2.3~3.1배 느렸다. 작은 캐시 복원 오차의 이득이 이 개발 영상 조건의 품질 이득으로 이어지지 않았다.
+
+[전체 결과와 한계](src/experiments/tt_video_development/REPORT_KO.md) · [고정 계획](src/experiments/TT_VIDEO_DEVELOPMENT.md).
+
+### 진행 중: TT rank를 낮춘 품질–메모리 비교
+
+같은 메모리 비교와 달리, TT→양자화 rank64/128/192 × 2/3/4비트 × 두 프롬프트의 새18영상을 검사한다. 기존 rank299와 직접 양자화 결과를 재사용한다. K/pending의 고정 공간 때문에 예상 전체 캐시 절감은 약4~15%이며, 실제 GPU peak와 시간도 함께 측정한다. n=2 개발 탐색이며 품질 동등성 확증이 아니다.
+
+[실행 전 계획](src/experiments/TT_RANK_SWEEP.md). 로그: `tail -f ~/sfq_data/tt_rank_sweep/run.log`. 상태: `systemctl --user status tt-rank-sweep --no-pager`.
 
 ## 출처와 공개 범위
 
