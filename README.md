@@ -467,11 +467,15 @@ BF16 prefix/target 및 all-high 개입 경로는 정확히 재현됐다. 전체 
 
 [전체 결과와 한계](src/experiments/tt_video_development/REPORT_KO.md) · [고정 계획](src/experiments/TT_VIDEO_DEVELOPMENT.md).
 
-### 진행 중: TT rank를 낮춘 품질–메모리 비교
+### 완료: TT rank를 낮춘 품질–메모리 비교
 
-같은 메모리 비교와 달리, TT→양자화 rank64/128/192 × 2/3/4비트 × 두 프롬프트의 새18영상을 검사한다. 기존 rank299와 직접 양자화 결과를 재사용한다. K/pending의 고정 공간 때문에 예상 전체 캐시 절감은 약4~15%이며, 실제 GPU peak와 시간도 함께 측정한다. n=2 개발 탐색이며 품질 동등성 확증이 아니다.
+TT→양자화 rank64/128/192 × 2/3/4비트 × 두 프롬프트의 새18영상 생성·평가·감사가 완료됐다. 기존 rank299와 직접 양자화 결과를 비교했다. 과거 V만 압축하며 K와 현재 청크는 BF16이다.
 
-[실행 전 계획](src/experiments/TT_RANK_SWEEP.md). 로그: `tail -f ~/sfq_data/tt_rank_sweep/run.log`. 상태: `systemctl --user status tt-rank-sweep --no-pager`.
+2비트 rank192는 직접 양자화 대비 총캐시 3.666→3.507GiB(4.3% 감소), 생성 peak 6.959→6.751GiB(약3.0% 감소), 후반 MUSIQ는 두 프롬프트에서 +1.469/+1.671점이었다. 그러나 평균 DINO 0.869→0.772, 경계 warp 약0.0155→0.027로 일관성 지표가 악화됐고 생성시간은 약2.91배였다. 따라서 프레임 품질·메모리의 유망한 개발점이지 전체 영상 품질 보존을 입증한 성공은 아니다.
+
+rank64에서는 총캐시가 약10~15% 줄었지만 MUSIQ 손상이 컸다. 3비트 rank192는 총캐시 5.5% 감소, MUSIQ 차이 −1.049/−0.232점으로 정한 1점 개발 선별 기준을 근소하게 통과하지 못했다. 이 기준은 검증된 지각적 동등성 한계가 아니며 n=2 결과를 확증으로 해석하지 않는다.
+
+[전체 비교·감사 결과](src/experiments/tt_rank_sweep/REPORT_KO.md) · [실행 전 개발 계획](src/experiments/TT_RANK_SWEEP.md).
 
 ## 출처와 공개 범위
 
