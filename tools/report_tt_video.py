@@ -80,6 +80,11 @@ def audit_quality(q):
     expected_pairs|={('inside',c,12*c+o,12*c+o+1) for c in range(42) for o in (2,3)}
     actual={(p['kind'],p['chunk'],p['i'],p['j']) for p in pairs}
     if len(pairs)!=125 or actual!=expected_pairs:raise RuntimeError('RAFT sample indices mismatch')
+    for pair in pairs:
+        for field in ('coverage','flow_pixels','raw_difference'):finite(pair[field],field)
+        if not 0<=pair['coverage']<=1:raise RuntimeError('invalid warp coverage')
+        if (pair['warp_error'] is None)!=(pair['coverage']==0):raise RuntimeError('warp undefined/coverage mismatch')
+        if pair['warp_error'] is not None:finite(pair['warp_error'],'warp_error')
     for name in ('whole_boundary','whole_inside','late_boundary','late_inside'):
         late,kind=name.split('_')
         selected=[p for p in pairs if p['kind']==kind and (late!='late' or p['chunk']>=21)]
@@ -115,6 +120,7 @@ def row_from_records(s,q):
     for field in ('k_bytes','v_bytes','total_bytes','pending_kv_bytes'):
         if len({c['cache'][field] for c in full})!=1:raise RuntimeError(f'full-window cache byte plateau not stable: {field}')
     generation_seconds=s.get('generation_seconds',s.get('sum_chunk_seconds',sum(c['seconds'] for c in chunks)))
+    if not close(generation_seconds,sum(c['seconds'] for c in chunks),rtol=1e-10):raise RuntimeError('generation duration differs from chunk sum')
     result=dict(prompt=s['prompt'],bits=s['bits'],arm=s['arm'],ranks=','.join(str(r) for r in s.get('ranks',[])),
                 generation_seconds=generation_seconds,sampling_seconds=s['sampling_seconds'],
                 generation_latent_frames_per_second=126/generation_seconds,
