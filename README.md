@@ -477,6 +477,12 @@ rank64에서는 총캐시가 약10~15% 줄었지만 MUSIQ 손상이 컸다. 3비
 
 [전체 비교·감사 결과](src/experiments/tt_rank_sweep/REPORT_KO.md) · [실행 전 개발 계획](src/experiments/TT_RANK_SWEEP.md).
 
+### 최종 확인 중: K와 V 동시 압축
+
+사용자 요청으로 V-only 제한을 풀고 직접 KV 양자화와 KV TT→양자화(rank192/299)를 2/3/4비트, 두 프롬프트에서 비교한다. 새18영상이며 K는 기존 post-RoPE 캐시 값을 압축한다. 새 직접 KV 양자화가 주 기준선이다. 생성·품질·실제 메모리·시간을 정리한 뒤 이 TT 방향의 추가 탐색은 종료한다.
+
+[고정 개발 계획](src/experiments/TT_KV_FINAL.md). 로그: `tail -f ~/sfq_data/tt_kv_final/run.log`. 서비스: `systemctl --user status tt-kv-final --no-pager`.
+
 ## 출처와 공개 범위
 
 이 저장소의 연구 변경은 사용자 저장소에서 관리한다. 외부 코드를 가져왔다는 사실과 원본 라이선스는 유지한다.
