@@ -1,0 +1,112 @@
+[
+  {
+    "repo": "Helldez/llama.cpp",
+    "ref": "152dd5c4a7883382509bde45ee7606433d987581",
+    "path": "src/llama-moe-cache.cpp",
+    "git_blob": "6a343a76033c927b07be2f14f22d4a8b62fd33ea",
+    "content_sha256": "2c8dd1c781a7e63c4a0f81547a0ff8f2af427749b59d2c0c8dff19f560446d70",
+    "utf8_bytes": 25907,
+    "git_blob_recomputed": "6a343a76033c927b07be2f14f22d4a8b62fd33ea",
+    "blob_matches": true
+  },
+  {
+    "repo": "Helldez/llama.cpp",
+    "ref": "152dd5c4a7883382509bde45ee7606433d987581",
+    "path": "src/llama-moe-cache.h",
+    "git_blob": "6c8e36582a42da0b2d23c96517c50c61a8e44786",
+    "content_sha256": "92a8718aec03a556f5bdde7f4f113facef3ab2d095709a946ee090d8fd8e4645",
+    "utf8_bytes": 1842,
+    "git_blob_recomputed": "6c8e36582a42da0b2d23c96517c50c61a8e44786",
+    "blob_matches": true
+  },
+  {
+    "repo": "Helldez/BigMoeOnEdge",
+    "ref": "cb78bfe0f1218ab350a1b7bcd3945c45eaf94595",
+    "path": "core/src/engine/session.cpp",
+    "git_blob": "6783a88754e1d0c0aecf4887ead58217808ad987",
+    "content_sha256": "1af387c7d2d2e0647b830ec3e1f09f5ac589973366e2be80824ca2bb6ad216d4",
+    "utf8_bytes": 181412,
+    "git_blob_recomputed": "6783a88754e1d0c0aecf4887ead58217808ad987",
+    "blob_matches": true
+  },
+  {
+    "repo": "Helldez/BigMoeOnEdge",
+    "ref": "cb78bfe0f1218ab350a1b7bcd3945c45eaf94595",
+    "path": "core/src/moe/expert_stream_source.cpp",
+    "git_blob": "fa7dd52fbc95e8daedf260c74e5213ab1d1ed0af",
+    "content_sha256": "9a1a515cb8ebd94f74052f3864a208af876e84ceb65645f5ff712945e89ecee1",
+    "utf8_bytes": 84340,
+    "git_blob_recomputed": "fa7dd52fbc95e8daedf260c74e5213ab1d1ed0af",
+    "blob_matches": true
+  },
+  {
+    "repo": "Helldez/BigMoeOnEdge",
+    "ref": "cb78bfe0f1218ab350a1b7bcd3945c45eaf94595",
+    "path": "core/include/bmoe/route_trace.h",
+    "git_blob": "1f35e89ab1581d460cfde039bacf86088a3da8e7",
+    "content_sha256": "574212ad4686eb53683319d9dbf93b9b4ac73cb2cfa085637066df843d8c6f7d",
+    "utf8_bytes": 3916,
+    "git_blob_recomputed": "1f35e89ab1581d460cfde039bacf86088a3da8e7",
+    "blob_matches": true
+  },
+  {
+    "repo": "Helldez/BigMoeOnEdge",
+    "ref": "cb78bfe0f1218ab350a1b7bcd3945c45eaf94595",
+    "path": "core/include/bmoe/decode_trace.h",
+    "git_blob": "256167d50c4e3a045bbe6d9cfea4ce4880cd4453",
+    "content_sha256": "c1a216a70e1e0a1585b9dbb256f0c251d33661500ce3cca60771bf23e4a834fb",
+    "utf8_bytes": 5841,
+    "git_blob_recomputed": "256167d50c4e3a045bbe6d9cfea4ce4880cd4453",
+    "blob_matches": true
+  },
+  {
+    "repo": "Helldez/BigMoeOnEdge",
+    "ref": "cb78bfe0f1218ab350a1b7bcd3945c45eaf94595",
+    "path": "core/src/metrics/route_trace_sink.cpp",
+    "git_blob": "5b173b6602b93356b02e0d57ce7e90939a6a6b52",
+    "content_sha256": "3cfd0e879ce420418a5cd194a4147377007200660949341d368a285018444375",
+    "utf8_bytes": 2647,
+    "git_blob_recomputed": "5b173b6602b93356b02e0d57ce7e90939a6a6b52",
+    "blob_matches": true
+  },
+  {
+    "repo": "Helldez/BigMoeOnEdge",
+    "ref": "cb78bfe0f1218ab350a1b7bcd3945c45eaf94595",
+    "path": "docs/ngram.md",
+    "git_blob": "c88fb528ec01040815ec28943ca12170b235868a",
+    "content_sha256": "95591d11724c022fc57807be371c093235cb5f30df03842676df307c0519bb04",
+    "utf8_bytes": 16789,
+    "git_blob_recomputed": "c88fb528ec01040815ec28943ca12170b235868a",
+    "blob_matches": true
+  },
+  {
+    "repo": "Helldez/BigMoeOnEdge",
+    "ref": "cb78bfe0f1218ab350a1b7bcd3945c45eaf94595",
+    "path": "docs/mtp.md",
+    "git_blob": "ef712a010e10728bfbf4dac1b8eec44f40c968dc",
+    "content_sha256": "699685507bb89064630a3f793d091defd2e48860625a5d1f2afd22bde8fa416b",
+    "utf8_bytes": 21808,
+    "git_blob_recomputed": "ef712a010e10728bfbf4dac1b8eec44f40c968dc",
+    "blob_matches": true
+  },
+  {
+    "repo": "Helldez/BigMoeOnEdge",
+    "ref": "cb78bfe0f1218ab350a1b7bcd3945c45eaf94595",
+    "path": "docs/telemetry.md",
+    "git_blob": "569ba85111d7bd469d556c2729fe5849e2765e8c",
+    "content_sha256": "0091958dc5d55dc80d53d9a6fe4d13dce30e2392ca20a13c46040059eeb555f3",
+    "utf8_bytes": 58579,
+    "git_blob_recomputed": "569ba85111d7bd469d556c2729fe5849e2765e8c",
+    "blob_matches": true
+  },
+  {
+    "repo": "EfficientMoE/MoE-Infinity",
+    "ref": "963aab08223e382a109094cdfe5debd970ab6fc8",
+    "path": "docs/configuration.md",
+    "git_blob": "09df31b0ad2f6f18d4841301eabde8e1c21d745b",
+    "content_sha256": "6be9a0ecb5d34edbc944cea96bf1ca21d1403e8e258ddeb242ebf1a7482694c6",
+    "utf8_bytes": 24550,
+    "git_blob_recomputed": "09df31b0ad2f6f18d4841301eabde8e1c21d745b",
+    "blob_matches": true
+  }
+]

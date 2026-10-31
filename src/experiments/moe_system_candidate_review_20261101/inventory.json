@@ -1,0 +1,59 @@
+{
+  "recorded_at_utc": "2026-10-31T18:58:48.993114+00:00",
+  "memory": {
+    "MemTotal_bytes": 66507223040,
+    "MemAvailable_bytes": 59562917888,
+    "SwapTotal_bytes": 137438949376,
+    "SwapFree_bytes": 137250828288
+  },
+  "disk": {
+    "total_bytes": 836393885696,
+    "used_bytes": 647793778688,
+    "free_bytes": 146038407168
+  },
+  "gpu_query": {
+    "returncode": 0,
+    "stdout": "NVIDIA GeForce RTX 4090, 24564"
+  },
+  "local_model": {
+    "directory": "/home/acorn0415/sfq_data/moe_allocation_stage1/model",
+    "safetensor_files": [
+      {
+        "name": "model-00001-of-00003.safetensors",
+        "bytes": 4997744872
+      },
+      {
+        "name": "model-00002-of-00003.safetensors",
+        "bytes": 4997235176
+      },
+      {
+        "name": "model-00003-of-00003.safetensors",
+        "bytes": 3843741912
+      }
+    ],
+    "total_safetensor_bytes": 13838721960,
+    "suitability": "로컬 OLMoE는 준비 자료로 쓸 수 있지만 이 파일 크기만으로 실제 GPU 오프로딩 압력이 입증되지는 않는다."
+  },
+  "possible_future_model": {
+    "id": "Qwen/Qwen3-Next-80B-A3B-Instruct-GGUF",
+    "revision": "4c8630cf7af926a9c5095cb4bbbbc65d36e20f77",
+    "weights": [
+      {
+        "rfilename": "Qwen3-Next-80B-A3B-Instruct-Q4_K_M.gguf",
+        "blobId": "206436d6d50b27ad169e1c4694140ec0fb01d813",
+        "size": 48410988384,
+        "lfs": {
+          "sha256": "d103b2733ec1012a52d01edda66b7e5c24ae50508c9f99f5297ea459ef3c061a",
+          "size": 48410988384,
+          "pointerSize": 136
+        }
+      }
+    ],
+    "metadata_only": true,
+    "downloaded": false,
+    "ram_or_vram_fit_verified": false
+  },
+  "new_gpu_executions": 0,
+  "new_model_downloads": 0,
+  "git_directory_apparent_bytes": 79744692
+}

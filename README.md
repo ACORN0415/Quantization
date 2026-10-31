@@ -90,6 +90,18 @@ GPU 비교는 아래와 같이 완료했다. 보정 불균형·damping 선택·�
 [선택과 보류 결과의 CPU 감사](src/experiments/moe_calibration_choice_stage1/audit.json) ·
 [사전 명세](src/experiments/moe_calibration_choice_stage1/registration.json).
 
+**다음 실행 후보 두 개 검토 완료 (2026-11-01):** 전문가/KV의 공동 메모리 배분은
+VAMP 등과 직접 겹쳐 넓은 정의로 채택하지 않았다. 다음 자원은 **추측 검증에서
+거절된 토큰의 전문가 접근이 이후 GPU 캐시 전송에 미치는 영향**을 확인하는
+제한 진단에 배정한다. 공개 GPU 캐시의 SLRU 갱신과 검증 뒤 채택 처리 시점은
+확인했지만, 실제 추가 전송이나 시간 손실은 아직 측정하지 않았다. 기존 trace의
+host/flash 비용과 GPU 전송을 구분하고, cache 우회·채택 window를 기록해야 한다.
+새 연구 방법의 채택은 보류이며, 후속 120분·생성 시도8회 범위는 제안 상태다.
+이번 검토의 GPU 실행·모델 다운로드는0회다.
+[후보 비교·의사결정 설명·다음 진단 범위](src/experiments/moe_system_candidate_review_20261101/REPORT_KO.txt) ·
+[원문과 고정 코드의 근거](src/experiments/moe_system_candidate_review_20261101/source_audit.json) ·
+[자원과 모델 메타데이터](src/experiments/moe_system_candidate_review_20261101/inventory.json).
+
 ## 먼저 읽을 현재 결론
 
 | 질문 | 현재 답 | 근거의 범위 |

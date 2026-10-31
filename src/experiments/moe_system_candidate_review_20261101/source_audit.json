@@ -1,0 +1,159 @@
+{
+  "reviewed_on_kst": "2026-11-01",
+  "source_policy": "원문과 고정 revision의 공개 코드를 대조했다. 논문의 보고 수치와 로컬 관측을 구분하며, 공개 코드 존재를 로컬 실행 성공으로 취급하지 않는다.",
+  "papers": [
+    {
+      "id": "vamp",
+      "candidate": "A",
+      "title": "Dynamic HBM Repartitioning for Multi-Turn MoE Serving",
+      "version": "2609.13537v1",
+      "url": "https://arxiv.org/html/2609.13537v1",
+      "read_scope": "방법·평가·논의",
+      "finding": "전문가 가중치와 KV 사이의 HBM 재배분 및 전문가 이동·prefix 재계산·선점 비용 비교를 직접 다룬다.",
+      "decision": "일반적인 공동 메모리 배분 후보는 제외. 압력 해소 후 전문가 복귀 미지원이라는 제한만으로 새 문제라고 주장하지 않는다."
+    },
+    {
+      "id": "eco_spec",
+      "candidate": "B",
+      "title": "Less Experts, Faster Decoding: Cost-Aware Speculative Decoding for Mixture-of-Experts",
+      "version": "2607.12696v1",
+      "url": "https://arxiv.org/html/2607.12696v1#S4",
+      "read_scope": "관련 연구·문제 정의·방법",
+      "finding": "검증 전 draft 후보를 채택 확률과 예상 전문가 집합의 추가 비용으로 고른다. 타깃 검증 규칙을 유지한다. Global Expert Buffer는 그 선택 집합의 전문가 합집합이다.",
+      "limit": "이 목적함수를 검증 이후 여러 단계에 걸친 물리 GPU 캐시의 채택 결과 반영 정책과 동일하다고 단정하지 않는다. 원문 확인만으로 해당 정책이 모든 구현에 없다고도 주장하지 않는다."
+    },
+    {
+      "id": "bigmomo",
+      "candidate": "B",
+      "title": "BigMoMo: Efficient Inference of Large-Scale MoE with Speculative Decoding on Mobile Devices",
+      "version": "2609.14643v1",
+      "url": "https://arxiv.org/html/2609.14643v1#S4",
+      "read_scope": "동기·방법·평가 설정",
+      "finding": "채택 가능성을 이용한 노드 제거와 전문가 이동 비용을 함께 다룬다. 전문가 제거·가중치 재배분은 타깃 mixture를 바꾸는 근사다.",
+      "limit": "논문의 거절 노드 작업량을 우리 GPU의 캐시 오염이나 이후 단계의 추가 전송량으로 해석하지 않는다. BigMoeOnEdge 소프트웨어와 별개다."
+    },
+    {
+      "id": "moe_speq",
+      "candidate": "B",
+      "title": "MoE-SpeQ: Speculative Quantized Decoding with Proactive Expert Prefetching and Offloading for Mixture-of-Experts",
+      "version": "2511.14102v1",
+      "url": "https://arxiv.org/html/2511.14102v1#S3.SS3",
+      "read_scope": "동기·governor·전문가 스케줄러·실행 방식",
+      "finding": "예측된 전문가와 현재 캐시를 사용하는 lookahead, 계층 캐싱, 프리페치, draft 길이 제어를 이미 다룬다.",
+      "limit": "확인한 스케줄러 설명만으로 채택 이후의 모든 캐시 정책이 빠져 있다고 확정하지 않는다. 일반적인 예측 캐싱·길이 선택은 새 기여가 아니다."
+    },
+    {
+      "id": "acceptmoe",
+      "candidate": "B",
+      "title": "AcceptMoE: Commitment-Weighted Self-Sizing Verifier Expert Sets for Efficient MoE Speculative Decoding",
+      "version": "2608.02989v1",
+      "url": "https://arxiv.org/html/2608.02989v1",
+      "read_scope": "초록·도입·관련 연구의 선별 확인; 정독 세 편과 구분",
+      "finding": "채택 가능성으로 전문가 수요를 가중하고 residency를 고려한 pruning을 제시한다. 타깃 분포를 변경하는 방법이다.",
+      "limit": "채택 여부를 고려한다는 발상만으로 신규성을 주장할 수 없다."
+    }
+  ],
+  "code_findings": [
+    {
+      "id": "a_config",
+      "repo": "EfficientMoE/MoE-Infinity",
+      "ref": "963aab08223e382a109094cdfe5debd970ab6fc8",
+      "path": "docs/configuration.md",
+      "lines": [
+        202,
+        328
+      ],
+      "finding": "adaptive_memory_enabled와 expert/KV 최소량·변경 폭·hysteresis 등의 설정, prefill 임시 admission 관련 설정이 문서화되어 있다.",
+      "limit": "이번 확인은 설정 문서이며 전체 controller의 기능이나 4090 동작을 검증한 것이 아니다.",
+      "url": "https://github.com/EfficientMoE/MoE-Infinity/blob/963aab08223e382a109094cdfe5debd970ab6fc8/docs/configuration.md#L202"
+    },
+    {
+      "id": "gpu_slru",
+      "repo": "Helldez/llama.cpp",
+      "ref": "152dd5c4a7883382509bde45ee7606433d987581",
+      "path": "src/llama-moe-cache.cpp",
+      "lines": [
+        17,
+        155
+      ],
+      "finding": "probation/protected로 나눈 SLRU다. 실제 요청 집합의 hit를 먼저 승격하고 miss를 probation에 삽입한다. 현재 요청에 필요한 항목은 victim에서 보호한다.",
+      "limit": "단순 LRU를 유일한 기준선으로 삼으면 안 된다.",
+      "url": "https://github.com/Helldez/llama.cpp/blob/152dd5c4a7883382509bde45ee7606433d987581/src/llama-moe-cache.cpp#L17"
+    },
+    {
+      "id": "gpu_bypass",
+      "repo": "Helldez/llama.cpp",
+      "ref": "152dd5c4a7883382509bde45ee7606433d987581",
+      "path": "src/llama-moe-cache.cpp",
+      "lines": [
+        479,
+        489
+      ],
+      "finding": "0행·32행 초과·최악의 요청 전문가 수가 슬롯 수를 넘는 경우 cache lookup을 우회한다.",
+      "limit": "실제 경로가 cache를 썼는지 기록해야 한다. 모든 검증 단계에서 캐시 오염이 발생한다고 일반화하지 않는다.",
+      "url": "https://github.com/Helldez/llama.cpp/blob/152dd5c4a7883382509bde45ee7606433d987581/src/llama-moe-cache.cpp#L479"
+    },
+    {
+      "id": "gpu_load",
+      "repo": "Helldez/llama.cpp",
+      "ref": "152dd5c4a7883382509bde45ee7606433d987581",
+      "path": "src/llama-moe-cache.cpp",
+      "lines": [
+        565,
+        597
+      ],
+      "finding": "실제 routing ids를 이미 CPU로 읽은 지점에서 SLRU plan을 호출하고 전문가 전송을 수행한다. 여기서 요청·fill·전송 바이트를 관찰할 수 있다.",
+      "limit": "추가 routing 실행이나 추가 GPU 읽기 없이 기존 ids를 관찰하는 계측을 우선 설계한다. 로그 작성 오버헤드는 별도다.",
+      "url": "https://github.com/Helldez/llama.cpp/blob/152dd5c4a7883382509bde45ee7606433d987581/src/llama-moe-cache.cpp#L565"
+    },
+    {
+      "id": "accept",
+      "repo": "Helldez/BigMoeOnEdge",
+      "ref": "cb78bfe0f1218ab350a1b7bcd3945c45eaf94595",
+      "path": "core/src/engine/session.cpp",
+      "lines": [
+        2837,
+        2906
+      ],
+      "finding": "검증 뒤 채택 prefix를 정하며 거절된 target KV 꼬리를 제거한다. 이 함수에는 GPU 전문가 캐시로 채택 행을 전달하는 호출이 없다. MTP catch-up을 채택 prefix만 계산하는 최적화는 이미 있다.",
+      "limit": "검사한 함수·cache 인터페이스에 대한 관측이며 전체 서비스의 오류나 성능 손실을 입증하지 않는다.",
+      "url": "https://github.com/Helldez/BigMoeOnEdge/blob/cb78bfe0f1218ab350a1b7bcd3945c45eaf94595/core/src/engine/session.cpp#L2837"
+    },
+    {
+      "id": "host_trace",
+      "repo": "Helldez/BigMoeOnEdge",
+      "ref": "cb78bfe0f1218ab350a1b7bcd3945c45eaf94595",
+      "path": "core/include/bmoe/route_trace.h",
+      "lines": [
+        21,
+        49
+      ],
+      "finding": "기존 trace의 residency와 expert_bytes는 flash/host source의 의미다. step·layer·slot은 있으나 검증 window id와 채택 결과는 이 형식에 없다.",
+      "limit": "이 값을 GPU PCIe 전송량으로 재명명하거나 절대 token 위치만으로 rollback 전후 행을 합치지 않는다.",
+      "url": "https://github.com/Helldez/BigMoeOnEdge/blob/cb78bfe0f1218ab350a1b7bcd3945c45eaf94595/core/include/bmoe/route_trace.h#L21"
+    },
+    {
+      "id": "existing_bench",
+      "repo": "Helldez/BigMoeOnEdge",
+      "ref": "cb78bfe0f1218ab350a1b7bcd3945c45eaf94595",
+      "path": "docs/ngram.md",
+      "lines": [
+        123,
+        134
+      ],
+      "finding": "일부 기존 벤치는 drop-cold-experts와 자동 RAM 캐시 예산을 사용하고 예산 차이를 명시한다.",
+      "limit": "그 수치를 자연 routing·동일 예산의 새 기준선으로 재사용하지 않는다. 다른 절의 모든 벤치에 이 조건을 일반화하지 않는다.",
+      "url": "https://github.com/Helldez/BigMoeOnEdge/blob/cb78bfe0f1218ab350a1b7bcd3945c45eaf94595/docs/ngram.md#L123"
+    }
+  ],
+  "trace_inventory": {
+    "repo": "aswinkumar99/qwen3.8-flash-next-expert-traces",
+    "ref": "d14a6d606da8f34f2bb3ff470fd7d9073c1b38c1",
+    "url": "https://huggingface.co/datasets/aswinkumar99/qwen3.8-flash-next-expert-traces/blob/d14a6d606da8f34f2bb3ff470fd7d9073c1b38c1/docs/trace_format.md",
+    "finding": "확인한 형식은 자연 routing과 cache 이벤트를 담지만 MTP 후보 flag는 예약되어 사용되지 않으며 loader는 mtp 가중치를 제외한다고 명시한다.",
+    "suitable_for_rejected_verification_analysis": false,
+    "prohibited_inference": "거절된 branch 기록이 없는 일반 decode trace에 가상 채택 마스크를 붙여 실제 현상으로 보고하지 않는다."
+  },
+  "closest_work_conclusion": "후보 B의 신규성은 미확보다. 검증 전 전문가 집합 절감과 예측 캐싱은 이미 다루며, 현재 남겨 둔 것은 채택 이후 캐시 상태가 실제 추가 전송을 만드는지에 대한 제한 진단이다.",
+  "evidence_level": "코드 경로 확인과 문헌 검토. 실제 추측 생성·GPU 전송 계측·성능 개선 관측은 0건."
+}

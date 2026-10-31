@@ -1,0 +1,14 @@
+{
+  "started_at_utc": "2026-10-31T18:45:45+00:00",
+  "deadline_utc": "2026-10-31T19:30:45+00:00",
+  "scope_fixed_at_utc": "2026-10-31T18:47:15.706997+00:00",
+  "topics": [
+    "Joint expert/KV GPU memory allocation under a real long-context constraint",
+    "Expert cache effects of accepted/rejected speculative verification tokens"
+  ],
+  "maximum_candidates": 2,
+  "maximum_deep_primary_papers_per_candidate": 3,
+  "note": "Initial broad literature screening preceded this scoped record. No hypothesis tests or GPU executions have occurred.",
+  "allowed_work": "Primary papers, pinned public code, local inventory, CPU-only arithmetic on existing metadata. No new GPU runs, model downloads, package installs, or closed-candidate extensions.",
+  "output": "At most two candidate comparisons; one justified next resource decision or explicit recommendation to move to an adjacent area."
+}
