@@ -29,6 +29,8 @@
 
 **MoE 제한 진단 완료·현재 후보 종료 (2026-10-31):** 승인한 120분 상한 안에서 약16분 동안 입력 확보·실제 검사·감사를 완료했다. OLMoE-0924의 8번 층에서 보정 공동 선택으로 고른 전문가 [5,11,37,45]에 대해, A(개별 오차)·B(캐시/증분 정확 합산)·C(교차항 정확 합산)는 모두 [3,2,3,4]비트를 선택했다. 보류16문서의 개선율은0%이며, 동일 배분의 비교라 [0,0]% 구간을 모집단 동등성 증거로 해석하지 않는다. native BF16도 동일 배분을 문서당 한 번 평가해 공유했다. 독립 프로세스3쌍에서 준비 포함 총시간 중앙값은 B209.859초/C209.896초, 준비 이후 독립 작업은4.290초/4.327초로 C의 일관된 이득이 없었고 전체 최대 RSS도 같았다. 무개입24문서 비트 일치·실제 가중치36개 패킹 왕복을 통과했다. **이 한 층·네 전문가·고정 비트 구성의 품질/비용 개발을 종료한다.** 전체 MoE의 최적 배분이나 전체 모델 품질에 대한 결론은 아니다. [실제 결과와 네 질문의 답](src/experiments/moe_allocation_stage1/REPORT_KO.txt) · [요약 수치](src/experiments/moe_allocation_stage1/summary.json) · [CPU 감사·파일 해시](src/experiments/moe_allocation_stage1/audit.json) · [측정 전 고정 명세](src/experiments/moe_allocation_baselines/registration.json) · [원문·코드 확인](src/experiments/moe_allocation_baselines/source_audit.json).
 
+MoE 종료 결과의 **사후 설명**도 추가했다. 저장된 보정 평균에서 A/B의 12개 후보 전체 순위가 같았으며, 선택 후보의 순교차항 비중 `(B−A)/B`는 +0.128507%, 전체 범위는 −0.140975%~+0.162775%, B의 1·2위 상대 차이는 0.560505%였다. 문서·토큰을 합산한 순교차항이므로 개별 토큰의 교차항 크기나 상쇄 여부를 결론내리지 않는다. 새 모델 실행과 등록 기준 변경 없이 기존 종료 판단을 유지했다. [후보별 순위·수치·원자료 해시](src/experiments/moe_allocation_stage1/posthoc_rank_analysis.json) · [재계산 코드](tools/explain_moe_allocation_ranks.py).
+
 ## 먼저 읽을 현재 결론
 
 | 질문 | 현재 답 | 근거의 범위 |

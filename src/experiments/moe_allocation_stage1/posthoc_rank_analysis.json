@@ -1,0 +1,243 @@
+{
+  "kind": "POST_HOC_DESCRIPTIVE_ONLY",
+  "timestamp_kst": "2026-10-31T23:20:29.771656+09:00",
+  "aggregation": "Ratio of document-mean scores across the eight calibration documents; not the mean of tokenwise ratios",
+  "net_cross_fraction_formula": "(mean_B - mean_A) / mean_B",
+  "runner_up_gap_formula": "(B_second - B_best) / B_best",
+  "all_12_ranks_identical": true,
+  "order_candidate_indices_zero_based": {
+    "A": [
+      3,
+      4,
+      9,
+      0,
+      1,
+      2,
+      5,
+      6,
+      10,
+      11,
+      7,
+      8
+    ],
+    "B": [
+      3,
+      4,
+      9,
+      0,
+      1,
+      2,
+      5,
+      6,
+      10,
+      11,
+      7,
+      8
+    ]
+  },
+  "adjacent_score_separation": {
+    "A": {
+      "minimum_adjacent_gap": 2.456801067764712e-06,
+      "all_adjacent_gaps_exceed_tie_band": true
+    },
+    "B": {
+      "minimum_adjacent_gap": 4.695103143110245e-06,
+      "all_adjacent_gaps_exceed_tie_band": true
+    }
+  },
+  "selected_candidate": [
+    3,
+    2,
+    3,
+    4
+  ],
+  "selected_net_cross_fraction": 0.0012850678401493906,
+  "net_cross_fraction_range": [
+    -0.0014097523888103197,
+    0.0016277544769040839
+  ],
+  "B_runner_up_relative_gap": 0.005605052103263671,
+  "candidate_rows": [
+    {
+      "candidate": [
+        2,
+        3,
+        3,
+        4
+      ],
+      "A": 0.0038343105230394534,
+      "B": 0.003837714955116102,
+      "net_cross_term": 3.4044320766485857e-06,
+      "net_cross_fraction": 0.0008870987336123279,
+      "rank_A": 4,
+      "rank_B": 4
+    },
+    {
+      "candidate": [
+        2,
+        3,
+        4,
+        3
+      ],
+      "A": 0.003851926297255406,
+      "B": 0.0038561269931167265,
+      "net_cross_term": 4.200695861320599e-06,
+      "net_cross_fraction": 0.001089356203470201,
+      "rank_A": 5,
+      "rank_B": 5
+    },
+    {
+      "candidate": [
+        2,
+        4,
+        3,
+        3
+      ],
+      "A": 0.00415283286708155,
+      "B": 0.00415623612185597,
+      "net_cross_term": 3.4032547744202238e-06,
+      "net_cross_fraction": 0.0008188309505621874,
+      "rank_A": 6,
+      "rank_B": 6
+    },
+    {
+      "candidate": [
+        3,
+        2,
+        3,
+        4
+      ],
+      "A": 0.002636506633362968,
+      "B": 0.0026398990827754825,
+      "net_cross_term": 3.3924494125146462e-06,
+      "net_cross_fraction": 0.0012850678401493906,
+      "rank_A": 1,
+      "rank_B": 1
+    },
+    {
+      "candidate": [
+        3,
+        2,
+        4,
+        3
+      ],
+      "A": 0.0026541224075789203,
+      "B": 0.002654695854681797,
+      "net_cross_term": 5.734471028766633e-07,
+      "net_cross_fraction": 0.00021601235481094277,
+      "rank_A": 2,
+      "rank_B": 2
+    },
+    {
+      "candidate": [
+        3,
+        3,
+        2,
+        4
+      ],
+      "A": 0.004523987789983985,
+      "B": 0.004531363737594335,
+      "net_cross_term": 7.3759476103500005e-06,
+      "net_cross_fraction": 0.0016277544769040839,
+      "rank_A": 7,
+      "rank_B": 7
+    },
+    {
+      "candidate": [
+        3,
+        3,
+        4,
+        2
+      ],
+      "A": 0.004544060365267702,
+      "B": 0.004544027434685199,
+      "net_cross_term": -3.2930582503053196e-08,
+      "net_cross_fraction": -7.247003451539363e-06,
+      "rank_A": 8,
+      "rank_B": 8
+    },
+    {
+      "candidate": [
+        3,
+        4,
+        2,
+        3
+      ],
+      "A": 0.004842510134026082,
+      "B": 0.004835693004261771,
+      "net_cross_term": -6.817129764311383e-06,
+      "net_cross_fraction": -0.0014097523888103197,
+      "rank_A": 11,
+      "rank_B": 11
+    },
+    {
+      "candidate": [
+        3,
+        4,
+        3,
+        2
+      ],
+      "A": 0.004844966935093847,
+      "B": 0.004840388107404881,
+      "net_cross_term": -4.57882768896585e-06,
+      "net_cross_fraction": -0.0009459629243285487,
+      "rank_A": 12,
+      "rank_B": 12
+    },
+    {
+      "candidate": [
+        4,
+        2,
+        3,
+        3
+      ],
+      "A": 0.0027729279157366333,
+      "B": 0.0027735105853641372,
+      "net_cross_term": 5.826696275038935e-07,
+      "net_cross_fraction": 0.00021008379437188778,
+      "rank_A": 3,
+      "rank_B": 3
+    },
+    {
+      "candidate": [
+        4,
+        3,
+        2,
+        3
+      ],
+      "A": 0.00466040907235765,
+      "B": 0.004654430477494905,
+      "net_cross_term": -5.978594862745233e-06,
+      "net_cross_fraction": -0.0012844954697793696,
+      "rank_A": 9,
+      "rank_B": 9
+    },
+    {
+      "candidate": [
+        4,
+        3,
+        3,
+        2
+      ],
+      "A": 0.004662865873425416,
+      "B": 0.004660470275129261,
+      "net_cross_term": -2.395598296154461e-06,
+      "net_cross_fraction": -0.0005140250135139028,
+      "rank_A": 10,
+      "rank_B": 10
+    }
+  ],
+  "source_sha256": {
+    "src/experiments/moe_allocation_stage1/calibration.json": "86baab62f30757f647366e15e0a78ed9278bc90322eb8cae6e9c03448177dff2",
+    "src/experiments/moe_allocation_stage1/summary.json": "64d3b09b53eeebb2783cceee3ded6129f0f568d0db2107976e56801c3fe25ac5",
+    "src/experiments/moe_allocation_stage1/run_state.json": "9fbf24fc736a2873545306a7dcf45355310ba64190b08f4ee4f227f93cd0908b",
+    "src/experiments/moe_allocation_stage1/audit.json": "a6665c72c0f09b0cea9cf31b6d6e2d0642872c994beeab9c9cbe6ce7e075e2ac",
+    "src/experiments/moe_allocation_baselines/registration.json": "2917d37b72267a8a72a4e5f60297355bcbedd748628ed3383f395603fa57f78d"
+  },
+  "analysis_code_sha256": "abf8c10a2bb9f3c0f90b9bd409dd4c90623ce2fe769c3412be2a0c3a13902d4e",
+  "gpu_calls": 0,
+  "model_forwards": 0,
+  "registered_criteria_changed": false,
+  "limitations": "Aggregated net cross terms do not bound individual-token cross terms or exclude positive/negative cancellation. Rank identity is for calibration mean scores, not every document or token.",
+  "conclusion": "For the tested subproblem, including cross terms changed neither the ranking of the 12 candidates nor the selected allocation; retain the existing closure decision."
+}
