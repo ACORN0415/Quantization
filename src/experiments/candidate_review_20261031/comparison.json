@@ -1,0 +1,276 @@
+{
+  "schema_version": 1,
+  "title_ko": "기존 실패 관측에서 출발한 두 후보의 채택 검토",
+  "date": "2026-10-31",
+  "scope": {
+    "started_at": "2026-10-31T13:02:37+09:00",
+    "deadline": "2026-10-31T13:47:37+09:00",
+    "max_wall_minutes": 45,
+    "max_candidates": 2,
+    "max_closest_works_per_candidate": 3,
+    "actions": "기존 결과 재계산, 원문·공개 코드 읽기, 기록 정리",
+    "new_gpu_generations": 0,
+    "new_gpu_profiles": 0,
+    "kernel_ports": 0,
+    "stopping_rule": "두 후보의 관측·단순 기준선·기존 방법·실행 가능성을 확인하면 조기 종료. 빈 자리에 다른 후보를 추가하지 않는다.",
+    "scope_limit": "전체 분야에서 연구할 문제가 없다는 결론이 아니다. 이번 두 후보의 현재 정의에 한정한다.",
+    "completed_at": "2026-10-31T13:14:20.670294+09:00",
+    "elapsed_seconds": 703.670294,
+    "within_time_limit": true
+  },
+  "decision": {
+    "adopted_candidates": [],
+    "status": "closed_no_candidate_adopted",
+    "reason_ko": "메모리 후보의 직접 관측한 실패는 단순 구현 수정으로 이미 해결됐다. 보정 후보는 선택 실패를 관측했지만 원인을 분리하지 못했고, 가장 단순한 설정 선택보다 나은 새 방법이 필요하다는 근거가 없다.",
+    "next_action": "이번 조사를 종료한다. 새 GPU 실험·커널 이식·후보 교체를 자동으로 시작하지 않는다.",
+    "relation_to_prior_work": "이미 종료한 희소 선택, 복원 재사용, 저장 정책 분석을 새 방법으로 재개하지 않는다."
+  },
+  "candidates": [
+    {
+      "id": "memory_lifecycle",
+      "name_ko": "저비트 KV의 저장 감소가 실제 최대 메모리 감소로 이어지지 않는 문제",
+      "failure_condition": "packed KV 자체는 예산에 들어가지만 BF16 선할당 또는 압축 대기 데이터 때문에 전체 실행이 메모리 상한을 넘는 조건.",
+      "existing_observations": {
+        "direct_historical": [
+          "S9 긴 문맥 검사에서 63잠재프레임 문맥의 BF16·INT2·K4V2 모두 초기 BF16 버퍼 선할당 단계에서 OOM.",
+          "KV_NO_BF16_BUFFERS=1 적용 후 INT2와 K4V2가 각각 3회 완료. INT2 최대 allocated 약 11.37 GiB, 평균 생성 약 113.7초. 현재 시점 재실행이 아닌 저장된 실행 기록이다.",
+          "최근 QVG 복원 재사용 진단의 B 경로는 36잠재프레임에서 실행 완료. pair1_B의 peak allocated는 11248259584바이트."
+        ],
+        "code_derived": [
+          "QVG 고정 revision의 QUANT_FACTOR=8, 블록당 3잠재프레임. 최초 압축 직전 BF16 K/V 24잠재프레임의 논리적 저장량은 2×30×24×1560×12×128×2 = 6900940800바이트 = 6.427001953125 GiB.",
+          "이 수치는 실제 할당기 peak 또는 제거 가능한 메모리의 측정치가 아니다. 다른 활성값·임시 텐서와 함께 peak가 형성된다.",
+          "현재 QVG ChunkedKVCache는 최초 쓰기 때 청크를 할당한다. 과거 P3 하네스의 전량 선할당 버그를 현재 QVG에도 있다고 주장하지 않는다."
+        ],
+        "literature_or_public_code": [
+          "KIVI는 full-precision residual 길이 R을 두고 가득 차면 양자화한다.",
+          "Tempokv 공개 구현에는 완성된 프레임을 점진적으로 pack하는 경로가 있다. 코드 존재만 확인했으며 우리 GPU에서 실행하거나 품질·속도를 재현하지 않았다."
+        ],
+        "conjecture": "QVG에서 압축 대기 구간을 줄인 뒤에도 고정 주기 설정으로 해결되지 않는 품질·메모리 충돌이 남는다는 가설은 아직 관측하지 않았다."
+      },
+      "closest_work_ids": [
+        "qvg",
+        "kivi",
+        "tempokv"
+      ],
+      "remaining_gap": "현재 입증한 공백 없음. 단순 선할당 제거와 고정 압축 주기 변경 후에도 실패하는 구체적 조건이 필요하다. 코덱이 다르다는 이유만으로 기존 점진적 저장 구현과의 차이가 연구 기여가 되지 않는다.",
+      "simplest_baseline": [
+        "실제로 해결된 경우: 불필요한 BF16 버퍼 선할당 생략.",
+        "QVG 대기 버퍼를 문제 삼으려면 우선 고정 압축 주기 조정과 할당 수명 정리를 기준선으로 둔다.",
+        "QVG 압축 주기를 줄이면 그룹·centroid 추정과 양자화 시점이 바뀔 수 있다. 출력 동등성이나 품질 유지가 자동으로 성립하지 않는다."
+      ],
+      "practical_value": "메모리 상한 아래에서 기존 OOM 작업을 완료하는 것은 실용적이다. 다만 과거 63잠재프레임 사례는 이미 구현 수정으로 달성했고, 현재 QVG에 대해 추가로 가능해질 문맥 길이나 줄일 peak는 미측정이다.",
+      "minimum_check": {
+        "kind": "GPU 진입 전 기존 자료·코드 검사",
+        "question": "관측한 OOM이 가장 단순한 구현 수정 뒤에도 남았는가? 현재 QVG에 동일 실패가 있는가?",
+        "success_to_continue": "단순 수정을 적용해도 남는 유효한 OOM/예산 초과 기록과 현재 실행 조건이 확인됨.",
+        "stop": "관측한 실패가 단순 수정으로 해소됨. 또는 현재 경로의 미해결 실패가 확인되지 않음.",
+        "inconclusive": "원 실행 로그나 설정 연결이 불명확하면 신규성 근거로 사용하지 않음.",
+        "completed_result": "선할당 실패는 기존 수정으로 해소. 현재 QVG의 대기 버퍼 양은 계산 가능하지만 그것 때문에 실행이 막힌 기록은 확인하지 못함.",
+        "resource_limit": "공통 45분 조사 상한 안의 CPU 읽기·산술 확인, 새 GPU 생성 0회.",
+        "gpu_followup": "채택 조건 미충족으로 설계·실행하지 않음."
+      },
+      "judgment_sequence": {
+        "exists": "과거 선할당 실패는 직접 관측. 현재 QVG의 미해결 실패는 미확인.",
+        "existing_solution": "직접 관측한 사례는 단순 수정으로 해결.",
+        "practical_value": "추가 연구의 증분 가치 미확인.",
+        "verifiable": "코드와 메모리 수치는 확인 가능하나 신규성에 필요한 실패 조건 없음."
+      },
+      "decision": "현재 형태로 채택하지 않음. 기존 구현 수정 사례로 보존."
+    },
+    {
+      "id": "calibration_to_rollout",
+      "name_ko": "오프라인 attention 오차로 고른 양자화 보정값이 실제 영상 품질에서 실패하는 문제",
+      "failure_condition": "같은 비트폭에서 국소 attention 오차가 작은 설정을 선택했는데 실제 자기회귀 생성의 품질은 기본 설정보다 나빠지는 조건.",
+      "existing_observations": {
+        "direct_historical": [
+          "캡처 기반 진단의 실제 λ1·λ2 대응 상대 attention 출력 오차는 각각 약 0.348·0.314.",
+          "P3 fused INT2, 새 프롬프트 10개, seed 0에서 λ2−λ1의 MUSIQ 평균은 -11.430081085931686, subject_consistency는 -0.16578880735042115. 두 지표 모두 양수 차이는 1/10.",
+          "이번에는 저장된 프롬프트별 평가값에서 대응 차이와 평균을 재계산했다. 영상 지표를 다시 실행하거나 새 영상을 생성하지 않았다."
+        ],
+        "confounders": [
+          "캡처는 INT8 rolling 이력에서 INT2를 재구성했고, 생성은 실제 packed P3 이력을 사용했다.",
+          "목적함수(국소 attention 오차 대 영상 품질), 이력, 연산 경로가 함께 달라졌다.",
+          "옛 진단 코드의 Δ=2×scale 때문에 λ 이름에 매핑 정정이 있다. 0.348은 R1_l0.25=실제 λ1, 0.314는 R1_l0.5=실제 λ2에 해당한다.",
+          "옛 PSAC 경로의 미래 query 사용과 평균항 부호 오류를 온라인 보정의 성공 근거로 사용하지 않는다."
+        ],
+        "literature_or_public_code": [
+          "Q-ARVD는 특정 프레임만 가중치·활성을 양자화한 뒤 최종 latent MSE로 민감도를 측정하고 재구성 손실에 반영한다. 지각 품질 지표의 직접 최적화나 persistent KV 양자화와 같지는 않다.",
+          "TempoKV는 BF16 trace를 수집하되 predictor의 입력에는 양자화·복원 이력을 사용한다. 단순히 복원 이력으로 보정한다는 아이디어는 이미 있다.",
+          "TempoKV의 action/scene 보정 분포 검사는 재구성 오차에 대한 결과이며, 모든 free-running 생성 상태 변화에 대한 보장이 아니다."
+        ],
+        "conjecture": "관측된 선택 실패의 주원인이 압축 이력의 분포 변화이고 이를 맞추면 더 좋은 영상 품질을 얻는다는 설명은 미검증."
+      },
+      "closest_work_ids": [
+        "qarvd",
+        "tempokv"
+      ],
+      "remaining_gap": "원인과 배포 조건을 맞춘 뒤에도 기존 보정이나 소규모 실제 생성 기반 설정 선택이 실패한다는 증거가 없다. Q-ARVD와 TempoKV가 우리 비교를 그대로 해결했다고 주장하지 않지만, 국소 오차 대신 미래 영향 또는 복원 이력을 보겠다는 넓은 방향만으로는 신규성이 부족하다.",
+      "simplest_baseline": [
+        "현재 자료에서는 시험한 INT2 네 λ 중 평균 품질이 가장 좋았던 λ1 유지.",
+        "새 선택기를 주장하려면 동일한 보정 비용에서 소수 실제 생성으로 λ를 고르는 방법과 비교하고, 선택에 쓰지 않은 프롬프트에서 평가.",
+        "메모리 예산이 허용하면 K4V2도 품질 대조군. INT2와 같은 실제 바이트를 사용하는 기준선이라고 표현하지 않음."
+      ],
+      "practical_value": "나쁜 설정 선택을 피하는 실용적 의미는 크다. 그러나 관측된 -11.43 MUSIQ는 λ2 대신 λ1을 쓰면 피한 손실이며 새 방법의 예상 개선량이 아니다.",
+      "minimum_check": {
+        "kind": "GPU 진입 전 기존 평가값 재계산과 비교 조건 정합성 검사",
+        "question": "입력 이력만 다른 동일 목적함수·동일 연산 경로의 설정 선택 대조가 현재 자료에 있는가?",
+        "success_to_continue": "관측한 선택 실패가 재계산되고, 이력 외 조건을 맞춘 비교 및 단순 설정 선택보다 남는 실패가 확인됨.",
+        "stop": "설정 선택 실패만 있고 이력·목적함수·연산 경로가 동시에 달라 원인을 분리할 수 없음. 기본 λ 유지로 관측한 손실은 회피 가능.",
+        "inconclusive": "원 평가값·λ 매핑이 확인되지 않으면 수치 비교 자체를 무효로 취급.",
+        "completed_result": "프롬프트별 차이·평균·구간은 기존 저장값과 일치. 원인 분리를 위한 조건 정합성은 충족하지 못함.",
+        "resource_limit": "공통 45분 조사 상한 안의 CPU 재계산, 새 GPU 생성 0회.",
+        "gpu_followup": "채택 조건 미충족으로 새 보정·생성 실험을 시작하지 않음."
+      },
+      "judgment_sequence": {
+        "exists": "설정 선택 실패는 관측. 이력 불일치라는 특정 원인은 미입증.",
+        "existing_solution": "기본 λ1 유지로 관측한 손실 회피. 기존 보정법을 넘는 잔여 실패 미확인.",
+        "practical_value": "잘못된 설정 선택 방지. 새로운 방법의 추가 이득은 미측정.",
+        "verifiable": "자체 λ 비교는 실행 가능. Q-ARVD/TempoKV의 동일 조건 재현과 구현 적합성은 아직 검증하지 않음."
+      },
+      "decision": "현재 형태로 채택하지 않음. 원인 미분리의 분석 관측으로 보존."
+    }
+  ],
+  "sources": [
+    {
+      "id": "qvg",
+      "paper": "https://arxiv.org/html/2602.02958v1",
+      "repository": "svg-project/Quant-VideoGen",
+      "revision": "0601468f2dbba6a17ac7086faec6d41527cad188",
+      "checked_files": [
+        {
+          "path": "experiments/Self-Forcing/pipeline/causal_inference.py",
+          "lines": [
+            98,
+            123,
+            337,
+            354,
+            470,
+            481
+          ]
+        },
+        {
+          "path": "quant_videogen/kv_cache.py",
+          "lines": [
+            56,
+            92,
+            200,
+            218
+          ]
+        }
+      ],
+      "execution_status": "이전 QVG 재사용 진단에 사용한 동일 revision. 이번에는 코드 읽기만 수행."
+    },
+    {
+      "id": "kivi",
+      "paper": "https://arxiv.org/html/2402.02750v1",
+      "paper_section": "3.3",
+      "repository": "jy-yuan/KIVI",
+      "revision": "876b4d2d08e3b1d5f70d0969c299d8c7c42ddfb6",
+      "checked_files": [
+        {
+          "path": "models/llama_kivi.py",
+          "lines": [
+            37,
+            131,
+            175,
+            193,
+            217
+          ]
+        }
+      ],
+      "scope": "LLM residual buffer의 선행 개념. 영상 품질이나 QVG와 같은 코덱이라는 주장이 아님.",
+      "execution_status": "원문·코드 확인, 실행하지 않음.",
+      "revision_verification": "GitHub commits/main 응답의 commit SHA와 대조해 일치 확인"
+    },
+    {
+      "id": "qarvd",
+      "paper": "https://arxiv.org/html/2605.21072v1",
+      "paper_section": "3.1",
+      "repository": "tsa18/Q-ARVD",
+      "revision": "7068178d4691ac11d46aeb5840d241434ba5fff2",
+      "checked_files": [
+        {
+          "path": "get_chunk_wise_weights.py",
+          "lines": [
+            207,
+            214
+          ]
+        },
+        {
+          "path": "quant_self_forcing.py",
+          "lines": [
+            107,
+            109
+          ]
+        },
+        {
+          "path": "quant/layer_recon_self_forcing.py",
+          "lines": [
+            115,
+            139,
+            214,
+            216
+          ]
+        }
+      ],
+      "code_caveat": "layer.use_dual_scale 분기에서는 sample_weights를 ones로 바꾼다. 모든 층에 민감도 가중치가 항상 적용된다고 요약하지 않음.",
+      "execution_status": "원문·코드 확인, RTX 4090 재현·메모리 요구량 미검증.",
+      "revision_verification": "GitHub commits/main 응답의 commit SHA와 대조해 일치 확인"
+    },
+    {
+      "id": "tempokv",
+      "paper": "https://arxiv.org/html/2610.15324v1",
+      "paper_sections": [
+        "3.3",
+        "A.5"
+      ],
+      "repository": "jiahui1021/Tempokv",
+      "revision": "25558596e49156a5fabef79150c2cf51240969bb",
+      "checked_files": [
+        {
+          "path": "src/tempokv/fitting.py",
+          "lines": [
+            2086,
+            2110
+          ]
+        },
+        {
+          "path": "src/tempokv/runtime/streaming.py",
+          "lines": [
+            1,
+            5,
+            126,
+            175
+          ]
+        }
+      ],
+      "repository_attribution": "동명 공개 구현을 확인했다. 이번 확인 범위에서 논문으로부터 공식 저장소임을 잇는 링크는 확보하지 못했으므로 저자 공식 재현이라고 부르지 않는다.",
+      "execution_status": "공개 코드의 reconstructed 기본값과 incremental 경로 존재만 확인. 학습·생성·커널 실행하지 않음.",
+      "revision_verification": "GitHub commits/main 응답의 commit SHA와 대조해 일치 확인"
+    }
+  ],
+  "review_limits": [
+    "최신 전체 문헌의 완전한 조사나 SOTA 순위표가 아니다.",
+    "OpenReview의 별도 검색 후보는 원문 접근 검증 화면 때문에 본 비교의 근거에서 제외했다.",
+    "GPU 구현이 존재함과 우리 GPU에서 실제로 정확하고 효율적으로 실행됨을 구분한다.",
+    "미검증 공백을 기존 방법의 실패로 표시하지 않는다.",
+    "최소 검사는 후보 채택 전의 읽기·재계산 단계다. 두 후보가 그 단계에서 탈락해 새 GPU 실험 계획을 승인된 작업처럼 만들지 않았다."
+  ],
+  "local_evidence": {
+    "calibration_report": "문서/결과서/S9_cand1_diag.md",
+    "calibration_scope_correction": "문서/지시서/S9_C1_lambda_prereg.md#4",
+    "per_prompt_metrics": [
+      "results/session9/c1_lambda/musiq_per_prompt.json",
+      "results/session9/c1_lambda/vbench_per_prompt.json"
+    ],
+    "saved_contrasts": "results/session9/c1_lambda/contrasts.json",
+    "oom_log": "results/session9/latency_window/run.log",
+    "fixed_allocation_stats": [
+      "results/session9/latency_window/int2_w63_nobuf.stats.json",
+      "results/session9/latency_window/k4v2_w63_nobuf.stats.json"
+    ],
+    "allocation_patch": "self_forcing_patches/0003-s9-psac-reference-backend.patch",
+    "qvg_peak": "src/experiments/kv_reuse_stage1/pair1_B.json",
+    "qvg_manifest": "src/experiments/kv_reuse_stage1/manifest.json"
+  }
+}

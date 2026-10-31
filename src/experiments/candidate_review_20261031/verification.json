@@ -1,0 +1,158 @@
+{
+  "checked_at": "2026-10-31T13:13:25.675150+09:00",
+  "mode": "CPU read-only verification of existing research artifacts; writes only this audit output",
+  "new_gpu_generations": 0,
+  "metric_recomputation": {
+    "musiq": {
+      "n_prompts": 10,
+      "computed": {
+        "mean": -11.430081085931686,
+        "lo": -17.69539919576244,
+        "hi": -5.164762976100931,
+        "pos": 1,
+        "per_prompt": [
+          -12.88398996988932,
+          -4.946572984967915,
+          -10.857727595737998,
+          -3.130577632359092,
+          -19.358583177839,
+          -16.941373007638113,
+          -16.147297450474333,
+          7.336535862513955,
+          -20.12608755202521,
+          -17.24513735089983
+        ]
+      },
+      "exact_match_saved_summary": true,
+      "ci_note": "기존 분석 코드와 같은 반올림된 t(9) 계수 2.262 사용"
+    },
+    "subject_consistency": {
+      "n_prompts": 10,
+      "computed": {
+        "mean": -0.16578880735042115,
+        "lo": -0.25377433751589396,
+        "hi": -0.07780327718494834,
+        "pos": 1,
+        "per_prompt": [
+          -0.08194719390162541,
+          -0.0761557058280995,
+          -0.10583108570426702,
+          -0.06834383525194665,
+          -0.225901676416998,
+          -0.2829167936297674,
+          -0.22757186311026734,
+          0.03379972840869627,
+          -0.2637549746451118,
+          -0.3592646734248245
+        ]
+      },
+      "exact_match_saved_summary": true,
+      "ci_note": "기존 분석 코드와 같은 반올림된 t(9) 계수 2.262 사용"
+    }
+  },
+  "historical_allocation_fix_stats": {
+    "int2_w63_nobuf": {
+      "n": 3,
+      "mean_seconds": 113.70759193102519,
+      "max_peak_allocated_gib": 11.369842529296875,
+      "window_latent_frames": 63,
+      "unit_note": "과거 JSON 키 peak_vram_gb는 결과서 정정에 따라 GiB로 읽음"
+    },
+    "k4v2_w63_nobuf": {
+      "n": 3,
+      "mean_seconds": 115.83451279004414,
+      "max_peak_allocated_gib": 12.375811576843262,
+      "window_latent_frames": 63,
+      "unit_note": "과거 JSON 키 peak_vram_gb는 결과서 정정에 따라 GiB로 읽음"
+    },
+    "int2_w21_nobuf": {
+      "n": 3,
+      "mean_seconds": 72.14622656504314,
+      "max_peak_allocated_gib": 9.25929069519043,
+      "window_latent_frames": 21,
+      "unit_note": "과거 JSON 키 peak_vram_gb는 결과서 정정에 따라 GiB로 읽음"
+    },
+    "int2_w21": {
+      "n": 3,
+      "mean_seconds": 72.25478895505269,
+      "max_peak_allocated_gib": 9.262129783630371,
+      "window_latent_frames": 21,
+      "unit_note": "과거 JSON 키 peak_vram_gb는 결과서 정정에 따라 GiB로 읽음"
+    }
+  },
+  "qvg_memory_accounting": {
+    "pending_bf16_logical_bytes": 6900940800,
+    "pending_bf16_logical_gib": 6.427001953125,
+    "measured_historical_B_peak_allocated_bytes": 11248259584,
+    "measured_historical_B_peak_allocated_gib": 10.475758075714111,
+    "peak_attribution_measured": false,
+    "claim_of_reclaimable_bytes": null
+  },
+  "input_files": {
+    "results/session9/c1_lambda/contrasts.json": {
+      "sha256": "4d23e61ada8a6c18f95996dba95b39f53ee6b42163df7e17349e1f1864e2c924",
+      "bytes": 10288
+    },
+    "results/session9/c1_lambda/musiq_per_prompt.json": {
+      "sha256": "c5c99e9d774fbdc49f37ecbd9d709c2b537b9b04c56c4447287f7dc4ae97e871",
+      "bytes": 30628
+    },
+    "results/session9/c1_lambda/vbench_per_prompt.json": {
+      "sha256": "ad9ad4d91d17d27da88a71f1de3b44fe4ba24ee4e13d2e05496873f4a1f50e7e",
+      "bytes": 3758
+    },
+    "results/session9/latency_window/int2_w21.stats.json": {
+      "sha256": "b0d576bacfaa0ab616f0398de4b0d502119e4f3556b138057de1ecddcdefea92",
+      "bytes": 975
+    },
+    "results/session9/latency_window/int2_w21_nobuf.stats.json": {
+      "sha256": "76a9aa2617d279836b2d0b9ce79005dfb637343aece448139679d1ca6d87b7c4",
+      "bytes": 976
+    },
+    "results/session9/latency_window/int2_w63_nobuf.stats.json": {
+      "sha256": "37358c65cec03ed936c2fd9bc1bd0a72cd4073770df12aaff8198e7ca6656e0f",
+      "bytes": 985
+    },
+    "results/session9/latency_window/k4v2_w63_nobuf.stats.json": {
+      "sha256": "bfc9a1466dba6d875bf2d16b250c286de78b213e1886178465f8f8fe2fc385c2",
+      "bytes": 978
+    },
+    "results/session9/latency_window/run.log": {
+      "sha256": "8af214a3eace8c6af1c05b52e3f8c8d12ee41135945b39cc03b762b59a19b4bb",
+      "bytes": 74435
+    },
+    "self_forcing_patches/0003-s9-psac-reference-backend.patch": {
+      "sha256": "685243476ff694f55d13e3d6bdcee8a15a2adbf6fbf4a5dc7b80c59dab344e5a",
+      "bytes": 18051
+    },
+    "src/experiments/kv_reuse_stage1/manifest.json": {
+      "sha256": "40acd3bec77d76533a4c29a65e9d1e277da14c2ac2d63765ee35a4a47935573e",
+      "bytes": 12078
+    },
+    "src/experiments/kv_reuse_stage1/pair1_B.json": {
+      "sha256": "75b04fcc53b7419532805616e6176f79527224c870a30c3169a7cbc9f938e184",
+      "bytes": 4133
+    },
+    "tools/analyse_arms.py": {
+      "sha256": "64e0984e550b8e3c151d69d599efb40c74a915c1610e915352b4d351f7e9236d",
+      "bytes": 2938
+    },
+    "문서/결과서/S9_cand1_diag.md": {
+      "sha256": "6c5f331b7b1b255770923cbe3d7142e8d675d4b40dba6e2b6cda5b0035be0600",
+      "bytes": 59389
+    },
+    "문서/지시서/S9_C1_lambda_prereg.md": {
+      "sha256": "0ae3e80cc8a88ba361c8c247faedcd1d118ee04dda1896c0bc0924e000d2b7c5",
+      "bytes": 6450
+    }
+  },
+  "qvg_source_hashes": {
+    "experiments/Self-Forcing/pipeline/causal_inference.py": "824d8cfbd2985a042e253648c2aaaa06f25cb40d62be504a6330c80242caedba",
+    "quant_videogen/kv_cache.py": "e6f03b8223833021c4ff6bbe16d73ee555e1f2ecdf0d0770b565c7b5b17e6963"
+  },
+  "limits": [
+    "평가 모델을 다시 실행하지 않았다. 저장된 프롬프트별 수치를 재집계했다.",
+    "과거 실행의 입력·중간 텐서를 전체 재감사한 것이 아니다.",
+    "공개 경쟁 구현을 설치하거나 GPU에서 실행하지 않았다."
+  ]
+}
