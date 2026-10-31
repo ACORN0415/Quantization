@@ -1,7 +1,7 @@
 {
   "date": "2026-10-31",
   "gpu_runs": 0,
-  "decision": "Do not start a GPU study yet. Broad novelty claim overlaps prior work; an executable sparse baseline on the current GPU is not established.",
+  "decision": "Exclude candidate A in its current broad formulation. Do not start GPU experiments or kernel porting.",
   "code_checks": [
     {
       "repo": "chengtao-lv/LightForcing",
@@ -85,5 +85,31 @@
     "Compare against a simple retained high-precision block summary with its actual storage, build and read costs before proposing a complex selector.",
     "A same-k diagnostic is not a same-time or same-memory deployment comparison.",
     "Only source/read-only review completed; no new algorithm, GPU validation or novelty establishment claimed."
+  ],
+  "initial_decision": "Do not start a GPU study yet. Broad novelty claim overlaps prior work; an executable sparse baseline on the current GPU is not established.",
+  "status": "excluded_current_form",
+  "supervisor_review": {
+    "date": "2026-10-31",
+    "source": "User-provided supervisor response",
+    "accepted": true,
+    "reasons": [
+      "The broad novelty claim overlaps existing quantization/sparsity and compressed-key retrieval work.",
+      "The checked LightForcing revision has no validated sparse dispatch path for SM89; this does not imply sparse attention is impossible on RTX4090.",
+      "The three-arm comparison identifies a conditional selector intervention; BF16 selection is not a proven optimal oracle."
+    ],
+    "reopen_only_with": [
+      "A concrete failure condition not explained or solved by the closest method, with an exact source or reproducible observation.",
+      "Evidence that the condition matters for output quality or end-to-end resource use, beyond changing model domain or nominal bit width.",
+      "A feasible comparison baseline with actual sparse execution verified; code provenance and adaptation cost disclosed."
+    ],
+    "porting_alone_does_not_establish_novelty": true,
+    "gpu_experiments_started": false,
+    "kernel_port_started": false
+  },
+  "future_candidate_recommendation_requires": [
+    "Closest prior work and pinned public implementation reviewed before recommendation.",
+    "Separate verified facts, untested hypotheses, and implementation gaps.",
+    "Compare with the strongest applicable simple baseline, including memory and end-to-end cost.",
+    "State a falsifiable prediction, minimum discriminating experiment and stopping rule before execution."
   ]
 }

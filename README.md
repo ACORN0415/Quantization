@@ -21,7 +21,7 @@
 
 **데이터 정리 (2026-10-31):** 사용자 요청으로 완료된 검증 테이프·파생 코덱 상태·폐기된 개발 텐서·설치 파일 61.75 GiB를 삭제했다. 주 논문 근거와 최종 latent는 보존했다. 일부 과거 전체 감사는 삭제한 파일을 재생성해야 다시 실행할 수 있다. [삭제 범위와 현재 재검증 한계](src/experiments/DATA_RETENTION_20261031_KO.md).
 
-**다음 후보의 문헌·코드 검토 (2026-10-31):** 저비트 KV와 희소 선택의 상호작용은 QuantSparse·Self-Indexing KVCache 등과 중복 위험이 있다. 확인한 LightForcing 공개 revision은 RTX 4090(SM89)에서 dense 경로로 우회하며, 현재 GPU에서 유효한 sparse 기준선이 아직 확보되지 않았다. 새 GPU 실험은 보류했다. [확인 범위·코드 revision·진단 설계 보완](src/experiments/sparse_selection_review/source_audit_20261031.json).
+**후보 A 채택 제외 (2026-10-31):** 저비트 KV와 희소 선택의 상호작용이라는 넓은 문제 정의는 QuantSparse·Self-Indexing KVCache 등과 겹쳐 현재 형태로 연구 채택 대상에서 제외했다. 확인한 LightForcing revision의 SM89 sparse 기준선 미확보는 별도의 구현 문제이며, 이식만으로 신규성 문제가 해결되지는 않는다. GPU 실험과 커널 이식은 시작하지 않는다. 재검토에는 기존 방법에 남는 구체적 실패 조건·중요성·실행 가능한 기준선이 모두 필요하다. [확인 범위·코드 revision·진단 설계 보완](src/experiments/sparse_selection_review/source_audit_20261031.json).
 
 ## 먼저 읽을 현재 결론
 
