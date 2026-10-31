@@ -85,7 +85,15 @@ def active_x(doc,expert):
 
 
 @torch.inference_mode()
-def evaluate(X,Q,W,reference):
+def native_up(X,Q,fused):
+    # Retain the original fused GEMM shape and row order. A standalone up
+    # GEMM can select another accumulation path even without quantization.
+    restored=torch.cat((fused[:1024],Q.to(torch.bfloat16)),dim=0)
+    return F.linear(X,restored).chunk(2,dim=-1)[1].contiguous()
+
+
+@torch.inference_mode()
+def evaluate(X,Q,W,reference,fused):
     if not len(X):
         return dict(elements=0,fp64_sse=0.,native_bf16_sse=0.,primary_seconds=0.,native_audit_seconds=0.),torch.empty((0,1024),dtype=torch.bfloat16)
     t=sync_time()
@@ -93,7 +101,7 @@ def evaluate(X,Q,W,reference):
     precise=float(diff.square().sum().item())
     primary_seconds=sync_time()-t
     t=sync_time()
-    native=F.linear(X,Q.to(torch.bfloat16))
+    native=native_up(X,Q,fused)
     actual=float((native.double()-reference.double()).square().sum().item())
     assert torch.isfinite(diff).all() and torch.isfinite(native).all()
     saved=native.cpu()
@@ -167,7 +175,7 @@ def run(reg):
             x=active_x(doc,e).cuda()
             if len(x):
                 ref=F.linear(x,fused).chunk(2,dim=-1)[1].contiguous()
-                restored=F.linear(x,W)
+                restored=native_up(x,W,fused)
                 assert same_bits(ref,restored),(e,doc['id'],'identity failed')
             else:
                 ref=torch.empty((0,1024),dtype=torch.bfloat16,device='cuda')
@@ -179,7 +187,7 @@ def run(reg):
     identity_seconds=sync_time()-identity_start
     torch.save(refs,DATA/'native_references.pt')
     write(RECORD/'identity.json',dict(status='PASS',rows=identity,elapsed_seconds=identity_seconds,
-                                    contract='Exact BF16 bytes: fused native gate/up upper slice vs separate up projection'))
+                                    contract='Exact BF16 bytes: original fused gate/up upper slice vs rebuilt fused gate/up upper slice'))
     event('identity_passed',comparisons=len(identity),seconds=identity_seconds)
     candidates=[]
     choice_rows=[]
@@ -191,6 +199,7 @@ def run(reg):
         t=sync_time()
         W=block['experts.gate_up_proj'][e,1024:].contiguous().cuda().float()
         weight_load_seconds=sync_time()-t
+        fused=block['experts.gate_up_proj'][e].cuda()
         whash=tensor_hash(W)
         H=None
         xs={}
@@ -257,7 +266,7 @@ def run(reg):
                     transfer_start=sync_time()
                     xs[n]=active_x(docs[n],e).cuda()
                     choice_transfer_seconds+=sync_time()-transfer_start
-                scores,native=evaluate(xs[n],Q,W,refs[e,n].cuda())
+                scores,native=evaluate(xs[n],Q,W,refs[e,n].cuda(),fused)
                 primary_evaluation_seconds+=scores['primary_seconds']
                 choice_rows.append(dict(expert=e,index=index,label=label,document=n,**scores))
                 native_outputs[e,index,n]=native
@@ -272,7 +281,7 @@ def run(reg):
             write(RECORD/'candidates.json',candidates)
         expert_costs.append(dict(expert=e,weight_load_seconds=weight_load_seconds,
                                  fit_input_transfer_seconds=xseconds,hessian_seconds=hseconds))
-        del W,H,xs
+        del W,H,xs,fused
     generation_seconds=sync_time()-generation_wall_start
     write(RECORD/'choice_scores.json',choice_rows)
     table=np.asarray([[sum(r['fp64_sse'] for r in choice_rows if r['expert']==e and r['index']==j)
@@ -297,17 +306,18 @@ def run(reg):
     evaluation_start=sync_time()
     for e in EXPERTS:
         W=block['experts.gate_up_proj'][e,1024:].contiguous().cuda().float()
+        fused=block['experts.gate_up_proj'][e].cuda()
         for index,label in enumerate(LABELS):
             a=torch.load(DATA/f'expert{e}_{label}.pt',map_location='cpu',weights_only=True)
             codes=utils.unpack_from_uint8(a['packed'].cuda(),4,a['shape'])
             Q=quant.dequantize(codes,a['scale'].cuda(),a['zero'].cuda())
             for n in reg['splits']['evaluation']:
                 x=active_x(docs[n],e).cuda()
-                scores,native=evaluate(x,Q,W,refs[e,n].cuda())
+                scores,native=evaluate(x,Q,W,refs[e,n].cuda(),fused)
                 eval_rows.append(dict(expert=e,index=index,label=label,document=n,**scores))
                 native_outputs[e,index,n]=native
             del Q,codes,a,x
-        del W
+        del W,fused
     evaluation_seconds=sync_time()-evaluation_start
     write(RECORD/'evaluation_scores.json',eval_rows)
     torch.save(native_outputs,DATA/'native_outputs.pt')

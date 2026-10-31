@@ -121,7 +121,7 @@
   },
   "validation": {
     "cpu": "Independent tiny NumPy sequential GPTQ including rank-deficient/dead-column case, reversed candidate order, independent nibble unpacking. Not real model candidates.",
-    "identity": "all 24 documents x 4 experts; original fused BF16 up output vs separate unquantized up; exact bytes",
+    "identity": "all 24 documents x 4 experts; original fused BF16 gate/up upper slice vs rebuilt fused gate/up upper slice with original up weights; exact bytes",
     "packing": "all real candidate codes roundtrip; FP32 decode equals primitive output bytes",
     "native_tie_relative_sse": 1e-06,
     "native_tie_absolute_sse": 1e-12
@@ -167,11 +167,16 @@
       "sha256": "c9c551d90515a5b757f6e97c9da3cc5280f0d6711f5fe611837a5a971cd64633"
     },
     "tools/run_moe_calibration_choice.py": {
-      "sha256": "f1123148cd69db2610f0663044bc7942aa2228fad03e12b1cfbb246a77435f37"
+      "sha256": "8daf2d9cd9371d428a848dab9a8cf1dddf98f2ff34904c61f78b634abb967d4a"
     }
   },
   "input_files": {
     "block.pt": "f2690ebab0fca9b5f39364764dbd835d3e222c0d88a0607338b24a7611baa3d8",
     "captures.pt": "00ecbc881f3584129243994d2adfbf6ddd0e15bd2455ae564b410618136e40e8"
+  },
+  "native_evaluation": "Replace only up rows in the original fused gate/up BF16 weight matrix; keep original F.linear output shape and row order; score up output slice only.",
+  "pre_candidate_amended_at_utc": "2026-10-31T18:28:34.464524+00:00",
+  "environment": {
+    "CUBLAS_WORKSPACE_CONFIG": ":4096:8"
   }
 }

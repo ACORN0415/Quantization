@@ -1,0 +1,15 @@
+{
+  "recorded_at_utc": "2026-10-31T18:28:34.464524+00:00",
+  "failed_check": "Separate up GEMM vs original fused GEMM was not bitwise identical on first document/expert.",
+  "real_weight_candidates_started": 0,
+  "real_weight_candidates_completed": 0,
+  "candidate_results_observed": 0,
+  "resolution": "Preserve original fused GEMM shape and row order in native evaluation and no-intervention reconstruction. Exact-byte identity criterion unchanged.",
+  "old_source_sha256": "f1123148cd69db2610f0663044bc7942aa2228fad03e12b1cfbb246a77435f37",
+  "new_source_sha256": "8daf2d9cd9371d428a848dab9a8cf1dddf98f2ff34904c61f78b634abb967d4a",
+  "unchanged": "Inputs, candidate set, primary FP64 score, selection/decision thresholds, deadline and 20-candidate cap.",
+  "failed_attempt_log": "attempt02_identity_failure/gpu_run.log",
+  "total_time_cap_includes_failed_attempts": true,
+  "next_process_wall_timeout_seconds": 590,
+  "prior_two_processes_combined_wall_seconds_less_than": 10
+}

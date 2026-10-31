@@ -1,0 +1,5 @@
+{
+  "status": "FAILED",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/acorn0415/Quantization/tools/run_moe_calibration_choice.py\", line 348, in main\n    run(reg)\n  File \"/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torch/utils/_contextlib.py\", line 116, in decorate_context\n    return func(*args, **kwargs)\n  File \"/home/acorn0415/Quantization/tools/run_moe_calibration_choice.py\", line 171, in run\n    assert same_bits(ref,restored),(e,doc['id'],'identity failed')\nAssertionError: (43, 'train_439', 'identity failed')\n",
+  "completed_at_utc": "2026-10-31T18:27:49.278317+00:00"
+}
