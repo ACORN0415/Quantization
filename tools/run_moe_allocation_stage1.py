@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import threading
 import time
 
 REPO=Path(__file__).resolve().parents[1]
@@ -21,19 +22,30 @@ def run(name,arguments):
     start=time.perf_counter()
     with (RECORD/f'{name}.log').open('w') as log:
         process=subprocess.Popen(command,env=env,cwd=REPO,stdout=log,stderr=subprocess.STDOUT)
-        while process.poll() is None:
-            if time.time()>=deadline:
-                process.terminate()
-                try: process.wait(timeout=5)
-                except subprocess.TimeoutExpired: process.kill();process.wait()
-                raise RuntimeError('Registered absolute wall-time cap reached')
-            disk=sum(p.stat().st_size for p in DATA.rglob('*') if p.is_file())
-            if disk>20*2**30:
-                process.terminate();process.wait(timeout=5)
-                raise RuntimeError('Registered incremental disk cap reached')
-            time.sleep(1)
+        done=threading.Event()
+        cap_reasons=[]
+        def watch():
+            while not done.wait(0.5):
+                reason=None
+                if time.time()>=deadline:
+                    reason='Registered absolute wall-time cap reached'
+                disk=sum(p.stat().st_size for p in DATA.rglob('*') if p.is_file())
+                if disk>20*2**30:
+                    reason='Registered incremental disk cap reached'
+                if reason:
+                    cap_reasons.append(reason)
+                    process.terminate()
+                    if not done.wait(5): process.kill()
+                    return
+        monitor=threading.Thread(target=watch,daemon=True)
+        monitor.start()
+        process.wait()
+        elapsed=time.perf_counter()-start
+        done.set()
+        monitor.join(timeout=1)
+        if cap_reasons: raise RuntimeError(cap_reasons[0])
     result=dict(name=name,pid=process.pid,exit_code=process.returncode,
-                complete_process_seconds=time.perf_counter()-start,arguments=arguments)
+                complete_process_seconds=elapsed,arguments=arguments)
     (RECORD/f'{name}_process.json').write_text(json.dumps(result,indent=2)+'\n')
     print(json.dumps(result),flush=True)
     if process.returncode:

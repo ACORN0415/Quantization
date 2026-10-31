@@ -84,7 +84,7 @@ class Guard:
             reason = None
             if time.time() >= self.deadline:
                 reason = '120 minute wall cap'
-            elif psutil.Process().memory_info().rss > 48 * 2**30:
+            elif resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024 > 48 * 2**30:
                 reason = '48 GiB process RSS cap'
             elif torch.cuda.is_initialized() and torch.cuda.max_memory_allocated() > 20 * 2**30:
                 reason = '20 GiB CUDA allocated cap'
