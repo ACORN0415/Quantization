@@ -1,0 +1,120 @@
+{
+  "reviewed_at_utc": "2026-10-31 18:10:40 UTC",
+  "source_scope": "Pinned code read via GitHub connector. Neither package imported or executed. CPU routing replay of coverage policy only; actual numerical failure fallbacks are outside that replay.",
+  "sources": [
+    {
+      "repository": "microsoft/Olive",
+      "revision": "1647eb2b589ae8a82b2dbe4429e5fe4335c40092",
+      "path": "olive/passes/pytorch/gptq.py",
+      "blob_sha": "6ea993260626c58684ec3339200b02db28a1095b",
+      "reviewed_lines": [
+        72,
+        89,
+        329,
+        384
+      ],
+      "url": "https://github.com/microsoft/Olive/blob/1647eb2b589ae8a82b2dbe4429e5fe4335c40092/olive/passes/pytorch/gptq.py"
+    },
+    {
+      "repository": "microsoft/Olive",
+      "revision": "1647eb2b589ae8a82b2dbe4429e5fe4335c40092",
+      "path": "olive/passes/pytorch/moe_calib.py",
+      "blob_sha": "bab8ebfbd5439ed2c1d9989848b594147a9bb0bc",
+      "reviewed_lines": [
+        54,
+        195,
+        246,
+        435
+      ],
+      "url": "https://github.com/microsoft/Olive/blob/1647eb2b589ae8a82b2dbe4429e5fe4335c40092/olive/passes/pytorch/moe_calib.py"
+    },
+    {
+      "repository": "ModelCloud/GPTQModel",
+      "revision": "bbe3ae8d2a2f81261a4e0f1a00fcaa4d72b794c8",
+      "path": "gptqmodel/quantization/config.py",
+      "blob_sha": "f11c57fcb995aeeadb69c6dbfb9bcb02a4dc808d",
+      "reviewed_lines": [
+        1237
+      ],
+      "url": "https://github.com/ModelCloud/GPTQModel/blob/bbe3ae8d2a2f81261a4e0f1a00fcaa4d72b794c8/gptqmodel/quantization/config.py"
+    },
+    {
+      "repository": "ModelCloud/GPTQModel",
+      "revision": "bbe3ae8d2a2f81261a4e0f1a00fcaa4d72b794c8",
+      "path": "gptqmodel/utils/fallback.py",
+      "blob_sha": "e17fdffef17c0f5cb890b9d10d66b1f55ed349f9",
+      "reviewed_lines": [
+        78,
+        93
+      ],
+      "url": "https://github.com/ModelCloud/GPTQModel/blob/bbe3ae8d2a2f81261a4e0f1a00fcaa4d72b794c8/gptqmodel/utils/fallback.py"
+    },
+    {
+      "repository": "ModelCloud/GPTQModel",
+      "revision": "bbe3ae8d2a2f81261a4e0f1a00fcaa4d72b794c8",
+      "path": "gptqmodel/looper/gptq_processor.py",
+      "blob_sha": "30694bd20d150f5295d1ad8117c7a5d4721f3a88",
+      "reviewed_lines": [
+        381
+      ],
+      "url": "https://github.com/ModelCloud/GPTQModel/blob/bbe3ae8d2a2f81261a4e0f1a00fcaa4d72b794c8/gptqmodel/looper/gptq_processor.py"
+    },
+    {
+      "repository": "ModelCloud/GPTQModel",
+      "revision": "bbe3ae8d2a2f81261a4e0f1a00fcaa4d72b794c8",
+      "path": "gptqmodel/quantization/gptq.py",
+      "blob_sha": "f3aad13194e337cd7ba1a3ba8a8825ef2b92a0f7",
+      "reviewed_lines": [
+        1743,
+        1761
+      ],
+      "url": "https://github.com/ModelCloud/GPTQModel/blob/bbe3ae8d2a2f81261a4e0f1a00fcaa4d72b794c8/gptqmodel/quantization/gptq.py"
+    }
+  ],
+  "papers": [
+    {
+      "title": "MoEQuant",
+      "url": "https://proceedings.mlr.press/v267/chen25aa.html",
+      "status": "ICML 2025",
+      "checked": "Official abstract and author repository README; expert-balanced sampling and affinity guidance overlap with generic calibration-coverage proposals."
+    },
+    {
+      "title": "Selecting GPTQ Damping from the Calibration Set by Nested-Ridge Leave-One-Out",
+      "url": "https://zenodo.org/records/23135543",
+      "version": "v8, 2026-10-04",
+      "status": "Non-peer-reviewed preprint",
+      "checked": "PDF sections 1-6 and appendix J excerpts. Damping selection, RTN limit, split-half strong baseline and correlated-window limitation. No reproduced implementation or claim of absence of prior work.",
+      "pdf_sha256": "e3b32de041d2aede478ebea3afd747a7f3789264afbba16b7d23092026f294e0"
+    },
+    {
+      "title": "Saliency-Aware Regularized Quantization Calibration for Large Language Models",
+      "url": "https://arxiv.org/abs/2605.05693",
+      "version": "v2",
+      "checked": "Official abstract, introduction and Appendix E.2: training/validation split selects regularization hyperparameters; experiments include MoE. Implementation not reproduced."
+    }
+  ],
+  "negative_search_limits": "Bounded review, not exhaustive novelty proof. Config default != full-package quality result.",
+  "execution_environment": {
+    "python": "3.10.22",
+    "torch": "2.6.0+cu124",
+    "gpu": "RTX 4090 24GB",
+    "installed_packages": {
+      "olive": false,
+      "gptqmodel": false,
+      "llmcompressor": false
+    },
+    "new_installations": 0
+  },
+  "unavailable_reads": [
+    {
+      "url": "https://github.com/vllm-project/llm-compressor/blob/main/src/llmcompressor/modeling/moe_context.py",
+      "status": 404,
+      "interpretation": "Old path missing; current official docs checked, no claim based on missing file."
+    },
+    {
+      "url": "https://github.com/ModelCloud/GPTQModel/blob/c1976918cfe3703fbcf6d1ce2440a82b26394375/gptqmodel/quantization/fallback.py",
+      "status": 404,
+      "interpretation": "Resolved current implementation at pinned utils/fallback.py."
+    }
+  ]
+}

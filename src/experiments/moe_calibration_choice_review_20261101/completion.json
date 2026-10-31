@@ -1,0 +1,22 @@
+{
+  "status": "review_complete",
+  "started_at_utc": "2026-10-31T18:04:05+00:00",
+  "completed_at_utc": "2026-10-31T18:13:11.697763+00:00",
+  "elapsed_seconds": 546.697763,
+  "review_cap_seconds": 1800,
+  "priority": "A: bounded baseline comparison preparation; not research adoption",
+  "candidate_b": "not adopted",
+  "new_gpu_calls": 0,
+  "new_model_forwards": 0,
+  "new_quantization": 0,
+  "quality_failure_observed": false,
+  "novelty_established": false,
+  "existing_data_scan_verified": true,
+  "files_sha256": {
+    "src/experiments/moe_calibration_choice_review_20261101/REPORT_KO.txt": "ec6e62007d263103279f3b4ab38a80339109bfe9028373aab6219787efb9482a",
+    "src/experiments/moe_calibration_choice_review_20261101/coverage.json": "41257813f4934cdf89594f92e55dadfbc76405857074db4c3b5d3199cbd9069f",
+    "src/experiments/moe_calibration_choice_review_20261101/scope.json": "05c4b8684a19592534803f7f806717238d372b40cd0e660025e13a3fbf1d5140",
+    "src/experiments/moe_calibration_choice_review_20261101/source_audit.json": "e6a84910e1ac217ed98c2d8b558a76c867d8aee0ab14ae0b986466f7234fbf1f",
+    "tools/inspect_moe_calibration_coverage.py": "ecdc5dadf6cc8a0cdb6456f5c7901e63ed2ebc0f6fe85330c7a21b1d55ff75b1"
+  }
+}

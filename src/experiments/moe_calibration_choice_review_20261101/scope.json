@@ -1,0 +1,19 @@
+{
+  "review_started_at_utc": "2026-10-31T18:04:05Z",
+  "deadline_utc": "2026-10-31T18:34:05Z",
+  "scope": "At most two candidates; primary literature and public implementation review plus CPU-only counts from saved routing. No new quantized outputs or GPU execution.",
+  "candidate_a": "Whether existing GPTQ-to-RTN fallback rules make materially different and correct choices under sparse expert calibration.",
+  "candidate_b": "Whether collecting Hessians that an existing fallback will discard leaves meaningful avoidable calibration cost.",
+  "scope_written_after_initial_literature_review": true,
+  "routing_check_frozen_before_execution": {
+    "input": "/home/acorn0415/sfq_data/moe_allocation_stage1/captures.pt",
+    "subset": "Original train split only, 8 documents. Do not inspect validation outputs or quantization errors.",
+    "quantities": "Per-expert routed token counts and per-document counts; apply 0.5% coverage and combined 0.5% plus 2*K rules analytically for gate/up K=2048 and down K=1024.",
+    "interpretation": "Rule disagreement is not evidence that either rule harms quality. Rank deficiency alone does not prove GPTQ is worse than RTN.",
+    "cpu_timeout_seconds": 120,
+    "model_forwards": 0,
+    "new_quantization": 0
+  },
+  "closed_candidates_remain_closed": true,
+  "stop_policy": "End the review with one prioritized bounded diagnostic or no adopted research candidate. Do not launch a GPU experiment or expand to more candidates in this review."
+}
