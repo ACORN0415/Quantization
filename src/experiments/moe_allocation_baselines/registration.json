@@ -1,6 +1,18 @@
 {
   "schema_version": 1,
-  "status": "BASELINES_FIXED_CPU_VERIFIED_REAL_MODEL_NOT_RUN",
+  "status": "APPROVED_REAL_DIAGNOSTIC_PREMEASUREMENT_AMENDMENT",
+  "execution_amendment": {
+    "date_kst": "2026-10-31",
+    "authorization": "User approved real input capture and one bounded diagnostic after these amendments are committed",
+    "execution_order": ["Acquire inputs", "Unquantized complete capture/reassembly identity", "Real-weight packed round trip", "12-candidate diagnostic"],
+    "no_intervention_identity": "For every one of the 24 captured documents, reconstruct the full 64-expert MoE output with original BF16 weights, captured inputs/indices/gates and the original expert iteration/linear/activation/gate/index_add order. Require shape, dtype and all element bits equal to the original captured MoE block output. No tolerance relaxation after quantization results.",
+    "identity_atol": 0.0,
+    "identity_rtol": 0.0,
+    "native_improvement_tie_atol": 1e-10,
+    "native_improvement_tie_rtol": 1e-9,
+    "memory_isolation": "Every timed B or C run uses a fresh subprocess. Record process lifetime maximum RSS, baseline RSS, model/output-cache residency stages and GPU allocated/reserved peaks. Never reuse a previous run's cumulative RSS high-water mark.",
+    "selection_scope": "The four experts are deliberately selected to favor observed calibration co-routing. Report per-expert activation, all six pair co-routing counts, and number of held-out tokens selecting at least two of the four. Do not describe them as a representative random expert sample."
+  },
   "decision": "Perform one bounded local allocation diagnostic next; no research-method adoption or whole-model experiment yet",
   "current_scope": {
     "gpu_calls": 0,
@@ -105,8 +117,8 @@
     "primary": "Paired per-document mean squared output norm on held-out fixed inputs/routing, using the same FP64 weighted-error definition",
     "gain": "1-sum_document L_B/sum_document L_A; if denominator is zero, no improvement opportunity",
     "uncertainty": "10000 paired document bootstrap resamples, seed 20261031, percentile 95% interval; tokens are not independent resampling units",
-    "native_guard": "Also evaluate native BF16 block outputs for the two selected allocations at fixed routing. Report separately; a reversal of improvement ends the quality direction.",
-    "proceed_quality": "At least 5% held-out objective reduction and bootstrap lower bound above 0, with no native BF16 reversal. This is an exploratory resource-allocation threshold, not a perceptual or whole-model quality guarantee.",
+    "native_guard": "Also evaluate native BF16 block outputs for the two selected allocations at fixed routing. Require pooled native error L_A-L_B > 1e-10 + 1e-9*max(abs(L_A),abs(L_B)); a reversal or numerical tie ends the quality direction. No new 5% native threshold is imposed.",
+    "proceed_quality": "At least 5% held-out FP64 objective reduction and bootstrap lower bound above 0, plus a native BF16 block error reduction beyond the predeclared numerical tie band. This is an exploratory resource-allocation threshold, not a perceptual or whole-model quality guarantee.",
     "failure_scope": "If choices are tied/same or the threshold is not met, end cross-term quality development for this diagnostic; no alternative layer/bitset added to rescue the result"
   },
   "cost": {
@@ -125,7 +137,7 @@
     ],
     "fairness": "Same expert-output bank, candidate order and evaluation count. Permit both methods to stream 64-token tiles. Never charge B with rerunning all experts per candidate or retaining a whole-dataset bank unnecessarily.",
     "measurement": "Warm up once per method, then three independent paired complete runs in orders B-C, C-B, B-C. Verify actual replayed weighted error data agree. Report one-shot total including common setup and the selection-phase subtotal; no speed claim from lookup time alone.",
-    "memory": "Report process RSS and GPU allocated/reserved peaks separately, with actual memory use and caps distinguished; common model memory included in full-path totals",
+    "memory": "Fresh independent process per timed B/C run; report lifetime peak RSS, stage baseline RSS and GPU allocated/reserved peaks separately. Record model/output-cache residency; common preparation peak is combined with worker peak by maximum, not sum. Actual use and caps remain distinct.",
     "proceed_cost": "Same scores/choice, plus >=10% median one-shot wall-time reduction with positive gains in all 3 pairs, or >=20% peak process-RSS reduction with <=5% time penalty and no higher GPU peak. Otherwise do not develop a speed method on this candidate set.",
     "current_cpu_test": "Correctness only; its small run time is not a cost comparison"
   },
