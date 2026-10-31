@@ -1,0 +1,23 @@
+{
+  "checked_at": "2026-10-31T06:41:52.836466+00:00",
+  "valid": true,
+  "checks": [
+    "사전 등록과 소스 해시 일치",
+    "선택 기록이 평가보다 앞섬",
+    "합성 입력 정확성 기준 통과",
+    "네 경로의 실제 CUDA 커널 식별",
+    "7704회 실제 attention 호출 집계와 계획 수 일치",
+    "세 라운드 각각600회 재생",
+    "실행 중 외부 GPU 작업 없음",
+    "GPU30분·전체90분 상한 이내"
+  ],
+  "input_sha256": {
+    "/home/acorn0415/Quantization/src/experiments/attention_execution_stage1/registration.json": "4fe8de4e5378f34dcf22f90ea345deba4eae5ffe459e69bd39fe938b88c2a063",
+    "/home/acorn0415/Quantization/src/experiments/attention_execution_stage1/run1/results.json": "e5db6cdb374385ff86e5329b0901ada257f18dba242d042c3ddd673d53af290e",
+    "/home/acorn0415/Quantization/src/experiments/attention_execution_stage1/run1/progress.jsonl": "dedfe5c1c8cce6fa31e0ac68cb7fb35f3385c8313618f39bdeafad2c9c4d941d",
+    "/home/acorn0415/Quantization/src/experiments/attention_execution_stage1/run1.log": "dedfe5c1c8cce6fa31e0ac68cb7fb35f3385c8313618f39bdeafad2c9c4d941d",
+    "/home/acorn0415/Quantization/tools/attention_execution_stage1.py": "3a3d9a599cbc752422142fb19cd13d3d311d2593bfa2c42c5fd0a6df45b3e6c9",
+    "/home/acorn0415/sfq_data/qvg-reuse-reference/experiments/Self-Forcing/wan/modules/attention.py": "02ad719a76e6bdec79d18fc62b094ef2ad7c28b2d593c9f395ae1226041b7c9d",
+    "/home/acorn0415/Quantization/src/experiments/kv_reuse_stage1/gate_B.json": "f3f3c29dd5e6b8abcc0476585afc16ada89f01f0f1be646944cbfb768da184b0"
+  }
+}

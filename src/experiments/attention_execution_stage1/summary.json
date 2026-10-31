@@ -1,0 +1,160 @@
+{
+  "status": "closed_current_scope",
+  "checked_at": "2026-10-31T06:41:52.836466+00:00",
+  "decision_ko": "현재 네 형상에서는 고정 FA2 경로로 충분하다. 복잡한 실행 선택기 개발로 진행하지 않는다.",
+  "action_ko": "현재 생성 경로의 backend 설정을 유지한다. 다음 MoE 후보는 별도 검토 자료로 남기며 이번 검사에 혼합하지 않는다.",
+  "software": {
+    "torch": "2.6.0+cu124",
+    "cuda": "12.4",
+    "flash_attn": "2.7.4.post1",
+    "triton": "3.2.0",
+    "gpu": "NVIDIA GeForce RTX 4090",
+    "capability": [
+      8,
+      9
+    ],
+    "sdpa_flags": {
+      "flash_sdp_enabled": true,
+      "mem_efficient_sdp_enabled": true,
+      "math_sdp_enabled": true,
+      "cudnn_sdp_enabled": true
+    }
+  },
+  "tested_calls": 600,
+  "full_schedule_calls": 1800,
+  "covered_k_lengths": [
+    4680,
+    18720,
+    37440,
+    56160
+  ],
+  "replay_rounds": 3,
+  "policies": {
+    "fixed_external_fa2": {
+      "median_ms": 3613.58663449937,
+      "min_ms": 3611.402614507824,
+      "max_ms": 3613.61325350299,
+      "median_replay_only_ms": 3612.9611549986294,
+      "median_percent_vs_fixed": 0.0,
+      "per_round_percent_vs_fixed": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "sdpa_auto": {
+      "median_ms": 3698.6949400015874,
+      "min_ms": 3696.201557992026,
+      "max_ms": 3699.627273992519,
+      "median_replay_only_ms": 3698.494569005561,
+      "median_percent_vs_fixed": 2.3552308028172764,
+      "per_round_percent_vs_fixed": [
+        2.3480888877785544,
+        2.3802774247118963,
+        2.3552308028172764
+      ]
+    },
+    "measured_selector": {
+      "median_ms": 4522.63664000202,
+      "min_ms": 4519.845681992592,
+      "max_ms": 4522.814601004939,
+      "median_replay_only_ms": 3614.772372005973,
+      "median_percent_vs_fixed": 25.156446972208556,
+      "per_round_percent_vs_fixed": [
+        25.154854344828404,
+        25.160449769232507,
+        25.156446972208556
+      ]
+    },
+    "posthoc_reference": {
+      "median_ms": 3627.7836344888783,
+      "min_ms": 3627.333272503165,
+      "max_ms": 3628.745992500626,
+      "median_replay_only_ms": 3627.494949992979,
+      "median_percent_vs_fixed": 0.39213883699789065,
+      "per_round_percent_vs_fixed": [
+        0.4802393929474791,
+        0.39213883699789065,
+        0.3804153433752955
+      ]
+    }
+  },
+  "selector_cost_ms": 907.8642679960467,
+  "fixed_vs_reference_percent": [
+    -0.47794411702126727,
+    -0.39060711480067845,
+    -0.37897366938959287
+  ],
+  "per_shape": [
+    {
+      "k_tokens": 4680,
+      "selected": "sdpa_flash",
+      "median_wall_ms": {
+        "external_fa2": 1.1283319981885143,
+        "sdpa_flash": 1.0565329939709045,
+        "sdpa_efficient": 1.4165515021886677,
+        "sdpa_auto": 1.0472350040799938
+      }
+    },
+    {
+      "k_tokens": 18720,
+      "selected": "external_fa2",
+      "median_wall_ms": {
+        "external_fa2": 3.965401505411137,
+        "sdpa_flash": 3.9762569940648973,
+        "sdpa_efficient": 5.304597500071395,
+        "sdpa_auto": 3.9580174925504252
+      }
+    },
+    {
+      "k_tokens": 37440,
+      "selected": "external_fa2",
+      "median_wall_ms": {
+        "external_fa2": 7.800819497788325,
+        "sdpa_flash": 7.904753998445813,
+        "sdpa_efficient": 10.525509496801533,
+        "sdpa_auto": 7.888082996942103
+      }
+    },
+    {
+      "k_tokens": 56160,
+      "selected": "external_fa2",
+      "median_wall_ms": {
+        "external_fa2": 11.687554491800256,
+        "sdpa_flash": 11.858223493618425,
+        "sdpa_efficient": 15.791861005709507,
+        "sdpa_auto": 11.838095502753276
+      }
+    }
+  ],
+  "correctness": {
+    "small_fp32_reference_comparisons": 12,
+    "large_nontrivial_comparisons": 12,
+    "large_self_checks": 4,
+    "rtol": 0.01,
+    "atol": 0.01,
+    "max_small_abs": 0.007803201675415039,
+    "max_large_abs": 0.0009765625
+  },
+  "resource": {
+    "preparation_seconds": 454.291979,
+    "gpu_phase_seconds": 48.90975711400097,
+    "overall_through_audit_seconds": 719.836466,
+    "attention_calls": 7704,
+    "model_generations": 0,
+    "torch_peak_allocated_gib": 0.9488143920898438,
+    "torch_peak_reserved_gib": 0.99609375
+  },
+  "limitations": [
+    "합성 고정 입력을 반복한 연산 검사다. 실제 여러 층의 작업 집합·출력 품질을 재현하지 않았다.",
+    "첫 형상 호출은 작은 정확성 검사 뒤의 관측이다. 완전한 프로세스 cold start가 아니다.",
+    "600회 재생 자체는 직접 계측했지만 준비 비용을 포함한 값은 별도 계측값을 합산한 것이다.",
+    "사후 참고는 평가 묶음에서 형상별로 고른 경로다. 실제 재생에서 최단이라는 보장이나 엄밀한 하한이 아니다.",
+    "고정 경로 대비 25.16%는 선택 비용을 포함한 해당 600회 묶음의 차이다. 모든 장기 서비스의 비용이나 전체 생성 지연이 아니다.",
+    "선택 결과를 여러 작업에서 재사용하면 선택 비용은 더 분산된다. 이번에는 단 한 번의 보정 비용을 한 묶음에 부과했다.",
+    "선택 비용을 제외한 경로 재생도 이번 세 라운드에서는 고정 FA2보다 빠르지 않았다. 장기 재사용의 보편적 우열을 주장하지 않는다.",
+    "네 길이만 검사했다. 미측정 여덟 길이의 성능을 보간하지 않는다.",
+    "계측 시 replay 전후 GPU SM clock은 2685MHz로 기록됐으나 연속 측정·고정은 아니다.",
+    "모든 GPU attention 구현이나 다른 장비에서의 실행 선택 문제를 종료하는 결론이 아니다."
+  ]
+}
