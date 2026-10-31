@@ -1,0 +1,11 @@
+{
+  "recorded_at_utc": "2026-10-31T18:27:47.709150+00:00",
+  "reason": "CUBLAS_WORKSPACE_CONFIG was absent. Deterministic F.linear failed at first identity projection.",
+  "real_weight_candidates_started": 0,
+  "real_weight_candidates_completed": 0,
+  "candidate_results_observed": 0,
+  "resolution": "Set CUBLAS_WORKSPACE_CONFIG=:4096:8 for the next process before torch import. No source, input, candidate, criterion, or deadline changes.",
+  "failed_attempt_log": "attempt01_environment_failure/gpu_run.log",
+  "total_time_cap_includes_failed_attempt": true,
+  "gpu_stage_cap_includes_failed_attempt": true
+}

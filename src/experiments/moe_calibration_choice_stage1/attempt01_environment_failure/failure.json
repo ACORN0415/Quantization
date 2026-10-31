@@ -1,0 +1,5 @@
+{
+  "status": "FAILED",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/acorn0415/Quantization/tools/run_moe_calibration_choice.py\", line 348, in main\n    run(reg)\n  File \"/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torch/utils/_contextlib.py\", line 116, in decorate_context\n    return func(*args, **kwargs)\n  File \"/home/acorn0415/Quantization/tools/run_moe_calibration_choice.py\", line 169, in run\n    ref=F.linear(x,fused).chunk(2,dim=-1)[1].contiguous()\nRuntimeError: Deterministic behavior was enabled with either `torch.use_deterministic_algorithms(True)` or `at::Context::setDeterministicAlgorithms(true)`, but this operation is not deterministic because it uses CuBLAS and you have CUDA >= 10.2. To enable deterministic behavior in this case, you must set an environment variable before running your PyTorch application: CUBLAS_WORKSPACE_CONFIG=:4096:8 or CUBLAS_WORKSPACE_CONFIG=:16:8. For more information, go to https://docs.nvidia.com/cuda/cublas/index.html#results-reproducibility\n",
+  "completed_at_utc": "2026-10-31T18:27:26.251604+00:00"
+}
