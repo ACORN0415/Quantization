@@ -11,7 +11,9 @@
     "native_improvement_tie_atol": 1e-10,
     "native_improvement_tie_rtol": 1e-9,
     "memory_isolation": "Every timed B or C run uses a fresh subprocess. Record process lifetime maximum RSS, baseline RSS, model/output-cache residency stages and GPU allocated/reserved peaks. Never reuse a previous run's cumulative RSS high-water mark.",
-    "selection_scope": "The four experts are deliberately selected to favor observed calibration co-routing. Report per-expert activation, all six pair co-routing counts, and number of held-out tokens selecting at least two of the four. Do not describe them as a representative random expert sample."
+    "selection_scope": "The four experts are deliberately selected to favor observed calibration co-routing. Report per-expert activation, all six pair co-routing counts, and number of held-out tokens selecting at least two of the four. Do not describe them as a representative random expert sample.",
+    "runtime_details_before_measurement": "Native eager expert execution; SDPA in the unmodified prefix; BF16 weights, deterministic algorithms, TF32 and BF16 reduced-precision reduction disabled; four CPU/BLAS threads. Preserve each expert's whole-document dispatch GEMM batch for BF16 agreement; stream objective evaluation in 64-token tiles with at most one document error bank resident for either method. Prefix capture stops after the target block; no downstream model quality evaluation.",
+    "complete_cost_accounting": "Use model download duration plus complete preparation subprocess wall time as the common one-shot cost, including identity/packing verification and input persistence. Add each independent worker's complete subprocess wall time. Report these common audit costs and worker load/collection/selection/hash components separately. Peak memory is max(common preparation peak, independent worker peak)."
   },
   "decision": "Perform one bounded local allocation diagnostic next; no research-method adoption or whole-model experiment yet",
   "current_scope": {
