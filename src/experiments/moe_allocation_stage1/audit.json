@@ -1,0 +1,67 @@
+{
+  "status": "PASS",
+  "audit_scope": "CPU tensor/hash/accounting/routing/scalar reaggregation; no repeated GPU forwards",
+  "source_sha256": {
+    "moe_allocation_objectives.py": "4f5c7314a5a0912ae81e271fffee9140f4eb12d9fc3a548d37512de8236215ef",
+    "moe_allocation_runtime.py": "1036904f37129aec9176546b653663c1755ba9dd819e083ec53fbd63b4048c40",
+    "moe_allocation_stage1.py": "08925c9290065129ecfc3f1794500fa05bbbbe042d9a4391393afcd1e9a6080f",
+    "run_moe_allocation_stage1.py": "40f7d8a7f5909171087780052a4d745693845c993dc6689dcdae9e979c154512",
+    "report_moe_allocation_stage1.py": "43e8368c897a424d0791d176c9283c2b911d53a1d2f59dc923b0932595a86e0c"
+  },
+  "actual_input_files": {
+    "tokens.pt": {
+      "bytes": 108274,
+      "sha256": "ecd31a374088cbbe0056374fa81168facac3af9a79e17626c467d3bd8c4f4d91"
+    },
+    "captures.pt": {
+      "bytes": 101673562,
+      "sha256": "00ecbc881f3584129243994d2adfbf6ddd0e15bd2455ae564b410618136e40e8"
+    },
+    "block.pt": {
+      "bytes": 805570054,
+      "sha256": "f2690ebab0fca9b5f39364764dbd835d3e222c0d88a0607338b24a7611baa3d8"
+    },
+    "packed.pt": {
+      "bytes": 31350378,
+      "sha256": "e8fb7d42029becb8ee59dd126f2194301a9eab0b90eb08c1a862224b894ca0a3"
+    },
+    "selected_reference_payload.pt": {
+      "bytes": 10563666,
+      "sha256": "10a7175c99b29371a7e8114ce823b63214e14d5de7f765c546a071c532104cfc"
+    }
+  },
+  "identity_documents": 24,
+  "packing_projections": 36,
+  "full_reference_candidate_bytes": [
+    10551348,
+    10551348,
+    10551348,
+    10551348,
+    10551348,
+    10551348,
+    10551348,
+    10551348,
+    10551348,
+    10551348,
+    10551348,
+    10551348
+  ],
+  "isolated_worker_pids": [
+    131430,
+    131465,
+    131487,
+    131509,
+    131531,
+    131555,
+    131581,
+    131604
+  ],
+  "fresh_workers_all_bank_hashes_equal": true,
+  "stage_order_valid": true,
+  "calculation_execution_commits": {
+    "prepare": "8ec4374",
+    "diagnose": "9856213",
+    "cost": "9856213"
+  },
+  "GPU_used_by_report": false
+}

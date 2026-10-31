@@ -1,0 +1,43 @@
+{
+  "repo": "allenai/OLMoE-1B-7B-0924",
+  "revision": "6d84c48581ece794365f2b8e9cfb043c68ade9c5",
+  "files": [
+    {
+      "name": "config.json",
+      "bytes": 759
+    },
+    {
+      "name": "generation_config.json",
+      "bytes": 120
+    },
+    {
+      "name": "model-00001-of-00003.safetensors",
+      "bytes": 4997744872
+    },
+    {
+      "name": "model-00002-of-00003.safetensors",
+      "bytes": 4997235176
+    },
+    {
+      "name": "model-00003-of-00003.safetensors",
+      "bytes": 3843741912
+    },
+    {
+      "name": "model.safetensors.index.json",
+      "bytes": 287214
+    },
+    {
+      "name": "special_tokens_map.json",
+      "bytes": 65
+    },
+    {
+      "name": "tokenizer.json",
+      "bytes": 2115417
+    },
+    {
+      "name": "tokenizer_config.json",
+      "bytes": 5372
+    }
+  ],
+  "expected_bytes": 13841130907
+}

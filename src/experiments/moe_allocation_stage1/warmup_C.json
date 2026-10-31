@@ -1,0 +1,179 @@
+{
+  "status": "PASS",
+  "method": "C",
+  "run_id": "warmup_C",
+  "pid": 131465,
+  "elapsed_worker_seconds": 3.304063097006292,
+  "load_seconds": 1.8484735910024028,
+  "output_collection_seconds": 0.34805086797859985,
+  "selection_seconds": 0.22380020598939154,
+  "integrity_hash_seconds": 0.7168872719921637,
+  "scores": [
+    0.003837714955116106,
+    0.0038561269931167313,
+    0.004156236121855974,
+    0.0026398990827754903,
+    0.0026546958546818065,
+    0.004531363737594349,
+    0.0045440274346852175,
+    0.004835693004261795,
+    0.004840388107404909,
+    0.0027735105853641724,
+    0.004654430477494942,
+    0.004660470275129304
+  ],
+  "choice": [
+    3,
+    2,
+    3,
+    4
+  ],
+  "bank_hashes": {
+    "train_439": "c6feb0f59e5e200d16fd65aeba9cb00bb8efce33b542e3b4ec77a668850024db",
+    "train_306": "1c9a13e60dce9664ca667c4d5e27393695d5437c14a7e24817d9028a1c8b716f",
+    "train_353": "116826dac0cfd51e5f14a351dbeeb8ce48c8c5d6cbb92b364a8c96b6ebd9dce2",
+    "train_417": "d53bc75ca2323d5b3587d934ffab487628e31547b2417ffb68a594ca5c126d14",
+    "train_181": "3f9081aadf01794ce7b04168c86bd934a9e3e361e745830a2ba7c5ec529ce15b",
+    "train_222": "358373bb0d64893ba3a696bdd06930a80f140324162fe137a944759bf23d6174",
+    "train_481": "ef9193be1c5bc1ab8717e1211a0c46e56c2011f0c27686278bc14c5d709c1206",
+    "train_497": "57c26747a9209bfa1e9ba7ea45e826a8fc3e5ade8fa5dbe7b1199691a74d3e5e"
+  },
+  "memory": {
+    "rss_bytes": 1371729920,
+    "process_peak_rss_bytes": 1646493696,
+    "gpu_allocated_bytes": 990117888,
+    "gpu_reserved_bytes": 1015021568,
+    "gpu_peak_allocated_bytes": 1002893824,
+    "gpu_peak_reserved_bytes": 1015021568
+  },
+  "residency": [
+    {
+      "stage": "startup",
+      "memory": {
+        "rss_bytes": 613281792,
+        "process_peak_rss_bytes": 611221504,
+        "gpu_allocated_bytes": 0,
+        "gpu_reserved_bytes": 0,
+        "gpu_peak_allocated_bytes": 0,
+        "gpu_peak_reserved_bytes": 0
+      },
+      "resident": "CUDA context only"
+    },
+    {
+      "stage": "weights_and_inputs",
+      "memory": {
+        "rss_bytes": 935981056,
+        "process_peak_rss_bytes": 1646493696,
+        "gpu_allocated_bytes": 956563456,
+        "gpu_reserved_bytes": 975175680,
+        "gpu_peak_allocated_bytes": 965017600,
+        "gpu_peak_reserved_bytes": 975175680
+      },
+      "resident": "One BF16 MoE block, 12 restored expert candidates, calibration inputs; full model released"
+    },
+    {
+      "stage": "train_439",
+      "memory": {
+        "rss_bytes": 1335570432,
+        "process_peak_rss_bytes": 1646493696,
+        "gpu_allocated_bytes": 990117888,
+        "gpu_reserved_bytes": 1010827264,
+        "gpu_peak_allocated_bytes": 995796480,
+        "gpu_peak_reserved_bytes": 1010827264
+      },
+      "resident": "One document error bank plus persistent block/candidates/inputs",
+      "bank_bytes": 100663296
+    },
+    {
+      "stage": "train_306",
+      "memory": {
+        "rss_bytes": 1367879680,
+        "process_peak_rss_bytes": 1646493696,
+        "gpu_allocated_bytes": 990117888,
+        "gpu_reserved_bytes": 1010827264,
+        "gpu_peak_allocated_bytes": 1002828288,
+        "gpu_peak_reserved_bytes": 1010827264
+      },
+      "resident": "One document error bank plus persistent block/candidates/inputs",
+      "bank_bytes": 100663296
+    },
+    {
+      "stage": "train_353",
+      "memory": {
+        "rss_bytes": 1371009024,
+        "process_peak_rss_bytes": 1646493696,
+        "gpu_allocated_bytes": 990117888,
+        "gpu_reserved_bytes": 1012924416,
+        "gpu_peak_allocated_bytes": 1002828288,
+        "gpu_peak_reserved_bytes": 1012924416
+      },
+      "resident": "One document error bank plus persistent block/candidates/inputs",
+      "bank_bytes": 100663296
+    },
+    {
+      "stage": "train_417",
+      "memory": {
+        "rss_bytes": 1368416256,
+        "process_peak_rss_bytes": 1646493696,
+        "gpu_allocated_bytes": 990117888,
+        "gpu_reserved_bytes": 1012924416,
+        "gpu_peak_allocated_bytes": 1002893824,
+        "gpu_peak_reserved_bytes": 1012924416
+      },
+      "resident": "One document error bank plus persistent block/candidates/inputs",
+      "bank_bytes": 100663296
+    },
+    {
+      "stage": "train_181",
+      "memory": {
+        "rss_bytes": 1360408576,
+        "process_peak_rss_bytes": 1646493696,
+        "gpu_allocated_bytes": 990117888,
+        "gpu_reserved_bytes": 1012924416,
+        "gpu_peak_allocated_bytes": 1002893824,
+        "gpu_peak_reserved_bytes": 1012924416
+      },
+      "resident": "One document error bank plus persistent block/candidates/inputs",
+      "bank_bytes": 100663296
+    },
+    {
+      "stage": "train_222",
+      "memory": {
+        "rss_bytes": 1375813632,
+        "process_peak_rss_bytes": 1646493696,
+        "gpu_allocated_bytes": 990117888,
+        "gpu_reserved_bytes": 1012924416,
+        "gpu_peak_allocated_bytes": 1002893824,
+        "gpu_peak_reserved_bytes": 1012924416
+      },
+      "resident": "One document error bank plus persistent block/candidates/inputs",
+      "bank_bytes": 100663296
+    },
+    {
+      "stage": "train_481",
+      "memory": {
+        "rss_bytes": 1350823936,
+        "process_peak_rss_bytes": 1646493696,
+        "gpu_allocated_bytes": 990117888,
+        "gpu_reserved_bytes": 1012924416,
+        "gpu_peak_allocated_bytes": 1002893824,
+        "gpu_peak_reserved_bytes": 1012924416
+      },
+      "resident": "One document error bank plus persistent block/candidates/inputs",
+      "bank_bytes": 100663296
+    },
+    {
+      "stage": "train_497",
+      "memory": {
+        "rss_bytes": 1371443200,
+        "process_peak_rss_bytes": 1646493696,
+        "gpu_allocated_bytes": 990117888,
+        "gpu_reserved_bytes": 1015021568,
+        "gpu_peak_allocated_bytes": 1002893824,
+        "gpu_peak_reserved_bytes": 1015021568
+      },
+      "resident": "One document error bank plus persistent block/candidates/inputs",
+      "bank_bytes": 100663296
+    }
+  ]
+}

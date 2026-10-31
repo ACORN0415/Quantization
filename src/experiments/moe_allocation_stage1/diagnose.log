@@ -1,0 +1,26 @@
+{"utc": "2026-10-31T12:27:00.830485+00:00", "pid": 131366, "stage": "calibration_scored", "document": "train_439"}
+{"utc": "2026-10-31T12:27:01.065044+00:00", "pid": 131366, "stage": "calibration_scored", "document": "train_306"}
+{"utc": "2026-10-31T12:27:01.304169+00:00", "pid": 131366, "stage": "calibration_scored", "document": "train_353"}
+{"utc": "2026-10-31T12:27:01.527896+00:00", "pid": 131366, "stage": "calibration_scored", "document": "train_417"}
+{"utc": "2026-10-31T12:27:01.734670+00:00", "pid": 131366, "stage": "calibration_scored", "document": "train_181"}
+{"utc": "2026-10-31T12:27:01.980903+00:00", "pid": 131366, "stage": "calibration_scored", "document": "train_222"}
+{"utc": "2026-10-31T12:27:02.167115+00:00", "pid": 131366, "stage": "calibration_scored", "document": "train_481"}
+{"utc": "2026-10-31T12:27:02.404883+00:00", "pid": 131366, "stage": "calibration_scored", "document": "train_497"}
+{"utc": "2026-10-31T12:27:02.407556+00:00", "pid": 131366, "stage": "allocations_frozen", "choices": {"A": [3, 2, 3, 4], "B": [3, 2, 3, 4], "C": [3, 2, 3, 4], "reference": [3, 2, 3, 4]}, "ties": {"A": {"best_value": 0.002636506633362968, "tie_count": 1, "band": 1.0263650663336297e-10}, "B": {"best_value": 0.0026398990827754825, "tie_count": 1, "band": 1.0263989908277549e-10}, "C": {"best_value": 0.0026398990827754907, "tie_count": 1, "band": 1.0263989908277549e-10}, "reference": {"best_value": 0.002639899082775491, "tie_count": 1, "band": 1.0263989908277549e-10}}}
+{"utc": "2026-10-31T12:27:02.567554+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_52", "completed": 1, "total": 16}
+{"utc": "2026-10-31T12:27:02.616966+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_56", "completed": 2, "total": 16}
+{"utc": "2026-10-31T12:27:02.682033+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_43", "completed": 3, "total": 16}
+{"utc": "2026-10-31T12:27:02.741776+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_9", "completed": 4, "total": 16}
+{"utc": "2026-10-31T12:27:02.800099+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_50", "completed": 5, "total": 16}
+{"utc": "2026-10-31T12:27:02.858203+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_15", "completed": 6, "total": 16}
+{"utc": "2026-10-31T12:27:02.931391+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_37", "completed": 7, "total": 16}
+{"utc": "2026-10-31T12:27:02.988865+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_4", "completed": 8, "total": 16}
+{"utc": "2026-10-31T12:27:03.049746+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_41", "completed": 9, "total": 16}
+{"utc": "2026-10-31T12:27:03.111835+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_27", "completed": 10, "total": 16}
+{"utc": "2026-10-31T12:27:03.185201+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_47", "completed": 11, "total": 16}
+{"utc": "2026-10-31T12:27:03.238996+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_55", "completed": 12, "total": 16}
+{"utc": "2026-10-31T12:27:03.294929+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_3", "completed": 13, "total": 16}
+{"utc": "2026-10-31T12:27:03.347952+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_25", "completed": 14, "total": 16}
+{"utc": "2026-10-31T12:27:03.402034+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_28", "completed": 15, "total": 16}
+{"utc": "2026-10-31T12:27:03.470605+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_13", "completed": 16, "total": 16}
+{"utc": "2026-10-31T12:27:03.473165+00:00", "pid": 131366, "stage": "diagnostic_complete", "allocations_differ": false, "fp64": {"gain": 0.0, "ci95": [0.0, 0.0], "resamples": 10000, "resampling_unit": "document"}, "native": {"gain": 0.0, "ci95": [0.0, 0.0], "resamples": 10000, "resampling_unit": "document"}, "continue_quality": false}

@@ -1,0 +1,68 @@
+{"utc": "2026-10-31T12:25:56.118824+00:00", "pid": 131149, "stage": "input_manifest_frozen", "documents": 24, "eligible": {"train": {"parsed_articles": 629, "eligible_articles": 602}, "validation": {"parsed_articles": 60, "eligible_articles": 60}}}
+{"utc": "2026-10-31T12:25:56.119936+00:00", "pid": 131149, "stage": "model_load_start"}
+{"utc": "2026-10-31T12:26:01.914484+00:00", "pid": 131149, "stage": "model_loaded", "seconds": 5.794173247995786, "memory": {"rss_bytes": 1207652352, "process_peak_rss_bytes": 15043768320, "gpu_allocated_bytes": 13838324736, "gpu_reserved_bytes": 15456010240, "gpu_peak_allocated_bytes": 14375194624, "gpu_peak_reserved_bytes": 15456010240}}
+{"utc": "2026-10-31T12:26:02.477128+00:00", "pid": 131149, "stage": "input_captured", "document": "train_439", "completed": 1, "total": 24}
+{"utc": "2026-10-31T12:26:02.648325+00:00", "pid": 131149, "stage": "input_captured", "document": "train_306", "completed": 2, "total": 24}
+{"utc": "2026-10-31T12:26:02.818090+00:00", "pid": 131149, "stage": "input_captured", "document": "train_353", "completed": 3, "total": 24}
+{"utc": "2026-10-31T12:26:02.990447+00:00", "pid": 131149, "stage": "input_captured", "document": "train_417", "completed": 4, "total": 24}
+{"utc": "2026-10-31T12:26:03.163910+00:00", "pid": 131149, "stage": "input_captured", "document": "train_181", "completed": 5, "total": 24}
+{"utc": "2026-10-31T12:26:03.335737+00:00", "pid": 131149, "stage": "input_captured", "document": "train_222", "completed": 6, "total": 24}
+{"utc": "2026-10-31T12:26:03.509806+00:00", "pid": 131149, "stage": "input_captured", "document": "train_481", "completed": 7, "total": 24}
+{"utc": "2026-10-31T12:26:03.679394+00:00", "pid": 131149, "stage": "input_captured", "document": "train_497", "completed": 8, "total": 24}
+{"utc": "2026-10-31T12:26:03.853207+00:00", "pid": 131149, "stage": "input_captured", "document": "validation_52", "completed": 9, "total": 24}
+{"utc": "2026-10-31T12:26:04.027237+00:00", "pid": 131149, "stage": "input_captured", "document": "validation_56", "completed": 10, "total": 24}
+{"utc": "2026-10-31T12:26:04.199525+00:00", "pid": 131149, "stage": "input_captured", "document": "validation_43", "completed": 11, "total": 24}
+{"utc": "2026-10-31T12:26:04.372713+00:00", "pid": 131149, "stage": "input_captured", "document": "validation_9", "completed": 12, "total": 24}
+{"utc": "2026-10-31T12:26:04.545813+00:00", "pid": 131149, "stage": "input_captured", "document": "validation_50", "completed": 13, "total": 24}
+{"utc": "2026-10-31T12:26:04.718800+00:00", "pid": 131149, "stage": "input_captured", "document": "validation_15", "completed": 14, "total": 24}
+{"utc": "2026-10-31T12:26:04.892004+00:00", "pid": 131149, "stage": "input_captured", "document": "validation_37", "completed": 15, "total": 24}
+{"utc": "2026-10-31T12:26:05.064876+00:00", "pid": 131149, "stage": "input_captured", "document": "validation_4", "completed": 16, "total": 24}
+{"utc": "2026-10-31T12:26:05.237739+00:00", "pid": 131149, "stage": "input_captured", "document": "validation_41", "completed": 17, "total": 24}
+{"utc": "2026-10-31T12:26:05.408911+00:00", "pid": 131149, "stage": "input_captured", "document": "validation_27", "completed": 18, "total": 24}
+{"utc": "2026-10-31T12:26:05.580883+00:00", "pid": 131149, "stage": "input_captured", "document": "validation_47", "completed": 19, "total": 24}
+{"utc": "2026-10-31T12:26:05.752281+00:00", "pid": 131149, "stage": "input_captured", "document": "validation_55", "completed": 20, "total": 24}
+{"utc": "2026-10-31T12:26:05.921304+00:00", "pid": 131149, "stage": "input_captured", "document": "validation_3", "completed": 21, "total": 24}
+{"utc": "2026-10-31T12:26:06.092593+00:00", "pid": 131149, "stage": "input_captured", "document": "validation_25", "completed": 22, "total": 24}
+{"utc": "2026-10-31T12:26:06.264707+00:00", "pid": 131149, "stage": "input_captured", "document": "validation_28", "completed": 23, "total": 24}
+{"utc": "2026-10-31T12:26:06.436546+00:00", "pid": 131149, "stage": "input_captured", "document": "validation_13", "completed": 24, "total": 24}
+{"utc": "2026-10-31T12:26:07.042381+00:00", "pid": 131149, "stage": "identity_passed", "documents": 24, "seconds": 0.532324878993677}
+{"utc": "2026-10-31T12:26:07.045190+00:00", "pid": 131149, "stage": "experts_frozen", "selected": [5, 11, 37, 45]}
+{"utc": "2026-10-31T12:26:07.865086+00:00", "pid": 131149, "stage": "expert_packed", "expert": 5}
+{"utc": "2026-10-31T12:26:08.081702+00:00", "pid": 131149, "stage": "expert_packed", "expert": 11}
+{"utc": "2026-10-31T12:26:08.305095+00:00", "pid": 131149, "stage": "expert_packed", "expert": 37}
+{"utc": "2026-10-31T12:26:08.529730+00:00", "pid": 131149, "stage": "expert_packed", "expert": 45}
+{"utc": "2026-10-31T12:26:08.579092+00:00", "pid": 131149, "stage": "preparation_complete", "memory": {"rss_bytes": 2293784576, "process_peak_rss_bytes": 15043768320, "gpu_allocated_bytes": 13871879168, "gpu_reserved_bytes": 15462301696, "gpu_peak_allocated_bytes": 14375194624, "gpu_peak_reserved_bytes": 15462301696}, "common_seconds": 200.8590201214538}
+{"utc": "2026-10-31T12:27:00.830485+00:00", "pid": 131366, "stage": "calibration_scored", "document": "train_439"}
+{"utc": "2026-10-31T12:27:01.065044+00:00", "pid": 131366, "stage": "calibration_scored", "document": "train_306"}
+{"utc": "2026-10-31T12:27:01.304169+00:00", "pid": 131366, "stage": "calibration_scored", "document": "train_353"}
+{"utc": "2026-10-31T12:27:01.527896+00:00", "pid": 131366, "stage": "calibration_scored", "document": "train_417"}
+{"utc": "2026-10-31T12:27:01.734670+00:00", "pid": 131366, "stage": "calibration_scored", "document": "train_181"}
+{"utc": "2026-10-31T12:27:01.980903+00:00", "pid": 131366, "stage": "calibration_scored", "document": "train_222"}
+{"utc": "2026-10-31T12:27:02.167115+00:00", "pid": 131366, "stage": "calibration_scored", "document": "train_481"}
+{"utc": "2026-10-31T12:27:02.404883+00:00", "pid": 131366, "stage": "calibration_scored", "document": "train_497"}
+{"utc": "2026-10-31T12:27:02.407556+00:00", "pid": 131366, "stage": "allocations_frozen", "choices": {"A": [3, 2, 3, 4], "B": [3, 2, 3, 4], "C": [3, 2, 3, 4], "reference": [3, 2, 3, 4]}, "ties": {"A": {"best_value": 0.002636506633362968, "tie_count": 1, "band": 1.0263650663336297e-10}, "B": {"best_value": 0.0026398990827754825, "tie_count": 1, "band": 1.0263989908277549e-10}, "C": {"best_value": 0.0026398990827754907, "tie_count": 1, "band": 1.0263989908277549e-10}, "reference": {"best_value": 0.002639899082775491, "tie_count": 1, "band": 1.0263989908277549e-10}}}
+{"utc": "2026-10-31T12:27:02.567554+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_52", "completed": 1, "total": 16}
+{"utc": "2026-10-31T12:27:02.616966+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_56", "completed": 2, "total": 16}
+{"utc": "2026-10-31T12:27:02.682033+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_43", "completed": 3, "total": 16}
+{"utc": "2026-10-31T12:27:02.741776+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_9", "completed": 4, "total": 16}
+{"utc": "2026-10-31T12:27:02.800099+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_50", "completed": 5, "total": 16}
+{"utc": "2026-10-31T12:27:02.858203+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_15", "completed": 6, "total": 16}
+{"utc": "2026-10-31T12:27:02.931391+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_37", "completed": 7, "total": 16}
+{"utc": "2026-10-31T12:27:02.988865+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_4", "completed": 8, "total": 16}
+{"utc": "2026-10-31T12:27:03.049746+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_41", "completed": 9, "total": 16}
+{"utc": "2026-10-31T12:27:03.111835+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_27", "completed": 10, "total": 16}
+{"utc": "2026-10-31T12:27:03.185201+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_47", "completed": 11, "total": 16}
+{"utc": "2026-10-31T12:27:03.238996+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_55", "completed": 12, "total": 16}
+{"utc": "2026-10-31T12:27:03.294929+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_3", "completed": 13, "total": 16}
+{"utc": "2026-10-31T12:27:03.347952+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_25", "completed": 14, "total": 16}
+{"utc": "2026-10-31T12:27:03.402034+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_28", "completed": 15, "total": 16}
+{"utc": "2026-10-31T12:27:03.470605+00:00", "pid": 131366, "stage": "heldout_scored", "document": "validation_13", "completed": 16, "total": 16}
+{"utc": "2026-10-31T12:27:03.473165+00:00", "pid": 131366, "stage": "diagnostic_complete", "allocations_differ": false, "fp64": {"gain": 0.0, "ci95": [0.0, 0.0], "resamples": 10000, "resampling_unit": "document"}, "native": {"gain": 0.0, "ci95": [0.0, 0.0], "resamples": 10000, "resampling_unit": "document"}, "continue_quality": false}
+{"utc": "2026-10-31T12:27:40.318939+00:00", "pid": 131430, "stage": "cost_worker_complete", "run_id": "warmup_B", "method": "B", "seconds": 3.267304936001892, "collection": 0.3148111129994504, "selection": 0.19998555800702889, "memory": {"rss_bytes": 1406382080, "process_peak_rss_bytes": 1647390720, "gpu_allocated_bytes": 990117888, "gpu_reserved_bytes": 1015021568, "gpu_peak_allocated_bytes": 1002893824, "gpu_peak_reserved_bytes": 1015021568}}
+{"utc": "2026-10-31T12:27:44.694035+00:00", "pid": 131465, "stage": "cost_worker_complete", "run_id": "warmup_C", "method": "C", "seconds": 3.304063097006292, "collection": 0.34805086797859985, "selection": 0.22380020598939154, "memory": {"rss_bytes": 1371729920, "process_peak_rss_bytes": 1646493696, "gpu_allocated_bytes": 990117888, "gpu_reserved_bytes": 1015021568, "gpu_peak_allocated_bytes": 1002893824, "gpu_peak_reserved_bytes": 1015021568}}
+{"utc": "2026-10-31T12:27:48.989255+00:00", "pid": 131487, "stage": "cost_worker_complete", "run_id": "pair1_B", "method": "B", "seconds": 3.223525833003805, "collection": 0.31491675901634153, "selection": 0.20147396800166462, "memory": {"rss_bytes": 1406541824, "process_peak_rss_bytes": 1646088192, "gpu_allocated_bytes": 990117888, "gpu_reserved_bytes": 1015021568, "gpu_peak_allocated_bytes": 1002893824, "gpu_peak_reserved_bytes": 1015021568}}
+{"utc": "2026-10-31T12:27:53.307894+00:00", "pid": 131509, "stage": "cost_worker_complete", "run_id": "pair1_C", "method": "C", "seconds": 3.2581984529970214, "collection": 0.34394015501311515, "selection": 0.2300877260422567, "memory": {"rss_bytes": 1371160576, "process_peak_rss_bytes": 1646809088, "gpu_allocated_bytes": 990117888, "gpu_reserved_bytes": 1015021568, "gpu_peak_allocated_bytes": 1002893824, "gpu_peak_reserved_bytes": 1015021568}}
+{"utc": "2026-10-31T12:27:57.615121+00:00", "pid": 131531, "stage": "cost_worker_complete", "run_id": "pair2_C", "method": "C", "seconds": 3.232677230000263, "collection": 0.3007810069830157, "selection": 0.23145850798755419, "memory": {"rss_bytes": 1369804800, "process_peak_rss_bytes": 1646510080, "gpu_allocated_bytes": 990117888, "gpu_reserved_bytes": 1015021568, "gpu_peak_allocated_bytes": 1002893824, "gpu_peak_reserved_bytes": 1015021568}}
+{"utc": "2026-10-31T12:28:01.929619+00:00", "pid": 131555, "stage": "cost_worker_complete", "run_id": "pair2_B", "method": "B", "seconds": 3.2454893960093614, "collection": 0.34480501600774005, "selection": 0.2075792739924509, "memory": {"rss_bytes": 1369939968, "process_peak_rss_bytes": 1646518272, "gpu_allocated_bytes": 990117888, "gpu_reserved_bytes": 1015021568, "gpu_peak_allocated_bytes": 1002893824, "gpu_peak_reserved_bytes": 1015021568}}
+{"utc": "2026-10-31T12:28:06.217040+00:00", "pid": 131581, "stage": "cost_worker_complete", "run_id": "pair3_B", "method": "B", "seconds": 3.215538596996339, "collection": 0.3054158359882422, "selection": 0.20293993399536703, "memory": {"rss_bytes": 1372999680, "process_peak_rss_bytes": 1646161920, "gpu_allocated_bytes": 990117888, "gpu_reserved_bytes": 1015021568, "gpu_peak_allocated_bytes": 1002893824, "gpu_peak_reserved_bytes": 1015021568}}
+{"utc": "2026-10-31T12:28:10.628577+00:00", "pid": 131604, "stage": "cost_worker_complete", "run_id": "pair3_C", "method": "C", "seconds": 3.3357310129940743, "collection": 0.35589330598304514, "selection": 0.23433728398231324, "memory": {"rss_bytes": 1373122560, "process_peak_rss_bytes": 1646223360, "gpu_allocated_bytes": 990117888, "gpu_reserved_bytes": 1015021568, "gpu_peak_allocated_bytes": 1002893824, "gpu_peak_reserved_bytes": 1015021568}}

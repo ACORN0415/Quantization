@@ -1,0 +1,220 @@
+{
+  "status": "PASS",
+  "summary": {
+    "status": "COMPLETE",
+    "decision": "Close this restricted candidate: no allocation improvement and no registered cost benefit",
+    "selected_experts": [
+      5,
+      11,
+      37,
+      45
+    ],
+    "allocation": [
+      3,
+      2,
+      3,
+      4
+    ],
+    "allocations_differ": false,
+    "fp64_heldout": {
+      "gain": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "resamples": 10000,
+      "resampling_unit": "document"
+    },
+    "native_heldout": {
+      "gain": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "resamples": 10000,
+      "resampling_unit": "document"
+    },
+    "native_mean_error": 0.0026409255236632297,
+    "native_execution": {
+      "unique_allocations": 1,
+      "document_forwards": 16,
+      "B_reuses_A": true,
+      "explanation": "Same selected allocation: evaluated once per held-out document, not two independent native executions"
+    },
+    "interval_interpretation": "Degenerate zero interval because the allocations are identical; not a population equivalence claim",
+    "routing": {
+      "selected_experts": [
+        5,
+        11,
+        37,
+        45
+      ],
+      "calibration": {
+        "tokens": 4096,
+        "experts": [
+          5,
+          11,
+          37,
+          45
+        ],
+        "activations": [
+          1330,
+          452,
+          670,
+          757
+        ],
+        "pair_counts": {
+          "5-11": 143,
+          "5-37": 240,
+          "5-45": 290,
+          "11-37": 214,
+          "11-45": 207,
+          "37-45": 545
+        },
+        "tokens_with_at_least_two": 771,
+        "weighted_pair_sums": [
+          [
+            2.200559824705124,
+            0.22307683527469635,
+            0.6251793652772903,
+            0.8115332871675491
+          ],
+          [
+            0.22307683527469635,
+            0.9836453646421432,
+            0.7247323393821716,
+            0.7331700325012207
+          ],
+          [
+            0.6251793652772903,
+            0.7247323393821716,
+            2.8962195366621017,
+            3.0291636288166046
+          ],
+          [
+            0.8115332871675491,
+            0.7331700325012207,
+            3.0291636288166046,
+            3.758053883910179
+          ]
+        ]
+      },
+      "held_out": {
+        "tokens": 8192,
+        "experts": [
+          5,
+          11,
+          37,
+          45
+        ],
+        "activations": [
+          2319,
+          856,
+          1389,
+          1493
+        ],
+        "pair_counts": {
+          "5-11": 191,
+          "5-37": 374,
+          "5-45": 471,
+          "11-37": 383,
+          "11-45": 379,
+          "37-45": 1155
+        },
+        "tokens_with_at_least_two": 1509,
+        "weighted_pair_sums": [
+          [
+            4.456238180398941,
+            0.303039014339447,
+            1.0865371227264404,
+            1.5568094551563263
+          ],
+          [
+            0.303039014339447,
+            1.6836248636245728,
+            1.4117940813302994,
+            1.4087124466896057
+          ],
+          [
+            1.0865371227264404,
+            1.4117940813302994,
+            6.7288166135549545,
+            7.272571787238121
+          ],
+          [
+            1.5568094551563263,
+            1.4087124466896057,
+            7.272571787238121,
+            9.154520228505135
+          ]
+        ]
+      },
+      "selection_bias": "Chosen for calibration co-routing; not representative random experts"
+    },
+    "common_preparation_seconds": 205.5690821664757,
+    "cost": {
+      "B": {
+        "complete_worker_seconds": [
+          4.289671484002611,
+          4.313564112002496,
+          4.287255510993418
+        ],
+        "one_shot_seconds": [
+          209.85875365047832,
+          209.8826462784782,
+          209.85633767746913
+        ],
+        "median_complete_worker_seconds": 4.289671484002611,
+        "median_one_shot_seconds": 209.85875365047832,
+        "median_output_collection_seconds": 0.31491675901634153,
+        "median_selection_seconds": 0.20293993399536703,
+        "median_worker_peak_RSS_bytes": 1646161920.0,
+        "median_full_peak_RSS_bytes": 15043768320.0,
+        "worker_peak_GPU_allocated_bytes": 1002893824,
+        "full_peak_GPU_allocated_bytes": 14375194624
+      },
+      "C": {
+        "complete_worker_seconds": [
+          4.326639163991786,
+          4.304075424006442,
+          4.471766889007995
+        ],
+        "one_shot_seconds": [
+          209.8957213304675,
+          209.87315759048215,
+          210.0408490554837
+        ],
+        "median_complete_worker_seconds": 4.326639163991786,
+        "median_one_shot_seconds": 209.8957213304675,
+        "median_output_collection_seconds": 0.34394015501311515,
+        "median_selection_seconds": 0.23145850798755419,
+        "median_worker_peak_RSS_bytes": 1646510080.0,
+        "median_full_peak_RSS_bytes": 15043768320.0,
+        "worker_peak_GPU_allocated_bytes": 1002893824,
+        "full_peak_GPU_allocated_bytes": 14375194624
+      }
+    },
+    "paired_one_shot_C_gain": [
+      -0.0001761550535592793,
+      4.5209492849029864e-05,
+      -0.0008792270943855929
+    ],
+    "median_total_C_gain": -0.0001761550535592793,
+    "full_RSS_C_gain": 0.0,
+    "continue_quality": false,
+    "continue_cost": false,
+    "measured_limits": {
+      "peak_process_RSS_GiB": 14.010601043701172,
+      "peak_GPU_allocated_GiB": 13.387943267822266,
+      "incremental_disk_GiB": 13.787239226512611,
+      "elapsed_wall_seconds": 952.1200270652771
+    },
+    "gates": {
+      "identity_documents": 24,
+      "packing_projections": 36,
+      "max_B_reference": 1.1362438767648086e-16,
+      "max_C_reference": 8.673617379884035e-18
+    },
+    "scope": "OLMoE-0924 layer 8, four co-routing-selected experts, 12 permutations of fixed bit multiset; not whole-model or all-MoE evidence"
+  }
+}

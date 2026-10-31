@@ -1,0 +1,179 @@
+{
+  "status": "PASS",
+  "method": "B",
+  "run_id": "pair1_B",
+  "pid": 131487,
+  "elapsed_worker_seconds": 3.223525833003805,
+  "load_seconds": 1.8147512249997817,
+  "output_collection_seconds": 0.31491675901634153,
+  "selection_seconds": 0.20147396800166462,
+  "integrity_hash_seconds": 0.7251517379772849,
+  "scores": [
+    0.003837714955116106,
+    0.0038561269931167317,
+    0.004156236121855974,
+    0.0026398990827754903,
+    0.002654695854681807,
+    0.0045313637375943485,
+    0.004544027434685216,
+    0.0048356930042617935,
+    0.004840388107404907,
+    0.00277351058536417,
+    0.0046544304774949405,
+    0.004660470275129302
+  ],
+  "choice": [
+    3,
+    2,
+    3,
+    4
+  ],
+  "bank_hashes": {
+    "train_439": "c6feb0f59e5e200d16fd65aeba9cb00bb8efce33b542e3b4ec77a668850024db",
+    "train_306": "1c9a13e60dce9664ca667c4d5e27393695d5437c14a7e24817d9028a1c8b716f",
+    "train_353": "116826dac0cfd51e5f14a351dbeeb8ce48c8c5d6cbb92b364a8c96b6ebd9dce2",
+    "train_417": "d53bc75ca2323d5b3587d934ffab487628e31547b2417ffb68a594ca5c126d14",
+    "train_181": "3f9081aadf01794ce7b04168c86bd934a9e3e361e745830a2ba7c5ec529ce15b",
+    "train_222": "358373bb0d64893ba3a696bdd06930a80f140324162fe137a944759bf23d6174",
+    "train_481": "ef9193be1c5bc1ab8717e1211a0c46e56c2011f0c27686278bc14c5d709c1206",
+    "train_497": "57c26747a9209bfa1e9ba7ea45e826a8fc3e5ade8fa5dbe7b1199691a74d3e5e"
+  },
+  "memory": {
+    "rss_bytes": 1406541824,
+    "process_peak_rss_bytes": 1646088192,
+    "gpu_allocated_bytes": 990117888,
+    "gpu_reserved_bytes": 1015021568,
+    "gpu_peak_allocated_bytes": 1002893824,
+    "gpu_peak_reserved_bytes": 1015021568
+  },
+  "residency": [
+    {
+      "stage": "startup",
+      "memory": {
+        "rss_bytes": 613158912,
+        "process_peak_rss_bytes": 611737600,
+        "gpu_allocated_bytes": 0,
+        "gpu_reserved_bytes": 0,
+        "gpu_peak_allocated_bytes": 0,
+        "gpu_peak_reserved_bytes": 0
+      },
+      "resident": "CUDA context only"
+    },
+    {
+      "stage": "weights_and_inputs",
+      "memory": {
+        "rss_bytes": 935714816,
+        "process_peak_rss_bytes": 1646088192,
+        "gpu_allocated_bytes": 956563456,
+        "gpu_reserved_bytes": 975175680,
+        "gpu_peak_allocated_bytes": 965017600,
+        "gpu_peak_reserved_bytes": 975175680
+      },
+      "resident": "One BF16 MoE block, 12 restored expert candidates, calibration inputs; full model released"
+    },
+    {
+      "stage": "train_439",
+      "memory": {
+        "rss_bytes": 1370210304,
+        "process_peak_rss_bytes": 1646088192,
+        "gpu_allocated_bytes": 990117888,
+        "gpu_reserved_bytes": 1010827264,
+        "gpu_peak_allocated_bytes": 995796480,
+        "gpu_peak_reserved_bytes": 1010827264
+      },
+      "resident": "One document error bank plus persistent block/candidates/inputs",
+      "bank_bytes": 100663296
+    },
+    {
+      "stage": "train_306",
+      "memory": {
+        "rss_bytes": 1402707968,
+        "process_peak_rss_bytes": 1646088192,
+        "gpu_allocated_bytes": 990117888,
+        "gpu_reserved_bytes": 1010827264,
+        "gpu_peak_allocated_bytes": 1002828288,
+        "gpu_peak_reserved_bytes": 1010827264
+      },
+      "resident": "One document error bank plus persistent block/candidates/inputs",
+      "bank_bytes": 100663296
+    },
+    {
+      "stage": "train_353",
+      "memory": {
+        "rss_bytes": 1405833216,
+        "process_peak_rss_bytes": 1646088192,
+        "gpu_allocated_bytes": 990117888,
+        "gpu_reserved_bytes": 1012924416,
+        "gpu_peak_allocated_bytes": 1002828288,
+        "gpu_peak_reserved_bytes": 1012924416
+      },
+      "resident": "One document error bank plus persistent block/candidates/inputs",
+      "bank_bytes": 100663296
+    },
+    {
+      "stage": "train_417",
+      "memory": {
+        "rss_bytes": 1403244544,
+        "process_peak_rss_bytes": 1646088192,
+        "gpu_allocated_bytes": 990117888,
+        "gpu_reserved_bytes": 1012924416,
+        "gpu_peak_allocated_bytes": 1002893824,
+        "gpu_peak_reserved_bytes": 1012924416
+      },
+      "resident": "One document error bank plus persistent block/candidates/inputs",
+      "bank_bytes": 100663296
+    },
+    {
+      "stage": "train_181",
+      "memory": {
+        "rss_bytes": 1395240960,
+        "process_peak_rss_bytes": 1646088192,
+        "gpu_allocated_bytes": 990117888,
+        "gpu_reserved_bytes": 1012924416,
+        "gpu_peak_allocated_bytes": 1002893824,
+        "gpu_peak_reserved_bytes": 1012924416
+      },
+      "resident": "One document error bank plus persistent block/candidates/inputs",
+      "bank_bytes": 100663296
+    },
+    {
+      "stage": "train_222",
+      "memory": {
+        "rss_bytes": 1410646016,
+        "process_peak_rss_bytes": 1646088192,
+        "gpu_allocated_bytes": 990117888,
+        "gpu_reserved_bytes": 1012924416,
+        "gpu_peak_allocated_bytes": 1002893824,
+        "gpu_peak_reserved_bytes": 1012924416
+      },
+      "resident": "One document error bank plus persistent block/candidates/inputs",
+      "bank_bytes": 100663296
+    },
+    {
+      "stage": "train_481",
+      "memory": {
+        "rss_bytes": 1385652224,
+        "process_peak_rss_bytes": 1646088192,
+        "gpu_allocated_bytes": 990117888,
+        "gpu_reserved_bytes": 1012924416,
+        "gpu_peak_allocated_bytes": 1002893824,
+        "gpu_peak_reserved_bytes": 1012924416
+      },
+      "resident": "One document error bank plus persistent block/candidates/inputs",
+      "bank_bytes": 100663296
+    },
+    {
+      "stage": "train_497",
+      "memory": {
+        "rss_bytes": 1406271488,
+        "process_peak_rss_bytes": 1646088192,
+        "gpu_allocated_bytes": 990117888,
+        "gpu_reserved_bytes": 1015021568,
+        "gpu_peak_allocated_bytes": 1002893824,
+        "gpu_peak_reserved_bytes": 1015021568
+      },
+      "resident": "One document error bank plus persistent block/candidates/inputs",
+      "bank_bytes": 100663296
+    }
+  ]
+}
