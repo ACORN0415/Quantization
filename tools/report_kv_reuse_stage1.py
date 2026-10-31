@@ -174,6 +174,14 @@ def main():
           '~/sfq_data/py tools/verify_kv_reuse_stage1.py\n'
           'python tools/report_kv_reuse_stage1.py\n'
           '```']
+    retention=ROOT/'src/experiments/DATA_RETENTION_20261031_KO.md'
+    if retention.exists():
+        lines[2:2]=[
+          '> **2026-10-31 보존 상태 변경:** 사용자 요청으로 검증 완료된 60.14 GiB 입력 '
+          '테이프를 삭제했다. 아래의 전체 입력 비교와 테이프 해시 검사는 삭제 전에 수행한 '
+          '기록이다. 최종 latent·색인·호출 집계·실행 로그·소스·기존 해시는 남아 있다. '
+          '아래 전체 검증 명령을 다시 실행하려면 삭제한 테이프가 필요하다. '
+          '[정리 범위와 재검증 한계](../DATA_RETENTION_20261031_KO.md).', '']
     (OUT/'REPORT_KO.md').write_text('\n'.join(lines)+'\n')
     print(s['decision'])
 

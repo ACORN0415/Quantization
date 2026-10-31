@@ -19,6 +19,8 @@
 [실행 가능성 보고](src/experiments/kv_reuse_preflight/REPORT_KO.md) ·
 [사전 측정 설계](src/experiments/kv_reuse_preflight/MEASUREMENT_PLAN_KO.md).
 
+**데이터 정리 (2026-10-31):** 사용자 요청으로 완료된 검증 테이프·파생 코덱 상태·폐기된 개발 텐서·설치 파일 61.75 GiB를 삭제했다. 주 논문 근거와 최종 latent는 보존했다. 일부 과거 전체 감사는 삭제한 파일을 재생성해야 다시 실행할 수 있다. [삭제 범위와 현재 재검증 한계](src/experiments/DATA_RETENTION_20261031_KO.md).
+
 ## 먼저 읽을 현재 결론
 
 | 질문 | 현재 답 | 근거의 범위 |
