@@ -1,0 +1,62 @@
+{
+  "frozen_at_utc": "2026-10-31T18:28:41.941610+00:00",
+  "criterion": "choice FP64 SSE",
+  "policies": {
+    "fixed_rtn": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "fixed_gptq_0.01": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "fixed_gptq_0.05": [
+      2,
+      2,
+      2,
+      2
+    ],
+    "fixed_gptq_0.1": [
+      3,
+      3,
+      3,
+      3
+    ],
+    "fixed_gptq_1.0": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "common_direct": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "expert_direct": [
+      4,
+      4,
+      4,
+      4
+    ]
+  },
+  "common_index": 4,
+  "expert_indices": [
+    4,
+    4,
+    4,
+    4
+  ],
+  "aliases": {
+    "coverage_0.5_percent": "fixed_gptq_0.01",
+    "coverage_plus_2K": "fixed_rtn"
+  },
+  "common_selection_seconds": 5.644597695209086e-05,
+  "expert_selection_seconds": 1.675100065767765e-05,
+  "heldout_scores_evaluated_before_freeze": 0
+}

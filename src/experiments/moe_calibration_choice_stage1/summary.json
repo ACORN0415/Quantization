@@ -1,0 +1,138 @@
+{
+  "decision": "CLOSE_EXPERT_SPECIFIC_SELECTOR_IN_REGISTERED_SCOPE",
+  "reason": "Common direct selection and expert-specific direct selection chose the same GPTQ damping 1.0 for all four experts.",
+  "experts": [
+    43,
+    62,
+    51,
+    17
+  ],
+  "choices": [
+    "gptq_1.0",
+    "gptq_1.0",
+    "gptq_1.0",
+    "gptq_1.0"
+  ],
+  "comparisons": {
+    "common_direct": {
+      "relative_reduction": 0.0,
+      "document_bootstrap_95_interval": [
+        0.0,
+        0.0
+      ],
+      "native_relative_reduction": 0.0,
+      "native_exceeds_tie": false,
+      "registered_comparison_passes": false,
+      "identical_selected_indices": true
+    },
+    "fixed_rtn": {
+      "relative_reduction": 0.09202403307840012,
+      "document_bootstrap_95_interval": [
+        0.07101739383335241,
+        0.11286838693586713
+      ],
+      "native_relative_reduction": 0.09201168022803441,
+      "native_exceeds_tie": true,
+      "registered_comparison_passes": true,
+      "identical_selected_indices": false
+    },
+    "fixed_gptq_0.01": {
+      "relative_reduction": 0.32787494423024743,
+      "document_bootstrap_95_interval": [
+        0.31721116646574854,
+        0.3374557473446907
+      ],
+      "native_relative_reduction": 0.3276579925988927,
+      "native_exceeds_tie": true,
+      "registered_comparison_passes": true,
+      "identical_selected_indices": false
+    }
+  },
+  "registered_selection_benefit": false,
+  "valid_candidates": 20,
+  "failed_weight_candidates": 0,
+  "pre_candidate_failed_attempts": 2,
+  "full_model_forwards": 0,
+  "costs": {
+    "fixed_rtn": {
+      "weight_access_seconds": 0.0059972240414936095,
+      "fit_access_seconds": 0.0,
+      "hessian_seconds": 0.0,
+      "quantization_generation_seconds": 0.12180906598223373,
+      "packing_export_with_check_seconds": 0.015084175975061953,
+      "choice_input_transfer_seconds": 0.0,
+      "choice_fp64_evaluation_seconds": 0.0,
+      "selection_reduction_seconds": 0.0,
+      "measured_component_sum_seconds": 0.1428904659987893
+    },
+    "fixed_gptq_0.01": {
+      "weight_access_seconds": 0.0059972240414936095,
+      "fit_access_seconds": 0.005948692036326975,
+      "hessian_seconds": 0.03622964501846582,
+      "quantization_generation_seconds": 1.2697949650173541,
+      "packing_export_with_check_seconds": 0.0035702389723155648,
+      "choice_input_transfer_seconds": 0.0,
+      "choice_fp64_evaluation_seconds": 0.0,
+      "selection_reduction_seconds": 0.0,
+      "measured_component_sum_seconds": 1.321540765085956
+    },
+    "fixed_gptq_0.05": {
+      "weight_access_seconds": 0.0059972240414936095,
+      "fit_access_seconds": 0.005948692036326975,
+      "hessian_seconds": 0.03622964501846582,
+      "quantization_generation_seconds": 1.2129560239845887,
+      "packing_export_with_check_seconds": 0.003229249006835744,
+      "choice_input_transfer_seconds": 0.0,
+      "choice_fp64_evaluation_seconds": 0.0,
+      "selection_reduction_seconds": 0.0,
+      "measured_component_sum_seconds": 1.2643608340877108
+    },
+    "fixed_gptq_0.1": {
+      "weight_access_seconds": 0.0059972240414936095,
+      "fit_access_seconds": 0.005948692036326975,
+      "hessian_seconds": 0.03622964501846582,
+      "quantization_generation_seconds": 1.21015810398967,
+      "packing_export_with_check_seconds": 0.0032378760224673897,
+      "choice_input_transfer_seconds": 0.0,
+      "choice_fp64_evaluation_seconds": 0.0,
+      "selection_reduction_seconds": 0.0,
+      "measured_component_sum_seconds": 1.2615715411084238
+    },
+    "fixed_gptq_1.0": {
+      "weight_access_seconds": 0.0059972240414936095,
+      "fit_access_seconds": 0.005948692036326975,
+      "hessian_seconds": 0.03622964501846582,
+      "quantization_generation_seconds": 1.2103757739823777,
+      "packing_export_with_check_seconds": 0.00327006695442833,
+      "choice_input_transfer_seconds": 0.0,
+      "choice_fp64_evaluation_seconds": 0.0,
+      "selection_reduction_seconds": 0.0,
+      "measured_component_sum_seconds": 1.2618214020330925
+    },
+    "common_direct": {
+      "weight_access_seconds": 0.0059972240414936095,
+      "fit_access_seconds": 0.005948692036326975,
+      "hessian_seconds": 0.03622964501846582,
+      "quantization_generation_seconds": 5.025093932956224,
+      "packing_export_with_check_seconds": 0.02839160693110898,
+      "choice_input_transfer_seconds": 0.002739210962317884,
+      "choice_fp64_evaluation_seconds": 0.06460513194906525,
+      "selection_reduction_seconds": 5.644597695209086e-05,
+      "measured_component_sum_seconds": 5.169061889871955
+    },
+    "expert_direct": {
+      "weight_access_seconds": 0.0059972240414936095,
+      "fit_access_seconds": 0.005948692036326975,
+      "hessian_seconds": 0.03622964501846582,
+      "quantization_generation_seconds": 5.025093932956224,
+      "packing_export_with_check_seconds": 0.02839160693110898,
+      "choice_input_transfer_seconds": 0.002739210962317884,
+      "choice_fp64_evaluation_seconds": 0.06460513194906525,
+      "selection_reduction_seconds": 1.675100065767765e-05,
+      "measured_component_sum_seconds": 5.1690221948956605
+    }
+  },
+  "cost_scope": "Single-run synchronized component sums. Packing includes roundtrip check and CPU export. Native diagnostic/evaluation/archive overhead excluded. No isolated policy end-to-end latency or memory claim.",
+  "scope": "One layer, four up projections, very small calibration split; not model quality or a general token-count rule.",
+  "next_gpu_experiments": 0
+}

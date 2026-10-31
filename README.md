@@ -70,13 +70,25 @@ FP16 결과 `1.0`과 `1.0009765625`의 차이는 **합성 산술 검사**이며 
 전환을 결정하는 기존 규칙을 검토했다. 기존 train8문서의4,096토큰을 CPU로 집계하면
 전문가별 도달 수는48~1,774개다. 확인한0.5% 도달 비율 규칙은64개 모두 GPTQ
 대상으로, 입력 차원의2배 조건을 더한 규칙은64개 모두 RTN 대상으로 판단한다.
-이는 규칙의 분석적 재생이며 실제 양자화 품질 비교가 아니다. **다음 우선순위는
-강한 단순 기준선으로 이 판단 차이의 실익을 확인하는 작은 비교 준비**다. 현재
-신규성·선택 이득·GPU 실행은 미확인이다. 보정 불균형·damping 선택·분할 검증은
+이는 규칙의 분석적 재생이며 실제 양자화 품질 비교가 아니다. 당시 남긴 작은
+GPU 비교는 아래와 같이 완료했다. 보정 불균형·damping 선택·분할 검증은
 이미 선행연구가 있으므로 새 방법으로 주장하지 않는다.
 [후보 비교와 다음 자원 배분](src/experiments/moe_calibration_choice_review_20261101/REPORT_KO.txt) ·
 [실제 routing 재집계](src/experiments/moe_calibration_choice_review_20261101/coverage.json) ·
 [고정 코드·문헌 확인](src/experiments/moe_calibration_choice_review_20261101/source_audit.json).
+
+**MoE 보정 설정 선택 진단 완료·현재 후보 종료 (2026-11-01):** 네 전문가의 up
+투영에서 RTN과 GPTQ damping 네 개, 총20개 실제 가중치 후보를 비교했다. 선택용
+4문서에서 공통 선택과 전문가별 선택은 모두 GPTQ1.0을 골랐다. 보류16문서에서
+공통 선택 대비 이득은0%였고, RTN 대비 투영 오차는9.2024%, GPTQ0.01 대비는
+32.7875% 감소했다. BF16에서도 감소가 남았다. **기존 공통 설정 선택으로 충분해
+전문가별 선택기 개발을 종료한다.** 유효 GPU 단계6.62초, 전체 모델 실행0회다.
+후보 생성 전 환경 설정과 원래 fused 연산 형상을 보완했고, 이후 무개입96건·
+패킹20개 검사를 통과했다. CPU에서 점수400개와 저장 자료를 재검증했다. 매우
+적은 보정 표본의 투영 검사이며 일반 보정 규모·모델 품질의 결과가 아니다.
+[결과·비용·실패 기록의 설명](src/experiments/moe_calibration_choice_stage1/REPORT_KO.txt) ·
+[선택과 보류 결과의 CPU 감사](src/experiments/moe_calibration_choice_stage1/audit.json) ·
+[사전 명세](src/experiments/moe_calibration_choice_stage1/registration.json).
 
 ## 먼저 읽을 현재 결론
 

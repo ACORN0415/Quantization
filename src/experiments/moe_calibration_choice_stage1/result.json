@@ -1,0 +1,160 @@
+{
+  "status": "PASS",
+  "completed_at_utc": "2026-10-31T18:28:42.310374+00:00",
+  "gpu_stage_wall_seconds": 6.620388673996786,
+  "valid_model_candidates": 20,
+  "failed_candidates": 0,
+  "model_forwards": 0,
+  "full_model_evaluations": 0,
+  "source_scope": "Pinned primitive and quantizer only; not full Olive/GPTQModel",
+  "environment": {
+    "torch": "2.6.0+cu124",
+    "cuda": "12.4",
+    "device": "NVIDIA GeForce RTX 4090"
+  },
+  "expert_costs": [
+    {
+      "expert": 43,
+      "weight_load_seconds": 0.0014177699922583997,
+      "fit_input_transfer_seconds": 0.00027004702133126557,
+      "hessian_seconds": 0.035687638010131195
+    },
+    {
+      "expert": 62,
+      "weight_load_seconds": 0.0013685790181625634,
+      "fit_input_transfer_seconds": 0.0006209049897734076,
+      "hessian_seconds": 0.00023228599457070231
+    },
+    {
+      "expert": 51,
+      "weight_load_seconds": 0.0013696400274056941,
+      "fit_input_transfer_seconds": 0.0006454310205299407,
+      "hessian_seconds": 0.00014282800839282572
+    },
+    {
+      "expert": 17,
+      "weight_load_seconds": 0.0013741989969275892,
+      "fit_input_transfer_seconds": 0.0008282640192192048,
+      "hessian_seconds": 0.00016689300537109375
+    }
+  ],
+  "input_hash_and_load_seconds": 0.3765677410119679,
+  "source_file_hash_seconds": 0.35164539399556816,
+  "weight_archive_open_seconds": 0.0004670360067393631,
+  "capture_archive_open_seconds": 0.003584044985473156,
+  "identity_seconds": 0.2102089980035089,
+  "generation_and_choice_phase_seconds": 5.845348455011845,
+  "heldout_evaluation_seconds": 0.34225147997494787,
+  "overall_process_peak": {
+    "cuda_allocated_bytes": 161203200,
+    "cuda_reserved_bytes": 192937984,
+    "process_peak_rss_bytes": 1918251008
+  },
+  "baseline_memory_note": "No independently executed full-policy peak comparisons. Process peak covers all diagnostic phases.",
+  "artifact_files": {
+    "expert17_gptq_0.01.pt": {
+      "bytes": 1181473,
+      "sha256": "6bade5ae3a2911fa728d8f88b97272e213d5038a719a2e63e387c5ae0cd26acd"
+    },
+    "expert17_gptq_0.05.pt": {
+      "bytes": 1181473,
+      "sha256": "69bdb3e240065cfefe276fea4b757a88b9d41b3039b34d07060dbf35891913f3"
+    },
+    "expert17_gptq_0.1.pt": {
+      "bytes": 1181466,
+      "sha256": "c5aa2c0a36158b72809a8f6297e8a5bfd122d1a773ee9c135d726025d7dff941"
+    },
+    "expert17_gptq_1.0.pt": {
+      "bytes": 1181466,
+      "sha256": "793a359bf2e22d4d2e8305ad8a5e77f8471bdac57b31eb24a43e8e6be32b5628"
+    },
+    "expert17_rtn.pt": {
+      "bytes": 1181431,
+      "sha256": "c60809ecd123d2b81990af51123db4e060616fa055cf7a74c5eedb51f70f0d0b"
+    },
+    "expert43_gptq_0.01.pt": {
+      "bytes": 1181473,
+      "sha256": "e767565bfe4a3625e750d559d11fbe63e63138b6c8579c533750608cb0a41bee"
+    },
+    "expert43_gptq_0.05.pt": {
+      "bytes": 1181473,
+      "sha256": "a74a87ef10e42f56fbb693fd0a887f8760b19c2df7bb9bf946657fa062995164"
+    },
+    "expert43_gptq_0.1.pt": {
+      "bytes": 1181466,
+      "sha256": "3e9f7687872e46dbaceb07a13c71b27c5da29d22fb962b2572eb6340ba5e139c"
+    },
+    "expert43_gptq_1.0.pt": {
+      "bytes": 1181466,
+      "sha256": "ca443b6073913e82b301520a3ec3e76c90ae751a7b6a7459031423d108fbf1e9"
+    },
+    "expert43_rtn.pt": {
+      "bytes": 1181431,
+      "sha256": "f067c1d7b51a15a61dd133cf0e145538571996695f1d7d4ac43bdaa562b6d124"
+    },
+    "expert51_gptq_0.01.pt": {
+      "bytes": 1181473,
+      "sha256": "1e43e6168c493c63181bb92bf1a2829439828e955ed72b116bd1fa651cd4ab78"
+    },
+    "expert51_gptq_0.05.pt": {
+      "bytes": 1181473,
+      "sha256": "ac4fa01e1776809d9211532dc444dac41d157350780583bc90891eefaa9d6e8b"
+    },
+    "expert51_gptq_0.1.pt": {
+      "bytes": 1181466,
+      "sha256": "d7cc5d7d5fe9e0f407b7727e2d3b3f92c28a3502ddea50445395585e0d2d3e55"
+    },
+    "expert51_gptq_1.0.pt": {
+      "bytes": 1181466,
+      "sha256": "c50caba8e1483ddd1e8cfe236d81af172c85011ffcd5c18b6cc232f0c0fcd144"
+    },
+    "expert51_rtn.pt": {
+      "bytes": 1181431,
+      "sha256": "b8912f89e582be43cf584cbd29bebf2fa8a48e452d5949bf00bec679c7f1bd97"
+    },
+    "expert62_gptq_0.01.pt": {
+      "bytes": 1181473,
+      "sha256": "473a5a7ed1792f300856f7c6d3565498b2a34c877b841e87224b02a537765ee8"
+    },
+    "expert62_gptq_0.05.pt": {
+      "bytes": 1181473,
+      "sha256": "bf35f2e05d5da43887e2ade5f5b0d70ff55c1f20664eb405410579937792c58e"
+    },
+    "expert62_gptq_0.1.pt": {
+      "bytes": 1181466,
+      "sha256": "dcf44ec5a095be915120775a33aea6a213843687827b197e82864ef9fc63e46e"
+    },
+    "expert62_gptq_1.0.pt": {
+      "bytes": 1181466,
+      "sha256": "888710a9df95bf6e8ed5074e02fbdcd1b90e39aa1b69297de9f1178f2b32eadb"
+    },
+    "expert62_rtn.pt": {
+      "bytes": 1181431,
+      "sha256": "2a56740104b73787b00106cd0e6594671862e0da286b49bd02c55b9811b9bfd4"
+    },
+    "hessian_17.pt": {
+      "bytes": 16778411,
+      "sha256": "c5e9cee6e83eb3bebd23c50ff92c66f6abe3f2606979674d2db7e7ee22add820"
+    },
+    "hessian_43.pt": {
+      "bytes": 16778411,
+      "sha256": "37404983cd4eb1676b6e0f21de81e8c856459ef1740f5aff1c77c3227b18d527"
+    },
+    "hessian_51.pt": {
+      "bytes": 16778411,
+      "sha256": "6471412eef5c0dbf49e2ca8125c5b07500ef9b11f05be92ee6d31babf4ef01f3"
+    },
+    "hessian_62.pt": {
+      "bytes": 16778411,
+      "sha256": "98bede0f1d4acaf904ebd6394828a27dd083479accb3ba546202eb0849403fb6"
+    },
+    "native_outputs.pt": {
+      "bytes": 51521054,
+      "sha256": "4f8806f399ad70fb2e2265110ae17101b728393acc5e000f161186d01ce7b1b5"
+    },
+    "native_references.pt": {
+      "bytes": 12320222,
+      "sha256": "2fdf1673553a92a0bf48ba2286c3a1f6cdde23039404f25f2a3cd4449eef0398"
+    }
+  }
+}

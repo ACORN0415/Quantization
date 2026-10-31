@@ -1,0 +1,140 @@
+{
+  "status": "COMPLETE",
+  "started_at_utc": "2026-10-31T18:19:54+00:00",
+  "artifacts_completed_at_utc": "2026-10-31T18:32:51.401163+00:00",
+  "deadline_utc": "2026-10-31T19:19:54+00:00",
+  "wall_seconds_through_artifact_completion": 777.401163,
+  "includes": "Preparation, validation, both pre-candidate failed attempts, real GPU diagnostic, CPU audit, report, README update. Final local Git commit follows this timestamp.",
+  "preregistration_commit": "b2597ed",
+  "environment_amendment_commit": "9da5a83",
+  "native_path_amendment_commit": "27d476f",
+  "real_candidates": 20,
+  "failed_weight_candidates": 0,
+  "pre_candidate_failed_attempts": 2,
+  "valid_gpu_stage_seconds": 6.620388673996786,
+  "earlier_failed_process_wall_seconds_bound": 10,
+  "gpu_stage_total_wall_seconds_upper_bound": 16.620388673996786,
+  "new_artifact_bytes_before_completion_record": 154821441,
+  "overall_process_peak": {
+    "cuda_allocated_bytes": 161203200,
+    "cuda_reserved_bytes": 192937984,
+    "process_peak_rss_bytes": 1918251008
+  },
+  "cpu_audit_status": "PASS",
+  "decision": "CLOSE_EXPERT_SPECIFIC_SELECTOR_IN_REGISTERED_SCOPE",
+  "new_gpu_work_scheduled": false,
+  "record_files": {
+    "src/experiments/moe_calibration_choice_stage1/REPORT_KO.txt": {
+      "bytes": 12709,
+      "sha256": "645497601f61bf6bb423482a5a0f4566c47cd0cfd43e833faa1f51c20d5b42f4"
+    },
+    "src/experiments/moe_calibration_choice_stage1/attempt01_environment_failure/cpu_validation.json": {
+      "bytes": 1282,
+      "sha256": "20da0f96ef513c11045ba6981bfe0d4c1d48bdab8db2b418e62b36c701c5e8e0"
+    },
+    "src/experiments/moe_calibration_choice_stage1/attempt01_environment_failure/events.jsonl": {
+      "bytes": 113,
+      "sha256": "56121a37ca3e6d4ea1c78f02cc1c251b9b296e43f981f0f267ce28591aa18dec"
+    },
+    "src/experiments/moe_calibration_choice_stage1/attempt01_environment_failure/failure.json": {
+      "bytes": 1101,
+      "sha256": "9127ddfd471269fb88d9c1d9d360ad91307cf6b92c9522d0740e9464ee9b8be5"
+    },
+    "src/experiments/moe_calibration_choice_stage1/attempt01_environment_failure/gpu_run.log": {
+      "bytes": 1206,
+      "sha256": "721bab75c51665e44e410f84cea1db93f74b7734b717f3ac2869d9aeab05bd79"
+    },
+    "src/experiments/moe_calibration_choice_stage1/attempt01_environment_failure/input_check.json": {
+      "bytes": 429,
+      "sha256": "a8afa6b51e4bba1ef3b9ef9d3033871c4925367db4ffb581c3a6775b24b734f2"
+    },
+    "src/experiments/moe_calibration_choice_stage1/attempt02_identity_failure/cpu_validation.json": {
+      "bytes": 1282,
+      "sha256": "20da0f96ef513c11045ba6981bfe0d4c1d48bdab8db2b418e62b36c701c5e8e0"
+    },
+    "src/experiments/moe_calibration_choice_stage1/attempt02_identity_failure/events.jsonl": {
+      "bytes": 113,
+      "sha256": "02085f6130566f7a57230869c2250bdb99a01222a50c21d70c35f33d3d3c1806"
+    },
+    "src/experiments/moe_calibration_choice_stage1/attempt02_identity_failure/failure.json": {
+      "bytes": 627,
+      "sha256": "bcaf00790792f4fb51db6f78269babebeb158709add08ba244ffb532a7288e42"
+    },
+    "src/experiments/moe_calibration_choice_stage1/attempt02_identity_failure/gpu_run.log": {
+      "bytes": 732,
+      "sha256": "0b449655b006b11579a5bea778193eeac7c39cf95409617f49e5207215a28028"
+    },
+    "src/experiments/moe_calibration_choice_stage1/attempt02_identity_failure/input_check.json": {
+      "bytes": 430,
+      "sha256": "3349d4e5481ec2d1a1cf99ced66991e08fae3987c888a20d40d6c791e3ae0e26"
+    },
+    "src/experiments/moe_calibration_choice_stage1/audit.json": {
+      "bytes": 20802,
+      "sha256": "39a7751b0a0c0bfa38440062b31a5f75dee3593452d9013805bc0ca409119fc8"
+    },
+    "src/experiments/moe_calibration_choice_stage1/candidates.json": {
+      "bytes": 19599,
+      "sha256": "0a4425021d887bd8381a16563cb607c78c86e031b6e75c101911605c1985e984"
+    },
+    "src/experiments/moe_calibration_choice_stage1/choice_scores.json": {
+      "bytes": 23510,
+      "sha256": "4fb952c103fe2508b2a79b26758dec72f674c5b00d7803471290a24b2c0bd5bc"
+    },
+    "src/experiments/moe_calibration_choice_stage1/cpu_preflight.json": {
+      "bytes": 1282,
+      "sha256": "20da0f96ef513c11045ba6981bfe0d4c1d48bdab8db2b418e62b36c701c5e8e0"
+    },
+    "src/experiments/moe_calibration_choice_stage1/cpu_validation.json": {
+      "bytes": 1282,
+      "sha256": "20da0f96ef513c11045ba6981bfe0d4c1d48bdab8db2b418e62b36c701c5e8e0"
+    },
+    "src/experiments/moe_calibration_choice_stage1/environment_amendment.json": {
+      "bytes": 612,
+      "sha256": "390104158ba936055bc3b72be85d665d415510ff02f36fc5b12317e2218a14e4"
+    },
+    "src/experiments/moe_calibration_choice_stage1/evaluation_scores.json": {
+      "bytes": 94618,
+      "sha256": "d040a482a57d52676e9ac5edc5cb6e9beebacc67d825c6c4c53a879092f82f62"
+    },
+    "src/experiments/moe_calibration_choice_stage1/events.jsonl": {
+      "bytes": 5006,
+      "sha256": "888daba95b66539a5fd8c2d05907fc3a900ffef067671d868414b09d1af0a2d5"
+    },
+    "src/experiments/moe_calibration_choice_stage1/gpu_run.log": {
+      "bytes": 5006,
+      "sha256": "888daba95b66539a5fd8c2d05907fc3a900ffef067671d868414b09d1af0a2d5"
+    },
+    "src/experiments/moe_calibration_choice_stage1/identity.json": {
+      "bytes": 20213,
+      "sha256": "dbef18586b00ac95cc5205731ac49a41c912ca3fb90a62aad160e9bc0a584b87"
+    },
+    "src/experiments/moe_calibration_choice_stage1/identity_amendment.json": {
+      "bytes": 981,
+      "sha256": "09e95600556c7e32a93e7c141ac818d7c45d5e6eb5ec93d044178c2c6a035036"
+    },
+    "src/experiments/moe_calibration_choice_stage1/input_check.json": {
+      "bytes": 429,
+      "sha256": "5bef12b7d21a76cf54ffcc84d5bb5cd3f5ff05517bcb3200e7e0b464760166f0"
+    },
+    "src/experiments/moe_calibration_choice_stage1/original_input_checks.json": {
+      "bytes": 4803,
+      "sha256": "72d9012924e7229a4b4be0cf1855216beb0fa75e00cba97bcb8c3748122b36bd"
+    },
+    "src/experiments/moe_calibration_choice_stage1/registration.json": {
+      "bytes": 7136,
+      "sha256": "f71ecd2a7345059aa060efe02c5ff9453bb84b2dab80b5f4adf0a415aa563751"
+    },
+    "src/experiments/moe_calibration_choice_stage1/result.json": {
+      "bytes": 5609,
+      "sha256": "bdd5c1e074ddc84205724aa32c5f70cd5f4f25f86fa6708ed5cc4467ab932f0c"
+    },
+    "src/experiments/moe_calibration_choice_stage1/selection.json": {
+      "bytes": 900,
+      "sha256": "dc07b55e9a6af64dbf18a8e6a65ddc1beacb4a57e497c3775657ecd27d84623a"
+    },
+    "src/experiments/moe_calibration_choice_stage1/summary.json": {
+      "bytes": 5473,
+      "sha256": "e739119250f3e2625fcb6342a4eb2c6dc2babb340b2cc8ec821c8ef87b64a9a7"
+    }
+  }
+}

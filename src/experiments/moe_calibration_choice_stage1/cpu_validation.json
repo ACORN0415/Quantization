@@ -1,0 +1,72 @@
+{
+  "status": "PASS",
+  "synthetic_cases": 3,
+  "unique_synthetic_gptq_results": 12,
+  "actual_model_candidates": 0,
+  "original_inputs_unchanged": true,
+  "candidate_order_independence": true,
+  "independent_packing": true,
+  "max_abs_difference": 2.4424906541753444e-15,
+  "rows": [
+    {
+      "case": 0,
+      "damping": 0.01,
+      "max_abs": 1.1102230246251565e-16
+    },
+    {
+      "case": 0,
+      "damping": 0.05,
+      "max_abs": 0.0
+    },
+    {
+      "case": 0,
+      "damping": 0.1,
+      "max_abs": 0.0
+    },
+    {
+      "case": 0,
+      "damping": 1.0,
+      "max_abs": 0.0
+    },
+    {
+      "case": 1,
+      "damping": 0.01,
+      "max_abs": 2.4424906541753444e-15
+    },
+    {
+      "case": 1,
+      "damping": 0.05,
+      "max_abs": 8.881784197001252e-16
+    },
+    {
+      "case": 1,
+      "damping": 0.1,
+      "max_abs": 2.220446049250313e-16
+    },
+    {
+      "case": 1,
+      "damping": 1.0,
+      "max_abs": 0.0
+    },
+    {
+      "case": 2,
+      "damping": 0.01,
+      "max_abs": 2.220446049250313e-16
+    },
+    {
+      "case": 2,
+      "damping": 0.05,
+      "max_abs": 2.220446049250313e-16
+    },
+    {
+      "case": 2,
+      "damping": 0.1,
+      "max_abs": 0.0
+    },
+    {
+      "case": 2,
+      "damping": 1.0,
+      "max_abs": 0.0
+    }
+  ]
+}
