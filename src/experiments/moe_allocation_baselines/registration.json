@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "status": "BASELINES_FIXED_CPU_VERIFIED_REAL_MODEL_NOT_RUN",
+  "decision": "Perform one bounded local allocation diagnostic next; no research-method adoption or whole-model experiment yet",
+  "current_scope": {
+    "gpu_calls": 0,
+    "model_forwards": 0,
+    "model_weights_downloaded": false,
+    "dependency_changes": false
+  },
+  "model": {
+    "id": "allenai/OLMoE-1B-7B-0924",
+    "revision": "6d84c48581ece794365f2b8e9cfb043c68ade9c5",
+    "layer_index_zero_based": 8,
+    "num_experts": 64,
+    "top_k": 8,
+    "dtype": "bfloat16",
+    "norm_topk_prob": false,
+    "routing": "Capture actual reference expert indices and applied gate values; freeze them for A/B/C; never renormalize top-8 weights",
+    "reference_inputs": "Inputs to the selected MoE block from the unmodified BF16 model; eval mode; batch size 1; use_cache false"
+  },
+  "data": {
+    "id": "Salesforce/wikitext",
+    "revision": "b08601e04326c79dfdd32d625aee71d232d685c3",
+    "config": "wikitext-2-raw-v1",
+    "calibration": {
+      "split": "train",
+      "documents": 8,
+      "tokens_per_document": 512
+    },
+    "held_out": {
+      "split": "validation",
+      "documents": 16,
+      "tokens_per_document": 512
+    },
+    "seed": 20261031,
+    "sampling": "Parse articles using top-level WikiText headings; retain articles >=512 tokenizer tokens; seeded article permutation and one seeded 512-token contiguous window per article. No document reuse, exclude cross-split exact document-hash duplicates.",
+    "before_scores": "Freeze document IDs, text and token hashes and window offsets before quantized error collection; never tune using held-out scores",
+    "current_status": "Revision pinned; text/token selection not executed"
+  },
+  "expert_selection": {
+    "count": 4,
+    "available_information": "Calibration routing only; no quantization errors or held-out routing",
+    "rule": "Compute W[e,f]=sum_t g[t,e]*g[t,f] for co-routed experts. Choose the largest-weight pair, then greedily add the expert with largest summed W to the selected set until four. Ties: lowest sorted expert IDs. Sort selected IDs for candidate slots.",
+    "zero_coactivation": "If all pair weights are zero, record absence of cross-term opportunity and end this layer's diagnostic; do not search other layers",
+    "remaining_experts": "BF16; fixed residual offset r0=0 in this first diagnostic. This is a restricted four-expert subproblem, not compression of all 64 experts."
+  },
+  "quantization": {
+    "method": "Independent reference implementation of grouped affine RTN matching the inspected formulation; no new quantizer",
+    "group_size": 128,
+    "bit_options": [
+      2,
+      3,
+      4
+    ],
+    "expert_projections": [
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ],
+    "same_bit_all_three_projections": true,
+    "source_weight_dtype": "bfloat16",
+    "arithmetic": "Freeze BF16 operator order and nearest-even rounding before data collection; preserve stored BF16 scale/zero values",
+    "packed_layout": "32-bit words with floor(32/b) codes per word, column packing, zero tail padding, transpose; BF16 scale and zero per group",
+    "round_trip_gate": "All codes, metadata and dequantized tensors must match the un-packed RTN reference across all 4 experts and 3 precisions. Reject before collecting allocation errors if not.",
+    "inference_scope": "Dequantize the reference packed weights for BF16 expert evaluation. Not GEMQ Triton inference or a compressed-serving throughput measurement.",
+    "full_gemq_execution": "Deferred; existing environment does not satisfy its requirements. No need to install its whole stack for this objective diagnostic."
+  },
+  "allocation": {
+    "multiset": [
+      2,
+      3,
+      3,
+      4
+    ],
+    "candidates": "All 12 unique permutations, sorted lexicographically; same first candidate and traversal for A/B/C",
+    "reference_payload_per_expert_bytes": {
+      "2": 1769472,
+      "3": 2719744,
+      "4": 3342336
+    },
+    "reference_payload_total_bytes": 10551296,
+    "accounting": "Reference code+scale+zero payload only. Count all additional tensor/selection metadata, padding, and common BF16 weights separately before calling deployed candidates equal-byte. File container size is not payload size.",
+    "prohibited_equal_budget_comparison": "All-3-bit candidate has 327680 more reference payload bytes; do not silently compare it as equal-budget",
+    "optimum_scope": "Exhaustive minimum only over these 12 calibration candidates and the specified objective"
+  },
+  "objectives": {
+    "weighted_error": "u[t,e,b]=float64(g[t,e])*(float64(E_quant[t,e,b])-float64(E_BF16[t,e])); expert outputs/gates are captured from the same fixed routing",
+    "A": "mean_t sum_e ||u[t,e,b_e]||^2",
+    "B": "mean_t ||sum_e u[t,e,b_e]||^2, cached residual and squared-norm updates on union of changed experts' affected token rows",
+    "C": "Same as B using precomputed usable expert/precision inner products on co-active tokens",
+    "fixed_offset": "If a later design quantizes other experts, include r0 in B and its linear cross terms in C; this extension is not today's experiment",
+    "implementation_precision": "FP64 CPU reductions; exact formula for cached outputs, not bit-exact native BF16 MoE accumulation",
+    "tie_rule": {
+      "atol": 1e-10,
+      "rtol": 1e-9,
+      "action": "Lexicographically smallest candidate within atol+rtol*abs(best) of minimum; tied changes are not evidence of improved allocation"
+    },
+    "validity": "Audit all 12 B/C scores against independent direct sums; same selected allocation required. Negative scores outside tolerance, mismatches or tie inconsistency invalidate the numerical comparison, not the research hypothesis.",
+    "stream_token_tile": 64,
+    "streaming_allowed_for_B_and_C": true
+  },
+  "held_out": {
+    "selection": "Choose A and B allocations on calibration only; C must select B's allocation",
+    "primary": "Paired per-document mean squared output norm on held-out fixed inputs/routing, using the same FP64 weighted-error definition",
+    "gain": "1-sum_document L_B/sum_document L_A; if denominator is zero, no improvement opportunity",
+    "uncertainty": "10000 paired document bootstrap resamples, seed 20261031, percentile 95% interval; tokens are not independent resampling units",
+    "native_guard": "Also evaluate native BF16 block outputs for the two selected allocations at fixed routing. Report separately; a reversal of improvement ends the quality direction.",
+    "proceed_quality": "At least 5% held-out objective reduction and bootstrap lower bound above 0, with no native BF16 reversal. This is an exploratory resource-allocation threshold, not a perceptual or whole-model quality guarantee.",
+    "failure_scope": "If choices are tied/same or the threshold is not met, end cross-term quality development for this diagnostic; no alternative layer/bitset added to rescue the result"
+  },
+  "cost": {
+    "common_costs": [
+      "Model acquisition/loading",
+      "BF16 input/routing capture",
+      "Expert selection",
+      "Quantization and packing"
+    ],
+    "per_method_costs": [
+      "Reference and quantized expert output collection",
+      "Gate weighting and dtype/layout conversion",
+      "CPU/GPU transfers and any spill/reload",
+      "B residual/cache preparation or C Gram construction",
+      "All 12 candidate evaluations and tie handling"
+    ],
+    "fairness": "Same expert-output bank, candidate order and evaluation count. Permit both methods to stream 64-token tiles. Never charge B with rerunning all experts per candidate or retaining a whole-dataset bank unnecessarily.",
+    "measurement": "Warm up once per method, then three independent paired complete runs in orders B-C, C-B, B-C. Verify actual replayed weighted error data agree. Report one-shot total including common setup and the selection-phase subtotal; no speed claim from lookup time alone.",
+    "memory": "Report process RSS and GPU allocated/reserved peaks separately, with actual memory use and caps distinguished; common model memory included in full-path totals",
+    "proceed_cost": "Same scores/choice, plus >=10% median one-shot wall-time reduction with positive gains in all 3 pairs, or >=20% peak process-RSS reduction with <=5% time penalty and no higher GPU peak. Otherwise do not develop a speed method on this candidate set.",
+    "current_cpu_test": "Correctness only; its small run time is not a cost comparison"
+  },
+  "future_execution_caps": {
+    "wall_minutes": 120,
+    "clock": "From first model/data preparation action, including download, warmup, validation and retries; no automatic extension",
+    "gpu_peak_allocated_GiB": 20,
+    "host_process_RSS_GiB": 48,
+    "incremental_disk_GiB": 20,
+    "timed_pairs": 3,
+    "additional_model_layers": 0,
+    "whole_model_evaluations": 0,
+    "on_cap": "Stop and report completed/invalid/incomplete counts; resource failure is not evidence of no quality gain",
+    "current_status": "Not started"
+  },
+  "next_action": "Implement the local model/input capture and packed RTN round-trip preflight under these fixed baselines. Only after it passes may the bounded real-model diagnostic begin."
+}

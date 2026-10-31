@@ -1,0 +1,54 @@
+{
+  "checked_at_utc": "2026-10-31T07:16:38Z",
+  "scope": "Public paper/configuration/source inspection; no paper implementation executed on GPU",
+  "dpa_moe": {
+    "url": "https://arxiv.org/html/2610.21378v1#A2",
+    "source_version": "2610.21378v1",
+    "experiment": "Qwen3-30B-A3B; 10 WikiText2 test sequences of 4096 tokens",
+    "k_meaning": "number of precision chunks, not selected-expert count",
+    "appendix_B": {
+      "k2_cross_fraction": 0.598,
+      "k2_diag_fraction": 0.402,
+      "k2_spearman": 0.999,
+      "reported_spearman_range": [
+        0.999,
+        1
+      ]
+    },
+    "comparison_axis": "Across routed dispatches at each fixed precision; not same-input, equal-byte mixed-allocation candidate ranking",
+    "remaining_question": "Whether diagonal and exact objectives select materially different equal-byte allocations on held-out inputs",
+    "does_not_establish": "Existing method failure or novelty of computing cross terms",
+    "proposed_diagnostic_not_reproduction": "OLMoE-0924 with RTN differs from DPA SharedScale AnyBCQ and its OLMoE-0125 experiments"
+  },
+  "gemq": {
+    "repository": "https://github.com/jndeng/GEMQ",
+    "revision": "5eb2240cb46d9811bc9f79026100b46f62a7b642",
+    "packing": {
+      "url": "https://github.com/jndeng/GEMQ/blob/5eb2240cb46d9811bc9f79026100b46f62a7b642/gemq/triton_kernels/utils.py#L74",
+      "rule": "int32 words; floor(32/bits) codes per word; pad final word; transpose packed matrix",
+      "three_bit_codes_per_word": 10,
+      "consequence": "Equal nominal average bit width does not guarantee equal actual payload bytes"
+    },
+    "rtn": {
+      "url": "https://github.com/jndeng/GEMQ/blob/5eb2240cb46d9811bc9f79026100b46f62a7b642/gemq/quantizers/rtn.py#L15",
+      "scope": "Per-group affine RTN formulation only; not full GEMQ allocation/router training"
+    },
+    "example_script": {
+      "url": "https://github.com/jndeng/GEMQ/blob/5eb2240cb46d9811bc9f79026100b46f62a7b642/scripts/quantize_olmoe.sh",
+      "issue": "Router fine-tuning enabled in example; must be disabled in the fixed-routing diagnostic"
+    },
+    "requirements": {
+      "url": "https://github.com/jndeng/GEMQ/blob/5eb2240cb46d9811bc9f79026100b46f62a7b642/pyproject.toml#L12",
+      "minima": {
+        "torch": "2.8.0",
+        "triton": "3.4.0",
+        "numpy": "2.2.6",
+        "hqq": "0.2.8",
+        "gemlite": "0.5.1"
+      },
+      "current_environment_compatible": false,
+      "action": "No package/environment changes; initial objective diagnostic can use an independent PyTorch RTN reference without GEMQ's inference stack"
+    },
+    "local_adapter_issue": "Installed transformers 5.20.2 uses stacked OlmoeExperts tensors; do not assume old expert ModuleList adapters work"
+  }
+}
