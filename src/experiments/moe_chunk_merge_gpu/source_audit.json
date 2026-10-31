@@ -1,0 +1,36 @@
+{
+  "repository": "lcj1111/RobustGEMQ",
+  "revision": "fe6fe6dc679495a53795b2a7eed4efb7e655e29c",
+  "files": [
+    {
+      "path": "gemq/triton_kernels/vllm_moe_dispatch.py",
+      "git_blob_sha": "39dc86e364809b94c165e78641953bc5f7f2bc75",
+      "url": "https://github.com/lcj1111/RobustGEMQ/blob/fe6fe6dc679495a53795b2a7eed4efb7e655e29c/gemq/triton_kernels/vllm_moe_dispatch.py",
+      "scope": "Unmodified code executed; dispatch and merge kernels independently counted in CUDA trace"
+    },
+    {
+      "path": "scripts/vllm/check_dispatch_correctness.py",
+      "git_blob_sha": "f3e53645e10a4ef80a4c85bb32d8cd705b3bc274",
+      "url": "https://github.com/lcj1111/RobustGEMQ/blob/fe6fe6dc679495a53795b2a7eed4efb7e655e29c/scripts/vllm/check_dispatch_correctness.py",
+      "scope": "Read only. Existing random merge unit checks exact FP16 equality to original slot-ordered FP32 sum; not rerun"
+    },
+    {
+      "path": "docs/10-concurrent-prefill/report.md",
+      "git_blob_sha": "32ec667c49c176290b1e26f51c333ba625ed7429",
+      "url": "https://github.com/lcj1111/RobustGEMQ/blob/fe6fe6dc679495a53795b2a7eed4efb7e655e29c/docs/10-concurrent-prefill/report.md",
+      "scope": "Read only. Numerical tolerance in model-level report differs from exact merge-unit predicate"
+    },
+    {
+      "path": "gemq/inference/moe_block.py",
+      "git_blob_sha": "f24579a09e5894d00eab5abbba74d625fe2218d1",
+      "url": "https://github.com/lcj1111/RobustGEMQ/blob/fe6fe6dc679495a53795b2a7eed4efb7e655e29c/gemq/inference/moe_block.py",
+      "scope": "Read only. Positive integer chunk_tokens; assignment_limit=chunk_tokens*top_k"
+    },
+    {
+      "path": "gemq/vllm_plugin/quantization.py",
+      "git_blob_sha": "2484ccdfd34e667a1ab7c882531e03b4a3132ebb",
+      "url": "https://github.com/lcj1111/RobustGEMQ/blob/fe6fe6dc679495a53795b2a7eed4efb7e655e29c/gemq/vllm_plugin/quantization.py",
+      "scope": "Read only. Lines 195-199 accept positive chunk_tokens; lines 351-369 construct expert dispatch and chunked merge with assignment_limit=chunk_tokens*top_k"
+    }
+  ]
+}

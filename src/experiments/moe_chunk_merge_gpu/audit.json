@@ -1,0 +1,44 @@
+{
+  "status": "PASS",
+  "checked_at_utc": "2026-10-31T15:42:01.524775+00:00",
+  "elapsed_seconds": 555.524775,
+  "preregistration_commit": "ea3feff",
+  "source_unchanged": true,
+  "raw_files_verified": 44,
+  "output_arrays_verified": 36,
+  "full_array_comparison": true,
+  "agreement": {
+    "matches_original_slot_reference": 20,
+    "matches_correctly_rounded_exact_sum": 16,
+    "merge_only_allclose_passes": 36,
+    "repeat_pairs_bitwise_equal": 18
+  },
+  "merge_launches_by_mode": {
+    "upstream": 28,
+    "slot_buffer": 12,
+    "expert_order": 28
+  },
+  "host_launch_counts": {
+    "stable_count_offsets_kernel": 1,
+    "stable_scatter_dispatch_kernel": 1,
+    "fused_weighted_unpermute_reduce_kernel": 68
+  },
+  "independent_cuda_trace_counts": {
+    "stable_count_offsets_kernel": 1,
+    "stable_scatter_dispatch_kernel": 1,
+    "fused_weighted_unpermute_reduce_kernel": 68
+  },
+  "invalid_or_incomplete_runs": 0,
+  "new_gpu_calls_by_auditor": 0,
+  "files_sha256": {
+    "registration.json": "d5e2888d45ffd777a97fecbb7da035571fcc4b20b37975376433ba7361d117ec",
+    "cpu_reference.json": "17aa372f6f9c9ba1064ac4f28cfe86d3e1c4324846aba6ab52287c6cdf3dee2b",
+    "result.json": "6c9db4beb5fcf6df4b780fdadc78d1d0e4ef614baa2e3f29fcaeb161ae43822b",
+    "calls.json": "34c349e3d72dbea2ad565191658b45e7fa705ec39a706c22618b96f683a726ac",
+    "raw_manifest.json": "90571687a175e7074c5bfbee8fe5109aec096e7372c2527d30451594d787bd63",
+    "cuda_trace.json": "0ce190dd0518d12ab65c4fda5869056f04fc6aa0ce743bf3aaee74fbad4c6d47",
+    "gpu_run.log": "d1e881ed295cbc2093245efc752b91a7e86be612977fa58e6b63b6ac7c511580"
+  },
+  "auditor_sha256": "336076e9775c8ce9392a251c48d003bb280b2ee02a8ab5e03f78492ffbc71d6a",
+  "research_expansion": false
+}

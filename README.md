@@ -38,13 +38,27 @@ MoE 종료 결과의 **사후 설명**도 추가했다. 저장된 보정 평균�
 FP16 결과 `1.0`과 `1.0009765625`의 차이는 **합성 산술 검사**이며 GPU 실행·모델
 품질 결과가 아니다. 전문가 번호순 통일이라는 단순 대조군에서는 두 반례가 사라졌다.
 현재 512토큰 조건의 전체 전문가 출력 버퍼는16 MiB이므로, 직접 보관이 메모리 때문에
-불가능하다는 근거도 없다. **새 양자화 방법 채택은0개이며**, 다음 자원은 인접한 GPU
-실행 검증으로 옮겨 공개 merge 커널과 단순 기준선을 확인하는60분 이내 검사에만
-배정하도록 정했다. 해당 GPU 검사는 아직 실행하지 않았다.
+불가능하다는 근거도 없다. **새 양자화 방법 채택은0개이며**, 당시 제안한 공개 커널의
+60분 이내 GPU 검사는 아래와 같이 완료했다. 이 CPU 검토만으로 연구 분야를
+전환하자는 권고는 채택하지 않는다.
 [후보 비교·구체적 관측·다음 자원 배분](src/experiments/moe_execution_review_20261031/REPORT_KO.txt) ·
 [원문·고정 코드 확인](src/experiments/moe_execution_review_20261031/source_audit.json) ·
 [CPU 반례·기존 routing의 구조 검사](src/experiments/moe_execution_review_20261031/cpu_order_check.json) ·
 [독립 재계산·해시 검증](src/experiments/moe_execution_review_20261031/audit.json).
+
+**공개 MoE merge GPU 재현 완료·확대 종료 (2026-11-01):** 공개 옵션으로 가능한
+네 토큰 합성 입력에서 `chunk_tokens=1`은 `1.0009765625`, `2·4`는 `1.0`을
+반환했다. 이 반례의 정확한 실수 합을 FP16으로 올바르게 반올림한 값은 전자다.
+따라서 합산 순서에 따른 차이를 정확도 저하로 부르지 않는다. 전체 출력을 보관해
+원래 슬롯 순서로 더하면 세 설정 모두 `1.0`, 전문가 번호순으로 통일하면 모두
+`1.0009765625`였다. 두 반례의 출력 배열 36개와 반복 18쌍을 전체 원소 바이트로
+검증했고, 실제 merge 68회와 dispatch 2회의 호출 기록은 CUDA trace와 일치했다.
+전체 모델·서비스는 실행하지 않았다. **기존 값 보존의 실제 요구와 단순 방법의
+감당하기 어려운 비용이 확인되지 않아, 회귀 검사로 마무리하고 새 연구로 확대하지
+않는다.** [결과와 정확성 요구의 구분](src/experiments/moe_chunk_merge_gpu/REPORT_KO.txt) ·
+[독립 감사](src/experiments/moe_chunk_merge_gpu/audit.json) ·
+[시간·자원 상한과 완료 기록](src/experiments/moe_chunk_merge_gpu/completion.json) ·
+[회귀 검사 코드](tools/reproduce_moe_chunk_merge.py).
 
 ## 먼저 읽을 현재 결론
 
