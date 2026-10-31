@@ -1,0 +1,177 @@
+{
+  "started_at_utc": "2026-10-31T18:19:54+00:00",
+  "deadline_utc": "2026-10-31T19:19:54+00:00",
+  "registered_at_utc": "2026-10-31T18:25:17.884182+00:00",
+  "scope": "Very small calibration sample diagnostic: fixed INT4 up projections only. Not research adoption.",
+  "caps": {
+    "total_wall_seconds": 3600,
+    "gpu_stage_wall_seconds": 600,
+    "real_weight_candidates": 20,
+    "cuda_allocated_bytes": 8589934592,
+    "cpu_rss_bytes": 8589934592,
+    "new_disk_bytes": 536870912,
+    "full_model_forwards": 0,
+    "package_installations": 0
+  },
+  "gpu_available_at_start": {
+    "name": "RTX 4090",
+    "memory_used_MiB": 1,
+    "utilization_percent": 0,
+    "compute_processes": 0
+  },
+  "model": "OLMoE-1B-7B-0924",
+  "layer_zero_based": 8,
+  "experts": [
+    43,
+    62,
+    51,
+    17
+  ],
+  "projection": "up half of original fused gate_up_proj; original upper-half output of F.linear is identity reference",
+  "weight_shape": [
+    1024,
+    2048
+  ],
+  "splits": {
+    "fit": [
+      "train_439",
+      "train_306",
+      "train_353",
+      "train_417"
+    ],
+    "choice": [
+      "train_181",
+      "train_222",
+      "train_481",
+      "train_497"
+    ],
+    "evaluation": [
+      "validation_52",
+      "validation_56",
+      "validation_43",
+      "validation_9",
+      "validation_50",
+      "validation_15",
+      "validation_37",
+      "validation_4",
+      "validation_41",
+      "validation_27",
+      "validation_47",
+      "validation_55",
+      "validation_3",
+      "validation_25",
+      "validation_28",
+      "validation_13"
+    ]
+  },
+  "expected_fit_counts": {
+    "43": 40,
+    "62": 261,
+    "51": 287,
+    "17": 394
+  },
+  "expected_choice_counts": {
+    "43": 118,
+    "62": 92,
+    "51": 253,
+    "17": 403
+  },
+  "data_limitations": "Old evaluation documents reused from a different study, not fresh blind data. Expert weights/distributions differ, so expert differences are not causal sample-size effects.",
+  "candidates": [
+    "rtn",
+    "gptq_0.01",
+    "gptq_0.05",
+    "gptq_0.1",
+    "gptq_1.0"
+  ],
+  "format": {
+    "bits": 4,
+    "group_size": 128,
+    "symmetric": true,
+    "signed_codes": false,
+    "code_range": [
+      0,
+      15
+    ],
+    "zero_point": 8,
+    "rounding": "torch.round ties-to-even before adding zero point",
+    "clipping": "unsigned [0,15]; scales from symmetric absmax (bound/7.5)",
+    "scale_storage_dtype": "float32",
+    "zero_storage_dtype": "int32",
+    "weight_compute_dtype": "float32",
+    "native_weight_dtype": "bfloat16",
+    "packing": "original Olive LSB-first uint8 nibbles",
+    "candidate_payload_bytes": 1179648,
+    "actorder": false,
+    "blocksize": 128
+  },
+  "hessian": "FP32 H=2*X.T@X/N, fit routed tokens only. TF32 disabled.",
+  "candidate_isolation": "Every call starts with separate W.clone and H.clone. Original byte hashes checked after every candidate. No candidate consumes previous modified inputs.",
+  "aliases": {
+    "coverage_0.5_percent": "All fit counts exceed 10.24: eligible for GPTQ; paired with fixed gptq_0.01 for main alias table, not a fifth distinct policy. Other dampings similarly alias fixed GPTQ.",
+    "coverage_plus_2K": "All fit counts below 4096: identical to fixed RTN."
+  },
+  "selection": {
+    "input_split": "choice only",
+    "score": "sum FP64 squared projection error over all routed elements; common denominator across policies",
+    "tie_atol": 1e-16,
+    "tie_rtol": 1e-12,
+    "tie_order": "candidate list order",
+    "freeze_before_evaluation": true
+  },
+  "validation": {
+    "cpu": "Independent tiny NumPy sequential GPTQ including rank-deficient/dead-column case, reversed candidate order, independent nibble unpacking. Not real model candidates.",
+    "identity": "all 24 documents x 4 experts; original fused BF16 up output vs separate unquantized up; exact bytes",
+    "packing": "all real candidate codes roundtrip; FP32 decode equals primitive output bytes",
+    "native_tie_relative_sse": 1e-06,
+    "native_tie_absolute_sse": 1e-12
+  },
+  "decision": {
+    "primary": "expert_direct vs common_direct, fixed_rtn and fixed_gptq_0.01",
+    "relative_error_reduction_at_least": 0.05,
+    "bootstrap_document_resamples": 10000,
+    "bootstrap_seed": 20261101,
+    "confidence_interval": [
+      0.025,
+      0.975
+    ],
+    "lower_bound_must_exceed": 0,
+    "native_reduction_must_exceed_tie": true,
+    "scope": "Projection-level selection benefit only; no full-model quality or novelty claim.",
+    "stop": "If common setting or direct selection suffices, close new-selector development. No actual deployment/calibration service budget is specified, so do not declare direct evaluation unaffordable."
+  },
+  "cost_accounting": {
+    "fixed_rtn": "weight access + RTN generation/packing only; no Hessian or other candidate costs",
+    "fixed_gptq": "weight and fit-input access + H collection + one candidate generation/packing",
+    "direct_common_and_expert": "same candidate generation and choice FP64 evaluation pool; report selection reductions separately",
+    "audit_and_evaluation": "identity checks, hashes, extra native BF16 evaluations, heldout evaluation and archive I/O reported as diagnostic overhead",
+    "memory": "overall measured peak only; no full policy isolated memory comparison claimed",
+    "timings": "Single diagnostic execution with explicit synchronization; no speedup significance claim or cold-service latency extrapolation"
+  },
+  "failure_policy": "No damping changes/retries and no silent RTN fallback. Record true failure, stop and investigate validity within cap; do not replace experts or extend candidate set.",
+  "upstream_revision": "1647eb2b589ae8a82b2dbe4429e5fe4335c40092",
+  "source_files": {
+    "tools/vendor/olive_calibration/gptq.py": {
+      "sha256": "f39d557a2fa37afdc03b7b373c2314c3cbd581bb0a9e52368ac1c4c9e7367732",
+      "git_blob_sha": "6ea993260626c58684ec3339200b02db28a1095b"
+    },
+    "tools/vendor/olive_calibration/quant_utils.py": {
+      "sha256": "038cad77b4864700c0b8a4721599b2b4dc0161a381301ce6352e1bc5a3e1256b",
+      "git_blob_sha": "dcd292a8e9186497e9bb4d600bf0d0946535e55f"
+    },
+    "tools/vendor/olive_calibration/LICENSE": {
+      "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+      "git_blob_sha": "9e841e7a26e4eb057b24511e7b92d42b257a80e5"
+    },
+    "tools/moe_calibration_choice_core.py": {
+      "sha256": "c9c551d90515a5b757f6e97c9da3cc5280f0d6711f5fe611837a5a971cd64633"
+    },
+    "tools/run_moe_calibration_choice.py": {
+      "sha256": "f1123148cd69db2610f0663044bc7942aa2228fad03e12b1cfbb246a77435f37"
+    }
+  },
+  "input_files": {
+    "block.pt": "f2690ebab0fca9b5f39364764dbd835d3e222c0d88a0607338b24a7611baa3d8",
+    "captures.pt": "00ecbc881f3584129243994d2adfbf6ddd0e15bd2455ae564b410618136e40e8"
+  }
+}
