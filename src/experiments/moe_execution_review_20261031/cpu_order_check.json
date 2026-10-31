@@ -1,0 +1,1103 @@
+{
+  "checked_at_utc": "2026-10-31T14:53:59.642959+00:00",
+  "scope_sha256": "db5aaad8ea5c0adb734f490984cd30e170cb3c728a11f1804f72c73fedd3d305",
+  "code_sha256": "cb4e016b450a2887ee61a94af673f73fa9147ce2e745f0a6b976a556047eae93",
+  "synthetic": [
+    {
+      "values": [
+        32.0,
+        9.5367431640625e-07,
+        -48.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "gates": [
+        0.375,
+        0.3125,
+        0.25,
+        0.03125,
+        0.015625,
+        0.0078125,
+        0.00390625,
+        0.00390625
+      ],
+      "experts": [
+        0,
+        2,
+        1,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "chunk_local_slot_order": {
+        "1": {
+          "fp32": 2.980232238769531e-07,
+          "fp16": 2.980232238769531e-07,
+          "fp16_little_endian_hex": "0500",
+          "effective_slot_order": [
+            0,
+            2,
+            1,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "2": {
+          "fp32": 2.980232238769531e-07,
+          "fp16": 2.980232238769531e-07,
+          "fp16_little_endian_hex": "0500",
+          "effective_slot_order": [
+            0,
+            2,
+            1,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "4": {
+          "fp32": 0.0,
+          "fp16": 0.0,
+          "fp16_little_endian_hex": "0000",
+          "effective_slot_order": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "8": {
+          "fp32": 0.0,
+          "fp16": 0.0,
+          "fp16_little_endian_hex": "0000",
+          "effective_slot_order": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        }
+      },
+      "canonical_expert_order": {
+        "1": {
+          "fp32": 2.980232238769531e-07,
+          "fp16": 2.980232238769531e-07,
+          "fp16_little_endian_hex": "0500",
+          "effective_slot_order": [
+            0,
+            2,
+            1,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "2": {
+          "fp32": 2.980232238769531e-07,
+          "fp16": 2.980232238769531e-07,
+          "fp16_little_endian_hex": "0500",
+          "effective_slot_order": [
+            0,
+            2,
+            1,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "4": {
+          "fp32": 2.980232238769531e-07,
+          "fp16": 2.980232238769531e-07,
+          "fp16_little_endian_hex": "0500",
+          "effective_slot_order": [
+            0,
+            2,
+            1,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "8": {
+          "fp32": 2.980232238769531e-07,
+          "fp16": 2.980232238769531e-07,
+          "fp16_little_endian_hex": "0500",
+          "effective_slot_order": [
+            0,
+            2,
+            1,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        }
+      },
+      "exact_real_sum": 2.980232238769531e-07,
+      "canonical_changes_original_slot_reference": true
+    },
+    {
+      "values": [
+        32.0,
+        9.5367431640625e-07,
+        -48.0,
+        32.0,
+        0.03125,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "gates": [
+        0.375,
+        0.3125,
+        0.25,
+        0.03125,
+        0.015625,
+        0.0078125,
+        0.00390625,
+        0.00390625
+      ],
+      "experts": [
+        0,
+        2,
+        1,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "chunk_local_slot_order": {
+        "1": {
+          "fp32": 1.000488519668579,
+          "fp16": 1.0009765625,
+          "fp16_little_endian_hex": "013c",
+          "effective_slot_order": [
+            0,
+            2,
+            1,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "2": {
+          "fp32": 1.000488519668579,
+          "fp16": 1.0009765625,
+          "fp16_little_endian_hex": "013c",
+          "effective_slot_order": [
+            0,
+            2,
+            1,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "4": {
+          "fp32": 1.00048828125,
+          "fp16": 1.0,
+          "fp16_little_endian_hex": "003c",
+          "effective_slot_order": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "8": {
+          "fp32": 1.00048828125,
+          "fp16": 1.0,
+          "fp16_little_endian_hex": "003c",
+          "effective_slot_order": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        }
+      },
+      "canonical_expert_order": {
+        "1": {
+          "fp32": 1.000488519668579,
+          "fp16": 1.0009765625,
+          "fp16_little_endian_hex": "013c",
+          "effective_slot_order": [
+            0,
+            2,
+            1,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "2": {
+          "fp32": 1.000488519668579,
+          "fp16": 1.0009765625,
+          "fp16_little_endian_hex": "013c",
+          "effective_slot_order": [
+            0,
+            2,
+            1,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "4": {
+          "fp32": 1.000488519668579,
+          "fp16": 1.0009765625,
+          "fp16_little_endian_hex": "013c",
+          "effective_slot_order": [
+            0,
+            2,
+            1,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "8": {
+          "fp32": 1.000488519668579,
+          "fp16": 1.0009765625,
+          "fp16_little_endian_hex": "013c",
+          "effective_slot_order": [
+            0,
+            2,
+            1,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        }
+      },
+      "exact_real_sum": 1.0004885792732239,
+      "canonical_changes_original_slot_reference": true
+    }
+  ],
+  "routing": {
+    "source": "/home/acorn0415/sfq_data/moe_allocation_stage1/captures.pt",
+    "source_sha256": "00ecbc881f3584129243994d2adfbf6ddd0e15bd2455ae564b410618136e40e8",
+    "documents": [
+      {
+        "document": "train_439",
+        "split": "train",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 64,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 511
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "train_306",
+        "split": "train",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 64,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "train_353",
+        "split": "train",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 61,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 511
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "train_417",
+        "split": "train",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 63,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 510
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "train_181",
+        "split": "train",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 64,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 511
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "train_222",
+        "split": "train",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 63,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 511
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "train_481",
+        "split": "train",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 64,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 511
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "train_497",
+        "split": "train",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 62,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "validation_52",
+        "split": "validation",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 63,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 510
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "validation_56",
+        "split": "validation",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 64,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "validation_43",
+        "split": "validation",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 63,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 511
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "validation_9",
+        "split": "validation",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 64,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 509
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "validation_50",
+        "split": "validation",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 64,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 511
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "validation_15",
+        "split": "validation",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 64,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 511
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "validation_37",
+        "split": "validation",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 64,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "validation_4",
+        "split": "validation",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 63,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 510
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "validation_41",
+        "split": "validation",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 63,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 511
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "validation_27",
+        "split": "validation",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 62,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 511
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 511
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 511
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "validation_47",
+        "split": "validation",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 63,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 510
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "validation_55",
+        "split": "validation",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 62,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 511
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "validation_3",
+        "split": "validation",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 61,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 511
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "validation_25",
+        "split": "validation",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 62,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "validation_28",
+        "split": "validation",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 62,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      },
+      {
+        "document": "validation_13",
+        "split": "validation",
+        "tokens": 512,
+        "top_k": 8,
+        "active_experts": 63,
+        "full_fp16_expert_output_bytes": 16777216,
+        "fp32_output_accumulator_bytes": 4194304,
+        "conditions": [
+          {
+            "assignment_capacity": 128,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 512,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 1024,
+            "split_tokens": 512,
+            "tokens_with_changed_slot_order": 512
+          },
+          {
+            "assignment_capacity": 4096,
+            "split_tokens": 0,
+            "tokens_with_changed_slot_order": 0
+          }
+        ]
+      }
+    ],
+    "aggregate": [
+      {
+        "assignment_capacity": 128,
+        "tokens": 12288,
+        "split_tokens": 12288,
+        "tokens_with_changed_slot_order": 12287
+      },
+      {
+        "assignment_capacity": 512,
+        "tokens": 12288,
+        "split_tokens": 12288,
+        "tokens_with_changed_slot_order": 12287
+      },
+      {
+        "assignment_capacity": 1024,
+        "tokens": 12288,
+        "split_tokens": 12288,
+        "tokens_with_changed_slot_order": 12265
+      },
+      {
+        "assignment_capacity": 4096,
+        "tokens": 12288,
+        "split_tokens": 0,
+        "tokens_with_changed_slot_order": 0
+      }
+    ],
+    "limitation": "BF16 fixed-routing captures from the closed allocation study; not RobustGEMQ routing, not a quantized serving workload; no expert outputs evaluated"
+  },
+  "gpu_calls": 0,
+  "model_forwards": 0,
+  "elapsed_seconds": 0.7327987549942918
+}

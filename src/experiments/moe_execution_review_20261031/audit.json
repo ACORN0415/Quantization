@@ -1,0 +1,24 @@
+{
+  "elapsed_seconds": 1054.339505,
+  "scope_cap_seconds": 2700,
+  "independent_python_chunk_enumeration_counts": {
+    "128": 12287,
+    "512": 12287,
+    "1024": 12265,
+    "4096": 0
+  },
+  "same_cpu_scope_and_code_hashes": true,
+  "new_gpu_calls": 0,
+  "new_model_forwards": 0,
+  "research_methods_adopted": 0,
+  "next_resource_decision": "At most 60 minutes for one public GPU merge reproduction and simple numerical-contract baselines; not a new quantization method",
+  "files_sha256": {
+    "scope.json": "db5aaad8ea5c0adb734f490984cd30e170cb3c728a11f1804f72c73fedd3d305",
+    "source_audit.json": "268a67bf46ca8f6bfaa237a3dbbeb8d28346b5dcaee57b6b8e1d8e9552f3d8b8",
+    "cpu_order_check.json": "74cd620a28a6f36a1b15c2509d3edd34b178118e38aa209d54a393190408a539",
+    "REPORT_KO.txt": "f52c56a38932f2874bda85ae14d1c424dfd41e5db2ea9f1b9ee630de7cf66b2e"
+  },
+  "code_sha256": "cb4e016b450a2887ee61a94af673f73fa9147ce2e745f0a6b976a556047eae93",
+  "cpu_validation_completed_at_utc": "2026-10-31T14:59:50.416179+00:00",
+  "completed_at_utc": "2026-10-31T15:01:02.339505+00:00"
+}

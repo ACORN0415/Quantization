@@ -1,0 +1,135 @@
+{
+  "checked_at_utc": "2026-10-31 14:57:22 UTC",
+  "scope": "Source inspection only; no external implementation executed",
+  "code_sources": [
+    {
+      "id": "gemq",
+      "repo": "jndeng/GEMQ",
+      "revision": "5eb2240cb46d9811bc9f79026100b46f62a7b642",
+      "path": "gemq/inference/moe_block.py",
+      "lines": [
+        763,
+        858
+      ],
+      "observation": "OLMoE n-token path loops over active experts and invokes three quantized GEMMs per active expert. Single-token path uses fused expert projections.",
+      "git_blob_sha": "3b2a62443b254069c7569ce90545c044adf88b29",
+      "url": "https://github.com/jndeng/GEMQ/blob/5eb2240cb46d9811bc9f79026100b46f62a7b642/gemq/inference/moe_block.py#L763"
+    },
+    {
+      "id": "robust_grouped",
+      "repo": "lcj1111/RobustGEMQ",
+      "revision": "fe6fe6dc679495a53795b2a7eed4efb7e655e29c",
+      "path": "gemq/triton_kernels/mixedbit_moe_prefill.py",
+      "lines": [
+        87,
+        449
+      ],
+      "observation": "Already implements variable-M mixed-bit grouped GEMM, fused gate/up activation, deterministic full and chunk reductions.",
+      "git_blob_sha": "77a4c22a726fc5b0d9f6c8016cd92e4da00bdc19",
+      "url": "https://github.com/lcj1111/RobustGEMQ/blob/fe6fe6dc679495a53795b2a7eed4efb7e655e29c/gemq/triton_kernels/mixedbit_moe_prefill.py#L87"
+    },
+    {
+      "id": "robust_dispatch",
+      "repo": "lcj1111/RobustGEMQ",
+      "revision": "fe6fe6dc679495a53795b2a7eed4efb7e655e29c",
+      "path": "gemq/triton_kernels/vllm_moe_dispatch.py",
+      "lines": [
+        111,
+        172
+      ],
+      "observation": "Each call visits slots in ascending order, but masks out assignments outside that expert-sorted chunk and carries a FP32 accumulator between chunks. This alone does not preserve global slot order across chunk sizes.",
+      "git_blob_sha": "39dc86e364809b94c165e78641953bc5f7f2bc75",
+      "url": "https://github.com/lcj1111/RobustGEMQ/blob/fe6fe6dc679495a53795b2a7eed4efb7e655e29c/gemq/triton_kernels/vllm_moe_dispatch.py#L111"
+    },
+    {
+      "id": "robust_checks",
+      "repo": "lcj1111/RobustGEMQ",
+      "revision": "fe6fe6dc679495a53795b2a7eed4efb7e655e29c",
+      "path": "scripts/vllm/check_dispatch_correctness.py",
+      "lines": [
+        60,
+        102
+      ],
+      "observation": "Randomized 19-token combine test checks FP16 equality to a reference. No inference about all inputs follows from that finite test.",
+      "git_blob_sha": "f3e53645e10a4ef80a4c85bb32d8cd705b3bc274",
+      "url": "https://github.com/lcj1111/RobustGEMQ/blob/fe6fe6dc679495a53795b2a7eed4efb7e655e29c/scripts/vllm/check_dispatch_correctness.py#L60"
+    },
+    {
+      "id": "robust_chunk_report",
+      "repo": "lcj1111/RobustGEMQ",
+      "revision": "fe6fe6dc679495a53795b2a7eed4efb7e655e29c",
+      "path": "docs/10-concurrent-prefill/report.md",
+      "lines": [
+        1,
+        65
+      ],
+      "observation": "Documents workspace chunking and numerical tolerance. Its public chunk_tokens option is multiplied by top_k to obtain an assignment limit. Does not establish a promise of bitwise invariance across chunk settings.",
+      "git_blob_sha": "32ec667c49c176290b1e26f51c333ba625ed7429",
+      "url": "https://github.com/lcj1111/RobustGEMQ/blob/fe6fe6dc679495a53795b2a7eed4efb7e655e29c/docs/10-concurrent-prefill/report.md#L1"
+    },
+    {
+      "id": "megatron",
+      "repo": "NVIDIA/Megatron-LM",
+      "revision": "dda809cad59315fcb304bb5e8a36ea30880f3753",
+      "path": "megatron/core/inference/moe/batch_invariant.py",
+      "lines": [
+        44,
+        58
+      ],
+      "observation": "Existing batch-invariant BF16 grouped-GEMM wrapper and rounding-aware MoE helpers; broad MoE determinism is not an untouched topic.",
+      "git_blob_sha": "305b8602d071dc665461620c6283d17b67ce41fd",
+      "url": "https://github.com/NVIDIA/Megatron-LM/blob/dda809cad59315fcb304bb5e8a36ea30880f3753/megatron/core/inference/moe/batch_invariant.py#L44"
+    },
+    {
+      "id": "vosti",
+      "repo": "QDelta/Vosti",
+      "revision": "347975fb658a7d073ee9788dc860a582949121a3",
+      "path": "README.md",
+      "lines": [
+        1,
+        39
+      ],
+      "observation": "Verified deterministic serving engine; README lists MoE as unsupported. Missing support alone is not evidence of research novelty.",
+      "git_blob_sha": "498077d1f57b8463f58615465ae770384fba75f8",
+      "url": "https://github.com/QDelta/Vosti/blob/347975fb658a7d073ee9788dc860a582949121a3/README.md#L1"
+    }
+  ],
+  "primary_literature": [
+    {
+      "id": "mxmoe",
+      "url": "https://arxiv.org/html/2505.05799v1#S4.SS3",
+      "finding": "Hardware-aware mixed precision allocation and heterogeneous Group-GEMM generation already address precision-dependent scheduling."
+    },
+    {
+      "id": "da_moe",
+      "url": "https://arxiv.org/html/2607.23099v1",
+      "finding": "Routing-distribution-aware kernel dispatch already exists; no general adaptive-dispatch novelty claim."
+    },
+    {
+      "id": "monomoe",
+      "url": "https://arxiv.org/html/2609.04244v1",
+      "finding": "Quantized MoE decode launch/padding overhead already targeted by persistent fused execution; H200 results not a 4090 baseline."
+    },
+    {
+      "id": "vllm_consistency",
+      "url": "https://vllm-project.github.io/2026/10/14/train-inference-consistency.html",
+      "finding": "Existing low-precision MoE consistency work aligns quantization, GEMMs and merge order. No claim that quantized MoE consistency is new."
+    },
+    {
+      "id": "vosti",
+      "url": "https://arxiv.org/html/2609.38981v1#S7",
+      "finding": "System-level deterministic inference formalized and verified; MoE expansion is discussed explicitly."
+    },
+    {
+      "id": "checker_mutation",
+      "url": "https://arxiv.org/abs/2609.22220",
+      "finding": "Kernel-checker adequacy/mutation analysis already investigated; moving to GPU validation does not by itself establish a novel topic."
+    }
+  ],
+  "limitations": [
+    "No independent reproduction of published speedups",
+    "No exhaustive novelty claim",
+    "CPU scalar arithmetic emulates the reviewed merge order but is not CUDA execution",
+    "No model-quality or runtime-speedup result from this review"
+  ]
+}
