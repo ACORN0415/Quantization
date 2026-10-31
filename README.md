@@ -60,6 +60,12 @@ FP16 결과 `1.0`과 `1.0009765625`의 차이는 **합성 산술 검사**이며 
 [시간·자원 상한과 완료 기록](src/experiments/moe_chunk_merge_gpu/completion.json) ·
 [회귀 검사 코드](tools/reproduce_moe_chunk_merge.py).
 
+보존 자료는 `python tools/verify_moe_merge_record.py`로 언제든 CPU에서 재검증할 수
+있다. 결과는 표준 출력으로만 내보내며 기존 `audit.json`과 `completion.json`을
+덮어쓰지 않는다. 시간 상한은 저장된 원래 실행·완료 시각으로 검사한다. 기존 감사와
+완료 기록의 코드 해시는 당시 버전의 해시이며, 이후 읽기 전용 수정의 해시는 재검증
+출력에 별도로 표시한다. 새 GPU 실행 코드의 시간 제한은 그대로 유지한다.
+
 ## 먼저 읽을 현재 결론
 
 | 질문 | 현재 답 | 근거의 범위 |

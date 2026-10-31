@@ -1,4 +1,8 @@
-"""Audit saved merge outputs with NumPy/Fraction; never initializes CUDA."""
+"""Read-only audit of saved merge outputs; prints JSON and never initializes CUDA.
+
+The registered deadline applies to the recorded experiment, not to this audit.
+The original audit.json and completion.json remain historical records.
+"""
 from collections import Counter
 from datetime import datetime, timezone
 from fractions import Fraction
@@ -17,11 +21,30 @@ def digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def main():
+def validate_recorded_window(reg, result, completion):
+    """Check the original run's timestamps without consulting the current clock."""
+    start = datetime.fromisoformat(reg['started_at_utc'].replace('Z','+00:00'))
+    deadline = datetime.fromisoformat(reg['deadline_utc'].replace('Z','+00:00'))
+    gpu_start = datetime.fromisoformat(result['started_at_utc'])
+    gpu_end = datetime.fromisoformat(result['completed_at_utc'])
+    end = datetime.fromisoformat(completion['completed_at_utc'])
+    assert completion['status'] == 'complete'
+    assert datetime.fromisoformat(completion['started_at_utc']) == start
+    assert start <= gpu_start <= gpu_end <= end < deadline, 'Recorded experiment exceeded its time window'
+    elapsed = (end-start).total_seconds()
+    assert elapsed < reg['caps']['total_wall_seconds']
+    assert abs(elapsed-completion['elapsed_seconds_including_preparation_execution_audit_report']) < 1e-6
+    return dict(started_at_utc=start.isoformat(), completed_at_utc=end.isoformat(),
+                deadline_utc=deadline.isoformat(), elapsed_seconds=elapsed, cap_met=True)
+
+
+def audit_saved_record():
     reg = json.loads((RECORD/'registration.json').read_text())
     result = json.loads((RECORD/'result.json').read_text())
     calls = json.loads((RECORD/'calls.json').read_text())
     manifest = json.loads((RECORD/'raw_manifest.json').read_text())
+    completion = json.loads((RECORD/'completion.json').read_text())
+    recorded_window = validate_recorded_window(reg, result, completion)
     assert result['status'] == 'PASS'
     assert result['regression_code_sha256'] == digest(ROOT/'tools/reproduce_moe_chunk_merge.py')
     assert result['registration_sha256'] == digest(RECORD/'registration.json')
@@ -114,10 +137,10 @@ def main():
     assert result['gpu_stage_wall_seconds'] < reg['caps']['gpu_stage_wall_seconds']
     assert result['model_forwards'] == 0
     now = datetime.now(timezone.utc)
-    start = datetime.fromisoformat(reg['started_at_utc'].replace('Z','+00:00'))
-    assert now.timestamp() < datetime.fromisoformat(reg['deadline_utc'].replace('Z','+00:00')).timestamp()
-    files = ['registration.json','cpu_reference.json','result.json','calls.json','raw_manifest.json','cuda_trace.json','gpu_run.log']
-    audit = dict(status='PASS',checked_at_utc=now.isoformat(),elapsed_seconds=(now-start).total_seconds(),
+    files = ['registration.json','cpu_reference.json','result.json','calls.json','raw_manifest.json','cuda_trace.json','gpu_run.log',
+             'audit.json','completion.json']
+    audit = dict(status='PASS',checked_at_utc=now.isoformat(),read_only=True,
+                 recorded_experiment_window=recorded_window,
                  preregistration_commit='ea3feff', source_unchanged=True, raw_files_verified=len(manifest),
                  output_arrays_verified=36, full_array_comparison=True, agreement=dict(agreement),
                  merge_launches_by_mode=dict(Counter(c['context']['mode'] for c in merges)),
@@ -125,8 +148,11 @@ def main():
                  invalid_or_incomplete_runs=0,new_gpu_calls_by_auditor=0,
                  files_sha256={f:digest(RECORD/f) for f in files},
                  auditor_sha256=digest(__file__),research_expansion=False)
-    (RECORD/'audit.json').write_text(json.dumps(audit,indent=2)+'\n')
-    print(json.dumps(audit,indent=2))
+    return audit
+
+
+def main():
+    print(json.dumps(audit_saved_record(),indent=2))
 
 
 if __name__ == '__main__':
