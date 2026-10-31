@@ -1,0 +1,111 @@
+{
+  "date": "2026-10-31",
+  "status": "proposal_only_no_gpu_started",
+  "correction": {
+    "scope": "앞선 45분 조사는 두 후보의 현재 정의만 종료했다. 연구 전체의 종료가 아니다.",
+    "lambda": "λ1 자체는 S9 사전 등록에 들어 있던 기준값이다. 이번 결과에서 λ1이 좋았다는 사실을 새 입력·모델에도 충분한 사전 해결책이라고 해석한 것이 과했다.",
+    "memory": "선할당 제거는 해당 P3 하네스의 OOM 해결이다. 모든 압축 메모리 문제가 해결됐다는 뜻이 아니다.",
+    "missing_responsibility": "후보 배제 이후 다음 자원 배분을 제시하지 않은 점을 보완한다."
+  },
+  "resource_recommendation": {
+    "direction": "새 저비트 양자화기·λ 선택기 개발에서, 현재 실행 가능한 생성 모델의 GPU attention 실행 선택 분석으로 초점을 옮긴다.",
+    "claim": "연구 주제 채택이나 신규성 확보가 아니라 인접 분야의 한 가지 의사결정 문제를 확인하는 투자 제안.",
+    "why": [
+      "현재 λ 자료에서는 사후에 프롬프트별 최선의 설정을 고르더라도 평균 개선 여지가 주체 일관성 0.00387, MUSIQ 0.734점이다. 이 상한은 관측한 입력·설정 표 안에서만 성립한다.",
+      "2개 보정·8개 평가의 회고 분할에서 실제 생성 기반 단순 선택이 고정 λ1보다 나았던 분할은 없었다. 이미 본 자료이므로 외부 일반화 증거는 아니다.",
+      "기존 P3 fused λ 실행 경로의 커널 소스를 현재 확인한 작업 사본에서 찾지 못했다. 현 src 재구현은 바이트 코드·BF16 attention 경로라 같은 λ 실험의 대체물로 간주할 수 없다.",
+      "반면 현재 QVG 경로는 RTX 4090에서 이미 실행했고, self-attention 구간 시간이 약 11.24초로 관측됐다. 이는 선택 실패의 증거는 아니지만 성능 선택을 점검할 실용적 동기다.",
+      "단일 24 GiB GPU로 제한된 attention 연산의 실행·수치·시간을 반복 검사할 수 있다. 저비트 방법의 여러 모델·긴 생성 품질 검증보다 초기 확인 비용이 작다. 양자화 분야 자체가 막혔다는 판단은 아니다."
+    ]
+  },
+  "one_page": {
+    "1_who_decides_what": {
+      "actor": "생성 모델을 RTX 4090에 배포하는 추론 엔지니어",
+      "decision": "Q 길이가 고정되고 K 길이가 늘어나는 self-attention에서, 같은 의미의 연산을 수행하는 실행 경로를 선택한다.",
+      "objective": "호출 준비·레이아웃 변환·초기 실행·선택 측정 비용을 포함한 누적 경과시간을 줄인다.",
+      "boundary": "현재 사용 가능한 비희소 BF16 attention 경로에 한정. 새 압축법·희소 커널·fused 코덱을 만들지 않는다."
+    },
+    "2_information_at_decision": {
+      "allowed": [
+        "Q/K/V 형상·dtype·stride",
+        "GPU 모델과 torch/flash-attn 버전",
+        "mask·scale·dropout 의미",
+        "알려진 생성 스케줄에서 얻는 호출 수",
+        "예산 내에서 실제로 측정한 준비·호출 시간"
+      ],
+      "not_allowed": [
+        "선택 평가에 사용할 후속 호출의 측정 결과",
+        "최종 생성 품질을 알고 있었던 것처럼 사용하는 정보",
+        "사후 가장 빨랐던 경로를 배포 가능한 선택기라고 부르는 것"
+      ]
+    },
+    "3_simplest_strong_baselines": [
+      {
+        "method": "현재 QVG의 FlashAttention-2 경로 고정",
+        "selection_cost": "추가 후보 비교 없음. 현재 wrapper 준비·변환 비용은 경과시간에 포함."
+      },
+      {
+        "method": "PyTorch 2.6 SDPA 자동 선택",
+        "selection_cost": "라이브러리 선택·준비 비용 포함. 외부 flash-attn과 같은 구현이라고 가정하지 않음."
+      },
+      {
+        "method": "지원되는 경로를 처음 몇 번 직접 측정하고 형상별로 결과 보관",
+        "selection_cost": "모든 후보의 워밍업·측정·변환 비용을 합산. 이후 호출에서 회수하는지 계산."
+      }
+    ],
+    "4_evidence_and_cheapest_check": {
+      "evidence_for_importance": "기존 profile_B.json의 self-attention 구간 11.2374초 / 전체 생성 24.6260초. 단순 비율이며 다른 구간과 합산하거나 전체 가속 상한으로 쓰지 않음.",
+      "evidence_simple_baselines_fail": "아직 없다. 현재 wrapper는 flash-attn을 사용할 수 있으면 그것을 우선하지만, 그것이 느리다는 증거는 아니다.",
+      "minimal_check": "현재 생성 스케줄에서 얻는 네 K 길이로 같은 의미의 attention 연산을 비교하고, 실제 호출 수를 반영해 준비 비용 포함 선택 손해를 계산한다.",
+      "shapes": {
+        "batch": 1,
+        "q_tokens": 4680,
+        "k_tokens": [
+          4680,
+          18720,
+          37440,
+          56160
+        ],
+        "heads": 12,
+        "head_dim": 128,
+        "dtype": "bfloat16",
+        "causal": false,
+        "dropout": 0,
+        "padding": "없음; 실제 호출 조건과 맞는지 먼저 확인"
+      },
+      "implementation_candidates": [
+        "현재 외부 FlashAttention-2 wrapper",
+        "명시적으로 요청한 SDPA FlashAttention 경로",
+        "명시적으로 요청한 SDPA efficient attention 경로"
+      ],
+      "auto_policy": "SDPA 자동 선택은 별도의 정책으로 측정하고 실제 호출된 커널을 기록한다. 지원하지 않는 경로는 실패로 기록하며 조용한 fallback을 성공으로 세지 않는다.",
+      "timing_design": "최초 호출과 워밍업 후 호출을 나눠 기록. 경로별 5회 워밍업 후 20회 측정, 실행 순서를 교차. 전체 wrapper의 CUDA 이벤트 시간과 동기화한 경과시간을 구분. 서로 다른 측정 묶음으로 선택과 평가를 나눈다.",
+      "correctness": "작은 입력에서 FP32 수학 기준과 mask·scale·dropout 의미 및 유한 출력을 먼저 검사. BF16 비교 기준 rtol=0.01, atol=0.01을 결과 전에 고정하고 실패 시 완화하지 않음. 큰 입력에서도 같은 입력의 경로 간 오차를 기록. 이 검사는 생성 영상의 품질 동등성 검사가 아니다.",
+      "costs": "합성 입력의 크기·배치·stride를 실제 경로에 맞춘 작은 연산 검사다. 실제 Q/K/V 전체 자료의 검증 또는 전체 생성 성능을 재현했다고 표현하지 않는다.",
+      "continue_gate": "기본 선택에서 호출 수로 가중한 누적 attention 경과시간 손해가 5%를 넘고 반복 측정 잡음보다 크며, 짧은 실측 선택도 초기 측정 비용을 포함하면 그 손해를 5% 이내로 줄이지 못하는 조건이 확인될 때만 실행 선택 문제의 후속 검토.",
+      "threshold_note": "5%는 자원 투자 판단용 기준이며 논문에서 검증된 지각 품질 기준이나 전체 생성 가속률이 아니다.",
+      "stop_gate": "고정 경로나 짧은 실측 선택으로 충분하면 해당 조건은 구현 선택으로 정리. 한 경로가 모두 우세하면 고정하면 되므로 복잡한 선택기를 만들지 않음.",
+      "inconclusive_gate": "연산 의미 불일치·지원 불가·수치 검사 실패·시간 상한 도달이면 미결로 보고하고 커널 이식을 자동으로 시작하지 않음."
+    }
+  },
+  "next_resource_budget": {
+    "cpu_preparation_minutes": 60,
+    "gpu_microbenchmark_minutes": 30,
+    "starts": "각 단계 첫 작업 시각",
+    "includes": "기존 구현 연결, 정확성 검사, 워밍업, 준비·선택 비용과 반복 타이밍, 결과 정리. 전체 상한 90분.",
+    "new_model_generations": 0,
+    "large_capture_files": 0,
+    "implementation_guard": "현재 검증된 QVG 소스를 직접 수정하지 않고 별도 벤치에서 호출. 신규 커널·압축법 구현은 범위 밖.",
+    "current_turn_gpu_runs": 0,
+    "current_turn_status": "자료 확인과 계획 제출까지만 수행. 새 GPU 연산은 시작하지 않음."
+  },
+  "sources": {
+    "baseline_lambda": "문서/지시서/S9_C1_lambda_prereg.md",
+    "local_reconstruction": "src/docs/RECONSTRUCTION_PROTOCOL.md",
+    "available_qvg_revision": "0601468f2dbba6a17ac7086faec6d41527cad188",
+    "qvg_attention": "https://github.com/svg-project/Quant-VideoGen/blob/0601468f2dbba6a17ac7086faec6d41527cad188/experiments/Self-Forcing/wan/modules/attention.py",
+    "pytorch": "https://docs.pytorch.org/docs/2.6/generated/torch.nn.functional.scaled_dot_product_attention.html",
+    "profile": "src/experiments/kv_reuse_stage1/profile_B.json",
+    "environment": "src/experiments/kv_reuse_stage1/environment.json"
+  }
+}

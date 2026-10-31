@@ -1,0 +1,5169 @@
+{
+  "checked_at": "2026-10-31T13:31:08.938628+09:00",
+  "design": "회고적 표 재생 분석, 새 GPU 실행 없음",
+  "selection_rule": "보정 프롬프트의 평균 subject_consistency 최대인 설정 하나를 고른다. 동률이면 배열 순서로 λ1 우선. 평가 프롬프트의 점수는 그 분할의 선택에 넣지 않는다.",
+  "options": [
+    "int2_l1",
+    "int2_l0.5",
+    "int2_l2",
+    "int2_l4"
+  ],
+  "analysis_unit": "프롬프트 10개, seed 0, 단일 모델·경로. 겹치는 45/210개 분할은 독립 표본 수가 아니다.",
+  "limitations": [
+    "분석자는 이미 전체 표를 봤으므로 미사용 평가나 새로운 일반화 검증이라고 부르지 않는다.",
+    "생성 비용은 과거 실행 시간 합이며 평가 모델 실행·자료 처리 비용을 제외한다.",
+    "설정 선택 비용이 입력 수만큼 반복 발생한다고 가정하지 않는다. 배포 묶음당 보정 1회 비용이다.",
+    "사후 최선 설정과의 차이는 관측 표 안의 개선 여지이며 미관측 입력·설정의 상한이 아니다."
+  ],
+  "summaries": {
+    "2": {
+      "n_splits": 45,
+      "selected_counts": {
+        "int2_l1": 36,
+        "int2_l0.5": 9
+      },
+      "positive_subject_splits": 0,
+      "mean_subject_delta": -0.0032457230492464926,
+      "mean_musiq_delta": -0.9334475683787515,
+      "generation_only_calibration_cost_range_s": [
+        576.8569142818451,
+        589.6580488681793
+      ]
+    },
+    "4": {
+      "n_splits": 210,
+      "selected_counts": {
+        "int2_l1": 186,
+        "int2_l0.5": 24
+      },
+      "positive_subject_splits": 0,
+      "mean_subject_delta": -0.002199833040567722,
+      "mean_musiq_delta": -0.5782491026551817,
+      "generation_only_calibration_cost_range_s": [
+        1153.797792673111,
+        1166.7709131240845
+      ]
+    }
+  },
+  "observed_table_per_prompt_best_mean_advantage": {
+    "subject": 0.0038712940088683643,
+    "musiq": 0.7336535862513955,
+    "note": "두 지표의 최선 설정은 다를 수 있어 동시에 달성 가능한 이득으로 읽지 않음."
+  },
+  "splits": {
+    "2": [
+      {
+        "calibration_indices": [
+          0,
+          1
+        ],
+        "evaluation_indices": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 589.6580488681793
+      },
+      {
+        "calibration_indices": [
+          0,
+          2
+        ],
+        "evaluation_indices": [
+          1,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 589.5308787822723
+      },
+      {
+        "calibration_indices": [
+          0,
+          3
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 589.3704597949982
+      },
+      {
+        "calibration_indices": [
+          0,
+          4
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 589.4401648044586
+      },
+      {
+        "calibration_indices": [
+          0,
+          5
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          4,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 589.4723505973816
+      },
+      {
+        "calibration_indices": [
+          0,
+          6
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 589.4580335617065
+      },
+      {
+        "calibration_indices": [
+          0,
+          7
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.015650259184410723,
+        "musiq_delta_vs_fixed": -4.694134757632303,
+        "calibration_generation_seconds": 589.4233305454254
+      },
+      {
+        "calibration_indices": [
+          0,
+          8
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 589.4079129695892
+      },
+      {
+        "calibration_indices": [
+          0,
+          9
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 589.3768196105957
+      },
+      {
+        "calibration_indices": [
+          1,
+          2
+        ],
+        "evaluation_indices": [
+          0,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 577.2985625267029
+      },
+      {
+        "calibration_indices": [
+          1,
+          3
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 577.1381435394287
+      },
+      {
+        "calibration_indices": [
+          1,
+          4
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 577.2078485488892
+      },
+      {
+        "calibration_indices": [
+          1,
+          5
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          4,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 577.2400343418121
+      },
+      {
+        "calibration_indices": [
+          1,
+          6
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          4,
+          5,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 577.2257173061371
+      },
+      {
+        "calibration_indices": [
+          1,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.015263849741689123,
+        "musiq_delta_vs_fixed": -4.136026246207102,
+        "calibration_generation_seconds": 577.191014289856
+      },
+      {
+        "calibration_indices": [
+          1,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 577.1755967140198
+      },
+      {
+        "calibration_indices": [
+          1,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 577.1445033550262
+      },
+      {
+        "calibration_indices": [
+          2,
+          3
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 577.0109734535217
+      },
+      {
+        "calibration_indices": [
+          2,
+          4
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 577.0806784629822
+      },
+      {
+        "calibration_indices": [
+          2,
+          5
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          4,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 577.1128642559052
+      },
+      {
+        "calibration_indices": [
+          2,
+          6
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          4,
+          5,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 577.0985472202301
+      },
+      {
+        "calibration_indices": [
+          2,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.016724214697587128,
+        "musiq_delta_vs_fixed": -4.009759653182258,
+        "calibration_generation_seconds": 577.063844203949
+      },
+      {
+        "calibration_indices": [
+          2,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          4,
+          5,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 577.0484266281128
+      },
+      {
+        "calibration_indices": [
+          2,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 577.0173332691193
+      },
+      {
+        "calibration_indices": [
+          3,
+          4
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 576.920259475708
+      },
+      {
+        "calibration_indices": [
+          3,
+          5
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          4,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 576.952445268631
+      },
+      {
+        "calibration_indices": [
+          3,
+          6
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          4,
+          5,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 576.9381282329559
+      },
+      {
+        "calibration_indices": [
+          3,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          4,
+          5,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.01610300852541599,
+        "musiq_delta_vs_fixed": -4.89459968748547,
+        "calibration_generation_seconds": 576.9034252166748
+      },
+      {
+        "calibration_indices": [
+          3,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          4,
+          5,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 576.8880076408386
+      },
+      {
+        "calibration_indices": [
+          3,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 576.8569142818451
+      },
+      {
+        "calibration_indices": [
+          4,
+          5
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 577.0221502780914
+      },
+      {
+        "calibration_indices": [
+          4,
+          6
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 577.0078332424164
+      },
+      {
+        "calibration_indices": [
+          4,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.015243030412332895,
+        "musiq_delta_vs_fixed": -5.1552265030997155,
+        "calibration_generation_seconds": 576.9731302261353
+      },
+      {
+        "calibration_indices": [
+          4,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 576.9577126502991
+      },
+      {
+        "calibration_indices": [
+          4,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 576.9266192913055
+      },
+      {
+        "calibration_indices": [
+          5,
+          6
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 577.0400190353394
+      },
+      {
+        "calibration_indices": [
+          5,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.017597029041949527,
+        "musiq_delta_vs_fixed": -5.1342024349031,
+        "calibration_generation_seconds": 577.0053160190582
+      },
+      {
+        "calibration_indices": [
+          5,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 576.989898443222
+      },
+      {
+        "calibration_indices": [
+          5,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 576.9588050842285
+      },
+      {
+        "calibration_indices": [
+          6,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          8,
+          9
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.014029330352411384,
+        "musiq_delta_vs_fixed": -4.307539167858306,
+        "calibration_generation_seconds": 576.9909989833832
+      },
+      {
+        "calibration_indices": [
+          6,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 576.975581407547
+      },
+      {
+        "calibration_indices": [
+          6,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 576.9444880485535
+      },
+      {
+        "calibration_indices": [
+          7,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          9
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.01820087103518625,
+        "musiq_delta_vs_fixed": -5.146751517341251,
+        "calibration_generation_seconds": 576.9408783912659
+      },
+      {
+        "calibration_indices": [
+          7,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.01724594422510914,
+        "musiq_delta_vs_fixed": -4.526900609334312,
+        "calibration_generation_seconds": 576.9097850322723
+      },
+      {
+        "calibration_indices": [
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 576.8943674564362
+      }
+    ],
+    "4": [
+      {
+        "calibration_indices": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "evaluation_indices": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.669022321701
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          2,
+          4
+        ],
+        "evaluation_indices": [
+          3,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.7387273311615
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          2,
+          5
+        ],
+        "evaluation_indices": [
+          3,
+          4,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.7709131240845
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          2,
+          6
+        ],
+        "evaluation_indices": [
+          3,
+          4,
+          5,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.7565960884094
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          2,
+          7
+        ],
+        "evaluation_indices": [
+          3,
+          4,
+          5,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.7218930721283
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          2,
+          8
+        ],
+        "evaluation_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.7064754962921
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          2,
+          9
+        ],
+        "evaluation_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.6753821372986
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          3,
+          4
+        ],
+        "evaluation_indices": [
+          2,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.5783083438873
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          3,
+          5
+        ],
+        "evaluation_indices": [
+          2,
+          4,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.6104941368103
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          3,
+          6
+        ],
+        "evaluation_indices": [
+          2,
+          4,
+          5,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.5961771011353
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          3,
+          7
+        ],
+        "evaluation_indices": [
+          2,
+          4,
+          5,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.5614740848541
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          3,
+          8
+        ],
+        "evaluation_indices": [
+          2,
+          4,
+          5,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.546056509018
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          3,
+          9
+        ],
+        "evaluation_indices": [
+          2,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.5149631500244
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          4,
+          5
+        ],
+        "evaluation_indices": [
+          2,
+          3,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.6801991462708
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          4,
+          6
+        ],
+        "evaluation_indices": [
+          2,
+          3,
+          5,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.6658821105957
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          4,
+          7
+        ],
+        "evaluation_indices": [
+          2,
+          3,
+          5,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.6311790943146
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          4,
+          8
+        ],
+        "evaluation_indices": [
+          2,
+          3,
+          5,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.6157615184784
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          4,
+          9
+        ],
+        "evaluation_indices": [
+          2,
+          3,
+          5,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.5846681594849
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          5,
+          6
+        ],
+        "evaluation_indices": [
+          2,
+          3,
+          4,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.6980679035187
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          5,
+          7
+        ],
+        "evaluation_indices": [
+          2,
+          3,
+          4,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.6633648872375
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          5,
+          8
+        ],
+        "evaluation_indices": [
+          2,
+          3,
+          4,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.6479473114014
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          5,
+          9
+        ],
+        "evaluation_indices": [
+          2,
+          3,
+          4,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.6168539524078
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          6,
+          7
+        ],
+        "evaluation_indices": [
+          2,
+          3,
+          4,
+          5,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.6490478515625
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          6,
+          8
+        ],
+        "evaluation_indices": [
+          2,
+          3,
+          4,
+          5,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.6336302757263
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          6,
+          9
+        ],
+        "evaluation_indices": [
+          2,
+          3,
+          4,
+          5,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.6025369167328
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          7,
+          8
+        ],
+        "evaluation_indices": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.5989272594452
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          7,
+          9
+        ],
+        "evaluation_indices": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.5678339004517
+      },
+      {
+        "calibration_indices": [
+          0,
+          1,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.5524163246155
+      },
+      {
+        "calibration_indices": [
+          0,
+          2,
+          3,
+          4
+        ],
+        "evaluation_indices": [
+          1,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.4511382579803
+      },
+      {
+        "calibration_indices": [
+          0,
+          2,
+          3,
+          5
+        ],
+        "evaluation_indices": [
+          1,
+          4,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.4833240509033
+      },
+      {
+        "calibration_indices": [
+          0,
+          2,
+          3,
+          6
+        ],
+        "evaluation_indices": [
+          1,
+          4,
+          5,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.4690070152283
+      },
+      {
+        "calibration_indices": [
+          0,
+          2,
+          3,
+          7
+        ],
+        "evaluation_indices": [
+          1,
+          4,
+          5,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.4343039989471
+      },
+      {
+        "calibration_indices": [
+          0,
+          2,
+          3,
+          8
+        ],
+        "evaluation_indices": [
+          1,
+          4,
+          5,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.418886423111
+      },
+      {
+        "calibration_indices": [
+          0,
+          2,
+          3,
+          9
+        ],
+        "evaluation_indices": [
+          1,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.3877930641174
+      },
+      {
+        "calibration_indices": [
+          0,
+          2,
+          4,
+          5
+        ],
+        "evaluation_indices": [
+          1,
+          3,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.5530290603638
+      },
+      {
+        "calibration_indices": [
+          0,
+          2,
+          4,
+          6
+        ],
+        "evaluation_indices": [
+          1,
+          3,
+          5,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.5387120246887
+      },
+      {
+        "calibration_indices": [
+          0,
+          2,
+          4,
+          7
+        ],
+        "evaluation_indices": [
+          1,
+          3,
+          5,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.5040090084076
+      },
+      {
+        "calibration_indices": [
+          0,
+          2,
+          4,
+          8
+        ],
+        "evaluation_indices": [
+          1,
+          3,
+          5,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.4885914325714
+      },
+      {
+        "calibration_indices": [
+          0,
+          2,
+          4,
+          9
+        ],
+        "evaluation_indices": [
+          1,
+          3,
+          5,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.4574980735779
+      },
+      {
+        "calibration_indices": [
+          0,
+          2,
+          5,
+          6
+        ],
+        "evaluation_indices": [
+          1,
+          3,
+          4,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.5708978176117
+      },
+      {
+        "calibration_indices": [
+          0,
+          2,
+          5,
+          7
+        ],
+        "evaluation_indices": [
+          1,
+          3,
+          4,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.017942824826565784,
+        "musiq_delta_vs_fixed": -4.449082268608943,
+        "calibration_generation_seconds": 1166.5361948013306
+      },
+      {
+        "calibration_indices": [
+          0,
+          2,
+          5,
+          8
+        ],
+        "evaluation_indices": [
+          1,
+          3,
+          4,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.5207772254944
+      },
+      {
+        "calibration_indices": [
+          0,
+          2,
+          5,
+          9
+        ],
+        "evaluation_indices": [
+          1,
+          3,
+          4,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.4896838665009
+      },
+      {
+        "calibration_indices": [
+          0,
+          2,
+          6,
+          7
+        ],
+        "evaluation_indices": [
+          1,
+          3,
+          4,
+          5,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.5218777656555
+      },
+      {
+        "calibration_indices": [
+          0,
+          2,
+          6,
+          8
+        ],
+        "evaluation_indices": [
+          1,
+          3,
+          4,
+          5,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.5064601898193
+      },
+      {
+        "calibration_indices": [
+          0,
+          2,
+          6,
+          9
+        ],
+        "evaluation_indices": [
+          1,
+          3,
+          4,
+          5,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.4753668308258
+      },
+      {
+        "calibration_indices": [
+          0,
+          2,
+          7,
+          8
+        ],
+        "evaluation_indices": [
+          1,
+          3,
+          4,
+          5,
+          6,
+          9
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.01874794748421475,
+        "musiq_delta_vs_fixed": -4.465814378526477,
+        "calibration_generation_seconds": 1166.4717571735382
+      },
+      {
+        "calibration_indices": [
+          0,
+          2,
+          7,
+          9
+        ],
+        "evaluation_indices": [
+          1,
+          3,
+          4,
+          5,
+          6,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.4406638145447
+      },
+      {
+        "calibration_indices": [
+          0,
+          2,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          1,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.4252462387085
+      },
+      {
+        "calibration_indices": [
+          0,
+          3,
+          4,
+          5
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.3926100730896
+      },
+      {
+        "calibration_indices": [
+          0,
+          3,
+          4,
+          6
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          5,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.3782930374146
+      },
+      {
+        "calibration_indices": [
+          0,
+          3,
+          4,
+          7
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          5,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.3435900211334
+      },
+      {
+        "calibration_indices": [
+          0,
+          3,
+          4,
+          8
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          5,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.3281724452972
+      },
+      {
+        "calibration_indices": [
+          0,
+          3,
+          4,
+          9
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          5,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.2970790863037
+      },
+      {
+        "calibration_indices": [
+          0,
+          3,
+          5,
+          6
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.4104788303375
+      },
+      {
+        "calibration_indices": [
+          0,
+          3,
+          5,
+          7
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          4,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.3757758140564
+      },
+      {
+        "calibration_indices": [
+          0,
+          3,
+          5,
+          8
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          4,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.3603582382202
+      },
+      {
+        "calibration_indices": [
+          0,
+          3,
+          5,
+          9
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          4,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.3292648792267
+      },
+      {
+        "calibration_indices": [
+          0,
+          3,
+          6,
+          7
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          4,
+          5,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.3614587783813
+      },
+      {
+        "calibration_indices": [
+          0,
+          3,
+          6,
+          8
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          4,
+          5,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.3460412025452
+      },
+      {
+        "calibration_indices": [
+          0,
+          3,
+          6,
+          9
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          4,
+          5,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.3149478435516
+      },
+      {
+        "calibration_indices": [
+          0,
+          3,
+          7,
+          8
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          4,
+          5,
+          6,
+          9
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.017919672587986563,
+        "musiq_delta_vs_fixed": -5.645601090930758,
+        "calibration_generation_seconds": 1166.311338186264
+      },
+      {
+        "calibration_indices": [
+          0,
+          3,
+          7,
+          9
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          4,
+          5,
+          6,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.2802448272705
+      },
+      {
+        "calibration_indices": [
+          0,
+          3,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          4,
+          5,
+          6,
+          7
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.2648272514343
+      },
+      {
+        "calibration_indices": [
+          0,
+          4,
+          5,
+          6
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.480183839798
+      },
+      {
+        "calibration_indices": [
+          0,
+          4,
+          5,
+          7
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.4454808235168
+      },
+      {
+        "calibration_indices": [
+          0,
+          4,
+          5,
+          8
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.4300632476807
+      },
+      {
+        "calibration_indices": [
+          0,
+          4,
+          5,
+          9
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.3989698886871
+      },
+      {
+        "calibration_indices": [
+          0,
+          4,
+          6,
+          7
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          5,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.4311637878418
+      },
+      {
+        "calibration_indices": [
+          0,
+          4,
+          6,
+          8
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          5,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.4157462120056
+      },
+      {
+        "calibration_indices": [
+          0,
+          4,
+          6,
+          9
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          5,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.384652853012
+      },
+      {
+        "calibration_indices": [
+          0,
+          4,
+          7,
+          8
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          5,
+          6,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.3810431957245
+      },
+      {
+        "calibration_indices": [
+          0,
+          4,
+          7,
+          9
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          5,
+          6,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.349949836731
+      },
+      {
+        "calibration_indices": [
+          0,
+          4,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          5,
+          6,
+          7
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.3345322608948
+      },
+      {
+        "calibration_indices": [
+          0,
+          5,
+          6,
+          7
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          4,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.4633495807648
+      },
+      {
+        "calibration_indices": [
+          0,
+          5,
+          6,
+          8
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          4,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.4479320049286
+      },
+      {
+        "calibration_indices": [
+          0,
+          5,
+          6,
+          9
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          4,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.416838645935
+      },
+      {
+        "calibration_indices": [
+          0,
+          5,
+          7,
+          8
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          4,
+          6,
+          9
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.019911699943364614,
+        "musiq_delta_vs_fixed": -5.965071420820933,
+        "calibration_generation_seconds": 1166.4132289886475
+      },
+      {
+        "calibration_indices": [
+          0,
+          5,
+          7,
+          9
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          4,
+          6,
+          8
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.018638464196595133,
+        "musiq_delta_vs_fixed": -5.1386035434783475,
+        "calibration_generation_seconds": 1166.382135629654
+      },
+      {
+        "calibration_indices": [
+          0,
+          5,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          4,
+          6,
+          7
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.3667180538177
+      },
+      {
+        "calibration_indices": [
+          0,
+          6,
+          7,
+          8
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.3989119529724
+      },
+      {
+        "calibration_indices": [
+          0,
+          6,
+          7,
+          9
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.3678185939789
+      },
+      {
+        "calibration_indices": [
+          0,
+          6,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1166.3524010181427
+      },
+      {
+        "calibration_indices": [
+          0,
+          7,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.019443586854244094,
+        "musiq_delta_vs_fixed": -5.155335653395881,
+        "calibration_generation_seconds": 1166.3176980018616
+      },
+      {
+        "calibration_indices": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "evaluation_indices": [
+          0,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.218822002411
+      },
+      {
+        "calibration_indices": [
+          1,
+          2,
+          3,
+          5
+        ],
+        "evaluation_indices": [
+          0,
+          4,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.2510077953339
+      },
+      {
+        "calibration_indices": [
+          1,
+          2,
+          3,
+          6
+        ],
+        "evaluation_indices": [
+          0,
+          4,
+          5,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.2366907596588
+      },
+      {
+        "calibration_indices": [
+          1,
+          2,
+          3,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          4,
+          5,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.2019877433777
+      },
+      {
+        "calibration_indices": [
+          1,
+          2,
+          3,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          4,
+          5,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.1865701675415
+      },
+      {
+        "calibration_indices": [
+          1,
+          2,
+          3,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.155476808548
+      },
+      {
+        "calibration_indices": [
+          1,
+          2,
+          4,
+          5
+        ],
+        "evaluation_indices": [
+          0,
+          3,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.3207128047943
+      },
+      {
+        "calibration_indices": [
+          1,
+          2,
+          4,
+          6
+        ],
+        "evaluation_indices": [
+          0,
+          3,
+          5,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.3063957691193
+      },
+      {
+        "calibration_indices": [
+          1,
+          2,
+          4,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          3,
+          5,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.2716927528381
+      },
+      {
+        "calibration_indices": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          3,
+          5,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.256275177002
+      },
+      {
+        "calibration_indices": [
+          1,
+          2,
+          4,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          3,
+          5,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.2251818180084
+      },
+      {
+        "calibration_indices": [
+          1,
+          2,
+          5,
+          6
+        ],
+        "evaluation_indices": [
+          0,
+          3,
+          4,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.3385815620422
+      },
+      {
+        "calibration_indices": [
+          1,
+          2,
+          5,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          3,
+          4,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.303878545761
+      },
+      {
+        "calibration_indices": [
+          1,
+          2,
+          5,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          3,
+          4,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.288460969925
+      },
+      {
+        "calibration_indices": [
+          1,
+          2,
+          5,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          3,
+          4,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.2573676109314
+      },
+      {
+        "calibration_indices": [
+          1,
+          2,
+          6,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          3,
+          4,
+          5,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.289561510086
+      },
+      {
+        "calibration_indices": [
+          1,
+          2,
+          6,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          3,
+          4,
+          5,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.2741439342499
+      },
+      {
+        "calibration_indices": [
+          1,
+          2,
+          6,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          3,
+          4,
+          5,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.2430505752563
+      },
+      {
+        "calibration_indices": [
+          1,
+          2,
+          7,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          3,
+          4,
+          5,
+          6,
+          9
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.018232734893919283,
+        "musiq_delta_vs_fixed": -3.721669696626209,
+        "calibration_generation_seconds": 1154.2394409179688
+      },
+      {
+        "calibration_indices": [
+          1,
+          2,
+          7,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          3,
+          4,
+          5,
+          6,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.2083475589752
+      },
+      {
+        "calibration_indices": [
+          1,
+          2,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.192929983139
+      },
+      {
+        "calibration_indices": [
+          1,
+          3,
+          4,
+          5
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.1602938175201
+      },
+      {
+        "calibration_indices": [
+          1,
+          3,
+          4,
+          6
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          5,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.145976781845
+      },
+      {
+        "calibration_indices": [
+          1,
+          3,
+          4,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          5,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.111273765564
+      },
+      {
+        "calibration_indices": [
+          1,
+          3,
+          4,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          5,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.0958561897278
+      },
+      {
+        "calibration_indices": [
+          1,
+          3,
+          4,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          5,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.0647628307343
+      },
+      {
+        "calibration_indices": [
+          1,
+          3,
+          5,
+          6
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.178162574768
+      },
+      {
+        "calibration_indices": [
+          1,
+          3,
+          5,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          4,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.143459558487
+      },
+      {
+        "calibration_indices": [
+          1,
+          3,
+          5,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          4,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.1280419826508
+      },
+      {
+        "calibration_indices": [
+          1,
+          3,
+          5,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          4,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.0969486236572
+      },
+      {
+        "calibration_indices": [
+          1,
+          3,
+          6,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          4,
+          5,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.129142522812
+      },
+      {
+        "calibration_indices": [
+          1,
+          3,
+          6,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          4,
+          5,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.1137249469757
+      },
+      {
+        "calibration_indices": [
+          1,
+          3,
+          6,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          4,
+          5,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.0826315879822
+      },
+      {
+        "calibration_indices": [
+          1,
+          3,
+          7,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          4,
+          5,
+          6,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.0790219306946
+      },
+      {
+        "calibration_indices": [
+          1,
+          3,
+          7,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          4,
+          5,
+          6,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.047928571701
+      },
+      {
+        "calibration_indices": [
+          1,
+          3,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          4,
+          5,
+          6,
+          7
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.0325109958649
+      },
+      {
+        "calibration_indices": [
+          1,
+          4,
+          5,
+          6
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.2478675842285
+      },
+      {
+        "calibration_indices": [
+          1,
+          4,
+          5,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.2131645679474
+      },
+      {
+        "calibration_indices": [
+          1,
+          4,
+          5,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.1977469921112
+      },
+      {
+        "calibration_indices": [
+          1,
+          4,
+          5,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.1666536331177
+      },
+      {
+        "calibration_indices": [
+          1,
+          4,
+          6,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          5,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.1988475322723
+      },
+      {
+        "calibration_indices": [
+          1,
+          4,
+          6,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          5,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.1834299564362
+      },
+      {
+        "calibration_indices": [
+          1,
+          4,
+          6,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          5,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.1523365974426
+      },
+      {
+        "calibration_indices": [
+          1,
+          4,
+          7,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          5,
+          6,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.148726940155
+      },
+      {
+        "calibration_indices": [
+          1,
+          4,
+          7,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          5,
+          6,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.1176335811615
+      },
+      {
+        "calibration_indices": [
+          1,
+          4,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          5,
+          6,
+          7
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.1022160053253
+      },
+      {
+        "calibration_indices": [
+          1,
+          5,
+          6,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          4,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.2310333251953
+      },
+      {
+        "calibration_indices": [
+          1,
+          5,
+          6,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          4,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.2156157493591
+      },
+      {
+        "calibration_indices": [
+          1,
+          5,
+          6,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          4,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.1845223903656
+      },
+      {
+        "calibration_indices": [
+          1,
+          5,
+          7,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          4,
+          6,
+          9
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.019396487353069147,
+        "musiq_delta_vs_fixed": -5.220926738920665,
+        "calibration_generation_seconds": 1154.180912733078
+      },
+      {
+        "calibration_indices": [
+          1,
+          5,
+          7,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          4,
+          6,
+          8
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.018123251606299667,
+        "musiq_delta_vs_fixed": -4.39445886157808,
+        "calibration_generation_seconds": 1154.1498193740845
+      },
+      {
+        "calibration_indices": [
+          1,
+          5,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          4,
+          6,
+          7
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.1344017982483
+      },
+      {
+        "calibration_indices": [
+          1,
+          6,
+          7,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          4,
+          5,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.166595697403
+      },
+      {
+        "calibration_indices": [
+          1,
+          6,
+          7,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          4,
+          5,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.1355023384094
+      },
+      {
+        "calibration_indices": [
+          1,
+          6,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          4,
+          5,
+          7
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.1200847625732
+      },
+      {
+        "calibration_indices": [
+          1,
+          7,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.018928374263948628,
+        "musiq_delta_vs_fixed": -4.411190971495614,
+        "calibration_generation_seconds": 1154.0853817462921
+      },
+      {
+        "calibration_indices": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          6,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.0331237316132
+      },
+      {
+        "calibration_indices": [
+          2,
+          3,
+          4,
+          6
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          5,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.018806695938
+      },
+      {
+        "calibration_indices": [
+          2,
+          3,
+          4,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          5,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.984103679657
+      },
+      {
+        "calibration_indices": [
+          2,
+          3,
+          4,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          5,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.9686861038208
+      },
+      {
+        "calibration_indices": [
+          2,
+          3,
+          4,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          5,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.9375927448273
+      },
+      {
+        "calibration_indices": [
+          2,
+          3,
+          5,
+          6
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          4,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.050992488861
+      },
+      {
+        "calibration_indices": [
+          2,
+          3,
+          5,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          4,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.018546490614572808,
+        "musiq_delta_vs_fixed": -4.716368841746498,
+        "calibration_generation_seconds": 1154.01628947258
+      },
+      {
+        "calibration_indices": [
+          2,
+          3,
+          5,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          4,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.0008718967438
+      },
+      {
+        "calibration_indices": [
+          2,
+          3,
+          5,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          4,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.9697785377502
+      },
+      {
+        "calibration_indices": [
+          2,
+          3,
+          6,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          4,
+          5,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.001972436905
+      },
+      {
+        "calibration_indices": [
+          2,
+          3,
+          6,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          4,
+          5,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.9865548610687
+      },
+      {
+        "calibration_indices": [
+          2,
+          3,
+          6,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          4,
+          5,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.9554615020752
+      },
+      {
+        "calibration_indices": [
+          2,
+          3,
+          7,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          4,
+          5,
+          6,
+          9
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.019351613272221773,
+        "musiq_delta_vs_fixed": -4.733100951664032,
+        "calibration_generation_seconds": 1153.9518518447876
+      },
+      {
+        "calibration_indices": [
+          2,
+          3,
+          7,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          4,
+          5,
+          6,
+          8
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.01807837752545229,
+        "musiq_delta_vs_fixed": -3.906633074321448,
+        "calibration_generation_seconds": 1153.920758485794
+      },
+      {
+        "calibration_indices": [
+          2,
+          3,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          4,
+          5,
+          6,
+          7
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.9053409099579
+      },
+      {
+        "calibration_indices": [
+          2,
+          4,
+          5,
+          6
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.1206974983215
+      },
+      {
+        "calibration_indices": [
+          2,
+          4,
+          5,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.0859944820404
+      },
+      {
+        "calibration_indices": [
+          2,
+          4,
+          5,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.0705769062042
+      },
+      {
+        "calibration_indices": [
+          2,
+          4,
+          5,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.0394835472107
+      },
+      {
+        "calibration_indices": [
+          2,
+          4,
+          6,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          5,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.0716774463654
+      },
+      {
+        "calibration_indices": [
+          2,
+          4,
+          6,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          5,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.0562598705292
+      },
+      {
+        "calibration_indices": [
+          2,
+          4,
+          6,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          5,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.0251665115356
+      },
+      {
+        "calibration_indices": [
+          2,
+          4,
+          7,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          5,
+          6,
+          9
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.018204975788110977,
+        "musiq_delta_vs_fixed": -5.080603372483027,
+        "calibration_generation_seconds": 1154.021556854248
+      },
+      {
+        "calibration_indices": [
+          2,
+          4,
+          7,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          5,
+          6,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.9904634952545
+      },
+      {
+        "calibration_indices": [
+          2,
+          4,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          5,
+          6,
+          7
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.9750459194183
+      },
+      {
+        "calibration_indices": [
+          2,
+          5,
+          6,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          4,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.1038632392883
+      },
+      {
+        "calibration_indices": [
+          2,
+          5,
+          6,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          4,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.0884456634521
+      },
+      {
+        "calibration_indices": [
+          2,
+          5,
+          6,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          4,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.0573523044586
+      },
+      {
+        "calibration_indices": [
+          2,
+          5,
+          7,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          4,
+          6,
+          9
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.02134364062759982,
+        "musiq_delta_vs_fixed": -5.052571281554207,
+        "calibration_generation_seconds": 1154.053742647171
+      },
+      {
+        "calibration_indices": [
+          2,
+          5,
+          7,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          4,
+          6,
+          8
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.02007040488083034,
+        "musiq_delta_vs_fixed": -4.226103404211622,
+        "calibration_generation_seconds": 1154.0226492881775
+      },
+      {
+        "calibration_indices": [
+          2,
+          5,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          4,
+          6,
+          7
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.0072317123413
+      },
+      {
+        "calibration_indices": [
+          2,
+          6,
+          7,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          4,
+          5,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.039425611496
+      },
+      {
+        "calibration_indices": [
+          2,
+          6,
+          7,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          4,
+          5,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.0083322525024
+      },
+      {
+        "calibration_indices": [
+          2,
+          6,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          4,
+          5,
+          7
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.9929146766663
+      },
+      {
+        "calibration_indices": [
+          2,
+          7,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          3,
+          4,
+          5,
+          6
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.020875527538479304,
+        "musiq_delta_vs_fixed": -4.242835514129156,
+        "calibration_generation_seconds": 1153.9582116603851
+      },
+      {
+        "calibration_indices": [
+          3,
+          4,
+          5,
+          6
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          7,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.9602785110474
+      },
+      {
+        "calibration_indices": [
+          3,
+          4,
+          5,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          6,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.9255754947662
+      },
+      {
+        "calibration_indices": [
+          3,
+          4,
+          5,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          6,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.91015791893
+      },
+      {
+        "calibration_indices": [
+          3,
+          4,
+          5,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          6,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.8790645599365
+      },
+      {
+        "calibration_indices": [
+          3,
+          4,
+          6,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          5,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.9112584590912
+      },
+      {
+        "calibration_indices": [
+          3,
+          4,
+          6,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          5,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.895840883255
+      },
+      {
+        "calibration_indices": [
+          3,
+          4,
+          6,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          5,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.8647475242615
+      },
+      {
+        "calibration_indices": [
+          3,
+          4,
+          7,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          5,
+          6,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.8611378669739
+      },
+      {
+        "calibration_indices": [
+          3,
+          4,
+          7,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          5,
+          6,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.8300445079803
+      },
+      {
+        "calibration_indices": [
+          3,
+          4,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          5,
+          6,
+          7
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.8146269321442
+      },
+      {
+        "calibration_indices": [
+          3,
+          5,
+          6,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          4,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.9434442520142
+      },
+      {
+        "calibration_indices": [
+          3,
+          5,
+          6,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          4,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.928026676178
+      },
+      {
+        "calibration_indices": [
+          3,
+          5,
+          6,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          4,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.8969333171844
+      },
+      {
+        "calibration_indices": [
+          3,
+          5,
+          7,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          4,
+          6,
+          9
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.020515365731371638,
+        "musiq_delta_vs_fixed": -6.232357993958488,
+        "calibration_generation_seconds": 1153.8933236598969
+      },
+      {
+        "calibration_indices": [
+          3,
+          5,
+          7,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          4,
+          6,
+          8
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.019242129984602157,
+        "musiq_delta_vs_fixed": -5.405890116615904,
+        "calibration_generation_seconds": 1153.8622303009033
+      },
+      {
+        "calibration_indices": [
+          3,
+          5,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          4,
+          6,
+          7
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.8468127250671
+      },
+      {
+        "calibration_indices": [
+          3,
+          6,
+          7,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          4,
+          5,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.8790066242218
+      },
+      {
+        "calibration_indices": [
+          3,
+          6,
+          7,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          4,
+          5,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.8479132652283
+      },
+      {
+        "calibration_indices": [
+          3,
+          6,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          4,
+          5,
+          7
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.832495689392
+      },
+      {
+        "calibration_indices": [
+          3,
+          7,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          4,
+          5,
+          6
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.02004725264225112,
+        "musiq_delta_vs_fixed": -5.422622226533438,
+        "calibration_generation_seconds": 1153.797792673111
+      },
+      {
+        "calibration_indices": [
+          4,
+          5,
+          6,
+          7
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          8,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1154.0131492614746
+      },
+      {
+        "calibration_indices": [
+          4,
+          5,
+          6,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          7,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.9977316856384
+      },
+      {
+        "calibration_indices": [
+          4,
+          5,
+          6,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          7,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.966638326645
+      },
+      {
+        "calibration_indices": [
+          4,
+          5,
+          7,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          6,
+          9
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.019368728247260842,
+        "musiq_delta_vs_fixed": -6.579860414777483,
+        "calibration_generation_seconds": 1153.9630286693573
+      },
+      {
+        "calibration_indices": [
+          4,
+          5,
+          7,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          6,
+          8
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.01809549250049136,
+        "musiq_delta_vs_fixed": -5.753392537434898,
+        "calibration_generation_seconds": 1153.9319353103638
+      },
+      {
+        "calibration_indices": [
+          4,
+          5,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          6,
+          7
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.9165177345276
+      },
+      {
+        "calibration_indices": [
+          4,
+          6,
+          7,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.9487116336823
+      },
+      {
+        "calibration_indices": [
+          4,
+          6,
+          7,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.9176182746887
+      },
+      {
+        "calibration_indices": [
+          4,
+          6,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          7
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.9022006988525
+      },
+      {
+        "calibration_indices": [
+          4,
+          7,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          6
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.018900615158140326,
+        "musiq_delta_vs_fixed": -5.770124647352432,
+        "calibration_generation_seconds": 1153.8674976825714
+      },
+      {
+        "calibration_indices": [
+          5,
+          6,
+          7,
+          8
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          9
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.9808974266052
+      },
+      {
+        "calibration_indices": [
+          5,
+          6,
+          7,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          8
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.9498040676117
+      },
+      {
+        "calibration_indices": [
+          5,
+          6,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          7
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.9343864917755
+      },
+      {
+        "calibration_indices": [
+          5,
+          7,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          6
+        ],
+        "selected": "int2_l0.5",
+        "subject_delta_vs_fixed": -0.02203927999762917,
+        "musiq_delta_vs_fixed": -5.742092556423612,
+        "calibration_generation_seconds": 1153.8996834754944
+      },
+      {
+        "calibration_indices": [
+          6,
+          7,
+          8,
+          9
+        ],
+        "evaluation_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "selected": "int2_l1",
+        "subject_delta_vs_fixed": 0.0,
+        "musiq_delta_vs_fixed": 0.0,
+        "calibration_generation_seconds": 1153.8853664398193
+      }
+    ]
+  },
+  "input_sha256": {
+    "results/session9/c1_lambda/vbench_per_prompt.json": "ad9ad4d91d17d27da88a71f1de3b44fe4ba24ee4e13d2e05496873f4a1f50e7e",
+    "results/session9/c1_lambda/musiq_per_prompt.json": "c5c99e9d774fbdc49f37ecbd9d709c2b537b9b04c56c4447287f7dc4ae97e871",
+    "results/session9/prompts_eval_c1_10.txt": "780c777611c70677d05893153fe32988f20e3ba8dac05c83d0f26713fb9b8d76",
+    "문서/지시서/S9_C1_lambda_prereg.md": "0ae3e80cc8a88ba361c8c247faedcd1d118ee04dda1896c0bc0924e000d2b7c5",
+    "results/session9/c1_lambda/int2_l1.stats.json": "038d90cd925e5db8bbab5ffe5656f1d5a71cdb86dd16ffc7132728e6069f8ca4",
+    "results/session9/c1_lambda/int2_l0.5.stats.json": "13df3d3c422a3d31971cb2bb4c23e45df4062d2f1490bcef8892e717783cb34e",
+    "results/session9/c1_lambda/int2_l2.stats.json": "c225caef95e9fb4c88624c455649a54e531401563c9616d2617ad62135682104",
+    "results/session9/c1_lambda/int2_l4.stats.json": "b66aa0034b30d74237573844ce2f3a13913b791949e3c27c028bfae8ce3bbc20"
+  }
+}
