@@ -1,0 +1,89 @@
+{
+  "date": "2026-10-31",
+  "gpu_runs": 0,
+  "decision": "Do not start a GPU study yet. Broad novelty claim overlaps prior work; an executable sparse baseline on the current GPU is not established.",
+  "code_checks": [
+    {
+      "repo": "chengtao-lv/LightForcing",
+      "revision": "d1e633337fff7e8a0ebf9f643dc37cd481fb299d",
+      "files": [
+        "wan/modules/sparse_attention.py",
+        "wan/modules/kernel.py"
+      ],
+      "findings": [
+        "Dispatcher uses sparse paths for SM80/SM120 and SM90/SM100; SM89 reaches the dense fallback.",
+        "Block selection pools Q/K, scores the pooled representations and applies top-k; query/key provenance matters more than accumulator dtype.",
+        "Sparse map helpers and the attention call are separate in source; this permits designing a controlled selector intervention, but has not been validated on RTX4090."
+      ]
+    },
+    {
+      "repo": "Tele-AI/TeleFuser",
+      "revision": "f21457a92e92f4a7570f0cb6b445ee334f1072b0",
+      "files": [
+        "telefuser/kernel/sol_attn/interface.py"
+      ],
+      "findings": [
+        "Input validator requires equal Q/K/V shapes; not a drop-in rectangular-query AR KV-cache interface.",
+        "SM90 FP8 uses the native CuTe path, while other architectures enter a separate fallback with a different V-scale contract.",
+        "The documented method retains summaries for non-exact blocks; it is not plain block dropping. Last point checked against author technical documentation, not all kernel internals."
+      ]
+    }
+  ],
+  "papers": [
+    {
+      "name": "Light Forcing",
+      "url": "https://proceedings.mlr.press/v306/lv26i.html",
+      "role": "AR video sparse-attention candidate baseline; code dispatch checked"
+    },
+    {
+      "name": "GSRS",
+      "url": "https://arxiv.org/abs/2610.21129",
+      "role": "Related denoising schedule and search reuse; abstract checked, implementation not audited"
+    },
+    {
+      "name": "DASA",
+      "url": "https://yuanyu0.github.io/DASA/",
+      "role": "Dynamic/static-region reuse; author project checked, implementation not audited"
+    },
+    {
+      "name": "ZipFusion",
+      "url": "https://arxiv.org/abs/2610.33719",
+      "role": "Lossless LLM fused attention; abstract checked, not treated as same-codec video baseline"
+    },
+    {
+      "name": "QuantWM",
+      "url": "https://arxiv.org/html/2609.26425v1",
+      "role": "Key perturbation and temporal-spatial selection shift; related mechanism, not proof of identical hard sparse-mask intervention"
+    },
+    {
+      "name": "ReadKV",
+      "url": "https://arxiv.org/html/2610.11245v1",
+      "role": "Query-adaptive read precision, related access-budget problem"
+    },
+    {
+      "name": "QuantSparse",
+      "url": "https://arxiv.org/html/2509.23681v1#S3.SS2",
+      "role": "Video quantization/sparsity interaction already studied; differs from isolated packed INT2 causal KV-cache intervention"
+    },
+    {
+      "name": "Self-Indexing KVCache",
+      "url": "https://arxiv.org/html/2603.14224v1",
+      "role": "Compressed keys directly support top-k retrieval; directly limits broad novelty claim"
+    },
+    {
+      "name": "FP8 Sol-Attn",
+      "url": "https://tele-ai.github.io/TeleFuser/blog/fp8_sol_attention/",
+      "role": "Quantized routing and summary-based attention, engineering baseline with hardware/shape limitations"
+    }
+  ],
+  "design_corrections": [
+    "Full-precision selector is a reference selector, not a proven optimal oracle.",
+    "Hold Q, quantized KV, scales, grouping, candidate universe, block budget, forced blocks, RoPE, normalization and nonselected-block handling fixed for selector-only interventions.",
+    "Use dense BF16 and dense-quantized outputs as separate anchors if attributing total quality loss or sparsity/quantization interaction.",
+    "Y_quant_route minus Y_fullprecision_route is a conditional output change. Loss differences can be negative; do not assume independent nonnegative error contributions.",
+    "Accumulator FP32 does not recover precision lost when selector summaries originate from quantized K.",
+    "Compare against a simple retained high-precision block summary with its actual storage, build and read costs before proposing a complex selector.",
+    "A same-k diagnostic is not a same-time or same-memory deployment comparison.",
+    "Only source/read-only review completed; no new algorithm, GPU validation or novelty establishment claimed."
+  ]
+}
