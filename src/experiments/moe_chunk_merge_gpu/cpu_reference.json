@@ -1,0 +1,396 @@
+{
+  "cases": {
+    "residual_only": {
+      "exact_sums": [
+        [
+          {
+            "numerator": 5,
+            "denominator": 16777216,
+            "decimal": 2.980232238769531e-07,
+            "correctly_rounded_fp16": 2.980232238769531e-07
+          },
+          {
+            "numerator": 527,
+            "denominator": 256,
+            "decimal": 2.05859375,
+            "correctly_rounded_fp16": 2.05859375
+          },
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          },
+          {
+            "numerator": -5,
+            "denominator": 16777216,
+            "decimal": -2.980232238769531e-07,
+            "correctly_rounded_fp16": -2.980232238769531e-07
+          }
+        ],
+        [
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          },
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          },
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          },
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          }
+        ],
+        [
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          },
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          },
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          },
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          }
+        ],
+        [
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          },
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          },
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          },
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          }
+        ]
+      ],
+      "original_slot_value": 0.0,
+      "chunk_values": {
+        "1": 2.980232238769531e-07,
+        "2": 0.0,
+        "4": 0.0
+      },
+      "expert_order_values": {
+        "1": 2.980232238769531e-07,
+        "2": 2.980232238769531e-07,
+        "4": 2.980232238769531e-07
+      },
+      "inverse_order": [
+        [
+          0,
+          8,
+          4,
+          12,
+          16,
+          20,
+          24,
+          28
+        ],
+        [
+          1,
+          9,
+          5,
+          13,
+          17,
+          21,
+          25,
+          29
+        ],
+        [
+          2,
+          10,
+          6,
+          14,
+          18,
+          22,
+          26,
+          30
+        ],
+        [
+          3,
+          11,
+          7,
+          15,
+          19,
+          23,
+          27,
+          31
+        ]
+      ],
+      "sorted_assignment_order": [
+        0,
+        8,
+        16,
+        24,
+        2,
+        10,
+        18,
+        26,
+        1,
+        9,
+        17,
+        25,
+        3,
+        11,
+        19,
+        27,
+        4,
+        12,
+        20,
+        28,
+        5,
+        13,
+        21,
+        29,
+        6,
+        14,
+        22,
+        30,
+        7,
+        15,
+        23,
+        31
+      ]
+    },
+    "rounding_boundary": {
+      "exact_sums": [
+        [
+          {
+            "numerator": 16785413,
+            "denominator": 16777216,
+            "decimal": 1.0004885792732239,
+            "correctly_rounded_fp16": 1.0009765625
+          },
+          {
+            "numerator": 527,
+            "denominator": 256,
+            "decimal": 2.05859375,
+            "correctly_rounded_fp16": 2.05859375
+          },
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          },
+          {
+            "numerator": -16785413,
+            "denominator": 16777216,
+            "decimal": -1.0004885792732239,
+            "correctly_rounded_fp16": -1.0009765625
+          }
+        ],
+        [
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          },
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          },
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          },
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          }
+        ],
+        [
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          },
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          },
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          },
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          }
+        ],
+        [
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          },
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          },
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          },
+          {
+            "numerator": 0,
+            "denominator": 1,
+            "decimal": 0.0,
+            "correctly_rounded_fp16": 0.0
+          }
+        ]
+      ],
+      "original_slot_value": 1.0,
+      "chunk_values": {
+        "1": 1.0009765625,
+        "2": 1.0,
+        "4": 1.0
+      },
+      "expert_order_values": {
+        "1": 1.0009765625,
+        "2": 1.0009765625,
+        "4": 1.0009765625
+      },
+      "inverse_order": [
+        [
+          0,
+          8,
+          4,
+          12,
+          16,
+          20,
+          24,
+          28
+        ],
+        [
+          1,
+          9,
+          5,
+          13,
+          17,
+          21,
+          25,
+          29
+        ],
+        [
+          2,
+          10,
+          6,
+          14,
+          18,
+          22,
+          26,
+          30
+        ],
+        [
+          3,
+          11,
+          7,
+          15,
+          19,
+          23,
+          27,
+          31
+        ]
+      ],
+      "sorted_assignment_order": [
+        0,
+        8,
+        16,
+        24,
+        2,
+        10,
+        18,
+        26,
+        1,
+        9,
+        17,
+        25,
+        3,
+        11,
+        19,
+        27,
+        4,
+        12,
+        20,
+        28,
+        5,
+        13,
+        21,
+        29,
+        6,
+        14,
+        22,
+        30,
+        7,
+        15,
+        23,
+        31
+      ]
+    }
+  },
+  "code_sha256": "ed3389ff0a45212fda9d803688a439402ec03560afb5e4812b7e39eab26237b5",
+  "registration_sha256": "d5e2888d45ffd777a97fecbb7da035571fcc4b20b37975376433ba7361d117ec"
+}

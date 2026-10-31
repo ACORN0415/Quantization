@@ -1,0 +1,130 @@
+{
+  "started_at_utc": "2026-10-31T15:32:46Z",
+  "deadline_utc": "2026-10-31T16:32:46Z",
+  "scope": "Authorized bounded regression check only; no research-direction adoption",
+  "caps": {
+    "total_wall_seconds": 3600,
+    "gpu_stage_wall_seconds": 300,
+    "merge_kernel_launches": 100,
+    "model_forwards": 0,
+    "environment_changes": false
+  },
+  "source": {
+    "repository": "lcj1111/RobustGEMQ",
+    "revision": "fe6fe6dc679495a53795b2a7eed4efb7e655e29c",
+    "path": "gemq/triton_kernels/vllm_moe_dispatch.py",
+    "local_path": "tools/vendor/robustgemq_merge/vllm_moe_dispatch.py",
+    "git_blob_sha": "39dc86e364809b94c165e78641953bc5f7f2bc75",
+    "sha256": "9b3840ce6d572bff6471de21d27e98c50577796c1cb46af6c94c3e7c73b1a8d6",
+    "modified": false
+  },
+  "fixtures": {
+    "tokens": 4,
+    "top_k": 8,
+    "num_experts": 64,
+    "hidden": 256,
+    "expert_ids_each_token": [
+      0,
+      2,
+      1,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "routing_weights_each_token": [
+      0.375,
+      0.3125,
+      0.25,
+      0.03125,
+      0.015625,
+      0.0078125,
+      0.00390625,
+      0.00390625
+    ],
+    "dtype": "float16",
+    "accumulation_dtype": "float32",
+    "token_0_vectors": {
+      "residual_only": [
+        32,
+        9.5367431640625e-07,
+        -48,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rounding_boundary": [
+        32,
+        9.5367431640625e-07,
+        -48,
+        32,
+        0.03125,
+        0,
+        0,
+        0
+      ]
+    },
+    "columns_modulo_4": {
+      "0": "registered vector",
+      "1": "[1,2,3,4,5,6,7,8] exact benign control",
+      "2": "all zeros",
+      "3": "negative registered vector"
+    },
+    "tokens_1_to_3": "all expert output vectors zero; valid identical routing and gates",
+    "chunk_tokens": [
+      1,
+      2,
+      4
+    ],
+    "assignment_limits": [
+      8,
+      16,
+      32
+    ],
+    "routing_provenance": "constructed synthetic inputs, not captured model traffic"
+  },
+  "paths": {
+    "upstream": "Unmodified public merge wrapper and Triton kernel, slot order inside each expert-sorted chunk",
+    "slot_buffer": "Copy every incoming chunk into a full sorted-expert output buffer, then invoke the unchanged public kernel once with original slot order",
+    "expert_order": "Keep the same sorted expert outputs; reorder inverse-index and gate slots together by expert ID, then invoke unchanged public chunked merge"
+  },
+  "reference_contracts": {
+    "slot": "CPU scalar FP32 accumulation in original top-k slot order, final FP16 round; full shape/dtype/element-byte equality",
+    "expert": "CPU scalar FP32 accumulation in ascending expert-ID order, final FP16 round; full shape/dtype/element-byte equality",
+    "mathematical": "Exact Fraction sum of FP16 operands; nearest FP16 selected using exact distances, ties to even",
+    "model_report_tolerance": "atol=0.002 rtol=0.002 evaluated only as a descriptive merge-level check; no model or service acceptance conclusion"
+  },
+  "runs": {
+    "repeats": 2,
+    "order_repeat_0": [
+      "upstream",
+      "slot_buffer",
+      "expert_order"
+    ],
+    "order_repeat_1": [
+      "expert_order",
+      "slot_buffer",
+      "upstream"
+    ],
+    "chunk_order_repeat_0": [
+      1,
+      2,
+      4
+    ],
+    "chunk_order_repeat_1": [
+      4,
+      2,
+      1
+    ],
+    "expected_merge_launches": 68,
+    "expected_public_dispatch_launches": 2,
+    "counter_method": "Wrap actual Triton JITFunction.run at launch points and independently count CUDA kernels in profiler trace; no extra merge calls for instrumentation",
+    "no_timing_comparison": "Cold compile and instrumentation included; record wall/peak for resource accounting only"
+  },
+  "success": "Observe public-option chunk-dependent results and verify the two simple numerical contracts without attributing a quality loss",
+  "failure_policy": "On mismatch or compile failure stop and investigate only within caps; no changed tolerances or additional fixtures to rescue a result",
+  "close_policy": "Default output is a small regression and explanation. No research expansion without both a real requirement to preserve the old result and measured unaffordable cost of simple solutions; neither is established at registration."
+}
