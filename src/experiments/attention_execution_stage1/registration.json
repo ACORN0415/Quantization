@@ -1,0 +1,69 @@
+{
+  "registered_at": "2026-10-31T06:37:18.091665+00:00",
+  "preparation_started_at": "2026-10-31T06:29:53+00:00",
+  "preparation_deadline": "2026-10-31T07:29:53+00:00",
+  "overall_deadline": "2026-10-31T07:59:53+00:00",
+  "gpu_seconds_limit": 1800,
+  "authorization": "사용자 시작 지시; MoE 검토는 현재 벤치 종료 이후로 보류",
+  "gpu_idle_at_start": {
+    "used_mib": 1,
+    "utilization_percent": 0,
+    "compute_processes": []
+  },
+  "attention_source": "/home/acorn0415/sfq_data/qvg-reuse-reference/experiments/Self-Forcing/wan/modules/attention.py",
+  "attention_source_sha256": "02ad719a76e6bdec79d18fc62b094ef2ad7c28b2d593c9f395ae1226041b7c9d",
+  "upstream_commit": "0601468f2dbba6a17ac7086faec6d41527cad188",
+  "script_sha256": "3a3d9a599cbc752422142fb19cd13d3d311d2593bfa2c42c5fd0a6df45b3e6c9",
+  "schedule_source": "src/experiments/kv_reuse_stage1/gate_B.json",
+  "schedule_source_sha256": "f3f3c29dd5e6b8abcc0476585afc16ada89f01f0f1be646944cbfb768da184b0",
+  "k_lengths": [
+    4680,
+    18720,
+    37440,
+    56160
+  ],
+  "shape_calls": {
+    "4680": 150,
+    "18720": 150,
+    "37440": 150,
+    "56160": 150
+  },
+  "all_schedule_calls": 1800,
+  "tested_schedule_calls": 600,
+  "omitted_lengths_extrapolated": false,
+  "input_shape": {
+    "B": 1,
+    "Q": 4680,
+    "H": 12,
+    "D": 128,
+    "dtype": "BF16",
+    "layout": "BSHD contiguous",
+    "causal": false,
+    "dropout": 0,
+    "mask": null,
+    "scale": "1/sqrt(128)"
+  },
+  "stride_evidence": "소스에서 rope의 stack/cat과 KV read의 cat이 연속 BSHD 결과를 만든다. 이번 실제 생성의 stride 직접 계측은 아님. 합성 입력 stride를 결과에 기록한다.",
+  "seed": 20261031,
+  "rtol": 0.01,
+  "atol": 0.01,
+  "warmup": 5,
+  "selection_samples": 5,
+  "evaluation_samples": 20,
+  "replay_rounds": 3,
+  "selector": "외부FA2/강제SDPA Flash/강제SDPA efficient 세 경로를 각각 5회 워밍업·5회 측정. wrapper 동기화 경과시간 중앙값으로 선택하고 평가 전 저장. 자동 SDPA는 별도 기준선.",
+  "first_call_scope": "작은 정확성 검사 이후 각 형상의 첫 관측 호출. 새 프로세스의 완전한 cold start나 전체 라이브러리 초기화 시간이 아니다.",
+  "cost_accounting": "선택기 비용 = 세 경로의 첫 형상 관측 비용 합 + 실제 워밍업/선택 측정/선택 로직의 경과시간. 직접 측정한 600회 attention-only 재생 경과시간에 한 번 더한다. 고정/auto/사후참고는 각 형상 첫 관측과 정상 호출 중앙값 차이의 양수 부분을 한 번 더한다.",
+  "replay": "네 형상을 실제 스케줄 순서로 각각 150회, 총600회. 세 라운드에서 정책 실행 순서를 교차. 이 재생은 합성 입력 반복이며 모델 전체 생성/서로 다른 층의 working set을 재현하지 않는다.",
+  "timing_scope": "각 wrapper 입력 변환·backend 제어 context·출력 연속화 포함. profiler는 타이밍 종료 후 실행. 선택비용과 재생 비용은 별도 직접 측정값을 합친 비용 추정이지 하나의 cold 전체 실행 측정이 아니다.",
+  "correctness": "작은 동일 BF16 입력으로 CPU FP32 기준과 비교. 큰 입력은 동일 합성 입력에서 외부FA2와 비교. 허용오차 고정. 영상 품질 동등성 주장은 하지 않는다.",
+  "backend_validation": "profiler의 aten 연산명과 실제 CUDA 커널명 모두 기록. 강제 backend 불일치, 수치 실패, 타 경로의 조용한 fallback 또는 외부 GPU 작업 발견 시 무효/미결.",
+  "decision": "5%는 attention 연산 선택에 대한 투자 기준. 고정/자동/짧은측정 중 충분한 경로가 있거나 한 구현이 모든 시험 형상에서 우세하면 새 선택기 개발 종료. 모든 단순 방법의 비용 포함 손해가 사후참고 대비 세 라운드 모두5% 초과하고 잡음으로 설명되지 않을 때만 후속 검토.",
+  "limits": [
+    "4/12형상만 검사, 미측정 형상을 보간하지 않음",
+    "3라운드는 작은 개발 검사이며 통계적 일반화 근거가 아님",
+    "정확성/프로파일/CPU입력생성은 진단비용으로 GPU30분에는 포함하지만 배포 선택비용에는 포함하지 않음",
+    "합성 고정 입력의 캐시 재사용 효과가 실제 다른 층 입력과 다를 수 있음",
+    "새 GPU 모델 생성0회, 새 커널0개, 큰입력자료저장0개"
+  ]
+}
