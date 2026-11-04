@@ -1,0 +1,21 @@
+사용자가 A안 실행을 승인했다. /home/acorn0415에서 시작하는 Claude Fable 채팅의 독립 검토다.
+대상 프로젝트 /home/acorn0415/Quantization. AGENTS.md와 docs/CLAUDE_REVIEW_PROTOCOL_KO.md를 먼저 읽는다.
+
+검토 파일:
+/home/acorn0415/Quantization/src/experiments/linear_w8a8_stage1/REGISTRATION_KO.txt
+/home/acorn0415/Quantization/tools/linear_w8a8_stage1.py (작성 후 제공)
+/home/acorn0415/Quantization/src/experiments/linear_w8a8_stage1/results.json (완료 후 제공)
+앞선 근거: /home/acorn0415/Quantization/src/experiments/mixed_precision_world_review_20261104/REPORT_KO.txt
+
+목적은 기존 PyTorch W8A8 경로의 제한된 비용 진단이다. 처음 청크 5 forward, 실제 GEMM 최대3형상,
+전체 시간 상한 2026-11-04 14:10:04 UTC. GPU 실험을 추가로 요구하거나 직접 시작하지 않는다.
+새로운 후보 제안은 필요 없다. 읽기 전용 코드·저장자료·Git 검토만 허용하며 파일 수정·설치·다운로드·
+GPU/모델 실행·다른 검토자 생성·커밋은 금지한다.
+
+검토 핵심: profiler/capture가 있는 1회 실행을 일반 생성 속도로 오해하지 않는지;
+W 정적 준비 vs X 동적 quant/dequant/bias/output 비용 포함 여부; native replay와 정수 누산의 검증;
+샘플 정수 검사를 전체 검증처럼 쓰지 않는지; 단계별 cold 비용 및 중첩 시간을 다루는 방식;
+늦은 시간상한과 forward5회 준수; 단순 unfused 경로 결과로 모든 W8A8을 종료한다고 과장하지 않는지.
+
+실제 확인한 파일과 아직 없는 결과를 구분하고 중요한 오류만 근거와 함께 한국어로 보고한다.
+Task/Dispatch에 맞춰 Orca worker_done으로 반환한다. 결과가 아직 없으면 설계/코드 검토 범위로 반환한다.

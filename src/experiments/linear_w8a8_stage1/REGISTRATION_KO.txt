@@ -1,0 +1,52 @@
+2026-11-04 A안 실행 등록 — 초기 청크 linear 비용 및 단순 W8A8 진단
+
+사용자 승인: 'A부터 하자'. 시작 2026-11-04 13:10:04 UTC, 종료 상한 14:10:04 UTC.
+환경 확인·구현·검증·실행·추가 실행을 모두 이 60분 상한에 포함한다. 검토 반환이 늦어도 GPU 상한은 연장하지 않는다.
+기존 TT·희소 attention·복원 재사용 후보는 재개하지 않는다. 새 커널·패키지 설치·모델 다운로드를 하지 않는다.
+
+목표: 실제 초기 청크에서 시간이 큰 linear 형상 최대 3개를 골라, BF16과 기존 torch._int_mm 기반
+단순 W8A8의 정확성·시간·메모리를 확인한다. 전체 영상 가속/품질 또는 모든 W8A8 구현의 한계를 주장하지 않는다.
+
+입력: 기존 Self-Forcing EMA 가중치, QVG 참조 revision 0601468f2dbba6a17ac7086faec6d41527cad188,
+policy_study_prompts.txt 첫 프롬프트, seed303. batch1, 3 latent frame, 60x104 latent grid,
+M=4680, 초기 과거 KV 없음. 원래 schedule 4 denoise + 1 cache-record = 모델 forward 총 5회.
+모델 측정은 한 번만 수행한다. 같은 모델의 warmup/재현 생성도 이 5회에 포함하므로 추가 전체 forward는 없다.
+텍스트 인코딩과 모델 로딩은 합친 준비 비용으로 생성 구간과 분리해 보고하고 VAE는 실행하지 않는다.
+공용 로더를 그대로 사용하므로 텍스트 인코딩 시간만 별도로 분해하지 않는다. checkpoint와 원본 코드는 변경하지 않는다.
+첫 forward는 cold 비용으로 별도 표시하고, 다음 네 forward도 서로 timestep이 다른 관측임을 명시한다.
+모델 profiler와 캡처가 시간을 교란하므로 이 실행의 wall time을 안정된 생성 벤치마크로 쓰지 않는다.
+
+계측: 모든 generator nn.Linear에 구간과 형상을 기록하고 CPU/CUDA profiler trace를 보존한다.
+중첩 구간을 합산해 전체 가속 상한으로 쓰지 않는다. 실제 동일 모듈의 입력·가중치·bias·BF16 출력을 보존한다.
+실제 M=4680 입력은 forward index1에서 형상당 처음 만난 모듈 하나만 캡처한다.
+형상 선택은 forward index1~4의 leaf-linear CUDA event 시간 합이 큰 순서로 최대3개다.
+캡처와 별도 모델 연산을 추가하지 않는다. 입력 clone은 diagnostic_capture 구간으로 따로 표시한다.
+
+W8A8: 대칭 [-127,127], nearest-even RTN, W는 출력채널별 FP32 scale, X는 행별 FP32 scale.
+W의 양자화와 INT8 전치/연속화는 정적 준비 비용으로 별도 측정한다. 실행 시간에는 X 양자화,
+torch._int_mm의 INT32 누산, FP32 scale 적용과 bias, BF16 출력 변환·reshape를 전부 포함한다.
+BF16 대조는 동일 X/W/bias의 torch.nn.functional.linear. 별도 fused 커널을 만들지 않는다.
+torchao/vllm은 현재 설치되지 않았으므로 비교 범위는 이 단순 PyTorch 경로다.
+
+정확성은 속도 결과 전에 판정한다.
+1. 작은 정수 행렬 3사례(무작위·0·극값)에서 torch._int_mm과 CPU INT64 직접 합산의 모든 원소 정확 일치.
+2. 실제 입력에서는 등록한 INT8 범위와 K*127^2<2^31을 확인한다. 첫/마지막 최대4행·첫16출력의
+   INT32 결과를 CPU INT64와 비교한다. 이 부분 검사를 전체 정수 출력 검사라고 표현하지 않는다.
+3. 같은 양자화 정수와 scale의 FP32 참조와 비교해 최종 BF16 출력의 relative-L2<=0.002,
+   모든 원소 abs오차<=0.02+0.02*abs(참조), finite/shape/dtype 일치.
+4. 모델에서 캡처한 BF16 출력과 native BF16 replay는 모든 원소 바이트 일치를 우선 검사한다.
+   일치하지 않으면 성능 판정에 쓰지 않고 구현 유효성 문제로 보고한다.
+5. BF16 원래 출력 대비 W8A8 relative-L2<=0.05는 다음 검토로 넘길 공학적 선별 기준이다.
+   영상 품질 동등성 기준이 아니며 통과해도 모델 품질 성공을 뜻하지 않는다. 실패도 결과로 보존한다.
+
+타이밍: 형상별 두 경로 warmup10회씩. 10개 대응 round, round마다 각 경로10회,
+짝수 round BF16→W8A8, 홀수 round 반대. GPU 구간과 동기화 포함 wall time을 모두 저장한다.
+W 정적 준비시간·실제 저장 bytes·경로별 독립 peak reset의 증가량·baseline 공존 메모리도 보고한다.
+선별: 대응 wall 시간 감소율 중앙값>=5%이고 고정 seed20261104 대응 round bootstrap 10000회
+중앙값 구간의 하한>0이며 정확성 조건을 통과한 형상만 시간 이득 후보로 표시한다.
+이 기준은 이번 진단의 공학적 기준이며 임의 35% linear 비중 같은 보편 종료 기준을 적용하지 않는다.
+
+한도가 먼저 오면 완료한 형상/단계와 미완료를 구분한다. 실패 후 tolerance를 바꾸지 않는다.
+유효한 단순 W8A8이 느리면 이 구현의 이득 없음으로 종료하며 최적 fused W8A8까지 부정하지 않는다.
+환경/정수 커널 자체가 실행되지 않으면 구현 이식 없이 기준선 확보 실패로 종료한다.
+측정 전 명세와 실행 코드를 commit한다. 결과와 실제 Fable 검토 여부를 구분해 최종 보고한다.
