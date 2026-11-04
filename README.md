@@ -639,6 +639,19 @@ AV 출력·영상 품질은 미측정이다. 별도 NumPy 디코더로 24파일�
 [B-1 결과·바이트·층별 역전](src/experiments/kv_channel_budget_stage1/REPORT_KO.txt) ·
 [B-1 독립 CPU 감사](src/experiments/kv_channel_budget_stage1/audit.json)
 
+**B-2 완료·B-3 실행 중 (2026-11-05 KST):** 현재 청크와 전체 V를 포함한 native BF16
+attention+출력 투영을 검사했다. 두 프롬프트의 3층 평균 출력 제곱오차는 S120에서
+U120보다 **48.83%, 54.93% 감소**했다. 이 감소는 주로 29층에서 나왔으며 14층은
+두 프롬프트 모두 악화했다. 전체 30층이나 영상 품질의 개선율이 아니다.
+16청크 teacher 재현과 6사례 무개입 attention 재생이 원소 바이트 일치했고,
+별도 디코더로 24개 payload와 저장 출력 점수 96건을 감사했다.
+B-3는 생성 전에 42청크·8실행과 원시 RGB 영상 평가로 등록했다. BF16·균일 INT3 두 방식·
+고정 채널 boost를 비교하며, 품질 판별용 구현의 시간/메모리를 배포 성능으로 주장하지 않는다.
+
+[B-2 보고서](src/experiments/kv_channel_budget_full_attention/REPORT_KO.txt) ·
+[B-2 Fable 검토 반영](src/experiments/kv_channel_budget_full_attention/RESULT_REVIEW_RESPONSE_KO.txt) ·
+[B-3 사전 명세](src/experiments/kv_channel_budget_rollout/REGISTRATION_KO.txt)
+
 ## 출처와 공개 범위
 
 이 저장소의 연구 변경은 사용자 저장소에서 관리한다. 외부 코드를 가져왔다는 사실과 원본 라이선스는 유지한다.

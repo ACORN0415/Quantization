@@ -1,0 +1,115 @@
+Fable 5.1 실제 구현 검토 — B-3 고정 코덱 롤아웃 구현 / 2026-11-04 16:12~16:20 UTC
+실행 형태: 실제 Claude 채팅 세션(모델 claude-fable-5-1), fable_implementation_launch.json의
+structured chat claude_2d44acb4_8b41_4d94_aecf_cc9cd39b873d. Task 연결은 fable_implementation_attach.json
+기록대로 terminal_handle_stale로 거절됐고 Task/Dispatch 식별자는 없다. 지어내지 않고 native chat 임을 기록한다.
+하위 agent 0. GPU/모델 실행/다운로드/커밋/코드 수정 없음. 쓴 파일은 이 파일 하나다.
+검토 시점 상태: generate_p00.log 기준 p00 BF16 완료, p00 U120 생성 진행 중(26/42, 16:15 UTC). 결과 리뷰는 범위 아님.
+
+================================================================
+1. 판단: 타당. 생성을 중단해야 할 중대한 구현 오류는 찾지 못했다.
+================================================================
+등록문(REGISTRATION_KO.txt, 16:10 수정본)의 수명주기·호출수·두 균일 기준선·품질 판정 규칙이
+tools/kv_channel_rollout.py에 그대로 구현되어 있고, 핵심 가정은 런타임 assert로 고정된다.
+아래 지적은 모두 기록·표현·절차 수준이며 숫자 결과에 영향을 주지 않는다.
+
+================================================================
+2. 직접 확인한 항목 (파일을 읽고 코드 경로를 따라감)
+================================================================
+읽은 것: tools/kv_channel_rollout.py 전체, tools/kv_channel_budget_core.py 전체, src/kvq/lockstep.py 전체,
+src/wan/modules/causal_model.py의 CausalWanSelfAttention cache 경로(90~262행)와 attention() 호출점 grep,
+tools/kv_channel_full_attention.py의 sha/save/same/record/error/free_gpu와 capture의 K 정의 부분,
+src/scripts/p3_tf_fr.py source_hash/build/encode, tools/mechanism_worker.py auxiliary_evaluator,
+src/utils/wan_wrapper.py decode_to_pixel 머리, src/configs/a1.yaml 관련 행,
+REGISTRATION_KO/V1 및 diff, compatibility.json/compatibility_v1.json(요약 필드), decision_unit_checks.json,
+p00_BF16_sampling.json(요약 필드), p00_U120/encode_events.jsonl 머리 2행, B-2 REPORT_KO,
+RESULT_REVIEW_RESPONSE_KO, FABLE_RESULT_NEXT_REVIEW_KO(1~60행 + 후반 grep), git log/diff 76a8485..HEAD.
+
+(a) 수명주기
+- c0 압축 없음: attend()가 c['chunk']==0이면 원래 attention으로 그대로 반환(68행). BF16 팔도 동일 경로.
+- context 저장: 컨트롤러는 kv_cache를 쓰지 않는다. causal_model 243~250행이 roped_key/v를 원래 BF16
+  cache에 그대로 쓰고, attend()는 읽기 시점에만 k를 복원값으로 치환한다(89~90행). 원본 BF16 cache 유지 확인.
+- c1에서 최초 encode: chunk-1이 store에 없으면 call==0을 assert하고 k[:,past-4680:past]를 CPU로 내려
+  codec.encode → payload와 복원값을 저장, 복원값만 .cuda()(75~80행). 이후 같은 청크의 call 1~4와 다음
+  청크들은 저장된 복원값을 재사용. k[:,past-4680:past]는 context 호출(call 4)이 마지막으로 쓴 슬롯이므로
+  "완료된 과거K만 압축"이 성립한다.
+- 최오래 퇴거: a1.yaml local_attn_size 21 = 7청크(32760 토큰), sink 0. causal_model 228~244행은 c7부터
+  매 청크 첫 호출에서 4680 토큰을 밀어낸다. attend()의 start=max(0,chunk-6), store 삭제, sorted(store)==ids
+  assert, k.shape[1]==past+4680 assert(70~71, 85행)가 이와 일치한다. 과거 최대 6청크.
+- 현재K/모든V BF16: original(q, restored_past ∪ k[:,past:], v)로 현재 K 슬라이스와 V 전체가 원본.
+(b) 호출수
+- a1.yaml denoising_step_list 4단계 + lockstep.run_chunk의 context 호출 1회 = 청크당 5 forward.
+  pre-hook의 chunk=count//5, call=count%5 매핑이 맞고, attention()은 causal_model 내 251행 한 곳에서만
+  3개 위치인자로 호출된다(grep 확인). assert c and not args and not kwargs(66행)와 정합.
+- 종료 assert: model_forwards 210, attention_calls 6300, 층별 210, 층별 encode 41(BF16은 0)(153~154행).
+  p00_BF16_sampling.json 실측: completed, forwards 210, attention 6300, encode 0, 42청크 전부
+  no_intervention_byte_equal True, latent_error mse/max_abs 0.0. 등록의 "BF16은 126프레임 byte일치" 충족.
+- p00_U120 encode_events.jsonl: layer 0/1, encoded_chunk 0, reader_chunk 1, call 0, 2,935,324B로
+  최초 encode 시점이 설계와 같다. 완료 시 1230행이어야 한다(검토 시점 561행, 진행 중).
+(c) 호환 검사
+- compatibility.json: passed, gpu_calls 0, encode_calls 108, 18사례 모두 byte_equal True.
+  6청크 바이트 합 U120 17,611,944 / U156 17,280,168 / S120 17,572,632로 등록문 수치와 일치
+  (단일 블록 payload bytes + 헤더 5개×28B = +140, 49행). 제시된 "18사례×6청크=108 encode, B2 active
+  payload 복원과 전원소 일치" 주장은 코드(48행 same(...))와 JSON이 뒷받침한다. 원자료 .pt/.bin은 열지 않았다.
+- 코덱이 페이지(group 120/156 토큰) 단위로 offset/scale/boost mask를 정하고 4680이 120·156의 배수이므로
+  청크별 encode가 6청크 블록 encode와 같은 복원값을 내는 것은 구조적으로 기대되는 결과다.
+(d) provenance
+- 현재 sha256: script 7012fdb7…, codec 3366d65b…, REGISTRATION_KO cd72491d… 가 compatibility.json의
+  provenance와 전부 일치. compatibility_v1.json은 v1 script 5e1fd685…/등록 29f19b98…으로 분리 보존됨.
+  generate()의 gate(107행)와 quality()의 sample provenance 검사(211행)는 이 값들과 맞물린다.
+- git diff 76a8485..HEAD: 변경은 36→126 프레임, 12→42 청크, 60/1800/11→210/6300/41, late 69→249,
+  141→501 뿐이며 ReadController·codec·decisions()는 변경 없음.
+(e) 두 균일 기준선과 품질 판정
+- ARMS=('BF16','U120','U156','S120') 고정 순서, settings()가 U156만 group 156, S120만 'selected'.
+- decisions(): 규칙1(공통 균일팔: 두 prompt 모두 late MUSIQ≥BF16-1, late DINO참조≥0.99,
+  late 인접≥BF16-0.005) → simple 목록. 규칙2(a) dm≥1 & dd≥-0.005, (b) dd≥0.01 & dm≥-1, 공통 guard
+  da≥-0.005 & dw≥-1, "같은 유형이 두 prompt 모두" = all(quality_path) or all(reference_path).
+  advance = not simple and (...) . 등록문 1~3항과 일치. "두 U 각각보다"는 max(U) 비교로 등가.
+- quality(): VAE decode_to_pixel(use_cache=False) → (1,501,3,480,832) assert → RGB8 → pixels.pt 저장 후
+  MUSIQ(pyiqa, [0,1] float, 4장 배치)와 DINO(auxiliary_evaluator.features, 16장 리스트, mechanism_worker의
+  raw_auxiliary와 같은 호출 방식)를 MP4 쓰기 전에 계산. metric_input 문자열로 기록. 로컬 weight 4개 존재 확인.
+(f) 자원·시간
+- 등록 상한: 1680 forwards, VAE 8회, 4008프레임. 코드 cap: forward 210/실행(130행), vae_decodes==8 assert.
+- 시간: limit()이 pre-hook·attend·quality 루프에 들어 있어 17:34 UTC를 넘기면 그 실행은 failed로 기록되고
+  예외가 전파된다. 로그 기준 U120은 약 5~6초/청크(12→26청크가 79초)로 압축 팔 1회 약 4분, BF16 68초.
+  남은 7실행+모델 2회 로드+품질 평가가 17:34 안에 끝날 가능성은 있으나 보장은 아니다(추정).
+
+================================================================
+3. 지적 (중대 아님, 기록·절차 수준)
+================================================================
+(1) provenance gate의 경직성: provenance()에 스크립트 자신의 sha가 들어가므로 quality() 단계에서
+    버그가 발견되어 한 줄이라도 고치면 이미 생성된 8개 sampling.json이 211행 assert에서 전부 거부되고,
+    생성 폴더는 overwrite 거부(120행)라 재생성도 불가하다. 지금 고치라는 뜻이 아니다. 만약 그런 상황이
+    오면 "생성 시 script sha ≠ 평가 시 script sha"를 명시적으로 기록하고 generate 부분 diff가 비었음을
+    보이는 절차를 미리 정해 두는 편이 낫다. 결과를 보고 판정 코드를 바꾸는 것과 구분해야 한다.
+(2) decision_unit_checks.json의 provenance가 v1 script sha(5e1fd685…)다. git diff로 decisions()가
+    HEAD에서 변경되지 않았음을 확인했으므로 결과는 유효하지만, 파일만 보면 현재 스크립트에 대한 검사로
+    읽히지 않는다. 보고서에 "v1 시점 검사, decisions() 무변경"을 한 줄 적으면 된다.
+(3) encode_events의 roundtrip_byte_equal: True는 컨트롤러가 검사한 값이 아니라 codec.encode 내부
+    assert(core 57~59행: decode(payload)와 직접 복원의 byte 일치)가 통과했음을 뜻한다. 라벨을
+    "codec 내부 assert 통과"로 읽어야 하며 독립 검증으로 세지 않는다.
+(4) late 창의 dino_adjacent는 adjacent[248:]로 (248,249) 쌍을 포함해 252쌍/252프레임이다. 정의상
+    문제는 없고 모든 팔에 동일하지만 "후반(249..500) 인접"의 첫 쌍이 248프레임을 포함함을 기록한다.
+(5) 메모리 수치 해석: 복원 K가 원본 BF16 cache에 더해 GPU에 상주하므로 peak_allocated는 기준선보다
+    클 수 있다. 등록대로 메모리·속도 주장이 없으니 모순은 아니나, 결과 보고에서 peak 값을 비교 지표로
+    쓰지 않도록 한다. cpu_encode_restore_transfer_s도 .cuda() 전송을 포함한 진단값이다.
+(6) 용어: S120의 'selected' mask는 페이지·head마다 그 페이지의 |K| 평균으로 63채널을 고르므로
+    청크 간에 채널 집합이 고정되지 않는다. 등록문의 "고정 K 채널boost"는 코덱 설정이 고정이라는
+    뜻으로 읽어야 하며, "고정 채널 집합"으로 오독되지 않게 결과 보고에서 한 번 명시한다.
+
+================================================================
+4. 주장 범위
+================================================================
+지금 말할 수 있는 것: 구현은 등록문의 수명주기·호출수·기준선·판정 규칙을 따르고, 핵심 가정은
+런타임 assert로 보호되며, p00 BF16 실행은 무개입 byte 일치와 호출수 조건을 충족했다.
+아직 말할 수 없는 것: 압축 팔의 생성 결과·품질 수치·판정, p04 실행, 시간 상한 내 완료 여부,
+quality() 단계의 실제 동작(실행 전). 결과 리뷰는 별도 작업이다.
+
+================================================================
+5. 미확인 항목
+================================================================
+- 어떤 코드도 실행하지 않았다(sha256sum·JSON 요약 출력 제외). GPU 사용 0.
+- compatibility.json의 byte_equal은 JSON과 코드 논리로 확인했고 .pt/.bin 원자료를 다시 복원하지 않았다.
+- causal_model.py는 cache 경로(90~262행)와 attention() 호출점만 읽었고 전체 1080행을 읽지 않았다.
+- evaluate_policy_supplement.Evaluator.features 내부, pyiqa MUSIQ 전처리, VAE decode 본문,
+  src/kvq/store.py, p04 reference 내용, capture .pt는 이번 세션에서 읽지 않았다.
+- p00 U120 이후 실행과 quality.json은 검토 시점에 존재하지 않았다.

@@ -1,0 +1,41 @@
+{
+  "status": "completed",
+  "completed_utc": 1793808965.0132313,
+  "scientific_status": "registered full-attention gate passed; not video/system claim",
+  "local_result_commit": "2d257b2",
+  "model_forwards": 80,
+  "attention_replays": 30,
+  "invalid_setup_forwards": 0,
+  "gpu_audit_repeats": 0,
+  "fable_sessions": [
+    "claude_d61941e7_5d6d_4d9e_bc03_bea8ddbc4029",
+    "claude_3feedbe3_e6c1_4f1f_8afb_a1b8bbf3cf9b"
+  ],
+  "orchestration_task_attached": false,
+  "attach_error": "terminal_handle_stale",
+  "files": {
+    "src/experiments/kv_channel_budget_full_attention/DESIGN_RESPONSE_KO.txt": "bb1fe1b09d3ae5063862d1795e4a3b67df6960dcedcf4d13c91426d5abfd3be7",
+    "src/experiments/kv_channel_budget_full_attention/FABLE_DESIGN_REVIEW_KO.txt": "8d1e101f30d6755beb0f23618032eb8b78c467dced9d745c64abf2f23982bc8b",
+    "src/experiments/kv_channel_budget_full_attention/FABLE_RESULT_NEXT_REVIEW_KO.txt": "aa0ce12fa9bdc13b7bc041a63152b9b209df202644dcd960811db7e0c9e070ed",
+    "src/experiments/kv_channel_budget_full_attention/REGISTRATION_KO.txt": "0179c38ee334af4e6578f772d82eefc3afb91fdcb01edaed8107d310870e6ee6",
+    "src/experiments/kv_channel_budget_full_attention/REPORT_KO.txt": "a20404065b41e91684c1da05455d4db393004771865a95098eb7b7bae0e10f3b",
+    "src/experiments/kv_channel_budget_full_attention/RESULT_REVIEW_RESPONSE_KO.txt": "434bafca3843b9ebb52b46db724ca35c8ca9c2c5ca88f7a9b00a29e9fdb708dd",
+    "src/experiments/kv_channel_budget_full_attention/audit.json": "eec87e440d1bae0abb9676fac1311f19bfc3bfdab2959cbb285d24c682997b4c",
+    "src/experiments/kv_channel_budget_full_attention/capture_p00.log": "e9ac142716e278a79b9e6bf66e4b68b52ab13ca6e78b38967aaaf3f073e59337",
+    "src/experiments/kv_channel_budget_full_attention/capture_p00_manifest.json": "84afdf87167777c99e2798825031bb368753c66f2b408f6951a5cdde85c97c2f",
+    "src/experiments/kv_channel_budget_full_attention/capture_p04.log": "3f2f4a1bceed7b247094ede816dc403db80cc5e306b26eefe31d1b9dfb60508f",
+    "src/experiments/kv_channel_budget_full_attention/capture_p04_manifest.json": "0556b43d072d5258fa5cbf06d0dd51866ece22ba62335bf09b19c34828e294a4",
+    "src/experiments/kv_channel_budget_full_attention/capture_setup_failure.json": "97fa5bb61ed26bfd41aa1ccf4598d5aed8ad6a85f1e15696ae3bd3dd244717f3",
+    "src/experiments/kv_channel_budget_full_attention/capture_setup_failure.log": "8e42c5a091ecc47e567f581706fe63b9a60bdb05d349c0b2edcd5d32ca4e1087",
+    "src/experiments/kv_channel_budget_full_attention/crop_unit_checks.json": "96c153fd4f140dd9f0e19c364716a3693fc3f92ea9b45a7d2564719fa5d2fb7c",
+    "src/experiments/kv_channel_budget_full_attention/evaluate.log": "dfa5fe79c0dbf1d82cec77f6dd73aee4080d3f59df52da386a0d1cecc1025dbe",
+    "src/experiments/kv_channel_budget_full_attention/fable_design_attach.json": "b36b173771c761af0d8455d35d82cbc9d23fc5c5be8929575690f496b65866f4",
+    "src/experiments/kv_channel_budget_full_attention/fable_design_launch.json": "cedca68726e30059977c52dab0097ee3b13fe47876919c80fc4835ec735cc7db",
+    "src/experiments/kv_channel_budget_full_attention/fable_design_prompt.txt": "fd8bda5a99adc6a317a580037217d7a8e80bea9ef4c8bc23e3bd5d559ca55b78",
+    "src/experiments/kv_channel_budget_full_attention/fable_result_attach.json": "ebc34c4d1ddcb8eb85d14423e691f7fd15283968bb0caef89cb75a522e6d30cd",
+    "src/experiments/kv_channel_budget_full_attention/fable_result_launch.json": "72be25214fc6844f9bb018ec2729ae9c8a58c38053d1e30c5e0ef21f34abf365",
+    "src/experiments/kv_channel_budget_full_attention/fable_result_prompt.txt": "d2a9b604a38c00c73ba020cb9360b3936ef66456693b60003078f1d5116aca33",
+    "src/experiments/kv_channel_budget_full_attention/posthoc_head_concentration.json": "2284f127e3d50d20eaa6be769893b7b0fe80254326837d912eeec2d260507222",
+    "src/experiments/kv_channel_budget_full_attention/results.json": "ac5cbb1cdc0125d4530b19d87e5212ab09e4878243cd1286aa797f5ad701ba6e"
+  }
+}

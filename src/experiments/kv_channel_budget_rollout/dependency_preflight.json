@@ -1,0 +1,16 @@
+{
+  "recorded_utc": 1793809044.3303924,
+  "files": {
+    "tools/kv_channel_full_attention.py": "bba0e837a7bd7ecb80c7f776e7739c42716d897a8a40464555050467b4a931d8",
+    "tools/mechanism_worker.py": "dc662434011c78f6dd291758372b465f1a456f36c0b2bbf7e389a54443bc4446",
+    "tools/evaluate_policy_supplement.py": "ab815c8f6dbafcf1655e34f3ecd7fa7798a3d0d39d40bbfdfa7bf8a83ad03ee9",
+    "src/utils/wan_wrapper.py": "da919629bac4472cd9072223f1ab03200de276e202ab0d9b91e6789d500ff8fa",
+    "src/wan/modules/vae.py": "a4c1d9362f25a1bef463ac51caed4097317c007d4d87887b02a3a733fdbc48d5"
+  },
+  "packages": {
+    "torch": "2.6.0+cu124",
+    "torchvision": "0.21.0+cu124",
+    "pyiqa": "0.1.16",
+    "flash_attn": "2.7.4.post1"
+  }
+}
