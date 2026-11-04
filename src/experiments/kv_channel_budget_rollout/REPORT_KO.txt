@@ -1,0 +1,56 @@
+B-3 고정 채널boost의 실제 생성/원시영상 결과 (저장 자료 감사·실제 Fable 검토 완료)
+42청크(126latent프레임)×8실행, 1680 generator forwards, 실제 past-K encode7380회.
+각프롬프트 BF16은42청크전체저장참조와byte일치. 후보도미압축첫청크byte일치.
+8영상×501프레임 rawRGB8을동일로컬VAE/MUSIQ/DINO로평가. 후반249..500.
+현재K와모든V는BF16, 과거K만고정codec. 전체30층·4denoising+context.
+이설정에서단순균일K양자화와S비교이며KV정밀도배분전체의최적화아님.
+
+p0 BF16: late MUSIQ=74.556728999, DINO-reference=1.000000000, adjacent=0.999580049
+p0 U120: late MUSIQ=69.215186967, DINO-reference=0.774105556, adjacent=0.993120343
+p0 U156: late MUSIQ=68.196701519, DINO-reference=0.752010614, adjacent=0.993026348
+p0 S120: late MUSIQ=71.162409495, DINO-reference=0.811688389, adjacent=0.997434601
+p4 BF16: late MUSIQ=74.942205247, DINO-reference=1.000000000, adjacent=0.998123842
+p4 U120: late MUSIQ=54.653155963, DINO-reference=0.586085928, adjacent=0.986174530
+p4 U156: late MUSIQ=56.385284681, DINO-reference=0.613506118, adjacent=0.987261179
+p4 S120: late MUSIQ=61.444203150, DINO-reference=0.727083575, adjacent=0.990026092
+
+{
+  "simple_uniform_sufficient": [],
+  "details": [
+    {
+      "prompt": 0,
+      "late_musiq_gain_vs_best_uniform": 1.9472225280035076,
+      "late_dino_reference_gain_vs_best_uniform": 0.03758283306146071,
+      "late_dino_adjacent_difference_vs_best_uniform": 0.004314258193354736,
+      "whole_musiq_difference_vs_best_uniform": 2.343866900293662,
+      "quality_path": true,
+      "reference_path": true
+    },
+    {
+      "prompt": 4,
+      "late_musiq_gain_vs_best_uniform": 5.058918468535893,
+      "late_dino_reference_gain_vs_best_uniform": 0.11357745708712352,
+      "late_dino_adjacent_difference_vs_best_uniform": 0.0027649132860025905,
+      "whole_musiq_difference_vs_best_uniform": 3.7720675896741653,
+      "quality_path": true,
+      "reference_path": true
+    }
+  ],
+  "advance": true
+}
+
+등록한품질/참조유사도경로는두prompt모두통과. 의미있는부분개선이며BF16품질보존은아님.
+S는BF16보다후반MUSIQ p0 -3.3943 / p4 -13.4980. 가장좋은U보다+1.9472/+5.0589.
+두개발prompt,seed1개결과. 프레임독립성검정·세계모델action/물리정확도·신규성주장없음.
+전체GPU원본cache와복원K가함께상주하는수치검사경로. peak/시간을배포성능으로쓰지않음.
+선택규칙은고정하지만선택된채널은각페이지/head마다달라진다.
+후반인접지표는(248,249)..(499,500)의252쌍.
+다음자원판단: V를BF16으로고정한조건을넘어총KV상한에서기존K8V8이더간단하고충분한지확인.
+기존RTN8 group16 실제byte codes+FP16scale+padding을계산하면과거pair16,201,728B/chunk,
+공통현재BF16 포함최대125,964,288B/층. S의직렬화내용132,588,312B/층보다작다.
+헤더28B를K/V각각부가해도125,964,624B/층으로상한에들어간다. 아직K8V8품질은미측정.
+
+감사완료: 1680forward,7380encode이벤트,108대표payload,336청크latent점수,4008프레임점수재집계.
+MUSIQ/DINO/VAE추론을감사에서반복한것은아니다. Fable는자신이직접읽은범위를별도명시했다.
+총내용바이트중과거K는약13.25%이다. 다른부분의BF16고정조건을유지한이득이다.
+B-4에서기존K8V8과총예산비교를수행한다. B-3관측/판정은그대로유지한다.

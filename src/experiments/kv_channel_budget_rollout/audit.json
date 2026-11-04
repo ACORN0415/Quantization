@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "gpu_calls": 0,
+  "model_forwards_checked": 1680,
+  "encode_events_checked": 7380,
+  "compatibility_encodes": 216,
+  "payloads_independently_decoded": 108,
+  "latent_chunk_scores_recomputed": 336,
+  "pixel_mse_frames_recomputed": 4008,
+  "dino_features_reaggregated": 4008,
+  "musiq_frame_scores_reaggregated": 4008,
+  "musiq_dino_vae_inference_rerun": false,
+  "decision_recomputed": true,
+  "advance": true,
+  "audit_code_sha256": "2f1e3c4b8937c06a41b0ddd7b86d9a906d2bb82bf6e0ffc28cd2b18dd1f08dc5"
+}
