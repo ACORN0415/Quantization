@@ -63,6 +63,7 @@ def main():
                 stats['chunk_scores']+=1
             if arm=='K8V8':
                 assert s['kv_with_headers_per_layer']==125964624<132588312 and len(s['payloads'])==36
+                assert {Path(i['path']).name for i in s['payloads']}=={f'l{l:02d}_c{c:02d}_{v}.bin' for l in (0,14,29) for c in range(35,41) for v in ('K','V')}
                 for item in s['payloads']:
                     file=checked(item);flag=raw8(file.read_bytes())
                     assert file.stem.split('_')[-1]==('V' if flag else 'K');stats['payloads']+=1
