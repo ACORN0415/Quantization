@@ -1,0 +1,40 @@
+A-2 실행 등록: 기존 INT8 GEMM+scale 융합 경로 하나
+시작 2026-11-04 14:08:11 UTC, 종료 상한14:38:11 UTC. 준비·코드·컴파일·검증 포함30분.
+사용자가 A-1 이후 근거가 있으면 A-2로 진행하라고 승인했다. A-1 완료와 결과를 변경하지 않는다.
+
+근거: A-1 기본컴파일은 입력quant와후처리만 융합했고 외부 _int_mm/INT32버퍼가 남았다.
+INT8 GEMM 단독도 현재BF16보다 빠르지 않았다. 공개torchao v0.9.0은 int_scaled_matmul에서
+INT32결과×행scale 패턴과 force_fuse_int_mm_with_mul을 사용한다. 현재torch에 해당lowering이 존재한다.
+https://github.com/pytorch/ao/blob/v0.9.0/torchao/kernel/intmm.py#L110
+https://github.com/pytorch/ao/blob/v0.9.0/torchao/quantization/utils.py#L523
+새알고리즘/커널 개발이 아니라 기존실행기준선 확인이다. torchao 설치·소스복사 없이 설치된torch API만 사용한다.
+
+기존A 입력3개, 새모델/영상0, 수동커널작성0, 패키지설치0, dtype/그룹/레이아웃변경0.
+등록된 단일표현식: int_mm(qx,wt)*sx.expand(M,N), 그후 sw/bias/최종BF16.
+기존 acc.float()*sx를 동등한dtype승격 표현으로 바꾼다. 실제 동일성·융합 발생은 검증한다.
+W 전치의 contiguous를 제거하지 않는다. 공개safe_int_mm의 비연속mat2 정확성 주의사항을 따른다.
+
+4팔: eager BF16 / tuned compiled BF16 / A-1 default compiled W8A8 / fused compiled W8A8.
+두 tuned팔 모두 max_autotune_gemm=True, backend ATEN,TRITON, CUDAgraph=False,
+fullgraph=True,dynamic=False,TF32=False. fused팔만 force_fuse_int_mm_with_mul=True.
+max_autotune 전체mode는 사용하지 않는다. 내장 finite kernel 후보의 autotuning은 허용하지만
+주작업자의config탐색·수식추가재작성·새backend설치·fallback포장은 하지 않는다.
+실제 선택된kernel/INT32중간버퍼유무를 출력코드와trace로 확인한다. 미융합이면 미확보로 보고한다.
+
+정확성은 타이밍 전에 판정한다.
+- eager BF16는 원래캡처와전원소바이트일치.
+- tuned BF16는 다른GEMM 알고리즘을 선택할 수 있으므로 바이트일치는기록하되 필수로하지 않는다.
+  원래BF16 대비relL2<=.002, 원소오차<=.02+.02*abs(ref),finite/shape/dtype를 사전조건으로 둔다.
+- 고정 qx/wt의 tuned INT32 GEMM은 eager INT32와 전원소일치,8×16 CPU INT64표본일치,
+  범위[-127,127],K*127^2<2^31. 실제선택backend를 함께보고한다.
+- W8A8 두팔은 A-1과 같은FP32 양자화참조대비relL2<=.002와원소오차, 원래BF16대비relL2<=.05.
+  독립 compiled quant 차이와전체호출내부관측을구분한다. 출력·정수·scale을보존한다.
+- 유효성실패는부분기록을보존하고 성능실패와구분한다. 결과를본후오차기준은바꾸지않는다.
+
+4팔 warmup각10회,12round×10호출,4순환순서. 동적X양자화부터최종출력까지포함.
+정적W준비와컴파일최초호출비용분리, 공통상주와allocator추가peak분리.
+형상별독립프로세스 최대5분,전체30분 중먼저도달하는상한. 실제trace는타이밍과별도1회.
+형상별 fused W8A8이 eager/tuned BF16 각각보다 대응감소율중앙값>=5%,bootstrap10000회(seed20261104)
+95%구간하한>0,정확성및실제융합검증통과하면 실행기준선이득후보다. 전체영상/신규성으로확대하지않는다.
+성공/유효한성능실패/정확성실패/컴파일실패/시간초과/융합미확보를구분한다.
+실패해도A-3로config탐색을자동연장하지않는다. 이번사용자요청의분기는A-2실행으로충족하고결과로다음판단을제출한다.
