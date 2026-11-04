@@ -1,0 +1,44 @@
+B-1 CPU 판별: 저장 예산 내 K 채널 boost / 2026-11-04
+시작14:47:00 UTC, 준비·코드·검증·검토 포함45분 상한15:32:00 UTC.
+사용자 지시에 따라 A의 현재 선택적 W8A8 경로가 rollout 오차 조건을 넘은 뒤 B로 이동한다.
+새모델·영상·GPU·패키지·수동커널0. CPU4threads, 기존6개 K+6개query 파일만사용.
+
+문제의범위: 같은상한에서 Kitty식 |K|평균 채널 선택의 응용가치가 있는가.
+Kitty(https://arxiv.org/html/2511.18643v1)는채널boost/페이지저장을이미제안했고,
+QuantWM(https://arxiv.org/html/2609.26425v1)은영상K오차와query민감도·logit보존을직접다룬다.
+이작업은그방법들의새발명이나신규성검증이아니다. 균일설정으로충분하면새선택기를개발하지않는다.
+
+입력: postwo_rounding/p00_s101,p04_s101 × l00,l14,l29의c6 key [1,32760,12,128],
+q6/q7는각32개query. 캡처위치는attention직전post-RoPE이며capture코드/해시확인.
+c6에과거전체V가없고c7에도새K/V가없다. 따라서AV/Wo출력오차는검사하지않는다.
+q7의주지표는c6까지의32760개과거K만을대상으로다시정규화한attention분포다.
+이는실제c7전체attention(새청크포함)의오차나보류영상품질이아니다. q6는설명용보조지표.
+선택에는K만사용하고q6/q7/결과를사용하지않는다.
+
+고정4팔:
+U120: 균일INT3,token page120
+U156: 균일INT3,page156 (기존group옵션의단순대조,더적은바이트)
+S120: INT2기본+페이지/헤드별 |K|평균상위63/128채널 INT4,page120
+R120: 같은63채널을고정seed20261104+prompt*100+layer로무작위선택,page120
+120과156은4680의약수여서청크경계를넘는그룹없음. 모든K는완료된c6까지의과거지원집합이다.
+양자화는채널별min/max,FP16 min과scale,scale>=2^-24,FP32계산·nearest-even·clamp,
+복원후BF16변환,평가지표는FP32 QK/softmax. 기준원래K도BF16->FP32.
+
+저장: 공통28byte헤더,실제비트패킹stream,min/scale각FP16,혼합mask1bit/channel/page/head.
+혼합은하위2비트dense+선택채널상위2비트sparse,mask에서채널순서를재구성하므로별도index없음.
+torch.save파일해시크기를payload로쓰지않고실제.bin직렬화길이를센다.
+상한=U120 실제20,547,100bytes/텐서. S/R는63채널로20,501,236bytes, U15620,160,028bytes.
+동일상한이지동일실측바이트가아니다. 남는바이트를임의padding해동일크기라고주장하지않는다.
+입력/양자화자료/Python실행메모리와저장payload를구분한다.
+
+정확성: 독립scalar bitpack oracle(1/2/3/4비트·경계길이),constant/zero/extreme toy roundtrip,
+실제24팔모두unpack codes정확일치,직접복원vs패킹복원전원소BF16바이트일치,finite/shape,
+입력파일sha와payloadsha보존. gate실패는오차효과와분리. 실패후scale/규칙/그룹탐색금지.
+
+주지표: q7 past-only softmax total variation(.5*L1), query와head평균,층別/프롬프트別표시.
+보조: 행평균을뺀QK relativeL2,원래QK relativeL2,K복원오차,q6 TV. 지표간부호상쇄를독립손실항으로분해하지않는다.
+진행: 두프롬프트각각에서3층평균TV가S로U120및U156각각보다10%이상감소하고,
+R120보다도작으며,각프롬프트3층중2층이상에서두U보다좋아야한다.
+그외는이번고정조건의추가개발미채택(혼합/실패표시),V재캡처/새선택기탐색을자동추가하지않는다.
+성공해도기존기제응용가치만확인한것이며AV/생성품질·GPU속도·실제배포peak는미검증.
+실제OOM해결조건·새선행공백없이는논문주제로채택하지않는다. 하나의randomseed와두개개발프롬프트를통계적일반화로쓰지않는다.
