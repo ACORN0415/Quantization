@@ -1,0 +1,10 @@
+2026-11-04T13:21:08.122853+00:00 integer_gate
+FINAL_STATUS failed
+Traceback (most recent call last):
+  File "/home/acorn0415/Quantization/tools/linear_w8a8_stage1.py", line 341, in <module>
+    main()
+  File "/home/acorn0415/Quantization/tools/linear_w8a8_stage1.py", line 321, in main
+    emit('integer_gate'); integer_gate(torch)
+  File "/home/acorn0415/Quantization/tools/linear_w8a8_stage1.py", line 70, in integer_gate
+    result = torch._int_mm(a.cuda(), b.cuda()).cpu()
+RuntimeError: self.size(0) needs to be greater than 16, but got 8

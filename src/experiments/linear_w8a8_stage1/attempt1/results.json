@@ -1,0 +1,22 @@
+{
+  "status": "failed",
+  "model_forward_started": 0,
+  "model_forward_finished": 0,
+  "start_utc": 1793797804.0,
+  "deadline_utc": 1793801404.0,
+  "benchmarks": [],
+  "torch": "2.6.0+cu124",
+  "cuda": "12.4",
+  "pid": 232473,
+  "git_commit": "090b8e1a37883351b09c0653a8625328de0873c3",
+  "code_sha256": "fd624cbdb41eadac684de89d862a1cf988afb79dced93db988dabdeb3ab1a4b6",
+  "loader_sha256": "e070ce3d54eeb08bc167165b8bd3855ec0bdeb75b8ed64136c553bad06afa48c",
+  "registration_sha256": "f74e40863ed84511f5ddf3c5e6157eee4b1b9442ad42d4526703de4f8e96c0bc",
+  "gpu": "NVIDIA GeForce RTX 4090, 24564 MiB, 615.71.09",
+  "phase": "integer_gate",
+  "updated_utc": 1793798468.1226728,
+  "error": "RuntimeError('self.size(0) needs to be greater than 16, but got 8')",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/acorn0415/Quantization/tools/linear_w8a8_stage1.py\", line 321, in main\n    emit('integer_gate'); integer_gate(torch)\n  File \"/home/acorn0415/Quantization/tools/linear_w8a8_stage1.py\", line 70, in integer_gate\n    result = torch._int_mm(a.cuda(), b.cuda()).cpu()\nRuntimeError: self.size(0) needs to be greater than 16, but got 8\n",
+  "finished_utc": 1793798468.3246124,
+  "elapsed_from_registered_start_s": 664.3246128559113
+}

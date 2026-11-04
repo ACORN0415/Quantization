@@ -61,7 +61,7 @@ def integer_gate(torch):
     gen = torch.Generator().manual_seed(303)
     cases = []
     for kind in ('random', 'zero', 'extreme'):
-        a = torch.randint(-127, 128, (8, 32), dtype=torch.int8, generator=gen)
+        a = torch.randint(-127, 128, (32, 32), dtype=torch.int8, generator=gen)
         b = torch.randint(-127, 128, (32, 16), dtype=torch.int8, generator=gen)
         if kind == 'zero':
             a.zero_()
