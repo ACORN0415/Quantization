@@ -1,0 +1,53 @@
+A-1: 기본 torch.compile 비교 결과, 2026-11-04
+
+판정: 측정한 기본 컴파일 W8A8 경로는 세 형상 모두 BF16을 이기지 못했다.
+정확성·CPU 감사는 통과했으며 단순 구현 대비 속도/추가 메모리는 개선됐다.
+기본 컴파일이 INT8 GEMM 자체를 교체/융합한 결과는 아니다. 출력 코드와 trace에서 외부 _int_mm과 INT32 버퍼가 남았다.
+
+형상 M×N×K          eager BF16  compile BF16  eager W8A8  compile W8A8 (wall ms/호출 중앙값)
+4680×1536×1536         0.15019       0.15291       0.44258       0.20254
+4680×8960×1536         0.79848       0.79954       2.67361       1.10301
+4680×1536×8960         0.78949       0.79175       3.15045       1.03132
+
+compile W8A8의 eager BF16 대비 대응 감소율 중앙값과95% bootstrap 구간:
+Q: -34.73% [-34.98,-33.76], FFN 확장: -38.14% [-38.38,-37.93], FFN 축소: -30.86% [-31.22,-30.46].
+compiled BF16 대비도 모두 음수였다. 등록한 이득 후보0/3이다. 반복 표본 구간이며 입력 일반화 구간이 아니다.
+
+추가 allocated peak(MB,1e6 bytes): eager W8A8→compile W8A8
+Q 95.29→43.76, FFN 확장510.56→251.68, FFN 축소503.34→70.71.
+같은 입력·가중치·양자화 가중치가 상주한 상태의 allocator 증가량이다. 프로세스 총VRAM이나 모델 배포 peak가 아니다.
+compiled 최초 호출은 BF16 1.05~1.34초, W8A8 0.45~0.53초였다. 최초 컴파일+실행 비용이며 정상 호출과 분리했다.
+
+직접 계측/출력 코드
+- 전체 compiled 경로는 입력quant용 Triton 커널1개, 외부 INT8 GEMM1개, 후처리 Triton 커널1개다.
+- INT8 GEMM kernel: ampere_igemm_int8_128x128_ldg4_nn. eager/compiled 경로에서 같은 이름을 관측했다.
+- 원래 eager 입력quant/정수GEMM/후처리를 별도로 잰 GPU ms 중앙값:
+  Q .13988/.16589/.14182, FFN 확장 .13629/.80497/1.73169, FFN 축소 2.13996/.87675/.13957.
+  분리 측정 합을 전체 시간의 엄밀한 가속 상한으로 쓰지 않는다.
+- 같은 조건에서 정수GEMM만 보아도 BF16 전체 linear보다 빠르지 않았다. 오버헤드 감소만으로 현재 외부GEMM의
+  속도 문제가 해결됐다고 말할 수 없다. 다른 backend나 fused epilogue 성능은 이번 검사의 대상이 아니다.
+
+정확성
+native/compiled BF16 모두 A의 캡처Y와 모든 원소 바이트 일치. 고정 qx/wt에 대한 compiled INT32와 eager INT32도
+모든 원소가 같았으며 CPU FP64 정수 행렬곱으로 저장된 전체 INT32 출력을 다시 검증했다.
+W8A8 두 경로는 등록한 FP32 참조 relL2<=.002 및 원소 오차, 원래BF16 relL2<=.05,finite/shape/dtype를 통과했다.
+compile W8A8의 원래BF16 대비relL2: .00553464/.01184685/.00542272. 블록0·timestep937.5·한프롬프트 범위다.
+독립 compiled quant만 검사했을 때 eager 대비 INT8 차이는1259/0/571원소였다(scale 차이0).
+따라서 같은 수식이라고 모든 중간정수가 동일하다고 주장하지 않는다. 이 독립quant 검사를 전체 compiled
+함수 내부 관측으로 쓰지도 않는다. 전체 최종출력은 별도로 저장·검증했다.
+
+실행
+등록 시작13:52:49 UTC, 완료13:59:49.26 UTC. 준비 포함420.26초로30분 상한 내 완료.
+기존 입력3개, 모델/영상 생성0, 3개 독립 프로세스 모두유효완료. 각4팔12round×10호출, 순환순서균형.
+컴파일 설정변경/수동커널/패키지설치0. frozen 코드커밋62d5446.
+audit.json은 원본해시·전원소정수·저장출력·타이밍·판정·생성코드해시를 읽기전용CPU로 확인했다.
+raw 검증tensor·trace·생성코드는 /home/acorn0415/sfq_data/linear_w8a8_compile_stage1에 보존한다.
+
+후속 판단 근거
+A-1 종료를 유지한다. 구체적으로 남은 것은 기본 컴파일에서 활성화되지 않은 기존 INT8 GEMM+scale 융합 경로다.
+설치된 PyTorch의 force_fuse_int_mm_with_mul과 대응 표현식은 존재하며, torchao v0.9.0 공식 구현도 같은 경로를 권장한다.
+https://github.com/pytorch/ao/blob/v0.9.0/torchao/quantization/utils.py#L523
+https://github.com/pytorch/ao/blob/v0.9.0/torchao/kernel/intmm.py#L110
+현재 Torch의 한 고정된 공개 경로로 이 조건을 확인할지는 별도 A-2 등록으로 결정한다.
+이것은 새 방법 신규성이 아니라 기존 최적화 기준선을 확보하는 문제다.
+Fable 독립 검토는 별도 FABLE_REVIEW_KO.txt에 반환되는 범위만 표시한다.

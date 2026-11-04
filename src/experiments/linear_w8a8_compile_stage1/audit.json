@@ -1,0 +1,75 @@
+{
+  "status": "passed",
+  "gpu_calls": 0,
+  "shapes": [
+    {
+      "shape_MNK": [
+        4680,
+        1536,
+        1536
+      ],
+      "full_int32_cpu_reference_equal": true,
+      "native_bf16_bytes_equal": true,
+      "quant_diff_count": 1259,
+      "output_metrics": {
+        "W8A8_eager": {
+          "cpu_fp64_vs_quantized_rel_l2": 0.0016461196296301789,
+          "cpu_fp64_vs_bf16_rel_l2": 0.005535003337460358
+        },
+        "W8A8_compiled": {
+          "cpu_fp64_vs_quantized_rel_l2": 0.0016543174444008943,
+          "cpu_fp64_vs_bf16_rel_l2": 0.0055346419572995156
+        }
+      },
+      "timing_and_decision_recomputed": true,
+      "whole_candidate_generated_source": "/home/acorn0415/sfq_data/linear_w8a8_compile_stage1/shape0/inductor/co/cco6krsaoxp3ejrgaejsl3v2wqmnofbzp7i7sucatetgbxwckd3f.py",
+      "implementation": "two generated Triton pointwise/reduction kernels around external _int_mm; INT32 buffer exists"
+    },
+    {
+      "shape_MNK": [
+        4680,
+        8960,
+        1536
+      ],
+      "full_int32_cpu_reference_equal": true,
+      "native_bf16_bytes_equal": true,
+      "quant_diff_count": 0,
+      "output_metrics": {
+        "W8A8_eager": {
+          "cpu_fp64_vs_quantized_rel_l2": 0.0016591193140160629,
+          "cpu_fp64_vs_bf16_rel_l2": 0.011846847751465722
+        },
+        "W8A8_compiled": {
+          "cpu_fp64_vs_quantized_rel_l2": 0.0016591193140160629,
+          "cpu_fp64_vs_bf16_rel_l2": 0.01184684757440378
+        }
+      },
+      "timing_and_decision_recomputed": true,
+      "whole_candidate_generated_source": "/home/acorn0415/sfq_data/linear_w8a8_compile_stage1/shape1/inductor/rk/crkoe6wwqlm4s5vc7bd4gcyqwr5epsm25rskvtzk2ji3b7czzlq7.py",
+      "implementation": "two generated Triton pointwise/reduction kernels around external _int_mm; INT32 buffer exists"
+    },
+    {
+      "shape_MNK": [
+        4680,
+        1536,
+        8960
+      ],
+      "full_int32_cpu_reference_equal": true,
+      "native_bf16_bytes_equal": true,
+      "quant_diff_count": 571,
+      "output_metrics": {
+        "W8A8_eager": {
+          "cpu_fp64_vs_quantized_rel_l2": 0.0016575030130242122,
+          "cpu_fp64_vs_bf16_rel_l2": 0.005422579640008486
+        },
+        "W8A8_compiled": {
+          "cpu_fp64_vs_quantized_rel_l2": 0.0016581252093852878,
+          "cpu_fp64_vs_bf16_rel_l2": 0.0054227198653083505
+        }
+      },
+      "timing_and_decision_recomputed": true,
+      "whole_candidate_generated_source": "/home/acorn0415/sfq_data/linear_w8a8_compile_stage1/shape2/inductor/c2/cc2zxdq5ytltflt76aheuskaqmljc4qcndok5vpnytw7upiisxbv.py",
+      "implementation": "two generated Triton pointwise/reduction kernels around external _int_mm; INT32 buffer exists"
+    }
+  ]
+}
