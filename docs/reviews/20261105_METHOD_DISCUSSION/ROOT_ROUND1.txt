@@ -1,0 +1,49 @@
+주 작업자 독립 설계 — 2026-11-05
+상태: 방법 후보. 신규성 확정/실제 모델 개선/실행 속도는 미확인. GPU 실행 없음.
+
+1. 질문과 관측의 연결
+현재 분석은 반복 횟수만으로 정책 간 손상을 설명할 수 없음을 보인다. 그것이 아래 보정법의 성공이나 특정 오차 구조의 인과성을 증명하지 않는다. 남은 실용적 질문은 고정 청크 packed KV를 읽을 때 손실되는 attention 응답을, 원본 KV를 보관하지 않고 작은 추가 상태로 보존할 수 있는가이다. 종료한 TT/채널 배분/재복원 재사용의 재실행이 아니다.
+
+2. 가장 가까운 연구와 좁은 설계 차이
+KVLinC §3.2 식(4)-(6), https://arxiv.org/html/2510.05373v1
+이미 양자화 attention의 분자·분모에 선형 보정 상태를 더한다. 따라서 '작은 보정 캐시'는 신규성 아님. 공개 식은 f(q,e)=phi_q(q)^T phi_e(e), e=k-khat로 보정한다. 실제 지수 가중치 차이는 exp(q*khat/sqrt(d))*(exp(q*e/sqrt(d))-1)로 base khat에도 의존한다. 아래 3-context 반례는 error-only 함수가 일반적으로 정확 보정을 표현하지 못함을 보인다. 논문의 실제 데이터에서 실패했다는 증거는 아니다. 논문 링크의 GitHub 저장소/API는 이번 조회에서 404여서 코드 대조는 하지 못했다.
+
+MomentKV §4.1-4.2, https://arxiv.org/html/2606.01563v1
+퇴거한 토큰의 key/value moments를 이용해 누락 attention을 근사한다. compact summary와 normalization correction 자체 역시 기존 아이디어다.
+
+QuantWM §3, https://arxiv.org/html/2609.26425v3
+query 방향의 K 잔차 보존과 비교 필요. token별 저랭크 잔차 대신 합산된 응답 잔차를 저장한다는 표현 차이가 후보이지 효율 우위 보장은 아니다.
+
+3. 후보: 같은 feature map의 원본/복원값 차이를 청크별로 보존
+아직 방법 이름을 붙이지 않는다. exp(q^T k/sqrt(d)) ≈ phi(q)^T psi(k)인 공유 feature map을 선택한다. random feature/학습 feature는 별개의 구현 선택이며 아직 최종 고정하지 않았다.
+청크 c가 완성돼 원본 K,V와 packed에서 복원한 khat,vhat가 함께 있을 때만:
+ Dz_c = sum_i [psi(k_i) - psi(khat_i)]
+ DN_c = sum_i [psi(k_i) v_i^T - psi(khat_i) vhat_i^T]
+를 계산해 packed KV와 같이 저장한다. 부호를 보존하고 원본/복원에 같은 map·seed를 사용한다.
+읽기: packed attention의 정확한 분자 Nhat와 분모 Zhat에 phi(q)^T sum_c DN_c, phi(q)^T sum_c Dz_c를 더해 비율을 계산한다.
+양자화 오차가 0이면 보정 상태도 정확히 0(동일 연산 입력 기준). 원래 커널 출력 bit 보존은 보정 0일 때 명시적으로 기존 출력 경로를 써야 한다.
+고정 map 아래 청크 append/evict는 해당 상태를 더하고 뺀다. 수학적으로 additive이나 부동소수 덧셈/뺄셈의 완전한 가역성은 아님. 작은 청크 상태 목록에서 재합산해 드리프트를 제어할 수 있다.
+현재 청크는 기존 BF16, 완료된 가시 청크만 보정한다. 청크 내부 mask/부분 퇴거는 첫 범위에서 제외하고 지원 단위를 명확히 해야 한다.
+
+4. 직접 유도한 표현 반례(실제 모델 측정 아님)
+d=1,q=1,V=[1,0],e=[epsilon,0],epsilon=0.25, 고정 단위 grid RTN.
+복원 key (0,0),(1,0),(0,1)의 세 문맥은 각각 원본 key에 epsilon을 첫 token에 더해 얻을 수 있다.
+a=exp(khat_0), b=exp(khat_1), t=exp(epsilon), u=f(1,epsilon), v=f(1,0).
+정확 출력 at/(at+b)를 (a+u)/(a+b+u+v)가 맞추려면 b*u-a*t*v=a*b*(t-1).
+처음 두 문맥은 u=0,v=-(t-1)/t를 강제한다. 세 번째 문맥은 그 값으로 만족하지 못한다.
+즉 error-only 함수 f는 세 문맥을 동시에 정확하게 맞추지 못한다(부호 제한 없이도). 유한 r paired-feature 방법 또한 일반 exp를 정확하게 표현한다고 주장하지 않는다.
+
+5. 가장 강한 반론/단순 기준선
+- f(q,[khat,e])처럼 base 정보를 단순 추가한 학습 보정기가 같은 상태/학습 비용으로 충분하면, 차분 feature의 필요성이 약해진다. 필수 비교다.
+- 두 kernel 근사의 차이는 자동으로 정확하지 않다. 큰 key norm, 집중된 attention, r 부족에서 feature variance/근사 오차가 양자화 오차보다 클 수 있다.
+- 부호 있는 분모 보정이 Zhat+Dz<=0 또는 매우 작은 수를 만들 수 있다. clamp로 감추지 말고 발생률/오차를 보고하고 사전 고정한 fallback으로 기존 출력 사용. 양의 분모도 정확성 보장 아님.
+- fixed features를 바꾸면 과거 요약을 변환/재생성해야 한다. 온라인 map 변경 금지.
+- query마다 다른 RoPE 재배치가 과거 K에 적용된다면 최초 write의 요약이 stale할 수 있다. 우리 캐시의 pre/post-RoPE 위치를 실제 코드로 확인해야 한다.
+- FA2에서 O와 logsumexp를 얻을 수 있어도 N/Z의 공통 수치 스케일에 보정항을 맞춰야 한다. 별도의 dense logits 재생성은 허용하지 않는 설계가 필요하다.
+- Q=4680인 영상 경로의 비용은 LLM decode가 아니다. 쓰기 O(N*r*d), 읽기 O(Q*r*d), state O(chunks*r*(dv+1))를 실제 kernel/layout까지 세어야 한다.
+- K8V8/균일 더 높은 bit에 같은 전체 bytes를 쓰는 단순 기준선을 반드시 포함한다. KVLinC, base-aware 보정, QuantWM residual과 비교해야 한다.
+
+6. 지금/다음 검증
+지금: 위 3-context 식의 수치 확인, paired summary의 direct residual 일치, 무양자화 0, append/evict 일관성을 소형 CPU 구성으로 확인한다. 이것은 구현/수학 진단이며 효과 실험이 아니다.
+다음 설계 조건: feature map 종류·r·학습자료, 보류 query, packed 전체 bytes/분모 fallback, RoPE 시점, logsumexp 접근 여부를 고정한다. 실제 저장 capture에서 낮은 r로 보정 잔차를 근사할 수 있는지가 최소 판별 질문이다. 아직 GPU 실험 등록/실행하지 않는다.
+신규성 문장 후보: '오차 벡터 자체를 임베딩하는 보정과 달리, 원본/복원 KV의 동일 kernel feature 차이를 저장해 양자화가 바꾼 분자·분모를 함께 근사한다.' 이것이 기존에 없는지는 추가 좁은 원문 대조와 Claude 반론을 거쳐야 한다.

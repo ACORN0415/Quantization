@@ -1,0 +1,108 @@
+2026-11-05 — 방법론 공동 설계 결과
+주 작업자: Codex. 독립 제안·상호 비판: 실제 Claude Fable 채팅.
+상태: 첫 구현 대상으로 선택한 방법 후보. 신규성/실제 모델 효과/시스템 이득 확정 아님.
+
+선택
+양자화가 바꾼 attention 응답을, 원본·복원 KV에 같은 feature map을 적용한 차이로 저장한다.
+청크가 완성될 때 한 번 계산하고, 후속 attention의 분자와 분모를 함께 보정하는 방식이다.
+공식 없이 '미래 영향/오차 구조를 고려하자'는 수준을 넘어, 저장할 상태와 읽기식을 정했다.
+GPU 실험은 이번 주 작업에서 0회. 합성 CPU 수학 검사와 기존 입력 한 파일의 무결성·형상 확인만 수행했다.
+
+왜 이 질문을 남겼는가
+1. 기존 +5.39 MUSIQ와 once/repeat 최종 latent 일치는 고정 청크 저장 정책 분석이다.
+   이 결과가 아래 보정법의 성공, 그룹 이동의 단일 원인, 오차 상관의 단일 원인을 증명하지는 않는다.
+2. Quantized Keys Steal Attention §6은 영평균·균일 오차 가정, 집중된 attention에서의 한계를 적고 있다.
+   https://arxiv.org/html/2605.26266v1#S6
+   이 한계에서 출발해 '평균적인 잡음 모형 대신, 이번 write에서 실제로 잃은 응답을 요약할 수 있는가'를 묻는다.
+3. KVLinC §3.2는 이미 분자/분모의 compact 보정을 한다. 확인한 식에서 보정 입력은 q와 e=k-khat다.
+   https://arxiv.org/html/2510.05373v1#S3.SS2
+   반면 실제 kernel 차이 exp(q*k)-exp(q*khat)는 base khat에도 의존한다(여기서는 sqrt(d) 생략).
+   '보정 캐시가 새롭다'가 아니라 '오차 자체의 feature와 원본/복원 응답 feature의 차이는 다르다'가 좁은 설계 차이다.
+
+수학적으로 확인한 점
+d=1,q=1,V=[1,0], 같은 e=[0.25,0], khat=(0,0),(1,0),(0,1)의 세 문맥.
+error-only f(q,e)가 앞 두 문맥의 정확 attention 출력을 맞추면 세 번째의 절대 오차가 0.0348686623 남는다.
+부호 없는 feature의 제약 때문만은 아니다. f의 부호를 제한하지 않아도 세 조건을 동시에 만족할 수 없다.
+단위 grid RTN으로 실현되는 작은 합성 반례다. KVLinC의 평균 학습 성능 실패나 우리 모델의 실패율을 측정한 것이 아니다.
+check_algebra.py / algebra_result.json: 차분 summary와 직접 계산 차이 최대 4.17e-16,
+무양자화 상태 0, 청크 합산/제거 수치 검사를 통과했다. 유한 Taylor feature를 사용한 계산 검사이며 효과 검증이 아니다.
+
+방법의 입력·상태·읽기
+입력: 완료 청크의 post-RoPE K,V, 실제 packed 양자화 후 복원한 khat,vhat, 고정 feature map.
+추론 중 미래 query/최종 영상/원본 과거 KV에는 접근하지 않는다. 원본은 최초 encode 때만 사용한다.
+
+κ(q,k)=exp(q^T k/sqrt(d)), G(q,k)=phi(q)^T psi(k) ≈ κ(q,k).
+청크 c별 저장:
+  Dz_c = Σ_i [psi(k_i)-psi(khat_i)]                     (r차원)
+  DN_c = Σ_i [psi(k_i)v_i^T-psi(khat_i)vhat_i^T]       (r×dv)
+기존 packed attention의 분자/분모 Nhat,Zhat를 사용해:
+  O_corr = [Nhat + phi(q)^T Σ_live DN_c] / [Zhat + phi(q)^T Σ_live Dz_c].
+현재 BF16 청크는 기존 경로로 처리하고 완료된 가시 청크에만 보정을 적용한다.
+청크 퇴거 시 해당 summary도 제거한다. mask/부분 퇴거는 처음부터 같은 단위로 맞춰야 한다.
+원본과 복원값이 같으면 summary는 0이다. bit identity가 필요하면 이때 기존 attention 출력을 그대로 반환한다.
+
+첫 구현의 좁은 범위
+- 학습 없는 iid Gaussian positive feature로 표현 가능성부터 검사한다. 원본/복원은 동일한 난수 행렬 사용.
+- QR만 적용한 단위벡터를 Gaussian feature라고 부르지 않는다. 직교 random feature는 별도의 올바른 스케일 설계가 필요하다.
+- CPU FP64 구현을 먼저 사용한다. 공통 exponent offset을 원본/복원에 동일하게 적용하며, offset이 다른 청크 상태를 그냥 합산하지 않는다.
+- 기존 O_hat와 logZ를 이용해 (O_hat+deltaN/Zhat)/(1+deltaZ/Zhat)로 읽을 수 있다.
+  numerator만 바꾸거나 raw exp(logZ)를 무조건 계산하는 구현은 피한다.
+- 비유한 값, 매우 작은/음수 분모는 기존 출력으로 fallback하고 발생률을 별도로 공개한다.
+  fallback은 정확성 보증이 아니며, 분모가 양수여도 출력이 정확하다는 뜻은 아니다.
+- 초기 feature 차원은 작은 고정 목록에서만 비교하고 전부 보고한다. 결과를 보고 계속 늘리는 방식은 쓰지 않는다.
+  구체적인 차원·seed·시간·RAM·실용 개선 기준은 실제 효과 계산 전에 별도 실행 명세에 고정한다.
+- 이는 실행 명세의 초안이지 이미 GPU 연결/패킹 구현을 완료했다는 뜻은 아니다.
+
+강한 비교 기준선
+1. 동일 packed 코덱 무보정.
+2. 같은 메모리 상한에서 가능한 단순 정밀도 증가. 실제 바이트로 결정하며 K5V4라고 미리 동등시하지 않는다.
+   비교가 가능한 packed bit폭만 사용한다. 기존 도구 중 2/3/4bit만 지원하는 경로도 있어 5bit 코드 존재를 가정하지 않는다.
+3. Quantized Keys Steal Attention의 scale 기반 score 보정(가능한 그룹 규칙에 맞춰 식을 적용).
+4. 논문 단계 이전에는 KVLinC 구조와 f(q,[khat,e]) 형태의 단순 base-aware 학습 보정을 같은 상태/학습 비용으로 비교.
+   입력에 base를 추가하는 것만으로 충분하면 paired 설계의 추가 가치를 주장하지 않는다.
+5. 원본 KV를 계속 갖는 정확한 차분은 진단용 목표일 뿐 배포 방법/공정한 비용 기준선이 아니다.
+
+비용과 실패 가능성
+- 추상 상태는 live청크수×r×(dv+1)개. 실제 구현은 dtype, exponent offset, feature map, seed,
+  alignment/padding, scale, 현재 BF16 청크, 임시 버퍼까지 포함해 측정한다.
+- feature 계산과 summary 만들기/읽기가 추가된다. 읽기 비용 0 또는 기존 GPU 가속을 주장하지 않는다.
+- positive random feature는 큰 Q/K 노름에서 분산이 클 수 있다. 같은 feature의 차이라고 해서 작은 r로 충분하지 않다.
+- feature 값이 kernel을 근사한다고 해서 그 기울기도 근사한다는 보장은 없다.
+- 시간에 따라 map을 바꾸면 이미 저장한 summary가 맞지 않는다. 첫 버전은 map 고정.
+- 실제 생성의 Q는 이전 보정에 영향받는다. 고정 teacher-query의 kernel 기대값 성질을 rollout의 불편성으로 확대하지 않는다.
+- 양자화 오류가 작은 곳에서 보정이 추가 오차를 만들 수 있고, 같은 메모리를 더 높은 비트에 쓰는 편이 나을 수 있다.
+
+기존 연구와 겹치는 부분(신규성으로 주장하지 않음)
+KVLinC: 선형 보정 summary와 분자/분모 갱신.
+MomentKV: 압축 요약을 통한 누락 정보와 normalization 보정.
+https://arxiv.org/html/2606.01563v1#S4
+EVA: random-feature attention과 control variates 원리.
+https://arxiv.org/pdf/2302.04542
+Attention Matching: output과 mass를 함께 맞춰 이후 토큰 연결을 보존하는 목표.
+https://arxiv.org/html/2602.16284v1#S2
+LESS: 전체/희소 attention 잔차를 보정하는 학습 summary. §3.1 식3-6은 퇴거 KV를 합산하며 원본/복원 feature 쌍의 차이는 쓰지 않는다(주 작업자 확인 범위).
+https://arxiv.org/html/2402.09398v2#S3.SS1
+LESS의 고정 Performer 비교가 약했던 결과도 고려한다. 첫 무학습 feature 검사는 표현의 최종 성능 상한이 아니며, 학습이 필요하면 그 비용까지 단순 base-aware 기준선과 비교해야 한다.
+이들과 전체 후속 문헌에서 동일한 '원본/복원 feature 차분 상태'가 없다는 전면적 증명은 하지 못했다.
+현재 확보한 것은 가장 가까운 공개 식과의 구체적인 표현 차이 및 그 차이를 검사할 방법이다.
+
+Claude와의 논의에서 달라진 판단
+라운드1: Fable은 읽기 축 sigma-delta, 주 작업자는 응답 차분 상태를 독립 제안.
+라운드2: Fable은 경계항/scale/선행 중복 지적을 수용하고 응답 차분 상태의 우선순위를 지지.
+주 작업자는 Fable의 '1차 보정 상한', 'r256와 K5V4 동등 바이트', 일부 feature/혼합항 해석을 정정 요청.
+라운드3: Fable은 7개 정정을 모두 수용하고 조건부 우선순위를 유지했다. 혼합항 및 정규화 식을 작은 독립 CPU 예제로 재확인했다. 원문 FABLE_ROUND3.txt에 보존한다.
+오차 확산을 보정법의 ablation으로 바로 붙이자는 의견은 수용하지 않는다. 첫 방법의 필요성부터 확인한다.
+
+다음 자원 배분에 대한 판단
+실제 성능 검사 전에 feature 수치 구현과 바이트 비교 명세를 고정하고, 기존 Q/K/V 캡처로 다음 하나를 묻는다:
+  '적은 추가 상태로 보류 query의 attention 출력 오차를 줄이며, 그 메모리를 단순히 비트 증가에 쓰는 것보다 나은가?'
+기존 p0/p4는 여러 후보에 이미 쓴 개발 입력이다. 둘 사이 분리 결과도 새로운 독립 시험 세트로 부르지 않는다.
+표현 가능성만 확인되면 다음에 별도의 미사용 입력과 실제 BF16 attention/전체 생성 평가로 검증한다.
+단순 기준선이 충분하면 특정 구현을 축소/종료하되, 그 판단을 모든 KV 보정 방법의 불가능성으로 확대하지 않는다.
+
+보존·범위
+세 실제 Fable 채팅의 launch receipt와 요청/답변 원문을 이 디렉토리에 보존.
+첫 채팅 Task attach는 terminal_handle_stale로 실패했으며 Task/Dispatch가 없는 실제 채팅 파일 교환이었다.
+Fable 모델을 다른 모델로 대체하지 않았다. 세 채팅 모두 /home/acorn0415에서 시작했고 사용자 화면에 유지된다.
+작업 중 별도 사용자 지시 '해보자'를 기록한 src/experiments/noise_shaping_cpu_stage0 산출물이 나타났다.
+주 작업자가 실행한 실험이 아니며, 이번 방법 선택의 검증 결과에 합치거나 수정/삭제/커밋하지 않는다.

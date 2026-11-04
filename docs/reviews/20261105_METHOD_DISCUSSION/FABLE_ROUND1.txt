@@ -1,0 +1,200 @@
+2026-11-05 — Claude Fable 라운드1: 관측에서 출발한 독립 방법 후보 (교수/공동연구자 역할)
+
+실행 조건: 모델 claude-fable-5-1. 시작 /home/acorn0415, 대상 /home/acorn0415/Quantization.
+Task/Dispatch 식별자: 없음(지정되지 않음). worker_done 호출 없음.
+GPU/모델 로드/새 실험/코드 변경/커밋/하위 agent: 0. 유일한 쓰기: 이 파일.
+
+직접 읽은 저장소 파일
+- AGENTS.md, docs/CLAUDE_REVIEW_PROTOCOL_KO.md
+- docs/reviews/20261105_METHOD_FROM_FINDINGS/RESPONSE_KO.txt, request.txt
+- docs/RESEARCH_STORY_KO.md 전체, docs/METHOD_CANDIDATES_KO.md 전체
+- 문서/paper/analysis_manuscript_ko.md §3.1–3.4 (양자화기 정의: g=16 토큰축 그룹,
+  scale은 그룹×head×channel별 max/7, FP16 scale, int8 컨테이너)
+- README.md §A/B/C (W8A8, K boost vs K8V8, FP64 SVD)
+직접 읽지 않은 것: src/experiments/* 보고서 본문, 캡처 텐서, quant.py 코드.
+
+읽은 원문(6편 상한 내)
+1. HyperQuant https://arxiv.org/html/2606.23406v1 — §3.4/4.4/5.2/6.2/§8 확인.
+2. Quantized Keys Steal Attention https://arxiv.org/html/2605.26266v1 — 본문 대부분.
+3. Low-Discrepancy Dither for Quantized Recurrent State Caches https://arxiv.org/abs/2609.39185 — 초록만.
+4. dKV Forcing https://arxiv.org/html/2611.01648v1 — 전반부(§7 결론 미독).
+5. KV Cache Compression Through the Lens of Transform Coding https://arxiv.org/abs/2608.14191 — 초록만.
+6. Sigma-Delta Quantized Networks (O'Connor & Welling, ICLR 2017) https://arxiv.org/abs/1611.02024 — 검색 요약만, 원문 미독.
+검색에서 못 찾음 ≠ 기존에 없음. 특히 3, 5, 6은 초록/요약 수준이므로 아래 "차이"는 미확인 항목이 남는다.
+
+==================================================================
+(1) 가장 가까운 기존 방법의 실제 남은 조건과 원문 위치
+==================================================================
+
+A. HyperQuant (감산 디더). §3.4: 디더 U를 forward 호출마다 독립으로 새로 뽑고,
+   Crypto Lemma로 오차가 입력과 독립인 균일 분포가 된다고 명시. §4.4: KV에 선택적
+   적용, 복원 후 감산으로 불편. §6.2: 2.0bps에서 디더만으로 PPL 10.089→9.622,
+   "per-vector bias compounds across thousands of tokens"가 디더의 효과 조건.
+   §8 Limitations: H100에서 속도 이득 없음(가변길이 decode가 지연을 더함), 균일 bps.
+   §8 Future(저자 제안): 커널 최적화, Gaussian-aware fp8 cast, LDLQ류 보정,
+   층별 비트 배분, Leech 격자. 토큰 간 오차 상관·noise shaping·오차 피드백은
+   본문에 없음(내 확인 범위). §6.5에서 LTX-2 DiT에 적용했으나 streaming KV는 아님.
+   → 남은 조건: 디더는 오차를 "백색(토큰 간 독립)"으로 만들 뿐, 읽기(attention
+     가중합)가 평균을 취하는 축을 따라 오차를 "서로 상쇄"시키지는 않는다.
+
+B. Quantized Keys Steal Attention (2605.26266). 청크 자기회귀 영상 확산 KV 캐시
+   (MAGI-1, SkyReels-V2 1.3B, HY-WorldPlay). 메커니즘: 캐시 K의 영평균 오차가
+   logit 섭동 δ_i=qᵀε_i/√d를 만들고 E[e^δ]≥1(Jensen)이므로 캐시 쪽 partition sum이
+   부풀어 현재 청크에서 attention 질량을 빼앗는다. 보정: 캐시 토큰 score에
+   b_i≈σ_i²/2 (기존 scale과 query로 즉석 계산)만 빼고 V·모델은 불변.
+   저자가 적은 한계(원문 인용): "It works best when cached attention is spread over
+   enough tokens for score perturbations to average out." / "When attention is
+   concentrated on a few cached tokens, the effective sample size is small" /
+   "Quantizers with nonuniform or biased error may likewise require a modified derivation."
+   저자 future: chunked prefill, FP/MXFP/NVFP 확장. 토큰·프레임 간 오차 상관은
+   모델링하지 않고 토큰별 독립 균일 오차를 가정한다(내 확인).
+   → 이 논문은 우리 설정과 가장 가까운 "기존의 강한 기준선"이며, 아래 후보와
+     결합 가능하고 동시에 아래 후보의 K 적용에 대한 예상 반례의 근거이기도 하다.
+
+C. 2609.39185 (Weyl 황금비 디더, Mamba류 recurrent state). 매 토큰 재기록되는
+   상태에 결정론적 저불일치 디더. 초록 기준 오차 피드백 없음, KV 캐시 아님.
+   METHOD_CANDIDATES의 "단순 시간 연동 rounding 보류" 근거가 된 논문. 초록만 읽음.
+
+D. dKV Forcing: 쓰기 전용 rank-64 잔차 어댑터를 미래 읽기의 gradient로 학습
+   (Wan2.1 1.3B 백본, DMD 1500 step, 14B teacher). 양자화 결합 없음(읽은 범위).
+   학습 자원이 우리 장비(4090 1장) 밖이며, 양자화 없는 설정이다.
+
+E. Transform coding(2608.14191): attention-aware distortion이 "토큰·채널에 걸쳐
+   인수분해"된다고 초록에 명시 → 토큰 간 오차는 독립으로 취급. 채널/query 방향으로
+   오차를 돌리는 설계이며 토큰축 상관 설계는 아님(초록 기준).
+
+F. Sigma-Delta Quantized Networks(2017): 영상 프레임 간 활성 변화량을 오차 피드백
+   rounding으로 이산화해 "계산량"을 줄이는 방법. 저장/attention 읽기가 목표가 아니며
+   원문 미독. 기제 측면에서 가장 가까운 비-KV 선행으로 적어 둔다.
+
+==================================================================
+(2) 독립 방법 후보 1개: 읽기 축 정렬 오차 확산 (attention-axis noise shaping)
+==================================================================
+
+관측과의 연결(내 추론, 입증 아님):
+- 노름을 맞춘 무작위 방향 잡음은 FR에서도 ~71로 무해, RTN은 56/64. 두 오차의
+  per-token 노름은 같으므로 차이는 "토큰 간 오차의 상관 구조"에 있을 가능성이
+  가장 단순한 설명 후보다. attention 출력 오차(V 기준)는 Σ_i p_i e_i이다. e_i가
+  토큰 간 독립이면 크기 ~ sqrt(Σ p_i²)·‖e‖로 평균화돼 작다. RTN은 scale이
+  16토큰×채널별 max/7이므로 값이 비슷한 이웃 토큰(배경 등)은 "같은 방향으로"
+  반올림된다(예: x/s≈6.5인 16토큰이 모두 7로 올라감). 이런 coherent 오차는
+  평균화되지 않고 Σ p_i e_i ≈ ‖e‖ 수준으로 남는다.
+- 고정 그룹 유지가 rolling보다 좋고 once/repeat 최종 동일: 쓰기 1회·고정 그룹의
+  C-once 구조는 "쓰기 시점에 한 번만 추가 연산을 하는" 방법과 잘 맞는다.
+- 이 설명은 가설이며, 대조군(노름만 일치)의 과해석을 반복하지 않도록 아래 (5)의
+  0단계 검사로 먼저 기각 가능하게 만든다.
+
+방법: 쓰기 시점(clean-context refresh forward 후 최초 인코딩) 1회에, attention이
+평균을 취하는 축을 따라 1차 sigma-delta(오차 확산)를 적용한다. 디더처럼 오차를
+백색으로 만드는 것이 아니라, 오차를 "이웃 토큰과 부호가 반대"가 되게 만들어
+가중합에서 서로 상쇄되게 한다(halftoning이 눈의 저역통과에 맞춰 오차를 고주파로
+보내는 것과 같은 원리. 여기서는 "눈" 대신 attention 가중치 p의 평활성).
+
+- 입력: 확정 청크의 BF16 K,V [4680, H, D]; 토큰의 (프레임 t∈{1,2,3}, 공간 raster 위치)
+  배치; 기존 그룹 규칙 g=16(토큰축)·scale 규칙 그대로.
+- 출력: 기존과 동일한 형식의 int 코드와 FP16 scale. 메타데이터 추가 0바이트.
+  읽기(decode)·attention 경로 변경 0. 즉 packed bytes는 RTN과 완전히 같다.
+- decision variable: 각 코드 c_i(기존 RTN과 같은 집합). 새 자유도는 "어느 축을
+  따라 오차를 넘길지"(축 a ∈ {시간: 같은 공간 위치의 프레임 1→2→3, 공간: 그룹 안
+  raster 이웃 1→16, 2D 조합})와 차수(1차 고정).
+- 목적식(설계 근거): 백색 오차 모형에서 출력 오차 분산은
+    RTN/디더:  σ² Σ_i p_i²
+    1차 shaping(축 a): σ² Σ_i (p_i − p_{prev_a(i)})²
+  이득 조건 R_a = Σ(p_i − p_prev)² / Σ p_i² < 1. R_a는 양자화 없이 캡처된
+  attention 가중치만으로 CPU 계산 가능하다.
+- 실행 단계(쓰기 1회, 그룹·채널별):
+    s ← max|x|/(7−h) (h: 헤드룸, 0.5 권장; 안 두면 clamp가 잔차를 키움)
+    e_prev ← 0 (축의 시작)
+    축 순서대로: v ← x_i − e_prev ; c_i ← clamp(round(v/s)) ; e_prev ← c_i s − v
+  청크 안(3프레임, 그룹 안 16토큰)에서만 닫으면 상태 저장 0. 청크 경계를 넘겨
+  확산하려면 마지막 프레임 잔차(층당 1560×H×D, BF16 기준 K+V 30층 ≈ 0.29GB)
+  보관이 필요하므로 1차 설계는 청크 내부로 제한한다.
+- K와 V의 차이: V는 선형 가중합이라 위 식이 바로 적용된다. K는 logit에 들어가므로
+  1차 근사에서만 같은 논리가 성립하고, 아래 (4)의 반례가 있다. V 먼저.
+
+==================================================================
+(3) 기존 방법에 이름만 바꾼 것이 아닌 차이 / 미확인 사항
+==================================================================
+- HyperQuant 디더와의 차이: 디더는 오차를 입력과 독립·토큰 간 독립(백색)으로 만든다.
+  오차 확산은 오차를 입력에 의존하게 두되 이웃 토큰 간 음의 상관(고주파)으로 만든다.
+  백색이 "상쇄되지 않고 평균화"되는 반면 shaping은 R_a<1이면 백색보다 작다. 난수·
+  seed 재생이 읽기 경로에 필요 없다. 둘 다 바이트 증가 0이므로 같은 바이트에서
+  직접 비교 가능하다(디더가 이기면 이 후보는 기각).
+- 2605.26266과의 차이: 그 논문은 읽기 시점 score 보정이고 토큰 간 독립 오차를 가정.
+  이 후보는 쓰기 시점 코드 선택이며 토큰 간 상관을 "설계"한다. 서로 직교해 결합 가능.
+- 저장소의 전환 rounding/post-W_O/16코드 전수(README §18–20)와의 차이: 그 탐색은
+  RTN 근방의 소수 코드 flip을 평균/전환 목적으로 골랐고 두 목적이 같은 코드를 택했다.
+  오차 확산은 그룹 전체에 걸친 "협조된" 코드 변경이며 per-token MSE는 오히려 커진다
+  (1차 shaping은 토큰별 오차 분산을 약 2배로 키움). MSE 근방 탐색으로는 도달할 수
+  없는 해이므로 그 결과가 이 후보를 기각하지 않는다. 다만 평가 지표(다음 청크 query의
+  post-W_O 출력 오차)는 같은 것을 써야 한다.
+- METHOD_CANDIDATES의 "단순 시간 연동 rounding 보류"와의 차이: 그 항목의 근거는
+  "반복 RTN이 추가 오차를 내지 않는다"였다. 이 후보의 근거는 반복이 아니라 "읽기
+  쪽 평균화 축"이며, 2609.39185는 recurrent state의 디더(피드백 없음)다.
+  주 작업자가 이 둘을 같은 계열로 묶어 기각하면 그 근거를 따로 요구한다.
+- GPTQ/OBQ/GPFQ류 가중치 오차 피드백과의 차이: 그쪽은 고정 입력 통계(Hessian)에
+  대한 층 출력 오차 최소화다. 여기서는 입력(query, p)이 쓰기 시점에 없고 평활성
+  prior만 있으며, 활성(KV) 스트리밍 1회 쓰기다.
+- 미확인: (a) "토큰축 sigma-delta를 KV 캐시에 적용"한 논문을 검색 2회에서 못 찾았을
+  뿐이다. (b) 2608.14191·2609.39185·Sigma-Delta Networks 본문 미독. (c) attention이
+  실제로 어느 축에서 평활한지 측정 전. (d) Self-Forcing의 1560 토큰 raster 배치
+  (H×W, 순서)를 코드에서 확인하지 않았다.
+
+==================================================================
+(4) 가장 강한 단순 기준선과 예상 반례
+==================================================================
+기준선(같은 바이트): C-once INT4 RTN g=16(현재) / 같은 바이트 HyperQuant식 감산
+디더 / RTN + 2605.26266 score 보정(K). 상위 기준선(바이트 2배): K8V8(README §B-4,
+BF16과 거의 동등). 후보가 K8V8을 바이트 절반에서 따라잡을 필요는 없지만, 같은
+바이트에서 디더와 score 보정 둘 다에게 지지 못하면 채택하지 않는다.
+
+예상 반례:
+1. attention이 소수 캐시 토큰에 집중(R_a ≥ 1): 1차 shaping은 토큰별 오차 분산을
+   ~2배로 키우므로 오히려 악화. 2605.26266의 저자 한계와 같은 조건.
+2. K 적용 시 Jensen 편향 악화: 캐시 logit 섭동 분산 σ_i²가 ~2배가 되면 2605.26266의
+   "attention stealing"이 더 커질 수 있다. 평균은 상쇄되지만 분산 편향은 커지는
+   구조적 충돌. 따라서 K는 score 보정과 결합하지 않으면 실패할 가능성이 높다.
+3. 축 불일치: 시간축(같은 위치 프레임 1→3)으로 확산했는데 attention이 공간 이웃만
+   평균하거나 그 반대이면 이득 없음. 2D 확산은 상태가 커진다.
+4. FR 손상의 주원인이 per-read 출력 오차가 아니라 생성 drift의 재귀(TF≈70 vs FR 56/64)
+   라면, per-read 오차를 줄여도 영상 점수는 안 움직일 수 있다. 노름 일치 잡음이
+   FR에서도 무해했다는 관측은 이 반례를 약화시키지만 배제하지 못한다.
+5. scale 헤드룸(7−h) 때문에 step이 ~7% 커져 큰 값 영역의 오차가 늘어난다.
+
+==================================================================
+(5) 최소 수학/CPU 판별 문제와 실제 모델 전 필요한 정보
+==================================================================
+0단계(양자화 불필요, 가장 싸다): B-2/post-W_O에 쓴 캡처(2프롬프트×3층의 Q,K,V)로
+   캐시 토큰에 대한 p를 CPU에서 계산하고 head별 R_time, R_space를 구한다.
+   판단: 중앙값 R<0.5인 축이 존재 → 진행. 모든 축에서 R≥0.9 → 종료(가설 기각).
+1단계(coherence 가설 자체 검사): 같은 캡처에서 RTN 오차 e_i로 ‖Σ p_i e_i‖²와
+   백색 기대값 Σ p_i²‖e_i‖²의 비를 계산. 비 ≫1이면 "RTN 손상=토큰 간 coherence"
+   설명에 근거가 생긴다. 비 ≈1이면 손상 원인은 다른 곳(K의 attention 패턴 변화,
+   drift)이며 이 후보는 표적이 틀린 것이다. 이 검사는 norm-matched 대조군 해석에
+   대한 RESPONSE_KO 1항 지적을 피하기 위해 반드시 먼저 한다.
+2단계: V에만 1차 shaping(0단계에서 고른 축), 같은 g=16·같은 바이트. 지표는
+   README §19–20과 동일한 다음 청크 query의 post-W_O 출력 오차. 대조: RTN, 감산 디더.
+   성공: RTN 대비 ≥20% 감소이며 디더보다 작음. 실패: <5% 또는 디더에 열세.
+   판단 불가: 층/프롬프트 간 부호가 엇갈림(14층 역전 사례처럼).
+3단계(2단계 통과 시에만): K에 shaping ± 2605.26266 보정, 같은 지표.
+생성 실험(GPU)은 3단계 뒤에만 등록한다. 등록 전 필요한 정보:
+   캡처에 캐시 토큰 전체의 K/V와 다음 청크 query가 있는지, 1560 토큰의 raster
+   배치, clean refresh가 유일한 쓰기 forward인지(원고 §3.1 기준 그렇다),
+   현재 청크 대 캐시의 attention 질량 비율.
+
+==================================================================
+(6) 계속 설계할 가치 여부
+==================================================================
+조건부 가치 있음. 근거: (i) 관측(노름 일치 잡음 무해, RTN 손상)에 가장 단순한
+기제 가설 하나를 대고 그것을 0·1단계 CPU 검사로 기각 가능하게 만들었다. (ii) 바이트·
+메타데이터·읽기 경로 변경이 0이라 "같은 자원에서 더 나은 이유"가 식으로 적힌다.
+(iii) 가장 가까운 두 선행(디더, score 보정)과 직교하므로 결합 비교가 바로 된다.
+가치 없음으로 바뀌는 조건: 0단계 R≥0.9, 또는 1단계 비≈1. 그 경우 "RTN 손상은
+토큰 간 coherence 때문"이라는 설명도 함께 기각되며 다른 기제를 찾아야 한다.
+신규성은 확보되지 않았다. 토큰축 sigma-delta KV 논문을 못 찾았을 뿐이며, 2608.14191·
+2609.39185 본문 확인과 "sigma-delta attention"/"noise feedback KV" 추가 검색이 필요하다.
+두 모델이 동의해도 신규성 증거가 아니다.
+
+Future work 문장 구분: 2605.26266 저자 제안=chunked prefill, FP 포맷; HyperQuant 저자
+제안=커널, fp8 cast, LDLQ, 층별 비트, Leech 격자. "토큰 간 오차 상관을 설계한다"는
+위 어느 저자도 제안하지 않은 나(Fable)의 추론이다.

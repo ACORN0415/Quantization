@@ -1,0 +1,15 @@
+Claude Fable 최종 집중 검토(3분 상한). 시작 /home/acorn0415, 프로젝트 /home/acorn0415/Quantization.
+라운드1·2 실제 Fable 파일을 이어받는 공동 논의의 마지막 정정이다. Task/Dispatch 없음. 다른 agent 금지.
+읽을 것: docs/reviews/20261105_METHOD_DISCUSSION/FABLE_ROUND2.txt, ROOT_ROUND1.txt, algebra_result.json. 필요할 때 SOURCE_AND_FEASIBILITY.txt.
+GPU·모델·캡처 tensor 로드·새 실험·코드변경·커밋 금지. 읽기 및 표준라이브러리 작은 식 확인만 허용. 유일한 출력 FABLE_ROUND3.txt.
+
+주 작업자 결정: 후보R을 첫 구현 설계로 선택. 후보F는 지금 ablation으로 붙이지 않는다(후보 증식 금지). Fable round2의 조건부 지지는 수용하되 다음 정정은 필요하다. 아래 7개가 맞는지 확인하고, 틀린 항목만 구체적으로 고쳐라. 새 문헌탐색/새 후보/새 실험계획 추가 불필요.
+1. '1차 Taylor 보정은 상한 근사' 철회. 단지 근사 대조군이며 정확 보정/성능 상한 아님. 진단용 정확 목표는 실제 e를 가지고 exp(qk)-exp(qkhat)를 계산한 것(배포 불가). K만 바꾸는 검사는 Attn(K,Vhat)를 참조해야 함. full teacher Attn(K,V)와 차이는 V오차 포함.
+2. phi(q)^Tpsi(k)가 kernel 값에 가까운 것만으로 k미분도 가깝다고 보장하지 못함. 'paired가 1차에서 정확히 base-aware'는 feature kernel의 derivative가 원래 derivative를 근사한다는 추가조건하에서만 맞음. 무조건 주장 철회.
+3. 원래 FULL state 유지: DN=Σ[psi(k)v^T-psi(khat)vhat^T], Dz=Σ[psi(k)-psi(khat)]. K-only ablation에서 DN_K=Σ[psi(k)-psi(khat)]vhat^T를 쓰면 나머지 정확한 V항은 Σpsi(k)(v-vhat)^T다. round2의 ψ(khat)(v-vhat)를 그대로 더하면 혼합항을 빠뜨림. 메인에 두 state 별도로 저장할 필요 없음.
+4. r=256과 K5V4의 bytes는 같은 자릿수이지 같지 않음. DN/Dz/FP32 상태, feature map/seed/metadata, live청크수, padding, scale, pending BF16 포함해 실제 bytes를 세야 함. 임의로5bit로고정하지않고 같은 memory cap의 단순 K4/5/6/8V4 및 K8V8 등의 실제가능한 nondominated 비교점으로 결정. 명목평균bit≠같은비용.
+5. Gaussian ω를 QR로 단위직교화만 하면 Gaussian marginal이 아님. v1은 iid N(0,I) 고정 seed로 단순화. orthogonal feature를 쓰려면 χ_d row length 등 원래feature법에 필요한 스케일을 명시해야 함.
+6. c_chunk=max norm²항은 ωk를 포함하지 않아overflow 보장 없음. CPU진단은FP64, 동일원본/복원 feature 열마다 실제 exponent 공통max a_cj를 빼고 저장offset을 올바르게합산(청크별offset다르면rawsum불가). 실제GPU저장format은별도미해결. overflow/underflow/cancellation 여부는 finite검사와기록으로확인. 기존O,logZ에 정규화해 O'=(O+deltaN/Zhat)/(1+deltaZ/Zhat). 0.5Zhat fallback은 수치보호 engineering규칙일뿐정확성보증이아니며비율보고. 불량query감추지말것.
+7. 정당한 좁은 조건부오차설명(새 이론이라는 주장 아님): E(q,k)=phi(q)^Tpsi(k)-exp(qk/sqrt(d))라 두면 보정후분자오차 ηN=Σ[E(q,k)v-E(q,khat)vhat], 분모오차ηZ=Σ[E(q,k)-E(q,khat)]. E가 k에대해L-Lipschitz, |E(q,khat)|≤ε이면 ||ηN||≤Σ[L||k-khat||||v||+ε||v-vhat||], |ηZ|≤ΣL||k-khat||. Z> |ηZ|일때 최종오차≤(||ηN||+||O||||ηZ||)/(Z-|ηZ|). 이 조건은 런타임에 아는 certificate가 아니고 baseline보다작다는보장도아님.
+
+이번 최종 산출물은 '신규성 확정'이 아니라 공식·이용정보·가장가까운선행과차이·첫판별질문이있는 방법설계다. 실제데이터효과/같은비용우위는미확인. FABLE_ROUND3.txt에 정정수용/남은오류, 후보R의조건부우선순위유지여부만짧게저장하고끝내라.

@@ -1,0 +1,63 @@
+2026-11-05 주 작업자 원문·코드 대조 기록
+
+직접 확인한 가장 가까운 원문과 차이의 범위
+
+KVLinC https://arxiv.org/html/2510.05373v1 §3.2 식4-6, §3.3
+- error-only query/key-error feature product로 분자·분모의 보정 상태를 합산한다.
+- 따라서 compact linear correction 자체는 기존 방법이다. 본 후보의 차이는 psi(k)-psi(khat)와 psi(k)v-psi(khat)vhat를 사용하는 데 한정된다.
+- 공식 링크 https://github.com/UtkarshSaxena1/kvlinc 와 GitHub API의 repository 조회는 404. 실제 코드 구현/지원 GPU를 검증했다고 쓰지 않는다.
+- OpenReview 검색 PDF 식4-6도 같은 형태였으나 최신 최종판 전수 대조는 아님.
+
+Quantized Keys Steal Attention https://arxiv.org/html/2605.26266v1 §4.1-4.3, §6
+- 독립 균일·영평균 반올림 오차 모형으로 score 보정을 유도한다. §6은 집중된 attention, 비균일/편향 오차를 명시적으로 한계로 든다.
+- 위 한계는 저자 진술. 우리 조건에서 해당 실패가 관측됐다는 뜻은 아니다.
+- 저자 future work는 LLM chunked prefill 및 FP/MXFP/NVFP 확장. '실제 원본/복원 쌍의 응답 차이를 요약'은 주 작업자의 설계 추론이다.
+- 최종 비교에 반드시 포함할 단순 강한 score 보정 기준선. 기존 scale metadata만 사용하는 점에서 새 상태 보정보다 비용상 유리할 수 있다.
+
+MomentKV https://arxiv.org/html/2606.01563v1 §4.1-4.2
+- 퇴거 토큰의 평균·공분산으로 누락 출력과 normalization을 근사. summary, 증분 update, 분모 보정은 신규성으로 쓰지 않는다.
+
+EVA https://arxiv.org/pdf/2302.04542 pp2-5, §2.3-4.1
+- random-feature approximation/control variates와 token subset별 계수는 이미 연구됨.
+- 원본 feature 근사에서 복원 feature 근사를 빼고 정확 복원 attention을 더하는 안은 일반 control-variate 원리의 특수화다. 원리 자체 새 이론이라고 쓰지 않는다.
+- 확인한 식은 양자화된 KV를 proxy로 한 아래 상태식 그대로가 아니었지만, 전체 후속 문헌에 없다고 입증한 것은 아니다.
+
+Fast KV Compaction via Attention Matching https://arxiv.org/html/2602.16284v1 §2-3
+- attention 응답과 mass를 같이 맞춰 이후 토큰 연결에도 유지하는 목표를 이미 제시.
+- 분자/분모 둘을 맞춘다는 목표 자체는 새롭지 않다. 토큰을 대체하는 compact KV와 immutable packed KV 위의 차분 상태는 저장 표현이 다르다.
+
+Bridging KV-Cache Quantization and Linear Attention https://arxiv.org/html/2610.11214v1 §3.2-3.3
+- 분리 가능한 주소 feature와 recurrent aggregation, mass-aware readout을 제시.
+- quantized KV와 linear summary를 연결한다는 넓은 서술은 차별점이 아니다.
+
+Distribution-Aware Fixed-Scale Quantization with Sigma-Delta Error Correction for Tiled Attention Computation
+https://www.tdcommons.org/dpubs_series/10659/ (2026-06-30)
+- 공개 기술 설명의 attention score tile feedback. 논문 실증/성능 증거로 쓰지 않는다.
+- V cache 쓰기와 동일하다고 단정하지 않지만 'attention에 sigma-delta를 처음 적용' 주장을 막는 가까운 공개 자료다.
+
+SDQ-LLM https://arxiv.org/abs/2510.03275 및 출판사 방법 본문
+https://journals.sagepub.com/doi/10.3233/FAIA251342
+- activation의 lowpass 성질을 사용한 weight noise shaping. smoothing 연산에 양자화 고주파 오차를 맡긴다는 기제는 기존.
+
+LESS https://arxiv.org/html/2402.09398v2 §3.1 식3-6, §3.2, §4.1 (라운드3 이후 주 작업자 추가 확인)
+- 퇴거한 KV의 feature를 합산해 보정 상태에 넣는다. 원본/복원 두 feature의 signed 차이를 누적하는 공식은 확인한 방법식에 없음.
+- 전체/희소 attention의 잔차를 작은 상태로 학습한다는 발상은 이미 존재한다.
+- §4.1 Table2에서 고정 Performer kernel을 붙인 비교는 학습 feature만큼 효과적이지 않았다. 따라서 무학습 random feature의 실패를 이 차분 표현 전체의 불가능성으로 확대하면 안 되며, 학습이 필요하면 그 비용과 단순 base-aware 학습 기준선까지 비교해야 한다.
+- 처음 다운로드한 출판사 PDF는 크기 상한으로 잘려 텍스트 추출이 불완전했다. 위 판정은 그 파일이 아니라 정상 열람한 arXiv HTML §3-4에 근거한다.
+
+현 코드 실행 가능성(정적 확인, GPU 미실행)
+1. src/wan/modules/causal_model.py 197-208: causal_rope_apply 후 key를 store.attend에 넘김.
+2. src/kvq/store.py ChunkStore: 이전 pending 확정 시 segment로 옮김; 원본과 복원값이 encode 시 함께 존재하며 이후 원본 raw를 None으로 정리. 후속 read에서 과거 key에 RoPE를 다시 적용하지 않음.
+3. src/wan/modules/attention.py의 현재 wrapper는 attention 출력만 반환.
+4. 설치 환경 /home/acorn0415/sfq_data/env/lib/python3.10/site-packages/flash_attn/flash_attn_interface.py:
+   varlen forward는 dropout=0일 때 return_softmax 옵션을 커널에 false로 전달하면서 softmax_lse를 반환할 수 있음. 실제 사용 API signature 및 shape/bit identity는 후속 검사 대상. 이번에 새 GPU를 쓰지 않음.
+5. 수치적으로는 Nhat와 Zhat를 직접 exp(logZ)로 만들지 말고, O_hat 및 logZ에 맞춰 a=exp(-logZ)*deltaN, b=exp(-logZ)*deltaZ를 계산해 (O_hat+a)/(1+b)로 읽을 수 있음. feature 자체의 overflow/underflow, cancellation과 잘못된 denominator는 여전히 해결해야 함.
+6. 기존 B-2 capture 코드 tools/kv_channel_full_attention.py는 p0/p4, l0/l14/l29, chunk7/call0에서 전체 q[1,4680,12,128], k/v[1,32760,12,128], W_O 및 native 출력을 저장하도록 작성됨. 저장 경로 /home/acorn0415/sfq_data/kv_channel_budget_full_attention. 코드에 경로가 있다는 사실과 원자료의 현재 보존/무결성은 구분. 새 검사 전 manifest hash 확인 필요.
+7. 이어서 실제 파일 존재 확인: 양쪽 prompt manifest completed, 각 3개 capture(파일당 249,132,916 bytes) 존재. p0/l0만 SHA256을 manifest와 대조하고 CPU로 load: 일치. 나머지 다섯 파일은 이번에 hash 재검증하지 않음. INPUT_FEASIBILITY.json은 해당 한 파일의 shape/dtype 및 첫 32토큰 norm 규모 확인이며, 품질·보정 성능 검사가 아니다.
+
+아직 하지 않은 일
+- 실세계에서 error-only feature의 표현 한계가 손실을 지배하는지 확인
+- 제안 feature map 종류와 작은 r의 실제 근사 성능 확인
+- 단순 base-aware f(q,[khat,e])와의 같은 비용 비교
+- GPU, 생성, 품질, peak memory, 속도 측정
+- 전 분야 신규성 확인. 조사 범위에서 식의 차이를 특정한 단계임.

@@ -1,0 +1,25 @@
+실제 Claude Fable 공동연구자/교수 역할. 시작 경로는 /home/acorn0415, 검토 프로젝트는 /home/acorn0415/Quantization.
+사용자: '클로드랑 상의해 가면서 futurework과 필요한 부분을 찾아가면서 논의해서 방법을 찾아봐 기존에 없던걸로'.
+이 요청은 새 GPU 실험보다 방법론 설계를 위한 실제 상호 논의를 뜻한다. 독립 후보 하나를 제안하라. 주 작업자는 다른 후보를 독립 검토하고, 이후 서로의 안을 비판한다. 두 모델의 동의는 신규성 증거가 아니다.
+
+먼저 AGENTS.md와 docs/CLAUDE_REVIEW_PROTOCOL_KO.md, docs/reviews/20261105_METHOD_FROM_FINDINGS/RESPONSE_KO.txt를 읽어라. 이전 Fable 디더 제안은 HyperQuant 본문 §4.4/§6.2가 이미 KV 감산 디더를 다뤄 새 방법으로 채택하지 않았다. RTN 분산 ≤step²/12 등 오류와 대조군 인과 과해석을 반복하지 말 것.
+
+현재 관측(필요한 근거 파일을 읽을 것):
+- 문서/paper/analysis_manuscript_ko.md: fixed-group repeat가 rolling보다 +5.39 MUSIQ, 11/12프롬프트. once vs repeat 24쌍 최종 latent exact. 그룹 이동 유일 원인 아님.
+- TF BF16 history 약70 vs FR 약56/64; norm-matched noise 약71. 동일노름만으로 손상 설명 불충분. 방향/좌표크기/피드백의 단일원인 입증은 아님.
+- docs/RESEARCH_STORY_KO.md와 docs/METHOD_CANDIDATES_KO.md: TT/텐서분해/재사용/전환rounding/시간정밀선택/개별층·채널배분 등 이미 제한된 실패. 의미없이 재개 금지.
+- README 최신: A W8A8 속도는 개별커널뿐, rollout engineeringgate 실패. B Kboost는 같은전체메모리에서 단순K8V8에 패배. C FP64SVD효과 <.03%. 모든후보실패의일반원인 아님.
+장비 RTX4090 24GB, RAM64GB, Self-Forcing1.3B,청크4680query,5forward/chunk(4denoise+1cleanrefresh). 실시간 query·미래정보 접근제약과 실제packedbytes/metadata 중요.
+
+이미 가까운 선행(같은 일반명제 재제안하지 말 것):
+OnPTQ https://arxiv.org/html/2609.36828v1 (quantized on-policy state/future consequence calibration)
+Q-ARVD https://arxiv.org/html/2605.21072v1 (future-error frame-weight calibration)
+QuantWM https://arxiv.org/html/2609.26425v3 (query-sensitive KV/lowrank attn compensation)
+CORAL-KV https://arxiv.org/html/2610.12514v1 (crosslayer predictors with reconstructed-input fit)
+dKV Forcing https://arxiv.org/html/2611.01648v1 (write-only lowrank adapter trained through future reads)
+HyperQuant https://arxiv.org/html/2606.23406v1 (KV subtractive dither alreadytested)
+QVG https://arxiv.org/html/2602.02958v5 (chunk-once,centroid+residual).
+
+권한/상한: 12분 이내, 필요한 원문 최대6개(초록만으로 미해결이라 하지 말고 목적함수/알고리즘/한계/부록까지). 읽기·웹탐색 허용, GPU/모델로드/새실험/대형다운로드/코드변경/커밋/하위agent 금지. 유일한 쓰기는 이 폴더의 FABLE_ROUND1.txt. 보고서 저장 후 끝내라. Task/Dispatch가 실제로 주어지면 worker_done, 아니면 식별자없음을기록. 주 작업자가 다음 라운드에 네 보고서를 읽고 반론/제안을 전달할 것이다.
+
+산출물: (1) 가장가까운 기존방법의 실제남은조건과 원문위치 (2) 독립 방법 최대1개, 입력/출력/decision variable/목적식/실행단계 (3) 기존방법에 이름만 바꾼것이 아닌 차이 또는 미확인사항 (4) 가장강한 단순기준선과 예상반례 (5) 최소수학/CPU판별문제, 실제모델전 필요한정보 (6) 계속설계할가치 여부. Futurework문장은 저자의제안/네추론 구분. 검색에서못찾음≠기존에없음. '분석논문으로 끝내자'로사용자목표대체하지말고, 확증편향도금지.

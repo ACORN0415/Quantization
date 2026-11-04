@@ -1,0 +1,47 @@
+{
+  "scope": "read-only input shape/norm feasibility; no quantization/correction or GPU experiment",
+  "file": "/home/acorn0415/sfq_data/kv_channel_budget_full_attention/p00_s101/l00_c7.pt",
+  "sha256": "8aaa3d66c479f91eb200c8586a10a5235e19c4fd77c9f998e51b8ed0653cfaf9",
+  "hash_matches_saved_manifest": true,
+  "tensors": {
+    "q": {
+      "shape": [
+        1,
+        4680,
+        12,
+        128
+      ],
+      "dtype": "torch.bfloat16",
+      "sample_first_tokens": 32,
+      "l2_norm_min": 7.370714444299049,
+      "l2_norm_median": 11.825707512231274,
+      "l2_norm_max": 15.898285344986764
+    },
+    "k": {
+      "shape": [
+        1,
+        32760,
+        12,
+        128
+      ],
+      "dtype": "torch.bfloat16",
+      "sample_first_tokens": 32,
+      "l2_norm_min": 1.5984164779373597,
+      "l2_norm_median": 9.775419396304283,
+      "l2_norm_max": 20.29992677900855
+    },
+    "v": {
+      "shape": [
+        1,
+        32760,
+        12,
+        128
+      ],
+      "dtype": "torch.bfloat16",
+      "sample_first_tokens": 32,
+      "l2_norm_min": 6.7215445251486985,
+      "l2_norm_median": 13.419037828161091,
+      "l2_norm_max": 26.35759072180788
+    }
+  }
+}

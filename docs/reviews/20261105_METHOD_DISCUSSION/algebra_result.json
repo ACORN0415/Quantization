@@ -1,0 +1,48 @@
+{
+  "scope": "synthetic scalar algebra only; not KVLinC empirical evaluation or model evidence",
+  "fixed_epsilon": 0.25,
+  "error_only_fit_from_contexts_1_and_2": {
+    "u": 0.0,
+    "v": -0.22119921692859507
+  },
+  "contexts": [
+    {
+      "khat": [
+        0.0,
+        0.0
+      ],
+      "target": 0.5621765008857981,
+      "fitted_error_only": 0.5621765008857981,
+      "equation_residual": 0.0,
+      "output_abs_error": 0.0
+    },
+    {
+      "khat": [
+        1.0,
+        0.0
+      ],
+      "target": 0.7772998611746911,
+      "fitted_error_only": 0.7772998611746911,
+      "equation_residual": -1.1102230246251565e-16,
+      "output_abs_error": 0.0
+    },
+    {
+      "khat": [
+        0.0,
+        1.0
+      ],
+      "target": 0.320821300824607,
+      "fitted_error_only": 0.2859526385515851,
+      "equation_residual": -0.4880357123150545,
+      "output_abs_error": 0.03486866227302193
+    }
+  ],
+  "paired_feature_summary_max_error": 4.163336342344337e-16,
+  "no_quantization_state_exact_zero": true,
+  "append_max_error": 6.938893903907228e-18,
+  "eviction_max_error": 6.938893903907228e-18,
+  "limits": [
+    "Finite Taylor features approximate exp, not exact softmax.",
+    "No real captures, GPU, quality, novelty or speed claim."
+  ]
+}

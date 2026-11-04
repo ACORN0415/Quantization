@@ -1,0 +1,29 @@
+실제 Claude Fable 교수/공동연구자 라운드2. 시작 /home/acorn0415, 대상 /home/acorn0415/Quantization.
+이전 실제 Fable 채팅 claude_67aa6bd8_b0fb_4958_b963_8eced0ffbef7의 독립 제안을 이어받아 주 작업자와 논의한다. 원 채팅은 Task attach가 terminal_handle_stale로 실패해 후속 메시지 경로가 없어 별도 Fable 채팅으로 토론을 이어간다. 원 채팅의 의견은 파일 원문 그대로다. 다른 모델의 발언을 Fable 발언으로 꾸미지 않는다.
+사용자 목표: 기존 결과에 붙일 구체적인 새 방법론을 찾기. 새로움을 보장하라는 뜻은 아니지만 조건/문헌 나열만으로 끝내지 말 것.
+
+필수 읽기(절대 경로 기준):
+/home/acorn0415/Quantization/AGENTS.md
+/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_DISCUSSION/FABLE_ROUND1.txt
+/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_DISCUSSION/ROOT_ROUND1.txt
+/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_DISCUSSION/check_algebra.py
+/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_DISCUSSION/algebra_result.json
+
+주 작업자가 Fable의 읽기 축 sigma-delta 제안에 보내는 반론:
+1. 가중합의 유한구간 경계항이 누락됐다. e0=0, y_i-x_i=e_i-e_{i-1}이면 sum p_i(y_i-x_i)=sum_{i=1}^{n-1}(p_i-p_{i+1})e_i+p_n e_n. 각 그룹 reset마다 경계항 존재. temporal n=3에서 무시 불가. 독립·등분산은 이 residual에 성립한다는 보장이 없으니 R<.5 등은 보장/자동종료 근거로 쓰지 말 것.
+2. 원고의 노름맞춤 잡음과 RTN 차이를 '토큰 상관이 가장 단순한 설명'으로 우선 지정할 근거 부족. coherence ratio≈1이라도 설계한 negative correlation이 이득일 수 있어 그것만으로 후보 종료는 논리적 비약이다. ratio≫1도 원인 확정 아님.
+3. 같은 scale규칙이라면서 max/(7-.5)로 바꾼다. 같은 bytes는 맞지만 같은 grid 아님. 같은 넓힌 scale의 RTN 기준선 필수. 시간축 경로는 g16 group을 가로질러 scale이 달라져 처리 순서/실수잔차 단위/경계가 중요하다.
+4. 원문 https://www.tdcommons.org/dpubs_series/10659/ (2026-06-30) 'Distribution-Aware Fixed-Scale Quantization with Sigma-Delta Error Correction for Tiled Attention Computation'은 attention score tile loop의 sigma-delta를 이미 공개함. KV V쓰기와는 다르지만 'attention noise shaping 최초'는 불가.
+5. SDQ-LLM https://arxiv.org/abs/2510.03275 는 activation이 lowpassfilter로 weights의 highfreq noise를 지운다는 동일논리를 사용. 기존GPFQ/halftoning과 구별하려면 새 시스템/최적화 문제가 필요하다. KV에 적용만으로 충분한가? 반론을 정면으로 답하라.
+
+주 작업자 후보는 ROOT_ROUND1.txt. KVLinC §3.2의 error-only f(q,e)에 대한 직접 유도 반례를 CPU로 확인(세 번째 문맥 오차 .03486866, 이는 모델성능 아님). 원본/복원에 동일 feature map을 적용한 차이를 분자·분모 summary로 저장하는 안이다. 자가 반론:
+- f(q,[khat,e])로 입력만 바꾼 학습 보정도 비교해야 하며, 이것이 같은 비용으로 충분하면 새 paired map의 필요성 약화.
+- 저차원 feature가 작은 양자화 잔차를 정확히 표현할지, signed denominator 안정성, calibration 부담, 구현 비용 미확인.
+- random features/control variates 자체 기존: EVA https://arxiv.org/abs/2302.04542 및 KVLinC/MomentKV/LESS. 해당 '같은 feature 차이로 packed KV residual 저장'과 직접 동일한 공식이 있는지 좁혀 확인 필요.
+- Quantized Keys Steal Attention §6 한계의 concentrated attention/nonuniform biased noise는 양쪽 공통의 비교 조건이며 근거 없이 '이 조건에서 우리 안이 낫다'는 말 금지.
+
+추가 실제 코드 확인(주 작업자): src/wan/modules/causal_model.py 197-208행은 post-RoPE key를 ChunkStore에 전달. src/kvq/store.py는 청크 시작시 이전 pending을 encode, 완료 chunk단위 eviction. 과거 key의 RoPE 재적용 없음. 설치 flash_attn_interface.py 739-771행은 dropout=0에서 return_softmax=True시 커널 return_softmax=False로 호출하면서 softmax_lse 반환 가능(정적 코드, GPU 미검증). 원본 attention wrapper는 현재 lse를 버리므로 연결 수정 필요.
+
+권한: 8분 이내, 추가 원문 최대4개 집중, 읽기/웹/작은 표준라이브러리 CPU 계산 허용. GPU·모델로드·대형자료·코드수정·커밋·하위agent 금지. 유일한 쓰기 docs/reviews/20261105_METHOD_DISCUSSION/FABLE_ROUND2.txt. 기존 결과 파일은 수정하지 말 것.
+제출: (a) 두 후보의 수학/선행/구현 비용 비판 (b) 정정할 본인 주장 (c) 둘 중 우선 개발할 하나 또는 구체적으로 수정된 하나, 새 후보 추가 금지 (d) 이름이 아니라 실행 가능한 첫 버전의 입력/코드 선택 혹은 state식/feature 선택/비용 (e) 실제 데이터 전 통과해야 할 최소 질문 하나와 단순강한기준선 (f) 지금 신규성이라고 쓸 수 있는 것/아직 못 쓰는 것.
+결과를 본 적 없는 gate 수치를 근거없이 만들어 채택/종료하지 말 것. 두 모델이 합의해도 신규성 증명 아님. 보고서 저장 후 종료, Task/Dispatch 없으면 없음 명시.
