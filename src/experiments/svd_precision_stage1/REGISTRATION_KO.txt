@@ -1,0 +1,56 @@
+C: FP32/FP64 SVD 계산 정밀도와 저비트 저장 후 효과
+시작 2026-11-04 21:48:55 UTC. 준비·검증·실행·감사·Fable 검토 포함30분, 마감22:18:55 UTC.
+사용자가 C 실행을 명시했다. 기존 A/B/TT 종료는 유지하며 이 검사는 재개 승인이 아니다.
+CPU4 threads, GPU0, 모델생성0, 다운로드0, 원자료추가저장1GiB 이하. 준비도 상한에 포함한다.
+
+질문: 동일 TT rank/형상/비트/scale/복원 경로에서 분해만 FP64로 하면 저장 후 V 복원과
+고정 attention의 출력 오차가 실질적으로 줄어드는가? NVIDIA 반복 정련 자체의 구현/속도 검사가 아니다.
+
+입력: 보존된 postwo_rounding/p00_s101,l29_c6 및 p04_s101,l29_c6의 new_value.
+V는 [1,4680,12,128] BF16, TT 형상[12,3,1560,128]. 12head 전부 사용.
+두 개발 프롬프트, 29층, 청크6, call4. 이전 관측상 민감한 층을 의도적으로 고른 국소 진단이며 일반화 표본이 아니다.
+동일 파일의 query32개, 전체 key32760개, wo를 평가에 사용. 미래query/새층/추가rank 탐색없음.
+파일 해시는 이전 input_availability.json과 대조하고 보존한다.
+
+방법: 고정 codec_order_core.decompose(x,'tt',192), rd128. 입력dtype만float32/float64로 변경.
+2/4bit 두 저장 조건은 각각 같은 core.store, group16, FP16 maximum, FP32 quantization/scale,
+round-to-nearest-even, 대칭 qmax=2^(bits-1)-1, clipping[-qmax,qmax], LSB-first 실제 bitpacking.
+기존 pack_factor는 FP64 인자도 FP32로 변환한다. 이 실제 저장 경로를 바꾸지 않는다.
+기존 core.decode의 FP32 계산 뒤 BF16으로 복원한다. FP64 인자를 고정밀로 보관하는 방법과 혼동하지 않는다.
+동일 입력은 BF16→각dtype로 정확히 표현되며 원본 W/K/V를 제자리 변경하지 않는다.
+각prompt/precision은 독립CPU프로세스. 같은분해를3회, 첫회와후속2회시간을별도기록.
+실행순서 p0 FP32, p0 FP64, p4 FP64, p4 FP32. 실제 SVD 호출2회/분해, 총24회(각12head batched).
+첫회 결과만 보존/평가하며 반복은 출력 반복성 및 CPU 비용 관찰용. GPU 가속률을 추정하지 않는다.
+
+측정:
+1. 분해 인자를 공통 FP64 산술로 조립한 rank192 복원 SSE/MSE/relative L2.
+   FP32/FP64 복원간 거리도 별도 측정. raw 잔차는 rank 절단을 포함하며 순수 계산오차가 아니다.
+2. 실제packed→FP32복원→BF16 V의 SSE/MSE/relative L2. payload tensor 바이트와 파일 바이트 구분.
+3. 고정 Q/K의 FP64 softmax 전체32760토큰 중 마지막4680토큰 확률을 P로 두고
+   delta_O = concat_head(P @ (Vhat−V)) @ Wo.T 를 FP64에서 계산. mean(delta_O^2)를 주 출력 오차로 사용.
+   이는 다른V와K를 고정한 신규V 청크 개입의 선형 출력차이다. 전체 native BF16 attention 재실행/전체영상 품질이 아니다.
+   원래 신규청크 기여 concat(P@V)@Wo.T로 정규화한 값도 별도기록하며 전체 출력정규화라 부르지 않는다.
+4. 원래 인자와 양자화 인자 간 FP32 stage, BF16 cast 영향을 구분한다.
+5. 각SVD singular values를 보존해 rank192 경계 gap을 설명용으로 보고. 결과에 따라 rank를 바꾸지 않는다.
+
+유효성:
+- 실제 입력 해시, dtype/형상/유한성. 각dtype 원본값일치.
+- 합성 작은 full-rank TT FP64 복원 relative L2<=1e-12.
+- 저장payload의 독립NumPy bit decoder와원본codec인자복원이 원소byte일치.
+- dtype 두조건의 각bit payload tensor 바이트가 expected_bytes와일치.
+- 인자 부호를 동시 변환해 동일TT를 만드는 canonical-sign 검사를 한다. store/decode후 출력 전원소byte일치가
+  성립해야 부호 모호성을 원인에서 제외한다. 실패하면 계산오류/부호효과를 구분해 보고하고 이득 채택을 보류한다.
+- 반복3회 같은dtype 인자byte일치. 실패시 반복범위보고/정밀도효과와분리못하면판단불가.
+- 감사는 보존인자/패킹/점수를CPU재계산하며 SVD/GPU/모델을 재실행하지 않는다.
+
+사전 판정:
+각prompt·bit에서 개선율=1−error64/error32. 실용적 의미를 볼 공학 문턱1%(통계적유의수준아님).
+같은bit의 두prompt 모두 V SSE와 출력MSE가 각각1% 이상 줄면 '분해정밀도 후속검토 근거 있음'.
+어느 조합에서도 두지표의 절대상대변화가1%에 못미치면 '시험범위에서 정밀도상향 종료'.
+큰차이가 있으나 방향/지표가 일관되지 않으면 '효과혼재, 이득채택안함'으로 마무리.
+raw 잔차만 좋아지는 결과는 계속 근거가 아니다. 통과해도 TT 재개·GPU가속·신규성 주장은 하지 않는다.
+실패/시간초과/실행무효는 완료수와원인을보고. 허용오차·비트·rank·층을결과뒤바꾸지 않는다.
+
+검토 의견의 위치:
+NEXT_AFTER_B Fable는 실용성이낮아 C보류를권고했다. 사용자의명시실행지시에따라한정검사를진행한다.
+그검토의합성SVD수치는코드/원자료를주작업자가재검증하지않았으므로 본검사근거/결과로사용하지 않는다.

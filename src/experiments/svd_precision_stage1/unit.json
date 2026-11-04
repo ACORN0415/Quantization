@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "gpu_calls": 0,
+  "synthetic_svd_calls": 2,
+  "synthetic_store_calls": 8,
+  "full_rank_relative_l2": 2.2026799820581836e-15,
+  "provenance": {
+    "tools/svd_precision_probe.py": "3cb15484893d041622c37b0c772438007f2e7b5cfbef90a373f45a969a1e0814",
+    "tools/codec_order_core.py": "67c7a74cf2362bf98c9e9095acee2dca5ad001734d47c5c1eb4f73593049187c",
+    "tools/change_mixed_core.py": "5f571f97e8a6dbb39b257c5f67f9f6d760dd9c1983aaf2775cd063293df12f1a",
+    "src/experiments/svd_precision_stage1/REGISTRATION_KO.txt": "2c2f25c6d165335a7943f19bdd5c1f6b8f940878c30728d7be03d997c069c8cf"
+  }
+}
