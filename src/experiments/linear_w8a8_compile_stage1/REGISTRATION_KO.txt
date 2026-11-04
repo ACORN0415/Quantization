@@ -1,0 +1,47 @@
+A-1 실행 등록, 2026-11-04
+사용자: A-1 실행 후 결과에 따라 A-2 또는 B로 계속 진행하라고 지시했다.
+등록 시작 2026-11-04 13:52:49 UTC, GPU 진단 종료 상한 14:22:49 UTC. 준비·코드·검증·컴파일 포함30분.
+후속 단계는 이 상한에 몰래 포함/연장하지 않고 A-1 결과를 보존한 뒤 별도 범위·상한을 정한다.
+
+질문: 현재 설치된 PyTorch 기본 컴파일 경로가 실제 3개 linear에서 eager 경로보다 유리하며 BF16도 이기는가?
+기존 A는 종료 상태 유지. 새 모델/영상 생성0, 추가 입력0, 수동 커널 작성0, 패키지 설치0.
+입력은 A의 raw_manifest/results에 해시로 고정한 3개 X/W/bias/BF16Y다.
+
+설정: torch2.6.0+cu124, RTX4090. TF32 false, inference_mode. torch.compile backend=inductor,
+fullgraph=True, dynamic=False, 기본 mode. max_autotune/max_autotune_gemm/search_autotune_cache=False,
+force_fuse_int_mm_with_mul=False, epilogue_fusion=True. 설정 탐색이나 수식 재작성은 하지 않는다.
+기본 compile이 INT8 GEMM을 Triton으로 바꾼다고 가정하지 않는다. 생성 코드를 보존해 실제 backend를 분류한다.
+
+4팔: eager BF16 / compiled BF16 / eager W8A8 / compiled W8A8.
+같은 X/W/bias와 BF16 출력. W 양자화·전치는 정적 준비로 별도 측정.
+W8A8 호출에는 X 양자화, 정수 GEMM, scale 적용, bias, BF16 변환 모두 포함한다.
+CUDA graph는 사용하지 않는다. compile 최초 호출 비용은 별도 기록하고 warmup 후 정상 호출을 비교한다.
+
+정확성(시간 측정 전에):
+- eager BF16와 원래 캡처Y 전 원소 바이트 일치.
+- compiled BF16와 eager BF16 전 원소 바이트 일치. 실패하면 그 기준선은 무효로 구분한다.
+- 고정된 eager qx/wt에서 compiled 정수 GEMM과 eager INT32 결과 전 원소 일치.
+  8행×16출력을 CPU INT64 직접 합산으로 추가 대조한다. 범위[-127,127], K*127^2<2^31.
+- compiled quantize만 독립 실행한 qx/scale과 eager 결과의 차이 개수를 보고한다.
+  이것이 전체 compiled 호출 내부의 실제 중간값과 같다고 주장하지 않는다.
+- 전체 eager/compiled W8A8은 같은 eager 양자화 정수의 FP32 참조 대비 relL2<=0.002,
+  모든 원소 abs오차<=0.02+0.02*abs(ref), finite/shape/dtype를 만족해야 한다.
+- 두 W8A8 모두 원래 BF16 대비 relL2<=0.05. compiled 대 eager 최종 출력 relL2도 기록하되
+  컴파일러의 부동소수점 순서 차이를 원소 비트 동등성으로 과장하지 않는다.
+중간 정수·최종 출력을 저장한다. 실패한 형상도 부분 결과를 즉시 보존하고 나머지 형상과 구분한다.
+
+측정: 4팔별 warmup10회. 12개 대응 round×각팔10호출, 4가지 순환 순서 반복으로 순서 균형.
+각팔 직전 동기화·peak allocated reset, CUDA event 및 동기화 포함 wall time 기록.
+공통 상주 bytes와 allocator 추가peak를 구분한다. 전체 프로세스 RSS/VRAM peak로 부르지 않는다.
+입력quant/INT8 GEMM/복원은 별도 warmup 및3round×10호출 진단. 그 합을 전체 절약 상한으로 쓰지 않는다.
+각팔1회 profiler trace를 별도로 보존한다. 계측 실행은 타이밍 표본에 포함하지 않는다.
+
+판정: 형상별 compiled W8A8이 eager BF16와 compiled BF16 각각 대비 감소율 중앙값>=5%이고,
+대응 round bootstrap10000회(seed20261104) 95%구간 하한>0이며 정확성 통과일 때 이득 후보.
+한 형상의 이득을 세 형상·전체 모델 이득으로 확대하지 않는다. 성공한 기본 컴파일러 사용은 신규성이 아니다.
+정확성 실패, 컴파일 실패, 시간 초과는 유효한 성능 실패와 분리한다.
+형상별 독립 프로세스, 최대5분/형상, 전체30분 중 먼저 끝나는 상한 적용. 시간 남아도 config sweep 안 한다.
+
+후속 선택: 유효한 실제 비용/정확성 관측이 구체적인 다음 질문을 만들면 A-2를 별도 등록한다.
+실행기 버그 수정이나 후보 구제만을 위해 A-2 이름을 붙이지 않는다. 그렇지 않으면 B의
+선행연구·메모리 목표·입력 완전성 검토로 진행한다. B에서도 가용 자료로 가능한 측정 범위만 채택한다.
