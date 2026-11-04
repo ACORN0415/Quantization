@@ -1,0 +1,36 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "group": 120,
+      "mode": "uniform",
+      "crop_byte_equal": true
+    },
+    {
+      "group": 120,
+      "mode": "selected",
+      "crop_byte_equal": true
+    },
+    {
+      "group": 120,
+      "mode": "random",
+      "crop_byte_equal": true
+    },
+    {
+      "group": 156,
+      "mode": "uniform",
+      "crop_byte_equal": true
+    },
+    {
+      "group": 156,
+      "mode": "selected",
+      "crop_byte_equal": true
+    },
+    {
+      "group": 156,
+      "mode": "random",
+      "crop_byte_equal": true
+    }
+  ],
+  "code_sha256": "f4f9823155df6314ad7fee0b6a03e7396bedd7a0318bd41be00cef61f5608177"
+}
