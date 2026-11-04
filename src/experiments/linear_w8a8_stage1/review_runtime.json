@@ -1,0 +1,26 @@
+{
+  "requested_model": "fable",
+  "requested_agent": "claude",
+  "requested_surface": "chat",
+  "requested_workspace": "/home/acorn0415",
+  "native_adoption_failure": {
+    "code": "terminal_handle_stale",
+    "orchestration_request_id": "5c390dd2-1b3b-4018-9588-6c31556a8971",
+    "handle": "structured-agent-session-claude_7c8b191a_7313_4eed_9d72_625721dd9df9",
+    "task_created": false,
+    "dispatch_created": false
+  },
+  "actual_review": {
+    "route": "direct_native_chat_after_task_adoption_failure",
+    "session_id": "claude_173482e4_cd3d_408e_b0b5_1b055710786d",
+    "operation_id": "1793798574688-eecd7dd350284465a8b53b4833819fa3",
+    "task_id": null,
+    "dispatch_id": null,
+    "status": "report_received",
+    "launch_receipt": "fable_chat_launch.json",
+    "report": "FABLE_REVIEW_KO.txt",
+    "reported_model": "claude-fable-5-1",
+    "report_sha256": "0e49b51483aba4e95a1e3dff3575b19975043214001b250f63eefc3e75269769",
+    "review_scope": "code, recorded measurements, aggregate CPU audit; not final prose or independent tensor/trace audit"
+  }
+}

@@ -1,0 +1,17 @@
+2026-11-04T13:22:12.393483+00:00 integer_gate
+2026-11-04T13:22:12.596042+00:00 model_and_text_preparation
+KV inference with 3 frames per block
+  0%|          | 0/1 [00:00<?, ?it/s]2026-11-04T13:23:07.924635+00:00 model_forward_0_started
+2026-11-04T13:23:08.255302+00:00 model_forward_1_started
+2026-11-04T13:23:08.415984+00:00 model_forward_2_started
+2026-11-04T13:23:08.577561+00:00 model_forward_3_started
+2026-11-04T13:23:08.740413+00:00 model_forward_4_started
+100%|██████████| 1/1 [00:00<00:00,  1.02it/s]100%|██████████| 1/1 [00:00<00:00,  1.02it/s]
+2026-11-04T13:23:14.774681+00:00 one_chunk_profile_and_capture_complete
+2026-11-04T13:23:15.652692+00:00 benchmark_4680x1536x1536
+2026-11-04T13:23:16.019999+00:00 benchmark_complete
+2026-11-04T13:23:16.027732+00:00 benchmark_4680x8960x1536
+2026-11-04T13:23:16.735564+00:00 benchmark_complete
+2026-11-04T13:23:16.742961+00:00 benchmark_4680x1536x8960
+2026-11-04T13:23:17.499137+00:00 benchmark_complete
+FINAL_STATUS completed

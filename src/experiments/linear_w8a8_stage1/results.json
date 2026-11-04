@@ -1,0 +1,822 @@
+{
+  "status": "completed",
+  "model_forward_started": 5,
+  "model_forward_finished": 5,
+  "start_utc": 1793797804.0,
+  "deadline_utc": 1793801404.0,
+  "benchmarks": [
+    {
+      "shape_MNK": [
+        4680,
+        1536,
+        1536
+      ],
+      "module": "model.blocks.0.self_attn.q",
+      "native_replay_bytes_equal": true,
+      "static_weight_prepare_s": 0.006452799018006772,
+      "fp32_integer_reference_max_abs": 0.0,
+      "integer_sample_equal": true,
+      "integer_sample_shape": [
+        8,
+        16
+      ],
+      "integer_range_valid": true,
+      "accumulator_worst_bound": 24774144,
+      "quantized_reference": {
+        "rel_l2": 0.0016461197519674897,
+        "max_abs": 0.06249809265136719,
+        "finite": true
+      },
+      "quantized_pointwise_valid": true,
+      "candidate_matches_quantized_reference": true,
+      "vs_native_bf16": {
+        "rel_l2": 0.005535003263503313,
+        "max_abs": 0.3125,
+        "finite": true
+      },
+      "engineering_error_gate": true,
+      "output_shape_valid": true,
+      "output_dtype_valid": true,
+      "weight_storage_bf16": 4718592,
+      "weight_storage_w8a8": 2365440,
+      "timing": [
+        {
+          "round": 0,
+          "order": [
+            "BF16",
+            "W8A8"
+          ],
+          "BF16": {
+            "wall_ms_per_call": 0.14535480295307934,
+            "gpu_ms_per_call": 0.14263999462127686,
+            "common_resident_bytes": 45491200,
+            "incremental_peak_bytes": 15728640
+          },
+          "W8A8": {
+            "wall_ms_per_call": 0.42870439938269556,
+            "gpu_ms_per_call": 0.4272928237915039,
+            "common_resident_bytes": 45491200,
+            "incremental_peak_bytes": 95838720
+          }
+        },
+        {
+          "round": 1,
+          "order": [
+            "W8A8",
+            "BF16"
+          ],
+          "W8A8": {
+            "wall_ms_per_call": 0.433802098268643,
+            "gpu_ms_per_call": 0.42937278747558594,
+            "common_resident_bytes": 45491200,
+            "incremental_peak_bytes": 95838720
+          },
+          "BF16": {
+            "wall_ms_per_call": 0.14359340420924127,
+            "gpu_ms_per_call": 0.14223359823226928,
+            "common_resident_bytes": 45491200,
+            "incremental_peak_bytes": 15728640
+          }
+        },
+        {
+          "round": 2,
+          "order": [
+            "BF16",
+            "W8A8"
+          ],
+          "BF16": {
+            "wall_ms_per_call": 0.14230000087991357,
+            "gpu_ms_per_call": 0.14101760387420653,
+            "common_resident_bytes": 45491200,
+            "incremental_peak_bytes": 15728640
+          },
+          "W8A8": {
+            "wall_ms_per_call": 0.4277336993254721,
+            "gpu_ms_per_call": 0.4264351844787598,
+            "common_resident_bytes": 45491200,
+            "incremental_peak_bytes": 95838720
+          }
+        },
+        {
+          "round": 3,
+          "order": [
+            "W8A8",
+            "BF16"
+          ],
+          "W8A8": {
+            "wall_ms_per_call": 0.43081140029244125,
+            "gpu_ms_per_call": 0.4294432163238525,
+            "common_resident_bytes": 45491200,
+            "incremental_peak_bytes": 95838720
+          },
+          "BF16": {
+            "wall_ms_per_call": 0.14308650279417634,
+            "gpu_ms_per_call": 0.14177279472351073,
+            "common_resident_bytes": 45491200,
+            "incremental_peak_bytes": 15728640
+          }
+        },
+        {
+          "round": 4,
+          "order": [
+            "BF16",
+            "W8A8"
+          ],
+          "BF16": {
+            "wall_ms_per_call": 0.1421748020220548,
+            "gpu_ms_per_call": 0.14084800481796264,
+            "common_resident_bytes": 45491200,
+            "incremental_peak_bytes": 15728640
+          },
+          "W8A8": {
+            "wall_ms_per_call": 0.4280081018805504,
+            "gpu_ms_per_call": 0.4266975879669189,
+            "common_resident_bytes": 45491200,
+            "incremental_peak_bytes": 95838720
+          }
+        },
+        {
+          "round": 5,
+          "order": [
+            "W8A8",
+            "BF16"
+          ],
+          "W8A8": {
+            "wall_ms_per_call": 0.43041969765909016,
+            "gpu_ms_per_call": 0.42903361320495603,
+            "common_resident_bytes": 45491200,
+            "incremental_peak_bytes": 95838720
+          },
+          "BF16": {
+            "wall_ms_per_call": 0.14320479822345078,
+            "gpu_ms_per_call": 0.14190080165863037,
+            "common_resident_bytes": 45491200,
+            "incremental_peak_bytes": 15728640
+          }
+        },
+        {
+          "round": 6,
+          "order": [
+            "BF16",
+            "W8A8"
+          ],
+          "BF16": {
+            "wall_ms_per_call": 0.1423029985744506,
+            "gpu_ms_per_call": 0.14101760387420653,
+            "common_resident_bytes": 45491200,
+            "incremental_peak_bytes": 15728640
+          },
+          "W8A8": {
+            "wall_ms_per_call": 0.4281755012925714,
+            "gpu_ms_per_call": 0.4268511772155762,
+            "common_resident_bytes": 45491200,
+            "incremental_peak_bytes": 95838720
+          }
+        },
+        {
+          "round": 7,
+          "order": [
+            "W8A8",
+            "BF16"
+          ],
+          "W8A8": {
+            "wall_ms_per_call": 0.43107899837195873,
+            "gpu_ms_per_call": 0.42968001365661623,
+            "common_resident_bytes": 45491200,
+            "incremental_peak_bytes": 95838720
+          },
+          "BF16": {
+            "wall_ms_per_call": 0.14312959974631667,
+            "gpu_ms_per_call": 0.14173439741134644,
+            "common_resident_bytes": 45491200,
+            "incremental_peak_bytes": 15728640
+          }
+        },
+        {
+          "round": 8,
+          "order": [
+            "BF16",
+            "W8A8"
+          ],
+          "BF16": {
+            "wall_ms_per_call": 0.1423981972038746,
+            "gpu_ms_per_call": 0.14110080003738404,
+            "common_resident_bytes": 45491200,
+            "incremental_peak_bytes": 15728640
+          },
+          "W8A8": {
+            "wall_ms_per_call": 0.42818549554795027,
+            "gpu_ms_per_call": 0.4268608093261719,
+            "common_resident_bytes": 45491200,
+            "incremental_peak_bytes": 95838720
+          }
+        },
+        {
+          "round": 9,
+          "order": [
+            "W8A8",
+            "BF16"
+          ],
+          "W8A8": {
+            "wall_ms_per_call": 0.4316720995120704,
+            "gpu_ms_per_call": 0.4302720069885254,
+            "common_resident_bytes": 45491200,
+            "incremental_peak_bytes": 95838720
+          },
+          "BF16": {
+            "wall_ms_per_call": 0.14367360272444785,
+            "gpu_ms_per_call": 0.14238719940185546,
+            "common_resident_bytes": 45491200,
+            "incremental_peak_bytes": 15728640
+          }
+        }
+      ],
+      "paired_wall_reduction_percent": [
+        -194.93652130716433,
+        -202.10447384931118,
+        -200.58587257946328,
+        -201.08458301769002,
+        -201.04357157054866,
+        -200.56234357977397,
+        -200.8900062415459,
+        -201.18088720712169,
+        -200.6958683155994,
+        -200.45331315313084
+      ],
+      "median_reduction_percent": -200.79293727857265,
+      "bootstrap_median_95ci_percent": [
+        -201.11222938883517,
+        -200.51959286629705
+      ],
+      "promising": false
+    },
+    {
+      "shape_MNK": [
+        4680,
+        8960,
+        1536
+      ],
+      "module": "model.blocks.0.ffn.0",
+      "native_replay_bytes_equal": true,
+      "static_weight_prepare_s": 0.0007242590072564781,
+      "fp32_integer_reference_max_abs": 0.0,
+      "integer_sample_equal": true,
+      "integer_sample_shape": [
+        8,
+        16
+      ],
+      "integer_range_valid": true,
+      "accumulator_worst_bound": 24774144,
+      "quantized_reference": {
+        "rel_l2": 0.0016591191524639726,
+        "max_abs": 0.0078122615814208984,
+        "finite": true
+      },
+      "quantized_pointwise_valid": true,
+      "candidate_matches_quantized_reference": true,
+      "vs_native_bf16": {
+        "rel_l2": 0.011846846900880337,
+        "max_abs": 0.0546875,
+        "finite": true
+      },
+      "engineering_error_gate": true,
+      "output_shape_valid": true,
+      "output_dtype_valid": true,
+      "weight_storage_bf16": 27525120,
+      "weight_storage_w8a8": 13798400,
+      "timing": [
+        {
+          "round": 0,
+          "order": [
+            "BF16",
+            "W8A8"
+          ],
+          "BF16": {
+            "wall_ms_per_call": 0.7937876973301172,
+            "gpu_ms_per_call": 0.791267204284668,
+            "common_resident_bytes": 148427264,
+            "incremental_peak_bytes": 84934656
+          },
+          "W8A8": {
+            "wall_ms_per_call": 2.6660951029043645,
+            "gpu_ms_per_call": 2.664620780944824,
+            "common_resident_bytes": 148427264,
+            "incremental_peak_bytes": 510559744
+          }
+        },
+        {
+          "round": 1,
+          "order": [
+            "W8A8",
+            "BF16"
+          ],
+          "W8A8": {
+            "wall_ms_per_call": 2.6702549017500132,
+            "gpu_ms_per_call": 2.668486404418945,
+            "common_resident_bytes": 148427264,
+            "incremental_peak_bytes": 510559744
+          },
+          "BF16": {
+            "wall_ms_per_call": 0.7973052968736738,
+            "gpu_ms_per_call": 0.7958975791931152,
+            "common_resident_bytes": 148427264,
+            "incremental_peak_bytes": 84934656
+          }
+        },
+        {
+          "round": 2,
+          "order": [
+            "BF16",
+            "W8A8"
+          ],
+          "BF16": {
+            "wall_ms_per_call": 0.7942114025354385,
+            "gpu_ms_per_call": 0.7928063869476318,
+            "common_resident_bytes": 148427264,
+            "incremental_peak_bytes": 84934656
+          },
+          "W8A8": {
+            "wall_ms_per_call": 2.6710044010542333,
+            "gpu_ms_per_call": 2.669561576843262,
+            "common_resident_bytes": 148427264,
+            "incremental_peak_bytes": 510559744
+          }
+        },
+        {
+          "round": 3,
+          "order": [
+            "W8A8",
+            "BF16"
+          ],
+          "W8A8": {
+            "wall_ms_per_call": 2.672368905041367,
+            "gpu_ms_per_call": 2.6708959579467773,
+            "common_resident_bytes": 148427264,
+            "incremental_peak_bytes": 510559744
+          },
+          "BF16": {
+            "wall_ms_per_call": 0.7968393969349563,
+            "gpu_ms_per_call": 0.7954559803009034,
+            "common_resident_bytes": 148427264,
+            "incremental_peak_bytes": 84934656
+          }
+        },
+        {
+          "round": 4,
+          "order": [
+            "BF16",
+            "W8A8"
+          ],
+          "BF16": {
+            "wall_ms_per_call": 0.7933777989819646,
+            "gpu_ms_per_call": 0.7920544147491455,
+            "common_resident_bytes": 148427264,
+            "incremental_peak_bytes": 84934656
+          },
+          "W8A8": {
+            "wall_ms_per_call": 2.6718500012066215,
+            "gpu_ms_per_call": 2.6704383850097657,
+            "common_resident_bytes": 148427264,
+            "incremental_peak_bytes": 510559744
+          }
+        },
+        {
+          "round": 5,
+          "order": [
+            "W8A8",
+            "BF16"
+          ],
+          "W8A8": {
+            "wall_ms_per_call": 2.6706436998210847,
+            "gpu_ms_per_call": 2.6691616058349608,
+            "common_resident_bytes": 148427264,
+            "incremental_peak_bytes": 510559744
+          },
+          "BF16": {
+            "wall_ms_per_call": 0.7959887036122382,
+            "gpu_ms_per_call": 0.794652795791626,
+            "common_resident_bytes": 148427264,
+            "incremental_peak_bytes": 84934656
+          }
+        },
+        {
+          "round": 6,
+          "order": [
+            "BF16",
+            "W8A8"
+          ],
+          "BF16": {
+            "wall_ms_per_call": 0.7941472984384745,
+            "gpu_ms_per_call": 0.792195177078247,
+            "common_resident_bytes": 148427264,
+            "incremental_peak_bytes": 84934656
+          },
+          "W8A8": {
+            "wall_ms_per_call": 2.670492499601096,
+            "gpu_ms_per_call": 2.6690975189208985,
+            "common_resident_bytes": 148427264,
+            "incremental_peak_bytes": 510559744
+          }
+        },
+        {
+          "round": 7,
+          "order": [
+            "W8A8",
+            "BF16"
+          ],
+          "W8A8": {
+            "wall_ms_per_call": 2.672101400094107,
+            "gpu_ms_per_call": 2.6706464767456053,
+            "common_resident_bytes": 148427264,
+            "incremental_peak_bytes": 510559744
+          },
+          "BF16": {
+            "wall_ms_per_call": 0.7956039975397289,
+            "gpu_ms_per_call": 0.7942016124725342,
+            "common_resident_bytes": 148427264,
+            "incremental_peak_bytes": 84934656
+          }
+        },
+        {
+          "round": 8,
+          "order": [
+            "BF16",
+            "W8A8"
+          ],
+          "BF16": {
+            "wall_ms_per_call": 0.7941392948850989,
+            "gpu_ms_per_call": 0.7928544044494629,
+            "common_resident_bytes": 148427264,
+            "incremental_peak_bytes": 84934656
+          },
+          "W8A8": {
+            "wall_ms_per_call": 2.670789003605023,
+            "gpu_ms_per_call": 2.669343948364258,
+            "common_resident_bytes": 148427264,
+            "incremental_peak_bytes": 510559744
+          }
+        },
+        {
+          "round": 9,
+          "order": [
+            "W8A8",
+            "BF16"
+          ],
+          "W8A8": {
+            "wall_ms_per_call": 2.6729068951681256,
+            "gpu_ms_per_call": 2.6713695526123047,
+            "common_resident_bytes": 148427264,
+            "incremental_peak_bytes": 510559744
+          },
+          "BF16": {
+            "wall_ms_per_call": 0.7976308988872916,
+            "gpu_ms_per_call": 0.7957791805267334,
+            "common_resident_bytes": 148427264,
+            "incremental_peak_bytes": 84934656
+          }
+        }
+      ],
+      "paired_wall_reduction_percent": [
+        -235.8700458411866,
+        -234.90996638557294,
+        -236.30899689016366,
+        -235.37108171616978,
+        -236.7689396697322,
+        -235.5127638999856,
+        -236.27168471794388,
+        -235.85821694676366,
+        -236.3124102795404,
+        -235.10573611138628
+      ],
+      "median_reduction_percent": -235.86413139397513,
+      "bootstrap_median_95ci_percent": [
+        -236.30899689016366,
+        -235.30925000568595
+      ],
+      "promising": false
+    },
+    {
+      "shape_MNK": [
+        4680,
+        1536,
+        8960
+      ],
+      "module": "model.blocks.0.ffn.2",
+      "native_replay_bytes_equal": true,
+      "static_weight_prepare_s": 0.0007680419948883355,
+      "fp32_integer_reference_max_abs": 0.0,
+      "integer_sample_equal": true,
+      "integer_sample_shape": [
+        8,
+        16
+      ],
+      "integer_range_valid": true,
+      "accumulator_worst_bound": 144515840,
+      "quantized_reference": {
+        "rel_l2": 0.001657503074966371,
+        "max_abs": 0.06246185302734375,
+        "finite": true
+      },
+      "quantized_pointwise_valid": true,
+      "candidate_matches_quantized_reference": true,
+      "vs_native_bf16": {
+        "rel_l2": 0.005422579124569893,
+        "max_abs": 0.125,
+        "finite": true
+      },
+      "engineering_error_gate": true,
+      "output_shape_valid": true,
+      "output_dtype_valid": true,
+      "weight_storage_bf16": 27525120,
+      "weight_storage_w8a8": 13768704,
+      "timing": [
+        {
+          "round": 0,
+          "order": [
+            "BF16",
+            "W8A8"
+          ],
+          "BF16": {
+            "wall_ms_per_call": 0.7849899004213512,
+            "gpu_ms_per_call": 0.7824351787567139,
+            "common_resident_bytes": 148382720,
+            "incremental_peak_bytes": 15425536
+          },
+          "W8A8": {
+            "wall_ms_per_call": 3.133833297761157,
+            "gpu_ms_per_call": 3.1323232650756836,
+            "common_resident_bytes": 148382720,
+            "incremental_peak_bytes": 503335424
+          }
+        },
+        {
+          "round": 1,
+          "order": [
+            "W8A8",
+            "BF16"
+          ],
+          "W8A8": {
+            "wall_ms_per_call": 3.1349694007076323,
+            "gpu_ms_per_call": 3.133468818664551,
+            "common_resident_bytes": 148382720,
+            "incremental_peak_bytes": 503335424
+          },
+          "BF16": {
+            "wall_ms_per_call": 0.7826635031960905,
+            "gpu_ms_per_call": 0.7811679840087891,
+            "common_resident_bytes": 148382720,
+            "incremental_peak_bytes": 15425536
+          }
+        },
+        {
+          "round": 2,
+          "order": [
+            "BF16",
+            "W8A8"
+          ],
+          "BF16": {
+            "wall_ms_per_call": 0.7815774995833635,
+            "gpu_ms_per_call": 0.7801407814025879,
+            "common_resident_bytes": 148382720,
+            "incremental_peak_bytes": 15425536
+          },
+          "W8A8": {
+            "wall_ms_per_call": 3.1337652006186545,
+            "gpu_ms_per_call": 3.1320192337036135,
+            "common_resident_bytes": 148382720,
+            "incremental_peak_bytes": 503335424
+          }
+        },
+        {
+          "round": 3,
+          "order": [
+            "W8A8",
+            "BF16"
+          ],
+          "W8A8": {
+            "wall_ms_per_call": 3.135959297651425,
+            "gpu_ms_per_call": 3.134342384338379,
+            "common_resident_bytes": 148382720,
+            "incremental_peak_bytes": 503335424
+          },
+          "BF16": {
+            "wall_ms_per_call": 0.7822958985343575,
+            "gpu_ms_per_call": 0.7809375762939453,
+            "common_resident_bytes": 148382720,
+            "incremental_peak_bytes": 15425536
+          }
+        },
+        {
+          "round": 4,
+          "order": [
+            "BF16",
+            "W8A8"
+          ],
+          "BF16": {
+            "wall_ms_per_call": 0.7814962998963892,
+            "gpu_ms_per_call": 0.7801023960113526,
+            "common_resident_bytes": 148382720,
+            "incremental_peak_bytes": 15425536
+          },
+          "W8A8": {
+            "wall_ms_per_call": 3.1362508016172796,
+            "gpu_ms_per_call": 3.134806442260742,
+            "common_resident_bytes": 148382720,
+            "incremental_peak_bytes": 503335424
+          }
+        },
+        {
+          "round": 5,
+          "order": [
+            "W8A8",
+            "BF16"
+          ],
+          "W8A8": {
+            "wall_ms_per_call": 3.136669599916786,
+            "gpu_ms_per_call": 3.135215950012207,
+            "common_resident_bytes": 148382720,
+            "incremental_peak_bytes": 503335424
+          },
+          "BF16": {
+            "wall_ms_per_call": 0.7836645003408194,
+            "gpu_ms_per_call": 0.7822688102722168,
+            "common_resident_bytes": 148382720,
+            "incremental_peak_bytes": 15425536
+          }
+        },
+        {
+          "round": 6,
+          "order": [
+            "BF16",
+            "W8A8"
+          ],
+          "BF16": {
+            "wall_ms_per_call": 0.7831785012967885,
+            "gpu_ms_per_call": 0.781820821762085,
+            "common_resident_bytes": 148382720,
+            "incremental_peak_bytes": 15425536
+          },
+          "W8A8": {
+            "wall_ms_per_call": 3.1357449013739824,
+            "gpu_ms_per_call": 3.134332847595215,
+            "common_resident_bytes": 148382720,
+            "incremental_peak_bytes": 503335424
+          }
+        },
+        {
+          "round": 7,
+          "order": [
+            "W8A8",
+            "BF16"
+          ],
+          "W8A8": {
+            "wall_ms_per_call": 3.137789701577276,
+            "gpu_ms_per_call": 3.13635196685791,
+            "common_resident_bytes": 148382720,
+            "incremental_peak_bytes": 503335424
+          },
+          "BF16": {
+            "wall_ms_per_call": 0.7840231992304325,
+            "gpu_ms_per_call": 0.7826079845428466,
+            "common_resident_bytes": 148382720,
+            "incremental_peak_bytes": 15425536
+          }
+        },
+        {
+          "round": 8,
+          "order": [
+            "BF16",
+            "W8A8"
+          ],
+          "BF16": {
+            "wall_ms_per_call": 0.7819641963578761,
+            "gpu_ms_per_call": 0.7806560039520264,
+            "common_resident_bytes": 148382720,
+            "incremental_peak_bytes": 15425536
+          },
+          "W8A8": {
+            "wall_ms_per_call": 3.134053701069206,
+            "gpu_ms_per_call": 3.132659149169922,
+            "common_resident_bytes": 148382720,
+            "incremental_peak_bytes": 503335424
+          }
+        },
+        {
+          "round": 9,
+          "order": [
+            "W8A8",
+            "BF16"
+          ],
+          "W8A8": {
+            "wall_ms_per_call": 3.1365153030492365,
+            "gpu_ms_per_call": 3.1350400924682615,
+            "common_resident_bytes": 148382720,
+            "incremental_peak_bytes": 503335424
+          },
+          "BF16": {
+            "wall_ms_per_call": 0.7832015980966389,
+            "gpu_ms_per_call": 0.7817759990692139,
+            "common_resident_bytes": 148382720,
+            "incremental_peak_bytes": 15425536
+          }
+        }
+      ],
+      "paired_wall_reduction_percent": [
+        -299.219569077136,
+        -300.5513720654723,
+        -300.9538660323735,
+        -300.8661305174537,
+        -301.31358293482435,
+        -300.2566912948888,
+        -300.3869994109657,
+        -300.2164355158382,
+        -300.7924807384487,
+        -300.47355759637037
+      ],
+      "median_reduction_percent": -300.5124648309213,
+      "bootstrap_median_95ci_percent": [
+        -300.8731733854111,
+        -300.2566912948888
+      ],
+      "promising": false
+    }
+  ],
+  "torch": "2.6.0+cu124",
+  "cuda": "12.4",
+  "pid": 232805,
+  "git_commit": "4e6600d1f5c87fe11eca34f8d31e0004d2cd0470",
+  "code_sha256": "2a678ecfab4848181e800e2330351775fd366549cf266abb7830d01596adfef4",
+  "loader_sha256": "e070ce3d54eeb08bc167165b8bd3855ec0bdeb75b8ed64136c553bad06afa48c",
+  "registration_sha256": "f74e40863ed84511f5ddf3c5e6157eee4b1b9442ad42d4526703de4f8e96c0bc",
+  "gpu": "NVIDIA GeForce RTX 4090, 24564 MiB, 615.71.09",
+  "phase": "benchmark_complete",
+  "updated_utc": 1793798597.4983244,
+  "integer_gate": [
+    {
+      "case": "random",
+      "all_elements_equal": true
+    },
+    {
+      "case": "zero",
+      "all_elements_equal": true
+    },
+    {
+      "case": "extreme",
+      "all_elements_equal": true
+    }
+  ],
+  "model_and_text_preparation_s": 55.2725341040059,
+  "prompt": "An orange tabby cat steps along a sunlit windowsill, pauses to watch a butterfly outside, and gently turns its head. A continuous close shot with a quiet garden in the background.",
+  "preparation_scope": "text encoding + model loading jointly; not separately instrumented",
+  "instrumented_chunk_wall_s": 1.6859535310068168,
+  "instrumented_model_peak_allocated": 4381737472,
+  "instrumented_model_peak_reserved": 4620025856,
+  "shape_ranking_ms": {
+    "4680x1536x1536": 104.05500794947147,
+    "4680x8960x1536": 95.1981760263443,
+    "4680x1536x8960": 94.92316776514053,
+    "4680x64x1536": 0.07948799803853035
+  },
+  "selected_shapes": [
+    "4680x1536x1536",
+    "4680x8960x1536",
+    "4680x1536x8960"
+  ],
+  "captures": [
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_stage1/4680x1536x1536.pt",
+      "sha256": "26c863dda76d29df7e0465f21a55f9fd81aa0d67106a6bf89c02d89d0cc9c235",
+      "bytes": 33477704,
+      "module": "model.blocks.0.self_attn.q",
+      "shape_MNK": [
+        4680,
+        1536,
+        1536
+      ]
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_stage1/4680x8960x1536.pt",
+      "sha256": "95986362e17da14cbd21024dc40113b12fdffa251caa4fb6759cdd88fe2117d2",
+      "bytes": 125787720,
+      "module": "model.blocks.0.ffn.0",
+      "shape_MNK": [
+        4680,
+        8960,
+        1536
+      ]
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_stage1/4680x1536x8960.pt",
+      "sha256": "66eb3214b07662485959ef3db381a2ec4737455bba5ff6d53be34bc194460350",
+      "bytes": 125772872,
+      "module": "model.blocks.0.ffn.2",
+      "shape_MNK": [
+        4680,
+        1536,
+        8960
+      ]
+    }
+  ],
+  "finished_utc": 1793798597.4991887,
+  "elapsed_from_registered_start_s": 793.4991888999939
+}

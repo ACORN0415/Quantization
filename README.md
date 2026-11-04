@@ -600,6 +600,12 @@ TT 종료·GPU 유휴 확인 뒤 2026-10-31 01:03:06–02:00:26 KST에 최대26�
 
 [통합 설명·추가 인사이트 6개](src/experiments/mixed_precision_world_review_20261104/REPORT_KO.txt) · [원문·코드 근거](src/experiments/mixed_precision_world_review_20261104/source_manifest.json) · [Claude 검토 기록](src/experiments/mixed_precision_world_review_20261104/review_runtime.json)
 
+## 초기 청크의 단순 W8A8 실행 진단 완료
+
+2026-11-04 A안을 실행했다. Self-Forcing 초기 청크의 5 forward에서 실제 linear 형상 3개를 추출했다. 입력 양자화·정수 GEMM·복원·bias·BF16 저장을 포함한 단순 PyTorch W8A8은 BF16보다 약 3.01~4.01배 느렸고, 실행 중 임시 메모리도 증가했다. 원래 BF16 대비 출력 상대 L2 오차는 0.54~1.18%였으나 영상 품질은 평가하지 않았다. 이 경로의 전체 모델 적용은 진행하지 않는다. 최적 fused 커널이나 전체 가중치 양자화 방향까지 종료하는 결과는 아니다.
+
+[결과와 제한](src/experiments/linear_w8a8_stage1/REPORT_KO.txt) · [측정 원기록](src/experiments/linear_w8a8_stage1/results.json) · [CPU 감사](src/experiments/linear_w8a8_stage1/audit.json)
+
 ## 출처와 공개 범위
 
 이 저장소의 연구 변경은 사용자 저장소에서 관리한다. 외부 코드를 가져왔다는 사실과 원본 라이선스는 유지한다.

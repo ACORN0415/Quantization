@@ -1,0 +1,8 @@
+{"shape": [4680, 1536, 1536], "cpu_reconstruction_rel_l2": 0.005535084288567305, "saved_gpu_rel_l2": 0.005535003263503313, "difference": 8.102506399154663e-08}
+{"shape": [4680, 8960, 1536], "cpu_reconstruction_rel_l2": 0.011816175654530525, "saved_gpu_rel_l2": 0.011846846900880337, "difference": -3.0671246349811554e-05}
+Traceback (most recent call last):
+  File "/home/acorn0415/Quantization/tools/audit_linear_w8a8_stage1.py", line 106, in <module>
+    main()
+  File "/home/acorn0415/Quantization/tools/audit_linear_w8a8_stage1.py", line 68, in main
+    assert abs(rel - b['vs_native_bf16']['rel_l2']) < 1e-6
+AssertionError
