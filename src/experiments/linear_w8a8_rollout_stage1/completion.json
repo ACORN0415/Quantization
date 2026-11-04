@@ -1,0 +1,21 @@
+{
+  "status": "completed",
+  "experiment_status": "stopped_latent_gate",
+  "finished_utc": 1793804325.6228757,
+  "finished_iso": "2026-11-04T14:58:45.622876+00:00",
+  "registered_start_utc": 1793803242.0,
+  "deadline_utc": 1793805942.0,
+  "elapsed_including_preparation_execution_audit_review_report_s": 1083.6228756904602,
+  "within_registered_budget": true,
+  "gpu_stage_or_cpu_measurement_finished_utc": 1793803499.749041,
+  "audit_status": "passed",
+  "review_report": "/home/acorn0415/Quantization/src/experiments/linear_w8a8_rollout_stage1/FABLE_REVIEW_KO.txt",
+  "review_scope": "Actual Fable code/JSON/source review; tensor/payload independent CPU audit by coordinator",
+  "artifact_sha256": {
+    "src/experiments/linear_w8a8_rollout_stage1/results.json": "ec6288b2a668df610968eb6822adea8a4bed560ac9d27fb910fee7f23803b932",
+    "src/experiments/linear_w8a8_rollout_stage1/REGISTRATION_KO.txt": "6219624cab79f9b08fd3fbe5f461eaf7243a8657b31819b687d2fca2cc54e87d",
+    "src/experiments/linear_w8a8_rollout_stage1/REPORT_KO.txt": "a34a1d3b13920a17f44c77786683dea354ad5e983bb09cb77e9603638dd0de15",
+    "src/experiments/linear_w8a8_rollout_stage1/audit.json": "d3e5773b565b6af4a37f448a8f2fd0d17b15f1c7c4a7778a9a6064c60e9f1388",
+    "src/experiments/linear_w8a8_rollout_stage1/FABLE_REVIEW_KO.txt": "386d2eb81ca9194b9deec2660b861ae009957019749a84856f4362b504bed56a"
+  }
+}

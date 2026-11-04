@@ -1,0 +1,36 @@
+{
+  "rows": [
+    {
+      "forward": 1,
+      "total_ms": 162.57664489746094,
+      "q_ms": 4.320511966943741,
+      "ffn_down_ms": 23.694623947143555,
+      "projected_reduction_percent": 5.148884830740126
+    },
+    {
+      "forward": 2,
+      "total_ms": 161.6090545654297,
+      "q_ms": 4.3142079859972,
+      "ffn_down_ms": 23.720991849899292,
+      "projected_reduction_percent": 5.1843686243893465
+    },
+    {
+      "forward": 3,
+      "total_ms": 162.73023986816406,
+      "q_ms": 4.318336009979248,
+      "ffn_down_ms": 23.74073600769043,
+      "projected_reduction_percent": 5.152987809617818
+    },
+    {
+      "forward": 4,
+      "total_ms": 162.5872039794922,
+      "q_ms": 4.326911985874176,
+      "ffn_down_ms": 23.766815960407257,
+      "projected_reduction_percent": 5.163566609493902
+    }
+  ],
+  "aggregate_projected_percent": 5.162417098487452,
+  "q_observed_reduction": 0.16112339487529317,
+  "down_observed_reduction": 0.32390253033171734,
+  "scope": "assumed transfer across layers and no integration overhead; not measured model speed or rigorous upper bound"
+}

@@ -1,0 +1,58 @@
+Fable 5.1 실제 검토 — B-1 CPU 판별(저장 예산 내 K 채널 boost) / 2026-11-04 14:51~14:57 UTC
+Task/Dispatch 없음(terminal_handle_stale 미해결, 채팅 직접 검토). 읽기 전용, 이 파일만 작성.
+읽은 것: REGISTRATION_KO.txt, tools/kv_channel_budget_core.py, tools/kv_channel_budget_stage1.py,
+results.json(status=completed, advance=true), execution.log, postwo_round_probe.py 캡처 부분(44~105행),
+linear_w8a8_continuation/FABLE_NEXT_REVIEW_KO.txt B 절. tensor/.pt/.bin 파일은 열지 않았다.
+
+1. 판단: 타당(사전 등록 기준 통과 자체) / 표현 수정 필요(주장 범위·기록 2건).
+   코드가 등록문과 일치하고 바이트 계정이 수식 재계산과 일치하며 판정 코드가 등록 조건을 그대로 구현한다.
+   다만 결과는 "고정 조건 CPU 진단에서 사전 기준을 통과"까지이며, l14 역전과 p4의 얇은 마진 때문에
+   B 본실험의 긍정 근거로서는 약하다. 이 점을 보고에 명시해야 한다.
+
+2. 직접 확인한 항목
+ - 해시: 현재 tools/*.py·REGISTRATION_KO.txt sha256이 results.json 기록(52cf…/3366…/31d2…)과 일치. 내가 읽은 코드가 실행 코드다.
+ - 시간: registered_start 14:47:00 UTC(코드에 상수), finished 14:50:10, 총 190초, 상한 45분 내. gpu_calls=0, model_forwards=0.
+ - 바이트 계정(수식 재계산, n=32760,h=12,d=128):
+   U120: 28 + (273·12·128)·4 + 50,319,360·3/8 = 20,547,100 ✓
+   U156: 28 + (210·12·128)·4 + 18,869,760 = 20,160,028 ✓
+   S/R120: 28 + 1,677,312 + mask 52,416 + low 12,579,840 + extra(273·12·120·63·2/8=6,191,640) = 20,501,236 ✓
+   S/R는 평균 2.984 bit/elem로 U120보다 45,864 byte 적다. 공정성은 S에 불리한 쪽이며 동일 바이트는 아니다(등록문 명시와 일치).
+   헤더 '<4s6I' = 28 byte ✓. FP16 min/scale은 네 팔 모두 같은 page·head·채널 단위로 동일 계정 ✓.
+ - bitpack: LSB-first, 8값/uint32 워드, 4bit×8=32bit로 overflow 없음, pack/unpack 대칭, 끝 길이 (count·bits+7)//8 ✓.
+   unit oracle 36 케이스(4비트×9길이)가 순수 Python 참조와 바이트 비교. 실제 24팔 각각 encode 안에서 unpack 코드 일치 assert.
+ - 채널 순서: encode/decode 모두 mask.nonzero()[:,-1]를 (p,h,63)로 reshape → 각 (page,head) 내 오름차순, 양쪽 동일 규칙 ✓. 별도 index 없음 ✓.
+ - 혼합 분해: 비선택 채널 코드≤3이므로 codes&3이 무손실, 선택 채널은 (>>2)로 상위 2비트 분리, decode에서 |(high<<2) 후 scatter ✓.
+ - min/scale: offset을 FP16 반올림한 뒤 scale=(max−offset_fp16)/high 계산, scale FP16·clamp 2^-24(FP16 subnormal 최솟값, 표현 가능).
+   FP16 반올림으로 최대 코드가 high를 넘을 수 있으나 torch.minimum(high)로 포화 처리. 복원은 저장된 FP16 값을 그대로 쓰므로 encode/decode 일관.
+   직접복원(direct)과 payload decode의 BF16 바이트 동일 assert가 각 팔에서 실행됨 ✓.
+ - query 사전정보 누수: encode(key,group,mode,seed)는 K만 입력. score = |K| page·head별 토큰 평균. seed = 20261104+prompt·100+layer, 결과/쿼리 무관 ✓.
+ - support: attention(q,k)는 32760 과거 K 전체에 softmax. c7 자기 청크 K 없음 → "과거 지원집합 재정규화" 등록대로. 실제 c7 attention 아님 ✓.
+ - 주지표: tv=.5·L1, (12 head × 32 query) 평균, tv_per_head_query 12×32 기록 ✓. 보조 지표 logit relL2·centered relL2·keyL2·q6 TV 기록 ✓.
+ - 판정 코드: 프롬프트별 3층 단순평균 TV, S120 개선율 vs U120/U156 ≥10 및 vs R120 >0, S<min(U120,U156)인 층 ≥2 → 등록 조건과 동일 ✓.
+   결과 p0: 16.7%/17.4%/46.2%, win 2. p4: 10.17%/10.31%/44.5%, win 2. advance=true.
+ - execution.log 24행 = results.json 24팔 값과 일치(q7 tv_mean 확인).
+ - 캡처 범위: postwo_round_probe는 model.attention 교체로 q,k,v를 받으며 c6(call 4)에서 key 전체·new_value(마지막 4680)·wo, c7(call 0)에서 query 32개만 저장.
+   전체 V 없음 확인. 참고로 c6 마지막 페이지 V는 존재하나 이번 등록은 AV 미검사로 고정했고 이는 적절하다.
+
+3. 수정 필요(표현·기록, 코드 재실행 불요)
+ (a) results.json의 full_pack_roundtrip_valid=True는 계산값이 아니라 row 생성 시 상수다(assert 통과의 함의). 보고에는 "encode 내 assert 통과"로 쓰고
+     "디스크 .bin 재디코드"라고 쓰지 않는다. decode는 메모리 payload에 대해 수행됐고 저장 파일은 sha만 기록했다.
+ (b) l14 역전을 보고 본문에 명시: 두 프롬프트 모두 S120이 U120보다 TV 9.4%/13.7% 나쁘고 keyL2도 0.208/0.194 vs 0.145/0.135로 크게 나쁘다.
+     즉 |K|평균 상위 63채널 boost는 l0·l29에서만 이득이고 l14에서는 65채널을 2비트로 내린 손실이 더 크다.
+ (c) p4 마진은 10.17/10.31%로 기준 10%에 0.2~0.3%p 여유다. 한 seed·두 프롬프트·한 모델에서의 통과이며 일반화 근거가 아님을 등록문대로 유지한다.
+
+4. 주장 범위
+ 말할 수 있는 것: 이 고정 조건(page 120, 63/128, 2/4비트, |K|평균 선택)에서 과거 지원집합 softmax TV 기준으로 사전 등록 통과. 선택기는 무작위 대조보다 분명히 낫다(R120 대비 44~46%).
+ 입증 못 한 것: 실제 c7 전체 attention(새 청크 포함)·AV/Wo 출력·생성 품질·GPU 속도·배포 peak. 층 일반성(l14 역전). Kitty/KIVI 대비 신규성(해당 없음, 응용 진단).
+
+5. 가장 강한 반론(1개)
+ 3층 단순평균 TV는 절대 TV가 가장 작은 l0의 큰 상대 개선(−50%)이 l14 악화를 가리는 구조다. 생성 품질은 오차가 큰 층이 좌우하므로
+ "평균 10% 개선"이 응용 가치로 이어진다는 보장이 없고, 층별로는 이득 2·손실 1이다. 따라서 advance=true를 "B 본실험 긍정 근거"가 아니라
+ "고정 조건 게이트 통과, 층별 혼합"으로 읽어야 한다. 대안(실험 요청 아님, 기록용): B 본 설계에서 층별 적용 여부를 K만으로 정하는 규칙이 없으면
+ l14형 층에서는 균일 INT3이 더 낫다. 그런 규칙은 등록문이 금지한 '새 선택기 개발'에 해당하므로 이번 단계의 범위 밖이며, 이번 결과로 정당화되지 않는다.
+
+6. 미확인 항목
+ - 실제 .pt/.bin 파일은 열지 않았고 입력 sha256도 재계산하지 않았다(스크립트가 전후 두 번 검증했다는 코드만 확인).
+ - q,k가 RoPE 적용 후인지는 wan/modules/causal_model.py를 열지 못해(모델 트리 없음) 미확인. model.attention 호출 시점이 RoPE 후라는 주 작업자 진술에 의존.
+ - 실제 모델 attention의 1/sqrt(d) scale·추가 마스크 부재 미확인. 진단은 flash 기본 가정.
+ - 혼합 조건의 BF16 복원이 실제 GPU 코덱과 같은 반올림 경로인지는 이번 범위 밖.

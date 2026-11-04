@@ -621,6 +621,24 @@ BF16보다 대응 시간 중앙값 **13.97% 감소**, FFN 확장은 **1.56% 증�
 [A-2 CPU 감사](src/experiments/linear_w8a8_fused_stage1/audit.json) ·
 [Fable 검토 반영](src/experiments/linear_w8a8_fused_stage1/REVIEW_RESPONSE_KO.txt)
 
+**A 연속 후속 완료·B 진단 진행 (2026-11-04 UTC):** 사용자 지시에 따라 A-3에서
+FFN 축소를 원래 eager BF16과 별도로 비교해 **32.39% 시간 감소**를 확인했다.
+A-2의 tuned BF16 무효 기록은 유지한다. 이어 A-4에서 30층 Q·FFN 축소를 선택적으로
+교체한 12청크 생성은 최종 latent 상대 L2 **59.68%**로 등록한 5% 공학적 오차 조건을
+넘었다. warm 2회·120 forward 후 종료해 유효 성능 대응 쌍은 0개다. 영상 품질 저하율이나
+전체 생성 가속률로 해석하지 않는다. 현재 A 경로를 종료하고 B로 이동했다.
+
+B-1은 CPU에서 실제 패킹 파일 24개를 만들었다. 같은 저장 상한에서 K의 63/128채널에
+4비트를 배정한 방식은 균일 INT3 대비 과거 K 구간의 softmax TV를 두 프롬프트에서
+**16.72%, 10.17% 감소**시켰다. 두 프롬프트 모두 14층은 악화했으며, 실제 전체 attention·
+AV 출력·영상 품질은 미측정이다. 별도 NumPy 디코더로 24파일과 48개 분포 지표를
+재검증했다. **기존 채널 boost 기제의 제한적 응용 진단 통과이며 신규성 확보는 아니다.**
+
+[A-3 결과](src/experiments/linear_w8a8_continuation/REPORT_KO.txt) ·
+[A-4 종료·해석 제한](src/experiments/linear_w8a8_rollout_stage1/REPORT_KO.txt) ·
+[B-1 결과·바이트·층별 역전](src/experiments/kv_channel_budget_stage1/REPORT_KO.txt) ·
+[B-1 독립 CPU 감사](src/experiments/kv_channel_budget_stage1/audit.json)
+
 ## 출처와 공개 범위
 
 이 저장소의 연구 변경은 사용자 저장소에서 관리한다. 외부 코드를 가져왔다는 사실과 원본 라이선스는 유지한다.

@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "gpu_calls": 0,
+  "forward_ledger": 120,
+  "valid_timed_pairs": 0,
+  "baseline_all_tensor_bytes_equal_to_previous_gate_U": true,
+  "previous_baseline_path": "/home/acorn0415/sfq_data/kv_reuse_stage1/gate_U/latent.pt",
+  "overall_latent_relative_l2": 0.5968074219876501,
+  "per_chunk_relative_l2": [
+    0.3015086554541223,
+    0.40852989256920813,
+    0.4048979968398689,
+    0.49877134307859183,
+    0.621264421879061,
+    0.7138972181409772,
+    0.7693620706501072,
+    0.7425703372888224,
+    0.667358242890535,
+    0.6201421643098575,
+    0.6047841369946455,
+    0.5610479014113139
+  ],
+  "posthoc_scope": "chunk errors describe saved outputs; not a causal attribution or image-quality metric",
+  "original_decision_preserved": "stop_A_and_move_to_B"
+}

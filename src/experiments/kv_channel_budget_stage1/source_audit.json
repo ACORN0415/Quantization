@@ -1,0 +1,34 @@
+{
+  "capture_manifest_checks": [
+    {
+      "path": "/home/acorn0415/sfq_data/postwo_rounding/p00_s101/manifest.json",
+      "sha256": "d4eae25477474bbbc76eb7c3af8ab067a038b86dede2717946c6db17e7f84507",
+      "matching_model_source_sha256": "e916506f6085f9c050cbd44b7e1b79d4a8aae9d77379fe5e2384fee5bad5a758"
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/postwo_rounding/p04_s101/manifest.json",
+      "sha256": "2d19ec8a197f7baeaaae0264a635467f0014c4136883db3f0d9abd0f0e7a0ac1",
+      "matching_model_source_sha256": "e916506f6085f9c050cbd44b7e1b79d4a8aae9d77379fe5e2384fee5bad5a758"
+    }
+  ],
+  "model_source_sha256": "e916506f6085f9c050cbd44b7e1b79d4a8aae9d77379fe5e2384fee5bad5a758",
+  "source_evidence": [
+    {
+      "path": "/home/acorn0415/Quantization/tools/postwo_round_probe.py",
+      "sha256": "98b559e963a1a7816adf314ef1f9e94a83962a80f6bc0eba88da53f890d2116a"
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/wan/modules/causal_model.py",
+      "sha256": "8da6416213a6bf790148afee7ff766bd676427be04433352621cd6a07d03de7d"
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/wan/modules/attention.py",
+      "sha256": "02ad719a76e6bdec79d18fc62b094ef2ad7c28b2d593c9f395ae1226041b7c9d"
+    }
+  ],
+  "observed_scope": "RoPE before cache insertion and attention; default scale and no extra mask argument. B evaluates historical support only.",
+  "primary_sources": [
+    "https://arxiv.org/html/2511.18643v1",
+    "https://arxiv.org/html/2609.26425v1"
+  ]
+}

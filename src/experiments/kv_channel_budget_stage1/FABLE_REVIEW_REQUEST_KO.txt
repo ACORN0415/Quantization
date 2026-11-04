@@ -1,0 +1,6 @@
+실제 Claude Fable 검토. 시작 /home/acorn0415, 대상 /home/acorn0415/Quantization. AGENTS.md/검토절차읽기. 실제채팅검토, Task/Dispatch없음(stale 미해결). GPU/모델로드/설치/다운로드/하위작업자/코드수정금지. 작은CPU·JSON·코드·사전게이트만읽고, 유일한쓰기 src/experiments/kv_channel_budget_stage1/FABLE_REVIEW_KO.txt. 10분이내,한글채팅요약. 결과미완료면그범위명시.
+사용자는A후속연속후근거없으면B진행승인. A4는warm_Q최종latentrelL2.5968>.05로종료,6timed실행0. B-1은기존Kitty/KIVI/QuantWM와겹치는응용진단이며새방법아님.
+읽을것: kv_channel_budget_stage1/REGISTRATION_KO.txt,tools/kv_channel_budget_core.py,tools/kv_channel_budget_stage1.py,results.json(진행중),execution.log,tools/postwo_round_probe.py 캡처범위. 참고linear_w8a8_continuation/FABLE_NEXT_REVIEW_KO.txt의B설계.
+6개post-RoPE K(p0/p4,l0/14/29,c6)와c6/c7 q32.전체V없음. 주지표q7은32760개과거지원집합만정규화한softmaxTV이지실제c7전체attention이아님. 선택은K만,결과/query사용금지.
+uniform INT3g120/g156, selected|K|mean상위63채널/128 2/4bit g120, random동일63. 공통28byteheader+FP16min/scale+실제packstreams+혼합1bitmask 포함.동일cap20,547,100byte이나실측S/R20,501,236,U15620,160,028로같지않음을명시.10%개선기준과bothprompts/2of3층/무작위대조조건사전등록. 코덱numpy패킹CPU진단이며GPU실행/속도기여아님.
+중점:bitpack/mask/채널순서·minscale양자화·바이트계정·같은상한공정성·query사전정보누수·support범위·실제출력기록·판정코드.검토자가실제열지않은tensor/pack을재검증했다고하지마세요.가장강한반론/대안최대1개.추가실험으로구제요청하지마세요.
