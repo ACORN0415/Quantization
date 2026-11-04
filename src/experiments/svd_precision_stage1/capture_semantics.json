@@ -1,0 +1,25 @@
+{
+  "checked_utc": 1793829592.832676,
+  "gpu_calls": 0,
+  "capture_fingerprint": "1ed69ee3256a9436fd9cd2fdee3ef2a3f45a911a4363ba47fb2f7c84fdd1f94b",
+  "model_source_sha256": "e916506f6085f9c050cbd44b7e1b79d4a8aae9d77379fe5e2384fee5bad5a758",
+  "manifests": [
+    {
+      "path": "/home/acorn0415/sfq_data/postwo_rounding/p00_s101/manifest.json",
+      "sha256": "d4eae25477474bbbc76eb7c3af8ab067a038b86dede2717946c6db17e7f84507",
+      "source_match": true
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/postwo_rounding/p04_s101/manifest.json",
+      "sha256": "2d19ec8a197f7baeaaae0264a635467f0014c4136883db3f0d9abd0f0e7a0ac1",
+      "source_match": true
+    }
+  ],
+  "code_findings": [
+    "postwo_round_probe.py:75-76 stores key and new_value=v[:,-4680:] from the same original attention call",
+    "causal_model.py:251-255 passes q,k,v only, with matching K/V slices ending at local_end_index",
+    "attention.py:139-149 defaults causal=False and window_size=(-1,-1); no call-specific mask argument",
+    "postwo_round_probe.py:84 checks eight captured BF16 chunks against saved reference"
+  ],
+  "scope": "source review and matching original capture manifests, not a new model execution"
+}

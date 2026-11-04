@@ -1,5 +1,5 @@
-C 완료 판정안: 시험한 입력에서 FP64 SVD 정밀도 상향의 실익 없음
-CPU 실행·저장자료 감사 완료. 실제 Claude Fable 검토는 진행 중이며 도착 후 반영한다.
+C 완료: 시험한 입력에서 FP64 SVD 정밀도 상향의 실익 없음
+CPU 실행·저장자료 감사·실제 Claude Fable 결과 검토 완료. FABLE_REVIEW_KO.txt와REVIEW_RESPONSE_KO.txt참조.
 
 질문과 결과
 FP32/FP64 TT 분해의 rank192·형상·저장비트·실제패킹·FP16scale·BF16복원을 고정해 비교했다.
@@ -28,6 +28,8 @@ FP64의미세한분해차이는실제packed codes/복원값에일부반영됐지
 query는같은청크call4에보존된32개,전체K32760토큰softmax중newV4680토큰의가중치를사용했다.
 고정Q/K와나머지V불변조건에서concat(P@(Vhat−V))@Wo.T의FP64 MSE를평가했다.
 이는해당V청크개입의출력차이다. native BF16 전체attention재생·자가회귀생성·영상품질평가가아니다.
+capture_semantics.json에기존capture/model fingerprint가두원본manifest와일치함을기록했다.
+같은attention호출의new_value=v[:,-4680:]와K/V동일구간slice,추가mask없는호출을코드에서확인했다. 새GPU재생은하지않았다.
 출력NSE의분모도신규청크의기여이며,전체attention출력norm으로정규화했다고말하지않는다.
 민감한29층을의도적으로선택한두개발입력이다. 다른층/입력/모델에일반화하지않는다.
 같은PyTorch CPU SVD 경로의dtype대조다. CUDA/cuSolver 알고리즘이나 NVIDIA Ogita–Aishima 반복정련은실행하지않았다.
@@ -54,3 +56,5 @@ audit.json: 저장raw인자4개,packed8개,24factor스트림의scale/rounding/�
 기존TT/A/B 종료는그대로유지한다. 새rank/bit/층/ALS/보정방법을추가하지않는다.
 다른문제의고정밀SVD가무의미하다는주장이나,모든GPU분해정밀도검사가불필요하다는주장은아니다.
 NEXT_AFTER_B 검토자의합성SVD수치는코드/원자료독립검증이없어이번근거에쓰지않았다. 본결론은이번실제입력관측에근거한다.
+Fable는코드·등록·worker JSON·실제결과의판정숫자를확인했다. 독립패킹/점수감사는주작업자가수행한별도범위다.
+작은차이를측정잡음이라단정하거나FP32→FP64효과에보편상한이있다고주장하지않는다.

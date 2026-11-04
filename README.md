@@ -621,7 +621,7 @@ BF16보다 대응 시간 중앙값 **13.97% 감소**, FFN 확장은 **1.56% 증�
 [A-2 CPU 감사](src/experiments/linear_w8a8_fused_stage1/audit.json) ·
 [Fable 검토 반영](src/experiments/linear_w8a8_fused_stage1/REVIEW_RESPONSE_KO.txt)
 
-**A 연속 후속 완료·B 진단 진행 (2026-11-04 UTC):** 사용자 지시에 따라 A-3에서
+**A 연속 후속 완료 (2026-11-04 UTC):** 사용자 지시에 따라 A-3에서
 FFN 축소를 원래 eager BF16과 별도로 비교해 **32.39% 시간 감소**를 확인했다.
 A-2의 tuned BF16 무효 기록은 유지한다. 이어 A-4에서 30층 Q·FFN 축소를 선택적으로
 교체한 12청크 생성은 최종 latent 상대 L2 **59.68%**로 등록한 5% 공학적 오차 조건을
@@ -673,6 +673,33 @@ Fable의 최종 검토를 완료했고, 검토에서 요구한 해석·검증 �
 [B-4 총 예산 비교·종료 판단](src/experiments/kv_channel_budget_global_baseline/REPORT_KO.txt) ·
 [B-4 읽기 전용 감사](src/experiments/kv_channel_budget_global_baseline/audit.json) ·
 [B-4 Fable 최종 검토](src/experiments/kv_channel_budget_global_baseline/FABLE_FINAL_REVIEW_KO.txt)
+
+## C: SVD 계산 정밀도 진단
+
+2026-11-05 KST, 두 개발 프롬프트의 29층·청크6 V에서 CPU FP32/FP64 TT 분해를 비교했다.
+입력은 `[1,4680,12,128]`, rank192이며 2/4비트의 기존 패킹·FP16 scale·BF16 복원 경로를
+고정했다. 각 비트에서 실제 저장 tensor 바이트도 같았다. 아래는 FP64로 바꾼 오차 감소율이며
+음수는 악화다. 출력은 고정 Q/K에서 해당 V 청크 개입의 FP64 post-Wo 증분 오차다.
+
+| 프롬프트 | 인자 비트 | V 복원 SSE 감소 | 출력 MSE 감소 |
+| --- | ---: | ---: | ---: |
+| 0 | 2 | +0.001113% | +0.014970% |
+| 0 | 4 | −0.001660% | +0.026162% |
+| 4 | 2 | +0.000817% | −0.007883% |
+| 4 | 4 | −0.000921% | −0.022631% |
+
+모든 변화가 사전 공학 기준 1% 미만이며 방향도 일관되지 않았다. **시험한 조건에서 분해
+정밀도 상향을 더 검토할 근거를 얻지 못했다.** GPU·생성·다운로드 0회, 실제 batched SVD
+24회(12head씩), 8개 패킹 결과와 24개 인자 스트림의 독립 CPU 감사를 완료했다.
+이는 CPU SVD와 제한된 출력 진단이며 NVIDIA 반복 정련·CUDA SVD·전체 영상 품질의 검사가 아니다.
+기존 TT/A/B의 종료는 유지하며 새 rank·비트·층 탐색으로 이어가지 않는다.
+실제 Claude Fable의 결과 검토를 완료했다. 보편적인 오차 상한이나 측정 잡음이라는 해석은 채택하지 않고
+시험한 입력과 실행 경로로 결론을 제한했다.
+
+[C 명세·결과·한계](src/experiments/svd_precision_stage1/REPORT_KO.txt) ·
+[C 비교 수치](src/experiments/svd_precision_stage1/comparisons.csv) ·
+[C 읽기 전용 감사](src/experiments/svd_precision_stage1/audit.json) ·
+[C Fable 검토 반영](src/experiments/svd_precision_stage1/REVIEW_RESPONSE_KO.txt)
 
 ## 출처와 공개 범위
 

@@ -1,0 +1,81 @@
+Fable 검토: C (FP32/FP64 SVD 계산 정밀도 vs 저비트 저장 후 효과)
+작성 2026-11-04 21:56 UTC, Claude Fable 5.1 (Orca 채팅 세션 claude_d033d1ed_fc88_4e2a_bead_d6ae2739e539).
+Task/Dispatch 식별자: 없음. fable_attach.json에 worker-start가 terminal_handle_stale로 거절된 기록이 있다.
+권한: 읽기 전용, 이 파일만 작성. SVD 재실행·대형 tensor 열기·GPU·커밋 없음.
+
+검토 대상(직접 읽음): REGISTRATION_KO.txt, unit.json, tools/svd_precision_probe.py,
+tools/codec_order_core.py, tools/tt_video_codec.py, change_mixed_core.py의 pack/unpack 시그니처,
+execution.json, p00_fp32/64.json, p04_fp32/64.json, results.json, 4개 .log, git 68f950a.
+도착 전 항목: audit.json 없음(21:56 UTC 기준). 감사 결과는 이 검토에 포함되지 않는다.
+
+1. 판단: 타당. 등록된 판정 규칙대로 '시험 범위에서 정밀도 상향 종료'
+   (close_precision_upgrading_for_tested_cases)가 맞다.
+   네 비교(p0/p4 × 2/4bit) 모두 V SSE 변화 |1.7e-5| 이하, 출력 MSE 변화 |2.6e-4| 이하로
+   공학 문턱 1%의 1/40 미만이며 부호도 일관되지 않는다(잡음 수준). per-prompt JSON에서
+   results.json의 comparisons를 재계산해 동일 값을 얻었다.
+
+2. 직접 확인한 항목
+ - 코드 해시: unit.json/results.json provenance == 현재 파일 sha256 == 커밋 68f950a 내용.
+   실행은 registration_commit 68f950a 기준. 결과 JSON들은 아직 untracked.
+ - 입력: 두 l29_c6.pt sha256이 input_availability.json의 expected와 일치(코드 assert + 내가 JSON 대조).
+ - dtype 외 동일: shape [12,3,1560,128], rank 192, rd 128. payload_tensor_bytes 2bit 1,753,344 /
+   4bit 2,922,240이 expected_bytes 공식(ceil(n·bits/8)+2·ceil(n/16), 세 인자)과 내 재계산으로 일치하고
+   FP32/FP64 사이 동일. 참고로 BF16 V 원본 14,376,960B(별도 효율 주장 아님).
+ - FP64 인자가 pack에서 FP32로 내려가는 의미: pack_factor 첫 줄 x.float()이 FP64 인자를 FP32로
+   변환한 뒤 FP16 maximum/FP32 scale/RTN을 적용한다. 따라서 FP64 조건이 FP32 조건과 다를 수 있는
+   경로는 'SVD 결과 자체의 차이'뿐이며, 이것은 FP32 SVD의 round-off(상대 1e-6~1e-7)에 한정된다.
+   측정된 FP32 vs FP64 raw 복원 거리 relative L2 2.03e-6 / 2.06e-6이 정확히 이 수준이다.
+   양자화 전 FP32 단계(decoded_fp32_v_error)의 변화율도 BF16 단계와 같은 ~1e-5로, BF16 cast는
+   추가 효과가 없다. 즉 이 설계에서 FP64는 원리적으로 양자화 잡음보다 10^4~10^5배 작은 차이만
+   만들 수 있고 결과가 그것을 그대로 보여준다.
+ - raw 잔차 vs 절단/저장 오차 구분: raw relative L2 0.164(p0)/0.203(p4)은 rank192 절단 오차이며
+   FP32/FP64 사이 변화율 1e-10으로 동일. rd=128=d이므로 두 번째 SVD는 절단이 없고 절단은 첫 SVD
+   하나뿐이다. 저장 후 relative L2는 4bit 0.229/0.255, 2bit 1.022/1.045.
+   storage_change_from_raw SSE가 raw SSE의 1~40배로 저장 오차가 지배한다.
+   2bit는 relative L2 > 1, 즉 복원 V가 영(0) 대체보다 나쁘고 출력 normalized SE 0.59~0.68이다.
+   이 관측은 정밀도와 무관하게 2bit TT 저장 자체가 무의미함을 재확인하며, 새 탐색 근거가 아니다.
+ - 부호 모호성: canonical()은 a 열·b r축, b rd축·c rd축을 짝으로 뒤집어 같은 TT를 만든다(einsum
+   축과 일치함을 확인). 저장 경로는 abs maximum·대칭 RTN이라 부호에 등변이고 (-a)(-b)=ab는
+   부동소수점에서도 정확하므로 byte 일치가 기대되며 8개 arm 모두 통과. FP32/FP64의 first_flips가
+   다르다(1174/1160, 1164/1132)는 것은 두 solver의 부호 관례가 다름을 뜻하지만 결과에 영향이 없음이
+   이 검사로 배제된다. 단, 이 검사는 축퇴 특이값 부분공간의 회전 모호성은 다루지 않는다. 경계
+   gap(σ191−σ192)/σ191 최소 1.2e-3/2.6e-3으로 작지만 raw 거리 2e-6이 부분공간 교체가 없었음을 보인다.
+ - 반복성: 3회 분해 인자 byte 일치(assert 통과), SVD 호출 6/worker, 총 24. GPU 호출 0,
+   CUDA 미초기화 assert 통과. max RSS 1.26~1.32GiB.
+ - CPU 시간: 분해 1회 FP32 0.19s, FP64 0.32s(첫 회와 후속 차이 없음). 4 threads CPU 수치이며
+   GPU/NVIDIA 반복 정련 속도와 무관하다.
+
+3. 부분 V 개입 출력 오차의 해석
+   K가 BF16 원본으로 고정되므로 P는 정확히 불변이고 attention 출력은 V에 선형이다. 따라서
+   delta_O = P[:, -4680:] @ (Vhat−V) @ Wo.T는 '이 청크 V만 교체했을 때의 call4 32 query 출력 차이'의
+   FP64 정확식이며 근사가 아니다. 이것이 말하지 않는 것: 네이티브 BF16 kernel 반올림, 후속 층 전파,
+   다른 청크의 동시 압축, 영상 품질. 정규화 분모는 이 청크 기여 ||P_chunk V Wo||^2(9.9e4/7.7e4)이고
+   전체 출력이 아니다. 미확인 가정: key 파일의 마지막 4680 위치가 new_value와 같은 토큰이며 마스크가
+   없다는 점. 대형 tensor를 열지 않아 검증하지 못했다. 이 가정이 틀려도 FP32/FP64 비교 결론은
+   같은 P를 양쪽에 쓰므로 바뀌지 않지만, 절대 출력 오차 수치의 의미는 달라진다.
+
+4. 1% 기준과 표본 범위
+   표본은 2 프롬프트 × 1층 × 1청크 × 1 rank이며 민감 층을 고른 국소 진단이다. 분산 추정이 없어
+   1%는 통계 기준이 아닌 공학 문턱이고, 관측 변화가 문턱의 1/40 미만에 부호까지 섞이므로 문턱의
+   정확한 위치에 결론이 의존하지 않는다. 2항의 원리적 상한(FP32 round-off ≪ 양자화 잡음) 때문에
+   다른 층/청크에서 결론이 뒤집힐 가능성은 낮다고 보지만 이는 가설이며 측정이 아니다.
+   결론 범위: '동일 pack 경로에서 분해만 FP64로 하는 것은 효과 없음'. FP64 인자를 고정밀로 보관하는
+   설계, 다른 rank/비트, 반복 정련 알고리즘의 품질·속도는 시험하지 않았고 이 결과로 말할 수 없다.
+
+5. 지적(결론을 바꾸지 않음)
+ - svd_precision_probe.py:157,181: 반복 불일치/부호 검사 실패 시 등록은 '판단 불가/보류 보고'를
+   요구하지만 코드는 assert로 종료해 JSON을 남기지 않는다. 이번에는 모두 통과해 무관.
+ - 경계 gap은 첫 SVD만 보고한다. rd=128이라 두 번째 SVD는 절단이 없으므로 타당하다.
+ - audit.json 미도착. 감사가 보존 인자/패킹/점수를 재계산해 동일 숫자를 내는지는 미확인.
+ - 결과 JSON·log·execution.json이 untracked 상태. 기록 보존을 위해 커밋이 필요하다(내 권한 밖).
+
+6. 요약 숫자(개선율 = 1 − err64/err32)
+   p0 2bit: V SSE +1.1e-5, 출력 MSE +1.5e-4
+   p0 4bit: V SSE −1.7e-5, 출력 MSE +2.6e-4
+   p4 2bit: V SSE +8.2e-6, 출력 MSE −7.9e-5
+   p4 4bit: V SSE −9.2e-6, 출력 MSE −2.3e-4
+   raw SSE 변화율 ~1e-10, FP32↔FP64 raw 거리 relative L2 2.0e-6.
+
+7. 입장: NEXT_AFTER_B에서 C 보류를 권고했으나 사용자가 실행을 지시했고, 한정 진단은 등록된 상한
+   안에서 종료 조건을 만족했다. 결과는 보류 권고의 근거(정밀도 효과 < 저장 잡음)를 측정으로 확인한
+   것이며, TT 재개·GPU 가속·신규성 주장의 근거가 아니다. 이전 검토의 합성 SVD 수치는 사용하지 않았다.
