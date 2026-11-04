@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "gpu_calls": 0,
+  "encode_calls": 0,
+  "synthetic_codes_cover_signed_int8_range": true,
+  "per_tensor_bytes": 8100892,
+  "kv_with_headers_per_layer": 125964624,
+  "provenance": {
+    "tools/kv_global_baseline.py": "cc0cd96e64f1863d4acc4f54165f8932b7a56a0e267b15989647709f4acc5958",
+    "tools/kv_channel_rollout.py": "7012fdb776605e529cc288205d01aea206dcd23de54863c9b71077523ff739d5",
+    "tools/kv_channel_full_attention.py": "bba0e837a7bd7ecb80c7f776e7739c42716d897a8a40464555050467b4a931d8",
+    "src/kvq/quant.py": "61c4d3cabd22109b389fe90623bff5b3eff3b4dcdcc596ffa3a8b7f054903250",
+    "src/kvq/store.py": "8960e23326fae1af43793bcd408d977722bc29c8c5306e48299914d42b3f7acb",
+    "src/kvq/lockstep.py": "2ef170749c3a0a344273ccbb07629eaa9103cc01f2b7b99e64285be9c9569eff",
+    "src/scripts/anchor_identity_gate.py": "31715a097a0bd18f854de60bb7598cd8f86de7f1ac43939d648e957fd3ae2cb5",
+    "src/experiments/kv_channel_budget_global_baseline/REGISTRATION_KO.txt": "08b06a937a0b504ad78ef1bf7200838b5b6b2eb6f42878b03746c393dcae3ec2"
+  }
+}

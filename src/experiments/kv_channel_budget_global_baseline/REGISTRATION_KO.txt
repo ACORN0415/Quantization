@@ -1,0 +1,45 @@
+B-4: 총 KV 예산에서 기존 K8V8의 충분성 확인 / 2026-11-05 KST
+2026-11-04 16:52 UTC 시작, 준비·실행·감사·검토 포함35분, 마감17:27 UTC.
+B-3는등록대로통과했고결과/기준을변경하지않는다. B-4는별도질문:
+V를BF16으로고정한K-channelboost 이득이총KV상한에서도단순기존방법보다유용한가.
+새방법/커널/정밀도탐색없음. 기존Quantizer('rtn',8,8,group16)와ChunkStore 그대로사용.
+
+최대4생성(Identity2+K8V8 2), 각42청크×5forward, 합계840forward.
+prompt0/4 seed101, 원래noise126latent프레임. 각prompt Identity→K8V8 순서.
+Identity는ChunkStore FR 경로에서기존IdentityQuantizer로복제만한다. 42청크전체가
+B-3 BF16latent와dtype/형상/전원소바이트일치해야K8V8로진행한다. K8V8첫청크도byte일치.
+기존ChunkStore가pending현재청크BF16, 완료과거6청크, 최오래퇴거, 청크당1회encode를담당한다.
+encoder는층별별도계측해실제encode_pair와K/V encode진입점을기록한다.
+유효한각실행210forward/층41pair encode. K8V8은K/V각41개/층.
+Identity의clone pair와양자화pair를구분. 새계측용양자화호출은추가하지않는다.
+
+RTN8은signed int8 codes, FP16scale, offset없음. 원래BF16산술/round/clamp(-128,127),
+시간축group16, 4680→4688 zero padding을유지한다. 8bit는byte container가실제8bit다.
+현재BF16pair+과거6pair에서tensor내용125,964,288B/층. K/V별28byte직렬화헤더를포함하면
+125,964,624B/층. S120의132,588,312B/층보다작다. byte계산을실제state와직렬화길이로확인.
+peak allocator/작업버퍼와KV내용바이트는분리한다. B-3의shadow-cache 실행시간과속도를비교하지않는다.
+대표최종상태층0/14/29×과거6청크×K/V를보존한다. codes/scale의전원소byte왕복확인.
+
+품질은Identity와K8V8 영상4개를새로decode, 총VAE4회/2004프레임상한.
+Identity원시RGB8이B-3 BF16원시RGB8과전원소byte일치해야한다.
+동일MUSIQ weight/전처리의프레임점수차이<=1e-4, DINO원시특징상대L2<=1e-5도확인한다.
+후반249..500 및전체0..500, DINO참조cosine/인접정의는B-3와같다.
+비교대상S120의이미측정된raw영상지표를재사용한다. 새모델/다운로드/프롬프트/seed없음.
+
+판정: 두prompt모두K8V8의후반MUSIQ>=S120-1, 후반DINO참조>=S120-.005,
+후반인접DINO>=S120-.005, 전체MUSIQ>=S120-1이며실제총KV내용/직렬화가S이하이면
+더단순하고적은저장량의기존기준선으로충분하므로S의새개발을종료한다.
+추가로BF16에얼마나가까운지는별도절대값으로보고하며위결론을품질보존의보편적증명으로쓰지않는다.
+못넘으면고정V조건의이득과총예산tradeoff를구분해서보고하고이번검토는종료한다.
+새bit/scale/층선택/다른후보를붙이지않는다. 유효성gate/시간상한실패는판단불가.
+두개발prompt·seed1개이므로일반화/신규성/세계모델action정확도주장없음.
+
+독립CPU감사: 파일해시·codes/scales별도해석·호출수·latent·원시영상지표집계/판정재계산.
+GPU추론을다시수행한감사로표현하지않는다. 실제Claude Fable 최종검토와남은이견기록.
+
+실행 전 검토 보완: RTN8은저장scale FP16을복원시에BF16으로변환해곱한다. B-3의
+FP32계산후BF16복원과산술도다르며선택효과만을분리하는비교가아니다.
+ChunkStore의BF16복원작업버퍼는한번에해당층에서생긴다. 이것만으로전체GPUpeak가
+BF16이상이라고단정할수도없다. 실제peak는별도기록하되S harness와가속비교를하지않는다.
+각청크끝에30층의실제segment start와pending start를읽어c7부터퇴거가발생함을검증한다.
+선행anchor identity검사의결과를현재42청크FR identity검사대신사용하지않는다.
