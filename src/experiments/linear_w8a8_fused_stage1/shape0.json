@@ -1,0 +1,1022 @@
+{
+  "index": 0,
+  "status": "completed",
+  "started_utc": 1793801432.4780009,
+  "validity": {
+    "native_replay_bytes_equal": true,
+    "compiled_bf16_numerically_valid": true,
+    "compiled_int32_all_equal": true,
+    "int64_sample_equal": true,
+    "int_range_and_bound": true,
+    "W8A8_default": true,
+    "W8A8_fused": true
+  },
+  "compile_first_call_s": {
+    "BF16_eager": 0.11199944699183106,
+    "BF16_tuned": 5.837887111993041,
+    "W8A8_default": 0.44754026300506666,
+    "W8A8_fused": 5.555692913010716
+  },
+  "timing": [
+    {
+      "round": 0,
+      "order": [
+        "BF16_eager",
+        "BF16_tuned",
+        "W8A8_default",
+        "W8A8_fused"
+      ],
+      "BF16_eager": {
+        "wall_ms": 0.14608799829147756,
+        "gpu_ms": 0.14325759410858155,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 15425536
+      },
+      "BF16_tuned": {
+        "wall_ms": 0.13989349827170372,
+        "gpu_ms": 0.1385472059249878,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 14376960
+      },
+      "W8A8_default": {
+        "wall_ms": 0.187492195982486,
+        "gpu_ms": 0.1861631989479065,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43756032
+      },
+      "W8A8_fused": {
+        "wall_ms": 0.11984020238742232,
+        "gpu_ms": 0.11857919692993164,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43737088
+      }
+    },
+    {
+      "round": 1,
+      "order": [
+        "BF16_tuned",
+        "W8A8_default",
+        "W8A8_fused",
+        "BF16_eager"
+      ],
+      "BF16_tuned": {
+        "wall_ms": 0.14171389630064368,
+        "gpu_ms": 0.1385472059249878,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 14376960
+      },
+      "W8A8_default": {
+        "wall_ms": 0.1874511013738811,
+        "gpu_ms": 0.18626559972763063,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43756032
+      },
+      "W8A8_fused": {
+        "wall_ms": 0.11961279669776559,
+        "gpu_ms": 0.1183743953704834,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43737088
+      },
+      "BF16_eager": {
+        "wall_ms": 0.14294729917310178,
+        "gpu_ms": 0.14161920547485352,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 15425536
+      }
+    },
+    {
+      "round": 2,
+      "order": [
+        "W8A8_default",
+        "W8A8_fused",
+        "BF16_eager",
+        "BF16_tuned"
+      ],
+      "W8A8_default": {
+        "wall_ms": 0.1897263980936259,
+        "gpu_ms": 0.18821120262145996,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43756032
+      },
+      "W8A8_fused": {
+        "wall_ms": 0.11969489860348403,
+        "gpu_ms": 0.11847679615020752,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43737088
+      },
+      "BF16_eager": {
+        "wall_ms": 0.14272980042733252,
+        "gpu_ms": 0.1415168046951294,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 15425536
+      },
+      "BF16_tuned": {
+        "wall_ms": 0.13914020382799208,
+        "gpu_ms": 0.13793280124664306,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 14376960
+      }
+    },
+    {
+      "round": 3,
+      "order": [
+        "W8A8_fused",
+        "BF16_eager",
+        "BF16_tuned",
+        "W8A8_default"
+      ],
+      "W8A8_fused": {
+        "wall_ms": 0.1218699966557324,
+        "gpu_ms": 0.11970560550689698,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43737088
+      },
+      "BF16_eager": {
+        "wall_ms": 0.14360349741764367,
+        "gpu_ms": 0.14223359823226928,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 15425536
+      },
+      "BF16_tuned": {
+        "wall_ms": 0.13905499945394695,
+        "gpu_ms": 0.13783040046691894,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 14376960
+      },
+      "W8A8_default": {
+        "wall_ms": 0.18709550495259464,
+        "gpu_ms": 0.18585599660873414,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43756032
+      }
+    },
+    {
+      "round": 4,
+      "order": [
+        "BF16_eager",
+        "BF16_tuned",
+        "W8A8_default",
+        "W8A8_fused"
+      ],
+      "BF16_eager": {
+        "wall_ms": 0.14419860090129077,
+        "gpu_ms": 0.1418239951133728,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 15425536
+      },
+      "BF16_tuned": {
+        "wall_ms": 0.139302498428151,
+        "gpu_ms": 0.1381376028060913,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 14376960
+      },
+      "W8A8_default": {
+        "wall_ms": 0.18707740237005055,
+        "gpu_ms": 0.18585599660873414,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43756032
+      },
+      "W8A8_fused": {
+        "wall_ms": 0.11984820012003183,
+        "gpu_ms": 0.11868159770965576,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43737088
+      }
+    },
+    {
+      "round": 5,
+      "order": [
+        "BF16_tuned",
+        "W8A8_default",
+        "W8A8_fused",
+        "BF16_eager"
+      ],
+      "BF16_tuned": {
+        "wall_ms": 0.14018709771335125,
+        "gpu_ms": 0.1385472059249878,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 14376960
+      },
+      "W8A8_default": {
+        "wall_ms": 0.18795710057020187,
+        "gpu_ms": 0.186572802066803,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43756032
+      },
+      "W8A8_fused": {
+        "wall_ms": 0.12011780054308474,
+        "gpu_ms": 0.11878399848937989,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43737088
+      },
+      "BF16_eager": {
+        "wall_ms": 0.1431436976417899,
+        "gpu_ms": 0.1419263958930969,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 15425536
+      }
+    },
+    {
+      "round": 6,
+      "order": [
+        "W8A8_default",
+        "W8A8_fused",
+        "BF16_eager",
+        "BF16_tuned"
+      ],
+      "W8A8_default": {
+        "wall_ms": 0.1907763013150543,
+        "gpu_ms": 0.18913279771804808,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43756032
+      },
+      "W8A8_fused": {
+        "wall_ms": 0.11966080055572093,
+        "gpu_ms": 0.1183743953704834,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43737088
+      },
+      "BF16_eager": {
+        "wall_ms": 0.14335099840536714,
+        "gpu_ms": 0.14202879667282103,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 15425536
+      },
+      "BF16_tuned": {
+        "wall_ms": 0.1389617973472923,
+        "gpu_ms": 0.13772799968719482,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 14376960
+      }
+    },
+    {
+      "round": 7,
+      "order": [
+        "W8A8_fused",
+        "BF16_eager",
+        "BF16_tuned",
+        "W8A8_default"
+      ],
+      "W8A8_fused": {
+        "wall_ms": 0.12331969919614494,
+        "gpu_ms": 0.12144639492034912,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43737088
+      },
+      "BF16_eager": {
+        "wall_ms": 0.14350819983519614,
+        "gpu_ms": 0.14213119745254515,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 15425536
+      },
+      "BF16_tuned": {
+        "wall_ms": 0.13968119747005403,
+        "gpu_ms": 0.13834240436553955,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 14376960
+      },
+      "W8A8_default": {
+        "wall_ms": 0.18752019968815148,
+        "gpu_ms": 0.18606079816818238,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43756032
+      }
+    },
+    {
+      "round": 8,
+      "order": [
+        "BF16_eager",
+        "BF16_tuned",
+        "W8A8_default",
+        "W8A8_fused"
+      ],
+      "BF16_eager": {
+        "wall_ms": 0.14691160176880658,
+        "gpu_ms": 0.14458880424499512,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 15425536
+      },
+      "BF16_tuned": {
+        "wall_ms": 0.13935960014350712,
+        "gpu_ms": 0.1381376028060913,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 14376960
+      },
+      "W8A8_default": {
+        "wall_ms": 0.187259801896289,
+        "gpu_ms": 0.18595839738845826,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43756032
+      },
+      "W8A8_fused": {
+        "wall_ms": 0.11989130289293826,
+        "gpu_ms": 0.11857919692993164,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43737088
+      }
+    },
+    {
+      "round": 9,
+      "order": [
+        "BF16_tuned",
+        "W8A8_default",
+        "W8A8_fused",
+        "BF16_eager"
+      ],
+      "BF16_tuned": {
+        "wall_ms": 0.1416336977854371,
+        "gpu_ms": 0.13916159868240358,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 14376960
+      },
+      "W8A8_default": {
+        "wall_ms": 0.18733689794316888,
+        "gpu_ms": 0.18606079816818238,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43756032
+      },
+      "W8A8_fused": {
+        "wall_ms": 0.12007670011371374,
+        "gpu_ms": 0.11878399848937989,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43737088
+      },
+      "BF16_eager": {
+        "wall_ms": 0.14298229943960905,
+        "gpu_ms": 0.1418239951133728,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 15425536
+      }
+    },
+    {
+      "round": 10,
+      "order": [
+        "W8A8_default",
+        "W8A8_fused",
+        "BF16_eager",
+        "BF16_tuned"
+      ],
+      "W8A8_default": {
+        "wall_ms": 0.1908034028019756,
+        "gpu_ms": 0.18759679794311523,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43756032
+      },
+      "W8A8_fused": {
+        "wall_ms": 0.13677380047738552,
+        "gpu_ms": 0.13547519445419312,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43737088
+      },
+      "BF16_eager": {
+        "wall_ms": 0.1437406986951828,
+        "gpu_ms": 0.14254080057144164,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 15425536
+      },
+      "BF16_tuned": {
+        "wall_ms": 0.13941669603809714,
+        "gpu_ms": 0.13834240436553955,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 14376960
+      }
+    },
+    {
+      "round": 11,
+      "order": [
+        "W8A8_fused",
+        "BF16_eager",
+        "BF16_tuned",
+        "W8A8_default"
+      ],
+      "W8A8_fused": {
+        "wall_ms": 0.12377750244922936,
+        "gpu_ms": 0.12226560115814208,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43737088
+      },
+      "BF16_eager": {
+        "wall_ms": 0.1434041012544185,
+        "gpu_ms": 0.14202879667282103,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 15425536
+      },
+      "BF16_tuned": {
+        "wall_ms": 0.13903300277888775,
+        "gpu_ms": 0.13783040046691894,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 14376960
+      },
+      "W8A8_default": {
+        "wall_ms": 0.18774669733829796,
+        "gpu_ms": 0.18647040128707887,
+        "common_resident_bytes": 30286848,
+        "incremental_peak_bytes": 43756032
+      }
+    }
+  ],
+  "model_forwards": 0,
+  "compiler_config": {
+    "max_autotune": false,
+    "max_autotune_gemm": false,
+    "search_autotune_cache": false,
+    "force_fuse_int_mm_with_mul": false,
+    "epilogue_fusion": true
+  },
+  "phase": "profile_warmed_arms",
+  "shape_MNK": [
+    4680,
+    1536,
+    1536
+  ],
+  "module": "model.blocks.0.self_attn.q",
+  "capture": {
+    "path": "/home/acorn0415/sfq_data/linear_w8a8_stage1/4680x1536x1536.pt",
+    "sha256": "26c863dda76d29df7e0465f21a55f9fd81aa0d67106a6bf89c02d89d0cc9c235",
+    "bytes": 33477704,
+    "module": "model.blocks.0.self_attn.q",
+    "shape_MNK": [
+      4680,
+      1536,
+      1536
+    ]
+  },
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "torch": "2.6.0+cu124",
+  "cuda": "12.4",
+  "static_weight_prepare_s": 0.038884237001184374,
+  "options_by_arm": {
+    "BF16_tuned": {
+      "max_autotune_gemm": true,
+      "max_autotune_gemm_backends": "ATEN,TRITON",
+      "triton.cudagraphs": false
+    },
+    "W8A8_default": {},
+    "W8A8_fused": {
+      "max_autotune_gemm": true,
+      "max_autotune_gemm_backends": "ATEN,TRITON",
+      "triton.cudagraphs": false,
+      "force_fuse_int_mm_with_mul": true
+    }
+  },
+  "integer_validation_compile_s": 3.350360391952563,
+  "quant_validation_compile_s": 0.1382295400253497,
+  "compiled_bf16_bytes_equal": false,
+  "compiled_bf16_metric": {
+    "rel_l2": 7.62712734285742e-05,
+    "max_abs": 0.125,
+    "finite": true
+  },
+  "isolated_compiled_quant": {
+    "int8_different_elements": 1259,
+    "scale_max_abs": 0.0,
+    "scope": "standalone compiled quant; not an observation inside the full compiled invocation"
+  },
+  "metrics": {
+    "W8A8_default": {
+      "vs_quantized_fp32": {
+        "rel_l2": 0.0016543174860998988,
+        "max_abs": 0.06783485412597656,
+        "finite": true
+      },
+      "vs_bf16": {
+        "rel_l2": 0.005534641910344362,
+        "max_abs": 0.3125,
+        "finite": true
+      },
+      "pointwise_valid": true,
+      "shape_valid": true,
+      "dtype_valid": true
+    },
+    "W8A8_fused": {
+      "vs_quantized_fp32": {
+        "rel_l2": 0.0016543174860998988,
+        "max_abs": 0.06783485412597656,
+        "finite": true
+      },
+      "vs_bf16": {
+        "rel_l2": 0.005534641910344362,
+        "max_abs": 0.3125,
+        "finite": true
+      },
+      "pointwise_valid": true,
+      "shape_valid": true,
+      "dtype_valid": true
+    }
+  },
+  "fused_vs_default_w8a8": {
+    "rel_l2": 0.0,
+    "max_abs": 0.0,
+    "finite": true
+  },
+  "validation_artifact": {
+    "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/validation.pt",
+    "sha256": "f805fa5a46649e9aba3d78f9da0db997ee7c8c1ecbd078fdc9debea12cd5a2fb",
+    "bytes": 131799714
+  },
+  "all_valid": true,
+  "comparisons": {
+    "BF16_eager": {
+      "reductions_percent": [
+        17.967113117454826,
+        16.323849845584924,
+        16.13881737022127,
+        15.134381232166994,
+        16.886710848136232,
+        16.08586160483737,
+        16.52600826863808,
+        14.067837700030761,
+        18.39221582948222,
+        16.019884570096643,
+        4.846851504855499,
+        13.686218618231049
+      ],
+      "median_percent": 16.11233948752932,
+      "bootstrap_median_95ci_percent": [
+        14.601109466098878,
+        16.706359558387156
+      ],
+      "passes": true
+    },
+    "BF16_tuned": {
+      "reductions_percent": [
+        14.334687553050907,
+        15.595576848717062,
+        13.975331851997808,
+        12.358421391318608,
+        13.96550566403032,
+        14.316080079853977,
+        13.88942656184453,
+        11.713457910050352,
+        13.969828580536369,
+        15.220246317638598,
+        1.8956808157248428,
+        10.972574874125463
+      ],
+      "median_percent": 13.967667122283345,
+      "bootstrap_median_95ci_percent": [
+        12.03593965068448,
+        14.325383816452442
+      ],
+      "passes": true
+    }
+  },
+  "performance_screen_passes": true,
+  "fusion_verification": "pending_saved_source_and_trace_audit",
+  "trace": {
+    "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/trace.json",
+    "sha256": "63f1b364a64173cfcf520afde532b3a14469c319798bafd436608e7b590f502a",
+    "bytes": 29560
+  },
+  "generated_code": [
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/2b/c2bdxf3aepy5ifskhneyz7vekvcyuwdkmhrwsn2i3tkro6i574ro.py",
+      "sha256": "74e0bd4633b132e95ecbd5921ee088cbba1b5269eeccec5839ce79ec3f6ff1da",
+      "bytes": 3999,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/4z/c4zmtcttmykwlljvght5xlz7yyk5qt2v6xxrqcudkap6jilnjhls.py",
+      "sha256": "252b64e8c8c0b1ff53f7adde0b9a6db1c66cefcbfc91ed5f7bff640f6ab7574c",
+      "bytes": 3980,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/5d/c5dbggvgbzlt4zni6iu6fe5qm4hbbihvurjhhph2w2qafv3xlii7.py",
+      "sha256": "7e30e3c2981f8307c3826dd60a5aee3b8930912c6576d4cfde4627b85021b867",
+      "bytes": 4000,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/5x/c5xmgqv34c5m7hvypchn3i6c6cw7shmeamtifdjyycnv3m37yjuh.py",
+      "sha256": "6d44aa65c8a4b270cf85427c8551f66108e23798e60c55cf298db96c9c9d6a90",
+      "bytes": 3539,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/62/c6246yuobk7z7zxy2socym3w237da4rkbehre45a2tw6r2sgdl6o.py",
+      "sha256": "897e2e832c362f899f45f8fb5b148f950ce3cf36165501772d44c7282708b759",
+      "bytes": 3999,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/6y/c6ynjepiklq33mkcfx3g3rcduzqkjdqiuxj4qclvuk54cp6u7m2f.py",
+      "sha256": "fcc39c884d17c6d90014604fa7a553f22139f55431ce3f42d6558831fb427378",
+      "bytes": 3999,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/7o/c7o2otlhdk7ojzxmjdhn6lrb7jhed7ofhtylmkycsqngbzjd7suc.py",
+      "sha256": "b101cec6da754c4d13f034868a8e90b2ab12c72af9ce98dce03b255f42fcdee3",
+      "bytes": 3819,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/ae/caevxlor25ey66uu7lgjrm4qpupunknawdms2o5xeurbis4roqeq.py",
+      "sha256": "837341d5cfdca325792175239eae3cf4ded690e21e29f037bf2fd56845849ab2",
+      "bytes": 3978,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/au/caufmzjpv2luy7sl3kv7knsyizotg4rf5ajwy26rtyelle5josbq.py",
+      "sha256": "eff49533c7b74b2b257258dd63aebc1ffd354a4f8d7fc00b9393bec6a722942e",
+      "bytes": 3978,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/av/cav67smk5s44iuhdtpgf2wjcby6n5zzqyjvutfnit4gpp5d2vqcw.py",
+      "sha256": "edf6b366706520d16621e5d8a0fbd324bf01e0aeecdf4f6e39f881ad79d5d455",
+      "bytes": 3819,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/ax/caxlhovki4xh4as6vktbwprj42bbhbkviapoxjazgol552hne2oi.py",
+      "sha256": "5fa81f1fa4b147d3516210d974a565f1400dcf243a0de133c003f1ccc6ad2986",
+      "bytes": 19561,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 3
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/ay/cay6yb4o67osari2i6dutn4s7mgpu4xwrjcm6zmrf4zjijqpkmvh.py",
+      "sha256": "c98242c81a1f7662a0ffadeddab193d69618283c20cf6b4a4e54899f24d5cff9",
+      "bytes": 7329,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/bf/cbf4gghyjwnwpa6qbyw7jqna7xpas67rmwuavymg2bqfcusrgrmr.py",
+      "sha256": "7e2ea417c64c002fe543b0654d0b55c9242bf01b2d1697c66c97499488774914",
+      "bytes": 3998,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/bu/cbuagaenm5o5ubsx6axwtfftdi2avujmps4oi5t2d52o6xu7eg52.py",
+      "sha256": "5e1bdcea5790f5077fefd57d6df49b96b22b7ad10d84227f3815cef06831b146",
+      "bytes": 4000,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/by/cbyqyuqqlr4utww2cbllrau726mmztifxfelryp43rfqtexcmjgh.py",
+      "sha256": "6ea25cadaeec293217218fe87cd2f2f986ff9e7b0adb493d849a7d7609243b63",
+      "bytes": 2603,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/ct/cctafo4mn7dr7w37zdrnhwihh4cscyws34jcwp5jhq3yd5tsdppc.py",
+      "sha256": "dde1a384684e200df4ebf4bc5e35eb531992855229ef48197beb81b6d35ea876",
+      "bytes": 3820,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/d3/cd3qbh5g74gxfb3do3uhsbfqgmk2yuxrq2jcofsnapv6jm3642mx.py",
+      "sha256": "a768706f217bf048044b116c955f78baaee5286db26c31141a42708c05dc3bc6",
+      "bytes": 3999,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/ee/ceebmcr6e6hsjd3lphyxkptfsujqhuhdum6uofykf7aajktyqkqo.py",
+      "sha256": "541f710951d597339ba4571b3bdbe3e02b1bf8636b130e0e192bf58b9686caa6",
+      "bytes": 3998,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/el/celrvskvqokzgp6cnri5ehigcipyigwrit7nhyzqjrymsdnw24z2.py",
+      "sha256": "97c8f5574024bf744c7861ae10b8e148cdf7828cf38a20106f533396c5cf85da",
+      "bytes": 4000,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/eq/ceqsjqpcv7rv23oezajutrldaj7a2exudpdiqjskg7jdj6fh3ujy.py",
+      "sha256": "c6dcd951924c0cf5af689c741a9c7301c5fbeb4e37e2f8a75ad79cac9d732738",
+      "bytes": 3977,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/f3/cf3sovvsw3z26rqfevjhdlik4uzkgt7sld5lk5llmvdpdzv62244.py",
+      "sha256": "15558cc53c5645177b8e6e774602f7d93666571963fde58cf9a5f9acfc6b03e8",
+      "bytes": 3821,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/f4/cf4lmt54fqnqt2523ojfzretlehtsq63krtuzjyxv3yeehojue3o.py",
+      "sha256": "a913da4f8af9122854eab56764d951034f18a979ff86854de4acb02e26501493",
+      "bytes": 3413,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/fb/cfbwyx45nz2icw5z4noqgqotf6qt2cql6kqhty76aiirx4eokkqc.py",
+      "sha256": "c72f9a8d460e7f116066203c1a6f2cca5688dd51648700580d3f0624f70a840c",
+      "bytes": 4000,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/gn/cgnt6off5efztczkafdk653nz5a253rfzikh5pwi22obx5cbmiqh.py",
+      "sha256": "7a4822ed7cdfb62ee3874541cf3f4fd5af7a229210819222853d389efcc8f21d",
+      "bytes": 3978,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/hd/chd4rh4xurms4j3k5qw3qofiza3xsu34z7ks53sovtnuwqphwawy.py",
+      "sha256": "d0e5151dc40c74d6313626fff360f24e3373d5af3c616d691e5075b7a2aceec9",
+      "bytes": 3998,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/hf/chfsmzshcx2n3n3rvojz7hnwbocudywpwqxrwiypqnymnyuquexw.py",
+      "sha256": "276bd4e5d8bf6c1fd1e2f85724551dc24b9cd8988eed0cfa8600b02f6d561165",
+      "bytes": 7759,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/i3/ci33giykm5imn4atj5skqnxwcplsy3fplwvot624jiakkuyohubj.py",
+      "sha256": "cfc1902bd14962629c44b03add1d6c7323adac002ef8f767becf032bce7ffa67",
+      "bytes": 3822,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/je/cjem3yushdu2pdfwl5vh2y2hdrggx6czsnufh2t4r5tg4o2dzbwk.py",
+      "sha256": "d5686a6144cb61a3946074841c8c425df76897239b030eeb5e2ecb1c9fd18232",
+      "bytes": 3999,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/jt/cjtx2acz5rprzgthc657eexrmptqoivdydl3erxoaii6fp7qxl4y.py",
+      "sha256": "57b02d18a577f1b757cc18067d5960fc53ce4a2009f401528030ccd7004318ab",
+      "bytes": 3977,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/kx/ckxktrxrkkas7343a77n3c5jsu74hlm3w5wkatv7ux7rtj3mdhr5.py",
+      "sha256": "2229df103f355fad5b8efb4194115fc2598a714816a9f080e18d4035697fdb46",
+      "bytes": 3979,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/mi/cmiupsqovoisxci4faun5bgxgib7zeowujqmovyz7cjwgup3xih7.py",
+      "sha256": "96fa2af60a87b7da1dd03821ce57d5ce93478e42cd01405d894d220dd08067e9",
+      "bytes": 4000,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/ng/cngmf4s3tehiyqjzhmflo2agvow3ckebnuadzpvcpullvyb3s22h.py",
+      "sha256": "05aa354a40495139406f03107a2b58bf2391467da827ad7f7dd7fbc4c1c143c5",
+      "bytes": 14125,
+      "aten_int_mm": true,
+      "aten_addmm": false,
+      "triton_definitions": 2
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/no/cnoohcspnhdctz7checknmqrluwwv5xvqo7rpbyvxuyd2vh2oj6r.py",
+      "sha256": "293ff93c428926a2706be18342afa0e363c7dd24ab037b72894bf15d9d68a2e0",
+      "bytes": 4010,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/pc/cpczzhcmvdplnwoy3phd6wxpfyoln75llzzas3gp53qsf57nlcx3.py",
+      "sha256": "750d4b1c07abd938017e1659263f074741e570bb499ea1367579d1f23ea59df3",
+      "bytes": 3998,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/pl/cpl4p7nkplvqudzgqi25o45qsns4aw2xxspldxcjogmk23wai3zp.py",
+      "sha256": "b0f848409989e3fced50be0ff3805d7c17da18f81cdd0e28d3ab19959f95a489",
+      "bytes": 3820,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/r6/cr6bslqiqulipv5y3ziouzez6aeq2osjf257kppgkdkzqmk7qq5i.py",
+      "sha256": "8756f4675289417a3d898787a02d1488f6ffe1814a1a957299863da711e505a2",
+      "bytes": 3548,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/rc/crc2vjkg4oghwxhbgpzwufxgznculegvyxcfxzoafykyltgkolft.py",
+      "sha256": "5431761723b258e8246c750fa7bc8f8a40b8127c4b9c1d272cc5fc377ec3b90d",
+      "bytes": 3978,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/re/creaed4gcutgk2ltgvjpgu6m6qqfbqx2njahzvepwrtlb7ecen7c.py",
+      "sha256": "cf697ea3a1b41e732932ba8e7ba81713082b1fe211ea2a13bb615ca2da4a8201",
+      "bytes": 3977,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/rm/crmx5ksvtg5gz4yarx4mca4pgzklzbgby7lut7ttfo22cfiij5lf.py",
+      "sha256": "508f00825cd7b62841a04e0738f65218864dee40679ef8d4180e608275b66314",
+      "bytes": 5853,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/s5/cs5m2zia5bizgsflg7q5erv3navfeb63onkqllazcbleixzx22sk.py",
+      "sha256": "a020531ef1d4d97c510bd1d3f16773ca2befe3a49676a6782bae2331ad5f951b",
+      "bytes": 3442,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/sh/cshk6p6q7f3nl5gg3fwol4avne4xmtc773m52anvf3h33367wm5c.py",
+      "sha256": "55a14fba05fb30a76a2823672f237540b49baf8a805c87be04c984f7ab953ee2",
+      "bytes": 3820,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/su/csubwjeeworil2eswquncgxcfh75fprfoa5wrb6whkzmaczf5ebr.py",
+      "sha256": "88847ec2c73ce94570c7d26dc73f3456cd063c751713965db9cc83fefad96467",
+      "bytes": 3980,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/tp/ctpwwt22xjlrzuegq7wdgtqwsnh63hs7gn3xluuohus4itjjnesa.py",
+      "sha256": "60b6cf9d1c612a381099f5e1cfe2b4010c98015efcb841a1d234d095437f5bd2",
+      "bytes": 3819,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/ui/cuiskjsjdnx235uj5qhawllxm4c5p7xnmwry5df35kn5kuggbqk4.py",
+      "sha256": "75f1ddc9fbebda41c9eb808f12fc4ba4edc618890af64863d0f9ff3552782ef4",
+      "bytes": 8418,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/vm/cvmphgzoi22qa36nro3n6yebxlytyedvvextwojydvlzqdezqklt.py",
+      "sha256": "4ceca4ed608d4b3ad162c2d176e84ea95263fcfabe223a16165d7dd3718975fd",
+      "bytes": 4057,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/vx/cvxww3o5kfwhiuajlcld6hsrn2ldofxjebwthiu2r3g32nlk5jxm.py",
+      "sha256": "26b4436dd1365fb8f2190671a20a20f9646fe440689417f98080a51437993256",
+      "bytes": 3820,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/vy/cvyfukwoaeo6meqxzkii6z7zcet7k376empupx7qax6qciaexhvf.py",
+      "sha256": "95d1fc8d08daf262d12ca2c8c07333b38f88a09737238b60906413583feccdfc",
+      "bytes": 3819,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/vz/cvz6mwv2fldccc3n4o5cp5q72id4e2iblj2b736jhcbgzcfkwppz.py",
+      "sha256": "25a5be5fee008c1dba6ec949764850b433d3b66690f4b9d39a7104c10163cee8",
+      "bytes": 3999,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/wf/cwfu3x7bdnxzdohtu455e35xy2a3w2yl6k7peck25ym37g7lyazy.py",
+      "sha256": "a3e387eb4da18e0cac76af25e8c919ffeab22ac87e6792aaa59fceedd920a390",
+      "bytes": 3998,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/wk/cwkz7mnx54mrzzddc5vop3w3faunx46ag7zt4aw5672uohyxpey3.py",
+      "sha256": "e8e73f91eda82b06ccf20bbf927964cee810312c95c01173b1fcc6bc069b08af",
+      "bytes": 3999,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/x6/cx6k3pfsmn7ynfhejijdk6i4lmhudfz7pef53m7lyq2jnsehjzbq.py",
+      "sha256": "614451267403482322ea85aefa5e5d9233c05223e1416ab8841172634fe4455a",
+      "bytes": 3998,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/xf/cxfcssjizhh4m2mkw744eb3gxnf7iud34f5jaw3gzj2kwotdikjr.py",
+      "sha256": "8639cb23d8480b79fc5214d7372f1427abe4b7028cd3a4761943cd5d24a93377",
+      "bytes": 3999,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/xj/cxjmhvj4xd5n5tpeh3vywny5polcs5qprczjbyjxbulxd65mmwd7.py",
+      "sha256": "13222d00150dfbadb964e9906c74dee3d0e1e53be54347f12f4e8163cd5e3ee0",
+      "bytes": 3837,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/xz/cxzo6nczpbzrh7xas7appcyylbjjlwf2hxkznf24l4mg7gmkxvgv.py",
+      "sha256": "d48b56d13d0610a9014f2f85475270c49a3a67c428fbb50361b918255d71f20f",
+      "bytes": 2269,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/ym/cympkriuzfax3syfs53pxsnymqpjq7ee7bau2tublihzqhcrtrjo.py",
+      "sha256": "e16511e3ba159d0c6439d575733560eaa6d025877f7e7dee32a44ebba8428768",
+      "bytes": 3822,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/ze/czeefdfeybgns3kem44l6lyzdbp5n4p5feqyn23hnel6lnpbenkf.py",
+      "sha256": "6099649a32adf5d0de95597d523b796f4af887c6c05af4e1c93a84533c7b524f",
+      "bytes": 3977,
+      "aten_int_mm": false,
+      "aten_addmm": false,
+      "triton_definitions": 1
+    }
+  ],
+  "finished_utc": 1793801449.0860057
+}

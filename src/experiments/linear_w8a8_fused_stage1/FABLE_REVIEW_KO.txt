@@ -1,0 +1,84 @@
+A-2 Fable 독립 검토 (claude-fable-5-1, 직접 채팅, Task/Dispatch 없음)
+검토 일시: 2026-11-04 14:10~14:20 UTC. 읽기 전용, GPU 실행 0, 코드 수정 0.
+대상: REGISTRATION_KO.txt(sha d348e325…), tools/linear_w8a8_fused_stage1.py(sha f0e60962…, commit 8ab5125),
+results.json(status partial_or_invalid, 14:11:27 UTC 종료, 등록 후 196.6초), shape0/1/2.json, shape0/1/2.log,
+/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0,1의 trace.json과 inductor 출력 코드,
+설치된 torch 2.6.0+cu124의 _inductor/kernel/mm.py와 fx_passes/post_grad.py.
+validation.pt(130MB)와 원본 캡처 tensor는 열지 않았다. 아래 수치는 모두 저장된 JSON/로그에서 읽거나 재계산한 값이다.
+
+1. 판단: 측정과 정확성은 타당. 결론 서술은 수정 필요. 등록 기준 결과는 1/3 이득 후보, 1/3 유효한 성능 실패, 1/3 판단 불가.
+
+- shape0 (Q, 4680x1536x1536): fused W8A8 wall 중앙값 0.1200ms, eager BF16 0.1435, tuned BF16 0.1394, default W8A8 0.1875.
+  감소율 중앙값 16.1% [14.6,16.7] / 14.0% [12.0,14.3]. 등록 스크린(>=5%, 하한>0) 통과. 실제 융합도 확인(아래 2항).
+- shape1 (FFN 확장, 4680x8960x1536): fused 0.7845 vs eager BF16 0.7995 (+1.75% [1.39,1.99]), tuned BF16 0.7727 (-1.56%).
+  정확성 통과, 유효한 성능 실패. default W8A8 1.1020보다는 빠르다.
+- shape2 (FFN 축소, 4680x1536x8960): tuned BF16 팔이 사전조건 relL2<=.002를 .00240으로 넘겨 'invalid'. W8A8 두 팔은
+  모두 정확성 통과(FP32 참조 relL2 .00166, 원래 BF16 대비 .00542). 타이밍은 실행되지 않았다(코드 191~192행 all_valid 게이트).
+  이것은 후보(W8A8 fused)의 실패가 아니라 기준선 팔의 사전조건 실패이며, 등록 분류로는 '정확성 실패'가 아니라 '판단 불가'로 써야 한다.
+  tuned BF16의 오차 .0024는 FP32 누산 Triton addmm 템플릿과 cuBLAS의 누산 순서 차이가 BF16 출력에서 1ulp 뒤집힘으로
+  나타난 크기와 일치한다(max_abs .125, K=8960). 추측이며 tensor로 확인하지 않았다. 사전조건 임계값이 BF16 출력 반올림에
+  맞춰 보정되지 않았던 설계 문제로 본다. 등록 규칙상 결과를 본 뒤 임계값을 바꾸면 안 되므로 A-2 안에서 재실행하지 말고,
+  별도 등록 시 (a) 기준선 무효여도 eager BF16 대비 타이밍은 기록하고 (b) tuned BF16을 BF16 캡처가 아니라 FP32 참조와
+  비교해 eager BF16의 오차와 같은 수준인지로 판정하는 방식이 가장 싸다. CPU만으로 가능하다.
+
+2. 실제 융합/정수 버퍼 (shape0 출력 코드 inductor/ax/caxlhov….py와 trace.json 직접 확인; shape1도 동일 구조)
+- fused 팔은 커널 3개: Triton reduction(양자화, qx int8+sx) → Triton 템플릿 triton_tem_fused__to_copy_clamp_clamp_min_div_mul_round_1
+  (int8 tl.dot, ACC int32, BLOCK 256x128x128, 에필로그 acc*sx를 FP32로 저장) → Triton pointwise(×sw, +bias, BF16 변환).
+  extern_kernels._int_mm 호출 없음, INT32 버퍼 없음, ampere_igemm 커널 trace에 없음. 등록된 '융합 발생' 조건은 충족한다.
+- 그러나 INT32 M×N 버퍼는 같은 크기의 FP32 M×N 버퍼(buf3)로 대체됐다. 추가 allocated peak는 43.74MB로 default 43.76MB와 같다.
+  sw/bias/BF16 변환은 GEMM 에필로그에 들어가지 않았다. 따라서 '정수 중간 버퍼 제거'는 문자 그대로는 맞지만 메모리 이득은 0이고,
+  메모리 트래픽 관점에서도 sx 곱 융합 자체는 바이트를 줄이지 않는다.
+- 이득의 원천은 융합이 아니라 GEMM 커널 교체다. 설치된 torch 2.6.0 kernel/mm.py 285~330행: tuned_int_mm은 Triton 템플릿이
+  가능하면 ATen _int_mm 후보를 버린다("TODO: Re-enable eager mode implementation once cuBLAS is fixed"). 773~800행:
+  tuned_fused_int_mm_mul은 Triton 후보만 가진다. 즉 max_autotune_gemm=True만으로도 cuBLAS igemm은 후보에서 빠지고 Triton int8
+  템플릿이 선택된다. 로그의 AUTOTUNE int_mm(4680x1536, 1536x1536) 독립 템플릿 0.0932ms, 융합 에필로그 포함 0.1085ms(동일
+  256x128x128 config)이며 A-1이 잰 cuBLAS igemm GPU 시간은 .16589ms였다. 설계에 'W8A8 + max_autotune_gemm, force_fuse 없음'
+  팔이 없어서 force_fuse_int_mm_with_mul 고유의 기여는 분리되지 않았다. 보고서에서 "GEMM+scale 융합으로 빨라졌다"로 쓰면 과장이다.
+  "autotune이 선택한 Triton int8 GEMM(scale 에필로그 포함)이 cuBLAS igemm보다 빠른 형상이 있다"가 정확한 서술이다.
+
+3. 비교 공정성 (코드 86~96, 136~145, 196~214행)
+- 타이밍: CUDA event 10회 묶음, 12 round, 4 순환 순서, wall과 gpu_ms 모두 기록. 두 값이 거의 같아 GPU-bound다. 타당.
+- 두 tuned 팔 모두 ATEN,TRITON autotune을 받았고 shape0/1 모두 tuned BF16도 Triton addmm 템플릿을 선택했다(trace에
+  triton_tem_fused_addmm_0, 로그 autotune에서 bias_addmm 0.1608 < triton_mm_13 0.1403). BF16에 같은 기회를 준 점은 공정하다.
+  단 int_mm 쪽은 위 2항대로 ATen 후보가 아예 없으므로 'BF16은 ATen/Triton 중 선택, INT8은 Triton 강제'라는 비대칭이 있다.
+  이것은 torch의 구현이며 조정자의 조작이 아니지만 보고서에 명시해야 한다.
+- 정적 W 양자화·전치 contiguous(0.038초)는 타이밍 밖. 배포 시 정적 가중치로 보면 타당. 동적 X 양자화는 W8A8 팔 안에 포함. 타당.
+- per-shape 독립 프로세스, nvidia-smi로 다른 compute 프로세스 없음 확인(131~132행), inductor/triton 캐시 디렉터리를 형상별로 분리. 타당.
+- bootstrap은 12개 round 짝 비율의 중앙값 구간이다. 반복 표본 구간이며 입력 일반화 구간이 아니다(형상당 캡처 1개). A-1과 같은 한계.
+- shape0 round 10에서 fused가 0.1368ms(4.8%)로 한 번 튀었다. 중앙값은 영향 없음. 원인 미확인.
+- shape0.json의 compiler_config 필드는 프로세스 전역 기본값(전부 False)이라 오해 소지가 있다. 팔별 실제 설정은 options_by_arm이다.
+
+4. 정확성·저장값
+- eager BF16: 원본 캡처와 바이트 일치 3/3.
+- tuned BF16: shape0 relL2 7.6e-5(바이트 불일치), shape1 바이트 일치(bytes_equal True인데 trace는 Triton 템플릿 사용. 기록대로 보고),
+  shape2 .0024로 사전조건 실패.
+- 고정 qx/wt의 tuned INT32(독립 컴파일 ic, Triton 템플릿 256x128x128)와 eager cuBLAS INT32 전원소 일치 3/3, CPU INT64 8x16 표본 일치,
+  범위·K*127^2<2^31 통과. 이 검사는 fused 팔 내부 커널이 아니라 별도 컴파일 템플릿에 대한 것이다. fused 팔의 정수 정확성 직접 근거는
+  fused_vs_default 최종 출력 max_abs 0.0(3/3 형상)이며, 두 팔이 같은 FP32 후처리를 쓰므로 정수 누산이 같았다고 보는 것이 합리적이다.
+- W8A8 두 팔: FP32 양자화 참조 relL2 .00165/.00166/.00166(<=.002), 원래 BF16 대비 .00553/.01185/.00542. A-1과 같은 값. 통과.
+- 독립 compiled quant의 int8 차이 1259개(shape0)는 A-1과 동일하며 전체 호출 내부 관측이 아니다. 그대로 구분 보고.
+- validation.pt 해시는 JSON에 기록됐으나 내용은 내가 열지 않았다.
+
+5. 컴파일 준비 비용
+- 최초 호출: tuned BF16 5.84/6.01/6.07초, fused W8A8 5.56/5.70/5.73초, default W8A8 0.45~0.48초, 독립 int_mm 검증 컴파일 3.35~3.50초.
+  autotune 1회당 benchmarking 1.3~2.4초 + precompile 0.6~1.8초(로그). 형상별 캐시를 비웠으므로 캐시 재사용 없는 비용이다.
+- 전체 호출 시간: 3형상 196.6초로 30분 상한 안. 새 모델 0, 패키지 0, 수동 커널 0 확인(코드와 로그).
+- 모델 배포 관점에서는 형상·모듈 수만큼 autotune이 반복되므로 이 비용은 작지 않다. 다만 A-2 범위 밖이므로 수치만 기록.
+
+6. 주장 범위
+말할 수 있는 것: 이 4090/torch 2.6.0에서 max_autotune_gemm+force_fuse 공개 경로는 Q 형상(N=K=1536)에서 BF16(eager·tuned) 대비
+약 14~16% 빠르고 정확성 동등이다. FFN 확장 형상에서는 BF16과 같은 수준이고 tuned BF16보다 느리다. FFN 축소 형상은 미판정.
+말할 수 없는 것: force_fuse 자체의 기여(대조 팔 없음), 메모리 이득(없음), 3형상 일반 이득(1/3), 영상 전체·신규성(등록대로 해당 없음),
+입력 일반화(캡처 1개). 후속연구 소재가 아니라 기존 실행 기준선 1개를 확보한 것이다.
+
+7. 가장 싼 추가 확인 (등록 범위 확장이 아니라 보고서 정정 수준)
+- shape2를 '판단 불가(기준선 사전조건)'로 분류하고 W8A8 fused의 정확성 통과는 기록한다.
+- 보고서에 2항의 torch 소스 근거(mm.py 285~330, 773~800행)를 넣고 "융합" 대신 "autotune Triton int8 GEMM 선택"으로 원인을 쓴다.
+- 만약 다음 등록이 있다면 대조 팔 1개(W8A8 default 수식 + max_autotune_gemm, force_fuse 없음)만 추가하면 융합 기여가 분리된다.
+  GPU 수 분. 지금 A-2 안에서 추가하지는 않는다.
+
+8. 직접 확인 / 미확인
+확인: 위 열거 파일 전부, shape0 fused 팔 출력 코드 전문, shape0/1 trace 커널 이름과 user_annotation, 로그 AUTOTUNE 블록,
+코드·등록문 sha 일치, git 커밋 8ab5125와 미커밋 결과 파일 목록, 설치 torch의 int_mm/fused 로워링 소스.
+미확인: validation.pt와 캡처 tensor 내용, shape2 tuned BF16 오차의 원인(추측), shape0 round 10 이상치 원인, shape1 BF16 tuned
+바이트 일치의 이유, 다른 GPU/torch 버전.

@@ -1,0 +1,122 @@
+{
+  "index": 2,
+  "status": "invalid",
+  "started_utc": 1793801469.8073695,
+  "validity": {
+    "native_replay_bytes_equal": true,
+    "compiled_bf16_numerically_valid": false,
+    "compiled_int32_all_equal": true,
+    "int64_sample_equal": true,
+    "int_range_and_bound": true,
+    "W8A8_default": true,
+    "W8A8_fused": true
+  },
+  "compile_first_call_s": {
+    "BF16_eager": 0.10548852296778932,
+    "BF16_tuned": 6.069439908023924,
+    "W8A8_default": 0.4559281980036758,
+    "W8A8_fused": 5.72819878696464
+  },
+  "timing": [],
+  "model_forwards": 0,
+  "compiler_config": {
+    "max_autotune": false,
+    "max_autotune_gemm": false,
+    "search_autotune_cache": false,
+    "force_fuse_int_mm_with_mul": false,
+    "epilogue_fusion": true
+  },
+  "phase": "numerical_validation",
+  "shape_MNK": [
+    4680,
+    1536,
+    8960
+  ],
+  "module": "model.blocks.0.ffn.2",
+  "capture": {
+    "path": "/home/acorn0415/sfq_data/linear_w8a8_stage1/4680x1536x8960.pt",
+    "sha256": "66eb3214b07662485959ef3db381a2ec4737455bba5ff6d53be34bc194460350",
+    "bytes": 125772872,
+    "module": "model.blocks.0.ffn.2",
+    "shape_MNK": [
+      4680,
+      1536,
+      8960
+    ]
+  },
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "torch": "2.6.0+cu124",
+  "cuda": "12.4",
+  "static_weight_prepare_s": 0.03813327697571367,
+  "options_by_arm": {
+    "BF16_tuned": {
+      "max_autotune_gemm": true,
+      "max_autotune_gemm_backends": "ATEN,TRITON",
+      "triton.cudagraphs": false
+    },
+    "W8A8_default": {},
+    "W8A8_fused": {
+      "max_autotune_gemm": true,
+      "max_autotune_gemm_backends": "ATEN,TRITON",
+      "triton.cudagraphs": false,
+      "force_fuse_int_mm_with_mul": true
+    }
+  },
+  "integer_validation_compile_s": 3.5028986140387133,
+  "quant_validation_compile_s": 0.15398724999977276,
+  "compiled_bf16_bytes_equal": false,
+  "compiled_bf16_metric": {
+    "rel_l2": 0.0023982818238437176,
+    "max_abs": 0.125,
+    "finite": true
+  },
+  "isolated_compiled_quant": {
+    "int8_different_elements": 571,
+    "scale_max_abs": 0.0,
+    "scope": "standalone compiled quant; not an observation inside the full compiled invocation"
+  },
+  "metrics": {
+    "W8A8_default": {
+      "vs_quantized_fp32": {
+        "rel_l2": 0.0016581251984462142,
+        "max_abs": 0.06253814697265625,
+        "finite": true
+      },
+      "vs_bf16": {
+        "rel_l2": 0.00542271975427866,
+        "max_abs": 0.125,
+        "finite": true
+      },
+      "pointwise_valid": true,
+      "shape_valid": true,
+      "dtype_valid": true
+    },
+    "W8A8_fused": {
+      "vs_quantized_fp32": {
+        "rel_l2": 0.0016581251984462142,
+        "max_abs": 0.06253814697265625,
+        "finite": true
+      },
+      "vs_bf16": {
+        "rel_l2": 0.00542271975427866,
+        "max_abs": 0.125,
+        "finite": true
+      },
+      "pointwise_valid": true,
+      "shape_valid": true,
+      "dtype_valid": true
+    }
+  },
+  "fused_vs_default_w8a8": {
+    "rel_l2": 0.0,
+    "max_abs": 0.0,
+    "finite": true
+  },
+  "validation_artifact": {
+    "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape2/validation.pt",
+    "sha256": "f64307f2636c61e1a01e73ea62ef8a1924afb32799db3a89cad8ee559abc7a89",
+    "bytes": 212691618
+  },
+  "all_valid": false,
+  "finished_utc": 1793801486.9090319
+}

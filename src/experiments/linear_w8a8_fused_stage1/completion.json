@@ -1,0 +1,35 @@
+{
+  "status": "completed_with_one_inconclusive_shape",
+  "utc_finished": "2026-11-04T14:20:17.532820+00:00",
+  "registered_start_utc": 1793801291.0,
+  "deadline_utc": 1793803091.0,
+  "finished_utc": 1793802017.5328205,
+  "elapsed_preparation_execution_cpu_audit_review_documentation_s": 726.5328204631805,
+  "gpu_stage_finished_utc": 1793801487.5590076,
+  "all_work_so_far_within_30min": true,
+  "model_forwards": 0,
+  "manual_kernel_implementations": 0,
+  "package_installs": 0,
+  "gpu_reruns_after_first_results": 0,
+  "decisions": [
+    "Q: valid benefit on one captured input",
+    "FFN expansion: valid performance screen failure",
+    "FFN contraction: inconclusive timing; tuned BF16 baseline rejected before timing; W8A8 outputs valid"
+  ],
+  "cpu_audit_status": "passed",
+  "review_session": "claude_93ef83b3_a7f1_4cdb_9c78_29c14e3844ef",
+  "review_surface": "structured chat",
+  "review_workspace": "/home/acorn0415",
+  "review_task_dispatch": null,
+  "review_scope": "code, JSON, generated source and traces; validation tensors recomputed by coordinator CPU audit, not by Fable",
+  "sha256": {
+    "src/experiments/linear_w8a8_fused_stage1/REGISTRATION_KO.txt": "d348e325912e08c5f583280bb3149811c85f2bffd014f4945216c4b947c103f1",
+    "src/experiments/linear_w8a8_fused_stage1/results.json": "b5db02c521f3c93d3bf026b5f8c545e530715c2ef077e0bfc2f7b07a1bf0c57f",
+    "src/experiments/linear_w8a8_fused_stage1/audit.json": "c0c2ff6d2ff2078b70ce885342529e852d8184a699e12d70af6647d8ad97c93c",
+    "src/experiments/linear_w8a8_fused_stage1/FABLE_REVIEW_KO.txt": "e7b8d28053c030bdca53618b33485f0ae5d4f81c7dd901e5c546a1ad5fb69875",
+    "src/experiments/linear_w8a8_fused_stage1/REPORT_KO.txt": "ff93f56be563e4d1b00313a4a0751d5c6dee9296c800cf160893785c4c7be90c",
+    "src/experiments/linear_w8a8_fused_stage1/REVIEW_RESPONSE_KO.txt": "cb26815fd832292e474ddec63f76f08f35e0e9e2e8e9308302b7f4e9237419a4",
+    "tools/linear_w8a8_fused_stage1.py": "f0e609629482a051f97fbe8f7b5bcbaa9d95e700e513c66573ce2cd120d0cdc1",
+    "tools/audit_linear_w8a8_fused_stage1.py": "e1570bda879c5da46e204d99c84c04fe07559e096fbfff9b28fc45d0f6fa0e43"
+  }
+}

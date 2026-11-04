@@ -1,0 +1,231 @@
+{
+  "status": "passed",
+  "meaning": "records validated; not all experiment arms passed",
+  "gpu_calls": 0,
+  "audit_code_sha256": "e1570bda879c5da46e204d99c84c04fe07559e096fbfff9b28fc45d0f6fa0e43",
+  "shapes": [
+    {
+      "shape_MNK": [
+        4680,
+        1536,
+        1536
+      ],
+      "measurement_status": "completed",
+      "full_int32_cpu_reference_equal": true,
+      "native_bf16_bytes_equal": true,
+      "bf16_tuned_cpu_metrics": {
+        "rel_l2": 7.6271278963691e-05,
+        "max_abs": 0.125,
+        "pointwise_valid": true,
+        "finite": true
+      },
+      "bf16_tuned_valid": true,
+      "default_fused_w8a8_bytes_equal": true,
+      "isolated_quant_diff_count": 1259,
+      "output_metrics": {
+        "W8A8_default": {
+          "vs_quantized_reference": {
+            "rel_l2": 0.0016543174444008943,
+            "max_abs": 0.06783485412597656,
+            "pointwise_valid": true,
+            "finite": true
+          },
+          "vs_bf16": {
+            "rel_l2": 0.0055346419572995156,
+            "max_abs": 0.3125,
+            "pointwise_valid": false,
+            "finite": true
+          }
+        },
+        "W8A8_fused": {
+          "vs_quantized_reference": {
+            "rel_l2": 0.0016543174444008943,
+            "max_abs": 0.06783485412597656,
+            "pointwise_valid": true,
+            "finite": true
+          },
+          "vs_bf16": {
+            "rel_l2": 0.0055346419572995156,
+            "max_abs": 0.3125,
+            "pointwise_valid": false,
+            "finite": true
+          }
+        }
+      },
+      "fused_generated_source": {
+        "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/ax/caxlhovki4xh4as6vktbwprj42bbhbkviapoxjazgol552hne2oi.py",
+        "sha256": "5fa81f1fa4b147d3516210d974a565f1400dcf243a0de133c003f1ccc6ad2986",
+        "kernel_names": [
+          "triton_red_fused__to_copy_abs_amax_clamp_clamp_min_div_round_0",
+          "triton_tem_fused__to_copy_clamp_clamp_min_div_mul_round_1",
+          "triton_poi_fused__to_copy_add_mul_2"
+        ],
+        "int32_intermediate": false,
+        "fp32_MxN_intermediate": true
+      },
+      "trace_kernels_by_arm": {
+        "BF16_eager": [
+          "ampere_bf16_s1688gemm_bf16_64x128_sliced1x2_ldg8_relu_f2f_tn"
+        ],
+        "BF16_tuned": [
+          "triton_tem_fused_addmm_0"
+        ],
+        "W8A8_default": [
+          "triton_red_fused__to_copy_abs_amax_clamp_clamp_min_div_round_0",
+          "ampere_igemm_int8_128x128_ldg4_nn",
+          "triton_poi_fused__to_copy_add_clamp_min_div_mul_1"
+        ],
+        "W8A8_fused": [
+          "triton_red_fused__to_copy_abs_amax_clamp_clamp_min_div_round_0",
+          "triton_tem_fused__to_copy_clamp_clamp_min_div_mul_round_1",
+          "triton_poi_fused__to_copy_add_mul_2"
+        ]
+      },
+      "performance_screen_recomputed": true,
+      "measurement_invalidity_preserved": false
+    },
+    {
+      "shape_MNK": [
+        4680,
+        8960,
+        1536
+      ],
+      "measurement_status": "completed",
+      "full_int32_cpu_reference_equal": true,
+      "native_bf16_bytes_equal": true,
+      "bf16_tuned_cpu_metrics": {
+        "rel_l2": 0.0,
+        "max_abs": 0.0,
+        "pointwise_valid": true,
+        "finite": true
+      },
+      "bf16_tuned_valid": true,
+      "default_fused_w8a8_bytes_equal": true,
+      "isolated_quant_diff_count": 0,
+      "output_metrics": {
+        "W8A8_default": {
+          "vs_quantized_reference": {
+            "rel_l2": 0.0016591193140160629,
+            "max_abs": 0.0078122615814208984,
+            "pointwise_valid": true,
+            "finite": true
+          },
+          "vs_bf16": {
+            "rel_l2": 0.01184684757440378,
+            "max_abs": 0.0546875,
+            "pointwise_valid": false,
+            "finite": true
+          }
+        },
+        "W8A8_fused": {
+          "vs_quantized_reference": {
+            "rel_l2": 0.0016591193140160629,
+            "max_abs": 0.0078122615814208984,
+            "pointwise_valid": true,
+            "finite": true
+          },
+          "vs_bf16": {
+            "rel_l2": 0.01184684757440378,
+            "max_abs": 0.0546875,
+            "pointwise_valid": false,
+            "finite": true
+          }
+        }
+      },
+      "fused_generated_source": {
+        "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/24/c246y76sdclfanc2jwl3cot5far2pyc4yvcdtd6z5pjebzpchnj2.py",
+        "sha256": "e764e3b7b2ce9c508743e041ffecd111b1be36b49c7177ace4d53e180aff100f",
+        "kernel_names": [
+          "triton_red_fused__to_copy_abs_amax_clamp_clamp_min_div_round_0",
+          "triton_tem_fused__to_copy_clamp_clamp_min_div_mul_round_1",
+          "triton_poi_fused__to_copy_add_mul_2"
+        ],
+        "int32_intermediate": false,
+        "fp32_MxN_intermediate": true
+      },
+      "trace_kernels_by_arm": {
+        "BF16_eager": [
+          "ampere_bf16_s16816gemm_bf16_128x64_ldg8_relu_f2f_tn"
+        ],
+        "BF16_tuned": [
+          "triton_tem_fused_addmm_0"
+        ],
+        "W8A8_default": [
+          "triton_red_fused__to_copy_abs_amax_clamp_clamp_min_div_round_0",
+          "ampere_igemm_int8_128x128_ldg4_nn",
+          "triton_poi_fused__to_copy_add_clamp_min_div_mul_1"
+        ],
+        "W8A8_fused": [
+          "triton_red_fused__to_copy_abs_amax_clamp_clamp_min_div_round_0",
+          "triton_tem_fused__to_copy_clamp_clamp_min_div_mul_round_1",
+          "triton_poi_fused__to_copy_add_mul_2"
+        ]
+      },
+      "performance_screen_recomputed": false,
+      "measurement_invalidity_preserved": false
+    },
+    {
+      "shape_MNK": [
+        4680,
+        1536,
+        8960
+      ],
+      "measurement_status": "invalid",
+      "full_int32_cpu_reference_equal": true,
+      "native_bf16_bytes_equal": true,
+      "bf16_tuned_cpu_metrics": {
+        "rel_l2": 0.0023982820408525274,
+        "max_abs": 0.125,
+        "pointwise_valid": true,
+        "finite": true
+      },
+      "bf16_tuned_valid": false,
+      "default_fused_w8a8_bytes_equal": true,
+      "isolated_quant_diff_count": 571,
+      "output_metrics": {
+        "W8A8_default": {
+          "vs_quantized_reference": {
+            "rel_l2": 0.0016581252093852878,
+            "max_abs": 0.06253814697265625,
+            "pointwise_valid": true,
+            "finite": true
+          },
+          "vs_bf16": {
+            "rel_l2": 0.0054227198653083505,
+            "max_abs": 0.125,
+            "pointwise_valid": false,
+            "finite": true
+          }
+        },
+        "W8A8_fused": {
+          "vs_quantized_reference": {
+            "rel_l2": 0.0016581252093852878,
+            "max_abs": 0.06253814697265625,
+            "pointwise_valid": true,
+            "finite": true
+          },
+          "vs_bf16": {
+            "rel_l2": 0.0054227198653083505,
+            "max_abs": 0.125,
+            "pointwise_valid": false,
+            "finite": true
+          }
+        }
+      },
+      "fused_generated_source": {
+        "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape2/inductor/qb/cqbzbr7viztp2lhd2qt2lbdmua42aagishkflksfw2kgyud6tsca.py",
+        "sha256": "01de17d516178218ed487d6db891fbf9cafdf41667d0db8c05d4716e602917f4",
+        "kernel_names": [
+          "triton_red_fused__to_copy_abs_amax_clamp_clamp_min_div_round_0",
+          "triton_tem_fused__to_copy_clamp_clamp_min_div_mul_round_1",
+          "triton_poi_fused__to_copy_add_mul_2"
+        ],
+        "int32_intermediate": false,
+        "fp32_MxN_intermediate": true
+      },
+      "trace_kernels_by_arm": null,
+      "performance_screen_recomputed": null,
+      "measurement_invalidity_preserved": true
+    }
+  ]
+}

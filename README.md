@@ -606,6 +606,21 @@ TT 종료·GPU 유휴 확인 뒤 2026-10-31 01:03:06–02:00:26 KST에 최대26�
 
 [결과와 제한](src/experiments/linear_w8a8_stage1/REPORT_KO.txt) · [측정 원기록](src/experiments/linear_w8a8_stage1/results.json) · [CPU 감사](src/experiments/linear_w8a8_stage1/audit.json)
 
+**후속 A-1·A-2 완료 (2026-11-04):** A-1 기본 `torch.compile`은 세 형상 모두 BF16보다
+30.9~38.1% 느렸다. 외부 INT8 GEMM이 남은 것을 확인하고, 별도 등록한 A-2에서 기존
+PyTorch의 INT8 GEMM 자동 튜닝·행 scale 융합 경로를 검사했다. Q 투영 한 캡처는 튜닝
+BF16보다 대응 시간 중앙값 **13.97% 감소**, FFN 확장은 **1.56% 증가**였다. FFN 축소는
+튜닝 BF16 대조군의 사전 정확성 조건 실패로 타이밍을 실행하지 않았다. W8A8 두 경로의
+최종 출력은 세 캡처에서 서로 원소 바이트가 같았으며, 원래 BF16과는 등록한 오차 범위 내
+차이가 있다. FP32 중간 버퍼가 남아 큰 임시 메모리 절감은 없었다. **Q 형상의 기존 실행
+기준선 이득이며 전체 영상 가속이나 새 방법의 성과는 아니다.** 새 모델·영상 생성0회,
+수동 커널 작성0회. Claude Fable 코드·trace 검토와 주 작업자 CPU 텐서 감사의 범위를 구분했다.
+
+[A-1 결과](src/experiments/linear_w8a8_compile_stage1/REPORT_KO.txt) ·
+[A-2 결과·미판정 조건](src/experiments/linear_w8a8_fused_stage1/REPORT_KO.txt) ·
+[A-2 CPU 감사](src/experiments/linear_w8a8_fused_stage1/audit.json) ·
+[Fable 검토 반영](src/experiments/linear_w8a8_fused_stage1/REVIEW_RESPONSE_KO.txt)
+
 ## 출처와 공개 범위
 
 이 저장소의 연구 변경은 사용자 저장소에서 관리한다. 외부 코드를 가져왔다는 사실과 원본 라이선스는 유지한다.

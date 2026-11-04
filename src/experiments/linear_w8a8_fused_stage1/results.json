@@ -1,0 +1,2185 @@
+{
+  "status": "partial_or_invalid",
+  "registered_start_utc": 1793801291.0,
+  "deadline_utc": 1793803091.0,
+  "model_forwards": 0,
+  "code_sha256": "f0e609629482a051f97fbe8f7b5bcbaa9d95e700e513c66573ce2cd120d0cdc1",
+  "registration_sha256": "d348e325912e08c5f583280bb3149811c85f2bffd014f4945216c4b947c103f1",
+  "git_commit": "8ab512534f3bd2e6f46aa9daac1b89566dd49f7f",
+  "shapes": [
+    {
+      "index": 0,
+      "status": "completed",
+      "started_utc": 1793801432.4780009,
+      "validity": {
+        "native_replay_bytes_equal": true,
+        "compiled_bf16_numerically_valid": true,
+        "compiled_int32_all_equal": true,
+        "int64_sample_equal": true,
+        "int_range_and_bound": true,
+        "W8A8_default": true,
+        "W8A8_fused": true
+      },
+      "compile_first_call_s": {
+        "BF16_eager": 0.11199944699183106,
+        "BF16_tuned": 5.837887111993041,
+        "W8A8_default": 0.44754026300506666,
+        "W8A8_fused": 5.555692913010716
+      },
+      "timing": [
+        {
+          "round": 0,
+          "order": [
+            "BF16_eager",
+            "BF16_tuned",
+            "W8A8_default",
+            "W8A8_fused"
+          ],
+          "BF16_eager": {
+            "wall_ms": 0.14608799829147756,
+            "gpu_ms": 0.14325759410858155,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 15425536
+          },
+          "BF16_tuned": {
+            "wall_ms": 0.13989349827170372,
+            "gpu_ms": 0.1385472059249878,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 14376960
+          },
+          "W8A8_default": {
+            "wall_ms": 0.187492195982486,
+            "gpu_ms": 0.1861631989479065,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43756032
+          },
+          "W8A8_fused": {
+            "wall_ms": 0.11984020238742232,
+            "gpu_ms": 0.11857919692993164,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43737088
+          }
+        },
+        {
+          "round": 1,
+          "order": [
+            "BF16_tuned",
+            "W8A8_default",
+            "W8A8_fused",
+            "BF16_eager"
+          ],
+          "BF16_tuned": {
+            "wall_ms": 0.14171389630064368,
+            "gpu_ms": 0.1385472059249878,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 14376960
+          },
+          "W8A8_default": {
+            "wall_ms": 0.1874511013738811,
+            "gpu_ms": 0.18626559972763063,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43756032
+          },
+          "W8A8_fused": {
+            "wall_ms": 0.11961279669776559,
+            "gpu_ms": 0.1183743953704834,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43737088
+          },
+          "BF16_eager": {
+            "wall_ms": 0.14294729917310178,
+            "gpu_ms": 0.14161920547485352,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 15425536
+          }
+        },
+        {
+          "round": 2,
+          "order": [
+            "W8A8_default",
+            "W8A8_fused",
+            "BF16_eager",
+            "BF16_tuned"
+          ],
+          "W8A8_default": {
+            "wall_ms": 0.1897263980936259,
+            "gpu_ms": 0.18821120262145996,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43756032
+          },
+          "W8A8_fused": {
+            "wall_ms": 0.11969489860348403,
+            "gpu_ms": 0.11847679615020752,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43737088
+          },
+          "BF16_eager": {
+            "wall_ms": 0.14272980042733252,
+            "gpu_ms": 0.1415168046951294,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 15425536
+          },
+          "BF16_tuned": {
+            "wall_ms": 0.13914020382799208,
+            "gpu_ms": 0.13793280124664306,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 14376960
+          }
+        },
+        {
+          "round": 3,
+          "order": [
+            "W8A8_fused",
+            "BF16_eager",
+            "BF16_tuned",
+            "W8A8_default"
+          ],
+          "W8A8_fused": {
+            "wall_ms": 0.1218699966557324,
+            "gpu_ms": 0.11970560550689698,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43737088
+          },
+          "BF16_eager": {
+            "wall_ms": 0.14360349741764367,
+            "gpu_ms": 0.14223359823226928,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 15425536
+          },
+          "BF16_tuned": {
+            "wall_ms": 0.13905499945394695,
+            "gpu_ms": 0.13783040046691894,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 14376960
+          },
+          "W8A8_default": {
+            "wall_ms": 0.18709550495259464,
+            "gpu_ms": 0.18585599660873414,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43756032
+          }
+        },
+        {
+          "round": 4,
+          "order": [
+            "BF16_eager",
+            "BF16_tuned",
+            "W8A8_default",
+            "W8A8_fused"
+          ],
+          "BF16_eager": {
+            "wall_ms": 0.14419860090129077,
+            "gpu_ms": 0.1418239951133728,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 15425536
+          },
+          "BF16_tuned": {
+            "wall_ms": 0.139302498428151,
+            "gpu_ms": 0.1381376028060913,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 14376960
+          },
+          "W8A8_default": {
+            "wall_ms": 0.18707740237005055,
+            "gpu_ms": 0.18585599660873414,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43756032
+          },
+          "W8A8_fused": {
+            "wall_ms": 0.11984820012003183,
+            "gpu_ms": 0.11868159770965576,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43737088
+          }
+        },
+        {
+          "round": 5,
+          "order": [
+            "BF16_tuned",
+            "W8A8_default",
+            "W8A8_fused",
+            "BF16_eager"
+          ],
+          "BF16_tuned": {
+            "wall_ms": 0.14018709771335125,
+            "gpu_ms": 0.1385472059249878,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 14376960
+          },
+          "W8A8_default": {
+            "wall_ms": 0.18795710057020187,
+            "gpu_ms": 0.186572802066803,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43756032
+          },
+          "W8A8_fused": {
+            "wall_ms": 0.12011780054308474,
+            "gpu_ms": 0.11878399848937989,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43737088
+          },
+          "BF16_eager": {
+            "wall_ms": 0.1431436976417899,
+            "gpu_ms": 0.1419263958930969,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 15425536
+          }
+        },
+        {
+          "round": 6,
+          "order": [
+            "W8A8_default",
+            "W8A8_fused",
+            "BF16_eager",
+            "BF16_tuned"
+          ],
+          "W8A8_default": {
+            "wall_ms": 0.1907763013150543,
+            "gpu_ms": 0.18913279771804808,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43756032
+          },
+          "W8A8_fused": {
+            "wall_ms": 0.11966080055572093,
+            "gpu_ms": 0.1183743953704834,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43737088
+          },
+          "BF16_eager": {
+            "wall_ms": 0.14335099840536714,
+            "gpu_ms": 0.14202879667282103,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 15425536
+          },
+          "BF16_tuned": {
+            "wall_ms": 0.1389617973472923,
+            "gpu_ms": 0.13772799968719482,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 14376960
+          }
+        },
+        {
+          "round": 7,
+          "order": [
+            "W8A8_fused",
+            "BF16_eager",
+            "BF16_tuned",
+            "W8A8_default"
+          ],
+          "W8A8_fused": {
+            "wall_ms": 0.12331969919614494,
+            "gpu_ms": 0.12144639492034912,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43737088
+          },
+          "BF16_eager": {
+            "wall_ms": 0.14350819983519614,
+            "gpu_ms": 0.14213119745254515,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 15425536
+          },
+          "BF16_tuned": {
+            "wall_ms": 0.13968119747005403,
+            "gpu_ms": 0.13834240436553955,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 14376960
+          },
+          "W8A8_default": {
+            "wall_ms": 0.18752019968815148,
+            "gpu_ms": 0.18606079816818238,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43756032
+          }
+        },
+        {
+          "round": 8,
+          "order": [
+            "BF16_eager",
+            "BF16_tuned",
+            "W8A8_default",
+            "W8A8_fused"
+          ],
+          "BF16_eager": {
+            "wall_ms": 0.14691160176880658,
+            "gpu_ms": 0.14458880424499512,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 15425536
+          },
+          "BF16_tuned": {
+            "wall_ms": 0.13935960014350712,
+            "gpu_ms": 0.1381376028060913,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 14376960
+          },
+          "W8A8_default": {
+            "wall_ms": 0.187259801896289,
+            "gpu_ms": 0.18595839738845826,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43756032
+          },
+          "W8A8_fused": {
+            "wall_ms": 0.11989130289293826,
+            "gpu_ms": 0.11857919692993164,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43737088
+          }
+        },
+        {
+          "round": 9,
+          "order": [
+            "BF16_tuned",
+            "W8A8_default",
+            "W8A8_fused",
+            "BF16_eager"
+          ],
+          "BF16_tuned": {
+            "wall_ms": 0.1416336977854371,
+            "gpu_ms": 0.13916159868240358,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 14376960
+          },
+          "W8A8_default": {
+            "wall_ms": 0.18733689794316888,
+            "gpu_ms": 0.18606079816818238,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43756032
+          },
+          "W8A8_fused": {
+            "wall_ms": 0.12007670011371374,
+            "gpu_ms": 0.11878399848937989,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43737088
+          },
+          "BF16_eager": {
+            "wall_ms": 0.14298229943960905,
+            "gpu_ms": 0.1418239951133728,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 15425536
+          }
+        },
+        {
+          "round": 10,
+          "order": [
+            "W8A8_default",
+            "W8A8_fused",
+            "BF16_eager",
+            "BF16_tuned"
+          ],
+          "W8A8_default": {
+            "wall_ms": 0.1908034028019756,
+            "gpu_ms": 0.18759679794311523,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43756032
+          },
+          "W8A8_fused": {
+            "wall_ms": 0.13677380047738552,
+            "gpu_ms": 0.13547519445419312,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43737088
+          },
+          "BF16_eager": {
+            "wall_ms": 0.1437406986951828,
+            "gpu_ms": 0.14254080057144164,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 15425536
+          },
+          "BF16_tuned": {
+            "wall_ms": 0.13941669603809714,
+            "gpu_ms": 0.13834240436553955,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 14376960
+          }
+        },
+        {
+          "round": 11,
+          "order": [
+            "W8A8_fused",
+            "BF16_eager",
+            "BF16_tuned",
+            "W8A8_default"
+          ],
+          "W8A8_fused": {
+            "wall_ms": 0.12377750244922936,
+            "gpu_ms": 0.12226560115814208,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43737088
+          },
+          "BF16_eager": {
+            "wall_ms": 0.1434041012544185,
+            "gpu_ms": 0.14202879667282103,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 15425536
+          },
+          "BF16_tuned": {
+            "wall_ms": 0.13903300277888775,
+            "gpu_ms": 0.13783040046691894,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 14376960
+          },
+          "W8A8_default": {
+            "wall_ms": 0.18774669733829796,
+            "gpu_ms": 0.18647040128707887,
+            "common_resident_bytes": 30286848,
+            "incremental_peak_bytes": 43756032
+          }
+        }
+      ],
+      "model_forwards": 0,
+      "compiler_config": {
+        "max_autotune": false,
+        "max_autotune_gemm": false,
+        "search_autotune_cache": false,
+        "force_fuse_int_mm_with_mul": false,
+        "epilogue_fusion": true
+      },
+      "phase": "profile_warmed_arms",
+      "shape_MNK": [
+        4680,
+        1536,
+        1536
+      ],
+      "module": "model.blocks.0.self_attn.q",
+      "capture": {
+        "path": "/home/acorn0415/sfq_data/linear_w8a8_stage1/4680x1536x1536.pt",
+        "sha256": "26c863dda76d29df7e0465f21a55f9fd81aa0d67106a6bf89c02d89d0cc9c235",
+        "bytes": 33477704,
+        "module": "model.blocks.0.self_attn.q",
+        "shape_MNK": [
+          4680,
+          1536,
+          1536
+        ]
+      },
+      "gpu": "NVIDIA GeForce RTX 4090",
+      "torch": "2.6.0+cu124",
+      "cuda": "12.4",
+      "static_weight_prepare_s": 0.038884237001184374,
+      "options_by_arm": {
+        "BF16_tuned": {
+          "max_autotune_gemm": true,
+          "max_autotune_gemm_backends": "ATEN,TRITON",
+          "triton.cudagraphs": false
+        },
+        "W8A8_default": {},
+        "W8A8_fused": {
+          "max_autotune_gemm": true,
+          "max_autotune_gemm_backends": "ATEN,TRITON",
+          "triton.cudagraphs": false,
+          "force_fuse_int_mm_with_mul": true
+        }
+      },
+      "integer_validation_compile_s": 3.350360391952563,
+      "quant_validation_compile_s": 0.1382295400253497,
+      "compiled_bf16_bytes_equal": false,
+      "compiled_bf16_metric": {
+        "rel_l2": 7.62712734285742e-05,
+        "max_abs": 0.125,
+        "finite": true
+      },
+      "isolated_compiled_quant": {
+        "int8_different_elements": 1259,
+        "scale_max_abs": 0.0,
+        "scope": "standalone compiled quant; not an observation inside the full compiled invocation"
+      },
+      "metrics": {
+        "W8A8_default": {
+          "vs_quantized_fp32": {
+            "rel_l2": 0.0016543174860998988,
+            "max_abs": 0.06783485412597656,
+            "finite": true
+          },
+          "vs_bf16": {
+            "rel_l2": 0.005534641910344362,
+            "max_abs": 0.3125,
+            "finite": true
+          },
+          "pointwise_valid": true,
+          "shape_valid": true,
+          "dtype_valid": true
+        },
+        "W8A8_fused": {
+          "vs_quantized_fp32": {
+            "rel_l2": 0.0016543174860998988,
+            "max_abs": 0.06783485412597656,
+            "finite": true
+          },
+          "vs_bf16": {
+            "rel_l2": 0.005534641910344362,
+            "max_abs": 0.3125,
+            "finite": true
+          },
+          "pointwise_valid": true,
+          "shape_valid": true,
+          "dtype_valid": true
+        }
+      },
+      "fused_vs_default_w8a8": {
+        "rel_l2": 0.0,
+        "max_abs": 0.0,
+        "finite": true
+      },
+      "validation_artifact": {
+        "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/validation.pt",
+        "sha256": "f805fa5a46649e9aba3d78f9da0db997ee7c8c1ecbd078fdc9debea12cd5a2fb",
+        "bytes": 131799714
+      },
+      "all_valid": true,
+      "comparisons": {
+        "BF16_eager": {
+          "reductions_percent": [
+            17.967113117454826,
+            16.323849845584924,
+            16.13881737022127,
+            15.134381232166994,
+            16.886710848136232,
+            16.08586160483737,
+            16.52600826863808,
+            14.067837700030761,
+            18.39221582948222,
+            16.019884570096643,
+            4.846851504855499,
+            13.686218618231049
+          ],
+          "median_percent": 16.11233948752932,
+          "bootstrap_median_95ci_percent": [
+            14.601109466098878,
+            16.706359558387156
+          ],
+          "passes": true
+        },
+        "BF16_tuned": {
+          "reductions_percent": [
+            14.334687553050907,
+            15.595576848717062,
+            13.975331851997808,
+            12.358421391318608,
+            13.96550566403032,
+            14.316080079853977,
+            13.88942656184453,
+            11.713457910050352,
+            13.969828580536369,
+            15.220246317638598,
+            1.8956808157248428,
+            10.972574874125463
+          ],
+          "median_percent": 13.967667122283345,
+          "bootstrap_median_95ci_percent": [
+            12.03593965068448,
+            14.325383816452442
+          ],
+          "passes": true
+        }
+      },
+      "performance_screen_passes": true,
+      "fusion_verification": "pending_saved_source_and_trace_audit",
+      "trace": {
+        "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/trace.json",
+        "sha256": "63f1b364a64173cfcf520afde532b3a14469c319798bafd436608e7b590f502a",
+        "bytes": 29560
+      },
+      "generated_code": [
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/2b/c2bdxf3aepy5ifskhneyz7vekvcyuwdkmhrwsn2i3tkro6i574ro.py",
+          "sha256": "74e0bd4633b132e95ecbd5921ee088cbba1b5269eeccec5839ce79ec3f6ff1da",
+          "bytes": 3999,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/4z/c4zmtcttmykwlljvght5xlz7yyk5qt2v6xxrqcudkap6jilnjhls.py",
+          "sha256": "252b64e8c8c0b1ff53f7adde0b9a6db1c66cefcbfc91ed5f7bff640f6ab7574c",
+          "bytes": 3980,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/5d/c5dbggvgbzlt4zni6iu6fe5qm4hbbihvurjhhph2w2qafv3xlii7.py",
+          "sha256": "7e30e3c2981f8307c3826dd60a5aee3b8930912c6576d4cfde4627b85021b867",
+          "bytes": 4000,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/5x/c5xmgqv34c5m7hvypchn3i6c6cw7shmeamtifdjyycnv3m37yjuh.py",
+          "sha256": "6d44aa65c8a4b270cf85427c8551f66108e23798e60c55cf298db96c9c9d6a90",
+          "bytes": 3539,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/62/c6246yuobk7z7zxy2socym3w237da4rkbehre45a2tw6r2sgdl6o.py",
+          "sha256": "897e2e832c362f899f45f8fb5b148f950ce3cf36165501772d44c7282708b759",
+          "bytes": 3999,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/6y/c6ynjepiklq33mkcfx3g3rcduzqkjdqiuxj4qclvuk54cp6u7m2f.py",
+          "sha256": "fcc39c884d17c6d90014604fa7a553f22139f55431ce3f42d6558831fb427378",
+          "bytes": 3999,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/7o/c7o2otlhdk7ojzxmjdhn6lrb7jhed7ofhtylmkycsqngbzjd7suc.py",
+          "sha256": "b101cec6da754c4d13f034868a8e90b2ab12c72af9ce98dce03b255f42fcdee3",
+          "bytes": 3819,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/ae/caevxlor25ey66uu7lgjrm4qpupunknawdms2o5xeurbis4roqeq.py",
+          "sha256": "837341d5cfdca325792175239eae3cf4ded690e21e29f037bf2fd56845849ab2",
+          "bytes": 3978,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/au/caufmzjpv2luy7sl3kv7knsyizotg4rf5ajwy26rtyelle5josbq.py",
+          "sha256": "eff49533c7b74b2b257258dd63aebc1ffd354a4f8d7fc00b9393bec6a722942e",
+          "bytes": 3978,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/av/cav67smk5s44iuhdtpgf2wjcby6n5zzqyjvutfnit4gpp5d2vqcw.py",
+          "sha256": "edf6b366706520d16621e5d8a0fbd324bf01e0aeecdf4f6e39f881ad79d5d455",
+          "bytes": 3819,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/ax/caxlhovki4xh4as6vktbwprj42bbhbkviapoxjazgol552hne2oi.py",
+          "sha256": "5fa81f1fa4b147d3516210d974a565f1400dcf243a0de133c003f1ccc6ad2986",
+          "bytes": 19561,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 3
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/ay/cay6yb4o67osari2i6dutn4s7mgpu4xwrjcm6zmrf4zjijqpkmvh.py",
+          "sha256": "c98242c81a1f7662a0ffadeddab193d69618283c20cf6b4a4e54899f24d5cff9",
+          "bytes": 7329,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/bf/cbf4gghyjwnwpa6qbyw7jqna7xpas67rmwuavymg2bqfcusrgrmr.py",
+          "sha256": "7e2ea417c64c002fe543b0654d0b55c9242bf01b2d1697c66c97499488774914",
+          "bytes": 3998,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/bu/cbuagaenm5o5ubsx6axwtfftdi2avujmps4oi5t2d52o6xu7eg52.py",
+          "sha256": "5e1bdcea5790f5077fefd57d6df49b96b22b7ad10d84227f3815cef06831b146",
+          "bytes": 4000,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/by/cbyqyuqqlr4utww2cbllrau726mmztifxfelryp43rfqtexcmjgh.py",
+          "sha256": "6ea25cadaeec293217218fe87cd2f2f986ff9e7b0adb493d849a7d7609243b63",
+          "bytes": 2603,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/ct/cctafo4mn7dr7w37zdrnhwihh4cscyws34jcwp5jhq3yd5tsdppc.py",
+          "sha256": "dde1a384684e200df4ebf4bc5e35eb531992855229ef48197beb81b6d35ea876",
+          "bytes": 3820,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/d3/cd3qbh5g74gxfb3do3uhsbfqgmk2yuxrq2jcofsnapv6jm3642mx.py",
+          "sha256": "a768706f217bf048044b116c955f78baaee5286db26c31141a42708c05dc3bc6",
+          "bytes": 3999,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/ee/ceebmcr6e6hsjd3lphyxkptfsujqhuhdum6uofykf7aajktyqkqo.py",
+          "sha256": "541f710951d597339ba4571b3bdbe3e02b1bf8636b130e0e192bf58b9686caa6",
+          "bytes": 3998,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/el/celrvskvqokzgp6cnri5ehigcipyigwrit7nhyzqjrymsdnw24z2.py",
+          "sha256": "97c8f5574024bf744c7861ae10b8e148cdf7828cf38a20106f533396c5cf85da",
+          "bytes": 4000,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/eq/ceqsjqpcv7rv23oezajutrldaj7a2exudpdiqjskg7jdj6fh3ujy.py",
+          "sha256": "c6dcd951924c0cf5af689c741a9c7301c5fbeb4e37e2f8a75ad79cac9d732738",
+          "bytes": 3977,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/f3/cf3sovvsw3z26rqfevjhdlik4uzkgt7sld5lk5llmvdpdzv62244.py",
+          "sha256": "15558cc53c5645177b8e6e774602f7d93666571963fde58cf9a5f9acfc6b03e8",
+          "bytes": 3821,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/f4/cf4lmt54fqnqt2523ojfzretlehtsq63krtuzjyxv3yeehojue3o.py",
+          "sha256": "a913da4f8af9122854eab56764d951034f18a979ff86854de4acb02e26501493",
+          "bytes": 3413,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/fb/cfbwyx45nz2icw5z4noqgqotf6qt2cql6kqhty76aiirx4eokkqc.py",
+          "sha256": "c72f9a8d460e7f116066203c1a6f2cca5688dd51648700580d3f0624f70a840c",
+          "bytes": 4000,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/gn/cgnt6off5efztczkafdk653nz5a253rfzikh5pwi22obx5cbmiqh.py",
+          "sha256": "7a4822ed7cdfb62ee3874541cf3f4fd5af7a229210819222853d389efcc8f21d",
+          "bytes": 3978,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/hd/chd4rh4xurms4j3k5qw3qofiza3xsu34z7ks53sovtnuwqphwawy.py",
+          "sha256": "d0e5151dc40c74d6313626fff360f24e3373d5af3c616d691e5075b7a2aceec9",
+          "bytes": 3998,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/hf/chfsmzshcx2n3n3rvojz7hnwbocudywpwqxrwiypqnymnyuquexw.py",
+          "sha256": "276bd4e5d8bf6c1fd1e2f85724551dc24b9cd8988eed0cfa8600b02f6d561165",
+          "bytes": 7759,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/i3/ci33giykm5imn4atj5skqnxwcplsy3fplwvot624jiakkuyohubj.py",
+          "sha256": "cfc1902bd14962629c44b03add1d6c7323adac002ef8f767becf032bce7ffa67",
+          "bytes": 3822,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/je/cjem3yushdu2pdfwl5vh2y2hdrggx6czsnufh2t4r5tg4o2dzbwk.py",
+          "sha256": "d5686a6144cb61a3946074841c8c425df76897239b030eeb5e2ecb1c9fd18232",
+          "bytes": 3999,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/jt/cjtx2acz5rprzgthc657eexrmptqoivdydl3erxoaii6fp7qxl4y.py",
+          "sha256": "57b02d18a577f1b757cc18067d5960fc53ce4a2009f401528030ccd7004318ab",
+          "bytes": 3977,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/kx/ckxktrxrkkas7343a77n3c5jsu74hlm3w5wkatv7ux7rtj3mdhr5.py",
+          "sha256": "2229df103f355fad5b8efb4194115fc2598a714816a9f080e18d4035697fdb46",
+          "bytes": 3979,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/mi/cmiupsqovoisxci4faun5bgxgib7zeowujqmovyz7cjwgup3xih7.py",
+          "sha256": "96fa2af60a87b7da1dd03821ce57d5ce93478e42cd01405d894d220dd08067e9",
+          "bytes": 4000,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/ng/cngmf4s3tehiyqjzhmflo2agvow3ckebnuadzpvcpullvyb3s22h.py",
+          "sha256": "05aa354a40495139406f03107a2b58bf2391467da827ad7f7dd7fbc4c1c143c5",
+          "bytes": 14125,
+          "aten_int_mm": true,
+          "aten_addmm": false,
+          "triton_definitions": 2
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/no/cnoohcspnhdctz7checknmqrluwwv5xvqo7rpbyvxuyd2vh2oj6r.py",
+          "sha256": "293ff93c428926a2706be18342afa0e363c7dd24ab037b72894bf15d9d68a2e0",
+          "bytes": 4010,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/pc/cpczzhcmvdplnwoy3phd6wxpfyoln75llzzas3gp53qsf57nlcx3.py",
+          "sha256": "750d4b1c07abd938017e1659263f074741e570bb499ea1367579d1f23ea59df3",
+          "bytes": 3998,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/pl/cpl4p7nkplvqudzgqi25o45qsns4aw2xxspldxcjogmk23wai3zp.py",
+          "sha256": "b0f848409989e3fced50be0ff3805d7c17da18f81cdd0e28d3ab19959f95a489",
+          "bytes": 3820,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/r6/cr6bslqiqulipv5y3ziouzez6aeq2osjf257kppgkdkzqmk7qq5i.py",
+          "sha256": "8756f4675289417a3d898787a02d1488f6ffe1814a1a957299863da711e505a2",
+          "bytes": 3548,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/rc/crc2vjkg4oghwxhbgpzwufxgznculegvyxcfxzoafykyltgkolft.py",
+          "sha256": "5431761723b258e8246c750fa7bc8f8a40b8127c4b9c1d272cc5fc377ec3b90d",
+          "bytes": 3978,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/re/creaed4gcutgk2ltgvjpgu6m6qqfbqx2njahzvepwrtlb7ecen7c.py",
+          "sha256": "cf697ea3a1b41e732932ba8e7ba81713082b1fe211ea2a13bb615ca2da4a8201",
+          "bytes": 3977,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/rm/crmx5ksvtg5gz4yarx4mca4pgzklzbgby7lut7ttfo22cfiij5lf.py",
+          "sha256": "508f00825cd7b62841a04e0738f65218864dee40679ef8d4180e608275b66314",
+          "bytes": 5853,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/s5/cs5m2zia5bizgsflg7q5erv3navfeb63onkqllazcbleixzx22sk.py",
+          "sha256": "a020531ef1d4d97c510bd1d3f16773ca2befe3a49676a6782bae2331ad5f951b",
+          "bytes": 3442,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/sh/cshk6p6q7f3nl5gg3fwol4avne4xmtc773m52anvf3h33367wm5c.py",
+          "sha256": "55a14fba05fb30a76a2823672f237540b49baf8a805c87be04c984f7ab953ee2",
+          "bytes": 3820,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/su/csubwjeeworil2eswquncgxcfh75fprfoa5wrb6whkzmaczf5ebr.py",
+          "sha256": "88847ec2c73ce94570c7d26dc73f3456cd063c751713965db9cc83fefad96467",
+          "bytes": 3980,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/tp/ctpwwt22xjlrzuegq7wdgtqwsnh63hs7gn3xluuohus4itjjnesa.py",
+          "sha256": "60b6cf9d1c612a381099f5e1cfe2b4010c98015efcb841a1d234d095437f5bd2",
+          "bytes": 3819,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/ui/cuiskjsjdnx235uj5qhawllxm4c5p7xnmwry5df35kn5kuggbqk4.py",
+          "sha256": "75f1ddc9fbebda41c9eb808f12fc4ba4edc618890af64863d0f9ff3552782ef4",
+          "bytes": 8418,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/vm/cvmphgzoi22qa36nro3n6yebxlytyedvvextwojydvlzqdezqklt.py",
+          "sha256": "4ceca4ed608d4b3ad162c2d176e84ea95263fcfabe223a16165d7dd3718975fd",
+          "bytes": 4057,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/vx/cvxww3o5kfwhiuajlcld6hsrn2ldofxjebwthiu2r3g32nlk5jxm.py",
+          "sha256": "26b4436dd1365fb8f2190671a20a20f9646fe440689417f98080a51437993256",
+          "bytes": 3820,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/vy/cvyfukwoaeo6meqxzkii6z7zcet7k376empupx7qax6qciaexhvf.py",
+          "sha256": "95d1fc8d08daf262d12ca2c8c07333b38f88a09737238b60906413583feccdfc",
+          "bytes": 3819,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/vz/cvz6mwv2fldccc3n4o5cp5q72id4e2iblj2b736jhcbgzcfkwppz.py",
+          "sha256": "25a5be5fee008c1dba6ec949764850b433d3b66690f4b9d39a7104c10163cee8",
+          "bytes": 3999,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/wf/cwfu3x7bdnxzdohtu455e35xy2a3w2yl6k7peck25ym37g7lyazy.py",
+          "sha256": "a3e387eb4da18e0cac76af25e8c919ffeab22ac87e6792aaa59fceedd920a390",
+          "bytes": 3998,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/wk/cwkz7mnx54mrzzddc5vop3w3faunx46ag7zt4aw5672uohyxpey3.py",
+          "sha256": "e8e73f91eda82b06ccf20bbf927964cee810312c95c01173b1fcc6bc069b08af",
+          "bytes": 3999,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/x6/cx6k3pfsmn7ynfhejijdk6i4lmhudfz7pef53m7lyq2jnsehjzbq.py",
+          "sha256": "614451267403482322ea85aefa5e5d9233c05223e1416ab8841172634fe4455a",
+          "bytes": 3998,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/xf/cxfcssjizhh4m2mkw744eb3gxnf7iud34f5jaw3gzj2kwotdikjr.py",
+          "sha256": "8639cb23d8480b79fc5214d7372f1427abe4b7028cd3a4761943cd5d24a93377",
+          "bytes": 3999,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/xj/cxjmhvj4xd5n5tpeh3vywny5polcs5qprczjbyjxbulxd65mmwd7.py",
+          "sha256": "13222d00150dfbadb964e9906c74dee3d0e1e53be54347f12f4e8163cd5e3ee0",
+          "bytes": 3837,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/xz/cxzo6nczpbzrh7xas7appcyylbjjlwf2hxkznf24l4mg7gmkxvgv.py",
+          "sha256": "d48b56d13d0610a9014f2f85475270c49a3a67c428fbb50361b918255d71f20f",
+          "bytes": 2269,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/ym/cympkriuzfax3syfs53pxsnymqpjq7ee7bau2tublihzqhcrtrjo.py",
+          "sha256": "e16511e3ba159d0c6439d575733560eaa6d025877f7e7dee32a44ebba8428768",
+          "bytes": 3822,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape0/inductor/ze/czeefdfeybgns3kem44l6lyzdbp5n4p5feqyn23hnel6lnpbenkf.py",
+          "sha256": "6099649a32adf5d0de95597d523b796f4af887c6c05af4e1c93a84533c7b524f",
+          "bytes": 3977,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        }
+      ],
+      "finished_utc": 1793801449.0860057,
+      "process_exit_code": 0,
+      "process_timeout": false
+    },
+    {
+      "index": 1,
+      "status": "completed",
+      "started_utc": 1793801450.3570502,
+      "validity": {
+        "native_replay_bytes_equal": true,
+        "compiled_bf16_numerically_valid": true,
+        "compiled_int32_all_equal": true,
+        "int64_sample_equal": true,
+        "int_range_and_bound": true,
+        "W8A8_default": true,
+        "W8A8_fused": true
+      },
+      "compile_first_call_s": {
+        "BF16_eager": 0.1050091499928385,
+        "BF16_tuned": 6.008797703019809,
+        "W8A8_default": 0.4768885299563408,
+        "W8A8_fused": 5.703524355951231
+      },
+      "timing": [
+        {
+          "round": 0,
+          "order": [
+            "BF16_eager",
+            "BF16_tuned",
+            "W8A8_default",
+            "W8A8_fused"
+          ],
+          "BF16_eager": {
+            "wall_ms": 0.7933676999527961,
+            "gpu_ms": 0.7906303882598877,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 84934656
+          },
+          "BF16_tuned": {
+            "wall_ms": 0.7689742953516543,
+            "gpu_ms": 0.7676928043365479,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 83886080
+          },
+          "W8A8_default": {
+            "wall_ms": 1.0989228961989284,
+            "gpu_ms": 1.0976256370544433,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251677184
+          },
+          "W8A8_fused": {
+            "wall_ms": 0.7810376991983503,
+            "gpu_ms": 0.7796735763549805,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251658240
+          }
+        },
+        {
+          "round": 1,
+          "order": [
+            "BF16_tuned",
+            "W8A8_default",
+            "W8A8_fused",
+            "BF16_eager"
+          ],
+          "BF16_tuned": {
+            "wall_ms": 0.7729267003014684,
+            "gpu_ms": 0.7704576015472412,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 83886080
+          },
+          "W8A8_default": {
+            "wall_ms": 1.0974340955726802,
+            "gpu_ms": 1.0960895538330078,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251677184
+          },
+          "W8A8_fused": {
+            "wall_ms": 0.7822450017556548,
+            "gpu_ms": 0.7809023857116699,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251658240
+          },
+          "BF16_eager": {
+            "wall_ms": 0.7954214990604669,
+            "gpu_ms": 0.7941120147705079,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 84934656
+          }
+        },
+        {
+          "round": 2,
+          "order": [
+            "W8A8_default",
+            "W8A8_fused",
+            "BF16_eager",
+            "BF16_tuned"
+          ],
+          "W8A8_default": {
+            "wall_ms": 1.1053709022235125,
+            "gpu_ms": 1.102847957611084,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251677184
+          },
+          "W8A8_fused": {
+            "wall_ms": 0.7838599965907633,
+            "gpu_ms": 0.7826432228088379,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251658240
+          },
+          "BF16_eager": {
+            "wall_ms": 0.7985313015524298,
+            "gpu_ms": 0.7972864151000977,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 84934656
+          },
+          "BF16_tuned": {
+            "wall_ms": 0.7717334025073797,
+            "gpu_ms": 0.7704576015472412,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 83886080
+          }
+        },
+        {
+          "round": 3,
+          "order": [
+            "W8A8_fused",
+            "BF16_eager",
+            "BF16_tuned",
+            "W8A8_default"
+          ],
+          "W8A8_fused": {
+            "wall_ms": 0.7880768971517682,
+            "gpu_ms": 0.7865344047546386,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251658240
+          },
+          "BF16_eager": {
+            "wall_ms": 0.7992166036274284,
+            "gpu_ms": 0.7979008197784424,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 84934656
+          },
+          "BF16_tuned": {
+            "wall_ms": 0.7713527011219412,
+            "gpu_ms": 0.7701504230499268,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 83886080
+          },
+          "W8A8_default": {
+            "wall_ms": 1.1016478994861245,
+            "gpu_ms": 1.1003904342651367,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251677184
+          }
+        },
+        {
+          "round": 4,
+          "order": [
+            "BF16_eager",
+            "BF16_tuned",
+            "W8A8_default",
+            "W8A8_fused"
+          ],
+          "BF16_eager": {
+            "wall_ms": 0.804121803957969,
+            "gpu_ms": 0.8014847755432128,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 84934656
+          },
+          "BF16_tuned": {
+            "wall_ms": 0.7724007009528577,
+            "gpu_ms": 0.7711743831634521,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 83886080
+          },
+          "W8A8_default": {
+            "wall_ms": 1.1012091010343283,
+            "gpu_ms": 1.0998784065246583,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251677184
+          },
+          "W8A8_fused": {
+            "wall_ms": 0.7843889994546771,
+            "gpu_ms": 0.7831552028656006,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251658240
+          }
+        },
+        {
+          "round": 5,
+          "order": [
+            "BF16_tuned",
+            "W8A8_default",
+            "W8A8_fused",
+            "BF16_eager"
+          ],
+          "BF16_tuned": {
+            "wall_ms": 0.7784088025800884,
+            "gpu_ms": 0.7768064022064209,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 83886080
+          },
+          "W8A8_default": {
+            "wall_ms": 1.1024634004570544,
+            "gpu_ms": 1.1011072158813477,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251677184
+          },
+          "W8A8_fused": {
+            "wall_ms": 0.7849780959077179,
+            "gpu_ms": 0.7836671829223633,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251658240
+          },
+          "BF16_eager": {
+            "wall_ms": 0.8006391988601536,
+            "gpu_ms": 0.7993343830108642,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 84934656
+          }
+        },
+        {
+          "round": 6,
+          "order": [
+            "W8A8_default",
+            "W8A8_fused",
+            "BF16_eager",
+            "BF16_tuned"
+          ],
+          "W8A8_default": {
+            "wall_ms": 1.1095105030108243,
+            "gpu_ms": 1.106227207183838,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251677184
+          },
+          "W8A8_fused": {
+            "wall_ms": 0.7846035005059093,
+            "gpu_ms": 0.7833600044250488,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251658240
+          },
+          "BF16_eager": {
+            "wall_ms": 0.8005060022696853,
+            "gpu_ms": 0.799232006072998,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 84934656
+          },
+          "BF16_tuned": {
+            "wall_ms": 0.7733473961707205,
+            "gpu_ms": 0.7720960140228271,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 83886080
+          }
+        },
+        {
+          "round": 7,
+          "order": [
+            "W8A8_fused",
+            "BF16_eager",
+            "BF16_tuned",
+            "W8A8_default"
+          ],
+          "W8A8_fused": {
+            "wall_ms": 0.7879115990363061,
+            "gpu_ms": 0.7859200000762939,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251658240
+          },
+          "BF16_eager": {
+            "wall_ms": 0.7986626005731523,
+            "gpu_ms": 0.7973887920379639,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 84934656
+          },
+          "BF16_tuned": {
+            "wall_ms": 0.7720681023783982,
+            "gpu_ms": 0.7708672046661377,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 83886080
+          },
+          "W8A8_default": {
+            "wall_ms": 1.100710197351873,
+            "gpu_ms": 1.0992639541625977,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251677184
+          }
+        },
+        {
+          "round": 8,
+          "order": [
+            "BF16_eager",
+            "BF16_tuned",
+            "W8A8_default",
+            "W8A8_fused"
+          ],
+          "BF16_eager": {
+            "wall_ms": 0.7984081050381064,
+            "gpu_ms": 0.796672010421753,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 84934656
+          },
+          "BF16_tuned": {
+            "wall_ms": 0.7724647002760321,
+            "gpu_ms": 0.7711743831634521,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 83886080
+          },
+          "W8A8_default": {
+            "wall_ms": 1.1011750961188227,
+            "gpu_ms": 1.0998784065246583,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251677184
+          },
+          "W8A8_fused": {
+            "wall_ms": 0.7824864005669951,
+            "gpu_ms": 0.7811071872711182,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251658240
+          }
+        },
+        {
+          "round": 9,
+          "order": [
+            "BF16_tuned",
+            "W8A8_default",
+            "W8A8_fused",
+            "BF16_eager"
+          ],
+          "BF16_tuned": {
+            "wall_ms": 0.7821238017641008,
+            "gpu_ms": 0.7795711994171143,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 83886080
+          },
+          "W8A8_default": {
+            "wall_ms": 1.1062695004511625,
+            "gpu_ms": 1.104793643951416,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251677184
+          },
+          "W8A8_fused": {
+            "wall_ms": 0.78446309780702,
+            "gpu_ms": 0.7832575798034668,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251658240
+          },
+          "BF16_eager": {
+            "wall_ms": 0.8026981027796865,
+            "gpu_ms": 0.8014847755432128,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 84934656
+          }
+        },
+        {
+          "round": 10,
+          "order": [
+            "W8A8_default",
+            "W8A8_fused",
+            "BF16_eager",
+            "BF16_tuned"
+          ],
+          "W8A8_default": {
+            "wall_ms": 1.1120704002678394,
+            "gpu_ms": 1.1100159645080567,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251677184
+          },
+          "W8A8_fused": {
+            "wall_ms": 0.8021830988582224,
+            "gpu_ms": 0.800870418548584,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251658240
+          },
+          "BF16_eager": {
+            "wall_ms": 0.8057628001552075,
+            "gpu_ms": 0.8039423942565918,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 84934656
+          },
+          "BF16_tuned": {
+            "wall_ms": 0.7761196000501513,
+            "gpu_ms": 0.7748608112335205,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 83886080
+          }
+        },
+        {
+          "round": 11,
+          "order": [
+            "W8A8_fused",
+            "BF16_eager",
+            "BF16_tuned",
+            "W8A8_default"
+          ],
+          "W8A8_fused": {
+            "wall_ms": 0.7886169012635946,
+            "gpu_ms": 0.7865344047546386,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251658240
+          },
+          "BF16_eager": {
+            "wall_ms": 0.799701502546668,
+            "gpu_ms": 0.7984127998352051,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 84934656
+          },
+          "BF16_tuned": {
+            "wall_ms": 0.7731972029432654,
+            "gpu_ms": 0.7719935894012451,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 83886080
+          },
+          "W8A8_default": {
+            "wall_ms": 1.102266099769622,
+            "gpu_ms": 1.1010047912597656,
+            "common_resident_bytes": 64541184,
+            "incremental_peak_bytes": 251677184
+          }
+        }
+      ],
+      "model_forwards": 0,
+      "compiler_config": {
+        "max_autotune": false,
+        "max_autotune_gemm": false,
+        "search_autotune_cache": false,
+        "force_fuse_int_mm_with_mul": false,
+        "epilogue_fusion": true
+      },
+      "phase": "profile_warmed_arms",
+      "shape_MNK": [
+        4680,
+        8960,
+        1536
+      ],
+      "module": "model.blocks.0.ffn.0",
+      "capture": {
+        "path": "/home/acorn0415/sfq_data/linear_w8a8_stage1/4680x8960x1536.pt",
+        "sha256": "95986362e17da14cbd21024dc40113b12fdffa251caa4fb6759cdd88fe2117d2",
+        "bytes": 125787720,
+        "module": "model.blocks.0.ffn.0",
+        "shape_MNK": [
+          4680,
+          8960,
+          1536
+        ]
+      },
+      "gpu": "NVIDIA GeForce RTX 4090",
+      "torch": "2.6.0+cu124",
+      "cuda": "12.4",
+      "static_weight_prepare_s": 0.03750888002105057,
+      "options_by_arm": {
+        "BF16_tuned": {
+          "max_autotune_gemm": true,
+          "max_autotune_gemm_backends": "ATEN,TRITON",
+          "triton.cudagraphs": false
+        },
+        "W8A8_default": {},
+        "W8A8_fused": {
+          "max_autotune_gemm": true,
+          "max_autotune_gemm_backends": "ATEN,TRITON",
+          "triton.cudagraphs": false,
+          "force_fuse_int_mm_with_mul": true
+        }
+      },
+      "integer_validation_compile_s": 3.48508292902261,
+      "quant_validation_compile_s": 0.13784161099465564,
+      "compiled_bf16_bytes_equal": true,
+      "compiled_bf16_metric": {
+        "rel_l2": 0.0,
+        "max_abs": 0.0,
+        "finite": true
+      },
+      "isolated_compiled_quant": {
+        "int8_different_elements": 0,
+        "scale_max_abs": 0.0,
+        "scope": "standalone compiled quant; not an observation inside the full compiled invocation"
+      },
+      "metrics": {
+        "W8A8_default": {
+          "vs_quantized_fp32": {
+            "rel_l2": 0.0016591191524639726,
+            "max_abs": 0.0078122615814208984,
+            "finite": true
+          },
+          "vs_bf16": {
+            "rel_l2": 0.011846846900880337,
+            "max_abs": 0.0546875,
+            "finite": true
+          },
+          "pointwise_valid": true,
+          "shape_valid": true,
+          "dtype_valid": true
+        },
+        "W8A8_fused": {
+          "vs_quantized_fp32": {
+            "rel_l2": 0.0016591191524639726,
+            "max_abs": 0.0078122615814208984,
+            "finite": true
+          },
+          "vs_bf16": {
+            "rel_l2": 0.011846846900880337,
+            "max_abs": 0.0546875,
+            "finite": true
+          },
+          "pointwise_valid": true,
+          "shape_valid": true,
+          "dtype_valid": true
+        }
+      },
+      "fused_vs_default_w8a8": {
+        "rel_l2": 0.0,
+        "max_abs": 0.0,
+        "finite": true
+      },
+      "validation_artifact": {
+        "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/validation.pt",
+        "sha256": "599b13ccc6374753922a906c9a9dc1ca20ef14f961ba86fe74a52b143ba7add5",
+        "bytes": 699141794
+      },
+      "all_valid": true,
+      "comparisons": {
+        "BF16_eager": {
+          "reductions_percent": [
+            1.5541344518032907,
+            1.656542766366742,
+            1.837286144343231,
+            1.393828209411574,
+            2.453957150044306,
+            1.9560749679421008,
+            1.9865562180280238,
+            1.3461255765739866,
+            1.9941812176808238,
+            2.271713974347267,
+            0.4442624177109722,
+            1.38609234167677
+          ],
+          "median_percent": 1.7469144553549865,
+          "bootstrap_median_95ci_percent": [
+            1.389960275544172,
+            1.9903687178544238
+          ],
+          "passes": false
+        },
+        "BF16_tuned": {
+          "reductions_percent": [
+            -1.5687655516728904,
+            -1.2055866941266258,
+            -1.571344980531375,
+            -2.1681645770477598,
+            -1.5520828097424388,
+            -0.8439387254942643,
+            -1.455504265085028,
+            -2.052085380693902,
+            -1.2973667647702136,
+            -0.29909536541949944,
+            -3.3581807245155026,
+            -1.9942775609679275
+          ],
+          "median_percent": -1.5604241807076646,
+          "bootstrap_median_95ci_percent": [
+            -2.023181470830915,
+            -1.2514767294484197
+          ],
+          "passes": false
+        }
+      },
+      "performance_screen_passes": false,
+      "fusion_verification": "pending_saved_source_and_trace_audit",
+      "trace": {
+        "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/trace.json",
+        "sha256": "e61a43c82c65e90034ed8b47b39da6ede24d5c9f157eb8b6ca580ec5c9ef388e",
+        "bytes": 29191
+      },
+      "generated_code": [
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/24/c246y76sdclfanc2jwl3cot5far2pyc4yvcdtd6z5pjebzpchnj2.py",
+          "sha256": "e764e3b7b2ce9c508743e041ffecd111b1be36b49c7177ace4d53e180aff100f",
+          "bytes": 19553,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 3
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/4v/c4vp5eiczcjclmgdn3fe36eye5cbfga7xncpcdtrq4cosjxeac6u.py",
+          "sha256": "94e264a93a9ad5700078e13ff4869d32d93a6714c66b48c2c6bc15b052e02782",
+          "bytes": 4000,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/4w/c4wqj54quu3djqnigtauwzrnhtzdvqhbydasja7yx2wylrel3ykh.py",
+          "sha256": "369e6267e8956a1b6de742476eae6d1e6d9af1b4d829a6271d5e2979bdf3acfc",
+          "bytes": 3998,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/53/c53qubzjkuqwxpq2raw4s7rnfmcpsawnbctd7kmf4xdyhzccxnrn.py",
+          "sha256": "9cd8f7deabc1cbcde50461749d0c7ea81af97c22e24f30caf628e7bf8d107d40",
+          "bytes": 3977,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/5j/c5jwkmmapcshpckiojy7fmwp56pejy6ziegux7cg7gd7rgra3uvt.py",
+          "sha256": "802b55a2bf97378f101e6bf516430c44c257269d0296b668acf853645dfedde3",
+          "bytes": 3998,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/5o/c5os56wknr3b44vaskdoi52fckx7evwhtk3taxgktc4tg7kzzjth.py",
+          "sha256": "ceaa427bd59f99b6d25190b0728ee302187810f9f3095cce8533c9ee2bde1842",
+          "bytes": 8418,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/5x/c5xmgqv34c5m7hvypchn3i6c6cw7shmeamtifdjyycnv3m37yjuh.py",
+          "sha256": "6d44aa65c8a4b270cf85427c8551f66108e23798e60c55cf298db96c9c9d6a90",
+          "bytes": 3539,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/64/c64okhrb7k7qnzan7htglxvrty6glpeemjazv2l2zvs4yljza5c2.py",
+          "sha256": "5cc10ce1d8ed9f78307ea63793d65b4f889e8c1d4248fbb1eaf9bab8662ffb8f",
+          "bytes": 3978,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/6f/c6fwzwp7azb65xjwgbcsbzo6mthtizyxcq5x2hcqdai36aufitai.py",
+          "sha256": "6f7eb455491eec82d2f9602b43d2cf7c36a8f15c9288e2673d8018dcb8fd65bd",
+          "bytes": 3819,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/6s/c6s3huwmmuf3i6bb7c4v6eauz5kkr5ru6jqja3egvowi3na62cld.py",
+          "sha256": "f02f04be87fd3f91821092da4758caa42b784ecd55b14f3dbe35667999c1daf8",
+          "bytes": 3998,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/74/c74d6lsfj6t4q2by2gaaxpsasyif75ikq6m5wojy745d427ag7xs.py",
+          "sha256": "001f3de3a87b897f9bbf88652b3b9aef158f5b208386bf2dc3b06b016b79fc1b",
+          "bytes": 3999,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/75/c752oc4kowloaesqridx5hs5lmikhtgotinu2fqa42muwdkwstsj.py",
+          "sha256": "048f568fe6100413fc8376e96a883dfec529bc83d26881c6ab0b153d25ec30b4",
+          "bytes": 3822,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/7m/c7mx5vcz2xpcu6rqto5vc25u2ig5tltcwi3c6tkfn24eiuoi3o7c.py",
+          "sha256": "5afc518da73290757219bfe588ff7164b3ea9e476a04394fa22188a413c0129f",
+          "bytes": 3819,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/7n/c7nnepo6qg3c3zreb45es7iriudd6pvwlrx5d3rtlyebe6xebm7l.py",
+          "sha256": "ee29d5ddd46868f738237f7eac8b4fe3da9b185b80b2c72d1dd22d2d03b3f666",
+          "bytes": 3998,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/a5/ca5ne6nqsyflftjc6tcyv4kjjii7qzah65sbq3rzekbrsticztng.py",
+          "sha256": "f96e025768dbe85d214713a439952aca4c4ffed9bc2e00ec5972a75b32951fb1",
+          "bytes": 3999,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/ac/cacdxuaax7qa2362u3ft273wexa5yhsx6cjmbfq2edl7wewlu5fr.py",
+          "sha256": "e1cc0602566b4dba8c5bfc63a22ed7e322d2957eb5a884836040a7637ca5310f",
+          "bytes": 3977,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/an/can3anb4idgib5zzo7awoe4lozsinoxmttagbwdd6xhhahplrlum.py",
+          "sha256": "7ee1cd8a9807c59b7267c187c5ca017c894e593e654700b9f428f3f19a625d67",
+          "bytes": 3820,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/bj/cbjqsqm3xaxi2zdl4c6qovrklo5ubqkyh7umb3crzgnu5p2nbjkh.py",
+          "sha256": "dbe2994f1378623382e8813d8de718b354e982fd84c3bd336d3a0fd933bfac45",
+          "bytes": 3999,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/cc/cccus4qssyrmk36ycpsa5yswrbxud7ocz252v7uvrq6jtfnd6ncn.py",
+          "sha256": "aaa09ca67eae1ebf5749f09b3d1fb0258dc28d383b3c0eb5d2c9ad9a7f267955",
+          "bytes": 4000,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/ch/cchs5bom3vw6sxcxuk6nwzkjhauhpi6prjvzcikynhnuwuxunwyf.py",
+          "sha256": "c6b625909f0e806eeeffd7deec79548b46e7f943cf6c1e38bc230539d0231502",
+          "bytes": 4010,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/dg/cdgs4qkzcbbypaeht4imi3rxilqishdjc736f55yxalzvqvtmvti.py",
+          "sha256": "b50e6378e81ec2b8282cd88c24d7260fcd9775f5cfa68c7b5766200177ac0538",
+          "bytes": 4057,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/ed/cedry3wrpvx24ksl4dytuni4suqbz5mvvc7tz4gr2ukcvomlwtz7.py",
+          "sha256": "754fcb6f84a7baca04c6104b37e06fdbb0e34bdb151f50cff8f54ea617a8703c",
+          "bytes": 4000,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/ey/cey3sgmzfmt3f43kv6chiye2h6chcc7jxl2q3iavmgnz5tsxacgi.py",
+          "sha256": "b4a79827ee0ba5bd4b45131d6e23d73d2ce0093f624f0d6910b9a85ae65cf15c",
+          "bytes": 3979,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/f4/cf4lmt54fqnqt2523ojfzretlehtsq63krtuzjyxv3yeehojue3o.py",
+          "sha256": "a913da4f8af9122854eab56764d951034f18a979ff86854de4acb02e26501493",
+          "bytes": 3413,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/f7/cf7efzoj6zabdhli4zuq5wia7jxglfh3znwiuncjbpfax6nxh557.py",
+          "sha256": "36a0fee789c43164d63f5f1a0816370472dd59790f981e66113efaeb375c91bb",
+          "bytes": 7329,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/fm/cfm3qv4ojjwwhr4vndzgtc34pq3tvhu7ijnm5p3kyh7sh4nxxnmg.py",
+          "sha256": "4dc2d4dfc8ba300d45ee7c47fbdd5fefc81071757917a8a5b7f29a89cbddc2e8",
+          "bytes": 3822,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/ia/ciajbjjsrzcezktbokhseou3fmjej5tl4e2ussganjuvaznhrv5k.py",
+          "sha256": "b79b5a665632e807ee7e9a82635424fa26bb89751e25a4b3b0f5ee23edd1d523",
+          "bytes": 2258,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/ip/cipfgnsham7ayyrxdxhtfkk4obx3nj3742rei5wxleinp56vlzti.py",
+          "sha256": "a00c95cde9fdcc4636c6c0d7ae208c36c3d041320aefc40a588771f9bf9e9f77",
+          "bytes": 14118,
+          "aten_int_mm": true,
+          "aten_addmm": false,
+          "triton_definitions": 2
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/j7/cj7ragzyzrvaqdcpynvohvu5ugzusopc3kv5nyndbkznrmxlqsfa.py",
+          "sha256": "e10b591b1bf2e62b9e62145c808593efbb458bb63472e01ef607341d947b05bf",
+          "bytes": 3978,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/jj/cjjhf2uhoxzrcprreydtmx3vxnvutizakwt35z34wtdn6rzbj5jv.py",
+          "sha256": "70e8cb7984d361a5f48c94205116ed15ac070b7bd98dc660679d837df2a038b0",
+          "bytes": 3820,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/k2/ck2c2xngrbtz2wxizhqi56yrucfh4ezs7qc52vampdaugp7lm44a.py",
+          "sha256": "efc43f091f9840cca9f621d4c83d7b80d415970f26fd322396e7d6a53aca2114",
+          "bytes": 3999,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/k3/ck3moji4jd6vabvqgsyvpj7pd6aqncqjr7eumk4jbe7e7xpdyftc.py",
+          "sha256": "6ae5992b909779f2590c12a895c9f75ca7d09ed70a1bd3a891aa15cfa590288c",
+          "bytes": 3980,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/m2/cm2zbfpjvk25riyrzsgyxofbd4zz6mhuzjubw6mfb2l6ncer3q5n.py",
+          "sha256": "c1fcf0346d23a707c65b28c062d9a6607fcca1e1a55e0fee779f90dfbb51a1cc",
+          "bytes": 3977,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/ng/cng2semgzoo6og6p6jsez7s5q74f7qx7rm3vitvelcdgoahhpkvb.py",
+          "sha256": "b2953838b4091e79fdd39f782e268718689f7d528d16b43f34d13b8eab8a8745",
+          "bytes": 3999,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/o5/co567jekndbsjc3yeslx5xsk33tjklbipntqfqgq4nzvtowjdtuc.py",
+          "sha256": "9995ab068564c60c7ca50de245e54f362930c2f89a60a83d68b584e734282a31",
+          "bytes": 3998,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/ol/coltsx65ds6kenybi3usiupuztepti3xyshme3pqftjpycmiktmq.py",
+          "sha256": "4c0ddd032ae901b9cc1868bdd57d1b9db54dace585946f705d9c3629fc5172cc",
+          "bytes": 3819,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/p4/cp4jdui7mvlkqpexdbujqoxt4ybvxbd2h42osk5nkdh54dbkkgt5.py",
+          "sha256": "05c39e57f45e0b69e624030fba4225bfc0e8758967213ab4bc311bc8a69e21cf",
+          "bytes": 3999,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/rf/crf2erpzygh7o2ttgkni4wrqzza2szx2ivzepjusoryb22zclhwt.py",
+          "sha256": "1d1133308e0fc01dd15971f162c986a88a5b4e3e718b79f9076b819bee13bf2d",
+          "bytes": 3837,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/s5/cs5m2zia5bizgsflg7q5erv3navfeb63onkqllazcbleixzx22sk.py",
+          "sha256": "a020531ef1d4d97c510bd1d3f16773ca2befe3a49676a6782bae2331ad5f951b",
+          "bytes": 3442,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/sw/cswisvaydueukcnmqzvr7eeqybhte6s6dicu4dobuoupfhqtekjh.py",
+          "sha256": "39c5f3ac93ead34a9bea8a137caa876b07b80a256cfd634f3d574e549d8e0cb6",
+          "bytes": 3999,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/t3/ct3kfulhcnzajkxgysfwuh7qq6m5kfqbojytmpbj7x264ztrgbav.py",
+          "sha256": "09bea3f2c5dbcca36604b818524891ce8605246a6c95776edaceaab1394a5be3",
+          "bytes": 3999,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/te/cte2vykl4xf7ccdkeql65vycmakzdte62mtto2ngr5hwzhpuduya.py",
+          "sha256": "d76c6bae5631d923ad7dc997a5001be24e6452395875a15acb01914fc3edc357",
+          "bytes": 3998,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/tk/ctkb2g54mpxswpxnccjyp773h6txogmjqlezhwhgqf3iz7yzsyuz.py",
+          "sha256": "f29fc0f5659a472930e98a81c8f0b216c1df9b07282c33d561621982c1d54be6",
+          "bytes": 3820,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/to/ctodfsl4lvxxe2s73dyy4iqeiyymw5ur7hwqejbvybsgcbifgr3a.py",
+          "sha256": "ffc785f9bc2669f5835ee8b2fe86f898d1ff25ecd2fb5f3edb0ea8c7abac1632",
+          "bytes": 5853,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/ug/cug26ldiljzpkf4q7oq6gcphipgof42h6g7qeiwntbyfgkn5f7mc.py",
+          "sha256": "715bf00b7305ac0ae88990e2681b825d9cbb3967e0698c4ed499090b80d0e239",
+          "bytes": 4000,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/ui/cuivdg5bkiyratumhmmqkzdubub6d7uj3kdvii2gzf2ropuqcadg.py",
+          "sha256": "7f2e4aae488898c681d0687cc8d9ec088d0b81c926ea33eb6dd18a415c6d6c40",
+          "bytes": 3820,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/vc/cvcoah333gfeph5u74d355n3iapr23x4qliippc5m7pv53afuydj.py",
+          "sha256": "16f963cb96e37a63a3b004f9d5782940ff72c2806cfc29edd1dc31279186f308",
+          "bytes": 7760,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/vs/cvsiirewv26jy6wabxvpd3s7udvi6li4coxm43ocswvmuvybr5ul.py",
+          "sha256": "0aee5ae5d2a30fa9cbf17535140f5ca15ecb67848c0db2f8e70d8fef405e930f",
+          "bytes": 4000,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/wz/cwzdnqccmkmrk53c3ujoqhlznnme4sf6pznp3hqo5qlhgaviiuco.py",
+          "sha256": "f14d03a322a0eed6542e34d652b4938aa70c80af121e3f182b0c4f27a3ed24dc",
+          "bytes": 3821,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/x5/cx5v7pyconmxfchvmt7uotybynnxntyulvyitfouwj3lo4mp4bqv.py",
+          "sha256": "a148f5f1be3be756f7a56b15622e2211d7c9036dd208e827e45be9515c5c3f05",
+          "bytes": 3978,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/xd/cxdzelfywefdifpdd2cvdh75gkcpzsj77qrlp6nzjrn2wkujlsre.py",
+          "sha256": "542e72f5a6e9766bfa150707192cdc8e79a51c8ec2c5f2dd3b8b746f2a44eead",
+          "bytes": 3980,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/xh/cxhh2kzimk22zzak5hgztimrfkmdxqjjtgjtqjydoepvnydvmbpn.py",
+          "sha256": "dbe35aba202e57a5069a0667fadb9568f95d93e825b9f0ff6078e329e03b4633",
+          "bytes": 3977,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/xj/cxjr3el2tmrpsom7xjbvrffkpbfjnspwojeqvhbdin4ifbkio3d3.py",
+          "sha256": "d1db8625740d79148a804e9863fc2b818e33093c40f0711747fbf5659c454e4d",
+          "bytes": 2593,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/yd/cydj3u24txhqpibog66rejaqjptqifxb3mfbuec73lch4ye3gwpr.py",
+          "sha256": "ccc1a05318bbf1250b646078f48001744e667ad1addf017424dccd02daa435af",
+          "bytes": 3819,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/zi/czi7shyh7nt5yjuth7iglfpikhj34widhhrypwovgyngf6mnkjh4.py",
+          "sha256": "2f3f746cad3cd344e2ab7f2ac2afe2651798812fcb8a4f9b6638b7233906edf9",
+          "bytes": 3978,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape1/inductor/zj/czjqavimzziq6ct56z24aonu5m5sacotjg7vtsi4lhxhowj2c7ek.py",
+          "sha256": "dfa0a9f0f9fc995450df20e02c5a27c1d03118ab421dbca3f225dec7369c06e1",
+          "bytes": 3539,
+          "aten_int_mm": false,
+          "aten_addmm": false,
+          "triton_definitions": 1
+        }
+      ],
+      "finished_utc": 1793801468.5253446,
+      "process_exit_code": 0,
+      "process_timeout": false
+    },
+    {
+      "index": 2,
+      "status": "invalid",
+      "started_utc": 1793801469.8073695,
+      "validity": {
+        "native_replay_bytes_equal": true,
+        "compiled_bf16_numerically_valid": false,
+        "compiled_int32_all_equal": true,
+        "int64_sample_equal": true,
+        "int_range_and_bound": true,
+        "W8A8_default": true,
+        "W8A8_fused": true
+      },
+      "compile_first_call_s": {
+        "BF16_eager": 0.10548852296778932,
+        "BF16_tuned": 6.069439908023924,
+        "W8A8_default": 0.4559281980036758,
+        "W8A8_fused": 5.72819878696464
+      },
+      "timing": [],
+      "model_forwards": 0,
+      "compiler_config": {
+        "max_autotune": false,
+        "max_autotune_gemm": false,
+        "search_autotune_cache": false,
+        "force_fuse_int_mm_with_mul": false,
+        "epilogue_fusion": true
+      },
+      "phase": "numerical_validation",
+      "shape_MNK": [
+        4680,
+        1536,
+        8960
+      ],
+      "module": "model.blocks.0.ffn.2",
+      "capture": {
+        "path": "/home/acorn0415/sfq_data/linear_w8a8_stage1/4680x1536x8960.pt",
+        "sha256": "66eb3214b07662485959ef3db381a2ec4737455bba5ff6d53be34bc194460350",
+        "bytes": 125772872,
+        "module": "model.blocks.0.ffn.2",
+        "shape_MNK": [
+          4680,
+          1536,
+          8960
+        ]
+      },
+      "gpu": "NVIDIA GeForce RTX 4090",
+      "torch": "2.6.0+cu124",
+      "cuda": "12.4",
+      "static_weight_prepare_s": 0.03813327697571367,
+      "options_by_arm": {
+        "BF16_tuned": {
+          "max_autotune_gemm": true,
+          "max_autotune_gemm_backends": "ATEN,TRITON",
+          "triton.cudagraphs": false
+        },
+        "W8A8_default": {},
+        "W8A8_fused": {
+          "max_autotune_gemm": true,
+          "max_autotune_gemm_backends": "ATEN,TRITON",
+          "triton.cudagraphs": false,
+          "force_fuse_int_mm_with_mul": true
+        }
+      },
+      "integer_validation_compile_s": 3.5028986140387133,
+      "quant_validation_compile_s": 0.15398724999977276,
+      "compiled_bf16_bytes_equal": false,
+      "compiled_bf16_metric": {
+        "rel_l2": 0.0023982818238437176,
+        "max_abs": 0.125,
+        "finite": true
+      },
+      "isolated_compiled_quant": {
+        "int8_different_elements": 571,
+        "scale_max_abs": 0.0,
+        "scope": "standalone compiled quant; not an observation inside the full compiled invocation"
+      },
+      "metrics": {
+        "W8A8_default": {
+          "vs_quantized_fp32": {
+            "rel_l2": 0.0016581251984462142,
+            "max_abs": 0.06253814697265625,
+            "finite": true
+          },
+          "vs_bf16": {
+            "rel_l2": 0.00542271975427866,
+            "max_abs": 0.125,
+            "finite": true
+          },
+          "pointwise_valid": true,
+          "shape_valid": true,
+          "dtype_valid": true
+        },
+        "W8A8_fused": {
+          "vs_quantized_fp32": {
+            "rel_l2": 0.0016581251984462142,
+            "max_abs": 0.06253814697265625,
+            "finite": true
+          },
+          "vs_bf16": {
+            "rel_l2": 0.00542271975427866,
+            "max_abs": 0.125,
+            "finite": true
+          },
+          "pointwise_valid": true,
+          "shape_valid": true,
+          "dtype_valid": true
+        }
+      },
+      "fused_vs_default_w8a8": {
+        "rel_l2": 0.0,
+        "max_abs": 0.0,
+        "finite": true
+      },
+      "validation_artifact": {
+        "path": "/home/acorn0415/sfq_data/linear_w8a8_fused_stage1/shape2/validation.pt",
+        "sha256": "f64307f2636c61e1a01e73ea62ef8a1924afb32799db3a89cad8ee559abc7a89",
+        "bytes": 212691618
+      },
+      "all_valid": false,
+      "finished_utc": 1793801486.9090319,
+      "process_exit_code": 0,
+      "process_timeout": false
+    }
+  ],
+  "finished_utc": 1793801487.5590076,
+  "elapsed_from_registration_s": 196.55900835990906
+}
