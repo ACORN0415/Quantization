@@ -1,0 +1,131 @@
+Fable 5.1 실제 검토 — B-2 결과 및 B-3 잠정안 / 2026-11-05 KST (2026-11-04 UTC 저녁)
+실행 형태: 실제 Claude 채팅 세션(모델 claude-fable-5-1). fable_result_launch.json 기록상
+structured chat claude_3feedbe3_e6c1_4f1f_8afb_a1b8bbf3cf9b이며, 본 세션의 프롬프트는
+fable_result_prompt.txt와 동일했다. Task/Dispatch 식별자는 지시에 없었으므로 기록하지 않는다.
+하위 작업자 0. 모델 실행·GPU·다운로드·코드 수정·커밋 없음. 이 파일만 작성.
+CPU 재계산: results.json/stage1 results.json/policy_study 기록의 JSON 재집계,
+p00/p04_l29_outputs.pt를 CPU(sfq_data/env python, CUDA 비활성)로 열어 head/query/frame별 오차 재계산.
+
+읽은 것: 본 디렉터리의 REGISTRATION_KO, REPORT_KO, DESIGN_RESPONSE_KO, FABLE_DESIGN_REVIEW_KO,
+results.json(전 필드), audit.json, capture_p00/p04_manifest.json, crop_unit_checks.json, evaluate.log,
+fable_result_prompt/launch; tools/kv_channel_full_attention.py, tools/audit_kv_channel_full_attention.py,
+tools/kv_channel_budget_core.py 전체; stage1/REPORT_KO.txt, stage1/results.json(요약 필드);
+src/scripts/p3_tf_fr.py, src/kvq/lockstep.py 전체, src/kvq/store.py ChunkStore, src/kvq/quant.py Quantizer;
+src/configs/a1.yaml 관련 행; policy_study_results/REPORT_KO.md·RESULTS.md·windows.csv·case_costs.csv,
+p3_pilot_results/SUMMARY.md; sfq_data/policy_study/cases/{p00,p04}_s101_chunk_int4, p00_s101_chunk_int2의
+fr/noise sampling·quality JSON, reference/{p00,p04}_s101/bf16_quality.json.
+읽지 않은 것: capture .pt 원본, packed .bin, causal_model.py(이번 세션), 전체 감사 재실행.
+
+================================================================
+1. 판단
+================================================================
+B-2: 타당(등록 판정 재현, 핵심 주장에 수치 오류 없음). 표현·해석 수정 2건(3-(a),(b)).
+B-3 잠정안: 수정 필요. 제안된 판정 지표(12청크 최종 latent 오차)는 이 프로젝트의 기존 A계열
+자료가 이미 "품질과 무관하게 카오스 발산으로 포화"함을 보여 주므로, 어떤 고정 문턱을 걸어도
+"U 충분" 또는 "S 유지"를 판별할 수 없다. 같은 90분 예산 안에서 판별 가능한 대안 1개를 5절에 둔다.
+
+================================================================
+2. B-2 직접 확인 사항
+================================================================
+- 호출 의미: lockstep.run_chunk는 denoising_step_list [1000,750,500,250] 4회 뒤 context 호출 1회
+  (a1.yaml, lockstep.py). 층당 40회/8청크=5회이며 count%5==0은 첫 denoising 단계(t=1000)다.
+  capture 코드의 chunk=count//5, call=count%5 매핑과 등록문 "c7 첫 단계" 표현이 일치한다.
+- 캡처 gate: K[:, :28080]==c6 K[:,4680:], 32 query 일치, W_o 일치, 8청크 teacher 전원소 바이트 일치
+  (무손실 cast 검사 포함)가 코드에 assert로 있고 두 manifest가 completed·forwards 40·chunks 8이다.
+- 무개입 재생: 같은 GPU에서 wan.modules.attention.attention과 F.linear로 재생해 native_av/native_post
+  바이트 일치를 assert. results.json 6사례 모두 native_identity_passed. torch 2.6.0+cu124, flash_attn 2.7.4.post1.
+- 퇴거 재직렬화: crop_blob은 헤더 n만 바꾸고 페이지 단위 바이트 슬라이스. 복원 suffix 일치 assert,
+  cropped 길이 ≤17,611,804 assert. 감사 코드는 별도 unpackbits 디코더로 24개 payload를 재구성했다.
+- 바닥 확인(설계 검토 3-(c)): native 원본 vs FP32 계산의 post-W_o NSE는 3.7e-6~6.5e-6.
+  가장 작은 팔 값은 S120 l0 7.06e-5(p0)/7.41e-5(p4)로 바닥의 11~19배. 모든 비교는 바닥 위에 있다.
+  작업자가 10배 규칙을 미수용했지만 결과는 그 규칙으로도 유효하다. 이견 해소.
+- 바이트 산술: S 17,572,492+현재K 14,376,960+전체V 100,638,720=132,588,172; BF16 32760×3072×2=201,277,440;
+  1−132,588,172/201,277,440=34.1267%. U120 132,627,484, U156 132,295,708. 보고값과 일치.
+- 판정 재계산: 3층 평균 NSE와 감소율, wins=2, FP32 보조 조건 모두 results.json decide()와 일치.
+  audit.json passed, 점수 최대 차이 1.3e-15. 단 감사는 같은 작업자 코드이며 외부 독립 검증이 아니다.
+
+================================================================
+3. 중요한 지적
+================================================================
+(a) 3층 평균 감소율 48.83%/54.93%는 사실상 l29 하나의 수치다.
+    p0 평균 분모 0.0621 중 l29가 0.1834(98.5%), p4 0.0337 중 l29 0.0986(97.5%).
+    l29 단독 감소율은 49.3%/55.8%로 평균과 거의 같다. l0은 S가 11~12배 좋지만 절대값이
+    8e-4→7e-5로 작고, l14는 S가 7.9%(p0)/13.1%(p4) 나쁘다. 보고의 "두 프롬프트 통과"는 등록 조건대로
+    맞으나, 요약 문장은 "3층 평균 약 50% 감소"가 아니라 "l29에서 약 절반, l0에서 1/11, l14에서 악화"로
+    써야 한다. 설계 검토 3-(b)에서 예고한 가림 효과가 실제로 발생했다.
+(b) 새 관측(CPU 재계산): l29 오차는 12 head 중 head 9 하나에 집중된다.
+    AV 출력 head별 NSE — p0 U120: head9 0.945, 나머지 11개 ≤0.003; S120: head9 0.479, 나머지 ≤0.003.
+    p4 U120: head9 0.639, 나머지 ≤0.005; S120: head9 0.288. 즉 균일 INT3 과거K에서 l29 head9의
+    attention 출력은 사실상 상관을 잃고(NSE≈0.95), S는 이를 절반으로 줄이되 여전히 0.3~0.5다.
+    query별로는 U120 중앙값 상대오차 0.17(p0)/0.023(p4), S120 0.0006/0.0002로 S는 대다수 query를
+    거의 복구하고 일부 query(상위 10%가 오차의 47~76%)가 남는다. 프레임별 NSE는 세 프레임 모두 유사하다.
+    해석: B-2 통과의 실체는 "특정 층의 특정 head가 INT3 과거K에 매우 민감하고 채널 boost가 그 head를
+    부분 구제"다. 이는 가설이 아니라 저장 출력의 재계산 관측이다. 원인(해당 head K의 채널 분포)은
+    계산하지 않았다. 새 선택기·층 제외·bit 추가를 제안하지 않는다. 다만 이 관측은 B-3의 판정을
+    "30층 전체 평균"이 아니라 "한 head의 손상이 생성에 전파되는가"로 읽어야 함을 뜻한다.
+(c) U156과 U120의 native 오차 차이는 모든 사례에서 ±9% 이내이고 방향이 섞인다. 두 U는 서로 다른
+    바이트의 같은 기준선이며 B-3에서 둘 다 둘 필요는 없다(5절).
+(d) 보고의 "다음: 단순 균일 INT3가 이미 충분한지"는 옳은 질문이다. 그러나 (b)의 head9 NSE 0.64~0.95는
+    단일 단계 출력 기준으로 "충분"과 거리가 멀고, 반대로 S의 0.29~0.48도 작지 않다. 어느 쪽도
+    출력 오차만으로는 생성 품질을 예단할 수 없다.
+
+================================================================
+4. 주장 범위(B-2)
+================================================================
+말할 수 있는 것: 두 개발 프롬프트, c7 첫 denoising 단계, 층 0/14/29, 고정 코덱·동일 상한에서
+native BF16 attention+W_o 출력 오차가 S120에서 균일 INT3보다 작다. 그 감소는 l29(head 9)와 l0에서
+나오고 l14에서는 반대다. 말할 수 없는 것: 다른 단계·청크·층·head, 생성 latent·영상 품질, GPU 메모리·속도,
+OOM 해결, 신규성. 30층 중 27층의 거동은 미관측이다.
+
+================================================================
+5. B-3 잠정안 검토 — 가장 강한 반론과 대안 1개
+================================================================
+반론(근거는 모두 프로젝트의 기존 기록): 12청크 최종/청크별 latent 오차는 품질 판별 지표가 아니다.
+- policy_study p00_s101 chunk INT4(K·V 모두 INT4 RTN g16, 같은 chunk 정책) FR의 latent 상대오차는
+  c1 0.15, c3 0.42, c6 0.71, c12 0.62였고, 같은 구간 MUSIQ는 BF16과 1~2점 차이(early −0.04)였다.
+  p04도 c12 0.55, early MUSIQ −0.84. 반면 late(21–41) MUSIQ 차이는 −2.96/−12.31로 늦게 나타난다.
+- 오차 노름을 맞춘 무작위 잡음 대조군은 c12 latent 상대오차 0.81(p0)/0.48(p4)로 양자화 FR보다
+  같거나 크지만 late MUSIQ 차이는 −0.75/−0.13이다. 즉 12청크 latent 오차는 카오스 발산이 지배하고,
+  품질 손상과 같은 방향조차 아니다.
+- 따라서 "U의 latent 오차가 충분히 작으면 S 종료"는 어떤 문턱으로도 고정할 수 없고,
+  "S가 U보다 latent 오차가 작다"도 포화 영역에서는 잡음이다. 12청크로 감지되는 것은 INT2급 붕괴
+  (p00 chunk INT2는 c1 MUSIQ 64.5, c3 55.1로 즉시 붕괴)뿐이며, 과거K만 INT3인 U는 K 오차 기준으로
+  INT4 RTN(k_rel 0.065)보다 약간 큰 0.08~0.14(B-1 key_relative_l2)이고 V는 BF16이므로 INT4급 거동이
+  예상된다. 이 경우 12청크 설계는 거의 확실히 "판단 불가"로 끝난다.
+
+대안 1개(새 방법·새 bit·층 제외 없음, 같은 90분 상한):
+  동일 코덱·동일 정책을 기존 lockstep ChunkStore FR 경로(residual 0, pending=현재 청크 BF16,
+  완료 청크는 다음 청크 첫 호출 때 context-호출 K로 1회 encode, 6세그먼트+현재=7청크, 최오래 세그먼트
+  pop)에 K 전용 어댑터(encode_pair: K→코덱 pack/decode, V identity)로 꽂아 126프레임 42청크를 전체
+  생성하고, A계열에서 이미 등록·사용한 주지표인 late(21–41) MUSIQ(p3_tf_fr.quality와 같은 함수·프레임
+  규칙)로 판정한다. 이 경로의 의미는 B-2·잠정안과 같다(현재K·전체V BF16, 과거K만 코덱, BF16 attention).
+  BF16 참조 latent와 bf16_quality.json(p00 late 74.59, p04 late 75.20)은 이미 있어 BF16 생성은 불필요하고,
+  대신 identity-K 어댑터로 같은 경로를 2회 돌려 42청크 전원소 바이트 일치를 gate로 삼는다.
+  팔: U120, S120 × p0/p4 = 4 생성 + gate 2회 = 6실행, 210 forwards×6 = 1,260 forwards.
+  U156 제외 근거는 3-(c). R120은 B-2에서 역할을 마쳤다.
+  시간 추정(미검증): policy_study 1 case(3 궤적×42청크+디코드+MUSIQ) 417초 → 궤적당 약 140초;
+  코덱 CPU는 B-1 실측 32760토큰 1.1~1.5초 → 4680토큰 약 0.2초 × 30층 × 41청크 ≈ 4분/실행.
+  6실행 ≈ 40분 + VAE 디코드·MUSIQ 수 분 ≈ 50분 < 90분. 초과 시 판단 불가.
+  고정 기준(프롬프트별 paired, late MUSIQ 차이 Δ = 팔 − BF16; 숫자는 개발 자원 배분 문턱이지 품질 허용치 아님):
+   - 판단 불가: identity gate 42청크 바이트 불일치, forward 1,260 초과, 90분 초과, MUSIQ 계산 실패.
+   - U 충분 → S 개발 종료: 두 프롬프트 모두 Δ(U120) ≥ −2.0.
+     근거: 같은 프롬프트의 INT4 K·V chunk FR이 −2.96/−12.31, 무작위 잡음 대조군 −0.75/−0.13,
+     TF −0.04/−0.34. −2.0 안이면 동일 바이트의 S가 줄일 여지가 잡음 대조군 수준이다.
+   - S 유지 → 실제 GPU 코덱/자원 판별을 별도 등록: 어느 한 프롬프트에서 Δ(U120) < −2.0이고,
+     두 프롬프트 모두 MUSIQ(S120) − MUSIQ(U120) ≥ +3.0.
+   - 그 외 → 종료(생성 이득 미입증). n=2·seed 1이므로 어느 결과도 품질 확증이나 일반화가 아니다.
+   - 청크별 latent 상대오차와 l29 head 9의 청크별 AV NSE는 기술 통계로만 기록하고 판정에 쓰지 않는다.
+  만약 12청크·480 forwards 설계를 유지한다면 고정 가능한 규칙은 하나뿐이다: c12까지 MUSIQ 누적 차이가
+  INT2급(−10 이상)이면 U 실패, 아니면 판단 불가. 이는 거의 확실히 판단 불가로 끝나므로 권하지 않는다.
+  주의: 두 대안 모두 BF16 attention·BF16 원본 상주 경로이므로 메모리·속도 주장 불가는 동일하다.
+
+================================================================
+6. 미확인 항목
+================================================================
+- l29 head 9 민감성의 원인(K 채널 분포·RoPE·outlier)은 계산하지 않았다. 다른 27층의 head 거동 미관측.
+- causal_model.py의 'store' 캐시 분기가 policy_study 시점과 동일한지 이번 세션에서 확인하지 않았다
+  (B-2 source_sha256은 B-1 manifest와 일치했으나 policy_study 당시 fingerprint와의 비교는 안 했다).
+- pyiqa/MUSIQ 환경이 sfq_data/env에서 현재도 동작하는지, 대안의 시간 추정, ChunkStore FR 경로의
+  identity 바이트 일치(policy_study gate는 TF 경로였음)는 실행 전 확인이 필요하다.
+- flash_attn 재생 결정성은 이번 6사례에서 성립했을 뿐 일반 보장은 아니다.
+- 이 검토는 10분 설계 판단 상한을 넘겼을 수 있다. A계열 기록을 찾아 읽는 데 시간을 썼고 시각은 재지 않았다.

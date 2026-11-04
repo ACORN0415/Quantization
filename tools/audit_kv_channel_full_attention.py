@@ -61,7 +61,7 @@ def main():
     assert r['finished_utc']<1793812560 and r['model_forwards']==0 and r['attention_replays']==30
     assert sha(ROOT/'tools/kv_channel_full_attention.py')==r['code_sha256']
     assert sha(OUT/'REGISTRATION_KO.txt')==r['registration_sha256']
-    old=json.loads((B1/'results.json').read_text());scores={};checked=0;max_delta=0.
+    old=json.loads((B1/'results.json').read_text());scores={};fp_scores={};checked=0;max_delta=0.
     captures=[]
     for c in r['cases']:
         for item in (c['capture'],c['outputs']):assert sha(item['path'])==item['sha256'] and Path(item['path']).stat().st_size==item['bytes']
@@ -70,6 +70,7 @@ def main():
         for name in ('av','post'):exact(x['native_'+name],y['reference_'+name])
         first=next(z for z in old['cases'] if z['prompt']==c['prompt'] and z['layer']==c['layer'])
         scores[c['prompt'],c['layer']]={}
+        fp_scores[c['prompt'],c['layer']]={}
         for a in ARMS:
             row=c['arms'][a];item=row['payload'];assert sha(item['path'])==item['sha256']
             blob=Path(item['path']).read_bytes();assert len(blob)==item['bytes']<=17611804
@@ -84,6 +85,7 @@ def main():
                         assert np.isclose(value[key],ref,rtol=2e-12,atol=1e-15)
                     checked+=1
             scores[c['prompt'],c['layer']][a]=score(y[a]['post'],y['reference_post'])['normalized_squared_error']
+            fp_scores[c['prompt'],c['layer']][a]=score(y[a]['fp32_post'],y['fp32_reference_post'])['normalized_squared_error']
         manifest=Path(c['capture']['path']).parent/'manifest.json'
         if str(manifest) not in captures:
             m=json.loads(manifest.read_text());assert m['status']=='completed' and m['model_forwards']==40 and len(m['chunks'])==8
@@ -96,7 +98,8 @@ def main():
         assert all(np.isclose(means[a],decision['native_mean_nse'][a],rtol=2e-12,atol=1e-15) for a in ARMS)
         gains={a:100*(1-means['S120']/means[a]) for a in ('U120','U156','R120')}
         wins=sum(scores[p,l]['S120']<min(scores[p,l]['U120'],scores[p,l]['U156']) for l in (0,14,29))
-        fp=decision['fp32_mean_nse']
+        fp={a:sum(fp_scores[p,l][a] for l in (0,14,29))/3 for a in ARMS}
+        assert all(np.isclose(fp[a],decision['fp32_mean_nse'][a],rtol=2e-12,atol=1e-15) for a in ARMS)
         ok=all(gains[a]>=10 for a in ('U120','U156')) and gains['R120']>0 and wins>=2 and all(fp['S120']<fp[a] for a in ('U120','U156'))
         assert ok==decision['passes'] and wins==decision['layers_beating_both_uniform']
     assert r['advance']==all(d['passes'] for d in r['decisions'])

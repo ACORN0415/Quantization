@@ -1,0 +1,98 @@
+{
+  "status": "completed",
+  "prompt": 0,
+  "seed": 101,
+  "started_utc": 1793807550.3020089,
+  "model_forwards": 40,
+  "source_sha256": "e916506f6085f9c050cbd44b7e1b79d4a8aae9d77379fe5e2384fee5bad5a758",
+  "code_sha256": "bba0e837a7bd7ecb80c7f776e7739c42716d897a8a40464555050467b4a931d8",
+  "registration_sha256": "0179c38ee334af4e6578f772d82eefc3afb91fdcb01edaed8107d310870e6ee6",
+  "artifacts": [
+    {
+      "path": "/home/acorn0415/sfq_data/kv_channel_budget_full_attention/p00_s101/l00_c7.pt",
+      "bytes": 249132916,
+      "sha256": "8aaa3d66c479f91eb200c8586a10a5235e19c4fd77c9f998e51b8ed0653cfaf9"
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/kv_channel_budget_full_attention/p00_s101/l14_c7.pt",
+      "bytes": 249132916,
+      "sha256": "f10746311cd5419f78b7dfbe76d6479420c49ed28c5753409a948244b81e7788"
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/kv_channel_budget_full_attention/p00_s101/l29_c7.pt",
+      "bytes": 249132916,
+      "sha256": "21f527ffb85fd6aacaa81e3697fb2ea533652d86c978ef7ec4c120a987c46991"
+    }
+  ],
+  "chunks": [
+    {
+      "chunk": 0,
+      "reference_dtype": "torch.bfloat16",
+      "output_dtype": "torch.bfloat16",
+      "byte_equal_after_lossless_cast": true
+    },
+    {
+      "chunk": 1,
+      "reference_dtype": "torch.bfloat16",
+      "output_dtype": "torch.bfloat16",
+      "byte_equal_after_lossless_cast": true
+    },
+    {
+      "chunk": 2,
+      "reference_dtype": "torch.bfloat16",
+      "output_dtype": "torch.bfloat16",
+      "byte_equal_after_lossless_cast": true
+    },
+    {
+      "chunk": 3,
+      "reference_dtype": "torch.bfloat16",
+      "output_dtype": "torch.bfloat16",
+      "byte_equal_after_lossless_cast": true
+    },
+    {
+      "chunk": 4,
+      "reference_dtype": "torch.bfloat16",
+      "output_dtype": "torch.bfloat16",
+      "byte_equal_after_lossless_cast": true
+    },
+    {
+      "chunk": 5,
+      "reference_dtype": "torch.bfloat16",
+      "output_dtype": "torch.bfloat16",
+      "byte_equal_after_lossless_cast": true
+    },
+    {
+      "chunk": 6,
+      "reference_dtype": "torch.bfloat16",
+      "output_dtype": "torch.bfloat16",
+      "byte_equal_after_lossless_cast": true
+    },
+    {
+      "chunk": 7,
+      "reference_dtype": "torch.bfloat16",
+      "output_dtype": "torch.bfloat16",
+      "byte_equal_after_lossless_cast": true
+    }
+  ],
+  "runtime": {
+    "torch": "2.6.0+cu124",
+    "cuda": "12.4",
+    "flash_attn": "2.7.4.post1",
+    "gpu": "NVIDIA GeForce RTX 4090",
+    "cwd": "/home/acorn0415/Quantization/src"
+  },
+  "reference": {
+    "path": "/home/acorn0415/sfq_data/policy_study/reference/p00_s101/bf16.pt",
+    "bytes": 25160845,
+    "sha256": "e2f47bd946b21159ed2c578d3fbd7744a0b7e89f987078341a793f30b0aa5306"
+  },
+  "selected_layer_calls": {
+    "0": 40,
+    "14": 40,
+    "29": 40
+  },
+  "finished_utc": 1793807609.138892,
+  "max_rss_bytes": 35537338368,
+  "peak_allocated_bytes": 9274017280,
+  "peak_reserved_bytes": 9705619456
+}
