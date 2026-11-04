@@ -1,0 +1,26 @@
+{
+  "recorded_utc": 1793809379.4178903,
+  "files": [
+    {
+      "path": "/home/acorn0415/sfq_data/ckpt/checkpoints/self_forcing_dmd.pt",
+      "bytes": 5676252553,
+      "sha256": "a0413986d9734e02c09504e1520f5697ba6df731bb2f0f35577485e9cc8f56a3"
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/ckpt/wan_models/Wan2.1-T2V-1.3B/config.json",
+      "bytes": 249,
+      "sha256": "ab37994c43740513f94b3ba6233a784035a67b43c8cde83c8f31aa90468c67ce"
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/configs/default_config.yaml",
+      "bytes": 403,
+      "sha256": "18303f1bacbfbebaa02893cc8e106941753f21a7d1a7109519a90762375ee772"
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/configs/a1.yaml",
+      "bytes": 165,
+      "sha256": "dc2fc01f43264c195a770faebfdbe790689c781fe2c052438cf6bea94cf0fa88"
+    }
+  ],
+  "note": "Read-only hashes during generation; BF16 trajectory byte gates provide additional model-path identity evidence."
+}

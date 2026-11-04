@@ -39,6 +39,9 @@ def main():
     q=json.loads((OUT/'quality.json').read_text());assert q['status']=='completed' and q['vae_decodes']==8 and q['finished_utc']<DEADLINE
     expected={'script':sha(ROOT/'tools/kv_channel_rollout.py'),'codec':sha(ROOT/'tools/kv_channel_budget_core.py'),'registration':sha(OUT/'REGISTRATION_KO.txt')}
     assert q['provenance']==expected
+    deps=json.loads((OUT/'dependency_preflight.json').read_text())
+    for name,h in deps['files'].items():assert sha(ROOT/name)==h
+    for item in json.loads((OUT/'generation_provenance.json').read_text())['files']:checked(item)
     helper_record=json.loads((ROOT/'src/experiments/kv_channel_budget_full_attention/results.json').read_text())
     assert sha(ROOT/'tools/kv_channel_full_attention.py')==helper_record['code_sha256']
     for item in q['weights'].values():checked(item)
