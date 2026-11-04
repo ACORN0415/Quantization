@@ -1,0 +1,45 @@
+{
+  "status": "completed",
+  "completed_utc": 1793812790.1246698,
+  "completed_utc_iso": "2026-11-04T17:19:50.124670+00:00",
+  "registered_start_utc": 1793811120.0,
+  "registered_deadline_utc": 1793813220.0,
+  "elapsed_seconds_including_review": 1670.124669790268,
+  "within_registered_limit": true,
+  "scientific_status": "existing RTN K8V8 sufficient at lower serialized KV bytes; close S120 development for tested total budget",
+  "generation_runs": 4,
+  "model_forwards": 840,
+  "vae_decodes": 4,
+  "raw_rgb_frames_evaluated": 2004,
+  "gpu_audit_repeats": 0,
+  "fable_sessions": [
+    "claude_11991c44_1821_42a1_b945_45a7e00acd70"
+  ],
+  "orchestration_task_attached": false,
+  "attach_error": "terminal_handle_stale",
+  "independent_untracked_file_excluded": null,
+  "sources": {
+    "tools/kv_global_baseline.py": "cc0cd96e64f1863d4acc4f54165f8932b7a56a0e267b15989647709f4acc5958",
+    "tools/audit_kv_global_baseline.py": "6af62b132af92d897f36cd892fadbcb6f27c03e10a57a9aa80d3f169caecad58"
+  },
+  "files": {
+    "src/experiments/kv_channel_budget_global_baseline/FABLE_FINAL_REVIEW_KO.txt": "fbf135f3fa1a7de9fd63fcd88441128d4f7cebcf323bf0e6d1c277f0fc1e821f",
+    "src/experiments/kv_channel_budget_global_baseline/REGISTRATION_KO.txt": "08b06a937a0b504ad78ef1bf7200838b5b6b2eb6f42878b03746c393dcae3ec2",
+    "src/experiments/kv_channel_budget_global_baseline/REPORT_KO.txt": "fc460ee9a1d8b32a62473cda44c2f90e8856a0a2099bfdc889dd4b1c93520127",
+    "src/experiments/kv_channel_budget_global_baseline/REVIEW_RESPONSE_KO.txt": "27484a9ea1b9816dbc20e575d4c38a128cf4530930a875f713a2857bc0d6e4e5",
+    "src/experiments/kv_channel_budget_global_baseline/audit.json": "c927d2c26ea2b0ca6a12ff6705181ebea8457984a67a04bc5ea2611c2a45eaa3",
+    "src/experiments/kv_channel_budget_global_baseline/audit.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/experiments/kv_channel_budget_global_baseline/fable_final_attach.json": "61cfdef5dd88d8709c67271d59ba502da157553590b047ccfba6570a3bf82d6e",
+    "src/experiments/kv_channel_budget_global_baseline/fable_final_launch.json": "e9d276ce7835e8bf1982f1e4e7b43920ba9bf2d2b9fccf7ea098752937b79892",
+    "src/experiments/kv_channel_budget_global_baseline/fable_final_prompt.txt": "7f82714a83def26698913d05a074c7e94e8f19779846cbcaa5c28070df5a5971",
+    "src/experiments/kv_channel_budget_global_baseline/format_checks.json": "ced4ade3f1ab8d9df0dd456266da3c49a86dc9447bbb1de505f9f7e64b4fabfb",
+    "src/experiments/kv_channel_budget_global_baseline/generate_p00.log": "b9e55d25875bc7405b5282fa6e5a56baa4188335f8e3673997d9fe6f54d5938e",
+    "src/experiments/kv_channel_budget_global_baseline/generate_p04.log": "f2976d4fb02ff59b0446a70a703793668dc9973ab96459e5bd8d202815e08dbb",
+    "src/experiments/kv_channel_budget_global_baseline/p00_Identity_sampling.json": "308e4467fd0bb69829469f000bfee1e4c3052698cfa7e50830ec7902df6d6107",
+    "src/experiments/kv_channel_budget_global_baseline/p00_K8V8_sampling.json": "45e90d3221be475312fc048607c33e26b923bb678035c072f8b1382acd233d6a",
+    "src/experiments/kv_channel_budget_global_baseline/p04_Identity_sampling.json": "2c0a3d844763786ed576f7905d685b7395d298ca4553e773d5f5a15920dd7eed",
+    "src/experiments/kv_channel_budget_global_baseline/p04_K8V8_sampling.json": "589ab893d4e9af01d957371c5c81daa84807c018429d5aa520a6ca878dd93e86",
+    "src/experiments/kv_channel_budget_global_baseline/quality.json": "8c228e17d89b68cf487b1496ca86334586f0414adc6916a0ce08242d2ee5666b",
+    "src/experiments/kv_channel_budget_global_baseline/quality.log": "3d43f7d79f3f0ca85628de0d475e3d8b6615503de20a597e2845c23eb9637111"
+  }
+}

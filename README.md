@@ -639,18 +639,40 @@ AV 출력·영상 품질은 미측정이다. 별도 NumPy 디코더로 24파일�
 [B-1 결과·바이트·층별 역전](src/experiments/kv_channel_budget_stage1/REPORT_KO.txt) ·
 [B-1 독립 CPU 감사](src/experiments/kv_channel_budget_stage1/audit.json)
 
-**B-2 완료·B-3 실행 중 (2026-11-05 KST):** 현재 청크와 전체 V를 포함한 native BF16
+**B-2/B-3/B-4 실험 완료 (2026-11-05 KST):** 현재 청크와 전체 V를 포함한 native BF16
 attention+출력 투영을 검사했다. 두 프롬프트의 3층 평균 출력 제곱오차는 S120에서
 U120보다 **48.83%, 54.93% 감소**했다. 이 감소는 주로 29층에서 나왔으며 14층은
 두 프롬프트 모두 악화했다. 전체 30층이나 영상 품질의 개선율이 아니다.
 16청크 teacher 재현과 6사례 무개입 attention 재생이 원소 바이트 일치했고,
 별도 디코더로 24개 payload와 저장 출력 점수 96건을 감사했다.
-B-3는 생성 전에 42청크·8실행과 원시 RGB 영상 평가로 등록했다. BF16·균일 INT3 두 방식·
-고정 채널 boost를 비교하며, 품질 판별용 구현의 시간/메모리를 배포 성능으로 주장하지 않는다.
+B-3는 42청크·8실행과 원시 RGB 영상 평가를 완료했다. 채널 boost는 더 좋은 균일 INT3보다
+후반 MUSIQ **+1.95/+5.06점**과 DINO 참조 유사도 개선을 얻었다. V를 BF16으로 고정한
+조건부 이득이며, 두 프롬프트에서 BF16보다 MUSIQ가 **3.39/13.50점 낮았다**.
+
+B-4에서 총 KV 예산에 들어가는 기존 **RTN K8V8, group16**을 확인했다. Identity ChunkStore
+2회·K8V8 2회, 각 42청크를 생성했으며 두 Identity는 B-3 BF16 latent·원시 RGB와
+전원소 바이트가 같았다. 결과는 다음과 같다(후반 249..500프레임 MUSIQ).
+
+| 프롬프트 | BF16 | U120 | U156 | S120 채널 boost | 기존 K8V8 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 0 | 74.56 | 69.22 | 68.20 | 71.16 | **75.56** |
+| 4 | 74.94 | 54.65 | 56.39 | 61.44 | **74.58** |
+
+K8V8은 S보다 층당 직렬화 내용이 **약 5.00% 적고**(125,964,624 대 132,588,312 bytes),
+DINO 참조 유사도도 높았다. 동일 ChunkStore 경로에서 GPU peak allocated는 Identity
+**8.77GiB**, K8V8 **6.83GiB**였다. 속도 검증은 하지 않았으며 S의 shadow-cache 경로와
+가속률을 비교하지 않는다. **이 총 예산에서는 기존 K8V8을 기준선으로 남기고 현재 채널 boost의
+추가 개발을 종료한다.** B-3의 고정 V 조건부 개선은 유지한다. 두 개발 프롬프트·seed 1개의
+결과로, 일반화·세계모델의 action 정확도·논문 신규성을 확보한 것은 아니다. K8V8의 후반
+DINO 참조 유사도는 약0.94로 BF16 동등성까지 확보한 것은 아니다. CPU 감사와 실제 Claude
+Fable의 최종 검토를 완료했고, 검토에서 요구한 해석·검증 범위의 명시를 반영했다.
 
 [B-2 보고서](src/experiments/kv_channel_budget_full_attention/REPORT_KO.txt) ·
 [B-2 Fable 검토 반영](src/experiments/kv_channel_budget_full_attention/RESULT_REVIEW_RESPONSE_KO.txt) ·
-[B-3 사전 명세](src/experiments/kv_channel_budget_rollout/REGISTRATION_KO.txt)
+[B-3 실제 생성 결과](src/experiments/kv_channel_budget_rollout/REPORT_KO.txt) ·
+[B-4 총 예산 비교·종료 판단](src/experiments/kv_channel_budget_global_baseline/REPORT_KO.txt) ·
+[B-4 읽기 전용 감사](src/experiments/kv_channel_budget_global_baseline/audit.json) ·
+[B-4 Fable 최종 검토](src/experiments/kv_channel_budget_global_baseline/FABLE_FINAL_REVIEW_KO.txt)
 
 ## 출처와 공개 범위
 

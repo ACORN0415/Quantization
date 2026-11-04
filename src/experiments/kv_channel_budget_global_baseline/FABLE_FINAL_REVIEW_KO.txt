@@ -1,0 +1,79 @@
+Claude Fable 5.1 실제 최종 교수검토 — B-4 (기존 RTN K8V8 총예산 기준선) 종료 판정
+대상: /home/acorn0415/Quantization/src/experiments/kv_channel_budget_global_baseline/ (2026-11-05 KST 기록 기준)
+Task/Dispatch 식별자: 프롬프트에 제공되지 않았다. fable_final_launch.json의 세션 id만 존재하며 Task id로 간주하지 않는다.
+실행 시각은 추정해 적지 않는다. 읽기 전용, GPU 0회, CPU 재계산만 수행.
+
+1. 판단: 타당. 등록된 범위 안에서 "현재 S120의 추가 개발 종료" 결론은 기록·코드·수치가 뒷받침한다.
+   수정 필요 항목은 보고서 문구 수준이며(아래 2-④, 2-⑤), 판정 자체를 바꾸지 않는다.
+
+2. 중요한 지적 (직접 확인한 근거와 함께)
+
+① B-3 조건부 이득과 B-4 총예산 충분성의 구분 — 구분됨.
+   - B-3 quality.json decision: S의 후반 MUSIQ 이득 +1.947(p0)/+5.059(p4), DINO참조 +0.0376/+0.1136, advance=true. 이는
+     "V=BF16 고정, 과거 K만 약 3bit 예산"이라는 조건에서 S가 두 uniform보다 낫다는 결과다. B-4는 이를 변경하지 않는다.
+   - B-4는 K/V 비트, 그룹(시간축 16), 대칭 RTN, 복원 산술(FP16 scale→BF16 곱)까지 동시에 바뀐 "기존 설정" 비교다.
+     REPORT_KO.txt 해석 단락이 이를 명시하고 "V 정밀도 하나의 인과 효과"라고 부르지 않는다. 옳다.
+   - 따라서 말할 수 있는 것: 시험한 총 바이트 상한(≤132,588,312 B/층)에서 더 단순한 K8V8이 S120을 네 품질 조건 모두에서
+     여유 있게 넘는다(비열등 gate는 −1점인데 실제 +4.399/+13.133). 말할 수 없는 것: 채널 boost가 K 정밀도 면에서
+     무효라는 것, 또는 다른 총예산(예: 더 낮은 상한)에서도 K8V8이 충분하다는 것. 등록문이 "못 넘으면 tradeoff 구분"만
+     약속했고 통과했으므로 종료는 등록 규칙에 부합한다. 새 후보 제안은 이 검토 범위가 아니다.
+
+② 메모리 산술 / peak 측정 범위 / 속도 미주장 — 모두 재계산으로 일치.
+   CPU 재계산(파이썬): 청크당 K+V BF16 28,753,920 B. RTN8 tensor 7,200,768(codes, 293 page×16×12×128)+900,096(FP16 scale)
+   =8,100,864 B, pair 16,201,728 B. 층당 pending BF16 + 과거 6 pair = 125,964,288 B, 12개 28 B 헤더 포함 125,964,624 B.
+   Identity 층당 7×28,753,920=201,277,440 B. S120 = 17,572,632 + 28,753,920 + 6×14,376,960 = 132,588,312 B. 감소 4.996%.
+   sampling.json의 kv_tensor_bytes_per_layer(청크0 28,753,920 → 마지막 125,964,288 / 201,277,440)과 일치하며,
+   tools/kv_global_baseline.py resident()가 실제 segments/pending 상태에서 센 값이다(추정식 아님). 감사 코드도
+   청크별 기대식 4680·1536·4 + min(6,c)·(…)로 42청크×30층 전부 재검증한다(audit_kv_global_baseline.py 50~52행).
+   대표 payload 1개(p00 l00_c35_K.bin)를 CPU로 열어 헤더 (RTN8,4680,12,128,16,8,0), 길이 8,100,892, sha256 일치,
+   codes 범위 −128..127, 4680→4688 padding 행이 0, scale 유한을 직접 확인했다.
+
+   peak 해석: sampling.json peak_allocated_bytes Identity 9,418,688,512(8.7718 GiB), K8V8 7,335,036,928(6.8313 GiB), 두 prompt 동일.
+   차이 2,083,651,584 B. 지속 상태 차이는 30층×(201,277,440−125,964,288)=2,259,394,560 B이고, 그 차이에서 빠지는
+   175.7 MB는 한 층의 과거 6 pair BF16 복원 버퍼(6×28,753,920=172.5 MB)와 거의 같다. 즉 실측은 "복원 버퍼는 attend()
+   호출 중 해당 층에서만 생기고(store.py 141~143행 pairs → cat), 전체 지속 상태는 int8+FP16"임을 지지한다.
+   "BF16으로 복원하므로 총 GPU 메모리는 BF16 이상"이라는 주장은 B-4 실측에 반한다. 그 문장을 B-3 리뷰 파일에서
+   그대로는 찾지 못했다. 찾은 것은 B-3 S120 harness(원본 BF16 cache+복원 K 동시 상주, peak 11.86 GB)에 대한 지적이며,
+   그것은 B-3 진단 경로에 한한 올바른 지적이고 B-4 ChunkStore 경로에는 적용되지 않는다. 두 문맥을 혼동하지 말 것.
+   단, peak_allocated는 모델 가중치·활성화·cat된 전체 BF16 k/v 작업버퍼(Identity도 동일하게 가짐)를 포함하므로
+   "KV 내용 5% 감소"와 "peak 22% 감소"는 서로 다른 양이다. REPORT가 이를 분리해 적었고, 속도/가속은 주장하지 않았다. 적절.
+
+③ BF16 근접 MUSIQ와 DINO 0.94의 구분 — 구분했으나 한 문장 보강 권고.
+   K8V8 후반 MUSIQ: p0 75.561(BF16 74.557보다 +1.00), p4 74.577(BF16 74.942보다 −0.37). 후반 DINO참조 0.9395/0.9419,
+   전체 0.9561/0.9629. latent normalized_squared_error 전체 0.514/0.266, 마지막 청크 0.762/0.487로 latent는 크게 다르다.
+   B-3 등록 규칙1은 "BF16 동등"에 DINO참조≥0.99를 요구했다. K8V8은 그 문턱을 넘지 못하므로 "BF16과 동등"이 아니라
+   "S120보다 충분히 낫고 MUSIQ는 BF16 수준"으로만 읽어야 한다. REPORT는 "품질 보존의 보편적 증명은 아니다"라고 썼는데,
+   B-3 자체 기준(0.99)에 미달한다는 점을 한 줄 명시하면 과장 여지가 없어진다. 일반화·action·물리 정확도 미주장은 적절.
+
+④ 미완료/코드 오류 — 중대한 오류 없음. 문서 불일치 1건.
+   - 호출 수: layer_calls 30층×pairs 41, K8V8 key/value 각 41, Identity 0. events 1230행/실행 → 2460 pair/arm,
+     840 forward, VAE 4, payload 72, 프레임 2004. audit.json status=passed, audit_code_sha256가 현재 파일 해시
+     6af62b13…과 일치. quality.json finished_utc < 마감(1793813220) 조건을 감사가 검사한다.
+   - 수명주기: ChunkStore.attend는 start≠pending_start일 때만 segment 추가·퇴거(capacity//count=7 유지)하고,
+     residual 0이면 다음 청크 첫 forward에서 직전 청크를 한 번만 encode한다(state None일 때만). Observed.encode_pair의
+     assert pairs==chunk와 기록된 segment starts range(max(0,c−6),c)가 이를 확인한다. 청크 내 5회 forward는 pending만
+     교체한다. Identity 42청크·K8V8 첫 청크 byte 일치는 코드 assert same(y,expected)로 강제된다.
+   - 불일치: REPORT_KO.txt 2행 "저장 자료 감사와 실제 Fable 최종 검토는 진행 중" — audit.json은 passed로 존재한다.
+     감사 완료로 갱신하고 이 검토 결과를 연결해야 한다.
+   - 주의 표기: encode_events.jsonl sha256이 prompt 0/4에서 arm별로 동일하다(Identity f697…, K8V8 7512…). 구조 정보만
+     기록하므로 당연하지만, 이 로그는 데이터 의존 증거가 아니라 호출 구조 증거임을 알고 인용해야 한다.
+   - 주의 표기: "codes/scales 전원소 byte 왕복"은 생성 시 serialize() 자체검사다. 감사 raw8()은 헤더·길이·유한성과
+     복원 산술 실행만 하고 저장 state와 비교하지 않는다(state는 별도 저장되지 않음). 보고 문구는 틀리지 않았으나
+     "감사가 독립 왕복 검증"으로 읽히지 않게 할 것.
+
+3. 주장 범위
+   가능: 두 개발 prompt·seed101·42청크·21프레임 창에서 기존 RTN K8V8(g16)이 S120보다 적은 직렬화 바이트로
+   후반/전체 MUSIQ·DINO참조·인접 DINO 모두 우수. 동일 ChunkStore 경로의 peak allocated도 Identity보다 낮음.
+   불가: BF16 동등(DINO 0.99 미달), 다른 prompt/seed/길이 일반화, 가속, S의 K 선택이 V8 위에서 무효라는 결론.
+
+4. 필요한 수정 / 가장 싼 추가 확인
+   - REPORT 2행 감사 상태 갱신, ③의 0.99 기준 미달 한 줄 추가, ④의 두 주의 표기 반영. 추가 실험 불필요.
+
+5. 직접 확인 / 미확인
+   확인: B-4 REGISTRATION/REPORT/quality.json/audit.json/4개 sampling.json(요약·청크 첫/끝·layer_calls·peak),
+   tools/kv_global_baseline.py 전체, tools/audit_kv_global_baseline.py 전체, src/kvq/quant.py·store.py 전체,
+   anchor_identity_gate.IdentityQuantizer, B-3 REGISTRATION/quality.json 창 수치·decision/audit.json, 파일 sha256 4종,
+   바이트·peak 산술 재계산, payload 1개 CPU 해석.
+   미확인: p3_tf_fr의 compressed_cache 설정 본문(capacity/residual 값은 기록된 segment starts로 간접 확인),
+   나머지 71개 payload 내용(감사가 72개 모두 해석했다고 기록), 원시 pixels/features 재집계(감사 기록만 확인),
+   MUSIQ/DINO 가중치 해시 재검, 다른 검토자의 판정은 근거로 쓰지 않았다.

@@ -1,0 +1,68 @@
+B-4: 기존 K8V8 기준선으로 이번 채널 boost 개발 종료
+작성: 2026-11-05 KST. 저장 자료 감사와 실제 Claude Fable 최종 검토 완료.
+검토 원문: FABLE_FINAL_REVIEW_KO.txt. 반영 내역: REVIEW_RESPONSE_KO.txt.
+
+판단: 시험한 총 KV 저장 상한에서 기존 RTN K8V8이 S120보다 적은 바이트로 더 높은 MUSIQ와 BF16 참조 유사도를 얻었다.
+따라서 현재 S120을 새 주방법으로 개발할 이유가 확인되지 않았다. B-3의 고정 V 조건에서의 개선 관측은 유지한다.
+
+후반(프레임249..500)의 원시 RGB8 결과:
+prompt | BF16 MUSIQ | U120 | U156 | S120 | K8V8 | S DINO참조 | K8V8 DINO참조
+0 | 74.556729 | 69.215187 | 68.196702 | 71.162409 | 75.561378 | 0.811688 | 0.939509
+4 | 74.942205 | 54.653156 | 56.385285 | 61.444203 | 74.576981 | 0.727084 | 0.941893
+
+두 prompt 모두 등록한 네 품질 조건과 총 바이트 조건을 충족했다.
+[
+  {
+    "prompt": 0,
+    "late_K8V8_minus_S120": {
+      "musiq": 4.398968227325923,
+      "dino_reference": 0.12782065164379763,
+      "dino_adjacent": 0.0022324272956479874
+    },
+    "whole_musiq_difference": 2.7975797976800294,
+    "kv_with_headers_per_layer": 125964624,
+    "existing_baseline_sufficient": true
+  },
+  {
+    "prompt": 4,
+    "late_K8V8_minus_S120": {
+      "musiq": 13.13277825855073,
+      "dino_reference": 0.2148098281326526,
+      "dino_adjacent": 0.006539141353994471
+    },
+    "whole_musiq_difference": 8.075694055614363,
+    "kv_with_headers_per_layer": 125964624,
+    "existing_baseline_sufficient": true
+  }
+]
+
+저장량과 실행 자원은 구분한다. 21프레임 창, 층당 현재 BF16 K/V + 과거6청크:
+- S120 직렬화 내용 132,588,312 B. K8V8은 헤더 포함 125,964,624 B: 약4.996% 감소.
+- K8V8 tensor 내용은 125,964,288 B/층. int8 codes에 padding과 FP16 scale을 포함하며 8bit에서는 실제 byte container 크기다.
+- B-4의 동일 ChunkStore 경로에서 peak allocated는 두 prompt 모두 Identity 8.771837 GiB, K8V8 6.831285 GiB였다.
+- 복원용 임시 BF16 버퍼와 모델/작업버퍼가 있으므로 KV 내용 감소율과 GPU peak 감소율은 다르다.
+- S120의 B-3 shadow-cache 구현과 B-4의 실행 시간을 비교해 가속률을 주장하지 않는다. 반복 타이밍 검사도 하지 않았다.
+
+무개입과 평가 연결:
+- Identity ChunkStore FR 2실행×42청크 전부 B-3 BF16 latent와 전원소 바이트 일치. K8V8의 첫 청크도 일치.
+- 두 Identity 영상은 새로 VAE decode했고 B-3 BF16 raw RGB8과 전원소 바이트 일치했다.
+- MUSIQ 프레임 점수 차이 <=1e-4, DINO 원시 특징 상대차이 <=1e-5를 등록했고 실제 차이는 quality.json에 저장했다.
+- 현재 청크 BF16, 과거 최대6청크, c7부터 퇴거를 30층 실제 segment start에서 검사했다.
+- 840 generator forwards. Identity clone pair 2460회, RTN8 pair2460회(K encode2460/V encode2460).
+- 대표 최종 K/V payload72개를 실제 직렬화하고 생성 시 codes/scales 전원소 byte 왕복을 검사했다.
+- CPU 감사는 저장된 72개 payload의 해시·헤더·길이·유한성·복원 산술을 확인했다. 생성 당시의 원본 state는 별도 보존하지 않아, 감사에서 원본 state와의 왕복 비교를 다시 한 것은 아니다.
+- encode_events는 실제 호출 지점에서 수집한 호출 구조 기록이다. 같은 arm의 두 prompt에서 로그 해시가 같으며, 입력 원소 동일성의 증거로 사용하지 않는다.
+- VAE4회, 영상4회분2004프레임 평가. BF16 identity 원시 영상/preview 파일은 새 결과 일치 확인 후 기존 파일을 재사용했다.
+
+해석:
+B-3에서 S는 V를 BF16으로 고정했을 때 두 균일 K3 방식보다 나았다. 이는 유효한 조건부 결과다.
+B-4는 K/V 비트 배분뿐 아니라 그룹 길이, 대칭 여부, 복원 산술도 함께 바꾸는 기존 설정 비교다.
+따라서 이 차이를 V 정밀도 변경 하나의 인과 효과라고 부르지 않는다. 실용적인 총 예산에서 더 단순한 설정이 충분하다는 판단이다.
+K8V8의 MUSIQ는 BF16에 가깝지만 DINO 참조는 약0.94이며 생성 내용이 동일하지 않다. 품질 보존의 보편적 증명은 아니다.
+B-3에서 단순 기준선의 BF16 근접성을 판단할 때 요구한 DINO 참조 0.99에도 미달한다. B-4 통과는 S120 대비 충분성 판정이지 BF16 동등 판정이 아니다.
+두 개발 프롬프트·seed101·Self-Forcing 영상 생성의 결과이며 새로운 입력, action 추종, 물리 정확도, 새 논문 기여까지 확보한 것은 아니다.
+추가 bit/층 선택/새 보정 후보를 붙이지 않는다. 다음 비교의 단순 기준선으로 기존 K8V8을 남기고 이번 B 탐색을 마무리한다.
+
+CPU 감사 완료: 840forward, Identity2460pair/RTN2460pair, K/V각2460encode, 대표payload72개,
+168청크오차,2004프레임의MUSIQ점수/DINO특징집계를재검산했고등록종료판정이같았다.
+VAE/MUSIQ/DINO추론은이감사에서다시수행하지않았다.

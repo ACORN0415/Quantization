@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "gpu_calls": 0,
+  "model_forwards": 840,
+  "identity_pairs": 2460,
+  "rtn_pairs": 2460,
+  "key_encode_calls": 2460,
+  "value_encode_calls": 2460,
+  "payloads": 72,
+  "chunk_scores": 168,
+  "musiq_frame_scores_reaggregated": 2004,
+  "dino_features_reaggregated": 2004,
+  "vae_musiq_dino_inference_rerun": false,
+  "decision_recomputed": true,
+  "close_boost_development": true,
+  "audit_code_sha256": "6af62b132af92d897f36cd892fadbcb6f27c03e10a57a9aa80d3f169caecad58"
+}
