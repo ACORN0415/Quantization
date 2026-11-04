@@ -1,0 +1,138 @@
+{
+  "status": "passed",
+  "gpu_calls": 0,
+  "encode_calls": 108,
+  "cases": [
+    {
+      "prompt": 0,
+      "layer": 0,
+      "arm": "U120",
+      "byte_equal": true,
+      "six_chunk_bytes": 17611944
+    },
+    {
+      "prompt": 0,
+      "layer": 0,
+      "arm": "U156",
+      "byte_equal": true,
+      "six_chunk_bytes": 17280168
+    },
+    {
+      "prompt": 0,
+      "layer": 0,
+      "arm": "S120",
+      "byte_equal": true,
+      "six_chunk_bytes": 17572632
+    },
+    {
+      "prompt": 0,
+      "layer": 14,
+      "arm": "U120",
+      "byte_equal": true,
+      "six_chunk_bytes": 17611944
+    },
+    {
+      "prompt": 0,
+      "layer": 14,
+      "arm": "U156",
+      "byte_equal": true,
+      "six_chunk_bytes": 17280168
+    },
+    {
+      "prompt": 0,
+      "layer": 14,
+      "arm": "S120",
+      "byte_equal": true,
+      "six_chunk_bytes": 17572632
+    },
+    {
+      "prompt": 0,
+      "layer": 29,
+      "arm": "U120",
+      "byte_equal": true,
+      "six_chunk_bytes": 17611944
+    },
+    {
+      "prompt": 0,
+      "layer": 29,
+      "arm": "U156",
+      "byte_equal": true,
+      "six_chunk_bytes": 17280168
+    },
+    {
+      "prompt": 0,
+      "layer": 29,
+      "arm": "S120",
+      "byte_equal": true,
+      "six_chunk_bytes": 17572632
+    },
+    {
+      "prompt": 4,
+      "layer": 0,
+      "arm": "U120",
+      "byte_equal": true,
+      "six_chunk_bytes": 17611944
+    },
+    {
+      "prompt": 4,
+      "layer": 0,
+      "arm": "U156",
+      "byte_equal": true,
+      "six_chunk_bytes": 17280168
+    },
+    {
+      "prompt": 4,
+      "layer": 0,
+      "arm": "S120",
+      "byte_equal": true,
+      "six_chunk_bytes": 17572632
+    },
+    {
+      "prompt": 4,
+      "layer": 14,
+      "arm": "U120",
+      "byte_equal": true,
+      "six_chunk_bytes": 17611944
+    },
+    {
+      "prompt": 4,
+      "layer": 14,
+      "arm": "U156",
+      "byte_equal": true,
+      "six_chunk_bytes": 17280168
+    },
+    {
+      "prompt": 4,
+      "layer": 14,
+      "arm": "S120",
+      "byte_equal": true,
+      "six_chunk_bytes": 17572632
+    },
+    {
+      "prompt": 4,
+      "layer": 29,
+      "arm": "U120",
+      "byte_equal": true,
+      "six_chunk_bytes": 17611944
+    },
+    {
+      "prompt": 4,
+      "layer": 29,
+      "arm": "U156",
+      "byte_equal": true,
+      "six_chunk_bytes": 17280168
+    },
+    {
+      "prompt": 4,
+      "layer": 29,
+      "arm": "S120",
+      "byte_equal": true,
+      "six_chunk_bytes": 17572632
+    }
+  ],
+  "provenance": {
+    "script": "5e1fd685c49db7ddf99aeaa0c94c78cd57e556ce225249d3e8fd447b78f75792",
+    "codec": "3366d65beb13b87d52f6344c99889f3da547a8340ce04d90e5309d995c00747e",
+    "registration": "29f19b98264af56b0f7c72cf96ae23177d49e227f4a37fb0ebacfe052b3265bc"
+  }
+}

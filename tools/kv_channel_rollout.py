@@ -114,7 +114,7 @@ def generate(prompt):
     modules=[m for m in pipe.generator.modules() if isinstance(m,model.CausalWanSelfAttention)];assert len(modules)==30
     original=model.attention
     ref_path=Path(f'/home/acorn0415/sfq_data/policy_study/reference/p{prompt:02d}_s101/bf16.pt')
-    ref=torch.load(ref_path,map_location='cpu',weights_only=True)['latent'][:,:36]
+    ref=torch.load(ref_path,map_location='cpu',weights_only=True)['latent'][:,:126]
     for arm in ARMS:
         limit();folder=DATA/f'p{prompt:02d}_{arm}'
         if folder.exists():raise RuntimeError('Refuse overwrite run')
@@ -127,10 +127,10 @@ def generate(prompt):
             control=ReadController(arm,model,modules,folder/'encode_events.jsonl');model.attention=control.attend
             def count(module,args):
                 limit();r['model_forwards']+=1
-                if r['model_forwards']>60:raise RuntimeError('Forward cap')
+                if r['model_forwards']>210:raise RuntimeError('Forward cap')
             handle=pipe.generator.register_forward_pre_hook(count)
             torch.cuda.reset_peak_memory_stats();started=time.perf_counter()
-            for chunk in range(12):
+            for chunk in range(42):
                 y=pilot.run_chunk(pipe,cache,xc,cond,noise,chunk,101).cpu()
                 expected=ref[:,chunk*3:(chunk+1)*3]
                 assert same(expected.to(y.dtype).to(expected.dtype),expected)
@@ -138,7 +138,7 @@ def generate(prompt):
                 assert torch.isfinite(y).all()
                 values.append(y);r['chunks'].append({'chunk':chunk,'no_intervention_byte_equal':True if arm=='BF16' or chunk==0 else None,
                     'latent_error':error(y,expected.to(y.dtype))})
-                save(folder/'sampling.json',r);print('generate',prompt,arm,chunk+1,'/12',flush=True)
+                save(folder/'sampling.json',r);print('generate',prompt,arm,chunk+1,'/42',flush=True)
             latent=torch.cat(values,dim=1);torch.save({'latent':latent},folder/'latent.pt')
             r.update(status='completed',latent=record(folder/'latent.pt'),latent_error=error(latent,ref.to(latent.dtype)),generation_s=time.perf_counter()-started)
         except BaseException as exc:
@@ -150,8 +150,8 @@ def generate(prompt):
             r.update(finished_utc=time.time(),peak_allocated_bytes=torch.cuda.max_memory_allocated(),peak_reserved_bytes=torch.cuda.max_memory_reserved(),
                      max_rss_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024)
             save(folder/'sampling.json',r);save(OUT/f'p{prompt:02d}_{arm}_sampling.json',r)
-        assert r['model_forwards']==60 and r['attention_calls']==1800 and all(n==60 for n in r['layer_attention_calls'])
-        assert all(n==(0 if arm=='BF16' else 11) for n in r['layer_encode_calls'])
+        assert r['model_forwards']==210 and r['attention_calls']==6300 and all(n==210 for n in r['layer_attention_calls'])
+        assert all(n==(0 if arm=='BF16' else 41) for n in r['layer_encode_calls'])
         assert pilot.source_hash()==model_source
         del control,cache,xc,noise,values,y,latent;gc.collect();torch.cuda.empty_cache()
 
@@ -161,9 +161,9 @@ def windows(musiq,features,reference):
     similarity=(norm*ref).sum(1).clamp(-1,1)
     adjacent=(norm[1:]*norm[:-1]).sum(1).clamp(-1,1)
     result={}
-    for name,start in (('whole',0),('late',69)):
+    for name,start in (('whole',0),('late',249)):
         result[name]={'musiq':float(np.mean(musiq[start:])),'dino_reference':float(similarity[start:].mean()),
-                      'dino_adjacent':float(adjacent[max(0,start-1):].mean()),'frames':141-start}
+                      'dino_adjacent':float(adjacent[max(0,start-1):].mean()),'frames':501-start}
     return result,similarity.tolist(),adjacent.tolist()
 
 
@@ -211,23 +211,23 @@ def quality():
                 sample=json.loads((folder/'sampling.json').read_text());assert sample['status']=='completed' and sample['provenance']==provenance()
                 assert sha(sample['latent']['path'])==sample['latent']['sha256']
                 latent=torch.load(sample['latent']['path'],map_location='cpu',weights_only=True)['latent']
-                assert latent.shape==(1,36,16,60,104)
+                assert latent.shape==(1,126,16,60,104)
                 decoded=vae.decode_to_pixel(latent.cuda().bfloat16(),use_cache=False);r['vae_decodes']+=1
-                assert decoded.shape==(1,141,3,480,832) and torch.isfinite(decoded).all()
+                assert decoded.shape==(1,501,3,480,832) and torch.isfinite(decoded).all()
                 pixels=((decoded[0]*.5+.5).clamp(0,1)*255).byte().permute(0,2,3,1).contiguous().cpu()
                 vae.model.clear_cache();del decoded,latent;torch.cuda.empty_cache()
                 torch.save({'pixels':pixels},folder/'pixels.pt')
                 musiq=[];features=[]
-                for start in range(0,141,4):
+                for start in range(0,501,4):
                     limit();batch=pixels[start:start+4].permute(0,3,1,2).cuda().float()/255
                     musiq.extend(metric(batch).reshape(-1).cpu().tolist())
-                for start in range(0,141,16):
+                for start in range(0,501,16):
                     limit();features.append(evaluator.features(list(pixels[start:start+16].numpy())))
-                features=torch.cat(features);assert len(musiq)==141 and features.shape[0]==141
+                features=torch.cat(features);assert len(musiq)==501 and features.shape[0]==501
                 assert np.isfinite(musiq).all() and torch.isfinite(features).all()
                 if arm=='BF16':ref_features=features;ref_pixels=pixels
                 win,sim,adj=windows(musiq,features,ref_features)
-                mse=[float((pixels[i].double()-ref_pixels[i].double()).square().mean()/255**2) for i in range(141)]
+                mse=[float((pixels[i].double()-ref_pixels[i].double()).square().mean()/255**2) for i in range(501)]
                 torch.save({'features':features},folder/'features.pt')
                 write_video(str(folder/'preview.mp4'),pixels,fps=16,video_codec='libx264',options={'crf':'18'})
                 row={'prompt':prompt,'arm':arm,'windows':win,'musiq_per_frame':musiq,'dino_reference_per_frame':sim,'dino_adjacent':adj,
