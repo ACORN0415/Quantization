@@ -1,0 +1,92 @@
+{
+  "status": "initial_review_received; root_chat_launched; chat_task_attachment_blocked",
+  "run_id": "run_cee0996dad4f",
+  "task_id": "task_6cb4341b2df9",
+  "first_attempt": {
+    "dispatch_id": "ctx_79bd89c57000",
+    "agent": "claude",
+    "workspace": "/home/acorn0415",
+    "state": "failed",
+    "failed_stage": "agent_readiness",
+    "error": "Agent startup blocked: agent-trust-workspace",
+    "task_ran": false,
+    "terminal_released": true,
+    "liveness_after_release": "exited"
+  },
+  "retry_target": "id:0d2a9b75-a524-4595-98f2-b5b9165d29bd::/home/acorn0415/Quantization",
+  "role_files_written": true,
+  "claude_review_received": true,
+  "gpu_runs": 0,
+  "second_attempt": {
+    "dispatch_id": "ctx_80585b5596c9",
+    "agent": "claude",
+    "workspace": "/home/acorn0415/Quantization",
+    "state": "failed",
+    "failed_stage": "agent_readiness",
+    "error": "timeout",
+    "observed_terminal_prompt": "Claude Code running in Bypass Permissions mode; No, exit",
+    "task_ran": false,
+    "terminal_released": true
+  },
+  "manual_launch": {
+    "terminal": "term_93dfb93a-8c4d-48ca-b868-0a09f4352410",
+    "workspace": "/home/acorn0415/Quantization",
+    "executable": "claude",
+    "permission_mode": "manual",
+    "allowed_tools": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Bash(/home/acorn0415/.orca/cli/bin/orca orchestration *)",
+      "Bash(orca orchestration *)"
+    ],
+    "tui_idle_confirmed": true,
+    "task_attached": true,
+    "global_settings_changed": false,
+    "dispatch_id": "ctx_003168a94e63"
+  },
+  "review_dispatch_id": "ctx_003168a94e63",
+  "review_report": "docs/reviews/20261104_SETUP_CLAUDE_REVIEW_KO.md",
+  "initial_review_model": "default Claude; not verified as Fable",
+  "review_actions": {
+    "N2": "received result and actual dispatch recorded",
+    "N1": "legacy manual allowlist retired for future starts; native chat permission behavior not yet verified",
+    "O1": "meaningful work unit examples added",
+    "O3": "one-time launch history retained in this record, removed from standing protocol"
+  },
+  "superseded_model_followup": {
+    "task_id": "task_3b5c4c5ed1df",
+    "dispatch_id": "ctx_43eed77a388c",
+    "reported_exit_cause": "stop_unverified",
+    "retry_needed": false,
+    "reason": "actual Fable research workers were subsequently launched; no claim of confirmed process exit"
+  },
+  "new_user_preferences": {
+    "workspace": "/home/acorn0415",
+    "model": "fable",
+    "surface": "chat",
+    "keep_open": true,
+    "cli_fallback_allowed": false
+  },
+  "chat_launch": {
+    "session_id": "claude_417f996d_d442_4ce1_b929_ee1eb746196d",
+    "handle": "structured-agent-session-claude_417f996d_d442_4ce1_b929_ee1eb746196d",
+    "worktree_id": "4c22a6d4-f9ba-4957-b6e5-9554efa1894a::/home/acorn0415",
+    "requested_model": "fable",
+    "observed_surface": "structured",
+    "receipt_detail": "Started a structured chat session, as requested.",
+    "operation_id": "1793796457404-22c74abde49e4a808ec8f2e8e3926231",
+    "task_attached": false,
+    "attachment_error": {
+      "code": "terminal_handle_stale",
+      "request_id": "624672f1-7af7-4610-adbc-3af701021c0e",
+      "task_created": false,
+      "dispatch_created": false
+    },
+    "direct_message_error": {
+      "code": "terminal_not_found",
+      "request_id": "cc595529-8852-4ad5-94b9-308c1634b5a1"
+    },
+    "review_received": false
+  }
+}

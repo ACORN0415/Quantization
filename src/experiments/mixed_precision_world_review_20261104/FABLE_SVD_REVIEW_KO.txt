@@ -1,0 +1,92 @@
+# Fable 독립 검토: NVIDIA Mixed-Precision SVD(Ogita–Aishima)와 월드/영상 생성 양자화
+
+- 검토자: Claude Fable 5.1 (`claude-fable-5-1`), Orca 터미널 `term_88bce5c1-7b78-4257-8c6e-cdef70ce0793`, Task `task_8cb5567e6743`, Dispatch `ctx_99406bf8a131`
+- 일자: 2026-11-04. 읽기 전용 검토. GPU 실행·파일 수정·커밋 0회.
+- 원문: https://research.nvidia.com/publication/2026-06_mixed-precision-svd-gpus-ogita-aishima-iterative-refinement (PDF 491,120바이트, SHA256 `c2ef37c9…299cf`). 제가 직접 내려받은 사본과 조정자가 제공한 `/tmp/world_quant_review_20261104/nvidia_svd.pdf`의 해시가 일치했다. 아래 쪽 번호는 이 PDF 기준이다.
+- 로컬 기준 commit: `d162f82`.
+
+## 0. 원문에서 직접 확인한 사실
+
+| 항목 | 확인 내용 | 위치 |
+|---|---|---|
+| 알고리즘 | FP32 `cusolverDnXgesvdp`로 저정밀 SVD → Ogita–Aishima 뉴턴형 정련(GEMM 6회/반복) → Wedin 기준으로 cluster 검출 → cluster는 투영 블록 `C_k=Û^H A V̂`의 작은 SVD(Rayleigh–Ritz)로 사후 정련 → 정렬 | Alg.1 p.3, Alg.2 p.5, Alg.3 p.7, Alg.4 p.10 |
+| 잔차 정밀도 | "High precision is required for all steps". 매 반복 `R=I−Û^HÛ, S=I−V̂^HV̂, T=Û^H A V̂`를 FP64(또는 Ozaki-I 에뮬레이션 FP64 GEMM)로 계산 | Alg.1/3 머리말, p.3·p.7 |
+| 원본 행렬 필요성 | 입력 A를 저정밀 사본으로 내려 SVD한 뒤, 정련 단계는 원본 A(고정밀)를 매 반복 다시 읽는다. 또한 U는 m×m 정방 행렬 전체를 정련한다 | Alg.4 1행, Alg.1 입력 p.3 |
+| cluster 처리 | 임계값 ω=2(‖offdiag T‖_F+‖A‖_F·max(‖R‖_F,‖S‖_F)) 와 `|σ_i−σ_j| ≤ √ε_lp·σ_max`의 합집합(Wedin-union). 1단계 루프는 cluster를 안전 상태로 두고, 2단계에서 cluster 블록 sub-SVD | 식(2) p.4, §4.3 p.7–8, Alg.3 6·9행 |
+| FP64 emulation | cuBLAS Automatic Dynamic Precision의 Ozaki-I. 1단계는 99% 이상 GEMM이라 에뮬레이션 이득을 받고, 2단계 sub-SVD의 non-GEMM 커널은 못 받음 | §5 p.11, p.14 |
+| CUDA/cuSolver | CUDA 13.2. `cusolverDnXgesvdp`는 CUDA 13.3 Update 1에 들어갈 pre-release 버전 | §5 p.11 |
+| 5.2× 조건 | RTX PRO 6000 Blackwell WSE(FP32 125 TFLOPS / FP64 1.95 TFLOPS), 복소수 산술, pattern (4)(상위 절반이 거의 평탄한 큰 cluster), 에뮬레이션 FP64, n≈2048–4096. 실수 산술 최대 4.6×. native FP64끼리 비교하면 n=8192에서 손익분기, pattern(5)는 ≈1×. B200(빠른 FP64 보유)에서는 1.0×/0.9×로 이득 없음 | p.12–15, Table 2 p.14, Table 3 p.15 |
+| 정확도 | n=2048 12개 스펙트럼에서 η=‖A−ÛΣ̂V̂^H‖_F/(n‖A‖_F)≈10⁻¹⁷–10⁻¹⁸ | Table 1 p.12 |
+| 공개 코드 | 공식 페이지에 코드 링크 없음. 웹 검색(2회)에서도 저장소 미발견. 선행 GPU 구현(Uchino et al. 2024)의 공개 코드도 미발견. **확인 실패로 기록** | — |
+| GPU 언급 | 논문에 RTX 3080·RTX 4090 언급 없음. 우리 저장소의 RTX 3080은 커널 개발용 10GB sm_86이고 측정은 4090이다(`문서/리뷰/codex_review_pack/HANDOFF_kernel_track.md:4`) | — |
+
+## 1. 판정: 직접 적용 가능 / 조건부 / 현재 비추천
+
+**현재 비추천(직접 활용).** 이유는 오차 예산의 자릿수 차이다.
+
+- 우리 TT 코덱은 BF16 K/V를 FP32로 올려 `torch.linalg.svd` 두 번(공간→시간→채널 TT-SVD)으로 분해하고, 인자를 16원소 그룹 symmetric RTN 2/3/4비트로 저장한다(`tools/codec_order_core.py:139–143`, `tools/tt_rank_codec.py:23–24`, `tools/codec_order_core.py:33–41`). 즉 네 가지 오차가 겹친다.
+  1. SVD 계산 오차: FP32 full SVD의 역방향 오차 ≈10⁻⁷ 상대. 논문은 이를 10⁻¹⁷로 낮춘다(Table 1).
+  2. rank 절단 오차: 헤드당 1560×384 행렬에서 rank 192/299 절단. codec_order 2비트 표에서 TT 분해만(FP16 인자)의 D 비율이 RTN 대비 0.54–0.64.
+  3. 인자 양자화 오차: 2비트에서 TT→양자화의 D 비율이 4.65–5.91(동일 예산), 즉 절단보다 한 자릿수 크다.
+  4. 생성 피드백 오차: README §10 TF/FR 차이(INT4 TF 70.35 vs FR 55.94).
+  논문이 줄이는 1번은 2·3·4번보다 10⁵배 이상 작다. FP64 정련은 우리 파이프라인의 어떤 수치도 바꾸지 못한다.
+- **FP32→FP64 정련과 저비트 복원은 다른 문제다.** 정련은 원본 A를 고정밀로 매 반복 읽는다(Alg.4). 저비트로 버린 K/V 원본은 복원 시점에 존재하지 않으므로, 이 알고리즘은 "양자화로 잃은 정보를 되찾는" 도구가 아니라 "원본이 있을 때 분해를 더 정확히 하는" 도구다. README §18에서 이미 "버린 과거 BF16 원본의 오차가 필요하며 저비용 획득 방법이 없다"고 기록한 것과 같은 벽이다.
+- **오프라인 보정 시간 vs 생성 지연.** tt_kv_final summary.csv에서 p0·2비트·rank192: 생성 559.0초 중 encode 432.1초, 직접 양자화는 생성 142.6초·encode 1.41초다. 생성 시간 차 416초가 거의 전부 encode(= SVD 분해) 차 431초다. 즉 TT의 3.9배 지연은 생성 경로 위의 SVD 비용이고, 논문 방법은 그 SVD에 정련 반복을 **추가**하므로 지연을 늘린다. 논문의 속도 이득은 "FP64 결과가 필요할 때 native FP64 대비"이며 우리는 FP64 결과가 필요 없다.
+- **메모리.** 논문 알고리즘은 m×m U 전체(헤드당 1560×1560 FP64 ≈ 19.5 MB)와 A를 고정밀로 유지한다. 우리는 thin rank-r만 필요하다.
+- **장비.** RTX 4090(SM89)은 논문의 "빠른 FP64가 없는 소비자급" 전제에는 맞지만, 논문은 CUDA 13.2·pre-release cuSolver·cuBLAS Ozaki-I 에뮬레이션(Blackwell에서 측정)을 쓴다. 우리 환경은 torch 2.6.0+cu124(`src/experiments/kv_reuse_stage1/environment.json`). Ada에서 cuBLAS FP64 에뮬레이션 지원 여부는 **미확인**이다. RTX 3080은 10GB sm_86 개발기로, 어떤 수치도 없다.
+
+**조건부(연구로 발전시킬 여지).** 논문의 두 구성요소는 재활용 가치가 있다. (a) Rayleigh–Ritz 블록 정련(Alg.2)을 "cluster"가 아니라 "양자화된 기저"에 적용하는 발상(아래 인사이트 3). (b) Wedin 기준의 √ε_lp 분기(Alg.3 6행)는 역방향 혼합정밀(저정밀 preconditioner→FP32)이 KV 스펙트럼에서 왜 안 되는지를 정량적으로 말해 준다(인사이트 2). 둘 다 TT 후보 재개가 아니라 CPU 수준 판별 검사 수준이다.
+
+**직접 적용 가능.** 없음. 굳이 꼽으면 "HPC용 FP64 SVD가 필요한 별도 수치 작업"뿐이며 이 프로젝트에는 그런 작업이 없다.
+
+**open-loop vs action-conditioned.** 우리 자료는 전부 text-to-video open-loop Self-Forcing(MUSIQ/DINO/flow)이다. 저장소에 action 조건 world-model 실행·지표가 없다. 따라서 "월드 생성 양자화에 쓸 수 있는가"의 action-conditioned 부분은 우리 증거 범위 밖이다. 말할 수 있는 것은 open-loop에서도 FR이 TF보다 크게 손상됐다는 사실뿐이고, 행동 피드백이 더해지면 cache 오차 민감도가 커질 것이라는 것은 가설이다.
+
+## 2. 가장 강한 반론과 단순 기준선
+
+**반론.** 논문의 대상은 "빠른 FP64 하드웨어 없이 FP64 정확도의 full SVD를 얻는 것"이다. 우리 파이프라인은 (i) full SVD가 아니라 thin rank-r, (ii) FP64가 아니라 FP32로 충분, (iii) 지배 오차는 2–4비트 인자 양자화와 절단, (iv) 실제 TT 실패 원인은 DINO 하락·3/4비트 MUSIQ 하락·3.9배 지연이다. SVD를 무한히 정확하게 해도 (iii)(iv)는 그대로다. 그리고 B200처럼 FP64가 빠른 GPU에서는 논문 스스로 이득이 사라진다고 보고한다(Table 3). "NVIDIA 신작"이라는 사실 외에 우리 문제와 연결되는 고리가 없다.
+
+**단순 기준선.**
+- 품질·메모리: 직접 KV RTN(종료 보고의 기준선, 생성 142.6초).
+- SVD 계산 자체: 현재 FP32 `torch.linalg.svd`. 더 싼 대안은 randomized range finder(코덱에 이미 `range` 방법 존재, `tools/codec_order_core.py:108–114`)이며 정련 없이 쓴다. 이것이 "혼합 정밀 SVD"가 우리에게 의미할 수 있는 유일한 방향(정밀도를 **내리는** 쪽)이다.
+
+## 3. 추가 인사이트 3개
+
+### 인사이트 1 (관측, 재계산 가능): SVD 계산 정밀도는 TT 오차 예산에서 측정 불가 수준이다
+- 근거: 위 1절의 네 오차 자릿수. FP32 SVD 10⁻⁷ vs 2비트 인자 양자화 D 비율 4.65–5.91.
+- 가장 가까운 기존 방법: 논문 자체(FP32→FP64 정련), Uchino et al. 2024.
+- 달라야 하는 조건: 인자를 FP16 이상으로 저장하고 rank를 거의 full로 두는 경우에만 SVD 정밀도가 보일 수 있는데, 그러면 압축이 없다.
+- 가장 싼 판별 검사(CPU, GPU 불필요): 보존된 개발 캡처 하나에서 `decompose(x,'tt',r)`를 FP32와 FP64(`x.double()`)로 각각 실행 → `store(…,bits)` → D 비교. 캡처가 삭제됐으면 `~/sfq_data/tt_kv_final/` latent로는 불가하므로 "판단 불가"로 기록.
+- 종료 기준: FP64 SVD가 TT→양자화의 added_D를 1% 미만으로 바꾸면 종료(예상 결과). 1%를 넘으면 그때만 코덱의 수치 문제(예: 정렬·cancellation)를 별도 조사.
+
+### 인사이트 2 (관측+가설): 역방향 혼합정밀(BF16/FP16 preconditioner → FP32 정련)은 KV 스펙트럼의 cluster 때문에 구조적으로 이득이 없다
+- 관측(원문): Alg.3 6행은 `|σ_j−σ_i| > √ε_lp·σ_max`인 쌍만 뉴턴 정련하고, 나머지는 2단계 sub-SVD로 보낸다(Alg.4 7행). √ε_lp는 BF16 0.0625, FP16/TF32 0.022, FP32 2.4×10⁻⁴.
+- 가설(우리 데이터): 헤드당 384개 특이값이 완만히 감소하면 인접 간격 평균 ≈ σ_max/384 ≈ 0.0026 < 0.022. 그러면 거의 모든 쌍이 cluster로 분류되어 2단계 sub-SVD가 사실상 원래 크기가 되고(논문 pattern (4)가 n/2 cluster에서 이미 속도 역전을 보임, p.14), 저정밀 preconditioner의 이득이 사라진다. S8에서 "21프레임 축 rank 3–4로 95% 에너지"가 실패한 것(README §5)도 완만한 스펙트럼을 시사한다.
+- 가장 가까운 기존 방법: 논문의 Wedin-union, mixed-precision Jacobi SVD(Gao et al. 2025; cluster에 강하나 GEMM 비의존), randomized SVD(cluster 무관, 절단만 목표).
+- 달라야 하는 조건: 상위 r개 특이값이 서로 √ε_lp·σ_max 이상 떨어진 "뾰족한" 스펙트럼일 때만 성립. KV가 그런지가 관건.
+- 가장 싼 판별 검사(CPU): 보존 캡처의 헤드별 특이값 384개를 구해 `gap_i > 0.022·σ_max`인 인덱스 비율을 센다. 수 초.
+- 종료 기준: 상위 r=192 안에서 "고립된" 인덱스가 10% 미만이면 역방향 혼합정밀 SVD 방향은 종료. 50% 이상이면 그때만 TF32 preconditioner 마이크로벤치를 제안(별도 승인 필요, TT 재개 아님).
+
+### 인사이트 3 (가설): Alg.2의 Rayleigh–Ritz 블록 정련을 "양자화된 외곽 인자"에 재목적화 — 같은 바이트에서 중간 인자만 원본에 다시 맞추기
+- 내용: TT→양자화에서 외곽 인자(공간 U, 채널 V)를 먼저 양자화해 고정한 뒤, 중간 인자(r×3×r_d)를 **원본 청크 x에 대한 최소제곱**으로 다시 풀고 그 다음 양자화한다. 논문 Alg.2가 `C_k=Û^H A V̂`의 작은 SVD로 근사 기저를 재정렬하는 것과 같은 꼴이며, 차이는 기저의 오염원이 cluster가 아니라 RTN이라는 점이다. 바이트는 같고 encode에 작은 LS 한 번이 추가된다. 원본 x는 encode 시점에 존재하므로 1절의 "원본 필요" 벽에 걸리지 않는다.
+- 가장 가까운 기존 방법: HOSVD 핵 투영(코덱 `tucker`가 이미 수행, `codec_order_core.py:135–138`), TT-ALS, 양자화 인지 ALS, LLM 가중치의 SVD-LLM/LoRC/ZeroQuant-V2 저랭크 오차 보상. 우리 README §18–20의 rounding 탐색(전환 목표)과는 목적함수가 다르다.
+- 달라야 하는 조건: 이득은 2비트에서만 기대할 수 있다(3/4비트 TT→양자화는 이미 직접 양자화보다 나쁘고, 2비트만 MUSIQ 우위가 있었다). 또 이득이 "그룹 scale을 LS로 재적합"하는 더 단순한 대조보다 커야 신규성이 있다.
+- 가장 싼 판별 검사(CPU, 기존 `codec_order_core`로 가능): 개발 캡처 p0/p4, 2비트, rank192·299에서 (a) 현재 TT→양자화, (b) 외곽 양자화 후 중간 LS 재적합→양자화, (c) scale만 LS 재적합 대조의 D를 비교. 수십 초.
+- 종료 기준: (b)가 (a) 대비 added_D를 두 프롬프트 모두 10% 이상 줄이고 (c)보다 커야 진행. 아니면 종료. 통과해도 TT 영상 실험을 자동 재개하지 않는다. DINO 하락과 3.9배 encode 지연은 이 검사로 해결되지 않는 별개 차단 요인이다.
+
+## 4. 주 작업자가 검증할 항목과 미확인 사항
+
+검증할 원문 위치: Alg.1 p.3(고정밀 요구·입력 A), Alg.2 p.5, Alg.3 6·9행 p.7, §4.3 p.7–8, Alg.4 p.10, §5 p.11(CUDA 13.2·pre-release cuSolver 13.3 U1·Ozaki-I), Table 1 p.12, Figure 3·Table 2 p.13–14(5.2× 조건), Table 3 p.15(B200).
+
+검증할 코드 위치: `tools/codec_order_core.py:92–144`(FP32 SVD, TT 경로), `tools/codec_order_core.py:33–41`(인자 RTN), `tools/tt_rank_codec.py:13–28`(형상 h×3×1560×128, `v.float()`), `tools/tt_kv_codec.py`, `src/experiments/tt_kv_final/summary.csv`의 `encode_seconds`/`generation_seconds` 열, `src/experiments/codec_order_development/summary.csv`의 `encode_ms`(TT 186–194 ms/호출, 12헤드 배치, 4090).
+
+미확인:
+- 공개 코드 없음(확인 실패). cuSolver 13.4 문서에 본 논문 방법이 들어갔는지 미확인.
+- RTX 4090(Ada, CUDA 12.4 환경)에서 cuBLAS Ozaki-I FP64 에뮬레이션 지원 여부 미확인.
+- 인사이트 1·2·3의 CPU 검사는 제안만 했고 실행하지 않았다. 개발 캡처가 2026-10-31 정리에서 삭제됐는지 미확인(`src/experiments/DATA_RETENTION_20261031_KO.md` 확인 필요).
+- 논문 encode 비용 432초 중 순수 SVD 비중은 프로파일이 없어 분리하지 못했다(`encode_seconds`는 분해+패킹 합).
+- action-conditioned world-model 성능은 저장소에 자료가 없어 어떤 결론도 내리지 않았다.
+
+## 5. 실제 Fable 실행 표시
+
+- 이 세션의 모델 식별자는 `claude-fable-5-1`이며, 하네스가 보고한 모델명은 Fable 5.1이다. 조정자의 `review_runtime.json`은 배포 전 Orca 터미널 화면에서 "Fable 5.1 · Claude Team"을 확인했다고 기록한다. 암호학적 증명은 제공할 수 없고, 조정자가 터미널 `term_88bce5c1-7b78-4257-8c6e-cdef70ce0793`의 모델 표시로 재확인할 수 있다.
+- 이 검토에서 하위 작업자·검토자를 만들지 않았다. 웹 조회 3회(공식 페이지 1, 검색 2), PDF 다운로드 1회(조정자 사본과 해시 일치), GPU 0회.

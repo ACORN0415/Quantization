@@ -1,0 +1,78 @@
+{
+  "scope": "documents, saved profile/TT rows, source hashes and input availability; no new numerical or GPU experiment",
+  "profile": {
+    "generation_s": 24.625995536996925,
+    "event_seconds": {
+      "concat": 0.7982270723991172,
+      "read_total": 1.4126663009729186,
+      "self_attention": 11.23740364384646,
+      "encode_total": 0.177868896484375,
+      "decoder": 0.2601994225531828,
+      "decode_and_layout": 0.5776578561067582
+    },
+    "event_interpretation": "nested GPU intervals, not additive or an upper bound",
+    "peak_allocated_GiB": 10.475758075714111,
+    "peak_reserved_GiB": 13.203125
+  },
+  "tt_p0_b2_r192": {
+    "key": "p0_b2_r192",
+    "generation_seconds": "558.9906561450007",
+    "encode_seconds": "432.0840108642578",
+    "restore_seconds": "57.06191290199736"
+  },
+  "arithmetic": {
+    "chunk_tokens": 4680,
+    "page_tokens": 128,
+    "pages_with_padding": 37,
+    "padding_tokens": 56,
+    "padding_fraction": 0.011965811965811967,
+    "fp16_scale_bits_per_element_g16": 1.0
+  },
+  "documents": [
+    {
+      "path": "src/experiments/mixed_precision_world_review_20261104/FABLE_SVD_REVIEW_KO.txt",
+      "bytes": 14968,
+      "sha256": "63e56bc7296f5b47fcd61b9cbad5bcc26051e2bb8bd6d499817d8aa962d2f5f2"
+    },
+    {
+      "path": "src/experiments/mixed_precision_world_review_20261104/FABLE_SYSTEMS_RECEIPT.json",
+      "bytes": 392,
+      "sha256": "cd3e849248ed3f1d2c04220c9c911d645530384310c81682aec134301f4a7741"
+    },
+    {
+      "path": "src/experiments/mixed_precision_world_review_20261104/FABLE_SYSTEMS_REVIEW_KO.txt",
+      "bytes": 13826,
+      "sha256": "5006446dd7684708beca35a40ee82a100582130fe62a495f4c1e23222a83dc1e"
+    },
+    {
+      "path": "src/experiments/mixed_precision_world_review_20261104/REPORT_KO.txt",
+      "bytes": 18201,
+      "sha256": "7b5ea584fd66912bc53ef09ae5a7249c16c32e722cd473f0f3506e26013c9c1b"
+    },
+    {
+      "path": "src/experiments/mixed_precision_world_review_20261104/SVD_REVIEW_REQUEST_KO.txt",
+      "bytes": 2786,
+      "sha256": "2b1e11ad0677c987e8b89f17e800eed13198670930b83c4b6cdbf6f7988bbd99"
+    },
+    {
+      "path": "src/experiments/mixed_precision_world_review_20261104/SYSTEMS_REVIEW_REQUEST_KO.txt",
+      "bytes": 3182,
+      "sha256": "72751faec54dbea242b23dbf5b72d2054408d04bd44533306e63b026bc65d5f6"
+    },
+    {
+      "path": "src/experiments/mixed_precision_world_review_20261104/input_availability.json",
+      "bytes": 4199,
+      "sha256": "e98a6010522e6fbb8f0b85484230f0eaa23a70be133a728e608bebe81b898629"
+    },
+    {
+      "path": "src/experiments/mixed_precision_world_review_20261104/review_runtime.json",
+      "bytes": 2069,
+      "sha256": "43c27f3d6eafa058d718bd6d0edd852c70e13b9db8b358a01625bb3791a27661"
+    },
+    {
+      "path": "src/experiments/mixed_precision_world_review_20261104/source_manifest.json",
+      "bytes": 4984,
+      "sha256": "08b733bb44232f1836b4600a225e9f6e6d8057a501991a89f5802590f31d471a"
+    }
+  ]
+}

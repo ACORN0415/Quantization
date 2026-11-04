@@ -1,0 +1,41 @@
+당신은 실제 Claude Fable이며 독립적인 교수·검토자 역할이다.
+프로젝트: /home/acorn0415/Quantization. 이 Task에서 다른 작업자를 만들지 않는다.
+주 작업자는 아직 결론을 주지 않았다. 아래 질문에 원문과 로컬 자료를 대조해 독립적으로 답하라.
+
+사용자 질문: NVIDIA의 Mixed-Precision SVD on GPUs via Ogita–Aishima Iterative
+Refinement를 월드 생성/영상 생성 양자화에 사용할 수 있는가? 직접 활용과 연구로
+발전시킬 여지를 구분하고, 이 주제에서 추가 인사이트 3개를 제시하라.
+
+1차 원문:
+https://research.nvidia.com/publication/2026-06_mixed-precision-svd-gpus-ogita-aishima-iterative-refinement
+공식 페이지에서 원문 PDF를 열어 알고리즘·잔차 계산의 정밀도·원본 행렬 필요성·
+cluster 처리·FP64 emulation·CUDA/cuSolver 버전·5.2배 비교 조건을 확인하라.
+원문 없이 소개글만으로 확인했다고 쓰지 않는다. 공개 코드도 찾되 확인 실패를 구분한다.
+
+우리 자료:
+- src/experiments/tt_kv_final/REPORT_KO.md 및 관련 계획/코드
+- src/experiments/repeat_once_final/REPORT_KO.md
+- src/experiments/kv_reuse_stage1/REPORT_KO.md
+- README.md의 현재 결론
+현재 기록된 주 장비는 RTX4090 24GB·RAM64GB다. 사용자의 인용에는 RTX3080도
+등장하므로 GPU별 차이를 뭉뚱그리지 마라. 새 GPU 실행은 금지다.
+기존 TT 후보는 종료했다. 새 논문만으로 자동 재개하지 않는다.
+
+반드시 구분할 사항:
+- 정확한 full SVD의 계산 오차, rank 절단 오차, 인자/가중치 양자화 오차.
+- FP32→FP64 SVD 정련과 저비트로 버린 원본 정보 복구의 차이.
+- 오프라인 보정 시간과 실제 생성 지연/메모리.
+- open-loop 영상 품질과 action-conditioned world-model 성능의 차이.
+
+산출물(한국어):
+1. 직접 적용 가능/조건부/현재 비추천과 근거, 원문 링크 및 절/쪽.
+2. 가장 강한 반론과 단순 기준선.
+3. 추가 인사이트 정확히 3개. 각각 관측 또는 가설임을 표시하고,
+   가장 가까운 기존 방법, 달라야 하는 조건, 가장 싼 판별 검사, 종료 기준을 쓴다.
+4. 주 작업자가 검증해야 할 원문·코드 위치, 미확인 사항.
+5. 실제 Fable 실행임을 확인 가능한 범위에서 표시한다.
+
+권한: 읽기 전용 파일·Git·웹 확인. 파일 수정/커밋/GPU/모델 다운로드/설치/
+외부 사용자 메시지 금지. 공개 논문 소량 다운로드/열람은 허용한다.
+대략 20분 내 제한 검토로 끝내고, 원문 접근 실패를 새 실험으로 우회하지 않는다.
+결과는 Orca worker_done으로 조정자에게 반환한다. 문서 파일을 직접 쓰지 않는다.

@@ -1,0 +1,50 @@
+[요약 3문장] 네 논문의 원문(arXiv HTML·MLSys PDF 텍스트)과 고정 SHA의 공개 코드를 대조하고 로컬 보고서 5건·src/kvq·profile_B와 비교했다. 네 편 모두 LLM decode(M=1, batch 확대)용 설계이며 공개 코드 중 RTX4090(SM89)에서 그대로 동작이 확인되는 것은 없고(AlignQuant는 코드가 SM80 외 예외, MixLLM은 sm_80 고정 빌드, Kitty는 t_query==1 assert), 직접 활용 가능 판정은 0건·조건부 2건(Kitty의 K 채널 boost 아이디어, MixLLM의 전역 배분 아이디어)·비추천 2건(AlignQuant 직접 사용, FIGFLEX)이다. 남은 것은 주 작업자가 결정할 다음 자원 배분이며, 본 검토는 GPU 실행 0회·파일 수정 0회·모델 다운로드 0회의 읽기 전용 검토다.
+
+[실행 주체] 이 세션은 claude-fable-5-1로 실행됐고, 조정자 기록 review_runtime.json의 "Fable 5.1 · Claude Team" 라벨과 일치한다. 그 이상의 독립 증명 수단은 없다. Task task_beeb10044069 / Dispatch ctx_d3c6fd352771.
+
+=== 1. 논문별 판정 ===
+
+(1) AlignQuant — 비추천(직접 사용), 아이디어 수준 조건부.
+원문: https://arxiv.org/html/2610.07457v1 (v1 2026-10-05). 코드: https://github.com/HanzhiZhang-Ulrica/AlignQuant 커밋 0ad8206971fbfe0e5a6c573de3bae96d572e46d7 (2026-09-25, 커밋 2개, LICENSE 파일 없음).
+- 정밀도 단위: 가중치 64×64 타일마다 W4/W8 대칭(zero-point 0), 타일당 FP32 scale + 1비트 라벨 + row offset. 활성 A8은 64 feature × bM행(M=1이면 1, 아니면 16) 그룹 scale. 연산은 INT8×INT8→INT32, FP32 재스케일. prefill은 Tensor Core INT8 MMA(m16n8k32), decode(M=1)는 __dp4a(linear.cu 669·1277행). 공칭 8−4ρ bit/weight(ρ=0.6 기본), KV 양자화 없음.
+- GPU 지원: extension.py 209–210행 `capability != (8,0)`이면 RuntimeError, gencode compute_80/sm_80만. 즉 원문 표의 RTX4090 결과(Llama-3.2-3B, bs1, 128 prompt/512 gen, TPOT 9.25→5.51ms 약 1.68×)는 공개 코드로는 재현 불가하다. cutlass sm80 레이아웃·mma.sync는 SM89가 지원하므로 수정 빌드는 가능해 보이지만 미검증(공유메모리 100KB vs A100 164KB, carveout 1402행).
+- 가속 범위: 전부 batch 1~8·decode TPOT. TTFT는 BF16보다 느림(4090: 11.79→16.54ms). 최대 2.50×는 A100·Qwen3-4B·bs1 TPOT.
+- 우리와의 거리: 우리 forward는 Q=4680 토큰(prefill형 GEMM)이며 KV 저장이 주제다. 가중치 메모리 대역폭이 병목인 M=1 가속은 전이되지 않는다.
+
+(2) MixLLM — 조건부(아이디어), 코드는 조건부(재빌드 필요).
+원문: arXiv 2412.14590 v1 2024-12-19, v2 2026-04-22 "Accepted at MLSys 2026"; MLSys PDF 텍스트는 /tmp/world_quant_review_20261104/mixllm.txt(sha256 97fd04bb…). 코드: https://github.com/microsoft/MixLLM 커밋 00263510f9760d3a1d958a388e0e7c25961a7d59 (2026-03-07, MIT).
+- 정밀도 단위: 출력 채널 단위 8/4비트를 모델 전역 salience(1차 항 유지 + 경험적 Fisher)로 정렬·배분. W4는 비대칭 g=128, fp16 scale + 4비트 zero(≈0.5+2.5/G B/weight), W8 대칭. A8은 per-token이 아니라 g=128 group-wise 대칭 RTN. 커널: vsub4로 (W_q−z) int8 계산 → INT8 Tensor Core → group별 scale 곱, I2F magic bias 0x4b400000, 4/8비트 하위 문제를 CUDA Graph로 병렬.
+- GPU 지원: Makefile 33행 `-arch=sm_80` 고정, ARCH=80; mq_mma_tensor_op_sm80.h. 원문은 A100 80GB·H100만. RTX 언급 없음. SM89 빌드는 명령어 집합상 가능해 보이나 미검증이며 multistage 단계 수 재조정 필요 가능.
+- 가속 범위: 단일 linear 토큰 1–1024 sweep에서 FP16 대비 1.9~2.8×, QServe 대비 0.99~1.41×. e2e는 vLLM bs2·1000/1000에서 1.41×(Mixtral-7B 표기; 모델명 불일치 존재). 8비트 KV는 "nearly lossless" 표만 있고 저비트 KV 방법은 아니다.
+- 우리와의 거리: DiT linear는 M=4680의 연산 바운드 GEMM이라 INT8 TC(4090에서 BF16의 약 2배)는 이론상 유효하지만, profile_B에서 self_attention 구간이 24.6초 중 11.24초(중첩 구간, 정확한 비율 아님)로 linear 비중이 미측정이다. diffusion 활성 outlier는 LLM과 다르고 group-wise A8 RTN의 DiT 적용 품질은 원문에 없다.
+
+(3) Kitty — 조건부(아이디어·오프라인 검사), 코드 직접 사용은 비추천.
+원문: arXiv 2511.18643, MLSys 2026 PDF 텍스트 /tmp/world_quant_review_20261104/kitty.txt(sha256 7a7b2c22…). 코드: https://github.com/Summer-Summer/Kitty 커밋 dfd2c07b407d6b407179359207c612ab631f3ed1 (2026-05-20; LICENSE는 MIT, pyproject classifier는 Apache로 불일치).
+- 정밀도 단위(코드 확인): K는 채널별 비대칭, page=128토큰 단위 min/max, metadata fp16 scale+min [page,H,D,2](채널·페이지당 4B → 원소당 0.25비트) + 채널당 uint8 boost 인덱스(원소당 0.0625비트). 2비트 dense [D,G] + boost 채널의 상위 2비트 sparse [D_boost,G]. 코드는 D_BOOSTED=head_dim//4(25%, Kitty-Pro) 고정(kitty.py 44행); 논문 Kitty(12.5%)는 코드 수정 필요. V는 토큰별 비대칭, Local 창 128(fp16)·Q-Buffer 128(fp16)·sink 32(fp16). 원문 식(7): 평균 비트 = 2200/N + 2.357, 32K에서 ≈2.44비트.
+- 채널 선택 시점: quantize_pack_k(kitty_quant_pack.py 253행~)에서 score = |K|.mean(토큰축)을 (batch, head, page)마다 topk → 페이지가 처음 양자화될 때 한 번 결정, 이후 재선택·재양자화 없음. prefill은 attention 후 전체를 한 번에 페이지화(quantize_prefill), decode는 Q-Buffer가 128 토큰 차면 1페이지 양자화(quantize_decode). eviction 없음(MAX_LEN 선할당, assert). 원문 310행 "각 그룹마다 on-the-fly 재계산"은 "페이지마다 다른 선택"이란 뜻이지 과거 페이지 갱신이 아니다.
+- 컴퓨트: Triton qk/sv 커널이 2비트를 fp16으로 복원해 tl.dot(fp16), softmax는 PyTorch fp32로 [B,H,T] 전체 logits를 materialize(kitty_attention.py 426·473행). kitty_attention.py 411행 `assert t_query == 1` → decode 전용. prefill attention은 HF 표준 경로.
+- GPU: 원문·코드 어디에도 RTX3080/4090 없음(grep 확인). accuracy_eval.sh 23행 TORCH_CUDA_ARCH_LIST="9.0". 벤치는 A100 80GB, 프롬프트 ~100토큰·생성 8192, OOM까지 batch 확대. 2.1–4.1×의 기준선은 HF transformers FP16 dynamic/static cache(vLLM·FlashAttention 아님)이고 가속 원천은 batch 확대다. 우리 batch=1·Q=4680에서는 가속 논리가 성립하지 않고, 과거 S9 fused INT2 커널 +36~74% 오버헤드가 더 가까운 예측이다. 오버헤드 자체 수치: bs32 decoding step 47ms 중 양자화 5.6ms+채널 점수 4.6ms, 128스텝마다 한 번.
+- 우리 구조와의 대응: Kitty의 "페이지가 찰 때 한 번 양자화·이후 불변"은 우리 P3/C-once(청크 단위 1회 encode, pending BF16)와 구조적으로 같다. 차이는 (a) 페이지 128 vs 청크 4680(4680%128=72, 경계 불일치) (b) K 채널 축 INT2/INT4 혼합. 우리 #21은 V·토큰 축 변화량 기반 혼합이 균일 INT3에 졌으므로 축이 다르며 같은 후보의 재개가 아니다. 가장 가까운 선행은 원고에 이미 인용된 QuantWM(arXiv 2609.26425, 영상 world model 2비트 KV)이며 신규성 주장 전 중복 확인이 필요하다.
+
+(4) FIGFLEX — 비추천(시스템), 양자화기 요령만 참고.
+원문: https://arxiv.org/abs/2610.30480 v1 2026-10-21, cs.AR. 공개 코드 링크를 abs·HTML에서 찾지 못함(미확인).
+- SystemVerilog RTL을 Synopsys DC·NanGate 15nm로 합성(1GHz), SRAM은 CACTI, HBM3E 1280GB/s 모델. 결과는 AxCore 대비 1.56×, FIGLUT 대비 1.42× TOPS/mm². GPU 대비 2.2–3.7×(bs128)·1.02–1.27×(bs1)는 FLUTE형 커널을 가정한 1차 해석 모델이며 실측 GPU 커널이 아니다. 따라서 GPU 커널 가속으로 서술하면 안 된다.
+- 양자화기: 출력 채널×128 입력 그룹 단위 W4/3/2/1 배분, GPTQ 2회(1차 비보상 오차 순위로 상·하위 p%에 ±1비트). 입력 채널 column scaling을 2의 거듭제곱으로 재조정해 FP16 subnormal flush를 피함(제거 시 ppl 13.77→16.48). 이 subnormal 가드와 "보정 후 오차로 순위"는 소프트웨어에서도 쓸 수 있으나 가중치 전용·LLM 결과다.
+
+[형상 차이 요약] LLM decode는 토큰 1개·가중치/KV 읽기 바운드라 저비트가 곧 속도다. 우리 Self-Forcing은 청크당 3 latent frame×1560=4680 query, 청크당 forward 5회(denoise 4 + 캐시 기록 1, profile_B schedule), K 길이 최대 56160. attention FLOPs는 KV 비트와 무관하고 복원 비용이 더해진다. 저비트 KV의 이득은 메모리뿐이며 현재 21프레임 창 peak는 6.8GiB/24GB로 메모리가 병목이 아니다(63프레임 창에서만 BF16 OOM 기록). world model(action-conditioned)은 README·원고에 대상이 없고 QuantWM 인용만 있다. 그 경우 MUSIQ/DINO가 아니라 action 추종·폐루프 drift 지표가 필요하며 현재 평가 파이프라인에 없다.
+
+=== 2. 추가 인사이트 3개 ===
+
+[I1] 바이트 일치 조건의 K 채널 boost(청크 정렬 큰 페이지). 관측: 우리 g=16 토큰 그룹은 fp16 scale 1개/16원소라 INT4에서 원소당 1비트(25%), INT2에서 50%의 metadata를 쓴다(quant.py 60·71행). Kitty는 g=128로 0.31비트/원소. 가설: K 그룹을 청크 약수(4680=36×130=39×120)로 키워 확보한 ~0.7–0.9비트/원소를 25~50% 채널 INT4 boost에 쓰면 같은 바이트의 균일 양자화보다 attention 출력 오차가 작다. 가까운 방법: Kitty, KIVI g=32/128, QuantWM. 강한 기준선: (a) 현재 INT4 g=16, (b) 같은 바이트의 균일 INT3 g=120, (c) 무작위 채널 boost. 최소 검사: 기존 p0/p4 캡처(층 0/14/29, 청크 0/1/6/7)에서 #21과 같은 teacher-query post-W_O MSE, CPU만, 새 생성 0회. 중단 기준: 두 프롬프트 모두에서 (b) 대비 10% 미만 개선이면 종료; 선택 채널이 인접 청크 간 30% 넘게 바뀌면 "페이지 고정 선택"도 종료. 주의: 캡처 K가 pre-RoPE인지 post-RoPE인지 명시해야 한다(Kitty는 HF 캐시의 post-RoPE K).
+
+[I2] 층별 전역 KV 비트 배분(MixLLM의 전역 정렬을 KV에 전이). 관측: S8에서 8층 선택 저랭크가 +0.586 MUSIQ였고 층별 민감도 차이가 있다; 현재 KV 양자화는 30층 균일. 가설: 고정 총 바이트에서 (층, K/V) 쌍별 비트를 출력 변화 salience(복원 오차 × query 가중 출력 민감도)로 전역 배분하면 균일 INT3·K4V2보다 후반 MUSIQ/DINO가 좋다. 가까운 방법: MixLLM(채널 전역), KVQuant·MiKV·층별 KV 정밀도 계열. 강한 기준선: 균일 INT3 및 K4V2(과거 강한 내부 기준선). 최소 검사: 전 30층 KV 1회 캡처(새 생성 1회·수 분, GPU 필요하므로 별도 승인)에서 층별 salience 범위 측정. 중단 기준: 층별 salience 최대/최소 < 3×이면 균일이 충분하므로 종료; 전수 배분이 K4V2를 두 프롬프트에서 넘지 못하면 종료.
+
+[I3] 가중치·활성 INT8 GEMM의 가치는 linear 시간 비중으로 먼저 판정. 관측: profile_B의 self_attention 11.24초/24.6초 외 나머지 비용의 귀속(linear/FFN/cross-attn/norm)이 없다. 가설: M=4680 연산 바운드에서 cuBLAS/torch._int_mm W8A8(per-channel W, per-token A, 커스텀 커널 없음)만으로 linear 시간이 최대 ~2× 줄 수 있으나 Amdahl 때문에 linear 비중 ≥35%일 때만 청크 시간 ≥15% 감소가 가능하다. 가까운 방법: MixLLM W8A8, SVDQuant/ViDiT-Q(diffusion W8A8). 강한 기준선: BF16 cuBLAS GEMM 동일 형상 시간. 최소 검사: torch.profiler로 1청크(5 forward) 연산자별 시간 1회(≤15분 GPU, 별도 승인). 중단 기준: linear 비중 <35%면 가중치/활성 양자화 가속 후보 전체를 종료하고 MixLLM·AlignQuant 커널 이식을 하지 않는다.
+
+=== 3. 우선순위 하나와 가장 강한 반론 ===
+우선: I1. 이유는 GPU 0회·기존 캡처·CPU 2시간 이내로 끝나고, 네 논문 중 유일하게 KV를 다루는 Kitty의 핵심 기제를 우리 결론(청크 단위 1회 양자화가 rolling보다 낫다)과 바이트를 맞춘 채 검사하기 때문이다.
+가장 강한 반론: 성공해도 얻는 것은 메모리뿐이며 현재 창에서 메모리는 병목이 아니고, attention 비용은 그대로다(S9 fused 커널 오버헤드 기록). 또 #21의 축 다른 실패와 QuantWM의 선행 가능성 때문에 "품질 우위"가 나와도 신규성은 별도 입증이 필요하다. 반론을 받아들이면 I3의 프로파일이 더 먼저일 수 있으나 그것은 GPU 승인이 필요하다.
+
+=== 4. 직접 확인 / 미확인 ===
+직접 확인: AlignQuant arXiv HTML 전체(2회 fetch), README·extension.py·linear.cu·artifact.py; MixLLM arXiv v1/v2 메타·HTML, MLSys PDF 텍스트 grep, README·setup.py·Makefile·Dockerfile·kernels 헤더; Kitty arXiv HTML, MLSys PDF 텍스트(300–311, 780–811행 등), README·pyproject·def·accuracy/latency README·kitty.py 전체·kitty_quant_pack.py·kitty_attention.py 400–480·utils_kv_per_layer.py·modeling_qwen3.py 220–256·kitty_sim 발췌; FIGFLEX abs·HTML(앞 100k자); 로컬 README 전체, 보고서 5건, profile_B.json, src/kvq quant/lockstep/store 발췌, nvidia-smi(RTX4090, 8.9, 24564MiB), review_runtime.json.
+미확인: 세 코드의 SM89 빌드·실행(어떤 것도 컴파일하지 않음); MixLLM/Kitty MLSys 카메라레디와 arXiv의 수치 차이 전수 대조; Kitty prefill 경로의 attention 구현 세부; FIGFLEX HTML 마지막 5k자와 공개 코드 존재 여부; AlignQuant 4090 수치의 재현; 우리 캡처 K의 RoPE 시점; QuantWM 원문과 I1의 중복 범위. 조정자가 예고한 /tmp/world_quant_review_20261104/code 사본은 도착 전이라 사용하지 않았고 동일 SHA의 raw 파일을 직접 읽었다.

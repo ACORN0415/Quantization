@@ -594,6 +594,12 @@ TT 종료·GPU 유휴 확인 뒤 2026-10-31 01:03:06–02:00:26 KST에 최대26�
 
 [최종 보고](src/experiments/repeat_once_final/REPORT_KO.md) · [24쌍 비교](src/experiments/repeat_once_final/comparisons.csv) · [이벤트·바이트 재집계](src/experiments/repeat_once_final/final_audit.json) · [고정 계획](src/experiments/REPEAT_ONCE_FINAL.md)
 
+### 완료: 혼합정밀 SVD·GPU 양자화 문헌 및 코드 검토
+
+2026-11-04 NVIDIA SVD 정련, AlignQuant, MixLLM, Kitty, FIGFLEX를 원문·고정 코드 버전과 대조했다. 실제 Claude Fable의 독립 검토 두 건과 조정자의 정정·이견을 보존했다. 새 GPU 실험·모델 다운로드·커널 빌드는 하지 않았다. FP64 SVD 정련의 현재 TT 경로 직접 적용을 권하지 않으며 TT 종료를 유지한다. 다음 검토 우선순위는 기존 가중치·활성화 양자화 경로의 실제 청크 형상 비용 진단이다. 새 알고리즘의 신규성이나 성능은 확인하지 않았다.
+
+[통합 설명·추가 인사이트 6개](src/experiments/mixed_precision_world_review_20261104/REPORT_KO.txt) · [원문·코드 근거](src/experiments/mixed_precision_world_review_20261104/source_manifest.json) · [Claude 검토 기록](src/experiments/mixed_precision_world_review_20261104/review_runtime.json)
+
 ## 출처와 공개 범위
 
 이 저장소의 연구 변경은 사용자 저장소에서 관리한다. 외부 코드를 가져왔다는 사실과 원본 라이선스는 유지한다.

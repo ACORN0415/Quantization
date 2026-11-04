@@ -1,0 +1,49 @@
+{
+  "requested_model": "fable",
+  "observed_model_label": "Fable 5.1 · Claude Team",
+  "model_verified_via": "Orca terminal screen before dispatch",
+  "gpu": "RTX 4090 24GB, SM89; read-only nvidia-smi",
+  "gpu_experiments": 0,
+  "research_status": "literature_and_code_review_complete; no_new_method_adopted",
+  "insight_scope": "SVD/refinement 3 + mixed-precision/GPU systems 3",
+  "workers": [
+    {
+      "title": "Fable SVD and world generation review",
+      "file": "SVD_REVIEW_REQUEST_KO.txt",
+      "terminal": "term_88bce5c1-7b78-4257-8c6e-cdef70ce0793",
+      "dispatchId": "ctx_99406bf8a131",
+      "taskId": "task_8cb5567e6743",
+      "runId": "run_cee0996dad4f",
+      "state": "succeeded",
+      "mode": "terminal",
+      "workspace": "0d2a9b75-a524-4595-98f2-b5b9165d29bd::/home/acorn0415/Quantization",
+      "next": "Orca wakes you when workers report; end your turn when you're done.",
+      "observed_via": "Orca worker-read / worker-show on 2026-11-04; full synthesis pending"
+    },
+    {
+      "title": "Fable mixed precision GPU systems review",
+      "file": "SYSTEMS_REVIEW_REQUEST_KO.txt",
+      "terminal": "term_6c2a25d1-fd97-4057-b92f-1b2dfffe82cc",
+      "dispatchId": "ctx_d3c6fd352771",
+      "taskId": "task_beeb10044069",
+      "runId": "run_cee0996dad4f",
+      "state": "succeeded",
+      "mode": "terminal",
+      "workspace": "0d2a9b75-a524-4595-98f2-b5b9165d29bd::/home/acorn0415/Quantization",
+      "next": "Orca wakes you when workers report; end your turn when you're done.",
+      "observed_via": "Orca worker-read / worker-show on 2026-11-04; full synthesis pending"
+    }
+  ],
+  "new_worker_preferences": {
+    "workspace": "/home/acorn0415",
+    "surface": "chat",
+    "model": "fable",
+    "existing_terminal_reviews_not_migrated": true
+  },
+  "review_reports": [
+    "FABLE_SVD_REVIEW_KO.txt",
+    "FABLE_SYSTEMS_REVIEW_KO.txt"
+  ],
+  "synthesis_rereview": "not_received; root_chat_task_attachment_blocked",
+  "decision": "prioritize weight/activation execution-cost diagnostic; TT remains closed; no experiment run"
+}

@@ -1,0 +1,110 @@
+{
+  "date": "2026-11-04",
+  "requested_paper_pdf_sources": [
+    {
+      "name": "nvidia_svd",
+      "url": "https://d1qx31qr3h6wln.cloudfront.net/publications/Mixed-Precision%20SVD%20on%20GPUs%20via%20Ogita%E2%80%93Aishima%20Iterative%20Refinement.pdf?VersionId=n_jDPnuWTzsHBMmHzMlwNlNs6hZg.ZVy",
+      "pdf": "/tmp/world_quant_review_20261104/nvidia_svd.pdf",
+      "text": "/tmp/world_quant_review_20261104/nvidia_svd.txt",
+      "bytes": 491120,
+      "sha256": "c2ef37c92f6386d2347118520ca1a0556fd4f5670b8cc7522e7ad94b05a299cf",
+      "hash_verified_now": true,
+      "storage_note": "temporary local copy; durable source is linked URL"
+    },
+    {
+      "name": "mixllm",
+      "url": "https://proceedings.mlsys.org/paper_files/paper/2026/file/a66caa1703fe34705a4368c3014c1966-Paper-Conference.pdf",
+      "pdf": "/tmp/world_quant_review_20261104/mixllm.pdf",
+      "text": "/tmp/world_quant_review_20261104/mixllm.txt",
+      "bytes": 517228,
+      "sha256": "97fd04bb3de22f0612e05d081627f195ffb8d1066e0bd2bb7c5c83641e4b5398",
+      "hash_verified_now": true,
+      "storage_note": "temporary local copy; durable source is linked URL"
+    },
+    {
+      "name": "kitty",
+      "url": "https://proceedings.mlsys.org/paper_files/paper/2026/file/e4d8d1b5120be349d3fff8878650cf45-Paper-Conference.pdf",
+      "pdf": "/tmp/world_quant_review_20261104/kitty.pdf",
+      "text": "/tmp/world_quant_review_20261104/kitty.txt",
+      "bytes": 1469688,
+      "sha256": "7a7b2c223662cc8c6db5f6aa5028390b22e228ed527e7ac08db6f24d2266a88a",
+      "hash_verified_now": true,
+      "storage_note": "temporary local copy; durable source is linked URL"
+    }
+  ],
+  "code": [
+    {
+      "repo": "HanzhiZhang-Ulrica/AlignQuant",
+      "revision": "0ad8206971fbfe0e5a6c573de3bae96d572e46d7",
+      "path": "README.md",
+      "git_blob": "7fd1d4979c079cac13db5a0e483228b204b7f2f3",
+      "url": "https://github.com/HanzhiZhang-Ulrica/AlignQuant/blob/0ad8206971fbfe0e5a6c573de3bae96d572e46d7/README.md"
+    },
+    {
+      "repo": "HanzhiZhang-Ulrica/AlignQuant",
+      "revision": "0ad8206971fbfe0e5a6c573de3bae96d572e46d7",
+      "path": "alignquant/kernels/cuda/extension.py",
+      "git_blob": "ed3bb693741e067f650985dadd27a75203181807",
+      "url": "https://github.com/HanzhiZhang-Ulrica/AlignQuant/blob/0ad8206971fbfe0e5a6c573de3bae96d572e46d7/alignquant/kernels/cuda/extension.py"
+    },
+    {
+      "repo": "microsoft/MixLLM",
+      "revision": "00263510f9760d3a1d958a388e0e7c25961a7d59",
+      "path": "README.md",
+      "git_blob": "2b9258375cf0fb9d04d8735414f95173111b2ac0",
+      "url": "https://github.com/microsoft/MixLLM/blob/00263510f9760d3a1d958a388e0e7c25961a7d59/README.md"
+    },
+    {
+      "repo": "microsoft/MixLLM",
+      "revision": "00263510f9760d3a1d958a388e0e7c25961a7d59",
+      "path": "setup.py",
+      "git_blob": "a098c7a1975fb9a06f9409ed014fef9fb1fa1d8c",
+      "url": "https://github.com/microsoft/MixLLM/blob/00263510f9760d3a1d958a388e0e7c25961a7d59/setup.py"
+    },
+    {
+      "repo": "Summer-Summer/Kitty",
+      "revision": "dfd2c07b407d6b407179359207c612ab631f3ed1",
+      "path": "README.md",
+      "git_blob": "a23fef2a74a0dde5d4635febb60ad65e8761b673",
+      "url": "https://github.com/Summer-Summer/Kitty/blob/dfd2c07b407d6b407179359207c612ab631f3ed1/README.md"
+    },
+    {
+      "repo": "Summer-Summer/Kitty",
+      "revision": "dfd2c07b407d6b407179359207c612ab631f3ed1",
+      "path": "src/kitty/kvcache/kernels/kitty_attention.py",
+      "git_blob": "8ce219786e60929f48dbf5c37c13fbb9465e107e",
+      "url": "https://github.com/Summer-Summer/Kitty/blob/dfd2c07b407d6b407179359207c612ab631f3ed1/src/kitty/kvcache/kernels/kitty_attention.py"
+    },
+    {
+      "repo": "Summer-Summer/Kitty",
+      "revision": "dfd2c07b407d6b407179359207c612ab631f3ed1",
+      "path": "src/kitty/kvcache/kernels/kitty_quant_pack.py",
+      "git_blob": "dd99153c809812693ef2dca2ab352c91090f8ac9",
+      "url": "https://github.com/Summer-Summer/Kitty/blob/dfd2c07b407d6b407179359207c612ab631f3ed1/src/kitty/kvcache/kernels/kitty_quant_pack.py"
+    }
+  ],
+  "additional_primary_sources": [
+    "https://arxiv.org/html/2610.07457v1",
+    "https://arxiv.org/html/2610.30480v1",
+    "https://docs.nvidia.com/cuda/cublas/index.html#floating-point-emulation",
+    "https://arxiv.org/html/2609.26425v1",
+    "https://arxiv.org/html/2411.05007v1",
+    "https://arxiv.org/html/2406.02540v3",
+    "https://arxiv.org/abs/2402.02446",
+    "https://arxiv.org/abs/2410.06040",
+    "https://arxiv.org/abs/2403.07378"
+  ],
+  "gpu_runs": 0,
+  "model_downloads": 0,
+  "kernel_builds": 0,
+  "new_numerical_experiments": 0,
+  "additional_code": [
+    {
+      "repository": "microsoft/MixLLM",
+      "revision": "00263510f9760d3a1d958a388e0e7c25961a7d59",
+      "path": "mixllm/kernels/Makefile",
+      "git_blob": "5d111cab73d40b142563cb6067e6db4d65515437",
+      "url": "https://github.com/microsoft/MixLLM/blob/00263510f9760d3a1d958a388e0e7c25961a7d59/mixllm/kernels/Makefile"
+    }
+  ]
+}
