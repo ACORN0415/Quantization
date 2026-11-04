@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "gpu_calls": 0,
+  "svd_reruns": 0,
+  "worker_records": 4,
+  "actual_svd_calls_checked": 24,
+  "factor_streams_independently_requantized_and_decoded": 24,
+  "payloads": 8,
+  "score_arms_recomputed": 8,
+  "raw_arms_recomputed": 4,
+  "data_bytes": 252401272,
+  "decision_recomputed": "close_precision_upgrading_for_tested_cases",
+  "audit_code_sha256": "d769d1167bb14f4951f8317b04e529718464ec5c7aedeb98f85dc363284b51d1",
+  "note": "Stored source factors, packing and scores audited; original SVD repeat logs/sign controls not rerun."
+}

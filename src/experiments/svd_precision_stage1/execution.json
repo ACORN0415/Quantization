@@ -1,0 +1,40 @@
+{
+  "started_utc": 1793829268.5890107,
+  "registration_commit": "68f950a",
+  "status": "completed",
+  "workers": [
+    {
+      "prompt": 0,
+      "precision": 32,
+      "started_utc": 1793829268.5891206,
+      "finished_utc": 1793829271.1578293,
+      "returncode": 0,
+      "log": "src/experiments/svd_precision_stage1/p00_fp32.log"
+    },
+    {
+      "prompt": 0,
+      "precision": 64,
+      "started_utc": 1793829271.1580384,
+      "finished_utc": 1793829274.0769591,
+      "returncode": 0,
+      "log": "src/experiments/svd_precision_stage1/p00_fp64.log"
+    },
+    {
+      "prompt": 4,
+      "precision": 64,
+      "started_utc": 1793829274.0771399,
+      "finished_utc": 1793829276.9962015,
+      "returncode": 0,
+      "log": "src/experiments/svd_precision_stage1/p04_fp64.log"
+    },
+    {
+      "prompt": 4,
+      "precision": 32,
+      "started_utc": 1793829276.9964726,
+      "finished_utc": 1793829279.464609,
+      "returncode": 0,
+      "log": "src/experiments/svd_precision_stage1/p04_fp32.log"
+    }
+  ],
+  "finished_utc": 1793829280.4801884
+}

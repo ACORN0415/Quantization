@@ -1,0 +1,198 @@
+{
+  "prompt": 0,
+  "precision": 32,
+  "status": "completed",
+  "input": {
+    "path": "/home/acorn0415/sfq_data/postwo_rounding/p00_s101/l29_c6.pt",
+    "sha256": "6c3642bce17712c5e827af1fbded32da695e4e24beab3d708f532d3690f09074",
+    "file_bytes": 119834819
+  },
+  "provenance": {
+    "tools/svd_precision_probe.py": "3cb15484893d041622c37b0c772438007f2e7b5cfbef90a373f45a969a1e0814",
+    "tools/codec_order_core.py": "67c7a74cf2362bf98c9e9095acee2dca5ad001734d47c5c1eb4f73593049187c",
+    "tools/change_mixed_core.py": "5f571f97e8a6dbb39b257c5f67f9f6d760dd9c1983aaf2775cd063293df12f1a",
+    "src/experiments/svd_precision_stage1/REGISTRATION_KO.txt": "2c2f25c6d165335a7943f19bdd5c1f6b8f940878c30728d7be03d997c069c8cf"
+  },
+  "rank": 192,
+  "shape": [
+    12,
+    3,
+    1560,
+    128
+  ],
+  "gpu_calls": 0,
+  "decompose_seconds": [
+    0.20421625301241875,
+    0.18695710698375478,
+    0.18646351201459765
+  ],
+  "svd_calls": [
+    {
+      "shape": [
+        12,
+        1560,
+        384
+      ],
+      "dtype": "torch.float32",
+      "seconds": 0.18303214805200696
+    },
+    {
+      "shape": [
+        12,
+        576,
+        128
+      ],
+      "dtype": "torch.float32",
+      "seconds": 0.013657275005243719
+    },
+    {
+      "shape": [
+        12,
+        1560,
+        384
+      ],
+      "dtype": "torch.float32",
+      "seconds": 0.16549646900966763
+    },
+    {
+      "shape": [
+        12,
+        576,
+        128
+      ],
+      "dtype": "torch.float32",
+      "seconds": 0.013582255982328206
+    },
+    {
+      "shape": [
+        12,
+        1560,
+        384
+      ],
+      "dtype": "torch.float32",
+      "seconds": 0.16491926001617685
+    },
+    {
+      "shape": [
+        12,
+        576,
+        128
+      ],
+      "dtype": "torch.float32",
+      "seconds": 0.013719740964006633
+    }
+  ],
+  "repeat_factor_byte_equal": true,
+  "sign_flips": {
+    "first_flips": 1174,
+    "second_flips": 806
+  },
+  "raw_v_error": {
+    "sse": 236827.28409210301,
+    "mse": 0.03294539097168011,
+    "normalized_squared_error": 0.02697581396171534,
+    "relative_l2": 0.16424315499196715
+  },
+  "raw_output_error": {
+    "sse": 885.8162386376678,
+    "mse": 0.01802197751134578,
+    "normalized_squared_error": 0.008940387218379819,
+    "relative_l2": 0.0945536208634012
+  },
+  "reference_chunk_output_norm_sq": 99080.29898487953,
+  "rank_boundary_relative_gap_per_head": [
+    0.00216457131318748,
+    0.009519632905721664,
+    0.006667320616543293,
+    0.00639862148091197,
+    0.008446615189313889,
+    0.0024561851751059294,
+    0.0052461931481957436,
+    0.0011620490113273263,
+    0.0037206336855888367,
+    0.003257294185459614,
+    0.005671114195138216,
+    0.00987872201949358
+  ],
+  "arms": [
+    {
+      "bits": 2,
+      "payload_tensor_bytes": 1753344,
+      "store_seconds": 0.01301704003708437,
+      "decode_cast_seconds": 0.029313002014532685,
+      "sign_invariant_byte_equal": true,
+      "decoded_fp32_v_error": {
+        "sse": 9170336.858009258,
+        "mse": 1.275699015370323,
+        "normalized_squared_error": 1.0445473037292148,
+        "relative_l2": 1.0220309700440662
+      },
+      "restored_bf16_v_error": {
+        "sse": 9170310.773487909,
+        "mse": 1.2756953867142857,
+        "normalized_squared_error": 1.0445443325715718,
+        "relative_l2": 1.0220295164874504
+      },
+      "output_error": {
+        "sse": 67250.42871317684,
+        "mse": 1.3682134747960781,
+        "normalized_squared_error": 0.6787467276763043,
+        "relative_l2": 0.8238608666979542
+      },
+      "storage_change_from_raw": {
+        "sse": 8933365.655908335,
+        "mse": 1.242733603753274,
+        "normalized_squared_error": 1.045765661200198,
+        "relative_l2": 1.022626843575015
+      },
+      "artifact": {
+        "path": "/home/acorn0415/sfq_data/svd_precision_stage1/p00_fp32/b2.pt",
+        "sha256": "defa53e31574d6b8f5730801ca33a6c97cc66f9483e40eed4c77b43ff3e5c20c",
+        "file_bytes": 16919547
+      }
+    },
+    {
+      "bits": 4,
+      "payload_tensor_bytes": 2922240,
+      "store_seconds": 0.00968547904631123,
+      "decode_cast_seconds": 0.03437771199969575,
+      "sign_invariant_byte_equal": true,
+      "decoded_fp32_v_error": {
+        "sse": 459099.5192133113,
+        "mse": 0.06386600772532042,
+        "normalized_squared_error": 0.0522937349372078,
+        "relative_l2": 0.2286782345069329
+      },
+      "restored_bf16_v_error": {
+        "sse": 459122.13819373155,
+        "mse": 0.06386915428487407,
+        "normalized_squared_error": 0.05229631135237955,
+        "relative_l2": 0.2286838677134431
+      },
+      "output_error": {
+        "sse": 2751.6619973140605,
+        "mse": 0.05598270665108359,
+        "normalized_squared_error": 0.027772039704219976,
+        "relative_l2": 0.16664945155691324
+      },
+      "storage_change_from_raw": {
+        "sse": 222300.46323095128,
+        "mse": 0.03092454360740397,
+        "normalized_squared_error": 0.026023136169521132,
+        "relative_l2": 0.16131688122921647
+      },
+      "artifact": {
+        "path": "/home/acorn0415/sfq_data/svd_precision_stage1/p00_fp32/b4.pt",
+        "sha256": "aded2fdcedfca8e34f43a68762eac74f593ca7da9ad3e067dbcf3c622e3136c3",
+        "file_bytes": 18088443
+      }
+    }
+  ],
+  "raw": {
+    "path": "/home/acorn0415/sfq_data/svd_precision_stage1/p00_fp32/raw.pt",
+    "sha256": "b509de98a8ad8f50122518b218c0cb5a91d92c16c90eb4f93c6be1dcdd9f8864",
+    "file_bytes": 18728872
+  },
+  "finished_utc": 1793829270.9032001,
+  "max_rss_bytes": 1356668928
+}
