@@ -1,0 +1,20 @@
+설계 검토 반영 / B-2 / 양자화 결과 관측 전
+실제 Claude Fable 채팅 d61941e7_5d6d_4d9e_bc03_bea8ddbc4029.
+모델 지정이 있는 attach는 invalid_argument로 거절되어 지정값 제거 후 연결을 시도했으나
+terminal_handle_stale로 Task 생성 전에 실패했다. 실제 직접 채팅 검토이며 Task/Dispatch 없음.
+검토 문서의 종료 시각은 검토자 작성값으로, 실제 실행 시간을 측정한 기록으로 쓰지 않는다.
+
+수용: c7 첫 denoising 단계 한정, 퇴거 후 실측 바이트 사전 기재, 버전/stride 기록,
+10% squared error와 TV/RMS 구분, 문턱 미달과 역효과 구분. layer14 포함 유지.
+추가 call 캡처는 하지 않는다. 성공 시 BF16과 U/S 비교로 생성 실익을 확인할 필요 있음.
+
+미수용: native BF16 대 FP32 출력 차이를 '측정 바닥'으로 간주하고 10배 미만이면
+판단 불가라는 새 문턱을 추가하자는 의견. 이는 서로 다른 산술 경로의 결정적 차이이며
+동일 native 경로의 비교 잡음이 아니다. 이미 원본 출력의 byte 재현을 요구한다.
+FP32와 BF16 차이는 설명용으로 기록하되, 임의의10배 조건으로 기존 판정을 바꾸지 않는다.
+캡처를 강제로 contiguous로 바꾸는 대신 원래 stride를 기록하고 동일 함수·형상 재생을 검사한다.
+저장 tensor copy는 CPU 스냅샷이며 이후 GPU cache 갱신으로 수정되지 않는다.
+
+첫 시도 모델 로딩 실패: cwd(repo)에서 상대 wan_models 경로를 못 찾았음. forward0,
+GPU할당0, 결과관측0. 실패 manifest/log 보존, src cwd와 offline 환경으로 수정했다.
+코드·명세를 다시 커밋 후 같은 시간/호출 상한으로 실행한다.

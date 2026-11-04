@@ -4,6 +4,8 @@ import gc
 import hashlib
 import json
 import math
+import os
+import importlib.metadata
 import resource
 import struct
 import subprocess
@@ -13,6 +15,8 @@ import traceback
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+os.environ['HF_HUB_OFFLINE'] = '1'
+os.environ['TRANSFORMERS_OFFLINE'] = '1'
 sys.path[:0] = [str(ROOT/'tools'), str(ROOT/'src'), str(ROOT/'src/scripts')]
 import torch
 import torch.nn.functional as F
@@ -101,6 +105,7 @@ def decide(cases):
 
 
 def capture(prompt):
+    os.chdir(ROOT/'src')  # Original pipeline resolves wan_models relative to src.
     import p3_tf_fr as pilot
     import wan.modules.causal_model as model
     free_gpu(); check_time()
@@ -109,6 +114,8 @@ def capture(prompt):
     folder.mkdir(parents=True)
     r = {'status': 'running', 'prompt': prompt, 'seed': 101, 'started_utc': time.time(), 'model_forwards': 0,
          'source_sha256': pilot.source_hash(), 'code_sha256': sha(__file__), 'registration_sha256': sha(OUT/'REGISTRATION_KO.txt'), 'artifacts': [], 'chunks': []}
+    r['runtime'] = {'torch':torch.__version__, 'cuda':torch.version.cuda, 'flash_attn':importlib.metadata.version('flash_attn'),
+                    'gpu':torch.cuda.get_device_name(), 'cwd':str(Path.cwd())}
     save(folder/'manifest.json', r)
     assert r['source_sha256'] == json.loads((B1/'source_audit.json').read_text())['model_source_sha256']
     old_hashes = {x['path']:x['sha256'] for c in json.loads((B1/'results.json').read_text())['cases'] for x in c['inputs']}
@@ -152,6 +159,7 @@ def capture(prompt):
                 payload = {'q':q.detach().cpu(), 'k':k.detach().cpu(), 'v':v.detach().cpu(), 'native_av':y.detach().cpu(),
                            'wo': modules[layer].o.weight.detach().cpu(), 'bias': modules[layer].o.bias.detach().cpu(),
                            'indices': indices.cpu(), 'layer': layer, 'prompt': prompt, 'chunk':7, 'call':0}
+                payload['original_strides'] = {n:list(t.stride()) for n,t in [('q',q),('k',k),('v',v),('native_av',y)]}
                 old = Path(f'/home/acorn0415/sfq_data/postwo_rounding/p{prompt:02d}_s101')
                 for filename in (old/f'l{layer:02d}_c6.pt',old/f'l{layer:02d}_c7.pt'):
                     assert sha(filename) == old_hashes[str(filename)]
@@ -210,7 +218,8 @@ def evaluate():
                 assert same(y.cpu(),d['native_av']) and same(z.cpu(),d['native_post']), 'Native no-intervention replay differs'
                 small = d['q'][:,d['indices']]; pr,av,post = fp32_attention(small,d['k'],d['v'],d['wo'],d['bias'])
                 case = {'prompt':prompt,'layer':layer,'capture':item,'native_identity_passed':True,'arms':{},
-                        'common_current_k_bytes':4680*12*128*2,'common_all_v_bytes':32760*12*128*2}
+                        'common_current_k_bytes':4680*12*128*2,'common_all_v_bytes':32760*12*128*2,
+                        'native_vs_fp32_reference_post':error(d['native_post'][:,d['indices']],post)}
                 r['cases'].append(case); save(path,r)
                 raw = {'reference_av':d['native_av'],'reference_post':d['native_post'],'fp32_reference_av':av,'fp32_reference_post':post}
                 previous = next(x for x in b1['cases'] if x['prompt']==prompt and x['layer']==layer)

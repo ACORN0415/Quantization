@@ -1,0 +1,18 @@
+{
+  "status": "failed",
+  "prompt": 0,
+  "seed": 101,
+  "started_utc": 1793807452.3405252,
+  "model_forwards": 0,
+  "source_sha256": "e916506f6085f9c050cbd44b7e1b79d4a8aae9d77379fe5e2384fee5bad5a758",
+  "code_sha256": "f4f9823155df6314ad7fee0b6a03e7396bedd7a0318bd41be00cef61f5608177",
+  "registration_sha256": "e1fcb56663fbceaf37d4507f6b40d8438390dd7422127974bfa223fecfdc026d",
+  "artifacts": [],
+  "chunks": [],
+  "error": "OSError(\"We couldn't connect to 'https://huggingface.co' to load this model, couldn't find it in the cached files and it looks like wan_models/Wan2.1-T2V-1.3B/ is not the path to a directory containing a config.json file.\\nCheckout your internet connection or see how to run the library in offline mode at 'https://huggingface.co/docs/diffusers/installation#offline-mode'.\")",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/diffusers/configuration_utils.py\", line 379, in load_config\n    config_file = hf_hub_download(\n  File \"/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py\", line 85, in _inner_fn\n    validate_repo_id(arg_value)\n  File \"/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py\", line 133, in validate_repo_id\n    raise HFValidationError(\nhuggingface_hub.errors.HFValidationError: Repo id must be in the form 'repo_name' or 'namespace/repo_name': 'wan_models/Wan2.1-T2V-1.3B/'. Use `repo_type` argument if needed.\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/acorn0415/Quantization/tools/kv_channel_full_attention.py\", line 117, in capture\n    pipe = pilot.build(101)\n  File \"/home/acorn0415/Quantization/src/scripts/p3_tf_fr.py\", line 29, in build\n    pipe=CausalInferencePipeline(config,device=gpu)\n  File \"/home/acorn0415/Quantization/src/pipeline/causal_inference.py\", line 22, in __init__\n    self.generator = WanDiffusionWrapper(\n  File \"/home/acorn0415/Quantization/src/utils/wan_wrapper.py\", line 127, in __init__\n    self.model = CausalWanModel.from_pretrained(\n  File \"/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py\", line 89, in _inner_fn\n    return fn(*args, **kwargs)\n  File \"/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/diffusers/models/modeling_utils.py\", line 640, in from_pretrained\n    config, unused_kwargs, commit_hash = cls.load_config(\n  File \"/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py\", line 89, in _inner_fn\n    return fn(*args, **kwargs)\n  File \"/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/diffusers/configuration_utils.py\", line 415, in load_config\n    raise EnvironmentError(\nOSError: We couldn't connect to 'https://huggingface.co' to load this model, couldn't find it in the cached files and it looks like wan_models/Wan2.1-T2V-1.3B/ is not the path to a directory containing a config.json file.\nCheckout your internet connection or see how to run the library in offline mode at 'https://huggingface.co/docs/diffusers/installation#offline-mode'.\n",
+  "finished_utc": 1793807452.3497927,
+  "max_rss_bytes": 661762048,
+  "peak_allocated_bytes": 0,
+  "peak_reserved_bytes": 0
+}
