@@ -1,0 +1,35 @@
+{
+  "scope": "static installed Python call-path review only; no GPU or model execution",
+  "created_utc": "2026-11-05T11:58:23.615899+00:00",
+  "claude_review_complete": false,
+  "source_files": [
+    {
+      "path": "/home/acorn0415/Quantization/src/wan/modules/causal_model.py",
+      "sha256": "8da6416213a6bf790148afee7ff766bd676427be04433352621cd6a07d03de7d"
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/kvq/store.py",
+      "sha256": "8960e23326fae1af43793bcd408d977722bc29c8c5306e48299914d42b3f7acb"
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/wan/modules/attention.py",
+      "sha256": "02ad719a76e6bdec79d18fc62b094ef2ad7c28b2d593c9f395ae1226041b7c9d"
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/flash_attn/flash_attn_interface.py",
+      "sha256": "d8eaf989a5401fedd23d11a336a7f38e67596d0a4d5a279df14cbe2d7de2ed75"
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/flash_attn/__init__.py",
+      "sha256": "19de6aae2ed6ace6bd29a0fa45c1872da7302b308bc2461144d3152f1a287ab8"
+    },
+    {
+      "path": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/PAIRED_READ_PATH_ROOT_KO.txt",
+      "sha256": "d8174319481e518cccdb99564bedf8248873983461f828b1e5435f097d04dffb"
+    }
+  ],
+  "inferred_lse_logical_tensor_bytes": 224640,
+  "cuda_allocation_verified": false,
+  "output_bit_identity_verified": false,
+  "native_lse_accuracy_verified": false
+}

@@ -1,0 +1,42 @@
+Paired 응답 보정 core 준비 보고 — 실제 입력 효과 검사 아님
+작성: Codex 업무2, 2026-11-05T20:57:30.091374+09:00
+상태: 소스 편집 종료. 실제 Opus 검토 대기. GPU/모델/실제 캡처/학습/새 효과 측정 0회.
+허용 범위: 이 새 폴더의 core.py, selftest.py 및 준비 산출물만 작성. 새 설치 없음.
+준비 시각: 첫 budget 확인 20:47:44 KST부터 현재까지 약 586.1초(셸 시각 기준), 30분 상한 이내.
+
+1. 구현한 수학과 API
+core.PairedResponse.gaussian(heads, dim, rank, seed)는 FP32 IID 표준정규 Omega[H,D,R] 하나를 만든다. 단위길이 정규화나 QR을 적용하지 않는다. 실제로 소유한 map은 self.omega 하나이며 phi/psi에 같은 map을 쓴다. rank/seed는 호출 인수이고 실자료 설정을 확정한 것이 아니다.
+phi(x)=psi(x)=exp(Omega^T x/D^(1/4) - ||x/D^(1/4)||^2/2)/sqrt(R).
+이 feature의 목표 kernel은 exp(q·k/sqrt(D))다. 입력 Q와 K는 같은 좌표계여야 하며 회전/RoPE/원래 attention 경로는 이 core에 포함하지 않는다.
+summarize(id,K,Khat,Vhat)는 K-only Dz=sum[psi(K)-psi(Khat)], DN=sum차분*Vhat를 만든다. feature마다 원본과 복원 전체 토큰의 최대 log-feature를 공통 offset으로 택한다. 저장은 exp(-offset)으로 스케일된 Dz FP32[H,R], DN FP32[H,R,Dv], offset FP64[H,R]다. 가까운 지수값의 차는 expm1으로 계산한다. 모든 준비 contraction·누산은 FP64이며 입력 또는 통계의 비유한/FP32 저장 overflow는 PreparationError로 거부한다. 무효 상태를 조용히 양자화 복구하지 않는다.
+append는 청크 id별 상태를 보유하고 중복 id를 거부한다. evict는 해당 상태만 제거한다. 모든 상태에 같은 map이 유지되어야 한다. 상태에 autograd graph가 남지 않도록 no_grad를 적용했다. 원본 K/Khat/Vhat나 feature 행렬은 상태에 저장하지 않는다.
+read(Q,Ohat,logZhat,min_denominator_ratio=외부인수)는 각 청크 offset과 query feature, native logZ를 결합한다. 전체 청크·feature에서 공통 query별 exponent를 빼고 분자·분모를 함께 계산한다. 서로 다른 청크 offset을 같은 값인 것처럼 더하지 않는다. 호출자는 현재 retained KV와 같은 native Ohat/logZ를 제공해야 한다. Q/현재 BF16 attention/마스크/logZ 추출 경로 자체는 아직 구현하지 않았다.
+
+2. 수치 실패 처리와 기록
+- 모든 상태가 정확히 0이거나 비어 있으면 native Ohat를 그대로 복사해 반환한다. 이는 무개입 비트 일치를 보존한다. FP32 underflow로 상태가 0이 된 경우도 이 경로에 들어갈 수 있으므로 summarize 진단을 함께 보존해야 한다. zero bypass가 원본=복원이었다는 증명은 아니다.
+- min_denominator_ratio는 필수 외부 인수다. 이번 합성 검사에서 .1을 사용했을 뿐 실제 캡처 gate/fallback 기준을 등록하지 않았다.
+- 비유한 상태·query/logZ·중간 log, 양수가 아니거나 외부 문턱보다 작은 분모, 스케일된 native base의 underflow, 출력/출력 dtype 변환의 비유한 값은 해당 query 또는 확인 불가능한 전체 batch에서 원래 Ohat로 fallback한다. 반환 fallback mask와 원인별 count를 제공한다. native Ohat 자체가 비유한이면 유효 fallback이 없으므로 예외다.
+- feature exp underflow, 순진한 exp 차감의 충돌, nonzero log 차의 소실, FP32 상태 변환 underflow, 읽기 coefficient underflow, 직접 exp라면 overflow할 항 수, native base underflow를 별도 기록한다. 일부 항의 underflow는 기록 후 계산을 계속하며 이를 정확한 값 보존으로 주장하지 않는다.
+- 안정화는 원래 큰 exp를 직접 만들지 않지만 높은 노름에서의 Gaussian feature 분산이나 FP32 요약 오차를 해결한 것은 아니다. 일부 fallback 또는 zero state가 생겨 원래 출력이 유지된 것을 개선으로 세면 안 된다.
+
+3. 합성 검증 결과 — 최종 SELFTEST_V3.json
+총 35건 통과. 독립 경로는 작은 Q/K에서 두 feature-kernel 행렬을 각각 직접 만든 뒤 차분하고, native 분자·분모에 합친다. core의 summary/_logs/offset 계산을 호출하지 않는다. FP32 상태 저장이 있으므로 비트 동일성 대신 사전에 코드에 정한 atol2e-7/rtol2e-6을 확인했다. 관측 최대 절대 차이는 2.1503705760483882e-10.
+검사: append 3단계/evict 후 직접 kernel 일치, 남은 청크 재구축과 출력 byte 일치, 원본=복원 정확 zero state, BF16 native 출력 byte 보존, 입력 Q/K/Khat/Vhat/Ohat/logZ와 저장 상태 보존, 단일 map, autograd 입력 미보존, 중복 id 거부, tensor byte 수, 지수·FP32 cast underflow, 작은 지수 차 expm1 보존, 준비/읽기 비유한, 위험 분모, 큰 exp 안정화, native base 소실 fallback, 출력 dtype overflow fallback, CUDA 미초기화.
+최종 합성 함수 wall 0.013467초(인터프리터 시작 제외), 프로세스 maxRSS 421179392B, CPU 4threads, Python 3.10.22, torch 2.6.0+cu124, CUDA initialized=False.
+V1은 최초 29검사, V2는 expm1/graph 방지·추가 수치검사 32검사, V3는 native 입력·상태 보존까지 명시한 최종 35검사다. 세 파일 모두 보존하며 이전 소스 hash를 현재 승인으로 대신하지 않는다. 반복 측정이나 독립 96사례 효과 검사가 아니다.
+
+4. 실제 tensor payload 확인과 범위
+루트 PAIRED_BUDGET_CHECK_ROOT.json을 읽고 합성 H12,D128,Dv128,R32,6청크를 실제 할당했다.
+DN/Dz FP32=1,188,864B; 공유 Omega FP32=196,608B; offset FP64=18,432B; 합 1,403,904B.
+서로 다른 storage pointer의 untyped_storage().nbytes 합과 논리 tensor 수가 모두 일치했다. 두 map 비용을 청구하지 않는다. 공통 Hadamard 65,536B는 이 core에 없으며 실제 경로에서 한 번 별도 집계해야 한다.
+이는 tensor payload 실측이다. Python dict/id/객체, allocator padding, FP64 작업공간, 출력, map의 임시 FP64 복사, host/device 복사, 추가 회전 기저를 포함한 총 peak 메모리가 아니다. 실제 효과 진단에서는 각 사용 범위를 별도 계측해야 한다.
+
+5. 남은 검토와 결론
+이 결과는 기존 Fable 식의 K-only 수학·수치 core를 구현했다는 합성 근거다. 새 방법의 실제 효과, Gaussian feature의 실자료 수용량, 신규성, native BF16 실행 동등성, GPU 속도는 검증하지 않았다.
+FULL/PSAC/QKSA/bit/signed-base-aware 대조와 실제 캡처 연결은 구현하지 않았다. rank·seed·분모 기준·효과 gate를 실제 Opus와 확정하기 전 실제 자료 점수를 측정하지 않는다. full-H pilot stop_quality를 변경하지 않는다.
+
+고정 소스 SHA256
+core.py 2665be65cb67680a8e526ed75077541ea8436f21c2b6c7dae3c4585aeb86cf2e
+selftest.py e385982bbd3ada4010b921a1afd66a9cc134c7915ad69b11df15c915818b1b17
+SELFTEST_V3.json 5362cde4db7bff4729b05fd6c019f6412970593a6d57f1725975d921ea152991
+root budget 3322b1915eebc0ca23ec3a0c706ceccbe701cff5324f9f040dcdcf48c2b42728

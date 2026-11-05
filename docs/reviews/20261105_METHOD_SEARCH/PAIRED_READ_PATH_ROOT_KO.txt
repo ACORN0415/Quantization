@@ -1,0 +1,25 @@
+Paired 응답 보정의 logZ 읽기 경로 — root 코드 검토, 2026-11-05
+범위: 설치된 Python 소스 및 프로젝트 호출 경로의 읽기 전용 검토. GPU 호출, 새 입력 캡처, 모델 생성, 패키지 변경 0회. 실제 효과·속도·CUDA 메모리·출력 동등성 검증이 아니다. 실제 Opus 검토 미완료.
+
+판단
+보정식에 필요한 기존 attention의 logZ를 얻기 위해 별도로 전체 QK 행렬을 만들어야 한다고 가정할 필요는 없다. 설치된 FlashAttention 2.7.4.post1에는 같은 forward 반환값의 LSE를 노출하는 Python 경로가 있다. 다만 현재 프로젝트 wrapper는 출력 텐서만 받으므로 연결은 아직 구현하지 않았다. API 문서의 testing-only 표현과 버전 의존성을 유지하며, 공개 반환 인자가 있다는 사실을 CUDA 실행 검증으로 쓰지 않는다.
+
+확인한 실제 호출
+src/wan/modules/causal_model.py의 KV store 분기는 post-RoPE Q/K와 V를 store.attend에 전달한다. src/kvq/store.py의 ChunkStore.attend는 복원된 가시 과거 청크와 현재 BF16 청크를 연결해 attention(query,k,v)를 한 번 호출한다. src/wan/modules/attention.py의 FA2 분기는 flash_attn_varlen_func를 사용한다. 기본값은 dropout=0, causal=False, window=(-1,-1)이며 이 경로의 가시 청크 범위는 store가 정한다.
+따라서 이 조건에서는 전체 가시 KV에 대한 logZ와 기존 출력으로 정규화하고, 보정 요약은 양자화된 과거 청크에만 적용하는 계약이 맞다. 과거 청크만의 logZ를 대신 사용하거나 현재 BF16 청크까지 보정하면 다른 연산이다. 부분 마스크, 서로 다른 batch 길이, 다른 attention backend로 확장할 때는 별도 계약이 필요하다.
+
+설치된 인터페이스 확인
+/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/flash_attn/flash_attn_interface.py
+- flash_attn_varlen_func는 return_attn_probs를 FlashAttnVarlenFunc.apply의 return_softmax 위치에 넘긴다.
+- FlashAttnVarlenFunc.forward는 _wrapped_flash_attn_varlen_forward에 return_softmax=(return_softmax and dropout_p > 0)를 넘긴다.
+- 위 Python forward는 요청한 경우 (out, softmax_lse, S_dmask)를 반환한다.
+- 따라서 dropout=0에서 반환 요청을 켜도 저수준 probability 출력 요청은 False다. 이는 Python 코드의 인자 전달 사실이며 설치된 CUDA 바이너리 내부의 실제 할당을 측정한 결과가 아니다.
+- 문서상 varlen LSE는 FP32 [heads,total_query]이며 natural-log softmax 정규화다. 보정 core의 [heads,query]와는 batch=1에서 직접 대응한다. 일반 batch는 cu_seqlens와 함께 분리해야 한다.
+- return_attn_probs 문서는 testing-only이고 probability tensor의 scaling을 보장하지 않는다고 설명한다. 보정에 S_dmask를 사용하지 않더라도 이 인터페이스의 버전 의존성은 남는다.
+
+비용과 다음 검사 범위
+12heads×4680query의 FP32 LSE 논리 크기는 224,640B다. 기존 커널이 계산하는 값의 수명을 늘리는 것과 새로 그만큼 할당하는 것은 구분해야 하며, 총 peak 증가는 측정 전 알 수 없다. 보정 출력·feature·FP64 작업 텐서도 별도다. 현재 합성 core는 CPU FP64 읽기 계산으로, GPU 추가 비용이 작다는 증거가 아니다.
+실자료 CPU 판별의 효과가 확인되어 GPU 연결을 검토할 때만, 같은 Q/K/V로 반환 옵션 전후 out의 바이트 동등성, LSE의 독립 계산 대비 허용오차, 반환 형상/dtype, CUDA peak와 반복 시간을 고정된 작은 입력에서 먼저 검사한다. 확률 행렬을 추가 생성하지 않았다는 실행 증거도 남긴다. 이는 다음 실험의 제안이며 아직 수행하지 않았다.
+
+현재 결정
+logZ 부재를 이유로 paired 후보를 배제할 코드는 발견하지 않았다. 이 결론은 읽기 경로의 가능성에 한정하며, paired의 효과·신규성·실용 비용을 지지하지 않는다. 전체 생성 pilot의 stop_quality는 그대로 유지한다.

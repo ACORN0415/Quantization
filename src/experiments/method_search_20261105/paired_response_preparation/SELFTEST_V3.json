@@ -1,0 +1,379 @@
+{
+  "status": "passed",
+  "scope": "synthetic algebra and numerical guard tests only; no real-effect evidence",
+  "cpu_threads": 4,
+  "python": "3.10.22",
+  "torch": "2.6.0+cu124",
+  "cuda_initialized": false,
+  "wall_seconds": 0.0134672379354015,
+  "max_rss_bytes": 421179392,
+  "check_count": 35,
+  "checks": [
+    {
+      "name": "persistent_dtypes_0",
+      "passed": true
+    },
+    {
+      "name": "reader_inputs_and_states_preserved_0",
+      "passed": true
+    },
+    {
+      "name": "append_direct_kernel_0",
+      "passed": true,
+      "max_absolute_difference": 2.1503705760483882e-10
+    },
+    {
+      "name": "persistent_dtypes_1",
+      "passed": true
+    },
+    {
+      "name": "reader_inputs_and_states_preserved_1",
+      "passed": true
+    },
+    {
+      "name": "append_direct_kernel_1",
+      "passed": true,
+      "max_absolute_difference": 1.7004663649400342e-10
+    },
+    {
+      "name": "persistent_dtypes_2",
+      "passed": true
+    },
+    {
+      "name": "reader_inputs_and_states_preserved_2",
+      "passed": true
+    },
+    {
+      "name": "append_direct_kernel_2",
+      "passed": true,
+      "max_absolute_difference": 1.1725701659637267e-10
+    },
+    {
+      "name": "evict_direct_kernel",
+      "passed": true,
+      "max_absolute_difference": 1.2677556227025377e-10
+    },
+    {
+      "name": "evict_equals_retained_rebuild_bits",
+      "passed": true
+    },
+    {
+      "name": "inputs_and_map_unchanged",
+      "passed": true
+    },
+    {
+      "name": "shared_map_single_persistent_tensor",
+      "passed": true
+    },
+    {
+      "name": "stored_state_does_not_retain_autograd_inputs",
+      "passed": true
+    },
+    {
+      "name": "no_intervention_exact_zero_state",
+      "passed": true
+    },
+    {
+      "name": "no_intervention_base_bytes",
+      "passed": true
+    },
+    {
+      "name": "empty_state_base_bytes",
+      "passed": true
+    },
+    {
+      "name": "duplicate_append_rejected",
+      "passed": true
+    },
+    {
+      "name": "actual_tensor_payload_budget",
+      "passed": true,
+      "logical_tensor_bytes": 1403904,
+      "unique_storage_bytes": 1403904,
+      "allocator_metadata_included": false
+    },
+    {
+      "name": "FP32_cast_underflow_recorded",
+      "passed": true,
+      "diagnostics": {
+        "feature_nonfinite": 0,
+        "feature_exp_underflow": 0,
+        "naive_exp_subtraction_collision": 0,
+        "nonzero_log_difference_lost": 0,
+        "state_cast_underflow": 2,
+        "state_nonfinite": 0,
+        "tensor_payload_bytes": 16
+      }
+    },
+    {
+      "name": "feature_exp_underflow_recorded",
+      "passed": true,
+      "diagnostics": {
+        "feature_nonfinite": 0,
+        "feature_exp_underflow": 2,
+        "naive_exp_subtraction_collision": 0,
+        "nonzero_log_difference_lost": 1,
+        "state_cast_underflow": 0,
+        "state_nonfinite": 0,
+        "tensor_payload_bytes": 16
+      }
+    },
+    {
+      "name": "nearby_exponent_cancellation_stabilized",
+      "passed": true,
+      "diagnostics": {
+        "feature_nonfinite": 0,
+        "feature_exp_underflow": 0,
+        "naive_exp_subtraction_collision": 1,
+        "nonzero_log_difference_lost": 0,
+        "state_cast_underflow": 0,
+        "state_nonfinite": 0,
+        "tensor_payload_bytes": 16
+      }
+    },
+    {
+      "name": "invalid_preparation_rejected",
+      "passed": true,
+      "cases": [
+        {
+          "name": "nonfinite_input",
+          "reason": "nonfinite_input",
+          "diagnostics": {
+            "feature_nonfinite": 0,
+            "feature_exp_underflow": 0,
+            "naive_exp_subtraction_collision": 0,
+            "nonzero_log_difference_lost": 0,
+            "state_cast_underflow": 0,
+            "state_nonfinite": 0
+          }
+        },
+        {
+          "name": "feature_log_overflow",
+          "reason": "nonfinite_feature_log",
+          "diagnostics": {
+            "feature_nonfinite": 1,
+            "feature_exp_underflow": 0,
+            "naive_exp_subtraction_collision": 0,
+            "nonzero_log_difference_lost": 0,
+            "state_cast_underflow": 0,
+            "state_nonfinite": 0
+          }
+        },
+        {
+          "name": "FP32_state_overflow",
+          "reason": "unrepresentable_FP32_state",
+          "diagnostics": {
+            "feature_nonfinite": 0,
+            "feature_exp_underflow": 0,
+            "naive_exp_subtraction_collision": 0,
+            "nonzero_log_difference_lost": 0,
+            "state_cast_underflow": 0,
+            "state_nonfinite": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "negative_denominator",
+      "passed": true,
+      "diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 1,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 1,
+        "exact_zero_bypass": false
+      }
+    },
+    {
+      "name": "small_positive_denominator",
+      "passed": true,
+      "diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 1,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 1,
+        "exact_zero_bypass": false
+      }
+    },
+    {
+      "name": "large_exp_stabilized_without_raw_overflow",
+      "passed": true,
+      "diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 1,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 0,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 0,
+        "exact_zero_bypass": false
+      }
+    },
+    {
+      "name": "lost_native_base_fallback",
+      "passed": true,
+      "diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 1,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 1,
+        "unsafe_denominator_queries": 0,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 1,
+        "exact_zero_bypass": false
+      }
+    },
+    {
+      "name": "coefficient_underflow_recorded",
+      "passed": true,
+      "diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 1,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 0,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 0,
+        "exact_zero_bypass": false
+      }
+    },
+    {
+      "name": "corrupted_state_fallback",
+      "passed": true
+    },
+    {
+      "name": "nonfinite_query",
+      "passed": true,
+      "diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 0,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 1,
+        "exact_zero_bypass": false,
+        "fallback_reason": "nonfinite_query_or_base_logz"
+      }
+    },
+    {
+      "name": "nonfinite_logz",
+      "passed": true,
+      "diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 0,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 1,
+        "exact_zero_bypass": false,
+        "fallback_reason": "nonfinite_query_or_base_logz"
+      }
+    },
+    {
+      "name": "computed_query_overflow",
+      "passed": true,
+      "diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 1,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 0,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 1,
+        "exact_zero_bypass": false,
+        "fallback_reason": "nonfinite_query_feature_log"
+      }
+    },
+    {
+      "name": "nonfinite_base_rejected",
+      "passed": true
+    },
+    {
+      "name": "output_dtype_overflow_fallback",
+      "passed": true,
+      "diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 0,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 1,
+        "fallback_queries": 1,
+        "exact_zero_bypass": false
+      }
+    },
+    {
+      "name": "cuda_uninitialized",
+      "passed": true
+    }
+  ],
+  "summary_diagnostics": [
+    {
+      "feature_nonfinite": 0,
+      "feature_exp_underflow": 0,
+      "naive_exp_subtraction_collision": 0,
+      "nonzero_log_difference_lost": 0,
+      "state_cast_underflow": 0,
+      "state_nonfinite": 0,
+      "tensor_payload_bytes": 624
+    },
+    {
+      "feature_nonfinite": 0,
+      "feature_exp_underflow": 0,
+      "naive_exp_subtraction_collision": 0,
+      "nonzero_log_difference_lost": 0,
+      "state_cast_underflow": 0,
+      "state_nonfinite": 0,
+      "tensor_payload_bytes": 624
+    },
+    {
+      "feature_nonfinite": 0,
+      "feature_exp_underflow": 0,
+      "naive_exp_subtraction_collision": 0,
+      "nonzero_log_difference_lost": 0,
+      "state_cast_underflow": 0,
+      "state_nonfinite": 0,
+      "tensor_payload_bytes": 624
+    }
+  ],
+  "maximum_direct_kernel_absolute_difference": 2.1503705760483882e-10,
+  "source_hashes": {
+    "core.py": "2665be65cb67680a8e526ed75077541ea8436f21c2b6c7dae3c4585aeb86cf2e",
+    "selftest.py": "e385982bbd3ada4010b921a1afd66a9cc134c7915ad69b11df15c915818b1b17"
+  }
+}
