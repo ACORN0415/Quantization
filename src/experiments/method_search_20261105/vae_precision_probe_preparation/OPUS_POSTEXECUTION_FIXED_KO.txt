@@ -1,0 +1,54 @@
+VAE 정밀도 실제 진단 — 결과·감사 사후 한정 검토 (Opus2, root msg_236a36dda056)
+시작 UTC: 2026-11-05T17:38:58Z. 공유 마감은 17:46:48Z다.
+부모: claude-opus-5-5, 기존 채팅 session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5. Task/Dispatch: 미연결(terminal_handle_stale).
+helper는 쓰지 않았다. 범위가 작은 JSON 대조 하나라 독립 조각이 없었다. 부모가 직접 수행했다.
+이번 검토의 추가 실행은 0이다(GPU, VAE, model, latent·tensor·.pt 로드, import, 감사 재실행 모두 없음).
+실제 진단 자체는 root가 이미 GPU에서 VAE decode 2회로 실행했다. 이 검토는 그 저장 기록을 읽은 것이다.
+
+hash (현재 파일 직접 sha256, 앞 20자리)
+- ROOT_EXECUTION_FINAL 04ef953dcb02d769242a, RESULT 875e1b48fc044fc0f10b(OBSERVED_RESULT_ROOT의 result_sha256과 일치)
+- AUDIT_CODEX f7d63c5dc2a20615a325, LOCK 635d0794a9988beccf06, RUN ad3087ceed345e31354d, READY_V2 11921f6b298343011e9e
+- OBSERVED_RESULT_ROOT 56bd7ea10500d4da87b7, ROOT_CRITERIA_DECISION 70e6f95aedc406e92ce0
+- worker.py bc3050540c89beedfc66(AUDIT의 hashes 기록과 일치), verify_result.py 975cdaec0d268e3047ff
+
+대조 결과
+1. 실행: ROOT_EXECUTION_FINAL은 completed, exit 0, wall 123.050초, attempts 1이다.
+   RESULT에 따르면 VAE decode 2회, generator 0회, watchdog_completed_cleanly true, inputs_unchanged true다.
+   [불일치·경미] RUN.json의 status는 여전히 "started"로 남아 완료 상태로 갱신되지 않았다. 최종 상태는 ROOT_EXECUTION_FINAL과 RESULT에서만 확인된다.
+2. 두 arm 모두 fresh load했다.
+   - checkpoint sha 38071ab5…가 같고, load 직후 파라미터 dtype은 FP32 194개다(worker:185 assert).
+   - 그다음 vae.to(dtype)(worker:186)로 캐스팅하고, latent를 같은 값으로 캐스팅했는지 확인한다(worker:188).
+   - 기록된 histogram은 캐스팅 전 값이다. 캐스팅 후 dtype은 assert와 소스로만 뒷받침되며 별도 기록 필드는 없다(경미).
+   - mean/std는 latent dtype 규칙을 따르고(정밀도 묶음), use_cache=False, autocast off.
+   - TF32는 matmul·cudnn 모두 off이고 cudnn deterministic이다(worker:160-163).
+3. 입력: 기존 개발 latent ~/sfq_data/mechanism/fr/p00_s303_BF16/latent.pt, tensor sha 45f1684c…, bf16 [1,126,16,60,104]이다(worker:8,176-178).
+4. 사전 기준: ROOT_CRITERIA_DECISION(created 1793899241.2)이 RUN 시작(1793899685.2)보다 앞선다. 데이터를 보기 전에 정한 것이다.
+   - 규칙: late 249..500 RGB RMSE ≥ 0.02이면 review, 미만이면 stop_precision_expansion.
+   - worker:95-105의 공식 sqrt(Σ MSE[249:501]/252)와 일치한다.
+5. 결과: late_RGB_RMSE = 0.0015816이므로 stop_precision_expansion이다(규칙 그대로 적용, 기준 사후 변경 없음).
+   - 참고로 서술 통계인 early(0..125)→late(375..500) 평균 RGB 변화 L2는 BF16 0.30397, FP32 0.30478이다. 두 arm이 거의 같다.
+   - 정밀도 차이(RMSE 0.0016)는 후반 색 변화의 크기보다 두 자릿수가량 작다. 이 사례(p00 s303)에서 VAE bf16 정밀도는 후반 색 변화의 주요 원인이 아니라는 해석과 부합한다.
+6. 자원(관측값): 등록 limits는 RSS 12GiB, GPU allocator 22GiB, 600초, output 256MiB였다.
+   - process peak RSS 10,467,708,928B, GPU allocated 10,241,936,896B(FP32 arm 누적), output 84,738,328B로 모두 상한 안이다.
+   - 표본 관측이다. GPU idle 확인(GPU_compute_apps_after_run 0)은 root 보고이며 내가 조회하지 않았다.
+7. 감사 범위: AUDIT_CODEX는 passed, 2728 checks다.
+   - scope는 "501 frames scalar records, direct RGB for 8 selected frames only"다.
+   - 선택된 8개 frame만 저장 RGB tensor로 다시 확인했다(FP64 허용오차 2e-14/2e-12). 501 frame 전체는 저장 스칼라를 다시 집계한 것이다.
+   - RESULT의 whole_RGB_saved_to_disk는 false다. 전체 RGB를 독립적으로 재생산한 것이 아니다.
+   - 이 검토도 tensor·decoder를 다시 계산하지 않았다.
+
+판정: root 해석은 대체로 타당하다. 과장은 없다.
+- 등록된 단일 진단이 유효하게 끝났다. 사전 규칙에 따른 stop_precision_expansion이 기록과 일치한다.
+- 해석 한계: 이 결과가 말하는 것은 "p00 s303 개발 latent 1개에서 decode 정밀도(BF16 대 FP32, TF32 off)를 바꿔도 후반 RGB가 거의 변하지 않는다"는 데까지다. 다음은 증명하지 않는다.
+  - 다른 prompt·seed·latent에서의 결과
+  - 모든 VAE·latent 원인의 배제(예: VAE 구조나 causal cache 자체)
+  - 생성 측 원인(하네스 대 126 외삽)의 구분
+  - FP32의 품질 우위, INT8 안전성, 신규 방법
+- 원래 하네스의 BF16 decode와는 runtime 플래그가 다르다(TF32/cudnn deterministic). 이 BF16 arm이 원래 하네스 출력과 bytes가 같다는 근거는 없다. 다만 matched 비교로서는 유효하다.
+- 원 Opus1의 source 검토는 부분 범위였다(원 마감 17:23 미충족, 명시 후속 17:28 안의 17:25:38 종료). 이를 완전한 독립 검토로 확대하지 않는다.
+- 결과를 본 뒤 기준을 바꾸거나 팔·후보를 추가하자는 제안은 하지 않는다.
+
+읽은 범위
+- 위 JSON들의 요약, worker.py의 grep 행(8, 95-105, 160-198, 215, 221)
+- 읽지 않은 것: REPORT_KO, REPORT_CODEX_KO 본문, verify_result.py 본문, selected RGB와 PNG 내용
+종료 UTC: 2026-11-05T17:39:57Z

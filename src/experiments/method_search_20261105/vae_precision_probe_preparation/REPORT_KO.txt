@@ -1,6 +1,6 @@
 고정 latent VAE 정밀도 진단 — 관측 결과와 독립 CPU 감사 완료
 
-현재 판정: stop_precision_expansion. 실제 Opus 사후 결과해석은 별도 요청한다.
+최종 판정: stop_precision_expansion. 실제 Opus 사후 결과해석까지 범위 한정 수용을 확인했다.
 단일 기존p00_s303_BF16 latent와 같은원본VAE체크포인트를각팔에서새로읽었다. BF16·FP32 두복원/generator0을root단일GPU프로세스로실행해123.050초/600초내exit0으로완료했다.
 BF16복원28.837초,FP32복원79.575초였다. 이값은복원호출구간이고전체영상생성가속이나정밀도별공정성능벤치마크가아니다.
 후반249..500의pooled RGB RMSE=0.0015816215983644165(약0.4033/255),사전engineering sensitivity기준0.02미만이다. 평균RGB early-late변화L2는BF16 0.3039723/FP32 0.3047798이며설명용이다.
@@ -21,3 +21,8 @@ Opus는핵심freshload/입력/TF32/복원/통계/선정프레임을읽었고reso
 
 다음 자원
 이정밀도원인분리진단은추가팔/다른seed로연장하지않는다.실제복원비용관측을바탕으로causalVAE의상태저장과기존스트리밍복원/압축문헌에남은문제가있는지제한검토한다.신규성이나실용적문제가없으면채택하지않는다.
+
+사후 실제 Opus 검토
+등록 판정과 실행·감사 범위는 수용됐다. 원문은OPUS_POSTEXECUTION_FIXED_KO.txt에그대로보존했다.RUN은최초exclusiveclaim이고terminal상태는ROOT_EXECUTION_FINAL과RESULT로판정한다.
+Opus원문의perpixelRMSE와temporalmeanRGB L2의크기비교는원인기여율로해석하지않는다. root는한입력의정밀도개입차이가작아확대를중지한다는범위를유지한다.
+캐스팅후파라미터dtype분포의추가기록은없으며freshload와.to호출의소스계약을넘어계측했다고쓰지않는다. 추가GPU/복원/텐서감사는없다.

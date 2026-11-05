@@ -1,0 +1,28 @@
+미채택 방법 가설 — 독립 문헌검토와 대조할 root 초안
+이 문서는 연구 채택·신규성·효과·실행 승인이 아니다. 동시 독립안이 반환되기 전에는 검토자에게 주입하지 않는다.
+
+관측과 미확인
+같은 개발 latent의 BF16/FP32 VAE 차이는 lateRGB RMSE0.00158이었다. 이것은 INT8 안전성의 근거가 아니다. native VAE는 과거 feature state를 저장하고 causal Conv3D를 반복한다. 저장 state의 실측 메모리 비중과 GPU 지연 기여는 아직 모른다. 기존 LightVAE·LatentQuant·Conv3D lowering과의 관계도 원문/코드에서 더 확인해야 한다.
+
+구체적인 가설 하나
+캐시의 각 시간 슬롯이 자기 scale을 가진 INT8 표현을 유지하고, causal convolution에서 슬롯별 정수 누산 뒤 각 scale로 복원해 더한다. 전체 과거+현재 activation을 하나의 새 scale로 맞추기 위해 저장 상태를 다시 양자화하는 경로를 피한다.
+정의 수준의 식: y_hat = sum_l s_x,l * s_w,l * Conv2D_int8(q_x,l, q_w,l) + b.
+이 식은 알려진 그룹별 정밀도 계산의 한 형태다. 식 자체를 새 발견이라고 주장하지 않는다. 가능한 연구 차이는 cached causal state의 scale 수명과 GPU temporal tile 경계를 함께 정하고, packed 상태를 실제 정수 연산까지 소비하도록 만드는 실행·정밀도 정책에 있다. 이것도 기존 group-wise GEMM/activation quantization에 이미 포함될 수 있다.
+
+왜 일반 이식으로는 부족한가
+단순 static-scale W8A8이 품질을 충분히 보존하면 동적 슬롯 scale은 필요 없다. state만 INT8로 저장하고 BF16 Conv를 쓰는 기준선이 같은 메모리·시간·출력오차를 제공해도 새 구현이 불필요하다. 공개 exact Conv3D lowering, LightVAE 구조 압축, LatentQuant 실제 가속이 이미 충분하면 채택하지 않는다. RTX4090이라는 설정 차이는 신규성이 아니다.
+
+가장 강한 단순 기준선
+1) output 누적cat/stack을 제거한 BF16 streaming과 적절한 channels-last 실행 가능성.
+2) 원 가중치의 기존 exact Conv3D->Conv2D lowering.
+3) INT8 state storage + BF16 compute.
+4) 고정 공유scale의 W8A8 state/compute.
+기존 라이브러리/커널이 이 조건을 지원하는지 먼저 확인하며 지원을 가정하지 않는다.
+
+다음 작은 검사의 조건
+문헌검토에서 같은 의사결정이 이미 해결됐는지 먼저 판단한다. 실측 hotspot/state 비중과 간단한 static 기준선의 실패가 확인되지 않으면 새 GPU kernel이나 정밀도 선택기를 만들지 않는다. 정당한 경우에만 이미 있는 latent의 한 decoder replay에서 state 수명/바이트/시간을 계측하고, 동일 활성화의 저장·복원 오류를 정밀도별로 검사한다. 새 생성은 필요하지 않다. 구체적 임계값·팔·자원은 아직 등록하지 않았다.
+
+검증 가능한 주장과 한계
+성공하더라도 현재 자료만으로는 fixed-latent decoder fidelity·실제 비용의 제한된 주장이다. 원래 generator/장기 기억/정책 성능을 자동 주장하지 않는다. 독립 보류 latent와 강한 기준선·실제 packed bytes·kernel 지원·비용·가장 가까운 선행 차이가 모두 있어야 전체 방법론 목표의 후보가 된다.
+
+작성 epoch: 1793900600.521051
