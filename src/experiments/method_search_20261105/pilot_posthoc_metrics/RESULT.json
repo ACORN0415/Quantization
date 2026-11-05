@@ -1,0 +1,104 @@
+{
+  "status": "completed_descriptive_only",
+  "source_sha256": "a49a0bb16dfdc4c8c6893f5b2946849d44dd018f694ae92ccaad07ef2ece407a",
+  "original_decision": "stop_quality",
+  "decision_changed": false,
+  "new_generation_calls": 0,
+  "new_metric_network_calls": 0,
+  "GPU_calls": 0,
+  "protected_inputs": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/QUALITY.json": "6cd48cdafb0e3f10029dfae05ceeb2a554fd2cf4dce2515496ced6ee8caa3d1d",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/BF16/sampling.json": "2d9dc12734683c893190c4138bf82648eba9883648b28b481db8215f735af071",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/BF16/features.pt": "6433a400c40e39e91f915b09b93fc80e521271239df1cb27654d9481b0bbbbd8",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_bf16/sampling.json": "e82aa6692dfc64828844f43863ee0d53c4ba49676a2fef4fe8fbb18d3c7afe21",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_bf16/features.pt": "724e3476b27b3c5704946a3352c4aa191d4f04f3ec9ee6e617272ac0aad28148",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_fp32/sampling.json": "c4a594c1200063af1bfc890186606c280bff8373ec84aa044be28ea4e2d308a7",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_fp32/features.pt": "f57b08a4f75e8403e289b5e152e52801eb352b41cfecfa24f3010364f9608353",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/O_full_gpu/sampling.json": "cc9d874762d5dbd1011b13e447705d9eb77366ede967f348ceaf2b8bfcb3eedb",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/O_full_gpu/features.pt": "d419ba0a6ae3f6fbfafa37b58bfe4f24d168aac31b18675daf943be9d60384d1",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/BF16/sampling.json": "e0134f8f66d07e52e19644994e9ac280d533d96fda19cd64958ee21dea1576c7",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/BF16/features.pt": "7ffcc5f135c4c5019f38c3532e706b1790c11b669ff002e2effeed5e06dd4ba0",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_bf16/sampling.json": "636da17cc4a58ac62b674eb9f1a8e328d111c8f8e814005ca44793f7004d4a81",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_bf16/features.pt": "db115aee31d278db40c786b1e9112c67fa952e64f0486966a4e4a7c720f0b413",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_fp32/sampling.json": "67af7f316ec6d86f636381806d22d7517791f9bc3d454893a56715f270901867",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_fp32/features.pt": "dfda6f9661f934715c8a346feadd403b1625daa12f662318c49f8b3e0e94ed1f",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/O_full_gpu/sampling.json": "b94b447bf9b07873b0388d54609a33eb52e5f9a0530cea8bf12f9dffcf1fc965",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/O_full_gpu/features.pt": "6f1d17cd1798a277bc4ea0753516c8ef9781482a7c97f275ff310a2e45e90a74"
+  },
+  "rows": [
+    {
+      "input_id": "coast_cycle",
+      "arm": "BF16",
+      "late_feature_dispersion": 0.06689718510518203,
+      "late_cosine_lag_12_frames": 0.9853131742066753,
+      "late_cosine_lag_60_frames": 0.9495945574037633,
+      "late_musiq": 71.12706759619334,
+      "late_dino_reference": 1.0
+    },
+    {
+      "input_id": "coast_cycle",
+      "arm": "R_bf16",
+      "late_feature_dispersion": 0.07726725147419229,
+      "late_cosine_lag_12_frames": 0.9794272098420201,
+      "late_cosine_lag_60_frames": 0.9473272413705236,
+      "late_musiq": 72.33557331751264,
+      "late_dino_reference": 0.921614994872169
+    },
+    {
+      "input_id": "coast_cycle",
+      "arm": "R_fp32",
+      "late_feature_dispersion": 0.07108180883529776,
+      "late_cosine_lag_12_frames": 0.980853357985642,
+      "late_cosine_lag_60_frames": 0.9488123441681969,
+      "late_musiq": 72.19509267050123,
+      "late_dino_reference": 0.9308851887775432
+    },
+    {
+      "input_id": "coast_cycle",
+      "arm": "O_full_gpu",
+      "late_feature_dispersion": 0.059518337239466985,
+      "late_cosine_lag_12_frames": 0.9833473327267781,
+      "late_cosine_lag_60_frames": 0.9600163387219133,
+      "late_musiq": 72.23434321085612,
+      "late_dino_reference": 0.9562753525768168
+    },
+    {
+      "input_id": "rain_market",
+      "arm": "BF16",
+      "late_feature_dispersion": 0.1379935073763637,
+      "late_cosine_lag_12_frames": 0.9247877614712825,
+      "late_cosine_lag_60_frames": 0.8725385151016555,
+      "late_musiq": 64.2175475529262,
+      "late_dino_reference": 1.0
+    },
+    {
+      "input_id": "rain_market",
+      "arm": "R_bf16",
+      "late_feature_dispersion": 0.09199239758334884,
+      "late_cosine_lag_12_frames": 0.9719897239192465,
+      "late_cosine_lag_60_frames": 0.9119232164372216,
+      "late_musiq": 74.42483123900398,
+      "late_dino_reference": 0.7213737020257426
+    },
+    {
+      "input_id": "rain_market",
+      "arm": "R_fp32",
+      "late_feature_dispersion": 0.07390183036303818,
+      "late_cosine_lag_12_frames": 0.9765661412747135,
+      "late_cosine_lag_60_frames": 0.9386320795610005,
+      "late_musiq": 72.17703767806765,
+      "late_dino_reference": 0.7384501802958133
+    },
+    {
+      "input_id": "rain_market",
+      "arm": "O_full_gpu",
+      "late_feature_dispersion": 0.04711063372244147,
+      "late_cosine_lag_12_frames": 0.9799476112313139,
+      "late_cosine_lag_60_frames": 0.9578975112781943,
+      "late_musiq": 72.24572215004572,
+      "late_dino_reference": 0.7472245650698942
+    }
+  ],
+  "elapsed_seconds": 0.535617572022602,
+  "interpretation": "Feature dispersion and fixed-lag cosine are descriptive, not validated motion/quality measures; no independent-frame statistics or causal inference."
+}
