@@ -221,4 +221,29 @@ root는실제RESULT/QUALITY/SUPERVISOR와소스diff를검토했다. 최종Claude
 사용자최신지시로21:50KST부터Opus5.5로검토재개하며그시각전Claude호출없음. 과거Fable원칙검토를최종Opus검토로표시하지않는다.
 같은저장량에서실행가능한보정효과검사의근거는있으므로고정된전체영상파일럿준비를계속한다. 전체생성품질/강한혼합정밀도대조/알고리즘신규성은별도미검증.
 
-상태: 국소효과와새입력native경로신호는있으나,전체생성품질/신규성의종합검증과최종Claude검토는미완료. 연속연구목표active.
+E018 [전체 생성 pilot 완료: 등록 stop_quality, 최종 Claude 검토 대기]
+full_obq_rollout_pilot/RUN.json SHA8a6c256a2dc47d182a785bed0d19e59addd3c48d1a5c9ce0c7440c05fe03cddf.
+QUALITY.json SHA6cd48cdafb0e3f10029dfae05ceeb2a554fd2cf4dce2515496ced6ee8caa3d1d.
+두 새 문장/seed × BF16/R_bf16/R_fp32/O_full_gpu, 42청크, 8생성/8VAE, 1182.421초. 재시도0, 결과 뒤 기준/코드 변경0.
+coast_cycle: FULL 후반 latent NSE 감소60.1057%/36.0306%, DINO 참조 유사도 +0.03466/+0.02539.
+rain_market: NSE 감소5.7449%/8.1978%로 두 RTN 대비 각각10% 조건미달. DINO는 +0.02585/+0.00877.
+MUSIQ는 coast -0.1012/+0.0393점, rain -2.1791/+0.0687점. rain/R_bf16의 -2점 중단조건 충족.
+따라서 Q1/Q3 실패,Q2 통과, combined stop_quality. 큰 NSE를 포화라 부르며 무효화하거나 유리한 기준선만 남기지 않는다.
+BF16 궤적 충실도와 무참조 MUSIQ가 같은 순위를 보장하지 않는 관측이다. 어느 지표가 틀렸다거나 영상 동작 붕괴 원인을 입증한 결과는 아니다.
+FULL sampling83.50/83.58초, RTN82.87~83.24초, BF1667.90~67.91초. 조건별1회로 전체가속/유의한 지연차 주장않음.
+동일 past KV payload1,622,937,780B, FULL 추가고정 U23,592,960B 별도. 같은 총메모리 사용이라고 하지 않는다.
+CPU사후 감사709검사/249보호파일/오류0, GPU재실행0; root는 보고서·판정·핵심3파일hash를 직접 확인했다.
+AUDIT_FINAL_CODEX.json SHAab76adbb2a71cd569f8953c7aef528e6198e53caaa3d33455a80cf1091f0e441.
+감사범위는 저장latent/DINOfeature/MUSIQ점수 및 호출/해시 기록이며 rawRGB의MUSIQ신경망 재실행은아니다.
+
+D009 [실패 범위 유지 및 다음 의사결정]
+현재 FULL 파일럿은 등록대로 종료하며 seed/팔/문턱을 추가해 성공으로 바꾸지 않는다.
+fixed_rotation_control은 별도 강한 기준선 진단의 준비 상태다. 신규 보류 평가나 FlagRot 전체 재현, 새 방법으로 간주하지 않는다.
+기존 개발 자료에서 알려진 단순 고정 회전이 국소 FULL 이득을 대체하는지 확인할 가치와 코드유효성을 먼저 독립 검토한다.
+실제 캡처 계산은 아직 실행하지 않았으며 root의 등록 수용/LOCK 이전에는 시작하지 않는다.
+최근 선행 대조는 PRIOR_ART_TARGETED_CODEX_KO.txt에 보존한다. fixed-Q/once-write/full-second-moment 자체는 차별점이 아니다.
+중간 관리자 실제 Codex chat codex_f3c117d6_300a_4bdd_8654_010cdfafebc7, Run run_37b53bde176e 연결확인.
+기존47status알림은 원문보존 후 handled 처리, 해당 수신함미처리0. UI상태를 직접 본 것은아니다.
+Claude최종검토2업무는21:50KST 이후 실제Opus5.5지원확인 후 실행할 예정이며 현재미완료다.
+
+상태: 국소효과 및 실행가능구현은 확인했으나 전체생성pilot는stop_quality. 강한기준선·실용효과·신규성의종합목표는미달이며연속연구목표active.

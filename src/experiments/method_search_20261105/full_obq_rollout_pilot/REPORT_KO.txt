@@ -1,0 +1,87 @@
+Full-H 보상 양자화 전체 생성 pilot: 실측 및 읽기 전용 감사 보고
+작성: Codex 업무2 / 2026-11-05. 최종 실제 Claude(Opus 5.5) 검토는 아직 미완료.
+
+판정: 등록한 stop_quality. 유효한 8개 생성과 8개 영상 복원·평가를 완료했으나, 두 입력 모두에서 두 RTN을 넘는다는 사전 기준을 충족하지 못했다. rain_market에서 R_bf16 대비 MUSIQ가 2.179109점 감소하여 등록한 -2점 중단 조건을 만족했다. Q1도 rain_market의 두 비교에서 10%에 미달했다. 기준·코드·입력·상한은 결과를 보고 변경하지 않았다.
+이 보고는 실행 및 Codex 감사의 완료이다. 실제 Claude 최종 코드/결과 검토, 신규성 확보, 새 방법의 효과 입증 완료를 뜻하지 않는다.
+
+1. 고정한 검사와 실행
+Self-Forcing 1.3B, RTX 4090 24GB, 30층×12head×128차원, 청크당 4 denoise+1 refresh. 각 입력 42청크/126 latent frame/501 pixel frame. 입력은 coast_cycle(seed409), rain_market(seed503) 두 개이며 PROMPTS.json의 정확한 문장을 사용했다. 개발 후 처음 시험하는 두 입력일 뿐 미학습 데이터·통계적 독립 표본 모집단이라고 주장하지 않는다.
+팔: BF16 참조, R_bf16(회전 INT4 K의 BF16 나눗셈/반올림), R_fp32(같은 그리드·scale의 FP32 나눗셈/반올림), O_full_gpu(같은 그리드·scale의 full-H 순차 오차 보상). V는 공통 packed INT4, 현재/직전 pending은 BF16. 완료 청크는 한 번 encode하고, 6개 과거 청크를 유지한다. 1560-frame 그룹·g16·Hadamard·FP16 scale 저장은 고정했다.
+H는 사전에 고정한 p00_s101의 30층 query에서 만든 오프라인 통계다. 새로운 두 입력의 미래 query나 출력 점수를 사용하지 않았다. GPU encoder는 검토된 layoutfix api.gpu_frames 및 원래 fused T_code 구현을 재사용했으며, 매 실제 encode에서 finite/positive scale 계약을 확인했다. fallback이나 clamp 정책 변경은 없다.
+명세·소스 커밋 1bf48fc; LOCK SHA256 4fcbbda6173a7886a8dbdf29f32e481628beda31e774b2b8efbf4238ab705414
+실험 실행 authority는 ROOT_DECISION.json의 명시적인 root_accepted_deferred_review이다. 과거 실제 Fable 설계 검토와 root·독립 Codex 코드 검토를 보존했고, quota 및 사용자 21:50 이후 Opus 5.5 지시 때문에 최종 Claude source/result flags는 false로 유지했다.
+본 실행 1182.421010초 = 19분 42.421초. 2026-11-05 19:56:28.633–20:16:11.054 KST. 계측 전에 소스 검증을 시작한 시점부터 preparation/integration/8생성/8VAE/metrics/종료 검증까지 포함한다. GPU 대기 큐 시간은 없었으며 실행 직전 idle 확인 후 시작했다. 60분 상한 미달, 재시도 0, 추가 생성 0. supervisor 세션 76737, exit code 0.
+
+2. 후반 결과: latent 청크21–41, pixel frame249–500
+후반 latent NSE는 BF16 궤적 충실도 proxy이며 영상 품질 또는 정답 자체가 아니다. MUSIQ·DINO는 MP4 인코딩 전 원본 복원 RGB8 프레임에서 계산했다. DINO는 같은 입력의 BF16 영상과 비교했다.
+입력 | 팔 | latent NSE | DINO 참조 유사도 | MUSIQ | sampling 초
+coast_cycle | BF16 | 0.000000000 | 1.000000000 | 71.127068 | 67.911444
+coast_cycle | R_bf16 | 0.402515442 | 0.921614995 | 72.335573 | 82.873385
+coast_cycle | R_fp32 | 0.251027157 | 0.930885189 | 72.195093 | 83.020568
+coast_cycle | O_full_gpu | 0.160580549 | 0.956275353 | 72.234343 | 83.503168
+rain_market | BF16 | 0.000000000 | 1.000000000 | 64.217548 | 67.895182
+rain_market | R_bf16 | 1.207411924 | 0.721373702 | 74.424831 | 82.967258
+rain_market | R_fp32 | 1.239673112 | 0.738450180 | 72.177038 | 83.239434
+rain_market | O_full_gpu | 1.138047598 | 0.747224565 | 72.245722 | 83.582195
+
+FULL 비교 | NSE 감소율 | DINO 차이 | MUSIQ 차이
+coast_cycle / R_bf16 | 60.105742% | +0.034660358 | -0.101230
+rain_market / R_bf16 | 5.744877% | +0.025850863 | -2.179109
+coast_cycle / R_fp32 | 36.030607% | +0.025390164 | +0.039251
+rain_market / R_fp32 | 8.197767% | +0.008774385 | +0.068684
+Q1(각 입력·각 RTN에서 NSE 감소≥10%): 실패. coast_cycle은 두 비교 모두 통과, rain_market은 5.744877%·8.197767%로 미달. 두 입력을 합쳐 이를 가리지 않았다.
+Q2(각 DINO 차이≥-0.005, RTN별 두 입력 평균≥0): 통과. 평균 차이는 R_bf16 대비 +0.030255610, R_fp32 대비 +0.017082274.
+Q3(각 MUSIQ 차이≥-1, RTN별 두 입력 평균≥-0.5): R_bf16 비교에서 실패. 평균 -1.140169598, rain_market -2.179109089. R_fp32 비교는 평균 +0.053967506으로 통과.
+등록한 중단 조건 중 MUSIQ 차이<-2가 rain_market/R_bf16에서 발생하여 stop_quality. 큰 NSE를 이유로 판단 불가로 바꾸지 않았으며, 서로 다른 RTN 산술의 차이를 계측 잡음이라고 부르지 않았다.
+
+3. 설명용 관측과 한계
+coast_cycle에서는 full-H가 후반 NSE를 36–60% 줄이고 DINO도 높였다. 그러나 초반 청크1–7과 중간8–20의 NSE는 R_fp32보다 각각 조금 컸다. 따라서 모든 시점·모든 척도의 단조 개선으로 표현하지 않는다.
+rain_market에서는 full-H의 후반 NSE와 DINO가 두 RTN보다 개선됐지만, R_bf16이 더 높은 MUSIQ를 얻었다. BF16 자체의 MUSIQ도 64.217548로 압축 팔보다 낮았다. 이는 이 자료에서 참조 궤적 충실도와 무참조 품질 점수가 같은 순위를 보장하지 않는다는 관측이며, 어느 한 지표를 사후 폐기할 근거가 아니다.
+두 입력·각 1seed이며 설정별 생성 타이밍도 1회다. 프레임 수를 독립 표본 수처럼 세지 않고 신뢰구간·통계적 유의성을 주장하지 않는다. 현재 자료는 이번 자원 배분 결정에 대한 pilot 근거다. 신규성 및 action-conditioned world-model 성능은 검증하지 않았다.
+
+4. 비용·메모리·같은 바이트의 범위
+공통 payload는 K 4,515,841B + V 4,500,480B / layer / chunk. 6개 과거 청크×30층의 packed KV 1,622,937,780B는 세 압축 팔에서 같았다. 이는 cache payload만의 동일성이다. FULL은 추가 고정 U 23,592,960B(22.5MiB), factor/H/workspace와 준비 비용을 가진다. 같은 총 메모리라고 주장하지 않는다.
+고정 U 준비 함수 총 10.827721초, 그중 기록된 원자료 I/O+hash 합 5.824160초, H/factor 계산 합 1.138750초. 모델 입력 원자료 7,042,655,940B는 기존 자료를 재사용했다. 원자료 생성 비용은 이번 준비 시간에 포함되지 않는다. 프로세스 시작/전후 전체 소스 검증까지 포함한 prepare stage wall은 아래 표와 다르다.
+단계 | 실제 stage wall 초
+prepare | 33.366553
+integration | 23.898744
+generate_0 | 392.371959
+generate_1 | 393.126435
+quality | 314.858370
+입력별 공유 모델 구축+conditioning: coast_cycle 48.144826초, rain_market 47.834496초. 이 값은 네 팔에 공통이며 네 번 합산하지 않는다. FULL의 U GPU 전송은 각각 0.007210초, 0.011170초.
+FULL sampling은 R_bf16 대비 각각 +0.760%, +0.741%, R_fp32 대비 +0.581%, +0.412%였다. 단일 실행의 기술값이며 안정적인 속도 차이 추정이나 가속 성과로 주장하지 않는다. BF16 약67.9초보다 모든 압축 팔 약82.9–83.6초가 느렸다.
+입력 | 팔 | encode GPU-event 합 초 | encode GPU-event 중앙값 ms | host-enqueue 합 초
+coast_cycle | O_full_gpu | 1.140762 | 0.926720 | 13.767008
+coast_cycle | R_bf16 | 0.595298 | 0.459776 | 13.841864
+coast_cycle | R_fp32 | 0.620691 | 0.503808 | 13.851753
+rain_market | O_full_gpu | 1.166463 | 0.927744 | 13.789509
+rain_market | R_bf16 | 0.567990 | 0.459776 | 13.822665
+rain_market | R_fp32 | 0.619094 | 0.502784 | 13.864874
+Encode 시간에는 공통 scale 유효성 검사에 따른 host barrier, K/V encoder, 이벤트와 host 계측을 포함한다. sampling에는 p.guard 및 기존 ChunkStore error_stats 등의 비용도 포함된다. 생산용 최소 오버헤드나 순수 커널 throughput이 아니다. event/host 구간은 서로 겹칠 수 있으므로 합산하여 전체 절약 상한으로 사용하지 않는다.
+프로세스 | RSS peak GiB | CUDA allocated peak GiB | CUDA reserved peak GiB
+prepare | 0.759827 | GPU 없음 | GPU 없음
+integration | 1.119137 | 0.165908 | 0.220703
+generate_0 | 33.271709 | 8.637163 | 9.039062
+generate_1 | 33.267746 | 8.637163 | 9.039062
+quality | 2.651890 | 7.379224 | 16.855469
+generation 프로세스 peak는 모델 구축 전부터 네 팔에 걸친 누적 최대치다. 따라서 각 팔의 독립 최대 메모리 비교가 아니다. 관측한 모든 단계의 RSS는 40GiB, CUDA allocated는 22GiB 상한 미만이었다. 최종 보고 작성 직전 폴더 전체는 약0.304GiB였고, 기존 읽기 전용 원자료를 제외한 4GiB 제한 이내다.
+
+5. 실행 증거와 사후 감사의 범위
+8생성 ×210 =1,680 model forward. 압축6생성 ×30층 ×41 encode_pair =7,380회. BF16 2생성의 encode 호출은 0. 8 VAE decode가 모두 유효 완료했다. 각 압축 팔에서 reader 청크1..41/층0..29의 실제 로그 순서, source_chunk=reader_chunk-1, 층별 누적호출41, payload 산술을 다시 확인했다.
+실행 전 integration 6사례는 원래 GPU 전처리의 CPU 참조 code 정확 일치, V CPU packet 및 GPU reader 일치, packet ownership/lifetime 검사를 통과했다. 전체 rollout의 packet을 전부 저장한 것은 아니므로 전체 생성 중 모든 packet byte를 사후 직접 재검증했다고 쓰지 않는다.
+사후 감사 AUDIT_FINAL_CODEX.json: 709검사 통과, 249개 보호 파일의 hash 및 읽기 전후 보존 확인, 오류0/누락0, GPU호출0, 22.427836초. 이 사후 CPU 감사는 본 실험 종료 후 별도 수행했다.
+실제 저장 latent 8개에서 첫3 latent frame의 원소 바이트 일치, 유한성, 후반·전체·3개 설명용 창의 NSE를 재계산했다. 42개 초기 noise chunk hash는 입력별 네 팔이 같음을 확인했으나 noise tensor를 다시 생성하지 않았다. 저장된 DINO feature에서 프레임별 cosine을 다시 계산했고, MUSIQ는 저장 점수의 평균·판정을 재계산했다. MUSIQ 네트워크나 raw RGB 프레임 metric 자체를 재실행하지 않았다.
+모든 모델/설정/metric/source hash를 실제 worker의 시작·종료 검사와 사후 audit에서 확인했다. 사후 audit은 원래 결과·LOCK·코드를 변경하지 않는 읽기 전용 경로이며 새 이름으로 독립 결과를 저장했다. combined gate의 독립 계산도 stop_quality로 일치했다.
+
+6. 다음 판단
+이번 full-H 전체 생성 pilot의 성공을 선언하거나 같은 범위에서 seed/팔/지표를 더 붙이지 않는다. 부분 attention 오차의 개선이 긴 생성에서 모든 등록 기준을 충족시키지 못했다는 결과를 보존한다. 다음 한 단계는 21:50 이후 실제 Opus 5.5가 등록 명세·코드·결과·본 감사를 검토하는 것이다. 그 검토와 기존 근거를 바탕으로 별도의 후보 선택을 해야 하며, 이 보고가 자동으로 기존 실패 기준을 무효화하지 않는다.
+
+주요 산출물 SHA256
+RUN.json 8a6c256a2dc47d182a785bed0d19e59addd3c48d1a5c9ce0c7440c05fe03cddf
+QUALITY.json 6cd48cdafb0e3f10029dfae05ceeb2a554fd2cf4dce2515496ced6ee8caa3d1d
+AUDIT_FINAL_CODEX.json ab76adbb2a71cd569f8953c7aef528e6198e53caaa3d33455a80cf1091f0e441
+FACTORS.json c7b1bf0e3906f1605d7346054b5ffa53c465738b7a5c4c7afb8c80eebfe3e8ce
+INTEGRATION.json c670dbc109f4d8896096ab3af8f84c99b8aa3790bf2c2474977eb1d519975d8f
+STAGE2_BINDING.json 0af353344aef977cd283c041dc0fb86e0a99fd039e5bc0e1af846a0ac089c408
+ROOT_DECISION.json 2970cb26dd878a03a5b9bd61ae05b830aca38c33792d96ce752e1b9f9c0e4b4a
+SELFTEST_V3.json daf256ba3e5dc37718852131594b74da466082015fbf42f7cbeb5b144c9f423f

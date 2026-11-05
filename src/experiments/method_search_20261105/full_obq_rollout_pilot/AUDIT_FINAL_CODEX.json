@@ -1,0 +1,2883 @@
+{
+  "status": "completed_audit",
+  "run_status": "completed",
+  "completed_generations": 8,
+  "protected_files": 249,
+  "checks": [
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/RUN.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/LOCK.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/QUALITY.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/COUNTERS.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/PROMPTS.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/FACTORS.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/INTEGRATION.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/pilot_common.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/packed_adapter.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/worker.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/quality.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/supervisor.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/selftest.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/SELFTEST_V3.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/PROMPTS.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/PROMPT_HISTORY_CHECK.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/REGISTRATION_DRAFT_KO.txt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/STAGE2_BINDING.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/ADMINISTRATIVE_AMENDMENT_KO.txt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/scripts/p3_tf_fr.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/scripts/anchor_identity_gate.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/P3_TF_FR_PILOT.md",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/configs/default_config.yaml",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/configs/a1.yaml",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/tools/kv_channel_rollout.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/tools/kv_channel_full_attention.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/tools/mechanism_worker.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/tools/evaluate_policy_supplement.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/kv_channel_budget_rollout/quality.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/kvq/__init__.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/kvq/lockstep.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/kvq/memory.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/kvq/quant.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/kvq/replay.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/kvq/store.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/kvq/verification.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/pipeline/__init__.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/pipeline/causal_inference.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/wan/__init__.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/wan/modules/__init__.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/wan/modules/attention.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/wan/modules/causal_model.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/wan/modules/model.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/wan/modules/t5.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/wan/modules/tokenizers.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/wan/modules/vae.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/utils/dataset.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/utils/lmdb.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/utils/misc.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/utils/scheduler.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/utils/wan_wrapper.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/sfq_data/kv_alllayer_capture/p00_s101/manifest.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/manifest.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/manifest.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/checkpoints/self_forcing_dmd.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/wan_models/Wan2.1-T2V-1.3B/config.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/wan_models/Wan2.1-T2V-1.3B/diffusion_pytorch_model.safetensors",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/wan_models/Wan2.1-T2V-1.3B/models_t5_umt5-xxl-enc-bf16.pth",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/wan_models/Wan2.1-T2V-1.3B/Wan2.1_VAE.pth",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/wan_models/Wan2.1-T2V-1.3B/google/umt5-xxl/special_tokens_map.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/wan_models/Wan2.1-T2V-1.3B/google/umt5-xxl/spiece.model",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/wan_models/Wan2.1-T2V-1.3B/google/umt5-xxl/tokenizer.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/wan_models/Wan2.1-T2V-1.3B/google/umt5-xxl/tokenizer_config.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/.cache/torch/hub/pyiqa/musiq_koniq_ckpt-e95806b9.pth",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/.cache/torch/hub/checkpoints/dino_vitbase16_pretrain.pth",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/.cache/torch/hub/checkpoints/raft_small_C_T_V2-01064c6d.pth",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/prepare_bundle.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/audit_posthoc.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/experiment.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/obq_pack.cu",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/REGISTRATION_DRAFT_KO.txt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/SELFTEST.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/selftest.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_cost_stage1/benchmark.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_cost_stage1/LOCK.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_cost_stage1/RESULT.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/common.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/LOCK.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/replay.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/NATIVE_RESULT.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_cost_stage1/prepared_l18_c1.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_cost_stage1/prepared_l24_c6.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_envfix/build/obq_stage2_50b86fd47474.so",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_wo.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_wo.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write1.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_write1.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_first_reader1.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_first_reader1.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write2.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_write2.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_first_reader2.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_first_reader2.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write3.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_write3.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_first_reader3.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_first_reader3.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write4.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_write4.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_first_reader4.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_first_reader4.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write5.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_write5.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_first_reader5.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_first_reader5.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write6.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_write6.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_first_reader6.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_read0.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_first_reader6.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_read0.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_read3.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_read3.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/latent.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c1_V.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c1_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c1_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c1_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c1_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c1_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c2_V.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c2_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c2_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c2_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c2_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c2_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c3_V.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c3_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c3_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c3_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c3_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c3_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c4_V.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c4_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c4_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c4_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c4_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c4_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c5_V.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c5_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c5_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c5_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c5_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c5_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c6_V.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c6_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c6_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c6_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c6_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c6_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c1_V.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c1_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c1_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c1_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c1_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c1_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c2_V.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c2_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c2_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c2_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c2_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c2_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c3_V.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c3_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c3_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c3_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c3_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c3_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c4_V.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c4_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c4_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c4_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c4_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c4_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c5_V.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c5_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c5_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c5_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c5_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c5_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c6_V.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c6_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c6_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c6_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c6_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c6_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/layout_supervisor.py",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/SOURCE_DIFF.patch",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/PREFLIGHT.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/FABLE_REVIEW_AT_LOCK_KO.txt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/LAYOUT_REVIEW_AT_LOCK_KO.txt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/stage2_validity_probe/RESULT.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_envfix/RESULT.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2/SUPERVISOR.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2/RESULT.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2/BUILD.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2/LOCK.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/AMENDMENT_REVIEW_AVAILABILITY_KO.txt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/FABLE_AVAILABILITY_EVIDENCE.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/LOCK.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/RESULT.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/QUALITY.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/BUILD.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/ROOT_DECISION_AT_LOCK.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/STAGE2_PRIOR_FABLE_AT_LOCK_KO.txt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/PILOT_PRIOR_FABLE_AT_LOCK_KO.txt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/INDEPENDENT_CODEX_AT_LOCK_KO.txt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/REVIEW_AVAILABILITY_AT_LOCK.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/USER_REVIEW_PREFERENCE_AT_LOCK_KO.txt",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/STAGE2_BINDING_PENDING_SNAPSHOT.json",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/BF16/sampling.json",
+      "pass": true
+    },
+    {
+      "label": "coast_cycle/BF16: forward cap",
+      "pass": true
+    },
+    {
+      "label": "completed 210 forwards",
+      "pass": true
+    },
+    {
+      "label": "completed 42 chunks",
+      "pass": true
+    },
+    {
+      "label": "42 stored initial-noise hashes",
+      "pass": true
+    },
+    {
+      "label": "layer encode counts BF16",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/BF16/encode_events.jsonl",
+      "pass": true
+    },
+    {
+      "label": "chronological actual encoder events coast_cycle/BF16",
+      "pass": true
+    },
+    {
+      "label": "event source/count/payload BF16",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/BF16/latent.pt",
+      "pass": true
+    },
+    {
+      "label": "latent size BF16",
+      "pass": true
+    },
+    {
+      "label": "latent shape BF16",
+      "pass": true
+    },
+    {
+      "label": "finite latent BF16",
+      "pass": true
+    },
+    {
+      "label": "actual first chunk bytes coast_cycle/BF16",
+      "pass": true
+    },
+    {
+      "label": "recomputed late_latent coast_cycle/BF16",
+      "pass": true
+    },
+    {
+      "label": "recomputed whole_latent coast_cycle/BF16",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_1_to_7 BF16",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_8_to_20 BF16",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_21_to_41 BF16",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_bf16/sampling.json",
+      "pass": true
+    },
+    {
+      "label": "coast_cycle/R_bf16: forward cap",
+      "pass": true
+    },
+    {
+      "label": "completed 210 forwards",
+      "pass": true
+    },
+    {
+      "label": "completed 42 chunks",
+      "pass": true
+    },
+    {
+      "label": "42 stored initial-noise hashes",
+      "pass": true
+    },
+    {
+      "label": "same 42 initial-noise hashes coast_cycle/R_bf16",
+      "pass": true
+    },
+    {
+      "label": "layer encode counts R_bf16",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_bf16/encode_events.jsonl",
+      "pass": true
+    },
+    {
+      "label": "chronological actual encoder events coast_cycle/R_bf16",
+      "pass": true
+    },
+    {
+      "label": "event source/count/payload R_bf16",
+      "pass": true
+    },
+    {
+      "label": "reported cache payload arithmetic R_bf16",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_bf16/latent.pt",
+      "pass": true
+    },
+    {
+      "label": "latent size R_bf16",
+      "pass": true
+    },
+    {
+      "label": "latent shape R_bf16",
+      "pass": true
+    },
+    {
+      "label": "finite latent R_bf16",
+      "pass": true
+    },
+    {
+      "label": "actual first chunk bytes coast_cycle/R_bf16",
+      "pass": true
+    },
+    {
+      "label": "recomputed late_latent coast_cycle/R_bf16",
+      "pass": true
+    },
+    {
+      "label": "recomputed whole_latent coast_cycle/R_bf16",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_1_to_7 R_bf16",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_8_to_20 R_bf16",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_21_to_41 R_bf16",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_fp32/sampling.json",
+      "pass": true
+    },
+    {
+      "label": "coast_cycle/R_fp32: forward cap",
+      "pass": true
+    },
+    {
+      "label": "completed 210 forwards",
+      "pass": true
+    },
+    {
+      "label": "completed 42 chunks",
+      "pass": true
+    },
+    {
+      "label": "42 stored initial-noise hashes",
+      "pass": true
+    },
+    {
+      "label": "same 42 initial-noise hashes coast_cycle/R_fp32",
+      "pass": true
+    },
+    {
+      "label": "layer encode counts R_fp32",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_fp32/encode_events.jsonl",
+      "pass": true
+    },
+    {
+      "label": "chronological actual encoder events coast_cycle/R_fp32",
+      "pass": true
+    },
+    {
+      "label": "event source/count/payload R_fp32",
+      "pass": true
+    },
+    {
+      "label": "reported cache payload arithmetic R_fp32",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_fp32/latent.pt",
+      "pass": true
+    },
+    {
+      "label": "latent size R_fp32",
+      "pass": true
+    },
+    {
+      "label": "latent shape R_fp32",
+      "pass": true
+    },
+    {
+      "label": "finite latent R_fp32",
+      "pass": true
+    },
+    {
+      "label": "actual first chunk bytes coast_cycle/R_fp32",
+      "pass": true
+    },
+    {
+      "label": "recomputed late_latent coast_cycle/R_fp32",
+      "pass": true
+    },
+    {
+      "label": "recomputed whole_latent coast_cycle/R_fp32",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_1_to_7 R_fp32",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_8_to_20 R_fp32",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_21_to_41 R_fp32",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/O_full_gpu/sampling.json",
+      "pass": true
+    },
+    {
+      "label": "coast_cycle/O_full_gpu: forward cap",
+      "pass": true
+    },
+    {
+      "label": "completed 210 forwards",
+      "pass": true
+    },
+    {
+      "label": "completed 42 chunks",
+      "pass": true
+    },
+    {
+      "label": "42 stored initial-noise hashes",
+      "pass": true
+    },
+    {
+      "label": "same 42 initial-noise hashes coast_cycle/O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "layer encode counts O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/O_full_gpu/encode_events.jsonl",
+      "pass": true
+    },
+    {
+      "label": "chronological actual encoder events coast_cycle/O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "event source/count/payload O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "reported cache payload arithmetic O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/O_full_gpu/latent.pt",
+      "pass": true
+    },
+    {
+      "label": "latent size O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "latent shape O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "finite latent O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "actual first chunk bytes coast_cycle/O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "recomputed late_latent coast_cycle/O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "recomputed whole_latent coast_cycle/O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_1_to_7 O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_8_to_20 O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_21_to_41 O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/BF16/sampling.json",
+      "pass": true
+    },
+    {
+      "label": "rain_market/BF16: forward cap",
+      "pass": true
+    },
+    {
+      "label": "completed 210 forwards",
+      "pass": true
+    },
+    {
+      "label": "completed 42 chunks",
+      "pass": true
+    },
+    {
+      "label": "42 stored initial-noise hashes",
+      "pass": true
+    },
+    {
+      "label": "layer encode counts BF16",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/BF16/encode_events.jsonl",
+      "pass": true
+    },
+    {
+      "label": "chronological actual encoder events rain_market/BF16",
+      "pass": true
+    },
+    {
+      "label": "event source/count/payload BF16",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/BF16/latent.pt",
+      "pass": true
+    },
+    {
+      "label": "latent size BF16",
+      "pass": true
+    },
+    {
+      "label": "latent shape BF16",
+      "pass": true
+    },
+    {
+      "label": "finite latent BF16",
+      "pass": true
+    },
+    {
+      "label": "actual first chunk bytes rain_market/BF16",
+      "pass": true
+    },
+    {
+      "label": "recomputed late_latent rain_market/BF16",
+      "pass": true
+    },
+    {
+      "label": "recomputed whole_latent rain_market/BF16",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_1_to_7 BF16",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_8_to_20 BF16",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_21_to_41 BF16",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_bf16/sampling.json",
+      "pass": true
+    },
+    {
+      "label": "rain_market/R_bf16: forward cap",
+      "pass": true
+    },
+    {
+      "label": "completed 210 forwards",
+      "pass": true
+    },
+    {
+      "label": "completed 42 chunks",
+      "pass": true
+    },
+    {
+      "label": "42 stored initial-noise hashes",
+      "pass": true
+    },
+    {
+      "label": "same 42 initial-noise hashes rain_market/R_bf16",
+      "pass": true
+    },
+    {
+      "label": "layer encode counts R_bf16",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_bf16/encode_events.jsonl",
+      "pass": true
+    },
+    {
+      "label": "chronological actual encoder events rain_market/R_bf16",
+      "pass": true
+    },
+    {
+      "label": "event source/count/payload R_bf16",
+      "pass": true
+    },
+    {
+      "label": "reported cache payload arithmetic R_bf16",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_bf16/latent.pt",
+      "pass": true
+    },
+    {
+      "label": "latent size R_bf16",
+      "pass": true
+    },
+    {
+      "label": "latent shape R_bf16",
+      "pass": true
+    },
+    {
+      "label": "finite latent R_bf16",
+      "pass": true
+    },
+    {
+      "label": "actual first chunk bytes rain_market/R_bf16",
+      "pass": true
+    },
+    {
+      "label": "recomputed late_latent rain_market/R_bf16",
+      "pass": true
+    },
+    {
+      "label": "recomputed whole_latent rain_market/R_bf16",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_1_to_7 R_bf16",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_8_to_20 R_bf16",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_21_to_41 R_bf16",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_fp32/sampling.json",
+      "pass": true
+    },
+    {
+      "label": "rain_market/R_fp32: forward cap",
+      "pass": true
+    },
+    {
+      "label": "completed 210 forwards",
+      "pass": true
+    },
+    {
+      "label": "completed 42 chunks",
+      "pass": true
+    },
+    {
+      "label": "42 stored initial-noise hashes",
+      "pass": true
+    },
+    {
+      "label": "same 42 initial-noise hashes rain_market/R_fp32",
+      "pass": true
+    },
+    {
+      "label": "layer encode counts R_fp32",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_fp32/encode_events.jsonl",
+      "pass": true
+    },
+    {
+      "label": "chronological actual encoder events rain_market/R_fp32",
+      "pass": true
+    },
+    {
+      "label": "event source/count/payload R_fp32",
+      "pass": true
+    },
+    {
+      "label": "reported cache payload arithmetic R_fp32",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_fp32/latent.pt",
+      "pass": true
+    },
+    {
+      "label": "latent size R_fp32",
+      "pass": true
+    },
+    {
+      "label": "latent shape R_fp32",
+      "pass": true
+    },
+    {
+      "label": "finite latent R_fp32",
+      "pass": true
+    },
+    {
+      "label": "actual first chunk bytes rain_market/R_fp32",
+      "pass": true
+    },
+    {
+      "label": "recomputed late_latent rain_market/R_fp32",
+      "pass": true
+    },
+    {
+      "label": "recomputed whole_latent rain_market/R_fp32",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_1_to_7 R_fp32",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_8_to_20 R_fp32",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_21_to_41 R_fp32",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/O_full_gpu/sampling.json",
+      "pass": true
+    },
+    {
+      "label": "rain_market/O_full_gpu: forward cap",
+      "pass": true
+    },
+    {
+      "label": "completed 210 forwards",
+      "pass": true
+    },
+    {
+      "label": "completed 42 chunks",
+      "pass": true
+    },
+    {
+      "label": "42 stored initial-noise hashes",
+      "pass": true
+    },
+    {
+      "label": "same 42 initial-noise hashes rain_market/O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "layer encode counts O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/O_full_gpu/encode_events.jsonl",
+      "pass": true
+    },
+    {
+      "label": "chronological actual encoder events rain_market/O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "event source/count/payload O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "reported cache payload arithmetic O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/O_full_gpu/latent.pt",
+      "pass": true
+    },
+    {
+      "label": "latent size O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "latent shape O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "finite latent O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "actual first chunk bytes rain_market/O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "recomputed late_latent rain_market/O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "recomputed whole_latent rain_market/O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_1_to_7 O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_8_to_20 O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "descriptive window chunks_21_to_41 O_full_gpu",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/BF16/features.pt",
+      "pass": true
+    },
+    {
+      "label": "501 DINO features",
+      "pass": true
+    },
+    {
+      "label": "501 finite MUSIQ scores",
+      "pass": true
+    },
+    {
+      "label": "saved MUSIQ mean ('coast_cycle', 'BF16')whole",
+      "pass": true
+    },
+    {
+      "label": "saved MUSIQ mean ('coast_cycle', 'BF16')late",
+      "pass": true
+    },
+    {
+      "label": "quality latent score matches artifact ('coast_cycle', 'BF16')",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/BF16/preview.mp4",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_bf16/features.pt",
+      "pass": true
+    },
+    {
+      "label": "501 DINO features",
+      "pass": true
+    },
+    {
+      "label": "501 finite MUSIQ scores",
+      "pass": true
+    },
+    {
+      "label": "saved MUSIQ mean ('coast_cycle', 'R_bf16')whole",
+      "pass": true
+    },
+    {
+      "label": "saved MUSIQ mean ('coast_cycle', 'R_bf16')late",
+      "pass": true
+    },
+    {
+      "label": "quality latent score matches artifact ('coast_cycle', 'R_bf16')",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_bf16/preview.mp4",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_fp32/features.pt",
+      "pass": true
+    },
+    {
+      "label": "501 DINO features",
+      "pass": true
+    },
+    {
+      "label": "501 finite MUSIQ scores",
+      "pass": true
+    },
+    {
+      "label": "saved MUSIQ mean ('coast_cycle', 'R_fp32')whole",
+      "pass": true
+    },
+    {
+      "label": "saved MUSIQ mean ('coast_cycle', 'R_fp32')late",
+      "pass": true
+    },
+    {
+      "label": "quality latent score matches artifact ('coast_cycle', 'R_fp32')",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_fp32/preview.mp4",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/O_full_gpu/features.pt",
+      "pass": true
+    },
+    {
+      "label": "501 DINO features",
+      "pass": true
+    },
+    {
+      "label": "501 finite MUSIQ scores",
+      "pass": true
+    },
+    {
+      "label": "saved MUSIQ mean ('coast_cycle', 'O_full_gpu')whole",
+      "pass": true
+    },
+    {
+      "label": "saved MUSIQ mean ('coast_cycle', 'O_full_gpu')late",
+      "pass": true
+    },
+    {
+      "label": "quality latent score matches artifact ('coast_cycle', 'O_full_gpu')",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/O_full_gpu/preview.mp4",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/BF16/features.pt",
+      "pass": true
+    },
+    {
+      "label": "501 DINO features",
+      "pass": true
+    },
+    {
+      "label": "501 finite MUSIQ scores",
+      "pass": true
+    },
+    {
+      "label": "saved MUSIQ mean ('rain_market', 'BF16')whole",
+      "pass": true
+    },
+    {
+      "label": "saved MUSIQ mean ('rain_market', 'BF16')late",
+      "pass": true
+    },
+    {
+      "label": "quality latent score matches artifact ('rain_market', 'BF16')",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/BF16/preview.mp4",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_bf16/features.pt",
+      "pass": true
+    },
+    {
+      "label": "501 DINO features",
+      "pass": true
+    },
+    {
+      "label": "501 finite MUSIQ scores",
+      "pass": true
+    },
+    {
+      "label": "saved MUSIQ mean ('rain_market', 'R_bf16')whole",
+      "pass": true
+    },
+    {
+      "label": "saved MUSIQ mean ('rain_market', 'R_bf16')late",
+      "pass": true
+    },
+    {
+      "label": "quality latent score matches artifact ('rain_market', 'R_bf16')",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_bf16/preview.mp4",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_fp32/features.pt",
+      "pass": true
+    },
+    {
+      "label": "501 DINO features",
+      "pass": true
+    },
+    {
+      "label": "501 finite MUSIQ scores",
+      "pass": true
+    },
+    {
+      "label": "saved MUSIQ mean ('rain_market', 'R_fp32')whole",
+      "pass": true
+    },
+    {
+      "label": "saved MUSIQ mean ('rain_market', 'R_fp32')late",
+      "pass": true
+    },
+    {
+      "label": "quality latent score matches artifact ('rain_market', 'R_fp32')",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_fp32/preview.mp4",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/O_full_gpu/features.pt",
+      "pass": true
+    },
+    {
+      "label": "501 DINO features",
+      "pass": true
+    },
+    {
+      "label": "501 finite MUSIQ scores",
+      "pass": true
+    },
+    {
+      "label": "saved MUSIQ mean ('rain_market', 'O_full_gpu')whole",
+      "pass": true
+    },
+    {
+      "label": "saved MUSIQ mean ('rain_market', 'O_full_gpu')late",
+      "pass": true
+    },
+    {
+      "label": "quality latent score matches artifact ('rain_market', 'O_full_gpu')",
+      "pass": true
+    },
+    {
+      "label": "sha /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/O_full_gpu/preview.mp4",
+      "pass": true
+    },
+    {
+      "label": "DINO per-frame from saved features ('coast_cycle', 'BF16')",
+      "pass": true
+    },
+    {
+      "label": "DINO window mean ('coast_cycle', 'BF16')whole",
+      "pass": true
+    },
+    {
+      "label": "DINO window mean ('coast_cycle', 'BF16')late",
+      "pass": true
+    },
+    {
+      "label": "DINO per-frame from saved features ('coast_cycle', 'R_bf16')",
+      "pass": true
+    },
+    {
+      "label": "DINO window mean ('coast_cycle', 'R_bf16')whole",
+      "pass": true
+    },
+    {
+      "label": "DINO window mean ('coast_cycle', 'R_bf16')late",
+      "pass": true
+    },
+    {
+      "label": "DINO per-frame from saved features ('coast_cycle', 'R_fp32')",
+      "pass": true
+    },
+    {
+      "label": "DINO window mean ('coast_cycle', 'R_fp32')whole",
+      "pass": true
+    },
+    {
+      "label": "DINO window mean ('coast_cycle', 'R_fp32')late",
+      "pass": true
+    },
+    {
+      "label": "DINO per-frame from saved features ('coast_cycle', 'O_full_gpu')",
+      "pass": true
+    },
+    {
+      "label": "DINO window mean ('coast_cycle', 'O_full_gpu')whole",
+      "pass": true
+    },
+    {
+      "label": "DINO window mean ('coast_cycle', 'O_full_gpu')late",
+      "pass": true
+    },
+    {
+      "label": "DINO per-frame from saved features ('rain_market', 'BF16')",
+      "pass": true
+    },
+    {
+      "label": "DINO window mean ('rain_market', 'BF16')whole",
+      "pass": true
+    },
+    {
+      "label": "DINO window mean ('rain_market', 'BF16')late",
+      "pass": true
+    },
+    {
+      "label": "DINO per-frame from saved features ('rain_market', 'R_bf16')",
+      "pass": true
+    },
+    {
+      "label": "DINO window mean ('rain_market', 'R_bf16')whole",
+      "pass": true
+    },
+    {
+      "label": "DINO window mean ('rain_market', 'R_bf16')late",
+      "pass": true
+    },
+    {
+      "label": "DINO per-frame from saved features ('rain_market', 'R_fp32')",
+      "pass": true
+    },
+    {
+      "label": "DINO window mean ('rain_market', 'R_fp32')whole",
+      "pass": true
+    },
+    {
+      "label": "DINO window mean ('rain_market', 'R_fp32')late",
+      "pass": true
+    },
+    {
+      "label": "DINO per-frame from saved features ('rain_market', 'O_full_gpu')",
+      "pass": true
+    },
+    {
+      "label": "DINO window mean ('rain_market', 'O_full_gpu')whole",
+      "pass": true
+    },
+    {
+      "label": "DINO window mean ('rain_market', 'O_full_gpu')late",
+      "pass": true
+    },
+    {
+      "label": "independent combined gate",
+      "pass": true
+    },
+    {
+      "label": "global attempt caps",
+      "pass": true
+    },
+    {
+      "label": "completed generations do not exceed attempted count",
+      "pass": true
+    },
+    {
+      "label": "complete run has all eight generations and quality",
+      "pass": true
+    },
+    {
+      "label": "completed run exact counters",
+      "pass": true
+    },
+    {
+      "label": "completed run wall cap",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/RUN.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/LOCK.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/QUALITY.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/COUNTERS.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/PROMPTS.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/FACTORS.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/INTEGRATION.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/pilot_common.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/packed_adapter.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/worker.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/quality.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/supervisor.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/selftest.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/SELFTEST_V3.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/PROMPT_HISTORY_CHECK.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/REGISTRATION_DRAFT_KO.txt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/STAGE2_BINDING.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/ADMINISTRATIVE_AMENDMENT_KO.txt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/scripts/p3_tf_fr.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/scripts/anchor_identity_gate.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/P3_TF_FR_PILOT.md",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/configs/default_config.yaml",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/configs/a1.yaml",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/tools/kv_channel_rollout.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/tools/kv_channel_full_attention.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/tools/mechanism_worker.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/tools/evaluate_policy_supplement.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/kv_channel_budget_rollout/quality.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/kvq/__init__.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/kvq/lockstep.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/kvq/memory.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/kvq/quant.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/kvq/replay.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/kvq/store.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/kvq/verification.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/pipeline/__init__.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/pipeline/causal_inference.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/wan/__init__.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/wan/modules/__init__.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/wan/modules/attention.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/wan/modules/causal_model.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/wan/modules/model.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/wan/modules/t5.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/wan/modules/tokenizers.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/wan/modules/vae.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/utils/dataset.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/utils/lmdb.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/utils/misc.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/utils/scheduler.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/utils/wan_wrapper.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/sfq_data/kv_alllayer_capture/p00_s101/manifest.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/manifest.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/manifest.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/checkpoints/self_forcing_dmd.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/wan_models/Wan2.1-T2V-1.3B/config.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/wan_models/Wan2.1-T2V-1.3B/diffusion_pytorch_model.safetensors",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/wan_models/Wan2.1-T2V-1.3B/models_t5_umt5-xxl-enc-bf16.pth",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/wan_models/Wan2.1-T2V-1.3B/Wan2.1_VAE.pth",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/wan_models/Wan2.1-T2V-1.3B/google/umt5-xxl/special_tokens_map.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/wan_models/Wan2.1-T2V-1.3B/google/umt5-xxl/spiece.model",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/wan_models/Wan2.1-T2V-1.3B/google/umt5-xxl/tokenizer.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/wan_models/Wan2.1-T2V-1.3B/google/umt5-xxl/tokenizer_config.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/.cache/torch/hub/pyiqa/musiq_koniq_ckpt-e95806b9.pth",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/.cache/torch/hub/checkpoints/dino_vitbase16_pretrain.pth",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/.cache/torch/hub/checkpoints/raft_small_C_T_V2-01064c6d.pth",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/prepare_bundle.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/audit_posthoc.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/experiment.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/obq_pack.cu",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/REGISTRATION_DRAFT_KO.txt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/SELFTEST.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/selftest.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_cost_stage1/benchmark.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_cost_stage1/LOCK.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_cost_stage1/RESULT.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/common.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/LOCK.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/replay.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/NATIVE_RESULT.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_cost_stage1/prepared_l18_c1.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_cost_stage1/prepared_l24_c6.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_envfix/build/obq_stage2_50b86fd47474.so",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_wo.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_wo.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write1.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_write1.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_first_reader1.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_first_reader1.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write2.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_write2.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_first_reader2.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_first_reader2.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write3.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_write3.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_first_reader3.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_first_reader3.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write4.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_write4.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_first_reader4.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_first_reader4.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write5.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_write5.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_first_reader5.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_first_reader5.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write6.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_write6.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_first_reader6.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_read0.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_first_reader6.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_read0.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_read3.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_read3.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/latent.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c1_V.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c1_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c1_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c1_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c1_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c1_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c2_V.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c2_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c2_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c2_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c2_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c2_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c3_V.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c3_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c3_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c3_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c3_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c3_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c4_V.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c4_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c4_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c4_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c4_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c4_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c5_V.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c5_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c5_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c5_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c5_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c5_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c6_V.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c6_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c6_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c6_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c6_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c6_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c1_V.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c1_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c1_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c1_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c1_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c1_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c2_V.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c2_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c2_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c2_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c2_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c2_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c3_V.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c3_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c3_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c3_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c3_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c3_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c4_V.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c4_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c4_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c4_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c4_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c4_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c5_V.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c5_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c5_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c5_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c5_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c5_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c6_V.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c6_R_bf16.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c6_R_fp32.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c6_O_offline.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c6_O_own_refresh.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c6_O_first_reader.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/layout_supervisor.py",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/SOURCE_DIFF.patch",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/PREFLIGHT.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/FABLE_REVIEW_AT_LOCK_KO.txt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/LAYOUT_REVIEW_AT_LOCK_KO.txt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/stage2_validity_probe/RESULT.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_envfix/RESULT.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2/SUPERVISOR.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2/RESULT.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2/BUILD.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2/LOCK.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/AMENDMENT_REVIEW_AVAILABILITY_KO.txt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/FABLE_AVAILABILITY_EVIDENCE.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/LOCK.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/RESULT.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/QUALITY.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/BUILD.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/ROOT_DECISION_AT_LOCK.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/STAGE2_PRIOR_FABLE_AT_LOCK_KO.txt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/PILOT_PRIOR_FABLE_AT_LOCK_KO.txt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/INDEPENDENT_CODEX_AT_LOCK_KO.txt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/REVIEW_AVAILABILITY_AT_LOCK.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/USER_REVIEW_PREFERENCE_AT_LOCK_KO.txt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/STAGE2_BINDING_PENDING_SNAPSHOT.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/BF16/sampling.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/BF16/encode_events.jsonl",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/BF16/latent.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_bf16/sampling.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_bf16/encode_events.jsonl",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_bf16/latent.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_fp32/sampling.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_fp32/encode_events.jsonl",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_fp32/latent.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/O_full_gpu/sampling.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/O_full_gpu/encode_events.jsonl",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/O_full_gpu/latent.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/BF16/sampling.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/BF16/encode_events.jsonl",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/BF16/latent.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_bf16/sampling.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_bf16/encode_events.jsonl",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_bf16/latent.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_fp32/sampling.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_fp32/encode_events.jsonl",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_fp32/latent.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/O_full_gpu/sampling.json",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/O_full_gpu/encode_events.jsonl",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/O_full_gpu/latent.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/BF16/features.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/BF16/preview.mp4",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_bf16/features.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_bf16/preview.mp4",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_fp32/features.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/R_fp32/preview.mp4",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/O_full_gpu/features.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/O_full_gpu/preview.mp4",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/BF16/features.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/BF16/preview.mp4",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_bf16/features.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_bf16/preview.mp4",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_fp32/features.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/R_fp32/preview.mp4",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/O_full_gpu/features.pt",
+      "pass": true
+    },
+    {
+      "label": "read-only preserved /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/rain_market/O_full_gpu/preview.mp4",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "missing_or_not_yet_produced": [],
+  "independent_decision": {
+    "decision": "stop_quality",
+    "comparisons": [
+      {
+        "input_id": "coast_cycle",
+        "baseline": "R_bf16",
+        "gain": 0.6010574211486095,
+        "DINO_delta": 0.034660357704647815,
+        "MUSIQ_delta": -0.10123010665651577
+      },
+      {
+        "input_id": "rain_market",
+        "baseline": "R_bf16",
+        "gain": 0.057448766984829924,
+        "DINO_delta": 0.02585086304415163,
+        "MUSIQ_delta": -2.1791090889582563
+      },
+      {
+        "input_id": "coast_cycle",
+        "baseline": "R_fp32",
+        "gain": 0.3603060700657451,
+        "DINO_delta": 0.025390163799273613,
+        "MUSIQ_delta": 0.0392505403548995
+      },
+      {
+        "input_id": "rain_market",
+        "baseline": "R_fp32",
+        "gain": 0.08197767111946175,
+        "DINO_delta": 0.008774384774080879,
+        "MUSIQ_delta": 0.0686844719780737
+      }
+    ]
+  },
+  "scope": "Actual saved latent first-chunk bytes and NSE; stored noise-hash equality; recorded encode chronology/payload; stored DINO features and MUSIQ means/gates. No noise regeneration, new encoder/attention/decoder/model/GPU or raw-image metric rerun; packet-byte evidence at rollout is logged, not a saved full cache.",
+  "GPU_calls": 0,
+  "elapsed_seconds": 22.427835767972283,
+  "auditor_sha256": "63a6a930415c830978c0bfa68b2bf104f191a22f91656c2fea91a3ca5a2d4ece"
+}

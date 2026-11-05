@@ -1,0 +1,53 @@
+{
+  "status": "completed",
+  "started_monotonic": 536477.396968423,
+  "started_utc": 1793876188.633243,
+  "stages": [
+    {
+      "name": "prepare",
+      "status": "completed",
+      "started_utc": 1793876202.2431676,
+      "return_code": 0,
+      "finished_utc": 1793876235.6097202
+    },
+    {
+      "name": "integration",
+      "status": "completed",
+      "started_utc": 1793876235.6296425,
+      "return_code": 0,
+      "finished_utc": 1793876259.5283868
+    },
+    {
+      "name": "generate_0",
+      "status": "completed",
+      "started_utc": 1793876259.54837,
+      "return_code": 0,
+      "finished_utc": 1793876651.9203293
+    },
+    {
+      "name": "generate_1",
+      "status": "completed",
+      "started_utc": 1793876651.9501865,
+      "return_code": 0,
+      "finished_utc": 1793877045.0766213
+    },
+    {
+      "name": "quality",
+      "status": "completed",
+      "started_utc": 1793877045.0976875,
+      "return_code": 0,
+      "finished_utc": 1793877359.9560575
+    }
+  ],
+  "counters": {
+    "generations": 8,
+    "vae_decodes": 8
+  },
+  "quality": {
+    "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/QUALITY.json",
+    "sha256": "6cd48cdafb0e3f10029dfae05ceeb2a554fd2cf4dce2515496ced6ee8caa3d1d",
+    "bytes": 331661
+  },
+  "finished_utc": 1793877371.0542524,
+  "elapsed_seconds": 1182.421009936952
+}

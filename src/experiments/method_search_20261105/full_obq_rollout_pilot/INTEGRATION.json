@@ -1,0 +1,66 @@
+{
+  "status": "completed",
+  "rows": [
+    {
+      "layer": 18,
+      "source_chunk": 1,
+      "arm": "R_bf16",
+      "native_GPU_preprocessed_CPU_reference_exact": true,
+      "V_CPU_packet_exact": true,
+      "V_reader_exact": true,
+      "owned_packet_lifetime": true
+    },
+    {
+      "layer": 18,
+      "source_chunk": 1,
+      "arm": "R_fp32",
+      "native_GPU_preprocessed_CPU_reference_exact": true,
+      "V_CPU_packet_exact": true,
+      "V_reader_exact": true,
+      "owned_packet_lifetime": true
+    },
+    {
+      "layer": 18,
+      "source_chunk": 1,
+      "arm": "O_full_gpu",
+      "native_GPU_preprocessed_CPU_reference_exact": true,
+      "V_CPU_packet_exact": true,
+      "V_reader_exact": true,
+      "owned_packet_lifetime": true
+    },
+    {
+      "layer": 24,
+      "source_chunk": 6,
+      "arm": "R_bf16",
+      "native_GPU_preprocessed_CPU_reference_exact": true,
+      "V_CPU_packet_exact": true,
+      "V_reader_exact": true,
+      "owned_packet_lifetime": true
+    },
+    {
+      "layer": 24,
+      "source_chunk": 6,
+      "arm": "R_fp32",
+      "native_GPU_preprocessed_CPU_reference_exact": true,
+      "V_CPU_packet_exact": true,
+      "V_reader_exact": true,
+      "owned_packet_lifetime": true
+    },
+    {
+      "layer": 24,
+      "source_chunk": 6,
+      "arm": "O_full_gpu",
+      "native_GPU_preprocessed_CPU_reference_exact": true,
+      "V_CPU_packet_exact": true,
+      "V_reader_exact": true,
+      "owned_packet_lifetime": true
+    }
+  ],
+  "peak": {
+    "rss_bytes": 1201664000,
+    "allocated_bytes": 178142720,
+    "reserved_bytes": 236978176
+  },
+  "generations": 0,
+  "VAE_decodes": 0
+}

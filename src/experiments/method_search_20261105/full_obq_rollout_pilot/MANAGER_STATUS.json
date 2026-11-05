@@ -1,0 +1,253 @@
+{
+  "updated_utc": "2026-11-05T11:19:43.666140+00:00",
+  "session_id": 76737,
+  "run_status": "completed",
+  "elapsed_seconds": 1182.421009936952,
+  "stages": [
+    {
+      "name": "prepare",
+      "status": "completed",
+      "started_utc": 1793876202.2431676,
+      "return_code": 0,
+      "finished_utc": 1793876235.6097202
+    },
+    {
+      "name": "integration",
+      "status": "completed",
+      "started_utc": 1793876235.6296425,
+      "return_code": 0,
+      "finished_utc": 1793876259.5283868
+    },
+    {
+      "name": "generate_0",
+      "status": "completed",
+      "started_utc": 1793876259.54837,
+      "return_code": 0,
+      "finished_utc": 1793876651.9203293
+    },
+    {
+      "name": "generate_1",
+      "status": "completed",
+      "started_utc": 1793876651.9501865,
+      "return_code": 0,
+      "finished_utc": 1793877045.0766213
+    },
+    {
+      "name": "quality",
+      "status": "completed",
+      "started_utc": 1793877045.0976875,
+      "return_code": 0,
+      "finished_utc": 1793877359.9560575
+    }
+  ],
+  "counts": {
+    "generations": 8,
+    "vae_decodes": 8
+  },
+  "sampling": [
+    {
+      "input_id": "coast_cycle",
+      "arm": "BF16",
+      "status": "completed",
+      "chunks": 42,
+      "model_forwards": 210,
+      "sampling_seconds": 67.91144391195849,
+      "late_NSE": 0.0
+    },
+    {
+      "input_id": "coast_cycle",
+      "arm": "O_full_gpu",
+      "status": "completed",
+      "chunks": 42,
+      "model_forwards": 210,
+      "sampling_seconds": 83.50316752598155,
+      "late_NSE": 0.16058054857231463
+    },
+    {
+      "input_id": "coast_cycle",
+      "arm": "R_bf16",
+      "status": "completed",
+      "chunks": 42,
+      "model_forwards": 210,
+      "sampling_seconds": 82.87338490306865,
+      "late_NSE": 0.40251544228406927
+    },
+    {
+      "input_id": "coast_cycle",
+      "arm": "R_fp32",
+      "status": "completed",
+      "chunks": 42,
+      "model_forwards": 210,
+      "sampling_seconds": 83.02056750899646,
+      "late_NSE": 0.25102715698555783
+    },
+    {
+      "input_id": "rain_market",
+      "arm": "BF16",
+      "status": "completed",
+      "chunks": 42,
+      "model_forwards": 210,
+      "sampling_seconds": 67.89518160303123,
+      "late_NSE": 0.0
+    },
+    {
+      "input_id": "rain_market",
+      "arm": "O_full_gpu",
+      "status": "completed",
+      "chunks": 42,
+      "model_forwards": 210,
+      "sampling_seconds": 83.58219452400226,
+      "late_NSE": 1.1380475977051505
+    },
+    {
+      "input_id": "rain_market",
+      "arm": "R_bf16",
+      "status": "completed",
+      "chunks": 42,
+      "model_forwards": 210,
+      "sampling_seconds": 82.9672583170468,
+      "late_NSE": 1.2074119239806183
+    },
+    {
+      "input_id": "rain_market",
+      "arm": "R_fp32",
+      "status": "completed",
+      "chunks": 42,
+      "model_forwards": 210,
+      "sampling_seconds": 83.2394335269928,
+      "late_NSE": 1.2396731124099314
+    }
+  ],
+  "quality_status": "completed",
+  "quality_rows": 8,
+  "quality_rows_complete": [
+    {
+      "input_id": "coast_cycle",
+      "arm": "BF16",
+      "late": {
+        "musiq": 71.12706759619334,
+        "dino_reference": 1.0,
+        "dino_adjacent": 0.9977446427296358,
+        "frames": 252
+      }
+    },
+    {
+      "input_id": "coast_cycle",
+      "arm": "R_bf16",
+      "late": {
+        "musiq": 72.33557331751264,
+        "dino_reference": 0.921614994872169,
+        "dino_adjacent": 0.9959718176466924,
+        "frames": 252
+      }
+    },
+    {
+      "input_id": "coast_cycle",
+      "arm": "R_fp32",
+      "late": {
+        "musiq": 72.19509267050123,
+        "dino_reference": 0.9308851887775432,
+        "dino_adjacent": 0.9961513747295667,
+        "frames": 252
+      }
+    },
+    {
+      "input_id": "coast_cycle",
+      "arm": "O_full_gpu",
+      "late": {
+        "musiq": 72.23434321085612,
+        "dino_reference": 0.9562753525768168,
+        "dino_adjacent": 0.9967674657702024,
+        "frames": 252
+      }
+    },
+    {
+      "input_id": "rain_market",
+      "arm": "BF16",
+      "late": {
+        "musiq": 64.2175475529262,
+        "dino_reference": 1.0,
+        "dino_adjacent": 0.9793624307420389,
+        "frames": 252
+      }
+    },
+    {
+      "input_id": "rain_market",
+      "arm": "R_bf16",
+      "late": {
+        "musiq": 74.42483123900398,
+        "dino_reference": 0.7213737020257426,
+        "dino_adjacent": 0.996872686230326,
+        "frames": 252
+      }
+    },
+    {
+      "input_id": "rain_market",
+      "arm": "R_fp32",
+      "late": {
+        "musiq": 72.17703767806765,
+        "dino_reference": 0.7384501802958133,
+        "dino_adjacent": 0.996291997968454,
+        "frames": 252
+      }
+    },
+    {
+      "input_id": "rain_market",
+      "arm": "O_full_gpu",
+      "late": {
+        "musiq": 72.24572215004572,
+        "dino_reference": 0.7472245650698942,
+        "dino_adjacent": 0.9968888319922484,
+        "frames": 252
+      }
+    }
+  ],
+  "known_gate_fact": "stop_quality: rain_market Q1 misses 10% against both RTN; MUSIQ FULL minus R_bf16=-2.179109089 crosses -2 stop threshold. Q2 passes; final actual Claude review pending.",
+  "review": "Actual final Claude source/result review pending, Opus5.5 not before 2026-11-05T21:50:00+09:00",
+  "notification_policy": "Routine updates stored here; root only on validity failure or overall quality+audit completion",
+  "source_changes_after_lock": 0,
+  "reruns": 0,
+  "decision": {
+    "decision": "stop_quality",
+    "comparisons": [
+      {
+        "input_id": "coast_cycle",
+        "baseline": "R_bf16",
+        "latent_NSE_reduction": 0.6010574211486095,
+        "DINO_delta": 0.034660357704647815,
+        "MUSIQ_delta": -0.10123010665651577
+      },
+      {
+        "input_id": "rain_market",
+        "baseline": "R_bf16",
+        "latent_NSE_reduction": 0.057448766984829924,
+        "DINO_delta": 0.02585086304415163,
+        "MUSIQ_delta": -2.1791090889582563
+      },
+      {
+        "input_id": "coast_cycle",
+        "baseline": "R_fp32",
+        "latent_NSE_reduction": 0.3603060700657451,
+        "DINO_delta": 0.025390163799273613,
+        "MUSIQ_delta": 0.0392505403548995
+      },
+      {
+        "input_id": "rain_market",
+        "baseline": "R_fp32",
+        "latent_NSE_reduction": 0.08197767111946175,
+        "DINO_delta": 0.008774384774080879,
+        "MUSIQ_delta": 0.0686844719780737
+      }
+    ],
+    "latent_interpretation": "BF16 trajectory fidelity proxy, not video quality or a ground-truth target"
+  },
+  "audit_status": "completed_audit",
+  "audit_checks": 709,
+  "audit_protected_files": 249,
+  "audit_errors": [],
+  "audit_path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/AUDIT_FINAL_CODEX.json",
+  "audit_sha256": "ab76adbb2a71cd569f8953c7aef528e6198e53caaa3d33455a80cf1091f0e441",
+  "report_path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/REPORT_KO.txt",
+  "report_sha256": "024c1fa0d50652ec706af4e505a28fef59014bd08b64024314ee567bb9fe1e27",
+  "new_GPU_after_registered_pilot": 0
+}

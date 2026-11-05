@@ -1,0 +1,69 @@
+고정 격자 Key GPTQ의 좁은 선행연구 대조
+작성: Codex /root/fair_comparison_codex, 2026-11-05 KST
+조사 시작: 19:55:39 KST. 범위: 기존 OBQ/Qcov/FlagRot 기록에서 출발한 최대 두 직접 비교 방법. CPU·웹·소스 읽기만 수행. GPU, 모델 로드, 잠긴 실험 변경, Claude 호출은 0회다. 현재 pilot 결과를 읽어 신규성 판단을 바꾸지 않았다.
+
+판정
+현재 구현은 알려진 GPTQ의 W=K, X=Q^T 치환과 고정 격자에 대한 순차 코드 보상이다. 새 목적식·새 반올림 수학이라고 부를 근거가 없다. 온라인 Query 없이 고정 보정 통계를 사용하고, 같은 cache payload에 한 번 인코딩한다는 요소도 이미 기존 방법들이 다룬다. 현재 남는 실용적 차이 후보는 '기존 INT4 packed decoder의 기저·scale 정책·복원 연산을 유지하면서, 쓰기 시점의 코드 선택만 바꿔 얻는 품질/비용 이득'이다. 이 제약을 만족하는 구현을 만들었다는 사실과 새로운 연구 기여를 확보했다는 판단은 구분한다.
+
+0. 이미 알려진 수학과 현재 시스템 범위
+목적식 ||Q(K-Khat)^T||_F^2 = sum_i e_i^T(Q^TQ)e_i와 inverse-Hessian Cholesky 순차 보상은 GPTQ 구조다. 원 공식 코드의 fasterquant, Hinv, err1 갱신을 다시 확인했다. 원소의 고정 INT4 격자를 고르는 것은 목적식의 정확한 전역 최소해라는 뜻도 아니다. head 128채널, token-row 병렬 처리·warp 융합·owned packing은 이 계산의 실행 구현이며, 그 자체로 새로운 양자화 알고리즘은 아니다.
+근거: https://github.com/IST-DASLab/gptq/blob/2d65066eeb06a5c9ff5184d8cebdf33662c67faf/gptq.py#L91
+
+'같은 reader'는 두 수준으로 나눈다. (a) 최종 BF16을 소비하는 FlashAttention/SDPA가 같음, (b) packed code를 BF16으로 복원하는 decoder까지 같음. 현재 방식의 차이는 (b)다. QuantWM도 (a)를 만족하므로 'attention 수정 없음'을 우리만의 장점으로 쓰면 안 된다. 또한 실제 사용 환경이 decoder/포맷 유지를 요구하는지 아직 별도 근거가 없다면, 우리가 스스로 제한한 조건의 승리를 일반적인 시스템 우위로 확대하지 않는다.
+
+1. 직접 비교 방법 1: QuantWM — 같은 도메인·목적식·청크 수명
+확인: arXiv 2609.26425v3 §4.1–4.2, C.3–C.5, D.1–D.2의 전체 해당 절.
+QSAC는 과거 Query의 head별 2차 모멘트로 centroid 후보를 고른다. 최종 점수는 대각 가중치와 residual 그룹 range를 결합한다. PSAC는 주요 Query 부분공간의 잔여 Key 오차를 추가 계수로 보존한다. 완료 청크를 packed 상태로 바꾸고 BF16 원본을 해제하며, active 청크만 BF16으로 남기는 수명도 이미 있다.
+중요한 범위 정정: C.4의 full-matrix 대조는 Eq.9를 full quadratic distance로 바꿔 top-m centroid shortlist를 선택하는 검사다. 전체 INT4 고정 격자의 개별 코드를 GPTQ로 순차 보상한 검사는 아니다. 따라서 그 대조의 이득 부재는 현재 구현을 직접 반증하지 않지만, 'full Q moment는 기존 연구가 안 봤다'는 주장도 불가능하다.
+현재와 다른 결정변수는 centroid 선택과 추가 residual coefficient다. 추가 계수·index·코드북·통계/기저 상태·복원 비용을 포함해 비교해야 한다. 현재 코드는 고정 scalar grid의 코드만 바꾸며 Query 통계는 다른 입력에서 고정한다.
+출처: https://arxiv.org/html/2609.26425v3#S4
+full-matrix 검사: https://arxiv.org/html/2609.26425v3#A3.SS4
+수명/복원: https://arxiv.org/html/2609.26425v3#A4
+공식 프로젝트 페이지를 직접 HTTP로 읽었으나 anchor는 #와 #comparisons뿐이며 이번 확인에서 실행 코드 링크를 찾지 못했다. 실행 코드가 존재하지 않는다는 증명은 아니다. 공개 구현 재현이나 동일 조건 성능 비교는 하지 않았다.
+https://quantwm-project.github.io/QuantWM/
+
+2. 직접 비교 방법 2: FlagRot — 고정 full-Q 통계·동일 payload의 강한 단순 대조
+확인: arXiv 2611.03992v1 §3.1–3.2, Appendix C.1, E.2 및 공식 코드 고정 SHA 22ca355cb67dfef8b1bc8bbab28d3989e3b4dbb5.
+오프라인 post-RoPE Query 2차 모멘트를 고정하고, cache-write 때 identity/H32/H128 후보의 재구성 오차를 평가한다. 부분 블록 선택에는 모멘트의 대각 블록, head 후보 경쟁에는 full matrix를 사용한다. 코드는 한 번 기록하고 수정하지 않는다. INT4 판본은 flags를 기존 scale sign bit에, zero-point를 scale word에 넣어 별도 payload 증가 없이 선택을 표현한다. 그러므로 'full-Q·offline·같은 바이트·write-once'가 우리만의 요소는 아니다.
+가장 단순한 강한 대조는 fixed mode다. 보정 입력으로 층/head/부분블록의 transform을 미리 고정하므로 런타임 후보 탐색과 token별 flags 없이 한 번 양자화한다. 다만 transform을 reader의 Query 경로로 옮기므로 현재 고정 decoder와 같지 않다. 동적 판본도 payload 크기가 같을 수 있지만 scale의 의미와 읽기 커널은 다르다. 논문의 INT4는 per-token g32 비대칭이며 현재 token축 g16/channel scale과도 다르다. 그대로 같은 조건의 실험이라고 부를 수 없다.
+출처: https://arxiv.org/html/2611.03992v1#S3
+4비트 정의: https://arxiv.org/html/2611.03992v1#A3.SS1
+
+직접 코드 확인으로 보강한 범위:
+- qattention.py: _weights(105–144), _vec_err(147–171), _head_err(174–188), dyn_quant(246–310)에서 고정 full-Cq 점수와 후보 선택을 확인했다. _static_acc/static_finalize(676–737)는 보정 합산 오차로 선택을 고정하고 dynamic 경로를 끈다.
+  https://github.com/KunmingSHAO/FlagRot_releaser/blob/22ca355cb67dfef8b1bc8bbab28d3989e3b4dbb5/blockflag/qattention.py#L105
+  https://github.com/KunmingSHAO/FlagRot_releaser/blob/22ca355cb67dfef8b1bc8bbab28d3989e3b4dbb5/blockflag/qattention.py#L676
+- attn_cb_write3.cuh 1190–1224의 K/V scale sign-bit 기록과 attn_decode_v2g.cuh 669–677의 sign-bit 해석/마스킹을 확인했다. 'flag가 있으니 반드시 cache bytes가 더 크다'는 반론은 이 판본에 성립하지 않는다.
+  https://github.com/KunmingSHAO/FlagRot_releaser/blob/22ca355cb67dfef8b1bc8bbab28d3989e3b4dbb5/kernels/csrc/attn_cb_write3.cuh#L1190
+  https://github.com/KunmingSHAO/FlagRot_releaser/blob/22ca355cb67dfef8b1bc8bbab28d3989e3b4dbb5/kernels/csrc/attn_decode_v2g.cuh#L669
+- 저장소 gptq.py가 있지만 weight용이다. qlinear.py finalize가 self.lin.weight를 gptq_quantize에 전달하고 run.py의 need_h가 lin_on에 묶인다. 이것을 'FlagRot가 이미 KV에 GPTQ 순차 보상을 했다'는 증거로 집계하지 않았다.
+  https://github.com/KunmingSHAO/FlagRot_releaser/blob/22ca355cb67dfef8b1bc8bbab28d3989e3b4dbb5/blockflag/gptq.py#L1
+  https://github.com/KunmingSHAO/FlagRot_releaser/blob/22ca355cb67dfef8b1bc8bbab28d3989e3b4dbb5/blockflag/qlinear.py#L47
+  https://github.com/KunmingSHAO/FlagRot_releaser/blob/22ca355cb67dfef8b1bc8bbab28d3989e3b4dbb5/blockflag/run.py#L418
+
+FlagRot 안에 있는 더 단순한 보정도 무시하면 안 된다. 고정 Key mean을 모든 Key에서 빼면 softmax logits에 공통 상수만 변한다는 원리와 보정 기반 mean 제거가 이미 구현돼 있다(qattention.py 40–43, 414; 논문 C.2). 현재 symmetric scale에 이득이 있을지는 미측정이다. 이를 대조한다면 압축된 과거만 shift하고 현재 BF16 Key를 그대로 두면 공통 shift가 아니므로 공정하지 않다. 원래 양자화 정책과 의미를 보존하는 별도 등록이 필요하며 이번 pilot에 추가하지 않는다.
+
+3. 겹친 결정변수와 아직 남은 검사
+이미 겹침: Query 가중 logit 목적, full second moment의 사용, 오프라인 통계 고정, 쓰기 시점 적응, 완료 청크 1회 인코딩, 과거 원본 해제, 실제 packed 저장, 기존 attention 사용, 추가 KV payload 없이 품질 개선을 노리는 선택.
+현재 검사 범위의 차이: 변환·centroid·side coefficient를 선택하는 대신, 이미 고정된 Hadamard 기저/scale/grid에서 GPTQ로 코드값만 순차 선택한다. 기존 decoder 입력과 의미가 그대로여서 decoder 호출/포맷 변경이 필요 없다. 하지만 factor 상주·보정 비용·추가 writer 비용이 0이라는 뜻은 아니다.
+
+현재 pilot이 양성이어도 직접 확보되는 것은 '이 입력·모델에서 알려진 GPTQ의 KV 이식이 RTN보다 품질 대리 지표를 개선했다'까지다. 새로운 알고리즘 또는 기존 강한 방식보다 우수하다는 결론이 아니다. 이미 수행한 순수 Q 고유기저 및 U-H-P 핵심 회전 대조는 FlagRot의 고정 부분 회전 선택을 평가한 것이 아니므로 모든 회전 대안을 배제하지 못한다.
+
+남길 실용적 질문 하나:
+'추가 KV payload 없이, 보정에서 고정한 단순 부분 회전+RTN으로도 확보되는 품질을 넘어서는 이득이, 기존 decoder를 유지한 순차 코드 보상의 총 실행 비용을 정당화하는가?'
+다음 공동 검토에서 우선할 대조는 같은 개발 입력에서 선택을 고정한 FlagRot fixed-mode 원리 대조다. 현재 codec의 frame/group 경계·정밀도·FP16 scale 저장·패딩 바이트·V·캐시 수명을 맞추고, 회전에 따라 scale 값은 바뀔 수 있되 산출 정책은 같게 해야 한다. 선택용 입력과 평가용 입력을 분리하고, 고정 transform 상태·쓰기/읽기 비용을 모두 센다. 이는 FlagRot 전체 재현이 아니며, 현재 등록된 생성 검사 결과를 본 뒤 같은 입력에 유리한 transform을 선택하는 절차도 아니다. 이 문서는 새 실험 팔·성공 문턱을 등록하거나 GPU 실행을 제안 범위 밖에서 시작하지 않는다.
+
+이 대조로 같거나 더 싼 해법이 충분하면 '새 decoder 없이 쓸 수 있다'는 실제 배포 요구가 있는지 확인한다. 요구가 없으면 통상적인 GPTQ 적용/구현 개선으로 기록한다. 요구와 실익이 모두 있어도 기여 후보는 시스템 실행 방식과 실증이며 새 수학이라고 주장하지 않는다.
+
+4. 확인 한계와 검색 종료
+이번에는 위 두 방법의 관련 전체 절·공식 코드 일부를 깊게 대조했다. 추가 검색은 KV cache/GPTQ/compensation, key quantization/Hessian/rounding, KV/sequential/GPTQ, query-aware/rounding 및 arXiv·GitHub 제한 조합 7개였다. 직접 KV에 현재와 같은 fixed-grid GPTQ를 적용했다고 식별 가능한 1차 근거는 이 제한 검색에서 추가 확보하지 못했다. 결과가 없다는 사실은 최초성 증명이 아니다. GPTQ weight와 KV RTN을 함께 지원하는 프레임워크 문구도 직접 KV-GPTQ 근거에서 제외했다.
+FlagRot 커널의 SM89 빌드·실행, 전체 baseline/모든 옵션, QuantWM 공식 구현, 다른 모델/입력의 성능은 확인하지 않았다. 검색 결과의 주변 논문을 새 후보로 확장하지 않고 이번 조사는 종료한다. 실제 Claude 공동 검토는 사용자 지정 시각 이후 Opus 5.5로 남아 있다.
+
+고정 FlagRot 소스 SHA256(직접 HTTP 읽기, 로컬 설치/실행 없음):
+blockflag/gptq.py b736aace10f0b25ea33575ae2289a1ff2dc88989ad1e3a40d3ca9679c63fff9a
+blockflag/qlinear.py 3f2f5597731a1e16def994612dd45b872c3023ff8b555cc1cfd7a955d8d56aa3
+blockflag/qattention.py 1cafd02fcfe514d1b368308d6e5860ff7bdff304bb53eb13c140f0998f144f5e
+blockflag/formats.py 01e823adfa45aa0ed995f94337b7a9e0f795238f710d753975c3125207cb8f4c
+blockflag/run.py 7ba25b22055253f6209b32e9f631116a19229c7bf8c6e0def98176b0b810f8b8
+kernels/csrc/attn_cb_write3.cuh f5899aa28c892b3fc69eb176e78dd13e614ccbfde8653c4e70f130c9530baaef
+kernels/csrc/attn_decode_v2g.cuh 857dfda3a94ed919a4e47dd8d516fab2da14c90fb9d693eb43675c4ec884c928

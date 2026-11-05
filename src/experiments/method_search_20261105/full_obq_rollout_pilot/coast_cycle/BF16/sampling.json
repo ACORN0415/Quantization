@@ -1,0 +1,289 @@
+{
+  "status": "completed",
+  "input_id": "coast_cycle",
+  "seed": 409,
+  "text_sha256": "2b47f065950e736d79404dff1e60d056b1ce767105c88fa268bcb4f02dfa9b29",
+  "arm": "BF16",
+  "model_source_sha256": "e916506f6085f9c050cbd44b7e1b79d4a8aae9d77379fe5e2384fee5bad5a758",
+  "model_forwards": 210,
+  "chunks": [
+    {
+      "chunk": 0
+    },
+    {
+      "chunk": 1
+    },
+    {
+      "chunk": 2
+    },
+    {
+      "chunk": 3
+    },
+    {
+      "chunk": 4
+    },
+    {
+      "chunk": 5
+    },
+    {
+      "chunk": 6
+    },
+    {
+      "chunk": 7
+    },
+    {
+      "chunk": 8
+    },
+    {
+      "chunk": 9
+    },
+    {
+      "chunk": 10
+    },
+    {
+      "chunk": 11
+    },
+    {
+      "chunk": 12
+    },
+    {
+      "chunk": 13
+    },
+    {
+      "chunk": 14
+    },
+    {
+      "chunk": 15
+    },
+    {
+      "chunk": 16
+    },
+    {
+      "chunk": 17
+    },
+    {
+      "chunk": 18
+    },
+    {
+      "chunk": 19
+    },
+    {
+      "chunk": 20
+    },
+    {
+      "chunk": 21
+    },
+    {
+      "chunk": 22
+    },
+    {
+      "chunk": 23
+    },
+    {
+      "chunk": 24
+    },
+    {
+      "chunk": 25
+    },
+    {
+      "chunk": 26
+    },
+    {
+      "chunk": 27
+    },
+    {
+      "chunk": 28
+    },
+    {
+      "chunk": 29
+    },
+    {
+      "chunk": 30
+    },
+    {
+      "chunk": 31
+    },
+    {
+      "chunk": 32
+    },
+    {
+      "chunk": 33
+    },
+    {
+      "chunk": 34
+    },
+    {
+      "chunk": 35
+    },
+    {
+      "chunk": 36
+    },
+    {
+      "chunk": 37
+    },
+    {
+      "chunk": 38
+    },
+    {
+      "chunk": 39
+    },
+    {
+      "chunk": 40
+    },
+    {
+      "chunk": 41
+    }
+  ],
+  "phases_before_sampling": {
+    "model_build": {
+      "rss_bytes": 35725225984,
+      "allocated_bytes": 2839108096,
+      "reserved_bytes": 3087007744
+    },
+    "conditioning": {
+      "rss_bytes": 35725225984,
+      "allocated_bytes": 4944657408,
+      "reserved_bytes": 5190451200
+    }
+  },
+  "shared_model_and_conditioning_seconds": 48.14482644596137,
+  "context_window": 21,
+  "started_utc": 1793876320.548113,
+  "factor_H2D_seconds": 4.849000833928585e-05,
+  "factor_GPU_bytes": 0,
+  "noise_sha256": "6f86fcc38b6f2849d7f0634ce19ae8c3f1d9ebececf4ecf7ab2723c87d2f3027",
+  "initial_noise_chunk_sha256": [
+    "77ed23087503014872b5fdfd7872e5b6c526e88e876dc0e2f9e4c6e85792a078",
+    "c0cbfc03a0ace1419b40544f37a8b61cf3ea083a839f25e94becf5e2e4656fd9",
+    "d19c67859b2ae8c346a150f4e940e96a29884f26669a06c81aff4d035ee313b9",
+    "99299a0c310df67464583f3147f51def799bc762e901cc599b25c8c21e430d29",
+    "e72a9350eea1d9f6340fb82dd3b7919c2ae47c37ee27ae1d591efcf9bed4a7af",
+    "6e7ce6ab0e49125afd788acf79835c8d339e3d6e90fea626dbc2d79701a4b435",
+    "ca89972587bdc65741f2989479143d69c8df5612f897c5c425907b3f8da231a9",
+    "0dd646dc74fccf0f4575fd8ee9bbb15f168bd4f53a8f054da0edd8412cf0b943",
+    "9039df2dcaad2b546d71d85679468263e396c6c81b2cb818927557e6fe87694e",
+    "34a89566b89fa1e4c4e91927ba51f4df51ba090015db89db641b64c63f2f88df",
+    "ab74b3974df1c46ea111d8e177426286d661cacb713ac21028fa6727bca06cf7",
+    "9051a93bbe0d96b8f3bcfa07b8a0320d7449939aa973280e85a51471bcf8ddeb",
+    "bf12684e81fc16a5457228e41b2d1a616ba430dc7735e46845f429537c2d8c1a",
+    "2040f10dc39f025c4bc7c72e0b87eee53a9bc9099d7f67f78afcb2a4fa84bd0d",
+    "83e6c1dad17ee2ca8e3c1df01f84dd39522bff42c127469c7fc6d96208446566",
+    "386e0f7063d98a9a9dcacd989bc0c58fe21777cd1987d0ca7bfc30de459dd202",
+    "73c92edfd7a5974cd0ce3e7559991d4c139adb760b5ee184fdf158552b022c5e",
+    "cd7bce20dcaabec8288871bd9c276026c447fde7111c99ae048f68c8a7d0b617",
+    "fcf7d6b9571f109b6965c923b16ba5c005166cb536f3531a82eba644e7f7b7cf",
+    "bcb7f2d501ba84dd59989699477edad9a8ac3eff5f0bcf951d0ae411c37b3b40",
+    "ae0ef4dc2e83fe5ef5de6f3fd2b70c9bbcc5bc11a66b11075c29821f7bf75ccb",
+    "7214216f76c0dec246a6d38830bb9b91cb224c1ade717132928d5a18294d2267",
+    "ea8198d77ec18cc062f72946a635df2ca95d3b2d57d2f836e33bed8f327f888f",
+    "203e740d95c4e25f41ec6f6932b383d773193020fffe27c850d6c38d4535ac19",
+    "e9729b6083e6db184a07a08b987e7ead2800958e36b5fc0fe3b70f0c580e20a1",
+    "3954eb5645c097c1890d683db426ffc1b7d941d38906bfb03f404569e72f53c4",
+    "d6278b087a2328d8ef4d7fc8bc86855b748a793188ec35f745734c4af35ad362",
+    "7bc91abd5076a57e82b7b393101e1c4f6a029436e540f788b24b5b75c6e18baf",
+    "ff01fac472853fee709bd68e0580486a19de80172614619d4a1322efbc550b71",
+    "6ada54751ac7f0f47b34871c7ccaef6244639a39f69fe1922199b4650e369593",
+    "1168a598c3a8c9ae6c9739eece1c96421ada4436725326fd02520367980c40c0",
+    "a274475df35a6b149e6f82cfe0dcc1bc2986d596e1fb996b7a81ae9adc718a48",
+    "54b3e057dfa18c7005a049fedcd682c30f71ebd5dd62069eab82de3768e28261",
+    "fab9ba1cfc7f2183954066c39d891c1815e955a79900b3613af404d0d3c6725c",
+    "7e80744fac451a4c0d31d7b2a3ad07e5d434517ea78d56089498c778fea5e5b9",
+    "2f1731dea88d6bbd5cbd934edee43f965b0abbd9786e048277ab8f385d339894",
+    "2e84a308d6020efc6e6beb9bce8ac411ea7a825efa32054e856e1c37e8637f27",
+    "b07332f8b2d3232a20d6ed6ec41b2d77584e871754967bd3e75485e5c1803f47",
+    "e09c15e5fa8bcdc51a84c61ec84a67aeeb6f52d11a9f33f5913d2d13414eee18",
+    "091dd469b7e48f127a92b49d3c1616accd4aa9fc33bc3b008d302033f20770cf",
+    "a808fde0feb1d982ce0e9406ff930f4dae6b05f22f0caee01a375067636676eb",
+    "7161bb0aa2d01fb34de5d2ce6de92d219e0aadb5ce0a117c55034d493f29e1cc"
+  ],
+  "noise_verification_seconds": 0.028170245001092553,
+  "sampling_seconds": 67.91144391195849,
+  "late_latent": {
+    "sse": 0.0,
+    "reference_energy": 4567784.895924897,
+    "nse": 0.0,
+    "start_latent_frame": 63,
+    "end_latent_frame_exclusive": null
+  },
+  "whole_latent": {
+    "sse": 0.0,
+    "reference_energy": 9359641.476842888,
+    "nse": 0.0,
+    "start_latent_frame": 0,
+    "end_latent_frame_exclusive": null
+  },
+  "descriptive_latent_windows": {
+    "chunks_1_to_7": {
+      "sse": 0.0,
+      "reference_energy": 1650099.1670601484,
+      "nse": 0.0,
+      "start_latent_frame": 3,
+      "end_latent_frame_exclusive": 24
+    },
+    "chunks_8_to_20": {
+      "sse": 0.0,
+      "reference_energy": 2969737.0288162343,
+      "nse": 0.0,
+      "start_latent_frame": 24,
+      "end_latent_frame_exclusive": 63
+    },
+    "chunks_21_to_41": {
+      "sse": 0.0,
+      "reference_energy": 4567784.895924897,
+      "nse": 0.0,
+      "start_latent_frame": 63,
+      "end_latent_frame_exclusive": 126
+    }
+  },
+  "latent": {
+    "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/BF16/latent.pt",
+    "sha256": "3566b53ea5cb8f9ecc7b6bc62678a5ee8de138956936288d37c4a268f59f3108",
+    "bytes": 25160855
+  },
+  "layer_encode_pair_calls": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "layer_encode_timing": [],
+  "finished_utc": 1793876388.587366,
+  "arm_total_seconds": 68.0392529964447,
+  "cumulative_process_peak": {
+    "rss_bytes": 35725225984,
+    "allocated_bytes": 9274082816,
+    "reserved_bytes": 9705619456
+  },
+  "peak_scope": "Cumulative from before model build across all arms in this input worker; not independent per-arm peaks",
+  "events": {
+    "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/coast_cycle/BF16/encode_events.jsonl",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  }
+}

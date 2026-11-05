@@ -1,0 +1,9 @@
+Loading pretrained model MUSIQ from /home/acorn0415/.cache/torch/hub/pyiqa/musiq_koniq_ckpt-e95806b9.pth
+coast_cycle BF16 {'musiq': 71.12706759619334, 'dino_reference': 1.0, 'dino_adjacent': 0.9977446427296358, 'frames': 252}
+coast_cycle R_bf16 {'musiq': 72.33557331751264, 'dino_reference': 0.921614994872169, 'dino_adjacent': 0.9959718176466924, 'frames': 252}
+coast_cycle R_fp32 {'musiq': 72.19509267050123, 'dino_reference': 0.9308851887775432, 'dino_adjacent': 0.9961513747295667, 'frames': 252}
+coast_cycle O_full_gpu {'musiq': 72.23434321085612, 'dino_reference': 0.9562753525768168, 'dino_adjacent': 0.9967674657702024, 'frames': 252}
+rain_market BF16 {'musiq': 64.2175475529262, 'dino_reference': 1.0, 'dino_adjacent': 0.9793624307420389, 'frames': 252}
+rain_market R_bf16 {'musiq': 74.42483123900398, 'dino_reference': 0.7213737020257426, 'dino_adjacent': 0.996872686230326, 'frames': 252}
+rain_market R_fp32 {'musiq': 72.17703767806765, 'dino_reference': 0.7384501802958133, 'dino_adjacent': 0.996291997968454, 'frames': 252}
+rain_market O_full_gpu {'musiq': 72.24572215004572, 'dino_reference': 0.7472245650698942, 'dino_adjacent': 0.9968888319922484, 'frames': 252}
