@@ -410,3 +410,13 @@ D014 [이번 고정 특징 후보 종료, 전체 방법론 목표 미달]
 FULLP1계열의국소순위는배포선택기의성공이나새방법론의기여가아니다.기존pilot stop_quality도유지한다.
 근거는paired_response_stage0_packet_contract_fix/REPORT_KO.txt와RESULT/AUDIT/GUARDED_STATUS다.
 연구전체의성공조건은아직충족하지못했다.다음자원은별도관측과강한단순기준선이남기는선택문제에만배분한다.
+
+E031 [지연 Fable 보완 기록과 실제 Opus 검토의 구분]
+msg_01f08e50f873은 Fable 5.1이 작성한 layoutfix diff 보완이며 Opus 최종 검토로 세지 않는다.
+실제 Opus1 FIRST_REVIEW는 이미 layoutfix를 시험 범위에서 타당하다고 판단했다.
+scale의 BF16 왕복 assert가 빠진 점은 향후 GPU 경로 재사용 전에 보강할 견고성 지적 G로 남긴다.
+root가 기존 causal O_offline과 layoutfix O_gpu의 저장 SSE/NSE 4쌍이 정확히 같음을 확인했다.
+이는 같은 개발 입력의 국소 품질 결과를 GPU encoder 경로에서 재현한 기록이며 독립적인 새 품질 증거가 아니다.
+이번 root 확인은 저장 스칼라 대조로 한정하며, 두 실행 출력 텐서의 비트 동일성을 다시 계산한 것은 아니다.
+근거와 SHA는 LAYOUTFIX_REVIEW_RECONCILIATION_ROOT.json에 보존했다. 기존 잠금·실패·보고서를 수정하지 않았다.
+기존 full-H pilot stop_quality와 paired 고정 Gaussian rank32 종료는 유지한다.

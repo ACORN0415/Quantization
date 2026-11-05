@@ -1,0 +1,74 @@
+{
+  "created_utc": "2026-11-05T14:45:53.577633+00:00",
+  "trigger_message": "msg_01f08e50f873",
+  "kind": "historical_review_receipt_and_stored_scalar_comparison",
+  "historical_fable_model": "Claude Fable 5.1",
+  "historical_fable_addendum_time_as_written": "2026-11-05 21:56 KST",
+  "fable_counts_as_opus_final_review": false,
+  "independent_opus_review_already_exists": true,
+  "opus_scope": "layoutfix scoped acceptance; not all-input correctness or new method validation",
+  "remaining_opus_observation": "Add BF16 scale roundtrip assertion before future GPU path reuse; no edit to locked historical experiment",
+  "rows": [
+    {
+      "layer": 18,
+      "call": 0,
+      "O_offline_sse": 517.637537908105,
+      "O_gpu_sse": 517.637537908105,
+      "stored_sse_equal": true,
+      "stored_nse_equal": true
+    },
+    {
+      "layer": 18,
+      "call": 3,
+      "O_offline_sse": 524.0061423673585,
+      "O_gpu_sse": 524.0061423673585,
+      "stored_sse_equal": true,
+      "stored_nse_equal": true
+    },
+    {
+      "layer": 24,
+      "call": 0,
+      "O_offline_sse": 280.7633198207643,
+      "O_gpu_sse": 280.7633198207643,
+      "stored_sse_equal": true,
+      "stored_nse_equal": true
+    },
+    {
+      "layer": 24,
+      "call": 3,
+      "O_offline_sse": 300.85975878373307,
+      "O_gpu_sse": 300.85975878373307,
+      "stored_sse_equal": true,
+      "stored_nse_equal": true
+    }
+  ],
+  "evidence": [
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/NATIVE_RESULT.json",
+      "sha256": "1b3e932f350978a96e891356282e3818a8e1546c9030f038f3bee0ec3cd2b2b9"
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/QUALITY.json",
+      "sha256": "3e26401cb52117427b48a18c9d108f6adb6f8b481ec2f56ce8346849aec789eb"
+    },
+    {
+      "path": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/OBQ_LAYOUTFIX_FABLE_REVIEW_KO.txt",
+      "sha256": "58826d8557880f405321a80c68fa2df62ba5bbde3fb890d0d172c58dbeba4a76"
+    },
+    {
+      "path": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/OPUS_ENCODER_FIRST_REVIEW_KO.txt",
+      "sha256": "8d79905b2a72d49eb7a0dfc5993e2b4e7ff7b23bddc29d78baf61669dac27a42"
+    }
+  ],
+  "interpretation": "GPU route reproduces the earlier local quality result on the same development inputs. Do not count it as independent new quality evidence. The current comparison verifies saved scalar equality only; no cross-run output tensor bit equality was independently recomputed here.",
+  "scope": {
+    "GPU_calls": 0,
+    "tensor_loads": 0,
+    "attention_SSE_recomputations": 0
+  },
+  "existing_decisions_preserved": [
+    "full_obq_rollout_pilot: stop_quality",
+    "paired_response_stage0_packet_contract_fix: stop_fixed_Gaussian_rank32"
+  ],
+  "historical_records_unchanged": true
+}

@@ -31,3 +31,28 @@ Task/Dispatch ID: 없음. 읽기 전용, GPU 0. 읽은 것: stage2_validity_prob
 == 4. 시간 ==
 남은 약 18분에 해시 검증·.so 로드·T_code/T_encoder 정확성·수명·품질(12 chunk CPU 참조 포함)·타이밍을 모두 넣어야 한다. 품질까지는 가능해 보이나 타이밍이 마감에 걸리면 incomplete로 기록하고 연장하지 않는다.
 이 검토는 승인이 아니라 권고다.
+
+== Addendum(2026-11-05 21:56 KST, Claude Fable 5.1): 대기 중이던 소스 diff 확인 + 완료된 실행의 저장값 읽기 ==
+모델 고지: 이 addendum은 Fable 5.1이 작성했다. 사용자의 최신 지시(21:50 KST 이후 Opus 5.5 전환, REVIEW_FOLLOWUP_STATUS의 requested_model=Opus 5.5)에 따라 "최종 독립 검토(PENDING)"는 해당 모델이 수행해야 하며,
+ 본 addendum은 앞선 Fable 검토가 남겨 둔 "diff 확인" 항목의 완결이지 그 최종 검토를 대신하지 않는다. 다른 모델로 표시하지 않는다.
+
+[소스 diff 확인 — 3절 a~d 전부 충족]
+ a. gpu_frames 치환: raw()(61행), cpu_reference()(69행), quality()(175행), timing z2/s2(247행) 네 곳 모두 새 gpu_frames로 교체, v1.gpu_frames 잔존 0(grep). 새 정의는 k.reshape(-1,128).float()@H → bf16 → reshape(3,1560,12,128)
+    → pad 8·group 16·absmax/7·FP16 — pad/group/scale 정책은 원본과 동일, 행렬곱만 2D mm로 고정. reshape(-1,128)의 행 순서 (frame,token,head)가 원형상 복원과 일치.
+ b. 그 외 변경 0: obq_pack.cu sha 50b86fd4… 동일(stage2·envfix·layoutfix 3곳), batch_codes/code_packet/restore_gpu/check_lifetime/timed_pairs/quality gate 식 불변(diff에 없음).
+    build_extension은 컴파일 대신 envfix의 .so(sha ae6e1a50…)를 sha assert 후 importlib(ExtensionFileLoader, 모듈명 obq_stage2_50b86fd47474 = TORCH_EXTENSION_NAME)로 로드 — compile 0 보장, BUILD.json이 reused_existing_binary 기록.
+ c. source_files()에 .so 추가, layout_supervisor.lock 목록에 SOURCE_DIFF.patch·probe RESULT·envfix RESULT·원본 실패 자료 포함, 절대 마감(원본 started+2700) 전달. layout_supervisor는 env_supervisor와 preflight(.cu·.so sha)·lock 목록만 다름.
+ d. restore_gpu 불변(입력이 새 reshape 텐서라 stride 고정). selftest.py에 as_strided(stride(0)×7)로 singleton-stride 입력과 정상 입력의 z/scale 동일성 검사가 추가됨 — 실패 모드를 직접 검사하는 적절한 합성 검사.
+ → 기준 완화·팔 변경·반복 횟수 변경 없음. 수정은 전처리 dispatch 고정에 국한.
+
+[완료된 실행의 저장값(재실행 없음, RESULT/QUALITY/SUPERVISOR/BUILD 읽기)]
+ - 실행: supervisor 20.8 s, worker 18.8 s, 최초 시도부터 2249.7 s로 원 마감(2700 s) 내, deadline_exceeded False, 컴파일 0, peak CUDA 768 MB, RSS 1.82 GiB.
+ - 정확성·수명: T_code·T_encoder × 2 사례 × 4 구현 모두 참조 일치·첫 패킷 보존·주소 독립·입력 보존 True. 두 비용 사례의 새 GPU z/scale은 CPU 원본과 불일치 0(우연한 일치, 보고서가 일반화하지 않음 ✓).
+ - 품질: 4 endpoint 모두 native 재생 비트 일치, O_gpu 이득 BF16/FP32 대비 37.2/37.8, 34.4/33.9, 29.3/28.3, 24.2/26.8% → 20% gate 통과. 36개 K 패킷의 GPU/CPU 복원 차이 0, V 복원 비트 일치.
+   주의: O_gpu SSE(517.6375, 524.0061, 280.7633, 300.8598)는 causal_obq NATIVE_RESULT의 O_offline(CPU encoder) 값과 동일하다. 즉 이번 GPU-native 경로는 이 자료에서 CPU encoder 결과를 비트 단위로 재현한 것이며
+   새로운 품질 관측이 아니다. "GPU encoder가 CPU 결과를 재현했다"로 서술해야 하고 "GPU에서 품질을 추가 확인했다"로 세지 않는다.
+ - 비용(host 중앙값, 층·청크당): T_code RTN eager 0.156 / RTN graph 0.173 / OBQ graph 4.92 / OBQ fused 0.557 ms; T_encoder RTN 0.31 / OBQ graph 5.13 / OBQ fused 0.73 ms. fused는 graph 대비 7.0~8.8배,
+   RTN 대비 전체 encoder 증분 ≈ 0.42 ms/층 → 30층 단순 외삽 12.7 ms/청크 ≈ 참조 청크(1.09~1.69 s)의 0.75~1.2%(추정, 실측 아님). 쌍별 IQR ≤ 0.02 ms로 안정.
+ - 해석 한계(보고서 서술과 일치): 2 사례·개발 자료·단일 읽기, 전체 rollout 누적 미검사, 30층 외삽은 추정, fused는 GPTQ 커널 공학이지 방법 기여가 아님.
+
+[남은 사항] 최종 독립 검토는 사용자 지시대로 Opus 5.5 모델이 수행해야 하며, 본 Fable addendum을 그 완료로 표시하지 않는다. 이 검토는 승인이 아니라 권고다.
