@@ -1,0 +1,22 @@
+QVG 유한 창 수정 — CPU 준비 단계 완료
+판정: 등록한 CPU 합성 범위에서 통과. 실제 Opus 두 검토를 원30분 상한 안에 확인했다.
+
+원인과 수정
+기존 QVG는 저장 주소 한도를 attention 창 크기로 설정하고 pre-RoPE 경로에서 과거 prefix 전체를 읽어 창 초과 시 오류를 냈다.
+새 adapter는126frame 절대 주소와21/63/126frame 읽기 창을 분리했다. 원24frame 압축 묶음/호출시점을 유지하고 압축 성공 경계까지의 누적 퇴거를 적용했다.
+미압축 pending과 부분적으로 살아 있는 packed span을 유지하며 현재 청크5회 덮어쓰기, 절대 RoPE 좌표, 세대 초기화/실패 상태 잠금을 구현했다.
+
+검증 근거
+서로 다른 작성자의 verifier가 원cache/RoPE 함수 AST와 all-history/list 참조를 사용했다.
+W21/63/126 각각42블록×5회=630읽기의 형상/dtype/원소바이트가 일치했다. 11,345개 검사 항목이 통과했다.
+미지원 설정 사전 거부, 잘못된 RoPE 원점, pending 조기 퇴거, 압축 과거 부분 덮어쓰기, 부분commit 뒤 예외/KeyboardInterrupt의 fail-closed와 reset 후 재사용을 확인했다.
+두 층 fake pipeline의2회 실행·freshcache·uninstall 검사를 통과했다. 원initializer가 target_frames를 무시하는 문제도 실제 함수 AST로 확인했다.
+최종 감사는 AUDIT_CODEX_V2.json이며 최초 원소값 비교 감사/소스도 보존했다. Root는 전체 verifier와 저장 검사 항목·6개 sourcehash를 확인했고 재실행하지 않았다.
+실제 Opus2는 adapter 전체 source계약을, 실제 Opus1은 독립 verifier의 reference/negative/감사 범위를 검토했다. 두 검토에서 차단 결함은 발견되지 않았다.
+
+비용과 한계
+최종 검증 실행1.377초, RSS422,268,928B, CPU4thread. 단계 전체시간은 FINAL_STATUS.json의 등록부터 판정까지 시간이다.
+원소 바이트 비교630회는 합성 데이터에 한정된다. attention은 spy, codec은 fake packed dict이며 실제PRQ·GPU·모델·원본전체inference·영상 생성은0회다.
+논리 보유량 최대는42/84/126frame으로 창 크기와 다르다. 실제 압축바이트·decode workspace·GPU peak/속도는 측정하지 않았다.
+sink0, initial없음,3frame block,126frame horizon, packedquantizer만 지원한다. 실제 native binding/큰형상·코덱은 다음 별도 등록 단계다.
+현재 결과는 기존 기준선을 공정하게 실행하기 위한 수리 근거다. 신규 방법 효과·독립 보류 입력 일반화·영상 품질/속도 개선은 미입증이며 연구 목표는 계속 active다.

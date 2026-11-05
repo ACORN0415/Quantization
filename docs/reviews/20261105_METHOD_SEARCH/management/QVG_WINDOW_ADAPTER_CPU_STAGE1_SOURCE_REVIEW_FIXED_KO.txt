@@ -1,0 +1,90 @@
+QVG CPU stage1 — adapter.py 소스·불변조건 독립 검토 (업무1, Opus2)
+배정: parent msg_1a0722ab772a, 범위 추가 msg_3230dc3c3421, 검토 허가 root msg_879fddc415eb, 관리자 run_37b53bde176e.
+시작 UTC: 2026-11-05T15:43:21Z (등록 계약은 15:36:39Z에 먼저 읽음). 종료 UTC는 파일 끝에 적는다.
+등록 절대마감은 16:00:46.304116 UTC다.
+부모: 실제 모델 claude-opus-5-5, 기존 Opus2 채팅(session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5).
+Task/Dispatch: 미연결(terminal_handle_stale).
+
+검토 대상과 hash
+- adapter.py 원본: 첫 읽기 15:43:21Z와 보고서 작성 직전에 sha256 cce683d4a2ec1db16dfe986d0202970d1ce3f83458427597f3145e55e8a46d09로 두 번 일치했다.
+  - 최종 대조값: cce683d4a2ec1db16dfe986d0202970d1ce3f83458427597f3145e55e8a46d09
+  - 관리자 사본 QVG_CPU_STAGE1_ADAPTER_SOURCE_cce683d4_INPUT.py는 15:44Z에 존재하지 않아 원본만 읽었다.
+- REGISTRATION.json 97884db9…(기존 전달값과 일치).
+- 원본 연결 대조: upstream 0601468f의 causal_model.py(28-100, 270-312, 324-352 등), causal_inference.py(252-290, 318-412, 62-130), quant_videogen/kv_cache.py(1-267, clear 264-267).
+- READY/AUDIT/verifier 결과는 아직 동결되지 않았다. 이 보고서는 소스 계약 검토이며 stage1 최종 수용이 아니다.
+
+helper
+- native general-purpose 1개(depth 1, 읽기 전용, 부모에게만 반환).
+- model 인자를 생략했다. 도구 설명상 부모 모델을 상속한다.
+- helper가 자기 보고한 모델 ID는 "claude-opus-5-5"다. 그 외의 provider 실행 근거는 관측하지 못했다.
+- 분담: helper는 RoPE 절대 offset, 읽기 범위, 같은 block 5회 호출을 원본과 대조했다(helper도 sha cce683d4 일치를 보고). 부모는 나머지 불변조건, 초기화, reset, 실패 경로, 등록 대조, 통합을 맡았다.
+- 직전 정정 helper(evict_range span 규칙)의 결과를 부분 span 해제 근거로 재사용했다.
+- 실행·import·tensor·PRQ·GPU·수정은 부모와 helper 모두 0이다.
+
+판정: 소스 수준에서 등록 불변조건과 추가 3계약을 충족한다. 차단 결함은 없다.
+단 fake codec 및 실행 증거는 이 검토 범위 밖이고, stage1의 pass는 verifier/감사 결과와 함께 판단해야 한다.
+
+불변조건별 근거 (adapter.py 행)
+1. 절대 주소 용량과 visible window의 분리
+   - initialize(92-111)는 max_num_chunks=horizon_frames(126)인 cache를 만든다. window와 무관하다.
+   - install의 init(279-284)이 upstream _initialize_kv_cache를 대체한다. upstream이 유한 window에서 target_frames를 무시하고 L×fs로 만드는 경로(CI:469-470)를 우회한다.
+   - attend(195-196)는 kv_cache_size ≥ horizon을 재검사한다.
+   [추가계약 1] 충족: 실제 등록 horizon 126을 지원한다.
+2. 성공 후에만 frontier 전진
+   - quantize(113-145)는 사전 검사 후 callback(원 quantizer)을 실행한다.
+   - 모든 층 K/V의 [sc,ec)가 QUANTIZED이고 whole-group dict span이 있는지 확인한 다음에만 frontier_tokens=end로 바꾼다.
+   - quant_type none이나 fake tensor처럼 commit이 없으면 poison된다.
+3. 대기 BF16 보존
+   - 압축 전에 그룹 전체가 BF16 상태인지 검사한다(127-131).
+   - eviction free_end=min(left, frontier)(201-202)는 frontier 이후의 미압축 pending을 건드리지 않는다.
+4. 누적 eviction
+   - evict_range(0, free_end)(207-208)를 쓴다. 정정 부록 420a81de의 누적 [0,min(L,P))를 그대로 반영했다. 증분 (old,new) 누수는 제거됐다.
+   - 부분 span은 upstream 규칙(KV:252)대로 끝까지 유지된다. helper가 남긴 '부분 span 삭제' 의문은 이 규칙으로 해소된다.
+   - 상주량은 W+21 frame 논리량이며(정정 부록), adapter는 이를 줄인다고 주장하지 않는다.
+5. 읽기 범위와 RoPE (helper 대조, 부모 확인)
+   - left=max(0,E−W·fs), read(left,end)이며 현재 block을 포함한다. 길이는 min(W,E)다.
+   - Q는 절대 start_frame(204)이다. K는 rope_absolute_segments(24-43)가 3-frame segment마다 start_frame=left/fs+3c'로 원 causal_rope_apply를 호출한다. 이는 원 long_input을 전체 prefix에 적용한 뒤 slice한 것과 같은 freqs 인덱스다.
+   - freqs 길이와 정렬 검사가 있다. offset 누락이나 오프바이원 반례는 없다.
+6. 덮어쓰기
+   - 같은 start에서 calls를 1→5로 늘리며 5회 초과를 거부한다(181-186). 다음 block은 연속이면서 calls==5일 때만 허용한다.
+   - 반복 호출은 같은 절대 위치에 쓰고 window와 evict는 멱등이다.
+   - packed 과거 chunk와 겹치는 span에 쓰기는 mutation 전에 거부한다(193-200).
+7. 지원하지 않는 조건의 사전 거부
+   - install(256-268)과 inference(294-307)가 sink≠0, initial latent, independent_first_frame, block≠3, denoise≠4, quant none, window 불일치, 126 이외 길이를 ctl.reset() 이전에 거부한다.
+   - attend는 비정렬 start, grid, shape, dtype, freqs를 write 이전에 거부한다.
+   - window는 생성자(52-56)에서 21/63/126만 받는다.
+8. full horizon(W=126)이면 left=0이고 eviction이 없다. 같은 codec의 no-eviction reference와 같은 경로다.
+   - 원 BF16 dense 동등성은 범위 밖이며, 그것으로 확대하지 않는다.
+9. upstream 소스 불변: 객체 단위 MethodType patch(272-276)이고 uninstall이 복원한다(229-238). upstream 파일은 수정하지 않는다.
+
+추가 계약
+- [2] generation 재사용 clear: inference 래퍼가 foreign cache를 거부한 뒤 ctl.reset()을 호출한다.
+  - reset은 각 K/V의 upstream clear()(KV:264-267: chunks, chunk_state, quantized_spans)를 부르고 frontier/layers/poison을 초기화한다.
+  - kv_cache1=None으로 두므로 upstream inference는 init 분기(CI:252-266, cross-attn cache 포함)로 새 cache를 만든다.
+  - upstream의 '인덱스만 0으로 되돌리는' 재사용 분기(CI:270-283)는 타지 않는다.
+  충족.
+- [3] 부분 층 commit 후 실패
+  - upstream quantize_kv_cache(CI:93-122)는 층마다 store_quantized를 하고 try가 없다. 중간 층에서 실패하면 예외가 전파된다.
+  - ctl.quantize의 except BaseException(143-145)이 poison하고 다시 raise한다. inference 래퍼(310-312)도 BaseException에서 poison하고 raise한다.
+  - 이후 attend와 quantize는 _usable()에서 거부된다.
+  - commit 검사 실패(일부 층만 QUANTIZED)도 try 안의 AdapterContractError이므로 poison된다.
+  - attend 내부 예외(write 이후 포함)도 BaseException에서 poison되고 state는 갱신되지 않는다.
+  - mixed state를 성공한 generation으로 계속 쓰는 경로는 없다(소스 기준).
+  - 롤백은 하지 않는다. 다음 inference의 reset이 정리한다. 이 사실은 docstring(47-50)에 명시돼 있다.
+  충족.
+
+잔여·주의 (비차단)
+- reset()이 failure 문자열을 지운다. 실패 generation의 기록은 caller/verifier가 예외 시점에 보존해야 한다.
+- current_start 정수 타입 검사(161)는 pipeline이 Python int를 넘긴다는 전제다(CI:318/412의 누적은 int). 다른 타입이면 fail-closed다.
+- read는 매 호출마다 부분 span 전체를 복원(decode)한다. 이는 비용이다.
+- 상주량 W+21 frame은 논리값이다. 실제 바이트, workspace, GPU peak는 미측정이다.
+- attention_fn과 rope_fn은 주입되므로, 실제 연결은 실행 단계의 binding으로 확인해야 한다.
+
+미확인
+- verifier/AUDIT/READY와 실제 fake codec 실행 결과(Opus1 범위)
+- 원 BF16 dense 비교
+- 실제 PRQ 동작, 압축 바이트, GPU 성능, 품질, 신규성
+- upstream uncompress 세부와 offload 경로(do_offload)와의 상호작용
+- install 이후 pipeline.generator 이외 경로의 KV 사용 여부
+이 검토는 stage1 최종 수용, 실험 승인, GPU 승인이 아니다.
+종료 UTC: 2026-11-05T15:45:06Z

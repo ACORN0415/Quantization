@@ -24,3 +24,5 @@ QVG 창 수정 다음 단계: 실제 코덱 연결 판별 (준비안)
 - native attention 자체 반복의 비결정성이 발생하면 다른경로오차로 단정하지않고 판단불가로 기록한다.
 - 시간초과·OOM·독립검토미완료는 판단불가. 임의재실행/별도seed구제 없음.
 - 이 검사가 통과해야 원본전체pipeline/모델의 장기 생성 비교를 준비한다.
+
+결과 전 구조 명확화: W126은 부분span이 생기지 않는다. nativeattention checkpoint는 W21(block7/8/9/41), W63(7/8/21/41), W126(7/8/21/41)이며 W126 block21은 intermediate_full_horizon_not_partial로 표시한다. 부분span 검사는 W21/63에만 적용한다. 각4회·전체630읽기·PRQ5회는 유지한다.

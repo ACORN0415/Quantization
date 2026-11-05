@@ -1,0 +1,65 @@
+QVG window adapter CPU stage1 — 독립 verifier 비교계약·검증범위 검토 (업무2 역할, 실제 Opus1)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음(역사적 terminal_handle_stale).
+권위: root msg_a326b162c9d4의 명시적 완성 알림(파일명 READY marker 없음). 범위 추가 msg_3230dc3c3421 포함.
+실제 시작 2026-11-05T15:48:25Z(완성 알림 수신 후). 등록 절대마감 16:00:46.304116Z 이전 종료.
+검토 대상 SHA(시작·제출 직전 모두 일치):
+ verify_adapter.py 22ab2d4c711db133247d5b9fd951c3d9496e745fd18990781f60179e21dc77c7 (작성자 method_gap_codex)
+ AUDIT_CODEX_V2.json 911ddc0ac723ff67acf9b2857d660c2da50f2bd5a179d9ae8b91162ac4e2c8d2 (최종 감사)
+ adapter.py cce683d4a2ec1db16dfe986d0202970d1ce3f83458427597f3145e55e8a46d09 (작성자 fair_comparison_codex; 경계/API만)
+ REGISTRATION.json 97884db9a1c11cbbc4ac5eb62ca1915f821ca00fff0e0b6980ffd9bed343e5da
+ AUDIT_V2의 source_sha256 6개(upstream kv_cache.py, causal_model.py, causal_inference.py, adapter, verifier, 등록)가 현재 파일과 일치(부모 확인).
+권한 준수: 읽기만. checker/torch/import/재실행/PRQ/모델/tensor/GPU/다운로드/수정 0. 저장 감사 수치는 Codex2 실행 기록이며 내 재실행이 아니다.
+
+helper: 1개, Agent 도구 subagent_type "fork"(도구 계약상 부모 모델로만 실행, model override 무시). 별도 provider 모델 ID는 관측하지 않았고
+helper도 "부모 상속, 별도 ID 미관측"이라 보고. 분담: helper = RoPE 절대 offset과 부분 span 해제/pending 반례(adapter.py·verify_adapter.py
+sed/grep만, 실행 0). 부모 = verifier 전체(452행) 판독, reference 독립성, negative·installer·추가 3계약, AUDIT_V2 대조, upstream 루프 확인.
+helper 결론은 부모의 독립 판독(verify 186–260행, adapter 24–41·201–215행)과 대조해 일치함을 확인한 뒤 통합했다. helper를 별도 Opus 검토로 세지 않는다.
+
+판정: 수용 가능(합성 fake-codec·fake-pipeline 범위의 비교계약으로서). 차단 결함 없음. 아래 잔여 한계는 등록 pass 문장이 이미 요구하는
+"별도 등록 실제-codec 시험"에서 다룰 사항이며, 이 단계의 pass/fail/inconclusive 조건을 바꾸지 않는다.
+
+1. reference 독립성
+ - finite 경로(W21/63): 같은 window의 all-history-retained reference = 별도 upstream ChunkedKVCache 인스턴스 rk/rv(evict 없음)와 순수 list
+   literal_k/v(verify 186–190, 216–230). cache.read(left,end)를 rk 전체 이력의 [left:] 슬라이스와 dtype/shape/바이트로 비교(231–232). ✓
+ - full-horizon 126: 동일 rk/rv 전체 read와 비교(260–262) = no-eviction reference. ✓
+ - 닫힌 고리 여부: rk와 adapter cache는 같은 upstream 클래스·같은 fake_pack을 공유한다(같은 codec 비교는 의도). 그 공유 경로는 매 step
+   literal_allhistory(227–228)와 압축 시 literal_reference_pack(200–201)으로 순수 list 계산과 교차검증되므로 고리가 닫혀 있지 않다. ✓
+ - RoPE: adapter는 자체 rope_absolute_segments(블록별 rope_fn 호출, start_frame=left//fs; adapter 24–41, 209)를, verifier는 upstream
+   causal_rope_apply_long_input을 전체 이력에 적용 후 슬라이스(verify 235)한다. 계산 경로가 달라 독립 대조다. ✓
+   단 두 upstream RoPE 함수의 산술 동일성 자체는 가정(미확인). fake grid [3,1,2]라 공간 주파수는 거의 시험되지 않는다.
+ - attention은 spy(Q/K/V 라우팅 검사)이며 실제 attention 수학이 아니다(감사 scope 문장과 일치).
+
+2. negative/control이 실제 실패 분기를 타는가
+ - 실제 adapter 분기를 타는 것: 잘못된 설정 7종 생성자 거부(266–276); packed 과거 부분 덮어쓰기 거부 + 전체 상태 스냅샷 불변(290–296);
+   quantizer 실패(무commit·일부commit) 시 오류 전파·frontier 불변·poisoned·이후 read/write/재quantize 거부(303–313); KeyboardInterrupt 후
+   동일(316–331); 미지원 initial_latent가 기존 generation을 바꾸지 않음, 잘못된 horizon 거부, sink 설치 거부 시 부분 patch 없음(381–404). ✓
+ - 민감도 대조(adapter 분기가 아님): naive_pending_eviction, upstream_partial_write는 upstream store만으로 위험이 실재함을 보인다.
+   wrong-origin RoPE(241–245, 259)는 기대값이 원점 차이를 구분함을 보인다. mutation 검사가 아니라는 점을 명시한다. 보호 근거는 positive trace.
+ - 5회 덮어쓰기: trace가 블록마다 5회 attend(212); upstream도 4 denoise + clean-context refresh 1회(causal_inference.py 357–402) 구조와 대응. ✓
+ - frontier: 성공 후에만 전진(206–207), 실패 반례(303–313). ✓  mid-group eviction(W21 end=27 → left=6, end=48 → frame24–26 pending)이
+   trace에 포함되고 same_window·pending_raw·fully_expired 검사로 잡힌다(helper 확인, 부모 대조). ✓
+
+3. 추가 3계약(msg_3230dc3c3421)
+ (1) target_frames 우회: upstream _initialize_kv_cache를 AST로 실행해 local_attn_size=21이면 target_frames=126을 무시하고 capacity 21임을 확인
+     (verify 336–341), 설치 후 capacity 126·원 initializer 미호출(368–369). ✓ (실제 upstream 함수 본문 사용)
+ (2) generation 재사용: 두 번째 inference가 새 cache 객체·이전 span/chunk 해제·출력 바이트 동일·quantizer 재호출 5회(384–390); reset 후 fresh
+     generation 성공(326–331); uninstall 복원(391–393). ✓
+ (3) 일부 층 commit 후 실패: layers=2에서 layer0 K만 commit 후 예외 → poisoned·frontier 불변·계속 사용 거부(303–313). fail-closed는 확인,
+     rollback은 주장하지 않음(문서와 일치). 정확히 "층0 K/V 모두 commit 후 층1 실패" 조합은 별도 사례가 아니나 같은 poison 경로로 판단(경미).
+
+4. 잔여 한계(차단 아님)
+ - fake pipeline의 inference 루프는 verifier가 작성한 것이다(345–364). upstream inference 본문(예: kv_cache1[0]["local_end_index"]로
+   max_tokens 산출, causal_inference.py:345)은 실행되지 않았다. adapter가 local_end_index를 end로 갱신함(adapter 104–106, 214)은 소스로 확인했으나
+   verifier에 그 값 검사는 없다. 실제 경로 연결은 다음 등록 시험의 대상.
+ - 형상: frame_seq_length 2, heads 2, dim 12의 소형. 실제 1560 토큰/frame 규모 주소 산술·메모리는 미시험.
+ - 보유량: peak_retained_frame_equivalents(W21 42, W63 84, W126 126)는 frame 단위 상주량이며 실제 codec 바이트/workspace가 아니다.
+   upstream evict_range가 packed span 중간에서 decoded 메모리를 실제로 해제하는지는 미확인.
+ - 11345 검사·630 읽기 대조는 검사 수이며 모든 실행 경로를 검증했다는 뜻이 아니다. fake codec 통과는 실제 PRQ 동작·압축 바이트·GPU 성능·
+   OOM·영상 품질·신규성의 증거가 아니다. 감사 1.377s/RSS 422,268,928B/GPU0는 저장값.
+
+5. 읽은/미확인 범위
+ 읽음: verify_adapter.py 전체, AUDIT_V2 요약·source 해시·case 요약, adapter.py 24–41·100–108·200–215행과 키 grep, REGISTRATION 전체,
+  upstream causal_inference.py 62–75·340–402행. helper: adapter/verifier RoPE·eviction 관련 행.
+ 미확인: adapter.py 나머지 본문(Opus2 보고서 23d336bd 담당, 대체하지 않음), AUDIT_V2 11345 개별 항목, IMPLEMENTATION_KO/SOURCE_REVIEW_ROOT,
+  upstream kv_cache.py 본문, 두 RoPE 함수 산술 동일성. root 수용 결정은 root 권한이다.
+실제 끝: 2026-11-05T15:50:15Z

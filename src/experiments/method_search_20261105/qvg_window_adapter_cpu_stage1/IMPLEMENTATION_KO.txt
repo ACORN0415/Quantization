@@ -1,0 +1,126 @@
+QVG finite window adapter CPU 구현 기록
+
+범위와 현재 상태
+등록 REGISTRATION.json의 126 latent frame, sink=0, 초기 latent 없음,
+3-frame 생성 블록, 4 denoise + 1 context refresh, W=21/63/126만 지원한다.
+adapter.py는 원본 소스를 수정하지 않고 기존 pipeline 인스턴스에 메서드를 주입한다.
+실제 모델·GPU·실제 PRQ·영상 생성은 실행하지 않았다. 별도 작성자
+method_gap_codex의 verify_adapter.py 최종 CPU 검증(V2)을 통과했다.
+합성 fake packed codec 결과를 실제 QVG codec 검증으로 간주하지 않는다.
+
+기준 원본
+/home/acorn0415/sfq_data/qvg-reuse-reference
+revision 0601468f2dbba6a17ac7086faec6d41527cad188
+quant_videogen/kv_cache.py:
+  write/read/store_quantized/evict_range/clear의 원래 절대주소 구현을 그대로 사용한다.
+experiments/Self-Forcing/wan/modules/causal_model.py:
+  forward가 호출하는 attn_kv_cache_prerope 인스턴스 메서드만 대체한다.
+  causal_rope_apply 함수는 외부 인수로 주입한다. 전체 model import를 강제하지 않는다.
+experiments/Self-Forcing/pipeline/causal_inference.py:
+  _initialize_kv_cache/quantize_kv_cache/inference의 인스턴스 wrapper를 설치한다.
+  원본 inference의 QUANT_FACTOR=8 분기와 원본 quantize_kv_cache 본문은 유지한다.
+
+API
+1) FiniteWindowAdapter(window_frames, horizon_frames=126, block_frames=3,
+       quant_group_frames=24, calls_per_block=5, sink_frames=0)
+2) initialize(cache_cls, *, batch_size, frame_seq_length, num_heads, head_dim,
+       num_layers, dtype, device) -> 원본 구조의 cache dict 목록
+3) quantize(start, end, max_tokens, callback)
+   callback은 인수가 없는 함수이며 원본 quantizer를 호출한다.
+4) attend(layer_index, kv_cache, *, current_start, q, k, v, grid_sizes, freqs,
+       rope_fn, attention_fn) -> (attention_output, 같은 cache dict)
+5) visible_range(layer_index) -> (왼쪽 token 주소, 오른쪽 token 주소)
+   inspect() -> frontier/실패 상태/층별 현재 주소·호출 수·활성 구간
+6) reset(): adapter가 소유한 모든 K/V cache의 clear() 후 controller 상태 초기화.
+7) install_pipeline(pipe, *, cache_cls, rope_fn, attention_fn,
+       window_frames, horizon_frames=126) -> PipelineInstallation
+   반환값.controller 및 .uninstall() 제공. 설치 시 기존 kv_cache1은 None이어야 한다.
+
+실제 pipeline 연결 예시(코드 준비만; 이 기록에서 실행하지 않음)
+  handle = install_pipeline(
+      existing_pipeline, cache_cls=ChunkedKVCache,
+      rope_fn=causal_rope_apply, attention_fn=attention,
+      window_frames=21, horizon_frames=126)
+  기존 pipeline.inference(noise, text_prompts, ...)를 그대로 호출한다.
+주의: 위 원본 클래스와 함수를 실제로 import하거나 모델을 생성한 것은 아니다.
+호출자가 pinned 원본과 codec을 주입할 책임이 있으며 함수 이름만으로 revision을
+자동 검증하지 않는다. 독립 verifier가 실제 사용한 원본 파일 SHA를 기록한다.
+
+주소·저장 계약
+원본 local 창 초기화는 target_frames를 무시하므로 initializer를 실질 대체한다.
+K와 V 각각 126개의 frame metadata 슬롯(None)을 만들되 frame payload는 원래
+ChunkedKVCache가 write 시점에 동적 할당한다. local_end/global_end는 재배치된
+창 주소가 아니라 끝까지 동일한 절대 token 주소 E를 기록한다.
+활성 attention 범위는 [max(0,E-W*frame_seq_length), E)이며 현재 3-frame도 포함한다.
+이 범위 선택은 원래 full-prefix attention 결과 보존 주장이 아니다. 같은 창을 읽되
+모든 과거를 계속 보관하는 대조군과 비교하는 명시적 실행 의미다.
+
+압축 경계 P는 0부터 시작한다. 원본 quantizer가 [P,P+24frame)의 모든 층 K/V에
+dict packed span을 저장하고 정상 반환했는지 확인한 뒤에만 P를 증가시킨다.
+quant_type='none'은 install/inference preflight에서 거부한다. Tensor fake quant나
+아무것도 저장하지 않는 callback도 packed span postcondition을 통과하지 못한다.
+합성 검증에서 사용하는 dict fake codec은 이 생명주기 인터페이스를 흉내 낸다.
+원본 callback에서 앞 층 K만 commit하고 실패할 수 있다. rollback은 하지 않는다.
+Exception뿐 아니라 KeyboardInterrupt/SystemExit 등 BaseException도 기록하여
+현재 generation을 poisoned 상태로 만들고 같은 예외를 다시 전달한다. 이후
+attend/quantize는 거부하며 명시적인 reset/새 inference만 새로운 세대를 시작한다.
+
+퇴거는 매 write 후 [0,min(활성창 왼쪽 주소,P))에 대한 누적 evict_range다.
+아직 완료되지 않은 다음 24-frame 압축 묶음의 원본은 창 밖에서도 남긴다.
+원본 eviction은 완전히 만료한 packed span만 제거하고 일부만 창에 걸치면 span
+전체를 유지한다. 재클러스터링·재양자화·압축형식 변경·주소 이동을 하지 않는다.
+따라서 실제 저장 메모리가 W frame과 정확히 같다고 주장하지 않는다. 부분 span
+복원 임시 메모리와 pending raw를 포함한 실제 GPU peak는 아직 측정하지 않았다.
+
+현재 청크와 RoPE
+한 층의 같은 3-frame 주소에 정확히 다섯 번 write를 허용하며, 다음 블록은 다섯
+번째 refresh 이후 연속 주소에서만 시작한다. packed 상태나 packed span과 겹친
+영역의 write는 실제 write 전에 거부하여 원본 write의 span 제거 위험을 피한다.
+Q는 원본 causal_rope_apply(q,start_frame=current_start/frame_seq_length)를 사용한다.
+K는 활성 구간을 3-frame 조각으로 나누고 같은 원본 함수에 각각 절대 start_frame을
+넘긴다. 원본 long-input RoPE와 같은 시간·공간 주파수 및 FP64 복소 곱셈이다.
+원본 K는 pre-RoPE라는 의미 계약을 요구하며 이미 RoPE된 입력을 자동 식별하지 않는다.
+출력의 .type_as(v) 시점과 현재 청크의 원본 저장 dtype을 유지한다.
+보조 작업자 window_frontier_check가 이 조각별 절대주소 식을 소스로 독립 확인했다.
+이는 실행한 수치 검증과 구분되며 별도 verifier가 실제 원본 RoPE 결과를 대조한다.
+
+재사용·미지원 조건
+새 inference의 noise는 정확히 126 frame이어야 하며 initial_latent는 None이어야 한다.
+실행 전 window/sink/3-frame/4-step/packed 설정을 다시 확인하고, 통과한 경우에만
+이 adapter가 소유한 이전 cache를 clear하여 압축 span까지 버리고 fresh 초기화한다.
+외부 cache를 임의로 clear하지 않으며 소유하지 않은 cache가 연결되면 거부한다.
+uninstall은 adapter 소유 cache를 clear하고 원래 인스턴스/클래스 메서드를 복원한다.
+sink 비0, independent first frame, 초기 latent, 기타 window/horizon, 비정렬 주소,
+부분3-frame 입력, batch별 서로 다른 grid, 홀수 head dimension, 짧은 RoPE table,
+순서가 다른 압축/쓰기·추가 sixth write 등은 지원하지 않는다.
+여러 세대/동시 thread에서 동일 pipeline을 동시에 사용하는 실행은 지원하지 않는다.
+CPU/GPU offload wrapper는 이 모듈에서 바꾸지 않으며 실제 offload와 GPU 커널은
+검증하지 않았다. torch.compile/분산 모델/실제모델 integration 성공도 미확인이다.
+
+판정 제한
+이 adapter는 기존 기준선을 공정하게 실행하기 위한 수리이며 새 메모리 알고리즘이 아니다.
+CPU reference 일치가 실제 PRQ 정확성, GPU 지연, 장기 생성 품질을 입증하지 않는다.
+actual codec을 포함한 다음 단계는 별도 등록·검증 대상이다. 실제 Claude Opus 검토는
+root가 연결하고 있으며 이 문서는 Codex 구현 기록으로만 표시한다.
+
+현재 adapter.py SHA256
+cce683d4a2ec1db16dfe986d0202970d1ce3f83458427597f3145e55e8a46d09
+
+독립 CPU 검증 결과(저장된 AUDIT_CODEX_V2.json 확인; 작성자의 중복 실행 없음)
+2026-11-05 15:45 UTC, 검사 11,345건 모두 통과, wall 1.376673599초,
+CPU 4스레드, 최대 RSS 422,268,928B. dtype·shape·논리적 원소 바이트를 대조하여
+signed zero도 구분했다. 원본 torch.equal 대조 V1은 삭제하지 않고 보존했다.
+W21/63/126 각각 42블록×5재쓰기=210회, 총630회 활성창 read가 대조군과 일치했다.
+압축 주소는 각 창에서 [0,24),[24,48),[48,72),[72,96),[96,120) 그대로였다.
+잘못된 K RoPE 원점을 사용한 대조는 W21에서35회, W63에서21회 차이를 확인했다.
+packed 부분 덮어쓰기·pending 조기퇴거 반례, 일부 K commit 후 일반예외와
+KeyboardInterrupt, poison 후 실행차단 및 reset 후 fresh 재시작도 확인했다.
+fake pipeline의 2개 층·2회 생성 재사용, 실제 원본 initializer AST의 target_frames
+무시 반례 및 수정 initializer의126슬롯, 초기latent 사전거부, uninstall도 통과했다.
+이 검증의 attention은 spy이다. 전달된 Q/K/V와 spy 출력을 비교한 것이며
+실제 attention kernel 수치, 원본 전체 pipeline 실행 성공을 측정한 것은 아니다.
+최대 보유 frame-equivalent는 W21에서42, W63에서84, W126에서126이었다.
+이는 span/raw 프레임 수를 합친 수치로 실제 바이트·GPU peak·압축률이 아니다.
+
+최종 상태: adapter source 동결, CPU 합성 계약 검증 통과.
+실제 Claude Opus의 최종 판단과 실제 codec/GPU integration은 별도 미완료 상태다.

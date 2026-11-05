@@ -1,0 +1,54 @@
+{
+  "reviewer": "root",
+  "at_utc": "2026-11-05T15:43:45.085021+00:00",
+  "scope": "Static full adapter source and upstream call-site review; no execution by root",
+  "source_hashes": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/qvg_window_adapter_cpu_stage1/adapter.py": "cce683d4a2ec1db16dfe986d0202970d1ce3f83458427597f3145e55e8a46d09",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/qvg_window_adapter_cpu_stage1/REGISTRATION.json": "97884db9a1c11cbbc4ac5eb62ca1915f821ca00fff0e0b6980ffd9bed343e5da",
+    "/home/acorn0415/sfq_data/qvg-reuse-reference/quant_videogen/kv_cache.py": "e6f03b8223833021c4ff6bbe16d73ee555e1f2ecdf0d0770b565c7b5b17e6963",
+    "/home/acorn0415/sfq_data/qvg-reuse-reference/experiments/Self-Forcing/pipeline/causal_inference.py": "824d8cfbd2985a042e253648c2aaaa06f25cb40d62be504a6330c80242caedba",
+    "/home/acorn0415/sfq_data/qvg-reuse-reference/experiments/Self-Forcing/wan/modules/causal_model.py": "c3575f16dcd50bd0a492b38b3ce9f299f03180f3719115115e1c5a27ed386375"
+  },
+  "findings": [
+    "Finite upstream initializer ignores target_frames: installer replaces allocator and fixes metadata capacity to126 frames.",
+    "Original inference schedule retained; callback invokes bound original quantize method. Frontier only commits after all layers packed successfully.",
+    "Attention visibility is [max(0,E-W),E), absolute address and absolute query/key RoPE preserved; no packed group split or regroup.",
+    "Cumulative evict(0,min(left,frontier)) protects pending original24-frame quantization data and retains partially visible packed spans.",
+    "Five writes per current block permitted; historical/nonsequential writes fail before destructive upstream write.",
+    "Mutating callback failure can leave partial upstream commits; generation is poisoned, frontier unchanged. No rollback guarantee.",
+    "Root found Exception-only interruption gap; author changed mutating exception paths to BaseException with re-raise; independent regression requested.",
+    "Inference wrapper validates unsupported settings before reset; fresh cache per generation prevents stale spans.",
+    "quant_type none is explicitly unsupported in this packed adapter; no validated BF16 baseline connection claimed."
+  ],
+  "pending": [
+    "Actual Opus independent verifier/V2 audit review; final stage binding",
+    "Actual PRQ codec, native attention/GPU/full pipeline evaluation outside CPU registration"
+  ],
+  "root_executed_gpu_calls": 0,
+  "root_executed_PRQ_calls": 0,
+  "root_executed_verifier": false,
+  "verdict": "source_contract_and_saved_CPU_evidence_consistent_actual_Opus_pending",
+  "limitations": [
+    "Only fixed126-frame horizon, windows21/63/126, sink0, no initial latent,3-frame blocks/four denoising calls+refresh",
+    "Fake attention checks argument path rather than numerical correctness of an attention kernel",
+    "Metadata frame capacity and logical resident spans are not GPU peak measurements",
+    "No algorithmic novelty, video quality or speed claim"
+  ],
+  "independent_record_checked": {
+    "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/qvg_window_adapter_cpu_stage1/AUDIT_CODEX_V2.json",
+    "sha256": "911ddc0ac723ff67acf9b2857d660c2da50f2bd5a179d9ae8b91162ac4e2c8d2",
+    "stored_checks": 11345,
+    "stored_failed_checks": 0,
+    "bound_current_hashes_match": true,
+    "root_reran": false,
+    "inspected_verifier": "full source, reference construction, byte comparator, negative cases, installer fixture, resource guards"
+  },
+  "actual_Opus_source_review_read_by_root": {
+    "path": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/QVG_WINDOW_ADAPTER_CPU_STAGE1_SOURCE_REVIEW_FIXED_KO.txt",
+    "sha256": "23d336bdf049f3c51132e60380ac898bc9e17280096c9e18be1ccf978df7f338",
+    "scope": "Full cce683d4 adapter source contract; no runtime or verifier/audit review",
+    "verdict": "No source-contract blocking defect in reviewed scope",
+    "review_completed_utc": "2026-11-05T15:45:06Z",
+    "root_read_utc": "2026-11-05T15:51:24.494295+00:00"
+  }
+}

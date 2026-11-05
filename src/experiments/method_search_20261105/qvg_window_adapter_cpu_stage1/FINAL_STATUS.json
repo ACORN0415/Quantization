@@ -1,0 +1,18 @@
+{
+  "status": "pass_CPU_preparation_only",
+  "decided_utc": 1793893955.3056138,
+  "original_deadline_utc": 1793894446.3041162,
+  "elapsed_since_registration_seconds": 1309.001497745514,
+  "audit_sha256": "911ddc0ac723ff67acf9b2857d660c2da50f2bd5a179d9ae8b91162ac4e2c8d2",
+  "checks": 11345,
+  "reference_reads": 630,
+  "review_hashes": {
+    "docs/reviews/20261105_METHOD_SEARCH/management/QVG_WINDOW_ADAPTER_CPU_STAGE1_SOURCE_REVIEW_FIXED_KO.txt": "23d336bdf049f3c51132e60380ac898bc9e17280096c9e18be1ccf978df7f338",
+    "docs/reviews/20261105_METHOD_SEARCH/management/QVG_WINDOW_ADAPTER_CPU_STAGE1_VERIFICATION_REVIEW_FIXED_KO.txt": "a57e5686f37fc167733f0d1c23095178b19165a5278dda392f9d0373addc9b62"
+  },
+  "actual_Claude_model": "claude-opus-5-5",
+  "GPU_calls": 0,
+  "actual_PRQ_calls": 0,
+  "goal_achieved": false,
+  "next": "Separately registered real codec/GPU connection test; code preparation ongoing"
+}
