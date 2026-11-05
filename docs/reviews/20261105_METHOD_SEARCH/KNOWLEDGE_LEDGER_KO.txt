@@ -330,3 +330,11 @@ production형상합성입력에서기존R_fp32의비선택11head복원/scale byt
 6청크추가코드1,806,336B+공유header24B+head1B=1,806,361B. 기존sentinel은상쇄되며전체KV추가비용의정수cap근거로고정한다.
 이는tensor/packet상한이며전체peak/작업공간/Python/allocator공간과다르다.실자료점수전metadata누락을보완한것이다.
 root소스/보고서검토및작은파일6해시일치확인,합성재실행0.실제입력/효과/GPU0,Opus검토대기,전체driver준비중.
+
+운영 검증 [실제 Opus 5.5 검토 시작]
+21:50예약은12:50:00UTC에1회전송접수됐다.관리자가허용시각이후현재provider카탈로그를조회해claude-opus-5-5를확인했다.
+실제채팅2개가21:54에/home/acorn0415에서생성되고21:56부터검토prompt를실행했다.원Task연결은terminal_handle_stale로실패했으므로Task/Dispatch완료로표시하지않는다.
+root는두채팅의runtime options current.model=claude-opus-5-5/confirmed model과실제working/source-reading상태를확인했다.
+세션claude_beab681e_3eaf_41b0_9688_b8ef268b288f,claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5.
+정상nativechat+보고서+관리Run최종회신경로로검토중이다.실제검토완료/실자료실행은아직아니며과거Fable결과를재명명하지않는다.
+근거:OPUS_RUNTIME_ROOT_VERIFICATION.json의고정실행/options/history/attachment기록SHA.신규방법효과미측정,목표active.
