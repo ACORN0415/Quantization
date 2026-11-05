@@ -92,5 +92,15 @@
     "next_model": "Opus 5.5",
     "effective_at": "2026-11-05T21:50:00+09:00",
     "call_before_effective_at": false
+  },
+  "middle_manager": {
+    "agent": "codex",
+    "session": "codex_f3c117d6_300a_4bdd_8654_010cdfafebc7",
+    "surface": "chat",
+    "cwd": "/home/acorn0415",
+    "own_run": "run_37b53bde176e",
+    "root_decision_run": "run_34feb04fa61d",
+    "policy": "Routine worker messages go to manager; root receives only milestones/decisions/actual blockers. Existing scientific worker pairs remain.",
+    "old_root_run_unhandled_after_ack": 0
   }
 }

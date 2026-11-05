@@ -1,0 +1,37 @@
+{
+  "requested_model": "Opus 5.5",
+  "provider_model_id": "unconfirmed; verify at launch, never silently substitute",
+  "not_before": "2026-11-05T21:50:00+09:00",
+  "surface": "chat",
+  "cwd": "/home/acorn0415",
+  "no_call_before_not_before": true,
+  "status": "queued_not_launched",
+  "historical_fable_chats_preserved": true,
+  "tasks": [
+    {
+      "work_item": 1,
+      "codex": "/root/fair_comparison_codex",
+      "scope": "Independently review fused full-H KV encoder source, original build/preprocess failures, explicit-layout repair, exact packet and lifetime evidence, native output and measured paired costs; then inspect nearest prior art and whether a meaningful methodological gap remains.",
+      "primary_folder": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix",
+      "prohibitions": [
+        "no GPU/model generation",
+        "no edits to frozen sources or results",
+        "do not equate GPTQ port with new mathematics",
+        "do not infer end-to-end speed from isolated kernel times"
+      ]
+    },
+    {
+      "work_item": 2,
+      "codex": "/root/method_gap_codex",
+      "scope": "Independently review eight-run full rollout pilot registration and implementation, deferred-review amendment, actual source/runtime validity and completed or partial results. Check frozen gates and interpretation, distinguish trajectory fidelity, image quality, overhead, and novelty.",
+      "primary_folder": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot",
+      "prohibitions": [
+        "no GPU/model generation",
+        "no edits to frozen sources or results",
+        "do not override gates using RTN differences as instrument noise",
+        "do not assume the two-input pilot establishes generalization or novelty"
+      ]
+    }
+  ],
+  "return_format": "Korean; main conclusion, material issues with exact evidence, strongest objection, at most one evidence-grounded alternative, directly checked vs unchecked; preserve current reviewer model/session identity."
+}

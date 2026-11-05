@@ -1,0 +1,8 @@
+관리자 재개 절차 (Claude 호출 전 시간 확인 필수)
+1. 실제 현재 시각이 2026-11-05T21:50:00+09:00 이상인지 확인한다. 그 이전에는 provider Claude 호출/실행/다른 모델 또는 계정 우회 0.
+2. 현재 Orca에서 실제 provider Opus 5.5 식별자를 읽기 전용으로 확인한다. 표시명이나 추정 alias로 실행하지 않는다. 미지원/확인불가면 실제 오류와 미완료 사실을 한 번 보고하고 대체하지 않는다.
+3. 각 spec마다 agent launch --agent claude --model <검증된 식별자> --surface chat --worktree path:/home/acorn0415 --json을 사용하고 응답을 관리 폴더에 보존한다. 실행 응답의 structured/chat 화면·정확 workspace·model/session을 확인한다. CLI로 대체하지 않는다.
+4. 실제 반환 handle에 worker-start --spec-file <해당 spec> --terminal <handle> --worktree path:/home/acorn0415 --keep-open --run run_37b53bde176e --json --full 로 Task 연결한다. 접수/실행 성공을 확인한 뒤만 connected로 표시한다. 실패/불명확 결과면 recovery-and-cleanup 지침 및 영수증을 따라 동일 요청/Task를 정리하고, 새 복제나 CLI 대체를 하지 않는다.
+5. 과거 terminal_handle_stale는 현재 성공의 증거가 아니다. 연결 오류를 실제로 기록한다. 직접 nativechat+파일 반환이 필요하면 정상 지원 API와 실제 session을 확인한 뒤 관리자에게만 라우팅하며 자동 Task 연결로 표기하지 않는다.
+6. 두 독립 검토자가 시작되면 비동기 규칙에 따라 턴을 끝내고 자신의 Run 알림을 처리한다. 보고는 단계별 한 번, 중요한 재검토 결과/이견은 관리자 STATE에 기록한다. 부모 Run send는 --to run:run_34feb04fa61d만 사용하고 --run <관리Run>을 함께 주지 않는다(서로 다른 Run 지정은 runtime이 거절함).
+7. 이 준비 단계에서는 타이머/자동 실행 스크립트를 설치하지 않았다. Orca 메시지로 재개할 때 STATE와 실제 시각을 다시 확인한다. 자기 수신함 외 큐 소비/삭제/DB 직접 수정은 금지한다.

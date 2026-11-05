@@ -1,0 +1,16 @@
+실제 Claude Opus 5.5 독립 검토 명세 — 아직 미실행
+시작 작업공간 /home/acorn0415, 화면 Orca chat. 검토 프로젝트 /home/acorn0415/Quantization.
+상위 관리 Run: run_37b53bde176e. 회신은 이 Run으로만 한다. run_34feb04fa61d와 run_cee0996dad4f에 직접 보내지 않는다.
+먼저 /home/acorn0415/Quantization/AGENTS.md 와 /home/acorn0415/Quantization/docs/CLAUDE_REVIEW_PROTOCOL_KO.md 및 orchestration 지침을 읽는다.
+이 검토는 2026-11-05 21:50 Asia/Seoul 이후, 관리자가 실제 provider 모델 ID와 실제 채팅 실행을 확인한 경우에만 배정된다. 모델 정체성을 추측하거나 과거 Fable 검토를 Opus로 표시하지 않는다. 검토자/하위 에이전트를 추가 생성하지 않는다.
+권한: 기존 소스·등록·작은 JSON·기록의 읽기 및 지정된 관리 검토 보고서 1개 작성만. GPU/생성/모델 로드/실자료 tensor 계산/대형 파일 hash/벤치마크/설치/계정전환/실험 변경/삭제/git 변경 금지. 현재 등록 상한을 넘기는 추가 검사를 실행하지 않는다. 새 실험 범위나 기준은 승인하지 않는다.
+연결된 Task/Dispatch가 있으면 이를 그대로 사용하여 worker_done으로 관리자에게 보고한다. 연결이 실패했으면 자동연결/완료를 주장하지 않으며 관리자 조정에 따른 정상 채팅 반환만 사용한다. routine heartbeat·파일 도착마다 메시지를 보내지 않는다. 필요한 질문과 마지막 결과를 관리자에게만 보낸다.
+반환: 한국어로 (1) 타당/수정 필요/근거 부족과 핵심 이유, (2) 중요한 지적과 정확한 파일·위치, (3) 현재 가능한 주장과 미입증 주장, (4) 가장 강한 반론 및 근거가 있을 때만 대안 최대 1개, (5) 직접 읽은 항목/읽지 않은 항목, (6) 가장 싼 수정·확인 제안과 불확실성. 검토 자체를 실험 검증으로 세지 않는다. 실제 session 및 Task/Dispatch ID는 확보된 값만 남긴다.
+
+범위: fused full-H KV encoder의 원래 build/preprocess 실패, explicit-layout 수정, exact code/owned packet 수명, native output 품질, paired 비용, 가까운 선행연구와 남은 방법론적 차이를 독립 검토한다.
+주 자료: /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/ 의 LOCK.json, experiment.py, obq_pack.cu, SOURCE_DIFF.patch, BUILD.json, RESULT.json, QUALITY.json, AUDIT_RESULT.json, RESULT_REPORT_KO.txt. 관련 원래 실패/환경복구 자료는 이 폴더의 참조를 따라 읽는다.
+추가 문헌 대조 자료: /home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/PRIOR_ART_TARGETED_CODEX_KO.txt. 그 내용은 Codex 조사 결과이며 독립적으로 확인한 문헌/코드와 구분한다. 새 검색 범위를 넓히거나 새 실험을 제안 범위 밖에서 시작하지 않는다.
+고정 결과 ID: RESULT SHA256 903804509a08ec3eb54e8627a0e39ad4e52d7a2751351e5af73c15003fe061b7, QUALITY SHA256 3e26401cb52117427b48a18c9d108f6adb6f8b481ec2f56ce8346849aec789eb, commit 751a073.
+보고된 exact/owned pass, 4 endpoint 양 RTN 대비 24.25~37.77% SSE 감소를 원근거와 대조한다. fused 0.729ms, Graph 5.13ms, 빠른 RTN 0.307ms 및 추가 0.422ms/층을 전체 생성 가속으로 해석하지 않는다. GPTQ의 KV 이식을 새 수학으로 부르지 않는다.
+fixed_rotation_control은 강한 기준선 진단이다. 종료된 pilot의 stop_quality를 구제하거나 같은 pilot의 기준·팔을 바꾸는 검사가 아니다. /home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/REGISTRATION_PROPOSAL_KO.txt와 diagnose.py를 기존 방식 대비 남은 효과를 판별할 수 있는지의 맥락에서 읽는다. 현재 native /root/method_gap_codex가 이 등록안/코드를 독립 검토 중이다. 실제 캡처 CPU 계산은 미승인이며, 실행 가치는 root가 기존 결과를 보존한 채 판단한다. 명세 검토를 실행 승인·완료나 FlagRot 완전 재현으로 표시하지 않는다.
+Codex 상대 업무: /root/fair_comparison_codex. 최종 관리 보고서 쓰기 허용 경로: /home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/OPUS_ENCODER_REVIEW_KO.txt

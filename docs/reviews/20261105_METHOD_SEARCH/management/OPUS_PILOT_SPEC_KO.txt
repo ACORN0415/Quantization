@@ -1,0 +1,15 @@
+실제 Claude Opus 5.5 독립 검토 명세 — 아직 미실행
+시작 작업공간 /home/acorn0415, 화면 Orca chat. 검토 프로젝트 /home/acorn0415/Quantization.
+상위 관리 Run: run_37b53bde176e. 회신은 이 Run으로만 한다. run_34feb04fa61d와 run_cee0996dad4f에 직접 보내지 않는다.
+먼저 /home/acorn0415/Quantization/AGENTS.md 와 /home/acorn0415/Quantization/docs/CLAUDE_REVIEW_PROTOCOL_KO.md 및 orchestration 지침을 읽는다.
+이 검토는 2026-11-05 21:50 Asia/Seoul 이후, 관리자가 실제 provider 모델 ID와 실제 채팅 실행을 확인한 경우에만 배정된다. 모델 정체성을 추측하거나 과거 Fable 검토를 Opus로 표시하지 않는다. 검토자/하위 에이전트를 추가 생성하지 않는다.
+권한: 기존 소스·등록·작은 JSON·기록의 읽기 및 지정된 관리 검토 보고서 1개 작성만. GPU/생성/모델 로드/실자료 tensor 계산/대형 파일 hash/벤치마크/설치/계정전환/실험 변경/삭제/git 변경 금지. 현재 등록 상한을 넘기는 추가 검사를 실행하지 않는다. 새 실험 범위나 기준은 승인하지 않는다.
+연결된 Task/Dispatch가 있으면 이를 그대로 사용하여 worker_done으로 관리자에게 보고한다. 연결이 실패했으면 자동연결/완료를 주장하지 않으며 관리자 조정에 따른 정상 채팅 반환만 사용한다. routine heartbeat·파일 도착마다 메시지를 보내지 않는다. 필요한 질문과 마지막 결과를 관리자에게만 보낸다.
+반환: 한국어로 (1) 타당/수정 필요/근거 부족과 핵심 이유, (2) 중요한 지적과 정확한 파일·위치, (3) 현재 가능한 주장과 미입증 주장, (4) 가장 강한 반론 및 근거가 있을 때만 대안 최대 1개, (5) 직접 읽은 항목/읽지 않은 항목, (6) 가장 싼 수정·확인 제안과 불확실성. 검토 자체를 실험 검증으로 세지 않는다. 실제 session 및 Task/Dispatch ID는 확보된 값만 남긴다.
+
+범위: 8회 full rollout pilot의 사전명세·구현·검토유예 행정기록·실제 실행 유효성·결과·동결 gate 해석을 독립 검토한다. pilot 판정과 다음 후보 선택에 사용할 근거를 검토한다. 어떤 관측이 다음 후보를 지지하거나 반박하는지, 어떤 추론은 아직 근거가 없는지 구분한다. 이는 종료한 pilot의 재개·구제, 새 실험 등록 또는 실행 승인이 아니며 연구 선택은 root와 사용자에게 남긴다.
+주 자료: /home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/ 의 REGISTRATION_DRAFT_KO.txt, ADMINISTRATIVE_AMENDMENT_KO.txt, ROOT_DECISION_AT_LOCK.json, LOCK.json, STAGE2_BINDING.json, INDEPENDENT_CODEX_AT_LOCK_KO.txt, CODEX_PILOT_REVIEW_KO.txt, packed_adapter.py, pilot_common.py, worker.py, quality.py, supervisor.py, audit_posthoc.py, RUN.json, COUNTERS.json, INTEGRATION.json, QUALITY.json, AUDIT_FINAL_CODEX.json. 오래된 초안의 pending 문구와 후속 LOCK/행정기록 시점을 구분한다.
+2026-11-05 20:18 KST 관리자 관측: 8 generation/8 VAE 완료, 총 1182.421초, 기존 감사 709 checks pass/errors 0. 실행 중 코드 변경/재생성은 보고상 0. LOCK SHA256 4fcbbda6173a7886a8dbdf29f32e481628beda31e774b2b8efbf4238ab705414; QUALITY SHA256 6cd48cdafb0e3f10029dfae05ceeb2a554fd2cf4dce2515496ced6ee8caa3d1d. 이 관측은 독립 검토 결론을 대체하지 않는다.
+저장된 판정 stop_quality: rain_market 후반 MUSIQ FULL-R_bf16 = -2.179109점으로 사전 -2 중단선 아래이고 Q1은 양 RTN 대비 5.7449%,8.1978%로 각 10% 미달이다. Q2 통과, Q3 미달. coast_cycle Q1은 60.1057%,36.0306%. 이 값을 원자료와 대조하고 지표·판정 코드의 혼입이나 오류가 있으면 정확한 근거로 지적한다.
+Q1~Q3 및 중단 기준을 완화하거나 포화 override를 추가하지 않는다. 서로 다른 RTN 양자화 결과 차이를 기기 잡음으로 간주하지 않는다. BF16 궤적 충실도/영상 대리지표/총 비용/신규성은 분리한다. 두 입력 8회만으로 새 방법 또는 일반화 성공을 주장하지 않는다. 사후감사의 저장 latent/features 검사와 미검증 raw-image 지표 재실행/실제 전체 cache byte 보존을 구분한다. 현재 최종 실제 Claude 검토는 false다.
+Codex 상대 업무: /root/method_gap_codex. 최종 관리 보고서 쓰기 허용 경로: /home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/OPUS_PILOT_REVIEW_KO.txt
