@@ -1,0 +1,79 @@
+{
+  "assembled_utc": "2026-11-05T14:54:37.611254+00:00",
+  "status": "actual_result_and_root_report_review_complete_bounded_candidate_stopped",
+  "manager_run": "run_37b53bde176e",
+  "parent_decision_run": "run_34feb04fa61d",
+  "actual_Claude_model": "claude-opus-5-5",
+  "same_existing_reviewer_session": "claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5",
+  "automatic_Task_Dispatch_attachment": false,
+  "reviews": {
+    "main": {
+      "path": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/OPUS_PAIRED_STAGE0_RESULT_FINAL_FIXED_KO.txt",
+      "sha256": "42c6c123bd6d2063842cad968a956344bb02c3cfd0c382d18a4feee50b1b30a6"
+    },
+    "root_report_addendum": {
+      "path": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/OPUS_PAIRED_STAGE0_RESULT_ADDENDUM_FIXED_KO.txt",
+      "sha256": "cce062ba89f4bb8b845c8a029d2dd3337fff1d89c5a461f7d03ea9d90c061d60"
+    },
+    "root_report": {
+      "path": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/ROOT_PAIRED_STAGE0_REPORT_FOR_FINAL_OPUS_KO.txt",
+      "sha256": "1bca14574766e8f13e1f2a4888c5ce5f6fdf79b87de884749e081f0c28d3d4db"
+    }
+  },
+  "decision": "stop_fixed_Gaussian_rank32",
+  "scope": "fixed Gaussian PRF rank32, seeds17/29/43, R_fp32-base K-only paired configuration,4registered development endpoints",
+  "execution_valid": true,
+  "guard_C1_satisfied": true,
+  "stages_exit0": 36,
+  "valid_rows": 68,
+  "registered_comparisons": 12,
+  "passed_comparisons": 0,
+  "candidate_to_strongest_Konly_SSE_ratio": [
+    1.8055570627065904,
+    2.681303171591723
+  ],
+  "candidate_to_Rfp32_Konly_SSE_ratio": [
+    1.000125003852131,
+    1.487007442442924
+  ],
+  "strongest_primary_baseline": "L18call0 FULLP1Q,other3FULLP1",
+  "fallback": "one cell L24call0seed43 count1/1536;other11zero, all within registered criterion",
+  "actual_finished_utc": "2026-11-05T14:33:35.362143+00:00",
+  "wrapper_seconds": 457.32354974746704,
+  "original_start_to_finish_seconds": 2374.937519311905,
+  "original_budget_seconds": 2700,
+  "original_deadline_utc": "2026-11-05T14:39:00.424624+00:00",
+  "finished_before_deadline": true,
+  "sampled_process_RSS_bytes": 3679240192,
+  "combined_disk_bytes": 267221663,
+  "GPU_calls": 0,
+  "independent_Codex_audit": {
+    "checks": 884,
+    "unique_files": 212,
+    "hashed_bytes_by_Codex": 1652908051,
+    "wall_seconds": 0.8718201350420713,
+    "scope": "Stored scalar arithmetic and byte integrity only; no independent output tensor/SSE reconstruction. Sampled RSS records are not a continuous peak proof. Post-experiment audit time is separate from the original experiment budget.",
+    "tensor_loads": 0,
+    "attention_SSE_recomputations": 0
+  },
+  "history": "original V4 invalid4.03s before scores; explicit one additional validity repair V5; original failure/source/LOCK preserved; no rule/seed/rank/cap/tolerance relaxation",
+  "validation_limits": [
+    "byte/scalar audit is not independent tensor/SSE reconstruction",
+    "RSS sample is not continuous peak proof",
+    "noquant only codec bypass/zero branch",
+    "no heldout/video/full-generation speed/generalization/novelty evidence"
+  ],
+  "reviewer_unverified_reporting_facts": [
+    "git commit35bf8a6",
+    "absence of a third actual run beyond root statement and two observed RUN records",
+    "all8 original artifact hashes directly: checked evidence listing and prior4hashes only"
+  ],
+  "PRF_noise_account": "compatible observation, not causal-mechanism proof",
+  "research_overall_complete": false,
+  "paired_family_globally_rejected": false,
+  "prior_full_H_pilot": "stop_quality unchanged",
+  "manager_new_experiments_or_models": 0,
+  "parent_final_report_pending": false,
+  "parent_final_sent": true,
+  "parent_final_receipt": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/OPUS_PAIRED_STAGE0_FINAL_PARENT_RECEIPT.json"
+}

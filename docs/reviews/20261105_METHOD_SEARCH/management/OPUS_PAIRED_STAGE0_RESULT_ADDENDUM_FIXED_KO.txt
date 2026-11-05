@@ -1,0 +1,36 @@
+Opus2 paired stage0 결과 최종검토 — 추가자료(root REPORT_KO) 정합성 부록
+작성 시각(date -u): 2026-11-05T14:44:59Z
+실제 모델: claude-opus-5-5, 기존 Opus2 session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5. Task/Dispatch 없음(terminal_handle_stale).
+배정: root msg_ea18af7d0db7.
+본 검토 OPUS_PAIRED_STAGE0_RESULT_REVIEW_KO.txt(42c6c123…, 발송 msg_e52b0caae950)는 이미 회신했으므로 수정하지 않았다. 이 부록은 추가자료의 정합성만 다룬다.
+
+대상: paired_response_stage0_packet_contract_fix/REPORT_KO.txt sha 1bca1457…(관리자 고정사본과 같은 hash임을 직접 확인). 전문을 읽었다.
+
+정합성: 일치한다. 저장 RESULT/LOCK/GUARDED_STATUS/AUDIT를 내가 읽은 값과 대조했다.
+- 결과
+  - 판정 stop_fixed_Gaussian_rank32, 통과 0/12.
+  - 최강 기준선은 L18 read0 FULLP1Q, 나머지 FULLP1. 기준선 SSE는 262.913 / 275.588 / 116.444 / 130.662.
+  - 12개 비율 표(1.805557~2.681303)가 내 추출값과 같다. "80.56~168.13% 큼"은 이 비율에서 1을 뺀 값과 같다.
+  - R_fp32보다도 12/12 악화.
+- fallback: L24 read0 seed43 1/1536, 나머지 0.
+- 바이트: cap 1,806,361, PAIR 1,403,904, FULL 786,432, FULLP1/FULLP1Q 1,800,600. FM3/FM8은 cap 밖.
+- 비용: 2,374.938초, 457.324초, RSS 3,679,240,192B(표본 관측), disk 267,221,663B, GPU 0.
+- 최종 LOCK 5fc4f125.
+- 감사: 0.872초, 884 checks, 212파일 1,652,908,051B, torch.load·attention·SSE 재실행 없음.
+- "anchor 16개"는 4개 기준선 × 4 endpoint와 맞는다.
+
+root 결론 중 내 독립 판단과 같은 것: 범위 한정 종료, 기준 불변, 사후 rank/seed 구제 금지, 연구 전체 미완료/비종료, pilot stop_quality 유지, 감사 범위 표현.
+root 보고서의 다음 서술도 타당하다: 분모 중앙값이 작다는 사실로 보정 영향 전체를 단정하지 않는다는 유보.
+
+내 검토에만 있는 보충(결론 불변)
+- FM8(cap 밖 참고점)이 3개 endpoint에서 FULLP1보다 SSE가 낮았다는 서술적 사실이다. 판정과 PSAC 일반 우위에 쓰지 않는다.
+- 보정 분모가 base 근처인데 오차가 증가한 것은 PRF 잡음 반론과 부합하는 관측이다. 메커니즘 증명은 아니다.
+
+직접 확인하지 않은 것
+- 보존 커밋 35bf8a6(git을 조회하지 않음).
+- "세 번째 실제 실행 없음"은 root 진술이다. 내가 본 RUN은 원 V4와 V5 두 개뿐이다.
+- 원 V4 자료 8개 보존은 LOCK review_evidence 목록과 내가 이전에 대조한 4개 hash 범위에서만 확인했다.
+
+수행: 읽기와 hash 확인만. .pt, 재계산, 감사 재실행, GPU, 새 agent, 기존 실행·보고서 수정은 0이다.
+같은 모델의 capacity 복구는 native 감사 준비의 운영 사실로 기록하며, 효과 실험을 추가로 시도한 것으로 보지 않는다.
+새 후보·실험·허용오차·팔 제안은 0이다.

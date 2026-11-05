@@ -1,0 +1,40 @@
+{
+  "updated_utc": "2026-11-05T14:56:22.511713+00:00",
+  "status": "completed_scoped_actual_Opus_result_and_report_review",
+  "root_accepted": true,
+  "model": "claude-opus-5-5",
+  "session": "claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5",
+  "Task_Dispatch_automatically_attached": false,
+  "manager_receipt": "msg_7cce78bdaa66",
+  "decision": "stop_fixed_Gaussian_rank32",
+  "scientific_result_changed": false,
+  "report_change": "pending-to-completed review status only; reviewed original preserved",
+  "reviewed_original_report_sha256": "1bca14574766e8f13e1f2a4888c5ce5f6fdf79b87de884749e081f0c28d3d4db",
+  "current_report_sha256": "a723581ab87e7df89ac6b86214f812d2745cd323de4b8fe6eea67a400d719c58",
+  "reviews": {
+    "main": {
+      "path": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/OPUS_PAIRED_STAGE0_RESULT_FINAL_FIXED_KO.txt",
+      "sha256": "42c6c123bd6d2063842cad968a956344bb02c3cfd0c382d18a4feee50b1b30a6"
+    },
+    "root_report_addendum": {
+      "path": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/OPUS_PAIRED_STAGE0_RESULT_ADDENDUM_FIXED_KO.txt",
+      "sha256": "cce062ba89f4bb8b845c8a029d2dd3337fff1d89c5a461f7d03ea9d90c061d60"
+    },
+    "root_report": {
+      "path": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/ROOT_PAIRED_STAGE0_REPORT_FOR_FINAL_OPUS_KO.txt",
+      "sha256": "1bca14574766e8f13e1f2a4888c5ce5f6fdf79b87de884749e081f0c28d3d4db"
+    }
+  },
+  "review_limits": [
+    "byte/scalar audit is not independent tensor/SSE reconstruction",
+    "RSS sample is not continuous peak proof",
+    "noquant only codec bypass/zero branch",
+    "no heldout/video/full-generation speed/generalization/novelty evidence"
+  ],
+  "reviewer_unverified_reporting_facts": [
+    "git commit35bf8a6",
+    "absence of a third actual run beyond root statement and two observed RUN records",
+    "all8 original artifact hashes directly: checked evidence listing and prior4hashes only"
+  ],
+  "root_resolution": "No substantive disagreement. PRF noise remains a hypothesis, not proven cause. Existing pilot stop_quality unchanged. Overall methodology goal remains unmet."
+}
