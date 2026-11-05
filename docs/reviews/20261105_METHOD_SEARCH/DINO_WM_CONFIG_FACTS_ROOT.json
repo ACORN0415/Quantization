@@ -1,0 +1,24 @@
+{
+  "observed_epoch": 1793904899.6962156,
+  "status": "source_configuration_correction_not_paper_run_provenance",
+  "facts": [
+    {
+      "path": "conf/plan_pusht.yaml",
+      "sha256": "d2c353a08e281c237b16724c1e6bbb4a2e8a32315aaf8fd11bb46e765b628fa8",
+      "fact": "Pinned explicit PushT config uses planner MPCPlanner / sub_planner CEMPlanner, goal_H5, num_samples300, topk30, opt_steps30, max_iter30, n_evals50. README commands select plan_pusht.yaml for PushT baseline. CEM does not use action gradients."
+    },
+    {
+      "path": "conf/plan.yaml",
+      "sha256": "9fc6da2b1f2441011462d12099e6e413b6cb467435e686a29da2bf045de15c70",
+      "fact": "Generic default plan.yaml separately selects planner gd. Must not mix generic GD path with explicit PushT CEM config."
+    },
+    {
+      "path": "readme.md",
+      "sha256": "d95a4c0fa612af0b24dfd63d75bf3aca6693b7b9fa7cac0b7c77f870fe64f893",
+      "fact": "README maps per_tensor to calib_mode_a layer_wise and per_token to token_wise. These activation paths differ in gradient contract, but that alone does not diagnose CEM failures."
+    }
+  ],
+  "consequence": "Earlier conditional GD gradient observation is not established as cause of published PushT failures. Exact original experiment config/log provenance unavailable, overrides possible; remain source-scope only. No actual CPU/GPU/model/tensor/gradient test.",
+  "root_source_count": 14,
+  "root_source_reading_limit_reached": true
+}

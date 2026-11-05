@@ -1,0 +1,40 @@
+{
+  "observed_epoch": 1793904775.131791,
+  "status": "source_contract_observation_not_model_failure",
+  "commit": "be738be37a0535f75f541a6c1201ce19f95499b0",
+  "facts": [
+    {
+      "paths": [
+        "planning/gd.py"
+      ],
+      "lines": "92-113",
+      "fact": "GDPlanner calls total_loss.backward(), updates actions, then first evaluator call at i=0 occurs AFTER one optimizer update. Do not interpret label0 as guaranteed zero model/optimizer calls without exact export mapping."
+    },
+    {
+      "paths": [
+        "models/ptq/layers.py",
+        "models/ptq/quantizer/base.py",
+        "models/ptq/quantizer/uniform.py"
+      ],
+      "lines": "QAct194-200; round_ste11-15; Base47-58; Uniform27-29",
+      "fact": "QAct per_tensor branch invokes self.quantizer; Base forward quant/dequant; Uniform uses plain outputs.round(). Per-token function uses round_ste=(round(x)-x).detach()+x. These branches have different surrogate backward contracts where active."
+    },
+    {
+      "paths": [
+        "planning/cem.py",
+        "models/visual_world_model.py"
+      ],
+      "lines": "CEM89-113;WM295",
+      "fact": "CEM repeats identical current observation for num_samples and calls wm.rollout per iteration; rollout starts encode(obs_0, act_0). Whether exact observation-only features can be amortized requires encode/fusion/state checks, not merely method name."
+    }
+  ],
+  "limitations": "No import or execution/model/weights/gradient test. Active runtime config and complete residual/action-gradient path not established; cannot infer total action gradient zero or attribution of paper failures. Plain-round vs STE may confound GD granularity comparisons if active; CEM does not require autograd. These are source facts for both independent reviewers, not counterpart conclusions.",
+  "sha256": {
+    "planning/cem.py": "a142d1bae0871c04b8ee6715f7d4831ddd10309ddcd742b259907e3eea9ce735",
+    "models/visual_world_model.py": "931d44c0d541d95be8236f65247de9b40ac3843fe047c1a44d4a2482d1bf636f",
+    "planning/gd.py": "81e8067f80954db4fcf4ffb477569f4d97199197b6213809c828237d41332d95",
+    "models/ptq/quantizer/uniform.py": "a12bc126bba4ce6c364fd3c46e86b89096ffbef138feecaed2a9a5ebaf6ce170",
+    "models/ptq/quantizer/base.py": "ead1cf60482cfb35cefa91c23b952d19865f7abf6d3315ee2d89798146ac5f0f",
+    "models/ptq/layers.py": "8a63e3078c3fc4252210965fd19b90703d9c1bbad58cdd4ce8ef661e3084bf68"
+  }
+}
