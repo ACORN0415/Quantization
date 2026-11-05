@@ -1,0 +1,75 @@
+{
+  "created_epoch": 1793919715.6726618,
+  "status": "source_only_scope_closed_no_candidate_adopted",
+  "Codex_report_sha256": "d084606710d10a8cf67b9a6baa54f02d7fadc0a188f9b160137549db598d9539",
+  "Opus_report_sha256": "5add8242e053b4bcc1b9c5626aeb866c78c6e402add31154128bed8d7d32bd69",
+  "independent_first_reports": true,
+  "actual_Claude_model": "claude-opus-5-5",
+  "actual_Claude_session": "claude_beab681e_3eaf_41b0_9688_b8ef268b288f",
+  "comparison": {
+    "agreement": [
+      "General direct compressed-code to native-MMA format and RoPE-aware codebooks have strong prior work.",
+      "Large-query native-MMA support missing in a public implementation alone is insufficient novelty or utility evidence.",
+      "Prepared caching is a strong simple baseline with explicitly higher resident-byte cost.",
+      "No new method or GPU experiment adopted in this scope."
+    ],
+    "corrections_preserved": [
+      "Observed Sage1 used FP16 V, not unmeasured FP8 V.",
+      "Payload smaller than GPU capacity does not prove whole-model fit.",
+      "Equal bytes or explicit memory-time-quality cost points matter even without a binding memory cap.",
+      "L2-normalization commuting with RoPE does not imply quantization commutes.",
+      "CommVQ examined public kernel is single-query BF16/1-bit-V, not proof the large-query INT8/FP8 boundary is fully solved."
+    ],
+    "reading_scope": {
+      "Codex": "Relevant sections of HyperQuant/CommVQ/NoMAD plus official Octave docs, 8 unique code files/selected sections",
+      "Opus": "Relevant sections of 2 papers and 1 raw code file; no new network or tensor/model loads"
+    },
+    "new_effect_measurements": 0
+  },
+  "static_payload_recalculation": [
+    {
+      "frames": 21,
+      "K_INT8_bytes": 1509580800,
+      "V_FP16_bytes": 3019161600,
+      "INT8K_FP16V_payload_bytes": 4528742400,
+      "INT8K_FP16V_payload_GiB": 4.217720031738281,
+      "INT8K_FP8V_hypothetical_payload_bytes": 3019161600,
+      "includes_metadata_padding_model_workspace": false,
+      "is_actual_memory_measurement": false
+    },
+    {
+      "frames": 63,
+      "K_INT8_bytes": 4528742400,
+      "V_FP16_bytes": 9057484800,
+      "INT8K_FP16V_payload_bytes": 13586227200,
+      "INT8K_FP16V_payload_GiB": 12.653160095214844,
+      "INT8K_FP8V_hypothetical_payload_bytes": 9057484800,
+      "includes_metadata_padding_model_workspace": false,
+      "is_actual_memory_measurement": false
+    },
+    {
+      "frames": 126,
+      "K_INT8_bytes": 9057484800,
+      "V_FP16_bytes": 18114969600,
+      "INT8K_FP16V_payload_bytes": 27172454400,
+      "INT8K_FP16V_payload_GiB": 25.306320190429688,
+      "INT8K_FP8V_hypothetical_payload_bytes": 18114969600,
+      "includes_metadata_padding_model_workspace": false,
+      "is_actual_memory_measurement": false
+    }
+  ],
+  "not_concluded": [
+    "No general impossibility of novel quantization methods.",
+    "No whole-model memory fit or video-quality preservation proof.",
+    "No complete solution of every codec/native boundary."
+  ],
+  "goal_runtime_observed": {
+    "status": "usageLimited",
+    "tokensUsed": 11282355,
+    "timeUsedSeconds": 42312,
+    "source": "get_goal tool in this user turn",
+    "handling": "Finish recording returned authorized reviews only; no new experiment, agent assignment, account/model retry, or automatic continuation."
+  },
+  "main_goal_achieved": false,
+  "next_experiment_authorized": false
+}

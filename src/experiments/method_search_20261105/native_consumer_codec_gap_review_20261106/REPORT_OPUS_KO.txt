@@ -1,0 +1,66 @@
+저비트 저장 코덱 ↔ native INT8/FP8 attention 경계 — 독립 source 검토 (실제 Opus1, root msg_c795b2341ed2)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음(역사적 terminal_handle_stale).
+실제 수신·시작 2026-11-05T22:54:46Z, 원 마감 23:12:28Z. root 새 결론·REPORT_CODEX·READ_CODE_INDEX_CODEX는 열지 않았다. helper 0(부모 직접).
+읽은 것(이 폴더에 root가 취득해 둔 1차 자료를 로컬에서 텍스트 추출로 읽음, 새 network 0):
+ - HyperQuant arXiv 2606.23406v1 HTML(865,046B, ACQUIRED_SOURCES sha f748ef71…): 목차, §5.2 KV pre-RoPE hook 문단, §4.8 Cast 본문, §6.5 LTX-2 video DiT 앞부분, §6.6 앞부분, §8 Limitations.
+ - CommVQ arXiv 2506.18879v1 HTML(344,658B, sha c495ef4b…): 초록, RoPE-commutative codebook 문단, 효율 문단.
+ - 논문 2편, 코드 파일 0개(commvq_*.py·octave_* 미열람), 본문 바이트 1,209,704B(로컬 파일 크기; 추출 텍스트 일부만 실제 검토). 이전 대화의 SageAttention 저수준 entry 판독(commit d1a57a5)과
+   kv_reuse_stage1 기록을 재사용. KVQuant 등 다른 문헌은 기억에 의한 언급이며 미확인.
+실행 0(GPU/모델/tensor/설치/컴파일 0). 아래 바이트 산술은 순수 정적 계산.
+
+판정: 후보 없음.
+근거
+ 1) 경계의 실체(관측·source): QVG는 저비트 PRQ를 pre-RoPE로 저장, Sage native QK는 post-RoPE INT8+블록 scale, V는 FP16/FP8을 요구(이전 판독). 따라서 매 읽기 decode→BF16→RoPE→INT8 양자화가 필요.
+ 2) 가장 강한 단순 기준선: 쓰기 시점에 한 번 post-RoPE INT8 K/FP8 V로 변환해 준비 캐시로 보관(prepared caching). root 관측상 Sage1 준비 KV 합성 부품이 호출당 준비보다 약 6–19% 빠름(4형상·1회).
+    우리 adapter는 절대 RoPE 위치를 쓰므로(이전 stage1 검토) post-RoPE 저장 후 위치가 바뀌지 않는다 — pre-RoPE 저장이 꼭 필요한 조건(상대 위치 재색인)이 현재 경로에 없다.
+ 3) 가까운 선행: HyperQuant는 KV를 pre-RoPE에서 양자화(RoPE가 위치별 직교회전이라 L2 정규화와 교환 → pre/post 통계 동등이라고 서술)하고, 복원값을 MMA 경계에서 int8/fp8로 cast(§4.8).
+    단 스스로 "H100에서 메모리 이득이지 속도 이득 아님, 가변길이 decode가 지연을 더함, Rice 스트림은 MMA mainloop에 직접 못 들어감"을 한계로 적고 fused decode+MMA는 미래 과제(§8).
+    video DiT(LTX-2) 실험은 가중치 양자화이며 KV가 아니다. CommVQ는 RoPE-commutative codebook으로 decode를 attention에 통합(LLM, Triton, 메모리 절감).
+    → "저비트 pre-RoPE 저장과 native post-RoPE 정수 MMA의 불일치"와 "decode를 attention에 붙이기"는 이미 다뤄진 문제다. 우리 설정 차이(청크 video, 대량 query)만으로 신규성 없음.
+ 4) 실용 요구: 정적 바이트 산술(12 head×128, 30층, 1560토큰/프레임; 준비 캐시 INT8 K + FP8 V = 2B/원소, 메타 제외):
+    창 21프레임 3.02GB, 63프레임 9.06GB, 126프레임 18.11GB (BF16 6.04/18.11/36.23GB, INT2 코드만 0.75/2.26/4.53GB).
+    현재 창(21)에서는 준비 캐시가 24GB 4090에 충분히 들어간다 — 메모리 병목은 관측되지 않았다(stage1 allocated peak 약 10.5GiB, root 기록).
+    126프레임 full horizon에서만 준비 캐시가 빠듯해지는데, 긴 창의 실용 요구 자체가 검증되지 않았다(이전 long-context 판정). 따라서 남는 공백은 미검증 요구에 조건부다.
+ 5) 동일 저장 바이트 통제: 준비 캐시는 코드·scale 외에 상주 native 버퍼(INT8 K, FP8 V, 패딩 64 정렬, 블록 scale)가 추가된다. QVG INT2 저장과 같은 바이트로 비교하면 준비 캐시가 불리하지만,
+    그 비교가 의미 있는 것은 메모리 상한이 실제로 걸릴 때뿐이다. 바이트 통제를 맞추려 작은 cap을 인위로 설정하지 않는다.
+실패 조건(남지 않음을 확인하려면): 실제 배포 메모리 상한이 준비 캐시를 막는 horizon이 요구로 정해진 경우에만 "저비트 저장에서 native INT8 입력으로의 직접 변환"이 의미 있다.
+가장 싼 미래 판별(권한 아님): 정적 산술 그대로 — root가 목표 horizon·메모리 상한을 정하면, 준비 캐시+모델+활성 예산이 그 상한을 넘는지 계산. 넘지 않으면 공백 없음으로 종료.
+ 넘을 때에만 HyperQuant/CommVQ식 기존 방법 대비 비교를 검토한다.
+미확인: HyperQuant §5.2·§6.6 전체 수치, CommVQ 커널 코드, KVQuant 등 pre-RoPE 근거 원문, Sage head_dim·치환 상세, 준비 캐시의 실제 메타·패딩 바이트.
+실제 끝: 2026-11-05T22:56:09Z
+
+==================== 원마감내 한정 통제 정정 후속 ====================
+(위 본문은 초기 반환 SHA ef0f9d2e…의 바이트 그대로이며 수정하지 않았다. 이 절만 덧붙인다.)
+후속 실제 시작 2026-11-05T22:58:29Z, 원 마감 23:12:28Z. helper 0. root REPORT_CODEX·READ_CODE_INDEX·새 결론 미열람.
+이번에 추가로 읽은 code: commvq_triton_kernels.py(이 폴더의 root 취득 공개 raw, 9,524B) — calculate_QC_T 커널, gatherC1C2…apply_rope 커널, attn_weights_mul_value 커널·래퍼 부분.
+누적 계수: primary 2/5, code 1/8, 본문 바이트 1,219,228B(로컬 파일 크기 합; 실제 검토는 일부). 새 network 0, 실행 0, 순수 정적 산술만.
+
+1) V 정밀도 분리. 관측(root): Sage1 준비 캐시 6–19% 부품 이득은 FP16 V 경로였고 FP8 V 경로는 측정되지 않았다. 본문 근거 2)에서 이 관측을 INT8 K+FP8 V 표와 묶은 것은
+   범위를 넘었다 — FP8 V 준비 캐시의 속도·품질은 미측정이다.
+   payload 정적 산술(같은 형상: 12 head×128, 30층, 1560토큰/프레임; 원소당 바이트, 코드북·scale·패딩·추가 상주 버퍼 제외):
+     창(프레임)   K INT8   V FP8   V FP16   INT8K+FP8V   INT8K+FP16V(관측된 경로)
+       21         1.51GB   1.51    3.02     3.02         4.53
+       63         4.53     4.53    9.06     9.06         13.59
+       126        9.06     9.06    18.11    18.11        27.17
+   K per-warp scale(FP32, 64토큰 블록·head)는 21/63/126에서 약 0.74/2.21/4.42MB로 작다. V 채널 scale은 무시 가능. 64 정렬 패딩은 청크 경계마다 수십 토큰.
+   제외 항목: QVG 코드북·group scale(크기 미확인), 준비 버퍼와 원 codec의 동시 상주, 모델·활성·workspace. 본문의 "INT2 코드만"은 코드 바이트만이며 전체 native payload와 같은 바이트 비교가 아니다.
+2) 메모리 fit 범위 축소: 본문 4)의 "현재 창(21)에서는 4090에 충분히 들어간다"는 payload가 24GB보다 작다는 정적 사실까지만 맞다. stage1 peak 10.5GiB는 다른 config(QVG INT2·FA2)의 기록이라
+   준비 캐시 config의 모델+활성+workspace+원 codec 동시 상주 전체 fit을 증명하지 않는다 → "같은 config 전체 메모리 미측정, 조건부"로 정정. 후보 없음의 근거는 "실측된 배포 병목이 입증되지 않음"으로
+   한정하며 메모리에 문제가 없다는 증명으로 확대하지 않는다. FP16 V 경로는 126프레임에서 payload만으로 27.17GB라 4090을 넘는다(정적 사실).
+3) 동일 바이트 통제 표현 정정: 본문 5)의 "같은 바이트 비교는 메모리 상한이 걸릴 때만 의미"를 철회한다. 상한 유무와 무관하게, 정밀도(INT2 코드 vs INT8/FP8/FP16)와 상주 바이트가 달라진 것을
+   방법 이득으로 오해하지 않으려면 동일 저장 바이트 비교 또는 바이트를 명시한 비용점 비교가 필요하다. 추가 바이트를 허용하는 준비 캐시는 "더 많은 바이트를 쓰는 별도 비용점 기준선"으로 표시한다.
+   이를 위해 인위적인 작은 cap을 새로 만들지는 않는다.
+4) 선행 범위 정정:
+   - HyperQuant(본문에서 실제 본 부분): 원문은 "RoPE는 위치별 직교 회전이라 ℓ2 정규화와 교환되므로 pre/post-RoPE 양자화가 통계적으로 동등"이라고 주장한다. 이는 "양자화·역양자화가
+     RoPE와 교환된다"는 명제와 다르다. 원문은 후자를 주장하지 않는다. MMA 경계 int8/fp8 cast(§4.8)와 "H100에서 속도 이득 없음, fused decode+MMA는 미래 과제"(§8)도 본문에서 확인한 범위다.
+   - CommVQ 공개 kernel(직접 읽음): calculate_QC_T는 query와 codebook 중심의 곱을 먼저 계산하고(query_states.squeeze(2) — query 길이 1, 즉 단일 토큰 decode 형태),
+     key 코드로 그 결과를 gather한 뒤 query 쪽 sin/cos로 RoPE를 2차원 쌍에 적용해 점수를 만든다(BF16 누적). value는 1비트 코드 비트를 풀어 attention weight와 tl.dot(BF16→FP16 누적)하며
+     래퍼가 "Currently only 1-bit quantization is supported to use Triton kernels"를 assert한다. INT8/FP8 native MMA·FlashAttention/Sage 소비자는 쓰지 않는다.
+     → 본문 3)의 "이미 다뤄진 문제다"는 좁힌다: CommVQ는 단일 query decode에서 RoPE-commutative codebook 점수화를 자체 Triton BF16 경로로 다룬다. 청크 단위 대량 query(4680)와
+       INT8/FP8 native MMA 소비자 사이의 경계는 이 공개 kernel의 범위 밖이다(공개 코드 기준; 논문의 다른 경로는 미확인).
+   - 우리 pre-RoPE 저장·adapter 절대 RoPE 주소 계약은 이전 검토의 재사용이며 이번에 직접 source로 재확인하지 않았다.
+5) 판정 유지 여부: 후보 없음 유지. 이유는 (a) 실측된 배포 메모리·지연 병목이 없고, (b) 바이트를 명시한 단순 기준선(준비 캐시, 별도 비용점)이 있으며, (c) 청크 대량 query × native MMA 경계가
+   공개 CommVQ kernel 범위 밖이라는 사실만으로 유용성이 입증되지 않기 때문이다. 다만 "문제를 이미 해결"이라는 단정은 철회하고, "단일 query decode에 대해서는 다뤄졌고 청크 대량 query·native MMA
+   조합은 공개 코드 범위 밖이나 요구가 미검증"으로 좁힌다. 가장 싼 미래 판별(정적 예산 계산)은 FP8 V/FP16 V를 분리해 같은 config 전체 메모리 실측 근거와 함께 적용한다.
+미확인: QVG 코드북·scale 바이트, 준비 캐시 config의 실제 peak, FP8 V 경로 속도·품질, CommVQ 논문 본문의 prefill 경로, HyperQuant §5.2·§6.6 전체.
+후속 실제 끝: 2026-11-05T22:59:20Z
