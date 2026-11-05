@@ -20,6 +20,18 @@ def tensor_bytes(x):
     return x.numel() * x.element_size()
 
 
+def _compensated_add(total, residual, term):
+    """Elementwise Neumaier sum; callers keep native terms until the end.
+
+    This improves signed floating-point accumulation, not feature accuracy or
+    exact real arithmetic. Products/exponentials are still rounded in FP64.
+    """
+    updated = total + term
+    residual = residual + torch.where(
+        total.abs() >= term.abs(), (total-updated)+term, (term-updated)+total)
+    return updated, residual
+
+
 class PreparationError(ValueError):
     def __init__(self, reason, diagnostics):
         super().__init__(reason)
@@ -198,15 +210,31 @@ class PairedResponse:
         m = torch.stack([t.amax(-1) for t in terms]).amax(0).clamp_min(0)
         base_scale = (-m).exp()
         d['base_exp_underflow'] = int((base_scale == 0).sum())
-        den = base_scale.clone()
-        num = base_output.double() * base_scale[:, :, None]
+        # Signed corrections can dwarf the native term and then cancel. Never
+        # seed a naive running sum with the native value. Compensate across both
+        # features and chunks (a chunk-local bmm can already lose small terms).
+        den_sum = torch.zeros_like(base_scale)
+        den_residual = torch.zeros_like(base_scale)
+        num_sum = torch.zeros_like(base_output, dtype=torch.float64)
+        num_residual = torch.zeros_like(num_sum)
         for s, t, active in zip(states, terms, masks):
             d['potential_unscaled_exp_overflow'] += int(((t > LOG_MAX64) & active).sum())
             shifted = t-m[:, :, None]
             coeff = shifted.exp()
             d['coefficient_exp_underflow'] += int(((coeff == 0) & torch.isfinite(shifted) & active).sum())
-            den = den + (coeff * s.dz.double()[:, None, :]).sum(-1)
-            num = num + torch.bmm(coeff, s.dn.double())
+            dz, dn = s.dz.double(), s.dn.double()
+            for feature in range(self.rank):
+                weight = coeff[:, :, feature]
+                den_sum, den_residual = _compensated_add(
+                    den_sum, den_residual, weight * dz[:, None, feature])
+                num_sum, num_residual = _compensated_add(
+                    num_sum, num_residual,
+                    weight[:, :, None] * dn[:, None, feature, :])
+        den_sum, den_residual = _compensated_add(den_sum, den_residual, base_scale)
+        num_sum, num_residual = _compensated_add(
+            num_sum, num_residual, base_output.double() * base_scale[:, :, None])
+        den = den_sum + den_residual
+        num = num_sum + num_residual
         positive = den > 0
         log_ratio = torch.where(positive, m + den.clamp_min(torch.finfo(torch.float64).tiny).log(), torch.full_like(den, float('-inf')))
         # Use actual subnormal log rather than clamping positive subnormal den.

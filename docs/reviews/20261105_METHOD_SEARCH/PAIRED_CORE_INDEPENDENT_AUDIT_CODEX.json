@@ -1,0 +1,54 @@
+{
+  "scope": "read-only source/hash audit and rerun of existing synthetic selftest, plus separately saved counterexample; no real capture/GPU/model",
+  "review_time_utc": 1793880458.4017432,
+  "files": [
+    {
+      "name": "core.py",
+      "sha256": "2665be65cb67680a8e526ed75077541ea8436f21c2b6c7dae3c4585aeb86cf2e",
+      "matches_manifest": true
+    },
+    {
+      "name": "selftest.py",
+      "sha256": "e385982bbd3ada4010b921a1afd66a9cc134c7915ad69b11df15c915818b1b17",
+      "matches_manifest": true
+    },
+    {
+      "name": "SELFTEST_V1.json",
+      "sha256": "72015556ca5546b6e8d404f8497009b0e0201ec392ec6368f6a2f8a4f54c7016",
+      "matches_manifest": true
+    },
+    {
+      "name": "SELFTEST_V2.json",
+      "sha256": "6acb37b592d896317efc732633cf05242a0ec92dd2af991087221e614674894a",
+      "matches_manifest": true
+    },
+    {
+      "name": "SELFTEST_V3.json",
+      "sha256": "5362cde4db7bff4729b05fd6c019f6412970593a6d57f1725975d921ea152991",
+      "matches_manifest": true
+    },
+    {
+      "name": "PREPARATION_KO.txt",
+      "sha256": "2f730c722050b34aa8d0c4a8b18ed5dc1160656936db52af8229fb8662552397",
+      "matches_manifest": true
+    },
+    {
+      "name": "commit003dd4a/core.py",
+      "sha256": "2665be65cb67680a8e526ed75077541ea8436f21c2b6c7dae3c4585aeb86cf2e",
+      "matches_working_file": true
+    },
+    {
+      "name": "commit003dd4a/selftest.py",
+      "sha256": "e385982bbd3ada4010b921a1afd66a9cc134c7915ad69b11df15c915818b1b17",
+      "matches_working_file": true
+    }
+  ],
+  "original_selftests_passed": 35,
+  "original_selftests_scope": "synthetic algebra and numerical guard tests only; no real-effect evidence",
+  "original_max_direct_error": 2.1503705760483882e-10,
+  "protected_files_unchanged": true,
+  "synthetic_cuda_initialized": false,
+  "counterexample_file": "PAIRED_CORE_INDEPENDENT_PROBE_CODEX.json",
+  "counterexample_sha256": "5157a61b3967b6aeb834a554fa7d08a96cba0d0a26f1d6966339b7a885b22285",
+  "verdict": "blocking_reader_signed_cancellation_counterexample_despite_original35_passing"
+}

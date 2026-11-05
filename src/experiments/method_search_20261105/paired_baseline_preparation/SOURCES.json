@@ -1,0 +1,36 @@
+{
+  "read_utc": 1793880173.669047,
+  "primary_sources": [
+    {
+      "name": "QuantWM v3",
+      "url": "https://arxiv.org/html/2609.26425v3",
+      "directly_read": [
+        "section 4.2 equations 13-17",
+        "section 5.1 Implementation",
+        "appendix D.1 Packed storage/Fused reconstruction"
+      ],
+      "supported_definition": "U is BF16 and C is INT8 (§5.1). D.1 specifies an FP16 scale for each coefficient row, discarding non-improving rows, and smaller dense/sparse layout including index storage.",
+      "not_specified_in_read_text": [
+        "INT8 symmetric range and rounding details",
+        "minimum scale handling",
+        "sparse index width",
+        "exact row-filter approximation and comparison arithmetic",
+        "projection before or after BF16 basis conversion"
+      ]
+    },
+    {
+      "name": "QKSA v1",
+      "url": "https://arxiv.org/html/2605.26266v1",
+      "directly_read": [
+        "Appendix C implementation note",
+        "Appendix D pseudocode",
+        "Appendix E equations 22-23",
+        "Appendix F equations 24-25"
+      ],
+      "supported_definition": "Use rotated query and actual code-step scale; subtract sum(q_rot^2 * Delta^2)/(24*d) on cached scores only. Native implementation uses FlexAttention score_mod; this CPU preparation materializes the bias."
+    }
+  ],
+  "official_code_reproduction": false,
+  "claim": "public-definition CPU adaptations; source parameter omissions are explicit implementation choices",
+  "source_search_scope": "Only the two requested primary papers and the two supplied local decision/budget files; no broad literature search or code-repository reproduction."
+}

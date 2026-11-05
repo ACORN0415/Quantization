@@ -1,0 +1,208 @@
+{
+  "source_sha256": "2665be65cb67680a8e526ed75077541ea8436f21c2b6c7dae3c4585aeb86cf2e",
+  "source_unchanged": true,
+  "synthetic_only": true,
+  "real_capture_reads": 0,
+  "GPU_calls": 0,
+  "cuda_initialized": false,
+  "model_loads": 0,
+  "time_utc": 1793880359.253823,
+  "cases": [
+    {
+      "case": "real_gaussian_float64",
+      "source_state_generated_by_summarize": true,
+      "gaussian_seed": 17,
+      "heads": 1,
+      "dim": 128,
+      "rank": 1,
+      "offset": [
+        [
+          50.82717312198034
+        ]
+      ],
+      "dz1": [
+        [
+          0.0
+        ]
+      ],
+      "dn1": [
+        [
+          [
+            0.39346933364868164
+          ]
+        ]
+      ],
+      "dn2": [
+        [
+          [
+            -0.39346933364868164
+          ]
+        ]
+      ],
+      "stored_corrections_exactly_cancel": true,
+      "base_output": [
+        [
+          [
+            1.0
+          ]
+        ]
+      ],
+      "output": [
+        [
+          [
+            0.0
+          ]
+        ]
+      ],
+      "expected_from_saved_states": [
+        [
+          [
+            1.0
+          ]
+        ]
+      ],
+      "absolute_error": 1.0,
+      "fallback": [
+        [
+          false
+        ]
+      ],
+      "log_denominator_ratio": [
+        [
+          0.0
+        ]
+      ],
+      "diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 0,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 0,
+        "exact_zero_bypass": false
+      },
+      "preparation_diagnostics": [
+        {
+          "feature_nonfinite": 0,
+          "feature_exp_underflow": 0,
+          "naive_exp_subtraction_collision": 0,
+          "nonzero_log_difference_lost": 0,
+          "state_cast_underflow": 0,
+          "state_nonfinite": 0,
+          "tensor_payload_bytes": 16
+        },
+        {
+          "feature_nonfinite": 0,
+          "feature_exp_underflow": 0,
+          "naive_exp_subtraction_collision": 0,
+          "nonzero_log_difference_lost": 0,
+          "state_cast_underflow": 0,
+          "state_nonfinite": 0,
+          "tensor_payload_bytes": 16
+        }
+      ]
+    },
+    {
+      "case": "real_gaussian_bfloat16",
+      "source_state_generated_by_summarize": true,
+      "gaussian_seed": 17,
+      "heads": 1,
+      "dim": 128,
+      "rank": 1,
+      "offset": [
+        [
+          50.82701496673689
+        ]
+      ],
+      "dz1": [
+        [
+          0.0
+        ]
+      ],
+      "dn1": [
+        [
+          [
+            0.39348626136779785
+          ]
+        ]
+      ],
+      "dn2": [
+        [
+          [
+            -0.39348626136779785
+          ]
+        ]
+      ],
+      "stored_corrections_exactly_cancel": true,
+      "base_output": [
+        [
+          [
+            1.0
+          ]
+        ]
+      ],
+      "output": [
+        [
+          [
+            0.0
+          ]
+        ]
+      ],
+      "expected_from_saved_states": [
+        [
+          [
+            1.0
+          ]
+        ]
+      ],
+      "absolute_error": 1.0,
+      "fallback": [
+        [
+          false
+        ]
+      ],
+      "log_denominator_ratio": [
+        [
+          0.0
+        ]
+      ],
+      "diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 0,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 0,
+        "exact_zero_bypass": false
+      },
+      "preparation_diagnostics": [
+        {
+          "feature_nonfinite": 0,
+          "feature_exp_underflow": 0,
+          "naive_exp_subtraction_collision": 0,
+          "nonzero_log_difference_lost": 0,
+          "state_cast_underflow": 0,
+          "state_nonfinite": 0,
+          "tensor_payload_bytes": 16
+        },
+        {
+          "feature_nonfinite": 0,
+          "feature_exp_underflow": 0,
+          "naive_exp_subtraction_collision": 0,
+          "nonzero_log_difference_lost": 0,
+          "state_cast_underflow": 0,
+          "state_nonfinite": 0,
+          "tensor_payload_bytes": 16
+        }
+      ]
+    }
+  ]
+}

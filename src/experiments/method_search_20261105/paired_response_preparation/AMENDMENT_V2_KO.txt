@@ -1,0 +1,20 @@
+Paired reader 수치 수정 V2 — 2026-11-05, root
+상태: 기존 합성 준비의 오류 수정. 실제 입력 효과 검사/실험 기준 변경 아님. 실제 Opus 검토 미완료.
+
+수정 근거
+Codex 독립 검토가 원본 core 2665be65...의 유효한 합성 반례를 발견했다. 실제 Gaussian(seed17,H1,D128,R1)과 summarize로 두 청크의 Dz=0, DN=정확히 반대 부호, offset=동일인 상태를 만든다. Q=0, 두 청크 V=[1,0]·[-1,0], 현재 V=5인 실제 다섯 토큰 attention에서 native 출력은1, logZ=log5다. 두 보정이 상쇄되므로 결과도1이어야 하지만 이전 read는0을 반환하고 fallback=False였다. 비유한 값이나 underflow가 아니라, native numerator를 큰 양·음 보정 사이에 섞어 잃어버리는 합산 오류였다.
+독립 반례·원문 실행 코드·native 일치 확인은 docs/reviews/20261105_METHOD_SEARCH/PAIRED_CORE_INDEPENDENT_* 및 PAIRED_CORE_NATIVE_CONSISTENCY_CODEX.json에 보존했다. 이전 소스는 git003dd4a에 있고, PREPARATION_MANIFEST.json과 SELFTEST_V1/V2/V3는 당시 기록으로 그대로 둔다. 이전 root 검토가 이 오류를 발견하지 못했다는 점도 유지한다.
+
+변경
+signed 보정의 분자와 분모를 별도로0에서 시작하고 feature 및 청크 전체를 Neumaier 보상합산한다. 청크별 bmm 안에서 먼저 작은 항을 잃는 경우를 피하려고 feature 축도 순차 보상합산한다. 마지막에 native numerator와 denominator를 보상합산으로 결합한다. feature map/저장 dtype/offset/요약식/분모 문턱/실패기준은 바꾸지 않았다. 새 helper와 read 합산 경로만 바꿨다.
+이 수정은 정확한 실수 연산 또는 모든 수치 위험 제거의 증명이 아니다. exp·곱셈·FP32 상태 저장에는 반올림이 있고, 기존 underflow와 fallback 계약은 남는다. FP64 tensor loop와 누적 보상 작업공간도 추가돼 CPU/GPU 실행 비용을 새로 측정해야 한다. 이 버전을 효율적인 GPU 구현이라고 부르지 않는다.
+
+확인 결과
+SELFTEST_V4: 기존35개 재실행 통과, 독립 직접 feature-kernel 대비 최대 절대 차이2.150370576e-10.
+CANCELLATION_REGRESSION_V1: 새33개 통과. Gaussian rank1/rank32와 FP64/BF16 입력의 실제 native QK/softmax/logZ를 계산한 상쇄, 한 청크 feature 내부와 세 청크 사이의 큰 양·음 항 및 작은 잔여, 여섯 입력 순서 각각의 분자/분모를 math.fsum 참조와 비교했다. 실제 Gaussian 반례는 fallback 없이 원래 출력을 정확히 유지했다. 수작업 상태 사례는 합산 분리 검사이며 모델에서의 발생빈도 증거가 아니다.
+두 검사는 CPU4, GPU/실제 캡처/모델 실행0이다. 합성 함수 계산 시간은 각각 약0.01675초·0.02186초이며 실제 크기에서의 시간이나 반복 성능 측정으로 쓰지 않는다.
+
+수정 후 소스
+core.py c66e2e3e429652ad60da35c94d56e0a2baab46134252cbfd7005c8152f10eb82
+cancellation_regression.py 8d028876e94a30b7480c28465d1b0a70f2f4bd56ce014a5d73babd37981b599d
+수정 부분의 독립 Codex 재검토는 별도 PAIRED_CORE_AMENDMENT_REVIEW_CODEX_KO.txt를 따른다. 이 파일 작성 시 진행 중이며 실제 Opus 검토는 아직 시작하지 않았다. 효과 실험으로 진행한 것은 아니다.

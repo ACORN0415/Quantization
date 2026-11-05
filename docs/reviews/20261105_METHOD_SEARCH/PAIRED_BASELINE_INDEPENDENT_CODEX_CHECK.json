@@ -1,0 +1,54 @@
+{
+  "status": "independent_small_synthetic_review_complete",
+  "real_capture_reads": 0,
+  "GPU_calls": 0,
+  "cuda_initialized": false,
+  "actual_Opus_review": false,
+  "source_hashes": {
+    "MANAGER_STATUS.json": "0fb002e8a5566104bc86a077555ca2c640131763519539d4ccd674aa96d3f413",
+    "core.py": "d45fab4430d19dba9bb8b68de4f86b90481406b586bfc4cd096556e1c17d3fef",
+    "PREPARATION_KO.txt": "e45ee5d150047138a8fff8b8a4fae1f8f1e26e3877af476387ba513ef4d1733f",
+    "SOURCES.json": "8c356dc2a13f42141d5399b20a4488b0421abb34def7e9ab09a1dbf1d7df8a2e",
+    "SELFTEST_V2.json": "70cfb4130af0779475aaab9791a3808674e3f253597de373336f83c5892e59e1",
+    "FINAL_READY.json": "2f4d1d7e181354b9f2f6996ff62c7bb99e614088e539828c58888a3150075c3e",
+    "selftest.py": "0e1bcb1ab9a1b872fb9bc624801b26e6361c861013ecb02dcc21035fcdb13db7",
+    "SELFTEST.json": "209c57f9094c054a95de7b3ec7c97c237b95655d3f826fa3c7cf43e206a17b66"
+  },
+  "checks": {
+    "BF16_row_screening_rounding_tie": {
+      "continuous_error_before": 6.103515625e-05,
+      "continuous_error_after": 2.7853275241795927e-12,
+      "active_rows": 0,
+      "BF16_unchanged": true
+    },
+    "QKSA_nonsymmetric_rotation": {
+      "bias": 0.032552083333333336,
+      "independent": 0.032552083333333336
+    },
+    "mask_after_bias": {
+      "matches": true,
+      "current_bytes_unchanged": true
+    },
+    "fixed_invariant_revalidation_calls": {
+      "eigvalsh": 2,
+      "bmm": 2
+    },
+    "grad_enabled_retention": {
+      "basis_requires_grad": true,
+      "basis_grad_fn": "CloneBackward0",
+      "stored_scales_requires_grad": true,
+      "stored_scale_grad_fn": "IndexPutBackward0",
+      "key_requires_grad": true
+    },
+    "budget_arithmetic": {
+      "cap": 1806336,
+      "FULL_U": 786432,
+      "rank1_six_packets_and_basis": 1014120,
+      "FULL_plus_rank1_packet_basis": 1800552,
+      "raw_moment_FP64_per_layer": 1572864,
+      "FULL_plus_rank1_plus_resident_raw_moment": 3373416
+    },
+    "protected_files_unchanged": true
+  },
+  "warning": "grad-enabled retention is an observed interface limitation; its test intentionally enables autograd. No real-data effect test."
+}

@@ -1,0 +1,229 @@
+"""Synthetic-only correctness tests. No imports from other experiment folders."""
+import os
+os.environ['CUDA_VISIBLE_DEVICES'] = ''
+os.environ['OMP_NUM_THREADS'] = '4'
+os.environ['MKL_NUM_THREADS'] = '4'
+import argparse
+import hashlib
+import json
+import math
+from pathlib import Path
+import struct
+import time
+import torch
+import core as c
+
+torch.set_num_threads(4)
+torch.set_grad_enabled(False)
+
+
+def main(output):
+    started = time.monotonic(); tests = []
+    def test(name, ok):
+        if not bool(ok):
+            raise AssertionError(name)
+        tests.append(name)
+    def rejects(name, fn):
+        try:
+            fn()
+        except ValueError:
+            tests.append(name)
+        else:
+            raise AssertionError(name+' did not reject')
+    gen = torch.Generator().manual_seed(20261105)
+    test('no_CUDA_initialization_before', not torch.cuda.is_initialized())
+
+    # Independently form rowwise quantization values, including different row scales.
+    coeff = torch.tensor([[1., -10., 3.], [100., -1., 0.]], dtype=torch.float64)
+    codes, scales, qi = c.quantize_rows(coeff)
+    expected_scale = torch.tensor([[10/127], [100/127]], dtype=torch.float16)
+    expected_code = torch.tensor([[round(float(x)/float(expected_scale[i, 0])) for x in row] for i,row in enumerate(coeff)], dtype=torch.int8)
+    test('scale_axis_is_row', torch.equal(scales, expected_scale) and scales.shape == (2,1))
+    test('codes_independent_scalar_RTN', torch.equal(codes, expected_code))
+    z, zs, zi = c.quantize_rows(torch.zeros(3,4))
+    test('zero_coefficients_safe_scale', torch.equal(z, torch.zeros_like(z)) and bool((zs>0).all()) and zi['clipped_coefficients']==0)
+    tiny, tiny_s, tiny_i = c.quantize_rows(torch.full((2,3), 1e-40, dtype=torch.float64))
+    test('tiny_coefficients_safe_scale', not bool(tiny.any()) and torch.equal(tiny_s, torch.full_like(tiny_s, 2**-24)))
+    clip, clip_s, clip_i = c.quantize_rows(torch.tensor([[127*c.MIN_FP16*1.49, -127*c.MIN_FP16*1.49]], dtype=torch.float64))
+    test('subnormal_scale_rounding_clipping_explicit', clip.tolist()==[[127,-127]] and clip_i['clipped_coefficients']==2 and float(clip_s[0,0])==c.MIN_FP16)
+    for bad in (float('nan'),float('inf'),-float('inf')):
+        rejects('nonfinite_coefficient_'+str(bad),lambda bad=bad:c.quantize_rows(torch.tensor([[bad]])))
+    rejects('unrepresentable_coefficient_scale',lambda:c.quantize_rows(torch.tensor([[1e20]])))
+
+    # Exact independent byte length / sparse-index width and actual binary roundtrip.
+    layouts=[]
+    for n,rank,active_ids,expected_layout in [(8,3,list(range(8)),'dense'),(8,3,[2],'sparse'),(8,3,[],'sparse'),(3,2,[0,2],'dense'),(65536,1,[65535],'sparse'),(65537,1,[65535,65536],'sparse')]:
+        codes=torch.arange(n*rank,dtype=torch.int64).remainder(127).to(torch.int8).reshape(n,rank)
+        scales=torch.full((n,1),.125,dtype=torch.float16);mask=torch.zeros(n,dtype=torch.bool);mask[active_ids]=True
+        p,info=c.packet_from_rows(codes,scales,mask,n,1,rank)
+        width=2 if n<=65536 else 4
+        want=min(c.HEADER.size+n*(rank+2),c.HEADER.size+len(active_ids)*(rank+2+width))
+        test(f'layout_{n}_{rank}_{len(active_ids)}',p.metadata()['layout']==expected_layout and p.nbytes()==want and len(p.to_bytes())==want)
+        p2=c.PsacPacket.from_bytes(p.to_bytes())
+        test(f'packet_roundtrip_{n}_{rank}_{len(active_ids)}',p2.to_bytes()==p.to_bytes())
+        dense=torch.zeros(n,rank);dense[mask]=codes[mask].float()*scales[mask].float()
+        test(f'coefficient_restore_{n}_{rank}_{len(active_ids)}',torch.equal(c.psac_coefficients(p2)[:,0],dense))
+        if expected_layout=='sparse':
+            test(f'index_width_{n}_{rank}_{len(active_ids)}',p2.indices.element_size()==width and p2.indices.to(torch.int64).tolist()==active_ids)
+        layouts.append({'rows':n,'rank':rank,'active_rows':len(active_ids),'chosen_layout':expected_layout,'bytes':want,'sparse_index_bytes':width})
+    test('index_width_boundaries_without_large_allocations', [c.index_width(n) for n in (1,65536,65537,2**32,2**32+1)]==[2,2,4,4,8])
+    rejects('truncated_packet',lambda:c.PsacPacket.from_bytes(p.to_bytes()[:-1]))
+    rejects('extra_packet_byte',lambda:c.PsacPacket.from_bytes(p.to_bytes()+b'0'))
+    damaged=bytearray(p.to_bytes());damaged[0]=0
+    rejects('invalid_magic',lambda:c.PsacPacket.from_bytes(bytes(damaged)))
+    bad=c.PsacPacket.from_bytes(p.to_bytes());bad.scales[0]=0
+    rejects('zero_stored_row_scale',bad.validate)
+    for value in (float('nan'),float('inf'),-1.):
+        bad=c.PsacPacket.from_bytes(p.to_bytes());bad.scales[0]=value
+        rejects('invalid_stored_row_scale_'+str(value),bad.validate)
+    bad=c.PsacPacket.from_bytes(p.to_bytes());bad.indices[1]=bad.indices[0]
+    rejects('duplicate_sparse_indices',bad.validate)
+
+    # PSAC formula independent projection, explicit full query-weighted row decisions.
+    n,h,d,rank=9,2,8,3
+    q=torch.randn(13,h,d,generator=gen,dtype=torch.float64)
+    moment=torch.einsum('qhd,qhe->hde',q,q)/len(q)
+    basis=torch.stack([torch.linalg.eigh(m)[1][:,-rank:] for m in moment])
+    u=c.prepare_basis(basis)
+    key=torch.randn(n,h,d,generator=gen).bfloat16()
+    khat=(key.float()+.1*torch.randn(n,h,d,generator=gen)).bfloat16()
+    original=[c.as_bytes(t) for t in (key,khat,u,moment)]
+    packet,info=c.psac_encode(key,khat,u,moment)
+    restored=c.psac_restore(khat,packet,u)
+    error=key.double()-khat.double()
+    coeff_ref=torch.empty(n,h,rank,dtype=torch.float64)
+    for i in range(n):
+        for j in range(h):
+            for k in range(rank):
+                coeff_ref[i,j,k]=sum(float(error[i,j,l])*float(u[j,l,k]) for l in range(d))
+    qcodes,qscales,_=c.quantize_rows(coeff_ref.reshape(n*h,rank))
+    chat=(qcodes.float()*qscales.float()).reshape(n,h,rank)
+    projection=torch.empty_like(key,dtype=torch.float32)
+    for i in range(n):
+        for j in range(h):
+            for l in range(d):
+                projection[i,j,l]=sum(float(chat[i,j,k])*float(u[j,l,k]) for k in range(rank))
+    raw_candidate=(khat.float()+projection).bfloat16()
+    e0=torch.einsum('qhd,nhd->nhq',q,error).square().mean(-1)
+    e1=torch.einsum('qhd,nhd->nhq',q,key.double()-raw_candidate.double()).square().mean(-1)
+    active=e1<e0
+    expected=torch.where(active[...,None],raw_candidate,khat)
+    test('PSAC_projection_and_full_query_filter_independent',torch.equal(restored,expected))
+    test('PSAC_row_filter_score_identity',math.isclose(float(e0.sum()),info['before_query_error'],rel_tol=1e-12,abs_tol=1e-12) and math.isclose(float(torch.where(active,e1,e0).sum()),info['after_screened_query_error'],rel_tol=1e-12,abs_tol=1e-12))
+    test('PSAC_input_bytes_preserved',original==[c.as_bytes(t) for t in (key,khat,u,moment)])
+    serial=c.PsacPacket.from_bytes(packet.to_bytes())
+    test('PSAC_actual_payload_restore_exact',c.as_bytes(c.psac_restore(khat,serial,u))==c.as_bytes(restored))
+    state_bytes=packet.to_bytes();c.psac_encode(-key,-khat,u,moment)
+    test('PSAC_output_ownership',packet.to_bytes()==state_bytes)
+    test('basis_storage_dtype',u.dtype==torch.bfloat16 and u.numel()*2==h*d*rank*2)
+    no,ni=c.psac_encode(key,key,u,moment)
+    test('noquant_PSAC_identity_and_empty_sparse',no.metadata()['stored_rows']==0 and no.nbytes()==c.HEADER.size and c.as_bytes(c.psac_restore(key,no,u))==c.as_bytes(key))
+    signed=key.clone();signed[0,0,0]=-0.;signed[0,1,0]=0.
+    signed_packet,_=c.psac_encode(signed,signed,u,moment)
+    test('noquant_PSAC_signed_zero_bytes',c.as_bytes(c.psac_restore(signed,signed_packet,u))==c.as_bytes(signed))
+    no,ni=c.psac_encode(key,khat,u,torch.zeros_like(moment))
+    test('zero_query_energy_exact_ties_drop',no.metadata()['stored_rows']==0 and c.as_bytes(c.psac_restore(khat,no,u))==c.as_bytes(khat))
+    # A projection can increase a weighted error when U is not its principal basis.
+    # This fixture exercises reject-vs-keep logic, not an alternative deployed basis.
+    fk=torch.tensor([[[1.,-1.]],[[1.,0.]]]).bfloat16();fb=torch.zeros_like(fk)
+    fu=c.prepare_basis(torch.tensor([[[1.],[0.]]]))
+    fm=torch.tensor([[[1.,1.],[1.,1.]]],dtype=torch.float64)
+    fp,fi=c.psac_encode(fk,fb,fu,fm)
+    test('nonimproving_row_removed_improving_row_kept',fi['active_rows']==1 and torch.equal(c.psac_restore(fb,fp,fu),torch.tensor([[[0.,0.]],[[1.,0.]]]).bfloat16()))
+    rejects('invalid_basis_orthogonality',lambda:c.prepare_basis(torch.ones(1,2,1)))
+    rejects('nonPSD_query_moment',lambda:c.psac_encode(key,khat,u,-torch.eye(d).expand(h,-1,-1)))
+    rejects('wrong_key_dtype',lambda:c.psac_encode(key.float(),khat,u,moment))
+    badkey=key.clone();badkey[0,0,0]=float('nan')
+    rejects('nonfinite_key',lambda:c.psac_encode(badkey,khat,u,moment))
+
+    # QKSA: grouped per-channel scales, independently mapped at frame boundaries.
+    scales=torch.arange(1,2*3*h*d+1,dtype=torch.float32).reshape(2,3,h,d).div(100).half()
+    steps=c.frame_token_steps(scales,frame_tokens=5,group_size=2)
+    expected=torch.stack([scales[f,t//2].float() for f in range(2) for t in range(5)])
+    test('group_scale_axis_frame_padding_removed',torch.equal(steps,expected))
+    test('code_step_is_one_scale',float(steps[0,0,0])==float(scales[0,0,0,0]))
+    rot=torch.stack([torch.linalg.qr(torch.randn(d,d,generator=gen,dtype=torch.float64)).Q for _ in range(h)])
+    query=q[:3]
+    bias=c.qksa_bias(query,steps,rot)
+    reference=torch.empty_like(bias)
+    for head in range(h):
+        for qi in range(len(query)):
+            qr=[sum(float(query[qi,head,j])*float(rot[head,j,k]) for j in range(d)) for k in range(d)]
+            for token in range(len(steps)):
+                reference[head,qi,token]=sum(qr[k]**2*float(steps[token,head,k])**2 for k in range(d))/(24*d)
+    test('QKSA_independent_scalar_rotated_formula',torch.allclose(bias,reference,rtol=1e-13,atol=1e-13))
+    identity=torch.eye(d,dtype=torch.float64).expand(h,-1,-1)
+    unrot=c.qksa_bias(query,steps,identity)
+    direct=torch.einsum('qhd,nhd->hqn',query.square(),steps.double().square())/(24*d)
+    test('QKSA_identity_rotation_formula',torch.equal(unrot,direct))
+    scores=torch.randn(h,3,len(steps)+4,generator=gen,dtype=torch.float64)
+    before=c.as_bytes(scores);out=c.qksa_apply(scores,bias)
+    test('QKSA_past_only_current_bytes_preserved',c.as_bytes(out[...,len(steps):])==c.as_bytes(scores[...,len(steps):]) and torch.equal(out[...,:len(steps)],scores[...,:len(steps)]-bias))
+    test('QKSA_inputs_preserved',before==c.as_bytes(scores))
+    nobias=c.qksa_bias(query,torch.zeros_like(steps),rot)
+    test('QKSA_noquant_identity',not bool(nobias.any()) and c.as_bytes(c.qksa_apply(scores,nobias))==before)
+    test('QKSA_zero_query_identity',not bool(c.qksa_bias(torch.zeros_like(query),steps,rot).any()))
+    test('QKSA_coefficient_one_and_scale_not_twice',torch.allclose(c.qksa_bias(query,steps*2,rot),4*bias,rtol=1e-13,atol=1e-13))
+    for value in (0.,-1.,float('nan'),float('inf')):
+        bad=scales.clone();bad[0,0,0,0]=value
+        rejects('invalid_K_scale_'+str(value),lambda bad=bad:c.frame_token_steps(bad,5,2))
+    rejects('negative_QKSA_step',lambda:c.qksa_bias(query,-steps,rot))
+    rejects('invalid_rotation',lambda:c.qksa_bias(query,steps,torch.zeros_like(rot)))
+    bad=q[:3].clone();bad[0,0,0]=float('inf')
+    rejects('nonfinite_query',lambda:c.qksa_bias(bad,steps,rot))
+    test('no_CUDA_initialization_after',not torch.cuda.is_initialized())
+
+    # Persistent-state construction must detach even when the caller enables grad.
+    # This is an inference contract, not a change to projection/rounding/filtering.
+    def graph_free(tensors):
+        return all(not t.requires_grad and t.grad_fn is None for t in tensors)
+    with torch.enable_grad():
+        basis_grad=basis.detach().clone().requires_grad_()
+        basis_before=c.as_bytes(basis_grad)
+        prepared_grad=c.prepare_basis(basis_grad)
+        test('grad_enabled_prepare_basis_detached',graph_free([prepared_grad]) and torch.equal(prepared_grad,u))
+        test('grad_enabled_basis_input_preserved',c.as_bytes(basis_grad)==basis_before and basis_grad.requires_grad and basis_grad.grad is None)
+        identity_grad=torch.eye(2,dtype=torch.bfloat16)[None].requires_grad_()
+        identity_prepared=c.prepare_basis(identity_grad)
+        test('grad_enabled_BF16_basis_owned_copy',graph_free([identity_prepared]) and identity_prepared.data_ptr()!=identity_grad.data_ptr() and c.as_bytes(identity_prepared)==c.as_bytes(identity_grad))
+
+        kg=key.detach().clone().requires_grad_();khg=khat.detach().clone().requires_grad_()
+        ug=u.detach().clone().requires_grad_();mg=moment.detach().clone().requires_grad_()
+        inputs=(kg,khg,ug,mg);input_bytes=[c.as_bytes(x) for x in inputs]
+        pg,ig=c.psac_encode(kg,khg,ug,mg)
+        test('grad_enabled_encode_persistent_tensors_detached',graph_free([pg.header,pg.codes,pg.scales,pg.indices]))
+        test('grad_enabled_encode_same_packet_and_scores',pg.to_bytes()==packet.to_bytes() and ig==info)
+        test('grad_enabled_encode_inputs_preserved',input_bytes==[c.as_bytes(x) for x in inputs] and all(x.requires_grad and x.grad is None for x in inputs))
+
+        cg=coeff.detach().clone().requires_grad_();cg_before=c.as_bytes(cg)
+        qc,qs,qi_grad=c.quantize_rows(cg)
+        qc_ref,qs_ref,qi_ref=c.quantize_rows(cg.detach())
+        test('grad_enabled_row_quantizer_detached',graph_free([qc,qs]) and c.as_bytes(qc)==c.as_bytes(qc_ref) and c.as_bytes(qs)==c.as_bytes(qs_ref) and qi_grad==qi_ref)
+        test('grad_enabled_row_quantizer_input_preserved',c.as_bytes(cg)==cg_before and cg.requires_grad and cg.grad is None)
+
+        for layout,active_ids in (('dense',list(range(8))),('sparse',[2]),('empty',[])):
+            external_codes=torch.arange(16,dtype=torch.int8).reshape(8,2)
+            external_scales=torch.full((8,1),.125,dtype=torch.float16,requires_grad=True)
+            active=torch.zeros(8,dtype=torch.bool);active[active_ids]=True
+            before_codes=c.as_bytes(external_codes);before_scales=c.as_bytes(external_scales)
+            owned,_=c.packet_from_rows(external_codes,external_scales,active,8,1,2)
+            test('grad_enabled_packet_'+layout+'_detached',graph_free([owned.header,owned.codes,owned.scales,owned.indices]))
+            test('grad_enabled_packet_'+layout+'_inputs_preserved',c.as_bytes(external_codes)==before_codes and c.as_bytes(external_scales)==before_scales and external_scales.requires_grad and external_scales.grad is None)
+            expected_layout='dense' if layout=='dense' else 'sparse'
+            test('grad_enabled_packet_'+layout+'_layout_and_ownership',owned.metadata()['layout']==expected_layout and (owned.scales.numel()==0 or owned.scales.data_ptr()!=external_scales.data_ptr()))
+        test('inference_factories_preserve_caller_grad_mode',torch.is_grad_enabled())
+
+    root=Path(__file__).resolve().parent
+    sha=lambda path:hashlib.sha256(path.read_bytes()).hexdigest()
+    result={'status':'passed','synthetic_only':True,'real_capture_reads':0,'GPU_calls':0,'model_loads':0,
+            'effect_experiments':0,'threads':torch.get_num_threads(),'torch_version':torch.__version__,
+            'elapsed_seconds':time.monotonic()-started,'checks_total':len(tests),'checks':tests,
+            'layouts':layouts,'header_bytes':c.HEADER.size,'source_sha256':sha(root/'core.py'),
+            'selftest_sha256':sha(Path(__file__)),'time_utc':time.time()}
+    with Path(output).open('x') as f:json.dump(result,f,indent=2);f.write('\n')
+    print(json.dumps({k:result[k] for k in ['status','checks_total','elapsed_seconds','source_sha256','selftest_sha256']}))
+
+
+if __name__=='__main__':
+    parser=argparse.ArgumentParser();parser.add_argument('--output',required=True)
+    main(parser.parse_args().output)

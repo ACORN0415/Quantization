@@ -1,0 +1,33 @@
+{
+  "task": "paired_baseline_preparation",
+  "status": "synthetic_preparation_ready_actual_Opus_review_pending",
+  "updated_utc": 1793880173.6692955,
+  "source_editing_stopped": true,
+  "synthetic_tests_passed": 72,
+  "synthetic_only": true,
+  "real_capture_reads": 0,
+  "GPU_calls": 0,
+  "model_loads": 0,
+  "new_effect_experiments": 0,
+  "LOCK_created": false,
+  "real_data_rank_arms_gate_registered": false,
+  "actual_claude_review_complete": false,
+  "official_code_reproduction": false,
+  "basis_provenance_contract": "external fixed p0 basis/raw moment; no reader-query fitting in core",
+  "FULL_same_Konly_reference_required": true,
+  "files": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/core.py": "d45fab4430d19dba9bb8b68de4f86b90481406b586bfc4cd096556e1c17d3fef",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/selftest.py": "0e1bcb1ab9a1b872fb9bc624801b26e6361c861013ecb02dcc21035fcdb13db7",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/SELFTEST.json": "209c57f9094c054a95de7b3ec7c97c237b95655d3f826fa3c7cf43e206a17b66",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/SELFTEST_V2.json": "70cfb4130af0779475aaab9791a3808674e3f253597de373336f83c5892e59e1",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/SOURCES.json": "8c356dc2a13f42141d5399b20a4488b0421abb34def7e9ab09a1dbf1d7df8a2e",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/PREPARATION_KO.txt": "e45ee5d150047138a8fff8b8a4fae1f8f1e26e3877af476387ba513ef4d1733f"
+  },
+  "unresolved": [
+    "actual Opus 5.5 review",
+    "real-data registration and basis provenance",
+    "reader integration and end-to-end cost/memory",
+    "official implementations not reproduced"
+  ],
+  "blocking_issue": null
+}

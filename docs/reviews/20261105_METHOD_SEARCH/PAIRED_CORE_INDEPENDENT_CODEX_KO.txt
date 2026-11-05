@@ -1,0 +1,44 @@
+Paired core 독립 Codex 검토 — 2026-11-05
+판정: 실자료 실행 전 필수 수정1건. 실제 Opus 검토를 대신하지 않는다.
+검토 대상: commit003dd4a, core.py SHA2665be65cb67680a8e526ed75077541ea8436f21c2b6c7dae3c4585aeb86cf2e.
+
+R1. 읽기 단계의 signed correction 상쇄가 native 분자를 지우지만 fallback이 발생하지 않는다.
+위치: paired_response_preparation/core.py:198~209 및215~228.
+현재 num=Ohat*exp(-m)에서 시작해 각 청크의 큰 양/음 보정을 차례로 더한다. exp(-m)이0이 아니더라도 큰 보정에 더하는 순간 FP64에서 native 항이 반올림으로 소실될 수 있다. 이후 반대 부호 보정이 상쇄되면 원래 native 항은 복구되지 않는다. 분모가 양수이고 native scale이 underflow하지 않았다는 검사만으로는 이 손실을 잡지 못한다.
+
+실행한 최소 반례
+실제 PairedResponse.gaussian(H1,D128,R1,seed17)를 생성했다. Omega 방향의 feature 최고점 주변 두 K를 만들고 Khat은 두 토큰의 순서를 바꿨다. 두 청크의 Vhat은 [1,0]과[-1,0]이다. summarize가 만든 Dz는 각각 정확히0, DN은 정확한 부호 반대이고 offset은 같다. 따라서 저장된 두 상태가 주는 전체 보정은 정확히0이다. 임의 상태를 손으로 주입한 반례가 아니다.
+query=0, 과거4토큰에 현재 V=5인1토큰을 붙이면 모든 native score가0이고 Ohat=1, logZ=log5다. 현재 토큰은 보정 상태에 포함하지 않았다.
+FP64 K: offset50.82717312198034, DN=±0.39346933364868164.
+BF16 K: offset50.82701496673689, DN=±0.39348626136779785.
+두 경우 모두 read output=0, 올바른 저장 상태 합산 결과=1, 절대오차1이다. fallback=False, log_denominator_ratio=0이며 nonfinite/underflow/unsafe 관련 진단은 모두0이다. 이 반례는 FP32 상태 손실, 임의 잘못된 map 또는 Gaussian 근사 오차 때문이 아니다. 원소가 정확히 반대인 유효한 저장 상태의 합산 순서 문제다.
+이 현상의 실제 캡처 발생 빈도나 모델 품질 손상은 측정하지 않았다. 방법 효과 실패의 근거가 아니라, 앞으로 효과 숫자를 신뢰하기 위해 고쳐야 하는 수치 유효성 결함이다.
+
+최소 수정 권고
+native 분자/분모와 signed correction을 분리한다. 모든 청크·feature의 delta_N과 delta_Z를 먼저 보상합산하고, native 항은 마지막에 결합한다. root의 Neumaier 제안에 동의한다. chunk별 bmm 결과만 Neumaier로 합치면 bmm 안의 feature 상쇄는 이미 일어났으므로 그것만으로 충분하다고 주장하면 안 된다.
+예비 CPU 구현에는 최대 청크수×rank개의 feature 항을 순회하고 [H,Q,Dv] 및[H,Q] 배열에서 Neumaier 보정 누산을 하는 단순 경로가 검증하기 쉽다. 한 번에 dense[chunk,H,Q,rank,Dv] 전체를 만들 필요는 없다. 이는 GPU 최적 커널 제안이 아니며 추가 FP64 배열/시간은 비용에 포함해야 한다.
+추가 회귀는 (a) 위 두 청크의 정확0보정, (b) 한 청크 안의 feature 항 +A,+small,-A, (c) 청크 사이 거의 상쇄하되 작은 유효 잔여가 있는 경우를 고정하면 된다. (b)(c)는 이번에 실행한 결과가 아니라 후속 수정판의 권고 검사다. math.fsum 또는 작은 고정밀 독립 합과 비교해야 하며 원 함수와 같은 bmm를 참조로 삼으면 안 된다.
+보상합산도 모든 조건에서 정확성을 보장하지 않으므로 항 절대합과 잔여 합, 누산 손실 위험을 기록하거나 확인할 수 없는 경우 명시적 fallback으로 표시할 필요가 있다. 실자료를 본 후 문턱을 정하지 않는다. 기존 효과 gate나 전체 pilot 종료를 바꾸는 수정이 아니다.
+
+수용 가능한 부분
+shared Gaussian map과 d^(-1/4), 1/sqrt(rank) 정규화는 exp(q·k/sqrt(d))에 대한 같은 feature kernel을 구성한다. 원본/복원에 공통 per-feature offset을 사용하고 읽기에서 query log-feature+청크 offset-native logZ를 결합하는 식은 맞다. 원래 attention의 Ohat/logZ를 사용하므로 전체 현재 BF16 chunk를 정규화에 포함하되 요약은 과거 양자화 청크만 다룬다는 root 계약도 맞다.
+append/evict는 지정한 청크만 더하고 제거하며, 모든 state가0인 경로는 native bytes를 그대로 반환한다. 단 전체0 우회가 개별 비제로 청크 사이의 상쇄까지 보호하지는 않는다. expm1의 가까운 feature 차분 보호는 준비 단계에 있고, R1은 별개의 읽기 누산 문제다.
+기존 합성 selftest를 파일 출력 없이 다시 실행해35건이 통과했고, 최대 직접 kernel 차이2.1503705760483882e-10을 재현했다. 이 합성 통과는 R1을 다루지 않았음을 함께 기록한다. manifest6개 파일과 commit의 두 소스가 현재 파일과 일치하고, 감사 전후 모두 불변이다.
+FP32 Omega 196,608B, FP32 DN/Dz1,188,864B, FP64 offset18,432B, 총1,403,904B tensor payload 계산과 실제 합성 storage 검사는 타당하다. FP64 map 복사·feature 배열·reader terms·출력 및 Python/allocator/host-device 사본을 제외했다는 설명도 적절하다. 총 peak나 GPU 성능으로 바꾸어 읽지 않는다.
+
+남은 계약/비차단 사항
+ChunkState에는 map fingerprint가 없으며 append는 shape/dtype만 확인한다. 다른 map으로 만든 state도 같은 shape라면 들어갈 수 있으므로 미래 adapter/manifest에서 같은 Omega hash를 묶어야 한다. 현재 정상 summarize→같은 객체 append 경로의 오류를 관측했다는 뜻은 아니다.
+빈 상태/모든 상태0이면 query/logZ finite 검사 전에 우회하므로 그 경우에는 비유한 query/logZ가 fallback으로 기록되지 않는다. 출력에 두 입력을 쓰지 않는 경로이므로 수치 오염은 없지만 문서의 '모든 비유한 query/logZ는 fallback' 표현에는 이 예외가 있다.
+root PAIRED_READ_PATH_ROOT_KO.txt와 설치된 FlashAttnVarlenFunc.forward:930~963 및 함수 문서를 대조했다. 요청 시out/LSE 반환, dropout0에서는 저수준 return_softmax=False라는 Python 코드 관찰은 맞다. CUDA 바이너리 실행·peak·out bytes 검증은 하지 않았고 testing-only API 의존성도 그대로 남는다.
+원래 native Ohat는 이미 저정밀 반올림된 출력일 수 있으므로 logZ와 곱해 원래 고정밀 분자를 완전히 복구한다고 주장하지 않는다. 현재 알고리즘이 주어진 native Ohat를 보정하는 계약과 합성 수식을 검사했을 뿐이다.
+
+산출물/재현
+PAIRED_CORE_INDEPENDENT_PROBE_CODEX.py는 위 합성 반례에 실제 사용한 Python 본문을 보존했다. 고정 원본2665be65...에 대해 생성된 JSON이며, 기본 출력이 exclusive-create이므로 원 결과를 덮어쓰지 않는다. 수정판 재검증 때는 별도 경로/식별자를 사용해야 한다. 실행 당시 CUDA_VISIBLE_DEVICES='', OMP_NUM_THREADS=4, MKL_NUM_THREADS=4를 사용했다.
+probe 소스 SHA a4d38af58ed36002a8d42e9e35e25f4ba75c9440d83b1b28f961cd52a40dc13a
+probe 결과 SHA 5157a61b3967b6aeb834a554fa7d08a96cba0d0a26f1d6966339b7a885b22285
+audit SHA 65eca743f911408a9f9c0e3321a7363089e9bf0a46b4f266aff49344529aa4ec
+이 검토에서 실제 캡처/모델/GPU/패키지 설치/peer 원소스 수정0회. baseline 준비 소스도 변경하지 않았다. 새 방법의 효과·신규성·GPU 속도 결론은 없으며, 실제 Opus 검토는 대기 상태다.
+
+추가 native 계약 확인
+기존 반례의 logZ는 log(5)=1.6094379124341003이다. probe JSON의 log_denominator_ratio=0과 구분한다. 동일 fixture의 Khat4토큰+현재K=0을 실제 연결하여 QK/√128, softmax, LSE를 독립 계산했다. 두 dtype 모두 score=0, native output=1, native logZ=log5이며 원 probe가 넘긴 값과 일치한다. core를 다시 읽거나 효과를 재실행하지 않은 native 입력 일관성 확인이다.
+PAIRED_CORE_NATIVE_CONSISTENCY_CODEX.json SHA 1413d6de4fc3079a84737bdfa2ab380918ece145103093e7a3a1a12963a4a96d

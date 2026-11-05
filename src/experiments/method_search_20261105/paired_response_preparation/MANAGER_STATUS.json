@@ -1,19 +1,34 @@
 {
-  "updated_kst": "2026-11-05T20:59:24.582489+09:00",
-  "task": "paired_response_preparation",
-  "status": "preparation_complete_sources_frozen_pending_actual_opus_review",
-  "scope": "synthetic only",
-  "source_frozen": true,
-  "hashes_sha256": {
-    "PREPARATION_MANIFEST.json": "e869209b2a4c961ee1ec1644f8ad9d4955e2d1cb52d1cf904c0de44c8d053dfa",
-    "core.py": "2665be65cb67680a8e526ed75077541ea8436f21c2b6c7dae3c4585aeb86cf2e",
-    "selftest.py": "e385982bbd3ada4010b921a1afd66a9cc134c7915ad69b11df15c915818b1b17",
-    "SELFTEST_V3.json": "5362cde4db7bff4729b05fd6c019f6412970593a6d57f1725975d921ea152991"
-  },
+  "version": 2,
+  "created_utc": "2026-11-05T12:18:35.553137+00:00",
+  "status": "amended_synthetic_core_frozen_independent_codex_recheck_passed_opus_pending",
+  "source_editing_stopped": true,
+  "prior_source_commit": "003dd4a",
+  "reason": "independent valid native-output cancellation counterexample",
+  "actual_claude_reviewed": false,
   "real_data_runs": 0,
   "gpu_runs": 0,
-  "actual_opus_review_completed": false,
-  "final_synthetic_checks_passed": 35,
-  "report_path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_preparation/PREPARATION_KO.txt",
-  "next_action": "Await root and actual Opus review; no additional tests, formulas, thresholds or source edits authorized in this status task."
+  "checks": {
+    "existing_suite": 35,
+    "new_cancellation_regression": 33
+  },
+  "files": {
+    "core.py": "c66e2e3e429652ad60da35c94d56e0a2baab46134252cbfd7005c8152f10eb82",
+    "selftest.py": "e385982bbd3ada4010b921a1afd66a9cc134c7915ad69b11df15c915818b1b17",
+    "cancellation_regression.py": "8d028876e94a30b7480c28465d1b0a70f2f4bd56ce014a5d73babd37981b599d",
+    "SELFTEST_V4.json": "e9eeca181a83cdc6de15a6837e314f85512947acafb94daac84670bab7336fed",
+    "CANCELLATION_REGRESSION_V1.json": "f8a40be4b6916ff045f83b99b90210dad24f6e7a8a9b1d2250e2963818fbf7f8",
+    "AMENDMENT_V2_KO.txt": "4d014a5f118e8902da79b7f9764b673bc9a6be1f78949caf1b184c7fc8374f52",
+    "PREPARATION_MANIFEST.json": "e869209b2a4c961ee1ec1644f8ad9d4955e2d1cb52d1cf904c0de44c8d053dfa"
+  },
+  "manifest_path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_preparation/PREPARATION_MANIFEST_V2.json",
+  "manifest_sha256": "1547f85c6d085b03603355f876475d299449fd7e790a334ee53cc67a4c3db514",
+  "updated_utc": "2026-11-05T12:20:39.762587+00:00",
+  "independent_codex_recheck": {
+    "review_path": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/PAIRED_CORE_AMENDMENT_REVIEW_CODEX_KO.txt",
+    "review_sha256": "2a81a880bed59212fe68b52b14f66f41e7fca8c65b1efc04da558f84edc16d48",
+    "audit_path": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/PAIRED_CORE_AMENDMENT_AUDIT_CODEX.json",
+    "audit_sha256": "56a82afdb7086ec468e6a0be1ee1adcdacac782aa66afb580ec09272e89fca48",
+    "scope": "original counterexample, 33 regression, independent vector math.fsum; no real data or GPU"
+  }
 }

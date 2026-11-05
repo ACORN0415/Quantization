@@ -1,0 +1,409 @@
+{
+  "status": "passed",
+  "scope": "synthetic numerical regression only; no capture/model/GPU",
+  "checks": [
+    {
+      "name": "gaussian_saved_cancel_r1_torch.float64",
+      "passed": true
+    },
+    {
+      "name": "gaussian_native_output_r1_torch.float64",
+      "passed": true,
+      "expected": [
+        [
+          [
+            1.0
+          ]
+        ]
+      ],
+      "output": [
+        [
+          [
+            1.0
+          ]
+        ]
+      ],
+      "logz": [
+        [
+          1.6094379124341003
+        ]
+      ],
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "gaussian_saved_cancel_r1_torch.bfloat16",
+      "passed": true
+    },
+    {
+      "name": "gaussian_native_output_r1_torch.bfloat16",
+      "passed": true,
+      "expected": [
+        [
+          [
+            1.0
+          ]
+        ]
+      ],
+      "output": [
+        [
+          [
+            1.0
+          ]
+        ]
+      ],
+      "logz": [
+        [
+          1.6094379124341003
+        ]
+      ],
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "gaussian_saved_cancel_r32_torch.float64",
+      "passed": true
+    },
+    {
+      "name": "gaussian_native_output_r32_torch.float64",
+      "passed": true,
+      "expected": [
+        [
+          [
+            1.0
+          ]
+        ]
+      ],
+      "output": [
+        [
+          [
+            1.0
+          ]
+        ]
+      ],
+      "logz": [
+        [
+          1.6094379124341003
+        ]
+      ],
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "gaussian_saved_cancel_r32_torch.bfloat16",
+      "passed": true
+    },
+    {
+      "name": "gaussian_native_output_r32_torch.bfloat16",
+      "passed": true,
+      "expected": [
+        [
+          [
+            1.0
+          ]
+        ]
+      ],
+      "output": [
+        [
+          [
+            1.0
+          ]
+        ]
+      ],
+      "logz": [
+        [
+          1.6094379124341003
+        ]
+      ],
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_False_False_(0, 1, 2)",
+      "passed": true,
+      "expected": 0.5,
+      "output": 0.5,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_False_False_(0, 2, 1)",
+      "passed": true,
+      "expected": 0.5,
+      "output": 0.5,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_False_False_(1, 0, 2)",
+      "passed": true,
+      "expected": 0.5,
+      "output": 0.5,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_False_False_(1, 2, 0)",
+      "passed": true,
+      "expected": 0.5,
+      "output": 0.5,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_False_False_(2, 0, 1)",
+      "passed": true,
+      "expected": 0.5,
+      "output": 0.5,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_False_False_(2, 1, 0)",
+      "passed": true,
+      "expected": 0.5,
+      "output": 0.5,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_False_True_(0, 1, 2)",
+      "passed": true,
+      "expected": 2.0,
+      "output": 2.0,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_False_True_(0, 2, 1)",
+      "passed": true,
+      "expected": 2.0,
+      "output": 2.0,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_False_True_(1, 0, 2)",
+      "passed": true,
+      "expected": 2.0,
+      "output": 2.0,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_False_True_(1, 2, 0)",
+      "passed": true,
+      "expected": 2.0,
+      "output": 2.0,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_False_True_(2, 0, 1)",
+      "passed": true,
+      "expected": 2.0,
+      "output": 2.0,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_False_True_(2, 1, 0)",
+      "passed": true,
+      "expected": 2.0,
+      "output": 2.0,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_True_False_(0, 1, 2)",
+      "passed": true,
+      "expected": 0.5,
+      "output": 0.5,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_True_False_(0, 2, 1)",
+      "passed": true,
+      "expected": 0.5,
+      "output": 0.5,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_True_False_(1, 0, 2)",
+      "passed": true,
+      "expected": 0.5,
+      "output": 0.5,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_True_False_(1, 2, 0)",
+      "passed": true,
+      "expected": 0.5,
+      "output": 0.5,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_True_False_(2, 0, 1)",
+      "passed": true,
+      "expected": 0.5,
+      "output": 0.5,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_True_False_(2, 1, 0)",
+      "passed": true,
+      "expected": 0.5,
+      "output": 0.5,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_True_True_(0, 1, 2)",
+      "passed": true,
+      "expected": 2.0,
+      "output": 2.0,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_True_True_(0, 2, 1)",
+      "passed": true,
+      "expected": 2.0,
+      "output": 2.0,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_True_True_(1, 0, 2)",
+      "passed": true,
+      "expected": 2.0,
+      "output": 2.0,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_True_True_(1, 2, 0)",
+      "passed": true,
+      "expected": 2.0,
+      "output": 2.0,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_True_True_(2, 0, 1)",
+      "passed": true,
+      "expected": 2.0,
+      "output": 2.0,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "residual_True_True_(2, 1, 0)",
+      "passed": true,
+      "expected": 2.0,
+      "output": 2.0,
+      "fallback": [
+        [
+          false
+        ]
+      ]
+    },
+    {
+      "name": "no_cuda",
+      "passed": true
+    }
+  ],
+  "checks_total": 33,
+  "checks_passed": 33,
+  "wall_seconds": 0.021861749002709985,
+  "source_sha256": {
+    "core.py": "c66e2e3e429652ad60da35c94d56e0a2baab46134252cbfd7005c8152f10eb82",
+    "cancellation_regression.py": "8d028876e94a30b7480c28465d1b0a70f2f4bd56ce014a5d73babd37981b599d"
+  }
+}

@@ -1,0 +1,31 @@
+PSAC/QKSA 준비물 수정 V2 — persistent state의 autograd graph 보유 방지
+작성: 2026-11-05T21:14:23.776794+09:00. root의 명시적 수정 요청에 따른 최소 inference 계약 보완.
+상태: 소스 편집 종료, 실제 Opus 검토 미완료. 실제 캡처/모델/GPU/효과 측정0.
+
+수정 이유
+독립 검토 PAIRED_BASELINE_INDEPENDENT_CODEX_KO.txt M2에서 grad-enabled 외부 basis와 BF16 K 입력을 넣으면 저장 basis에 CloneBackward0, packet scale에 IndexPutBackward0가 남는 것을 확인했다. 원본 K/E를 보존하지 않는 inference payload 계약을 보장하기 위해 수정했다.
+
+변경 범위
+core.py의 prepare_basis, quantize_rows, packet_from_rows, psac_encode 네 함수에만 @torch.no_grad()를 추가했다. 이 네 decorator 줄을 제거하면 수정 전 core 전체 텍스트와 정확히 일치함을 확인했다. projection·INT8 범위·FP16 scale·반올림/clipping·실제 BF16 row-filter·dense/sparse·byte 계산·QKSA 수식은 바뀌지 않았다.
+prepare_basis와 packet factory는 기존 owned clone 경로를 그대로 사용한다. from_bytes는 기존 byte buffer에서 만든 독립 tensor를 사용하며 변경하지 않았다. 직접 dataclass 생성에 임의의 외부 tensor를 넣는 저수준 사용을 새로운 소유 API로 정의한 것은 아니다. persistent state의 정식 생성 경로에 inference 계약을 적용했다.
+
+회귀검사
+SELFTEST_V3.json: 기존72개와 새18개, 총90/90 통과. 계산 구간 0.020717초, CPU4, CUDA 초기화 없음.
+새 검사는 torch.enable_grad() 안에서 수행했다. BF16 K/Khat, 외부 FP64 또는 이미 BF16인 basis, raw moment, FP16 외부 row scale, FP64 coefficient에 requires_grad=True를 주었다.
+- 반환 basis 및 encode/quantize/packet factory의 persistent tensor 전부 requires_grad=False와 grad_fn=None.
+- grad를 끈 기존 동일 입력의 packet bytes·row 판정 점수와 정확히 동일.
+- dense/sparse/empty packet 경로 모두 확인; nonempty scale 저장은 외부 scale과 다른 storage.
+- 원입력 bytes·requires_grad·grad=None을 보존하며 호출자의 grad mode도 True로 돌아온다.
+이 검사는 inference 메모리 계약 회귀검사이며 새 성능 또는 품질 실험이 아니다.
+
+변경하지 않은 기록
+기존 FINAL_READY.json, SELFTEST.json, SELFTEST_V2.json, PREPARATION_KO.txt, SOURCES.json은 전후 SHA가 일치한다. 기존 코드는 core.py.before_amendment_v2.txt, 이전 검사는 selftest.py.before_amendment_v2.txt로 보존했다. 과거 FINAL_READY는 당시 소스의 역사적 기록이고 현재 소스의 승인으로 재해석하지 않는다. 현재 준비 상태는 FINAL_READY_V2.json과 MANAGER_STATUS.json을 따른다.
+
+미결 계약 유지
+고정 raw moment의 eigvalsh 반복 검증, QKSA 회전 직교성 반복 검증을 옮기는 성능 리팩터링은 하지 않았다. PSAC raw moment FP64 1,572,864B/층의 GPU/host 상주·전송·write 비용은 미결이다. FULL+PSAC1의1,800,552B는 packet+basis+FULL U 산술이며 moment가 GPU상주하면3,373,416B다. 같은 cap의 실행 가능성을 확정하지 않았다. 실자료 rank/팔/효과 gate 등록이나 실행 승인은 없다.
+
+소스 SHA256
+이전 core d45fab4430d19dba9bb8b68de4f86b90481406b586bfc4cd096556e1c17d3fef
+현재 core 63364f9d4619a231ea5425fcf8e60bf8254bbde738948a952c6604d5432185d9
+현재 selftest 6adfed183fb614726e52cc24f72a91878ea2a56d7ed35b66f60320bc55e9b7de
+SELFTEST_V3 509ac4c11e6e6d746beed3c6bad1f32d890fbd718f37587d4f89b7c3d7b6f248

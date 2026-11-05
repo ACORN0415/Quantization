@@ -1,0 +1,19 @@
+{
+  "updated_kst": "2026-11-05T20:59:24.582489+09:00",
+  "task": "paired_response_preparation",
+  "status": "preparation_complete_sources_frozen_pending_actual_opus_review",
+  "scope": "synthetic only",
+  "source_frozen": true,
+  "hashes_sha256": {
+    "PREPARATION_MANIFEST.json": "e869209b2a4c961ee1ec1644f8ad9d4955e2d1cb52d1cf904c0de44c8d053dfa",
+    "core.py": "2665be65cb67680a8e526ed75077541ea8436f21c2b6c7dae3c4585aeb86cf2e",
+    "selftest.py": "e385982bbd3ada4010b921a1afd66a9cc134c7915ad69b11df15c915818b1b17",
+    "SELFTEST_V3.json": "5362cde4db7bff4729b05fd6c019f6412970593a6d57f1725975d921ea152991"
+  },
+  "real_data_runs": 0,
+  "gpu_runs": 0,
+  "actual_opus_review_completed": false,
+  "final_synthetic_checks_passed": 35,
+  "report_path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_preparation/PREPARATION_KO.txt",
+  "next_action": "Await root and actual Opus review; no additional tests, formulas, thresholds or source edits authorized in this status task."
+}

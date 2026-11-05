@@ -1,0 +1,268 @@
+"""CPU-only public-definition adaptations of PSAC and QKSA.
+
+No model/capture I/O, basis fitting, rank selection, or effect experiment lives here.
+PSAC: QuantWM v3 equations 13--17, section 5.1, appendix D.1.
+QKSA: arXiv:2605.26266v1 equations 23--25 (Taylor coefficient fixed to one).
+See PREPARATION_KO.txt for representation choices the papers do not specify.
+"""
+from dataclasses import dataclass
+import math
+import struct
+import torch
+
+
+HEADER = struct.Struct('<4sBBHIIIII')  # magic, layout, index bytes, reserved, N,H,D,r,rows
+MIN_FP16 = 2.0 ** -24
+INDEX_DTYPES = {2: torch.uint16, 4: torch.uint32, 8: torch.uint64}
+
+
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def finite_cpu(x, name):
+    require(isinstance(x, torch.Tensor) and x.device.type == 'cpu', name + ': CPU tensor required')
+    require(x.is_floating_point(), name + ': floating tensor required')
+    require(bool(torch.isfinite(x).all()), name + ': nonfinite input')
+
+
+def index_width(total_rows):
+    require(isinstance(total_rows, int) and 0 < total_rows <= 2**64, 'invalid row count')
+    return 2 if total_rows <= 2**16 else 4 if total_rows <= 2**32 else 8
+
+
+def as_bytes(t):
+    return t.contiguous().view(torch.uint8).numpy().tobytes()
+
+
+def from_bytes(data, dtype, shape):
+    if not data:
+        return torch.empty(shape, dtype=dtype)
+    return torch.frombuffer(bytearray(data), dtype=dtype).clone().reshape(shape)
+
+
+@dataclass
+class PsacPacket:
+    header: torch.Tensor
+    codes: torch.Tensor
+    scales: torch.Tensor
+    indices: torch.Tensor
+
+    def metadata(self):
+        require(self.header.dtype == torch.uint8 and self.header.shape == (HEADER.size,), 'header shape')
+        magic, layout, width, reserved, n, h, d, rank, rows = HEADER.unpack(as_bytes(self.header))
+        require(magic == b'PSC1' and layout in (0, 1) and reserved == 0, 'invalid header')
+        require(n > 0 and h > 0 and d > 0 and 0 < rank <= d, 'invalid dimensions')
+        require(rows <= n*h and (layout != 0 or rows == n*h), 'invalid stored rows')
+        require(width == (index_width(n*h) if layout else 0), 'invalid index width')
+        return {'layout': 'sparse' if layout else 'dense', 'index_bytes': width,
+                'tokens': n, 'heads': h, 'dim': d, 'rank': rank, 'stored_rows': rows}
+
+    def validate(self):
+        m = self.metadata(); rows, rank = m['stored_rows'], m['rank']
+        for t in (self.header, self.codes, self.scales, self.indices):
+            require(t.device.type == 'cpu' and t.is_contiguous(), 'packet CPU contiguous tensors required')
+        require(self.codes.dtype == torch.int8 and self.codes.shape == (rows, rank), 'coefficient shape/dtype')
+        require(not bool((self.codes == -128).any()), 'symmetric INT8 uses [-127,127]')
+        require(self.scales.dtype == torch.float16 and self.scales.shape == (rows, 1), 'rowwise scale shape/dtype')
+        require(bool(torch.isfinite(self.scales).all() & (self.scales > 0).all()), 'invalid stored scale')
+        if m['layout'] == 'sparse':
+            require(self.indices.dtype == INDEX_DTYPES[m['index_bytes']] and self.indices.shape == (rows,), 'index dtype/shape')
+            ix = self.indices.to(torch.int64)
+            require(bool((ix >= 0).all() & (ix < m['tokens']*m['heads']).all()), 'index bounds')
+            require(bool((ix[1:] > ix[:-1]).all()), 'indices must be unique and sorted')
+        else:
+            require(self.indices.dtype == torch.uint8 and self.indices.numel() == 0, 'dense indices must be absent')
+        return m
+
+    def nbytes(self):
+        self.validate()
+        return sum(t.numel()*t.element_size() for t in (self.header, self.codes, self.scales, self.indices))
+
+    def to_bytes(self):
+        self.validate()
+        return b''.join(as_bytes(t) for t in (self.header, self.codes, self.scales, self.indices))
+
+    @classmethod
+    def from_bytes(cls, data):
+        require(isinstance(data, bytes) and len(data) >= HEADER.size, 'invalid byte payload')
+        head = from_bytes(data[:HEADER.size], torch.uint8, (HEADER.size,))
+        # Validate dimensions before allocating any derived tensor.
+        probe = cls(head, torch.empty(0), torch.empty(0), torch.empty(0))
+        m = probe.metadata(); nr, rank, width = m['stored_rows'], m['rank'], m['index_bytes']
+        nc = nr*rank; ns = nr*2; ni = nr*width
+        require(len(data) == HEADER.size+nc+ns+ni, 'byte payload length mismatch')
+        pos = HEADER.size
+        codes = from_bytes(data[pos:pos+nc], torch.int8, (nr, rank)); pos += nc
+        scales = from_bytes(data[pos:pos+ns], torch.float16, (nr, 1)); pos += ns
+        indices = from_bytes(data[pos:], INDEX_DTYPES[width] if width else torch.uint8, (nr,) if width else (0,))
+        packet = cls(head, codes, scales, indices); packet.validate()
+        return packet
+
+
+@torch.no_grad()
+def prepare_basis(basis):
+    """External, already selected p0 basis [H,D,r]; own BF16 copy. Never fit on a reader query."""
+    finite_cpu(basis, 'basis')
+    require(basis.ndim == 3 and 0 < basis.shape[2] <= basis.shape[1], 'basis [H,D,r] required')
+    gram = torch.einsum('hdr,hds->hrs', basis.double(), basis.double())
+    eye = torch.eye(basis.shape[2], dtype=torch.float64).expand_as(gram)
+    require(torch.allclose(gram, eye, rtol=1e-5, atol=1e-5), 'input basis is not orthonormal')
+    saved = basis.to(torch.bfloat16).clone().contiguous()
+    require(bool(torch.isfinite(saved).all()), 'BF16 basis overflow')
+    return saved
+
+
+def validate_moment(moment, heads, dim):
+    """External raw p0 second moment, never fitted here and never damped for PSAC."""
+    finite_cpu(moment, 'moment')
+    require(moment.shape == (heads, dim, dim), 'moment shape')
+    m = moment.double()
+    require(torch.allclose(m, m.transpose(-1, -2), rtol=1e-10, atol=1e-10), 'moment must be symmetric')
+    eigen = torch.linalg.eigvalsh(m)
+    require(bool((eigen[:, 0] >= -1e-10 * eigen.abs().amax(-1).clamp_min(1)).all()), 'moment must be PSD')
+    return m
+
+
+@torch.no_grad()
+def quantize_rows(coefficients):
+    """One positive FP16 scale per row; RTN/clamp to [-127,127]."""
+    finite_cpu(coefficients, 'coefficients')
+    require(coefficients.ndim == 2 and coefficients.shape[1] > 0, 'coefficients [rows,r] required')
+    c = coefficients.double()
+    desired = (c.abs().amax(-1, keepdim=True)/127).clamp_min(MIN_FP16)
+    require(bool((desired <= torch.finfo(torch.float16).max).all()), 'coefficient scale exceeds FP16 range')
+    scale = desired.to(torch.float16)
+    require(bool(torch.isfinite(scale).all() & (scale > 0).all()), 'invalid FP16 coefficient scale')
+    rounded = torch.round(c/scale.double())
+    clipped = int(((rounded < -127) | (rounded > 127)).sum())
+    codes = rounded.clamp(-127, 127).to(torch.int8)
+    return codes.contiguous(), scale.contiguous(), {'clipped_coefficients': clipped}
+
+
+def row_error(error, moment):
+    return torch.einsum('nhd,hde,nhe->nh', error.double(), moment, error.double())
+
+
+@torch.no_grad()
+def packet_from_rows(codes, scales, active, tokens, heads, dim):
+    """Flatten rows in token-major/head-minor order; choose actual smaller layout."""
+    rank = codes.shape[-1]; nr = tokens*heads
+    require(codes.shape == (nr, rank) and scales.shape == (nr, 1) and active.shape == (nr,), 'row shape')
+    require(active.dtype == torch.bool, 'active mask dtype')
+    ix = torch.nonzero(active, as_tuple=False).flatten(); width = index_width(nr)
+    dense_bytes = HEADER.size + nr*(rank+2)
+    sparse_bytes = HEADER.size + ix.numel()*(rank+2+width)
+    sparse = sparse_bytes < dense_bytes  # Dense on exact storage ties.
+    if sparse:
+        outc, outs, outi = codes[ix].clone(), scales[ix].clone(), ix.to(INDEX_DTYPES[width])
+    else:
+        outc, outs = codes.clone(), scales.clone()
+        outc[~active] = 0; outs[~active] = 1
+        outi = torch.empty(0, dtype=torch.uint8)
+    raw = HEADER.pack(b'PSC1', int(sparse), width if sparse else 0, 0, tokens, heads, dim, rank, len(outc))
+    packet = PsacPacket(from_bytes(raw, torch.uint8, (HEADER.size,)), outc.contiguous(), outs.contiguous(), outi.contiguous())
+    require(packet.nbytes() == min(dense_bytes, sparse_bytes), 'layout byte mismatch')
+    return packet, {'dense_bytes': dense_bytes, 'sparse_bytes': sparse_bytes,
+                    'selected_bytes': packet.nbytes(), 'sparse_index_width_bytes': width,
+                    'active_rows': int(active.sum()), 'total_rows': nr}
+
+
+@torch.no_grad()
+def psac_encode(key, reconstructed_key, stored_basis, raw_query_moment):
+    """Prepare correction of one completed chunk. Basis/moment are caller-frozen p0 state.
+
+    key and reconstructed_key: BF16 [N,H,D]. Basis: stored BF16 [H,D,r].
+    Coefficients use stored U; row screening evaluates the actual BF16 reconstruction
+    under full external raw moment. This explicit adaptation is not official code.
+    """
+    finite_cpu(key, 'key'); finite_cpu(reconstructed_key, 'reconstructed_key')
+    finite_cpu(stored_basis, 'stored_basis')
+    require(key.shape == reconstructed_key.shape and key.ndim == 3, 'key shape')
+    require(key.dtype == reconstructed_key.dtype == stored_basis.dtype == torch.bfloat16, 'BF16 K/Khat/U required')
+    n, h, d = key.shape; require(stored_basis.shape[:2] == (h, d), 'basis dimensions')
+    require(n > 0 and 0 < stored_basis.shape[2] <= d, 'invalid key/rank dimensions')
+    m = validate_moment(raw_query_moment, h, d)
+    error = key.float()-reconstructed_key.float()
+    c = torch.einsum('nhd,hdr->nhr', error.double(), stored_basis.double()).reshape(n*h, -1)
+    codes, scales, quant_info = quantize_rows(c)
+    chat = (codes.float()*scales.float()).reshape(n, h, -1)
+    correction = torch.einsum('nhr,hdr->nhd', chat, stored_basis.float())
+    corrected = (reconstructed_key.float()+correction).to(torch.bfloat16)
+    require(bool(torch.isfinite(corrected).all()), 'corrected BF16 overflow')
+    before = row_error(error, m); after = row_error(key.float()-corrected.float(), m)
+    require(bool(torch.isfinite(before).all() & torch.isfinite(after).all()), 'nonfinite screening scores')
+    active = (after < before).reshape(-1)  # No improvement / exact tie => zero row.
+    packet, storage = packet_from_rows(codes, scales, active, n, h, d)
+    return packet, {**storage, **quant_info, 'basis_bytes_shared': stored_basis.numel()*2,
+                    'before_query_error': float(before.sum()),
+                    'after_screened_query_error': float(torch.where(active.reshape(n, h), after, before).sum())}
+
+
+def psac_coefficients(packet):
+    m = packet.validate(); n, h, r = m['tokens'], m['heads'], m['rank']
+    values = packet.codes.float()*packet.scales.float()
+    if m['layout'] == 'dense':
+        return values.reshape(n, h, r)
+    dense = torch.zeros(n*h, r)
+    dense[packet.indices.to(torch.int64)] = values
+    return dense.reshape(n, h, r)
+
+
+def psac_restore(reconstructed_key, packet, stored_basis):
+    m = packet.validate(); finite_cpu(reconstructed_key, 'Khat'); finite_cpu(stored_basis, 'U')
+    require(reconstructed_key.dtype == stored_basis.dtype == torch.bfloat16, 'BF16 Khat/U required')
+    require(reconstructed_key.shape == (m['tokens'], m['heads'], m['dim']), 'Khat shape')
+    require(stored_basis.shape == (m['heads'], m['dim'], m['rank']), 'U shape')
+    coefficients = psac_coefficients(packet)
+    correction = torch.einsum('nhr,hdr->nhd', coefficients, stored_basis.float())
+    out = (reconstructed_key.float()+correction).to(torch.bfloat16)
+    require(bool(torch.isfinite(out).all()), 'corrected BF16 overflow')
+    # Omitted/all-zero coefficient rows must preserve even signed-zero input bytes.
+    return torch.where(coefficients.ne(0).any(-1, keepdim=True), out, reconstructed_key)
+
+
+def frame_token_steps(stored_scale, frame_tokens, group_size):
+    """Stored K scale [F,ceil(frame_tokens/g),H,D] -> [F*frame_tokens,H,D].
+
+    Padding is removed separately at each frame. A code increment is ONE scale.
+    Strict positive scale is required for actual stored quantizer metadata.
+    """
+    finite_cpu(stored_scale, 'stored_scale')
+    require(stored_scale.dtype == torch.float16 and stored_scale.ndim == 4, 'FP16 [F,G,H,D] scale required')
+    require(frame_tokens > 0 and group_size > 0, 'positive frame/group size required')
+    require(stored_scale.shape[1] == math.ceil(frame_tokens/group_size), 'frame group count mismatch')
+    require(bool((stored_scale > 0).all()), 'invalid stored quantizer scale')
+    expanded = stored_scale.float().repeat_interleave(group_size, dim=1)[:, :frame_tokens]
+    return expanded.reshape(-1, *stored_scale.shape[2:]).contiguous()
+
+
+def qksa_bias(query, steps, rotation):
+    """Taylor bias [H,Q,Npast], coefficient=1, delta=code scale (not twice scale).
+
+    Query [Q,H,D]; steps [Npast,H,D]; rotation [H,D,D], matching K @ rotation.
+    Zero steps are allowed only as a mathematical noquant control. Actual stored
+    scale ingestion uses frame_token_steps and rejects zero/nonfinite values.
+    """
+    finite_cpu(query, 'query'); finite_cpu(steps, 'steps'); finite_cpu(rotation, 'rotation')
+    require(query.ndim == steps.ndim == 3 and query.shape[1:] == steps.shape[1:], 'Q/steps shape')
+    _, h, d = query.shape; require(rotation.shape == (h, d, d), 'rotation shape')
+    gram = torch.bmm(rotation.double().transpose(1, 2), rotation.double())
+    require(torch.allclose(gram, torch.eye(d, dtype=torch.float64).expand_as(gram), rtol=5e-5, atol=5e-5), 'orthogonal rotation required')
+    require(bool((steps >= 0).all()), 'steps must be nonnegative')
+    qrot = torch.einsum('qhd,hde->qhe', query.double(), rotation.double())
+    bias = torch.einsum('qhc,nhc->hqn', qrot.square(), steps.double().square())/(24*d)
+    require(bool(torch.isfinite(bias).all()), 'QKSA bias overflow')
+    return bias
+
+
+def qksa_apply(scores, bias):
+    """Subtract on the historical prefix only; current chunk is byte-preserved."""
+    finite_cpu(scores, 'scores'); finite_cpu(bias, 'bias')
+    require(scores.ndim == bias.ndim == 3 and scores.shape[:2] == bias.shape[:2], 'score/bias shape')
+    require(0 <= bias.shape[2] <= scores.shape[2] and bool((bias >= 0).all()), 'invalid bias prefix')
+    out = scores.clone()
+    out[..., :bias.shape[2]] = (scores[..., :bias.shape[2]].double()-bias).to(scores.dtype)
+    require(bool(torch.isfinite(out).all()), 'corrected score overflow')
+    return out

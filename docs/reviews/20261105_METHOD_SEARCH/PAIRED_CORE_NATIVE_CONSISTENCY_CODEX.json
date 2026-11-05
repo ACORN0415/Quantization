@@ -1,0 +1,86 @@
+{
+  "scope": "Independent native QK/softmax check of the SAME original two synthetic fixtures; no new candidate, no core rerun, no state/effect experiment",
+  "cases": [
+    {
+      "case": "real_gaussian_float64",
+      "native_query_is_zero": true,
+      "historical_token_count": 4,
+      "current_token_count": 1,
+      "actual_score_shape": [
+        1,
+        1,
+        5
+      ],
+      "actual_score_absmax": 0.0,
+      "actual_native_logZ": [
+        [
+          1.6094379124341003
+        ]
+      ],
+      "actual_native_Ohat": [
+        [
+          [
+            1.0
+          ]
+        ]
+      ],
+      "original_probe_Ohat_matches": true,
+      "original_probe_logZ_formula_was_log5": true,
+      "original_log_denominator_ratio_not_logZ": [
+        [
+          0.0
+        ]
+      ],
+      "original_reported_output": [
+        [
+          [
+            0.0
+          ]
+        ]
+      ]
+    },
+    {
+      "case": "real_gaussian_bfloat16",
+      "native_query_is_zero": true,
+      "historical_token_count": 4,
+      "current_token_count": 1,
+      "actual_score_shape": [
+        1,
+        1,
+        5
+      ],
+      "actual_score_absmax": 0.0,
+      "actual_native_logZ": [
+        [
+          1.6094379124341003
+        ]
+      ],
+      "actual_native_Ohat": [
+        [
+          [
+            1.0
+          ]
+        ]
+      ],
+      "original_probe_Ohat_matches": true,
+      "original_probe_logZ_formula_was_log5": true,
+      "original_log_denominator_ratio_not_logZ": [
+        [
+          0.0
+        ]
+      ],
+      "original_reported_output": [
+        [
+          [
+            0.0
+          ]
+        ]
+      ]
+    }
+  ],
+  "all_consistent": true,
+  "real_capture_reads": 0,
+  "GPU_calls": 0,
+  "core_imported": false,
+  "created_utc": 1793880687.090142
+}

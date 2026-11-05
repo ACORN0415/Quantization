@@ -1,0 +1,62 @@
+PSAC/QKSA 강한 기준선 준비 — 2026-11-05, Codex
+상태: CPU 합성 준비 완료, 실제 Opus 5.5 독립 검토 대기. 실자료 실험 등록/LOCK/효과 측정이 아니다.
+
+수행 범위
+PAIRED_RESPONSE_NEXT_DECISION_CODEX_KO.txt와 PAIRED_BUDGET_CHECK_ROOT.json을 읽고 공개 정의의 CPU 기준선 core.py와 selftest.py를 만들었다. 실제 캡처·모델·GPU·새 생성·새 효과 실험은 모두0이다. 외부 파일을 읽는 경로나 basis/rank를 선택하는 함수는 core에 없다. 코드/문서 편집은 이 폴더 안에서만 했다.
+
+원문 확인과 재현 범위
+QuantWM v3 §4.2 식13~17은 E=K-Khat, C=EU와 CU^T 복원을 정의한다. U BF16과 C INT8은 §5.1 Implementation에 명시되어 있다. D.1은 계수 행별 FP16 scale, query-weighted 오차를 줄이지 않는 행 제거, sparse index 비용을 포함한 작은 dense/sparse 저장을 명시한다. U의 BF16 저장 근거까지 D.1 한 절에서 모두 확인했다는 표현은 쓰지 않는다.
+https://arxiv.org/html/2609.26425v3
+QKSA v1 부록 D/E/F 식23~25와 구현 설명을 직접 읽었다. 실제 코드 간격 Δ=scale, 회전 query, 1/(24d) Taylor 항, 과거 구간에서만 차감하는 정의를 사용한다.
+https://arxiv.org/html/2605.26266v1
+공식 코드 재현이 아니라 공개 정의 adaptation이다. 정수 범위·최소 scale·row-filter의 정확한 근사/산술·인덱스 폭 등 원문에서 확정하지 못한 세부는 아래처럼 고정한 구현 선택이다. 이 준비만으로 QuantWM/QKSA 전체 재현을 주장하지 않는다.
+
+PSAC 구현 계약
+입력은 key/Khat BF16[N,H,D], 외부 고정 basis[H,D,r], 외부 고정 raw query moment[H,D,D]다. prepare_basis는 이미 선택된 p0 basis의 직교성을 확인하고 소유한 BF16 사본만 만든다. 기저나 rank를 미래 평가 query에서 다시 고르지 않는다. p0 provenance와 고유벡터 순서는 미래 실행 명세가 보장해야 하며 이 함수가 파일의 정보 시점을 자동으로 증명하는 것은 아니다.
+psac_encode는 BF16으로 저장된 U를 사용하여 C=EU를 FP64로 계산한다. INT8 대칭[-127,127], ties-to-even 반올림, 행마다 maxabs/127의 FP16 scale이다. 최소 scale은 FP16 최소 양수 subnormal 2^-24. 실제 stored scale로 코드를 계산하고 범위를 넘는 것은 clamp하며 개수를 반환한다. 작은 scale의 FP16 반올림 때문에 생기는 clipping도 합성으로 검사했다. 원하는 scale이 FP16 최대를 넘거나 입력/저장값/복원값이 비유한이면 오류다. NaN을0으로 바꾸거나 별도 fallback을 하지 않는다.
+row-filter는 각 행의 실제 BF16(Khat + Chat U^T) 복원 오차를 외부 raw full query moment로 평가한다. 감소가 엄격히 양수일 때만 보정한다. 동점/악화는0행이다. 원문의 'approximated Query-weighted error'가 정확히 어떤 연산을 사용하는지는 확인한 텍스트에 없으므로, 이 full-moment·실제 BF16 복원 검사를 명시적인 강한 adaptation으로 둔다. GPTQ의 damped H를 PSAC raw score로 대체하지 않는다.
+psac_restore는 원문 D.1처럼 최종 BF16 K를 만든다. 없어진 보정행은 원 Khat bytes를 보존하며 -0도 +0으로 바꾸지 않는다. 보정 payload에는 원 K/E나 moment를 남기지 않는다. U는 층당 한 번 별도 공유하고 청크마다 복제하지 않는다. U 변환·moment 검증·projection·packet 생성·복원은 모두 비용이 있으므로 이후 비용 비교에서 제외할 수 없다.
+
+실제 payload
+PsacPacket에는 실제 uint8 header 28B, int8 coefficients, FP16 row scales, sparse일 때 unsigned indices가 있다. 토큰-major/head-minor 순서로 행을 평탄화한다. 전체 행 수≤65,536이면 uint16(2B), 그보다 크면 범위에 따라 uint32(4B)/uint64(8B)다. [4680,12] 한 청크는56,160행이므로 uint16으로 표현된다. Python object/allocator overhead와 중복 host/device 사본은 이 packed payload 수치에 포함되지 않는다.
+각 청크 dense=28+N*H*(r+2), sparse=28+nnz*(r+2+index_bytes)를 실제 선택하며 정확한 바이트 동점은 dense다. dtype·shape·정렬·index bounds·중복·길이를 decoder가 확인한다. byte stream roundtrip 후 복원이 같고, 다음 encode가 앞 packet을 덮어쓰지 않는지 검사했다. 직렬화 보존용 payload와 decoder 작업 중 dense 계수/출력은 구분한다. CPU byte stream은 현재 little-endian 시스템을 대상으로 하며 별도 GPU packed kernel은 없다.
+분석적 dense 예산(실자료 할당/타이밍 아님):
+{
+  "2": {
+    "coefficient_dense_six_chunks": 1348008,
+    "basis_BF16_shared_once": 6144,
+    "dense_total": 1354152
+  },
+  "3": {
+    "coefficient_dense_six_chunks": 1684968,
+    "basis_BF16_shared_once": 9216,
+    "dense_total": 1694184
+  },
+  "4": {
+    "coefficient_dense_six_chunks": 2021928,
+    "basis_BF16_shared_once": 12288,
+    "dense_total": 2034216
+  },
+  "8": {
+    "coefficient_dense_six_chunks": 3369768,
+    "basis_BF16_shared_once": 24576,
+    "dense_total": 3394344
+  }
+}
+위 값은 기존 root tensor 계획량에 청크별28B header, 여섯 청크168B를 더한 것이다. rank3 dense 총1,694,184B는 주어진 계획 cap1,806,336B 안이다. rank4·8도 실제 sparse 비율에 따라 가능성이 달라지므로 dense 계획량만으로 탈락시키지 않는다. 이번에는 어떤 rank/팔/효과 gate도 실자료 등록하지 않았다.
+
+QKSA 구현 계약
+frame_token_steps는 FP16[F,ceil(frame_tokens/g),H,D]를 받아 각 프레임의 pad를 따로 버리고 실제 token step으로 펼친다. scale은 이미 실제 인접 코드 간격이므로2배하지 않는다. stored metadata는 엄격한 양수·유한성 검사를 거친다.
+qksa_bias(query, steps, rotation)는 K@R과 같은 좌표의 Q@R을 FP64로 계산하고 b[h,q,t]=sum_c(q_rot^2 * step^2)/(24*d)를 반환한다. 계수는1로 고정되어 lambda 인수가 없다. qksa_apply는 과거 prefix만 차감하며 현재 점수 bytes는 그대로 둔다. 무양자화 합성용 Δ=0은 수식 함수에서만 허용되고 실제 stored scale 입력 함수에서는 거부된다.
+이 CPU 기준선은 유한한 unmasked score를 받아 보정 후 attention mask/softmax를 적용할 계약이다. 원문 FlexAttention score_mod를 재현하지 않았고 bias/확장 scale/score 사본을 작업공간에 materialize한다. 추가 persistent cache state가 없다는 것과 임시 메모리·연산 비용이 없다는 것은 다르다. 이 준비의 CPU 시간은 GPU 실행 비용이나 속도 향상 수치가 아니다.
+
+합성 검증
+SELFTEST_V2.json: 72/72 통과, 계산 구간 0.018773초, CPU4, Torch 2.6.0+cu124, CUDA 초기화0. SELFTEST.json의 최초71개 기록도 보존했다. 최종판에서는 무개입 -0 byte 보존을 추가했다.
+독립 scalar RTN/회전 QKSA 수식, full query projection으로 확인한 PSAC 행별 오차와 제거 결정, 행별 scale 축, 실제 packet byte roundtrip/복원, sparse index 65,536 경계, dense/sparse 바이트 동점, 0 residual/0 query/noquant, tiny coefficient와 scale clipping, 비유한값·음수/0 scale·잘못된 basis/moment·중복 index·잘린 payload 거부를 검사했다. 테스트 모양은 작은 합성 자료이며 실제 q/k/v 효과 검사는 아니다.
+core SHA256 d45fab4430d19dba9bb8b68de4f86b90481406b586bfc4cd096556e1c17d3fef
+selftest SHA256 0e1bcb1ab9a1b872fb9bc624801b26e6361c861013ecb02dcc21035fcdb13db7
+SELFTEST_V2 SHA256 70cfb4130af0779475aaab9791a3808674e3f253597de373336f83c5892e59e1
+
+남은 사항과 다음 검토 계약
+실제 Opus 5.5의 공개 정의/행 제거/저장 형식 검토가 남아 있다. 실자료 basis·moment provenance, rank/팔/예산/gate 등록, 기존 reader 통합, 동일 K-only 참조 검증, 임시·host/device·allocator 메모리와 전체 비용 측정은 하지 않았다. FULL 기존 팔은 후속 진단에서 같은 Attn(Q,K,Vhat) 참조와 같은 post-Wo 좌표로 필수 포함해야 한다. 전체 BF16 오차를 K-only 오차 대신 쓸 수 없다. 기존 FULL pilot stop_quality는 유지한다.
+이 파일들은 강한 기준선의 정확한 준비물이다. paired 또는 새 방법의 이득이 검증됐다는 결론은 없다. 최종 준비 기록 이후 편집을 멈춘다.

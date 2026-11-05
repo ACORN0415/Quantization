@@ -1,0 +1,29 @@
+Paired core signed 누산 수정판 — 독립 Codex 한정 재검토
+2026-11-05. 실제 Opus 검토를 대신하지 않는다.
+
+판정
+이전 독립 검토의 R1(reader 상쇄로 native 분자 소실)은 검토한 수정 범위에서 해소됐다. 기존 실제 Gaussian map과 summarize로 만든 FP64/BF16 두 반례가 output1, 절대오차0, fallback=False로 통과했다. 원래 failing JSON과 소스는 보존했다. 이번 수정 범위에서 추가 필수 오류는 찾지 못했다. 이는 실자료 진행 승인이나 실제 효과·신규성 검증이 아니다.
+대상 core SHA c66e2e3e429652ad60da35c94d56e0a2baab46134252cbfd7005c8152f10eb82.
+이전 core SHA2665be65... 및 원 반례는 commit003dd4a와 기존 파일에 남아 있다.
+
+코드 확인
+_compensated_add는 각 원소에서 total+term 반올림으로 사라진 성분을 크기 비교에 따라 residual에 더하는 Neumaier 형태다. 읽기에서 native 항을 초기 합에 넣지 않고 delta_Z/delta_N 합과 residual을0으로 시작한다. 각 청크의 모든 feature를 순회하므로 과거의 chunk-local bmm 내부 단순합도 제거됐다. 모든 보정을 누산한 후 native 분모/분자를 같은 보상합산에 마지막으로 넣고 최종 total+residual을 사용한다.
+Gaussian map, 준비 요약, offset, FP32 persistent state, 현재/과거 범위와 min_denominator_ratio 의미는 이번 diff에서 바뀌지 않았다. 기존 unsafe denominator/nonfinite/base-underflow/cast fallback 검사는 유지된다. 수치 누산 수정이며 효과 gate를 바꾸는 수정이 아니다.
+
+독립 재확인
+1. 이전 PAIRED_CORE_INDEPENDENT_PROBE_CODEX.py를 그대로 재실행하고 출력 파일명만 PAIRED_CORE_AMENDMENT_PROBE_CODEX.json으로 바꿨다. 상태 생성과 Q/K/V/native Ohat/logZ는 원 반례와 같다. 두 경우 모두 저장 DN의 부호 반대·Dz0·같은 offset 관계가 유지되고 native output을 정확히 보존했다. 입력의 native 일치는 이전 별도 QK 계산으로 확인했으며 logZ는log5, log_denominator_ratio는0이다.
+2. 새 cancellation_regression.py의33검사를 파일 출력 없이 독립 재실행해 모두 통과했다. rank1/32와 FP64/BF16의 실제 Gaussian 반례 및 인위적 저장 상태의 한 청크 feature/세 청크 상쇄, 작은 분자·분모 잔여의6순열을 포함한다. 인위적 상태는 연산 검사용이며 실제 모델에서 그 상태가 발생했다는 뜻이 아니다.
+3. 별도 H2/Q3/D4/rank3/Dv2 저장 상태로 여러 head·query·출력 성분의 broadcast 누산을 확인했다. 각 성분의 참조는 Python math.fsum으로 계산했다. 최대 절대차 6.2172489379008766e-15, 허용 rtol=atol2e-13 안이며 fallback0이다. 이 역시 작은 합성 누산 검사다.
+4. 저장 SELFTEST_V4와 CANCELLATION_REGRESSION_V1의 source hash가 현재 코드와 일치한다. 이번 재검토에서 기존35검사 전체를 다시 실행한 것으로 표시하지 않는다. 반복 실행한 것은 위33회귀와 원 반례2개 및 추가 vector 검사다.
+5. 검토 전후 준비 폴더의 보호 파일 hash는 모두 같았다. 실제 캡처·GPU·모델·패키지 설치·peer 소스 변경0이다.
+
+잔여 한계
+Neumaier 누산은 유한정밀도 보상을 개선하지만 FP64 exp/product 반올림, FP32 요약 저장 오차, 모든 극단적인 조건의 정확 산술을 보장하지 않는다. 이번 제한된 반례의 해결을 범용 무오차 증명으로 표시하지 않는다. 구조적 조건부 오차와 실제 입력의 수치 진단은 후속 등록에서 유지해야 한다.
+reader는 feature×chunk의 FP64 반복과 추가 sum/residual 배열을 사용한다. 그 작업공간과 시간을 향후 비용에 포함해야 하며 현재 합성 통과는 GPU 효율의 근거가 아니다. 준비 요약의 persistent payload 형식은 변하지 않았다.
+이전 PREPARATION_MANIFEST/SELFTEST_V1~3는 이전 소스의 역사 기록이다. 새 실자료 등록이 생기면 이번 수정 SHA, 명시적 amendment와 새 회귀 기록을 연결해야 한다. 이전 manifest를 수정판 검토로 표시하지 않는다.
+전체 FULL pilot의 stop_quality는 변하지 않는다. 실제 Opus5.5 독립 검토 및 실자료 방법효과 평가는 여전히 남아 있다.
+
+산출물
+PAIRED_CORE_AMENDMENT_PROBE_CODEX.json SHA 023b5b609f9692324ee0d8e837a787ac68f9b8c0f654d9b183893065c855afb9
+PAIRED_CORE_AMENDMENT_AUDIT_CODEX.json SHA 56a82afdb7086ec468e6a0be1ee1adcdacac782aa66afb580ec09272e89fca48
+본 검토는 원 반례의 재실행과 수정 코드의 한정된 수치 계약 확인으로 종료한다.

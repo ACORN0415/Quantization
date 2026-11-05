@@ -270,4 +270,28 @@ densePSAC rank3의계획1,694,016B는1,806,336B추가상한내,rank4/8dense는�
 중간관리자의21:50일회성재개알림예약PID516187(start_ticks53931741)은root가/proc로동일생존프로세스확인.
 예약은관리Run에알림한번만보내며모델을직접실행하지않고실제Opus검토완료를보장하지않는다.
 
-상태: 국소효과는추가강한회전대조에서도남았으나 전체생성pilot는stop_quality. 강한기준선·실용효과·신규성의종합목표는미달이며연속연구목표active.
+E020 [paired 합성 core의 독립 반례와 수정]
+초기35합성검사는통과했지만독립Codex가native계약과일치하는상쇄반례를발견했다.
+Gaussian(seed17)두청크의Dz0/DN±/동일offset에서실제nativeO=1,logZ=log5인데reader가0을반환하고fallback도발생하지않았다.
+이는실자료방법효과실패가아닌구현유효성문제다. 원core003dd4a/반례/초기검사와놓친root검토를보존했다.
+feature·청크별Neumaier합산뒤native항을마지막에더하도록수정. 새core c66e2e3e429652ad60da35c94d56e0a2baab46134252cbfd7005c8152f10eb82.
+기존35검사SELFTEST_V4및추가33상쇄회귀통과. 독립재검토에서원반례2개출력정확일치,추가head/query/value성분math.fsum대조최대6.22e-15.
+상태1,403,904B형식은불변이나FP64순차보상합산의시간/작업공간은새로측정해야한다. GPU효율근거로쓰지않는다.
+실제캡처/GPU/효과측정0,실제Opus검토미완료.
+
+E021 [PSAC/QKSA 합성 기준선과 메모리 계약 누락]
+공개정의adaptation기준선72합성검사통과뒤,독립검토에서grad-enabled입력이basis/scale의계산그래프로보유되는경로를발견했다.
+네상태생성함수에no_grad만추가하고90검사통과. 새core63364f9d4619a231ea5425fcf8e60bf8254bbde738948a952c6604d5432185d9.
+PSAC는실제BF16복원행을rawM으로선별하며이를원문에미지정된강한adaptation으로명시했다.
+D010의rank3예산산술은coefficient+basis계획량이며전체운영상주상태판정으로사용할수없다.
+실제header포함rank3payload1,694,184B에반복write용rawM FP64 1,572,864B를더하면3,267,048B다.
+M host보유/전송/계산또는더작은근사필터를정하지않고PSAC를cap내/밖으로단정하지않는다.
+반복eigvalsh/회전직교성검사시간도최적실행의필수비용과구분한다. 독립감사와원문근거를보존했다.
+
+D011 [실자료 비교 등록 전 수치·비용 계약 정정]
+paired core 수치수정은한정독립재검토통과. 강한기준선의rawM운영비용과단순FULL+QKSA/FULL+PSAC결합대조를실제Opus와검토한다.
+같은cap주장은payload/GPU상주/host상주/write-read peak를같은범위로센뒤확정한다.
+새rank/팔/효과gate를결과뒤에붙인것이아니라,실자료점수0인준비단계에서발견한누락이다. 원proposal은이계약해결전LOCK하지않는다.
+전체pilot stop_quality,기존후보종료,원임계값은모두유지한다. 실제Claude는사용자지정21:50이후Opus5.5확인전까지호출하지않는다.
+
+상태: 국소효과는추가강한회전대조에서도남았으나 전체생성pilot는stop_quality. paired와기준선은합성구현수정/검토단계이며실제효과미측정. 강한기준선·실용효과·신규성의종합목표는미달이며연속연구목표active.

@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "created_kst": "2026-11-05T21:14:23.776794+09:00",
+  "source_editing_stopped": true,
+  "status": "synthetic_preparation_ready_actual_Opus_review_pending",
+  "amendment": "Autograd graph-free persistent inference factories only",
+  "core_text_difference_exactly_four_no_grad_decorators": true,
+  "synthetic_test_checks": 90,
+  "actual_data_execution_authorized_here": false,
+  "actual_claude_final_review_complete": false,
+  "real_capture_reads": 0,
+  "GPU_calls": 0,
+  "new_effect_experiments": 0,
+  "files": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/core.py": "63364f9d4619a231ea5425fcf8e60bf8254bbde738948a952c6604d5432185d9",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/selftest.py": "6adfed183fb614726e52cc24f72a91878ea2a56d7ed35b66f60320bc55e9b7de",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/SELFTEST_V3.json": "509ac4c11e6e6d746beed3c6bad1f32d890fbd718f37587d4f89b7c3d7b6f248",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/AMENDMENT_V2_KO.txt": "346b7c74a87e593d13768e01d27c528a7fb778167c3ef54b5c0e7c383e2b8c09",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/FINAL_READY.json": "2f4d1d7e181354b9f2f6996ff62c7bb99e614088e539828c58888a3150075c3e",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/core.py.before_amendment_v2.txt": "d45fab4430d19dba9bb8b68de4f86b90481406b586bfc4cd096556e1c17d3fef",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/selftest.py.before_amendment_v2.txt": "0e1bcb1ab9a1b872fb9bc624801b26e6361c861013ecb02dcc21035fcdb13db7",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/PRESERVED_BEFORE_V2.json": "3317d6cdc90e62361ef735daf0b143b87de17fb77601b452a81ce5b11aa47dc7",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/MANAGER_STATUS_BEFORE_V2.json": "0fb002e8a5566104bc86a077555ca2c640131763519539d4ccd674aa96d3f413"
+  },
+  "preserved_historical_files": {
+    "FINAL_READY.json": "2f4d1d7e181354b9f2f6996ff62c7bb99e614088e539828c58888a3150075c3e",
+    "SELFTEST.json": "209c57f9094c054a95de7b3ec7c97c237b95655d3f826fa3c7cf43e206a17b66",
+    "SELFTEST_V2.json": "70cfb4130af0779475aaab9791a3808674e3f253597de373336f83c5892e59e1",
+    "PREPARATION_KO.txt": "e45ee5d150047138a8fff8b8a4fae1f8f1e26e3877af476387ba513ef4d1733f",
+    "SOURCES.json": "8c356dc2a13f42141d5399b20a4488b0421abb34def7e9ab09a1dbf1d7df8a2e"
+  },
+  "unresolved": [
+    "actual Opus review",
+    "PSAC raw moment residency and host/transfer/write cost",
+    "repeated invariant-validation time versus production cost",
+    "real-data registration and matching K-only references"
+  ]
+}

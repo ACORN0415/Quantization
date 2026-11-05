@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "created_utc": "2026-11-05T12:18:35.553137+00:00",
+  "status": "amended_synthetic_core_frozen_independent_recheck_pending",
+  "source_editing_stopped": true,
+  "prior_source_commit": "003dd4a",
+  "reason": "independent valid native-output cancellation counterexample",
+  "actual_claude_reviewed": false,
+  "real_data_runs": 0,
+  "gpu_runs": 0,
+  "checks": {
+    "existing_suite": 35,
+    "new_cancellation_regression": 33
+  },
+  "files": {
+    "core.py": "c66e2e3e429652ad60da35c94d56e0a2baab46134252cbfd7005c8152f10eb82",
+    "selftest.py": "e385982bbd3ada4010b921a1afd66a9cc134c7915ad69b11df15c915818b1b17",
+    "cancellation_regression.py": "8d028876e94a30b7480c28465d1b0a70f2f4bd56ce014a5d73babd37981b599d",
+    "SELFTEST_V4.json": "e9eeca181a83cdc6de15a6837e314f85512947acafb94daac84670bab7336fed",
+    "CANCELLATION_REGRESSION_V1.json": "f8a40be4b6916ff045f83b99b90210dad24f6e7a8a9b1d2250e2963818fbf7f8",
+    "AMENDMENT_V2_KO.txt": "4d014a5f118e8902da79b7f9764b673bc9a6be1f78949caf1b184c7fc8374f52",
+    "PREPARATION_MANIFEST.json": "e869209b2a4c961ee1ec1644f8ad9d4955e2d1cb52d1cf904c0de44c8d053dfa"
+  }
+}

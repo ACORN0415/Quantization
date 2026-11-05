@@ -1,0 +1,31 @@
+PSAC/QKSA CPU 준비물 — Codex 독립 교차 검토
+작성: 2026-11-05T21:10:19.097089+09:00
+범위: 동결 core.py 전체264행, selftest.py189행, PREPARATION_KO/SOURCES/FINAL_READY/SELFTEST_V2, 두 원문 해당 식·부록. 추가 소형 합성 반례만 실행. 실자료·GPU·설치·원소스 변경0. 실제 Opus 검토나 실자료 실행 승인을 대체하지 않는다.
+
+판정
+수식과 실제 BF16 행 판정·패킹의 핵심 구현은 명시한 adaptation에 부합한다. 독립 합성 검사에서 잘못된 보정 채택·회전 방향·마스크·바이트 산술 오류는 발견하지 못했다. 다만 “예산 안의 강한 기준선이 준비됐다”는 결론에는 아직 두 조건이 빠져 있다: PSAC raw moment의 실제 상주/전송 정책, inference-only graph 비보존 계약. 현재 검증 포함 CPU 비용으로 알고리즘의 실용 비용 우열을 판정하면 안 된다.
+
+확인한 내용
+1. PSAC 원문 대조: QuantWM v3 식13–17의 E=K-Khat, C=EU, Khat+CU^T를 구현한다. U를 BF16으로 저장한 뒤 C를 계산하고 INT8[-127,127]/FP16 행별 scale을 쓴다. D.1의 불리한 행 제거와 index 포함 작은 dense/sparse 선택을 반영한다. INT8 범위·최소scale2^-24·ties-to-even·저장 U를 이용한 projection·full moment 및 실제 BF16 row 판정은 원문에서 구체적으로 확정되지 않은 구현 선택이며 문서가 이를 명시한다. 공식 전체 재현이라고 부르지 않는 것이 맞다.
+2. 실제 저장 scale로 quantization하고 FP16 반올림에 따른 clipping을 계수로 남긴다. 원하는 scale이 FP16 범위를 넘거나 저장/복원/점수가 비유한이면 거부한다. 임의 repair/fallback이 없다. row-filter는 연속 근사 출력이 아니라 실제 BF16 복원 결과의 e^T M e 감소만 채택한다.
+   독립 경계 사례 K=[1,1.0078125], Khat=[1,1], rank1 U≈[1,1]/sqrt(2), M=ones에서 연속 projection의 점수는 6.103515625e-5→2.785327524e-12로 줄었지만 실제 BF16 출력은 그대로였다. core는 active_rows=0으로 버렸고 bytes를 보존했다. 따라서 단순 FP64 개선을 BF16 개선으로 잘못 세지 않았다.
+3. payload: header28B와 실제 code/scales/indices dtype·shape를 센다. N4680,H12는56160행으로 uint16 index가 충분하다. dense=28+NH(r+2), sparse=28+nnz(r+2+indexwidth); 동점은dense. 누락 행0, 양수 scale, 정렬/중복/bounds/길이 검사와 실제 byte roundtrip을 확인했다. basis는 층별 별도이며 총메모리와 payload가 구분돼 있다. 미래 GPU allocator/임시 dense 복원까지 검증한 것은 아니다.
+4. QKSA: Δ는 실제 인접 code 간격이며2배하지 않는다. K@R에 맞춰 Q@R을 쓰고 Σq_rot²Δ²/(24d)를 과거 prefix에만 뺀다. 비대칭90도 회전의 독립 scalar 값0.032552083333333336과 정확히 같았다. 유한 unmasked score에 bias를 먼저 적용한 뒤 mask/softmax를 적용하는 독립 검사도 일치했고 현재 구간 bytes는 유지됐다. -inf mask가 이미 적용된 score를 이 API에 넣으면 거부되는 계약이므로 후속 driver가 순서를 지켜야 한다. frame별 scale 확장은 각 프레임 padding을 따로 제거한다.
+5. 정보 시점: core가 query를 읽어 basis/rank를 고르거나 원자료 파일을 여는 경로는 없다. 현재 쓰기의 원본 K와 복원 K를 사용한 row-filter는 인과적으로 가능하다. 그러나 p0 고정 provenance는 외부 잠금의 책임이다. PSAC residual K/Khat, basis, raw moment는 같은 좌표계여야 한다. causal common의 Hadamard-회전 H를 원좌표 residual에 그대로 넘기지 말아야 한다. QKSA는 읽기 당시 현재 Q를 쓰는 것이 허용되지만 평가 Q로 과거 PSAC basis를 고르면 다른 설정이다.
+
+보완할 메모리·비용 계약
+[M1, 예산 판정 전 필수] PSAC full raw M[12,128,128] FP64=1,572,864B가 행 선별 때문에 매 쓰기에 필요하다. coefficient+basis만으로 rank3의1,694,184B를 cap1,806,336B와 비교하는 것은 payload 비교다. M도 GPU에 계속 두면 합3,267,048B로 cap을 넘는다. M을 CPU에 보유하거나 쓰기마다 전송/복원하면 host 상주·전송·CPU 계산·일시 GPU workspace와 시간을 따로 보고해야 한다. 이를 단순한 1회 기저 준비 비용으로 숨길 수 없다. FULL은 준비 후 H를 해제하고 U만 보유하는 기존 경로라 이 점이 다르다.
+[C1, 실용 비용 판정 전 필수] 같은 고정 moment에 대해 psac_encode 2회는 eigvalsh 검증2회를, qksa_bias 2회는 직교성 bmm 검증2회를 다시 호출했다. 추가 packet validate/finite scan·FP64 변환·dense bias/scale/score materialization도 있다. 이는 합성 검증 core의 정확성 문제는 아니지만 반복 validation을 포함한 wall time이 최적 구현의 필수 비용은 아니다. 이후 고정 상태 검증을 준비 단계에서 한 번 하고 immutable hash/계약을 보존하는 경로와 실제 동적 packet 검증 비용을 구분해야 한다. 기존 코드를 수정하지 않았으며 어떤 overhead 비율도 측정하지 않았다. full-moment·실제 BF16 row-filter는 강한 품질 adaptation이지만 논문의 불명확한 근사보다 비쌀 수 있어 그 비용을 PSAC 일반 비용으로 단정하지 않는다.
+[M2, 통합 전 명시 필요] core 자체는 no_grad를 강제하지 않고 requires_grad 입력을 거부하지 않는다. 독립 합성에서 prepare_basis 출력은 CloneBackward0를, packet.scales는 IndexPutBackward0를 갖고 requires_grad=True였다. 따라서 inference-only 조건 없이 “원본 K/E를 payload에 보존하지 않는다”는 메모리 주장은 성립하지 않는다. 실제 캡처가 detached이면 이 문제는 발생하지 않지만, 미래 driver에 no_grad/inference_mode와 저장 tensor의 grad_fn=None 검사를 넣거나 core 계약을 보완해야 한다. 현재 소스는 동결 상태로 그대로 유지했다.
+
+FULL 결합 대조에 대한 의견 — 팔 확정 아님
+FULL+QKSA는 기존 scale과 같은 공통 회전을 재사용하면 추가 persistent state0인 유효한 강한 대조 후보다. OBQ 잔차는 균일·독립 오차 가정에 맞지 않을 수 있어 이론적 이득을 보장하지 않지만, 미래 정보 없이 비교할 수 있다. 읽기 bias 생성/적용의 실제 시간·workspace는 반드시 포함한다.
+FULL+PSAC rank1의 산술은 U786,432B + [6×(28+56160×3)+BF16 basis3072B] = 1,800,552B로 payload 관점에서 cap보다5,784B 작다. 원본 K가 살아 있는 같은 write에서 FULL 복원 잔차를 만들 수 있으므로 시점상 가능하다. 그러나 M을 GPU 상주시키면3,373,416B가 되어 cap을 넘고 padding/추가 메타/작업공간도 미검증이다. 현재로서는 조건부 payload 가능성이지 실제 cap 충족이 아니다. p0 basis와 M을 FULL의 inverse-Cholesky U와 같은 tensor인 것처럼 공유 계수로 세면 안 된다.
+따라서 새 요약의 필요성을 말하기 전에 이 두 단순 결합을 Opus와 강한 대조 목록으로 검토하는 것이 타당하다. 다만 FULL+PSAC1은 M 상주 정책까지 맞춘 실행 가능한 예산 점을 확보한 경우에만 cap 내 주비교에 포함한다. 이를 이유로 현재 source/팔/효과 gate를 변경하지 않았다.
+
+증거와 검토 한계
+저장된 SELFTEST_V2의72검사를 읽었으며 여기서 전체72개를 다시 실행했다고 주장하지 않는다. 별도 JSON의 소형 경계/회전/마스크/호출 계수/grad-retention/바이트 산술을 독립 실행했다. 대상 폴더 파일의 전후 SHA는 모두 같고 CUDA 초기화도 없다. real-K-only/FULL 공통 참조 비교, 실제 저정밀 입력의 error 효과, runtime/peak, 데이터 누수 없는 driver 등록, 실제 Opus 검토는 남아 있다.
+core SHA d45fab4430d19dba9bb8b68de4f86b90481406b586bfc4cd096556e1c17d3fef
+selftest SHA 0e1bcb1ab9a1b872fb9bc624801b26e6361c861013ecb02dcc21035fcdb13db7
+독립 JSON SHA 2c46f6548cf0a35d9458f70cd13838df8530deb7314fdb7ab41d73e11e6582d4
+원문: https://arxiv.org/html/2609.26425v3 (식13–17, D.1); https://arxiv.org/html/2605.26266v1 (Appendix C–F).

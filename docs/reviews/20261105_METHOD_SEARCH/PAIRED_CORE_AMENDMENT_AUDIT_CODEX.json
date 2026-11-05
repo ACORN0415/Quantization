@@ -1,0 +1,504 @@
+{
+  "review_scope": "Only the explicit signed-summation numerical amendment; no real data/GPU/model",
+  "review_time_utc": 1793881050.2639656,
+  "source_sha256": "c66e2e3e429652ad60da35c94d56e0a2baab46134252cbfd7005c8152f10eb82",
+  "original_probe_source_sha256": "a4d38af58ed36002a8d42e9e35e25f4ba75c9440d83b1b28f961cd52a40dc13a",
+  "original_probe_output_redirect": {
+    "from": "PAIRED_CORE_INDEPENDENT_PROBE_CODEX.json",
+    "to": "PAIRED_CORE_AMENDMENT_PROBE_CODEX.json",
+    "only_source_text_substitution": true
+  },
+  "original_counterexamples_now_pass": 2,
+  "original_probe_result_sha256": "023b5b609f9692324ee0d8e837a787ac68f9b8c0f654d9b183893065c855afb9",
+  "original_failed_probe_preserved": true,
+  "existing_regression_rerun": {
+    "status": "passed",
+    "scope": "synthetic numerical regression only; no capture/model/GPU",
+    "checks": [
+      {
+        "name": "gaussian_saved_cancel_r1_torch.float64",
+        "passed": true
+      },
+      {
+        "name": "gaussian_native_output_r1_torch.float64",
+        "passed": true,
+        "expected": [
+          [
+            [
+              1.0
+            ]
+          ]
+        ],
+        "output": [
+          [
+            [
+              1.0
+            ]
+          ]
+        ],
+        "logz": [
+          [
+            1.6094379124341003
+          ]
+        ],
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "gaussian_saved_cancel_r1_torch.bfloat16",
+        "passed": true
+      },
+      {
+        "name": "gaussian_native_output_r1_torch.bfloat16",
+        "passed": true,
+        "expected": [
+          [
+            [
+              1.0
+            ]
+          ]
+        ],
+        "output": [
+          [
+            [
+              1.0
+            ]
+          ]
+        ],
+        "logz": [
+          [
+            1.6094379124341003
+          ]
+        ],
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "gaussian_saved_cancel_r32_torch.float64",
+        "passed": true
+      },
+      {
+        "name": "gaussian_native_output_r32_torch.float64",
+        "passed": true,
+        "expected": [
+          [
+            [
+              1.0
+            ]
+          ]
+        ],
+        "output": [
+          [
+            [
+              1.0
+            ]
+          ]
+        ],
+        "logz": [
+          [
+            1.6094379124341003
+          ]
+        ],
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "gaussian_saved_cancel_r32_torch.bfloat16",
+        "passed": true
+      },
+      {
+        "name": "gaussian_native_output_r32_torch.bfloat16",
+        "passed": true,
+        "expected": [
+          [
+            [
+              1.0
+            ]
+          ]
+        ],
+        "output": [
+          [
+            [
+              1.0
+            ]
+          ]
+        ],
+        "logz": [
+          [
+            1.6094379124341003
+          ]
+        ],
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_False_False_(0, 1, 2)",
+        "passed": true,
+        "expected": 0.5,
+        "output": 0.5,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_False_False_(0, 2, 1)",
+        "passed": true,
+        "expected": 0.5,
+        "output": 0.5,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_False_False_(1, 0, 2)",
+        "passed": true,
+        "expected": 0.5,
+        "output": 0.5,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_False_False_(1, 2, 0)",
+        "passed": true,
+        "expected": 0.5,
+        "output": 0.5,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_False_False_(2, 0, 1)",
+        "passed": true,
+        "expected": 0.5,
+        "output": 0.5,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_False_False_(2, 1, 0)",
+        "passed": true,
+        "expected": 0.5,
+        "output": 0.5,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_False_True_(0, 1, 2)",
+        "passed": true,
+        "expected": 2.0,
+        "output": 2.0,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_False_True_(0, 2, 1)",
+        "passed": true,
+        "expected": 2.0,
+        "output": 2.0,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_False_True_(1, 0, 2)",
+        "passed": true,
+        "expected": 2.0,
+        "output": 2.0,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_False_True_(1, 2, 0)",
+        "passed": true,
+        "expected": 2.0,
+        "output": 2.0,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_False_True_(2, 0, 1)",
+        "passed": true,
+        "expected": 2.0,
+        "output": 2.0,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_False_True_(2, 1, 0)",
+        "passed": true,
+        "expected": 2.0,
+        "output": 2.0,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_True_False_(0, 1, 2)",
+        "passed": true,
+        "expected": 0.5,
+        "output": 0.5,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_True_False_(0, 2, 1)",
+        "passed": true,
+        "expected": 0.5,
+        "output": 0.5,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_True_False_(1, 0, 2)",
+        "passed": true,
+        "expected": 0.5,
+        "output": 0.5,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_True_False_(1, 2, 0)",
+        "passed": true,
+        "expected": 0.5,
+        "output": 0.5,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_True_False_(2, 0, 1)",
+        "passed": true,
+        "expected": 0.5,
+        "output": 0.5,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_True_False_(2, 1, 0)",
+        "passed": true,
+        "expected": 0.5,
+        "output": 0.5,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_True_True_(0, 1, 2)",
+        "passed": true,
+        "expected": 2.0,
+        "output": 2.0,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_True_True_(0, 2, 1)",
+        "passed": true,
+        "expected": 2.0,
+        "output": 2.0,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_True_True_(1, 0, 2)",
+        "passed": true,
+        "expected": 2.0,
+        "output": 2.0,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_True_True_(1, 2, 0)",
+        "passed": true,
+        "expected": 2.0,
+        "output": 2.0,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_True_True_(2, 0, 1)",
+        "passed": true,
+        "expected": 2.0,
+        "output": 2.0,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "residual_True_True_(2, 1, 0)",
+        "passed": true,
+        "expected": 2.0,
+        "output": 2.0,
+        "fallback": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "name": "no_cuda",
+        "passed": true
+      }
+    ],
+    "checks_total": 33,
+    "checks_passed": 33,
+    "wall_seconds": 0.020228793029673398,
+    "source_sha256": {
+      "core.py": "c66e2e3e429652ad60da35c94d56e0a2baab46134252cbfd7005c8152f10eb82",
+      "cancellation_regression.py": "8d028876e94a30b7480c28465d1b0a70f2f4bd56ce014a5d73babd37981b599d"
+    }
+  },
+  "additional_vector_math_fsum_check": {
+    "shape": {
+      "H": 2,
+      "Q": 3,
+      "D": 4,
+      "rank": 3,
+      "Dv": 2
+    },
+    "scope": "artificial stored states, not attained model statistics",
+    "passed": true,
+    "max_abs_error": 6.217248937900877e-15,
+    "fallback_queries": 0,
+    "expected": [
+      [
+        [
+          1.9961186630467882,
+          3.0922373260935765
+        ],
+        [
+          2.1656054162575664,
+          3.231210832515133
+        ],
+        [
+          2.3033306116933163,
+          3.306661223386633
+        ]
+      ],
+      [
+        [
+          -0.031105966302658716,
+          2.1077764915756645
+        ],
+        [
+          0.3788299461754907,
+          2.2552925134561272
+        ],
+        [
+          0.8049988107635251,
+          2.398750297309119
+        ]
+      ]
+    ],
+    "observed": [
+      [
+        [
+          1.9961186630467893,
+          3.092237326093579
+        ],
+        [
+          2.1656054162575695,
+          3.2312108325151394
+        ],
+        [
+          2.3033306116933163,
+          3.3066612233866324
+        ]
+      ],
+      [
+        [
+          -0.031105966302655948,
+          2.107776491575664
+        ],
+        [
+          0.3788299461754934,
+          2.2552925134561264
+        ],
+        [
+          0.8049988107635256,
+          2.398750297309119
+        ]
+      ]
+    ]
+  },
+  "stored_SELFTEST_V4_source_matches": true,
+  "stored_regression_source_matches": true,
+  "protected_files_unchanged": true,
+  "no_CUDA_initialized": true,
+  "real_capture_reads": 0,
+  "GPU_calls": 0,
+  "model_loads": 0,
+  "verdict": "original_blocking_signed_cancellation_fixed_in_reviewed_scope; actual_Opus_review_pending"
+}
