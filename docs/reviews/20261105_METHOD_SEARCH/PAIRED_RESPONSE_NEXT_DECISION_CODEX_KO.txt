@@ -1,0 +1,28 @@
+공통 feature 차분 응답 보정 — 다음 선택을 위한 Codex 검토 (2026-11-05)
+상태: 기존 Fable 제안의 재검토. GPU/캡처 로드/실험/학습 0회. 실제 Opus 검토 미완료. 실행 등록 아님.
+
+판단: paired 실자료 검사는 미실행으로 파악된다. 다음 선택 하나는 “동일 예산에서 FULL·비트 증가·PSAC보다 작은 부호 있는 응답 요약을 택할 이유가 있는가?”이다. 이 CPU 판별 명세를 실제 Opus와 확정하는 데 다음 자원을 쓴다. 기존 full-H pilot의 stop_quality는 유지한다.
+
+1. 중복 검사와 관측/미확인
+장부 D001은 paired를 실패가 아닌 OBQ 우선순위 때문에 유보했다고 기록한다. 기존 METHOD_FROM_FINDINGS·METHOD_DISCUSSION·method_gap_codex 보고서와 무시 파일까지 포함한 tools/src/experiments/docs/results 검색에서 paired 실자료 구현·LOCK·RESULT는 찾지 못했다. algebra_result.json의 약4.2e-16 일치는 합성 요약식 검증이다. 이 결론은 확인한 저장소 범위에 한정한다.
+반면 S9 INT2+PSAC8+score는 10입력 생성까지 검사했고 K4V2 비열등 실패로 fused 투자를 종료했다. 이를 재개하거나 미실행이라고 하지 않는다. 현재 회전 INT4·동일 frame 그룹의 paired 검사와도 다르다.
+full-H pilot은 유효 8생성 뒤 stop_quality: coast 후반 latent NSE 감소36.0~60.1%, rain 5.7~8.2%, rain/R_bf16 MUSIQ -2.179점; DINO는 네 비교 모두 증가했다. “국소 attention 개선이 전체 생성 기준 충족을 보장하지 않았다”는 관측이다. mass·값 방향·query 궤적·V 오차 중 원인은 미분리이며 paired가 고칠 증거는 없다. 별도 fixed_rotation_control은 완료됐고 6 endpoint에서 FULL이 FIXED17보다 SSE를 21.40~42.08% 줄여 continue_beyond_simple_fixed_rotation이었다. 이는 국소 강한 대조를 확보한 결과이지 pilot 종료의 철회가 아니다.
+
+2. 기존 후보에서 먼저 결정할 것
+청크별 Dz=Σ[ψ(K)-ψ(Khat)], DN=Σ[ψ(K)Vᵀ-ψ(Khat)Vhatᵀ]를 저장하고 기존 attention 분자·분모를 φ(Q)ᵀDN, φ(Q)ᵀDz로 보정하는 기존 식을 유지한다. 공통 map, 최초 encode 후 원본 해제, 청크 단위 append/evict 조건이다. 식·부호 허용·요약 상태 자체를 신규성으로 부르지 않는다.
+첫 제안은 학습 없는 고정 feature의 표현·수치 가능성 검사다. p0 통계·head 선택을 고정하고 기존 causal 캡처 층18/24×call0/3의 고정 stride Q128에서 평가한다. 이미 개발에 사용한 입력이므로 독립 최종 보류가 아니다. 회전·RTN 산술·frame1560/g16·scale 저장·V4·현재 BF16을 맞춘다. 완료된 fixed_rotation_control의 p0 선택 FIXED17과 FULL을 필수 기준선에 포함한다.
+K-only DN=Σ[ψ(K)-ψ(Khat)]Vhatᵀ로 제한하고 모든 팔(FULL 포함)을 같은 Attn(Q,K,Vhat) 및 같은 post-Wo 좌표로 평가한다. 공통 Vhat와 현재 BF16을 유지하며, 전체 BF16 참조 오차는 별도 열로 남긴다. fixed_rotation_control의 기존 전체 BF16 SSE를 K-only 점수로 대신하지 않는다. 기존 제안에서 rank32 하나·seed17/29/43만 남기고 결과에 따라 rank를 늘리지 않는다. 공통 Gaussian map/공통 exponent offset, FP64 작업 누산/FP32 저장, native logZ 정규화와 cancellation·분모 fallback을 고정해야 한다. 제안 gate는 각 endpoint·각 seed에서 FULL을 포함한 최선의 실행 가능한 기준선보다 post-Wo SSE≥10% 감소, fallback≤0.1%, byte cap 준수다. CPU45분/4threads/RSS8GiB/추가2GiB에 준비·평가 포함. 아직 잠금·실행하지 않았으며, 미달은 해당 고정 feature 인스턴스의 실패이지 학습 feature 전체의 불가능성은 아니다.
+
+3. 강한 대조와 실제 비용의 계약
+FULL: 고정 p0 full-H의 기존 동일 INT4 grid/scale/code 보상 경로. 추가 KV payload 0이지만 encoder factor U FP32[12,128,128]=786,432B/층을 쓴다. 이를 예산 내 필수 대조로 두며, RTN/PSAC만 이겨 paired의 이득을 선언하지 않는다. 기존 RESULT의 k_only_reference도 존재하나 입력·좌표·참조가 모두 맞는 점수만 재사용한다.
+비트 증가: p0로 고정한 한 head K8, 나머지 K4/V4의 기존 packed 경로. 6청크·한 층 추가 코드1,806,336B에 metadata 차이를 실측한다. 같은 상한≠같은 사용량. 없는 INT5 패킹을 가정하지 않는다.
+PSAC: QuantWM v3 D.1은 U BF16·C INT8·행별 FP16 scale, query-weighted 오차가 줄지 않는 행의 보정 제거, sparse index를 포함한 dense/sparse 중 작은 저장을 명시한다. 기존 cand1_diag.py의 FP16 U·열별 C scale을 그대로 쓰면 기준선이 달라진다. p0 고정 U는 오프라인 대조이며 온라인 전체 재현이 아니다. rank8 dense는 공유 U 포함 약3,394,176B/층/6청크로 위 cap을 넘는다. cap 내 rank는 p0에서 고정하고 실제 scale/index를 세며, rank8은 별도 비용점으로 표시한다. 낮은 rank를 이긴 결과를 PSAC 일반 우위로 쓰지 않는다.
+QKSA: 회전 Q와 실제 인접 코드 간격 Δ에 대해 과거 score에서 Σq_rot,c²Δ_group,c²/(24d)를 뺀다. Δ=scale이지 2×scale이 아니다. 이론 계수1 고정; 과거 λ 실패를 구제하는 튜닝 금지. 추가 persistent state는 없어도 읽기 연산은 있다.
+signed base-aware: g(Q,[Khat,K-Khat])는 paired 함수를 표현할 수 있다. KVLinC의 양의 error-only feature만 이기는 비교는 부족하다. 학습형 진행 시 같은 상태량·자료·파라미터·시간의 signed 대조가 필수이며 현재 구현·학습 비용은 없다. 첫 검사 성공으로 공유 차분의 신규성·일반화 우위를 주장할 수 없다.
+예산 범위: 6개 과거 KV 54,097,926B/층을 공통 바닥으로 하고, 추가 상주 상태 cap은 한 head K8의 1,806,336B/층+실제 metadata 차이다. FULL U는 청크마다 복제하지 않고 층당 한 번 센다. 공통 Hadamard FP32[128,128] 65,536B는 전체 모델에서 한 번 별도 포함한다. rank32 paired DN/Dz 1,188,864B+두 map 393,216B+FP64 offset 계획 18,432B=1,600,512B/층이며 기타 metadata를 추가한다(공유 Ω 한 map이면 1,403,904B). 같은 cap 안에서도 실제 사용량은 다르다. 이 값은 paired 구현 전의 tensor 계획량이며 직렬화·alias·패딩 확인 전 실측으로 쓰지 않는다. 준비용 query H는 FP64[12,128,128] 하나당1,572,864B: 기존 FULL은 raw/damped H를 준비 후 해제하고 U만 추론에 쓴다. CPU 진단에서 H를 공유해 남기면 공통 host workspace로 한 번 세고, 팔별 단독 실행 필요량도 분리한다. 기존 pilot은 CPU U 사본도 유지했으므로 GPU U와 별도 host 사용량으로 기록한다. paired map도 같은 host/device 복사 범위로 세며 FP64 작업 누산·encoder workspace·임시 복원은 별도 peak에 포함한다. K-only 상태 형성 약115M FLOP/head/chunk, Q128 읽기 약2.1M FLOP/head는 exp·정규화 제외 추정이다. GPU 속도 이득이 아니다. FULL H/factor/encode, PSAC 기저/projection/복원, QKSA 읽기, 비트 복원, 각 준비시간·peak·전송을 함께 비교해야 한다.
+
+다음 행동: 이 한정된 CPU 검사의 byte 계약·강한 대조·안정화 수식을 Opus와 확정한다. 학습기나 GPU 생성부터 만들지 않는다. full-H pilot의 구제 실험과 별개인, 유보된 paired 후보의 첫 실자료 가능성 판별이다.
+
+근거
+로컬: METHOD_SEARCH/KNOWLEDGE_LEDGER_KO.txt D001·method_gap_codex/REVIEW_KO.txt; METHOD_DISCUSSION/{DECISION_KO.txt,algebra_result.json}; METHOD_FROM_FINDINGS/RESPONSE_KO.txt; full_obq_rollout_pilot/{REPORT_KO.txt,QUALITY.json,AUDIT_FINAL_CODEX.json}; fixed_rotation_control/RESULT.json(SHA256 4099fb0c8c4afa004405c21b036871986f840b2de044780a3484b4564d84bf97); full_obq_rollout_pilot/{worker.py,packed_adapter.py,FACTORS.json}; 문서/결과서/S9_cand1_diag.md §6–7; tools/cand1_diag.py.
+원문 직접 재확인: QuantWM §4.2/D.1 https://arxiv.org/html/2609.26425v3 ; QKSA Appendix E/F https://arxiv.org/html/2605.26266v1 ; KVLinC §3.2 https://arxiv.org/html/2510.05373v1 (공식 GitHub 링크 이번 확인404).

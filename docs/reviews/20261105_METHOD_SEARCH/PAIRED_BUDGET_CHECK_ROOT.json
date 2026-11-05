@@ -1,0 +1,32 @@
+{
+  "status": "analytical_planning_only_not_an_actual_allocation",
+  "extra_persistent_state_cap_bytes": 1806336,
+  "common_H128_bytes_separate": 65536,
+  "paired_rank32_shared_Gaussian_map": {
+    "DN_Dz_FP32": 1188864,
+    "one_shared_Omega_FP32": 196608,
+    "per_chunk_feature_offset_FP64": 18432,
+    "sum": 1403904
+  },
+  "paired_two_map_variant_sum": 1600512,
+  "FULL_U_FP32": 786432,
+  "PSAC_dense_INT8_rowwise_FP16_scale_and_BF16_basis": {
+    "2": 1353984,
+    "3": 1694016,
+    "4": 2034048,
+    "8": 3394176
+  },
+  "excluded_and_must_measure": [
+    "temporary workspaces and output buffers",
+    "host duplicates and transfer buffers",
+    "allocator padding/metadata",
+    "sparse indices, flags and dense-sparse selection",
+    "additional selected-rotation basis if used"
+  ],
+  "conclusions": [
+    "The fixed Gaussian phi/psi construction can share one Omega; two maps must not be charged unless actually present.",
+    "Rank3 dense PSAC fits the proposed additional-state cap; rank4 and8 dense do not. Sparse storage can change feasibility and must be checked before rejecting a rank.",
+    "A common base Hadamard can be counted outside the incremental cap only when it is identical and resident for all methods.",
+    "No speed, effect, total-memory equality, or implementation-completeness claim follows from this arithmetic."
+  ]
+}
