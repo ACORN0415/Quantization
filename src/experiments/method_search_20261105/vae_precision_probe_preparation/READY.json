@@ -1,0 +1,37 @@
+{
+  "status": "source_prepared_pending_independent_review_and_root_LOCK",
+  "root_execution_authorized": false,
+  "actual_Opus_design_review_read": false,
+  "actual_Opus_source_review_complete": false,
+  "preparation_deadline_utc": "2026-11-05T17:23:00Z",
+  "prepared_epoch": 1793899089.1695824,
+  "source_sha256": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/worker.py": "64c6b59ec0f68e7e78be79946e49420a5911062c0443a60b8036bb53af6f1b3d",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/selftest.py": "0bb235b2fd282332dc2200b3cf0343f2fc7bdf1c6c2fa927700e06aae83b51d6",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/SELFTEST.json": "c02673ba4c908073d71a5ea402f07106e25b36b6e7001f53bbaa9e6cf16c6e60",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/PROPOSAL_KO.txt": "d29491e0a59f87f051402e1d88aedc31f7ea206095842e09227e8331ad48a7a4",
+    "/home/acorn0415/Quantization/src/utils/wan_wrapper.py": "da919629bac4472cd9072223f1ab03200de276e202ab0d9b91e6789d500ff8fa",
+    "/home/acorn0415/Quantization/src/wan/modules/vae.py": "a4c1d9362f25a1bef463ac51caed4097317c007d4d87887b02a3a733fdbc48d5"
+  },
+  "synthetic_checks": 15,
+  "native_helper": "/root/method_gap_codex/event_sheet_review",
+  "helper_scope": "read-only native VAE/wrapper dtype and explicit buffer lifetime; no model load",
+  "source_frozen": true,
+  "GPU_calls": 0,
+  "model_loads": 0,
+  "latent_loads": 0,
+  "VAE_decodes": 0,
+  "generator_calls": 0,
+  "new_quality_scores": 0,
+  "git_changes": 0,
+  "runtime_gate_proposal": "late_RGB_RMSE_ge_0.02_sensitivity_only",
+  "removed_proposed_gate": "50% early-late mean RGB change reduction is descriptive only",
+  "not_verified": [
+    "actual native FP32 checkpoint dtype",
+    "GPU memory/wall cap",
+    "actual BF16/FP32 output",
+    "live GPU watchdog behavior",
+    "historical RGB bit identity"
+  ],
+  "root_run_command": "/home/acorn0415/sfq_data/env/bin/python worker.py --lock /absolute/root/approved/LOCK.json"
+}

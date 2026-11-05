@@ -1,0 +1,41 @@
+{
+  "status": "passed_synthetic_and_static_only",
+  "checks": [
+    "501 exact frame rows",
+    "MSE matches independent constant difference",
+    "MAE and linear q99 exact",
+    "input arrays unchanged",
+    "late fixed252frame RMSE",
+    "sensitivity gate positive without RGB drift criterion",
+    "identical path zero stop",
+    "shape mismatch rejects",
+    "float64 input rejects",
+    "partial frame summary rejects",
+    "missing LOCK rejects",
+    "no RUN created",
+    "original unchanged decode and constructor present",
+    "wrapper false-cache branch is native decode",
+    "worker compiles"
+  ],
+  "count": 15,
+  "actual_model_loads": 0,
+  "actual_latent_loads": 0,
+  "GPU_calls": 0,
+  "VAE_decodes": 0,
+  "numpy_version": "1.24.4",
+  "python_version": "3.10.22 (main, Oct  1 2026, 20:14:04) [GCC 14.3.0]",
+  "source_sha256": {
+    "worker.py": "64c6b59ec0f68e7e78be79946e49420a5911062c0443a60b8036bb53af6f1b3d",
+    "selftest.py": "0bb235b2fd282332dc2200b3cf0343f2fc7bdf1c6c2fa927700e06aae83b51d6"
+  },
+  "native_WanVAEWrapper_AST_sha256": "a6fdf05e871915e31406a26f91adfb34dc60fd0804c77e2be4cf0e157c6b8c3d",
+  "finished_epoch": 1793898902.2693732,
+  "not_verified": [
+    "native VAE execution",
+    "CUDA memory peak",
+    "FP32 checkpoint stored dtype",
+    "501frame decoder walltime",
+    "watchdog live GPU safety",
+    "RGB numerical difference"
+  ]
+}

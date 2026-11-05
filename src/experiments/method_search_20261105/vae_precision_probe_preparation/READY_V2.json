@@ -1,0 +1,39 @@
+{
+  "status": "source_prepared_final_V2_pending_actual_Opus_source_review_and_root_LOCK",
+  "root_execution_authorized": false,
+  "actual_Opus_design_review_read": false,
+  "actual_Opus_source_review_complete": false,
+  "preparation_deadline_utc": "2026-11-05T17:23:00Z",
+  "prepared_epoch": 1793899188.195752,
+  "source_sha256": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/worker.py": "bc3050540c89beedfc66943ba753f640293ca7347f04c2969aaf9fc8d327e970",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/selftest.py": "f89c3109742e7964ad1e815933ef1faeaeb85c94104a5697e09d375039d0765f",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/SELFTEST_V2.json": "708fe200d0bac0e6893375c4ff3d0f2f906eb8f5f1e8cc7d6a89fff2185366ed",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/PROPOSAL_KO.txt": "c5b77de76bb261248a030426471c0844563fb64a4dca327c87ed9ff2f7297ba2",
+    "/home/acorn0415/Quantization/src/utils/wan_wrapper.py": "da919629bac4472cd9072223f1ab03200de276e202ab0d9b91e6789d500ff8fa",
+    "/home/acorn0415/Quantization/src/wan/modules/vae.py": "a4c1d9362f25a1bef463ac51caed4097317c007d4d87887b02a3a733fdbc48d5"
+  },
+  "synthetic_checks": 17,
+  "native_helper": "/root/method_gap_codex/event_sheet_review",
+  "helper_scope": "read-only native VAE/wrapper dtype and explicit buffer lifetime; no model load",
+  "source_frozen": true,
+  "GPU_calls": 0,
+  "model_loads": 0,
+  "latent_loads": 0,
+  "VAE_decodes": 0,
+  "generator_calls": 0,
+  "new_quality_scores": 0,
+  "git_changes": 0,
+  "runtime_gate_proposal": "late_RGB_RMSE_ge_0.02_sensitivity_only",
+  "removed_proposed_gate": "50% early-late mean RGB change reduction is descriptive only",
+  "not_verified": [
+    "actual native FP32 checkpoint dtype",
+    "GPU memory/wall cap",
+    "actual BF16/FP32 output",
+    "live GPU watchdog behavior",
+    "historical RGB bit identity"
+  ],
+  "root_run_command": "/home/acorn0415/sfq_data/env/bin/python worker.py --lock /absolute/root/approved/LOCK.json",
+  "amendment": "atomic temporary-file race handled; unexpected monitor exceptions fail closed; clean watchdog completion asserted; payload arithmetic typo corrected",
+  "supersedes": "READY.json V1 preserved"
+}

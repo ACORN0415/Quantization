@@ -1,0 +1,20 @@
+{
+  "status": "criteria_selected_before_any_new_numeric_data",
+  "created_epoch": 1793899241.2260232,
+  "role": "root resource decision after independent design comparison",
+  "selected_rule": "late_RGB_RMSE_ge_0.02_sensitivity_only",
+  "formula": "sqrt(mean(perframe MSE_RGB_FP64_CPU for frames249..500 inclusive)); RGB[0,1],all spatial/channel samples",
+  "flag_at_or_above": 0.02,
+  "interpretation": "Engineering sensitivityflag(about5.1/255 RGBlevels), not perceptual threshold,statisticalsignificance,causaldefect,FP32qualityadvantage ornovelmethodsuccess. Flagpermitsonlyevaluationprecisionreview;noautomaticFP32adoption.",
+  "below_threshold": "Stop current decoderprecision intervention expansion for thiscase; donotexcludeallVAE/latentcauses.",
+  "meanRGB": "Reportearly0..125 andlate375..500 vector/L2 andratio descriptiveonly. Do notrequire50percent reduction; lowerchangeisnotknownbetter underlegitimate scene/lightingchange.",
+  "independent_proposals": "Codex independentlyrejectedmeanRGBgate andproposedRMSEsensitivity; Opus independentlycriticizedrootundefinedANDgate andproposedmeanRGBL2ratio. RootchoosesCodexforprecisenumericalquestion,retainsOpusfreshload/normalizationbundle/TF32cuDNNcontracts.",
+  "provenance": "Chosenp00ispreviouslyinspecteddevelopmentcase;notindependentholdout.",
+  "intervention_bundle": [
+    "weight rounding",
+    "decoder arithmetic/backend dtype",
+    "native mean/std castandreciprocal dtype"
+  ],
+  "new_GPU_model_or_latent_loads_before_decision": 0,
+  "pending": "Final frozenworker/actualOpussource review/rootLOCK; noGPUauthorityfromthisrecord"
+}
