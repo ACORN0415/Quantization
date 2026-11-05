@@ -1,0 +1,39 @@
+Paired stage0 등록 문서의 우선순위 — root 결정
+2026-11-05. 실제 입력의 방법 효과를 측정하기 전에 작성한다.
+
+이 문서는 실제 Opus 5.5 두 검토자의 문서 모순 지적(R1)에 대한 결정이다.
+과거 REGISTRATION_DRAFT_KO.txt와 수정 전 소스·기록은 그대로 보존한다.
+이 문서 자체는 실자료 실행 승인이나 전체 실행 유효성 확인이 아니다.
+
+1. 대체 관계
+paired_response_stage0/AMENDMENT_V2_KO.txt와 AMENDMENT_V3_KO.txt는
+REGISTRATION_DRAFT_KO.txt의 39–43행(15팔), 54–56행(FM의 사후 cap 적격성),
+89행(60행)을 대체한다. 구 초안의 다른 조항도 수정 문서와 충돌하면 수정 문서를
+우선한다. V3는 PAIR의 초기 미정의 변수 수정만 추가하며 V2의 비교·판정 기준을 유지한다.
+이후 실행 결함의 한정 수정은 별도 변경 기록과 해시로 묶는다. 그 수정으로
+후보·입력·성공 기준·비용 분류·자원 상한을 변경하지 않는다.
+
+2. 확정된 비교와 비용 분류
+17팔 × 2층 × 2읽기 = 68행이다. 팔은 R_bf16, R_fp32, FULL, FIXED17, BIT8,
+RMU, RP3, RP3Q, FULLP1, RQ, FULLQ, FULLP1Q, FM3, FM8, PAIR17, PAIR29, PAIR43다.
+주 기준선은 위에서 FM3/FM8/PAIR17/PAIR29/PAIR43을 제외한 12팔이다.
+FM3/FM8은 사전에 고정한 높은 비용 참고점이며 실제 sparse 크기가 작아져도
+주 기준선에 편입하지 않는다. 추가 tensor/packet cap은 층별 6청크당 1,806,361B다.
+각 팔의 사전 dense 추가 상한과 저장량 계정 범위는 AMENDMENT_V2를 따른다.
+같은 cap에서 비교하는 것이지 같은 실제 사용량이라고 주장하지 않는다.
+
+3. 판정 정본과 기록
+최종 LOCK에 해시로 고정된 diagnose.py의 ARMS, PRIMARY_BASELINES,
+DENSE_EXTRA 및 decide가 실행되는 판정 정본이다. LOCK의 동일 필드와 정확히
+같아야 한다. 필수 행 누락·무효·상한 위반을 남은 기준선만으로 구제하지 않는다.
+각 endpoint·각 PAIR seed는 12개 주 기준선 최소 K-only post-Wo SSE 대비
+10% 이상 감소와 등록된 fallback 조건(1536쌍 중 최대 1쌍), 저장량 조건을 충족해야 한다.
+전체 BF16 참조 SSE는 별도로 필수 기록하지만 새로운 통과 조건을 추가하지 않는다.
+이 결과는 개발 입력의 국소 판별이다. 독립 보류 입력, 영상 품질, 전체 속도,
+일반화 및 신규성의 입증으로 확대하지 않는다. 기존 pilot stop_quality는 유지한다.
+
+4. 최종 결합 방법
+이 문서와 실제 Opus 검토 기록 및 전체 경로 합성 검증 기록의 해시를 최종 LOCK의
+review_evidence_sha256에 포함한다. 원본 실자료 LOCK/RUN은 root가 검토한 후에만 만든다.
+별도 synthetic_full 디렉터리의 합성 전용 LOCK는 실자료 실행 승인이 아니다.
+실자료의 2700초/CPU4/프로세스 RSS 8GiB/새 디스크 2GiB/GPU 0 및 1회 실행 원칙은 그대로다.

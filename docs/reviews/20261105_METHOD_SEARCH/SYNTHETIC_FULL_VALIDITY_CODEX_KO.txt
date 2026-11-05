@@ -1,0 +1,53 @@
+전체 합성 연결 검사 유효성 — 독립 Codex 좁은 검토
+작성 시점: 2026-11-05. 실제 Opus2의 검토를 대신하지 않는다.
+
+판정
+합성 입력 생성과 실제 자료 입력이 혼동된 증거는 발견하지 못했다. 현재 prepare18 실패는 tensor 내용 손상이나 방법 효과 실패가 아니라 BF16 singleton stride를 uint8 view로 바꾸는 감사 helper 결함이다. 해당 형상은 flatten으로 수정 가능하다. 일반 hash helper의 모든 singleton 형상까지 지원하려면 1D stride1도 명시적으로 보장해야 한다. 기존 원소스/합성실행소스를 이번 검토에서 수정하지 않았다.
+
+읽기 전용 연결 확인
+build_inputs.py는 고정 seed randn, eye, linspace로 production shape Q/K/V/Wo를 만든다. 원래 연구 캡처를 torch.load하는 경로가 없다. 원본 source helper를 import해 실제 연산을 수행하지만 source 읽기와 실제 tensor 자료 로드를 구분해야 한다. 현재 INPUT_BINDINGS_DRAFT의70개 artifact 경로 모두 합성 폴더 inputs 아래다. 모든 shape는 Q4680/H12/D128, 과거6청크+현재, 두 층18/24·read0/3·Q128로 구성되어 있다.
+등록된 diagnose.py/bit_baseline.py/mean_baseline.py 세 파일의 복사본과 실제 준비본의 SHA가 각각 FIXTURE_REGISTRATION 값과 일치한다. 따라서 이번 fixture는 경로·입력 교체이며 세 파일의 함수 본문을 축소한 검사는 아니다. FIXED17 상태를 고정 H128로 만들고 Wo를 identity로 만든 것은 합성 runtime fixture 선택이다. 실제 고정회전 선택/모델 품질/독립 보류 평가를 재현했다는 뜻이 아니다. 아직 17개팔의 전체 정상 완료를 확인한 것이 아니다.
+
+I/O 범위
+sitecustomize는 open audit에서 .pt 경로를 resolve한 뒤 합성ROOT 외부를 거부한다. run_all은 자식 PYTHONPATH에 합성 폴더를 지정하고 CUDA_VISIBLE_DEVICES를 빈 값으로 두며 CPU4, 각 process RSS8GiB, 디스크2GiB, 시작 시점부터20분을 감시한다. 완료된4개 IO_AUDIT의 외부.pt 거부 시도는0이며 기록된 tensor 경로는 모두 합성ROOT 내부다. 본 검토는 source와 작은 JSON만 읽었고 .pt는 합성이든 원자료든 열지 않았다.
+이 hook은 .pt 파일명 open 이벤트만 다루며 모든 파일형식/열린 fd/native라이브러리에 대한 일반 보안 sandbox라는 주장은 안 된다. 현재 확인한 torch.load manifest 경로와 source에는 이 범위 밖으로 연구 tensor를 읽는 코드가 없다. audit 목록의 'reads'는 쓰기 open도 포함하므로 실제 read 횟수와 같은 것으로 해석하면 안 된다.
+
+합성 LOCK와 실제 승인
+LOCK의 root_execution_authorized/actual_opus_review_complete 등 true는 기존 guard 분기를 실행하기 위한 test fixture 값이다. 같은 파일에 synthetic_only/test_authority/NOT_REAL_REVIEW_OR_REAL_EXPERIMENT_AUTHORIZATION이 있고 SYNTHETIC_EVIDENCE는 actual_Opus_final_source_review_complete=false를 명시한다. 따라서 이를 실제 Opus 승인 또는 실제 자료 실행 권한의 증거로 인용하면 안 된다. 진짜 실행 precedence/authority 문서는 root가 별도로 정한다. 원본 stage0의 LOCK/RUN을 이 합성 LOCK로 대체할 수 없다.
+
+작은 독립 stride 확인
+원래 코드 x.detach().contiguous().view(torch.uint8)는 contiguous 여부가 마지막 singleton stride=1을 보장한다고 가정했다. PyTorch는 크기1축 stride를 contiguous 판정에서 무시하므로 이 가정이 성립하지 않는다.
+1. BF16 shape[12,128,1], stride[128,1,128]: 기존식 RuntimeError, detached contiguous flatten 또는 reshape(-1) 후 byte view는 성공. 새 stride1 buffer copy의 bytes와 SHA가 같다.
+2. BF16 shape[1,1], stride[128,128]: contiguous=True지만 flatten/reshape도 stride128을 유지해 실패한다. stride1 새1D buffer copy는 성공한다.
+3. BF16 scalar는 기존식 실패, flatten 성공. 작은 noncontiguous transpose는 기존/new/copy 모두 동일한 논리 원소순서 bytes로 성공한다.
+
+권고 최소 구현
+flat=x.detach().contiguous().reshape(-1)
+if flat.stride(0)!=1:
+    flat=torch.empty(flat.numel(),dtype=flat.dtype,device=flat.device).copy_(flat)
+bytes=flat.view(torch.uint8).numpy().tobytes()
+shape/dtype는 기존 tensor_digest가 별도로 보존한다. 현재 원래 문제의 rank1 basis에는 flatten만으로 충분하나 일반적인 tsha 계약을 유지하려면 위 조건을 추가하는 편이 정확하다. hash용 buffer만 바꾸므로 방법의 양자화·복원·선택·점수·기준을 변경할 이유는 없다. 원래 byte view가 성공했던 비어 있지 않은 보통 tensor의 논리 원소 bytes도 유지된다. 이번 검토가 빈 tensor 등 모든 torch dtype/layout를 증명한 것은 아니다.
+
+독립 probe 재현 구성
+x=torch.arange(12*128,dtype=torch.float32).bfloat16().reshape(12,128).unsqueeze(-1).as_strided((12,128,1),(128,1,128))
+one=torch.ones(256,dtype=torch.bfloat16).as_strided((1,1),(128,128))
+각각 기존식/flatten/reshape/torch.empty(numel,dtype).copy_(reshape(-1))를 비교했다. 소규모 tensor만 사용했고 Torch import 후 증가 RSSpeak9,576,448B로 추가256MiB 이내, CPU4, CUDA initialized=False였다. 실제자료/GPU/효과계산/원소스수정0.
+
+현재 실행 상태
+읽은 FULL_FIXTURE_STATUS는 build exit0, full_driver exit1, incomplete_or_invalid다. FAILURE_prepare_18_state는 tensor_digest의 위 오류다. 최종 68개cell(17팔×4endpoint)의 완료 결과는 아직 없다. 입력 생성 완료와 전체driver 성공을 구분하며, 수정 뒤 새로운 합성 실행 결과가 필요하다. 이 보고서는 해당 수정이나 재실행의 승인을 대신하지 않는다.
+
+검토 시점 SHA256
+build_inputs.py bd8597c1401ab4069249bc1c0152923d09e3df4b7c889d3a0cc64e2f4c6d1258
+run_all.py a370216911b250819082ef061af75e4dd814440343aa73ac68d88f366a82ee0c
+sitecustomize.py 15bc9c63a7cd012f8c42b199de6e396f39687df012a50a844034944881c53050
+FIXTURE_REGISTRATION.json 19e1207ab22e3b8e86bbb157387ba4480808d8e63c5204b4b55e995f1a88195f
+INPUT_BINDINGS_DRAFT.json c9cf766e90bb01a9826376ad8af67eb67b0f29b1e94cd5f2e6c1b47db080dc2d
+SYNTHETIC_EVIDENCE.json bd0dbee6872c779d3ec1033811c1196e6932848c81a25ddbaac66bafd4861028
+LOCK.json 5f34ee71d59fc24430fa424a3d0191520d324c6e93e8c74a1cbe8459b4532fef
+diagnose.py d3e2ca259bb2895d44218095ed95f6b810350ac2ceedba55de59063375f57018
+bit_baseline.py 73fccb81cbc3a938678a064057940b0ea43bcfa9888c4ce4ef7cd461f5e9da3d
+mean_baseline.py faa3c3291c234c55eeaee48a7d3c0fb783d4d37775551811b102360e4e732618
+FAILURE_prepare_18_state.json 7eec3aa2387f5f9102c3dccc346eccdaf15a6c3b9d1d60b86cd11cc2333441f2
+FULL_FIXTURE_STATUS.json 8c7e0e23ec67faf53601bf5cb06afb3c2ef72c2d989653605444580f3debd23a
+
+범위 구분 보완: root가 언급한 초기20개 probe는 별도 검사이며 이 독립 검토에서 다시 실행하거나 그 전체 범위를 확인하지 않았다. 위 4개 형상은 본 검토에서 새로 실행한 독립 probe다. 모든 축 singleton 반례는 그 중 별도 사례이며, 초기 검사 통과를 부정하는 것이 아니라 hash helper의 검사 범위를 넓혀 드러낸 누락이다. root가 V4에 단위stride 보장을 반영하도록 전달했다고 알렸으나, 아직 V4 최종 소스나 재실행 결과를 검토한 것은 아니다. 새 precedence 문서의 작성 사실은 전달받았으며 이 보고서는 그 승인 판단을 대체하지 않는다.

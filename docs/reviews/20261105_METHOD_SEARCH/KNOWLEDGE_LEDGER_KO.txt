@@ -352,3 +352,16 @@ root소스diff검토에서초기PAIR생성직후 reloaded 변수를정의전에�
 실자료접근전발견된구현유효성문제이며과학적효과실패가아니다.원V2/READY/V7을보존하고가짜DataAccess경계회귀와최소V3수정을요청했다.
 OPUS_FIRST_REVIEW_ROOT_RESPONSE_KO.txt에수용/보류사항과새비트대조상한범위,미검사기준선/일반화한계를명시했다.
 최종Opus소스검토및LOCK전실자료실행없음.원pilot stop_quality유지,연속목표active.
+
+E027 [실제 Opus V3 검토와 전체 합성 경로에서 발견한 해시 결함]
+두 실제 Opus5.5 검토자는 bit/mean/cap 및 V3 초기변수 최소수정을 해당범위에서 수용했다.
+등록 구초안과 수정문의 우선순위 모순, 17팔 전체 실행 경로 미검증을 지적했다.
+root는 PAIRED_REGISTRATION_PRECEDENCE_ROOT_KO.txt에서 구초안 해당조항을 명시적으로 대체했다.
+별도 synthetic_full에서 실제 형상/동일 V3 driver/2층17팔 경로를20분CPU검사로 시작했다.
+입력생성 후 prepare18 저장해시에서 BF16[12,128,1] singleton 마지막축 stride128 오류가 발생했다.
+이는 contiguous()가 크기1축 stride1을 보장하지 않는데 byte view가 이를 요구한 구현결함이다.
+method_gap의20합성probe와 fair의독립4형상검사는 구문제와 all-singleton flatten 반례를 구분해 확인했다.
+root는 flatten 후 필요시 stride1 buffer copy만 추가하는 V4수정과 원마감13:46:20UTC내 합성재검사1회를 허용했다.
+과학수식/비교팔/성공기준/cap은 유지하며 실제자료LOCK/RUN/효과/GPU는0이다. 원실패는보존한다.
+합성입력70경로 및 완료IOaudit의외부.pt시도0을 확인했으나 전체17팔완료는아직아니다.
+이번goal턴의진전은 문서모순해결·독립반례·실행결함의최소수정 결정이며 방법효과성공이아니다.

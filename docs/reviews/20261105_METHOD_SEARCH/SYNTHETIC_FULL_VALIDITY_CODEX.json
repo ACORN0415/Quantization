@@ -1,0 +1,107 @@
+{
+  "status": "scoped_review_completed_hash_helper_defect_confirmed",
+  "created_utc": "2026-11-05T13:34:01.928429+00:00",
+  "sources_sha256": {
+    "build_inputs.py": "bd8597c1401ab4069249bc1c0152923d09e3df4b7c889d3a0cc64e2f4c6d1258",
+    "run_all.py": "a370216911b250819082ef061af75e4dd814440343aa73ac68d88f366a82ee0c",
+    "sitecustomize.py": "15bc9c63a7cd012f8c42b199de6e396f39687df012a50a844034944881c53050",
+    "FIXTURE_REGISTRATION.json": "19e1207ab22e3b8e86bbb157387ba4480808d8e63c5204b4b55e995f1a88195f",
+    "INPUT_BINDINGS_DRAFT.json": "c9cf766e90bb01a9826376ad8af67eb67b0f29b1e94cd5f2e6c1b47db080dc2d",
+    "SYNTHETIC_EVIDENCE.json": "bd0dbee6872c779d3ec1033811c1196e6932848c81a25ddbaac66bafd4861028",
+    "LOCK.json": "5f34ee71d59fc24430fa424a3d0191520d324c6e93e8c74a1cbe8459b4532fef",
+    "diagnose.py": "d3e2ca259bb2895d44218095ed95f6b810350ac2ceedba55de59063375f57018",
+    "bit_baseline.py": "73fccb81cbc3a938678a064057940b0ea43bcfa9888c4ce4ef7cd461f5e9da3d",
+    "mean_baseline.py": "faa3c3291c234c55eeaee48a7d3c0fb783d4d37775551811b102360e4e732618",
+    "FAILURE_prepare_18_state.json": "7eec3aa2387f5f9102c3dccc346eccdaf15a6c3b9d1d60b86cd11cc2333441f2",
+    "FULL_FIXTURE_STATUS.json": "8c7e0e23ec67faf53601bf5cb06afb3c2ef72c2d989653605444580f3debd23a"
+  },
+  "binding_paths_count": 70,
+  "all_binding_paths_inside_synthetic_inputs": true,
+  "copied_source_matches": {
+    "diagnose.py": {
+      "copy": true,
+      "original": true
+    },
+    "bit_baseline.py": {
+      "copy": true,
+      "original": true
+    },
+    "mean_baseline.py": {
+      "copy": true,
+      "original": true
+    }
+  },
+  "io_audit_count": 4,
+  "external_pt_denials": 0,
+  "fixture_status_observed": "incomplete_or_invalid",
+  "all_17_arms_completed": false,
+  "probe": {
+    "singleton_last": {
+      "shape": [
+        12,
+        128,
+        1
+      ],
+      "stride": [
+        128,
+        1,
+        128
+      ],
+      "is_contiguous": true,
+      "old": "RuntimeError stride(-1) must be1",
+      "flatten": "pass",
+      "reshape": "pass",
+      "allocated_copy": "pass",
+      "matching_sha256": "11e2711a1e11997c3f3c0c6acd552b82c04b60dbd957b44c73d66517454f0091"
+    },
+    "all_singleton": {
+      "shape": [
+        1,
+        1
+      ],
+      "stride": [
+        128,
+        128
+      ],
+      "is_contiguous": true,
+      "old": "RuntimeError",
+      "flatten": "RuntimeError",
+      "reshape": "RuntimeError",
+      "allocated_copy": "pass",
+      "matching_sha256": "b9c205bdac187f20bf876cea369cb6032ad1bf69043b31d716b36b8defbffdf2"
+    },
+    "scalar": {
+      "old": "RuntimeError dim0",
+      "flatten": "pass",
+      "reshape": "pass",
+      "allocated_copy": "pass"
+    },
+    "noncontiguous_transpose": {
+      "shape": [
+        4,
+        3
+      ],
+      "stride": [
+        1,
+        4
+      ],
+      "old": "pass",
+      "flatten": "pass",
+      "reshape": "pass",
+      "allocated_copy": "pass"
+    },
+    "extra_peak_RSS_bytes": 9576448,
+    "threads": 4,
+    "cuda_initialized": false
+  },
+  "real_tensor_reads_by_review": 0,
+  "synthetic_pt_reads_by_review": 0,
+  "GPU_calls_by_review": 0,
+  "effect_measurements": 0,
+  "peer_source_edits": 0,
+  "actual_opus2_review": "separate_pending",
+  "synthetic_lock_is_real_authority": false,
+  "initial_root_20_probe": "separate_not_independently_rerun",
+  "independent_probe_case_count": 4,
+  "V4_final_source_reviewed": false
+}
