@@ -1,0 +1,16 @@
+{
+  "status": "authorized_readonly_postrun_recalculation_not_extra_GPU_run",
+  "created_epoch": 1793918296.923111,
+  "result_values_not_read_before_spec": true,
+  "CPU": 2,
+  "seconds": 120,
+  "RSS_bytes": 2147483648,
+  "GPU": 0,
+  "model_original_dataset_loads": 0,
+  "tensor_artifacts_max": 2,
+  "source": "SMALL_random.pt and SMALL_zero_Q.pt if actually saved, weights_only=True/mapCPU. RESULT/root guard/hashes/timing scalars.",
+  "numeric_reconstruction": "Independently form dequantized FP64 Q/K from saved int8 codes/scales, explicit exp/log2 scaling and row normalization, multiply FP16 V represented FP64. Recalculate error gates0.01 and0.05; compare producer stored FP64 reference at atol=rtol1e-12.",
+  "timing_summary": "Per-shape3arm8cycles median/min/max and paired per-cycle full/prepared wall changes; keep setup+JIT costs and cold total separate. Single synthetic fixture suite, no video/model speedup.",
+  "failure": "If missing artifacts after runtime failure, record unavailable rather than regenerate. Audit mismatches are invalid evidence, not excuse to change runtime gates or rerun.",
+  "scope": "Root arithmetic/byte integrity reanalysis, not independent native audit or independent GPU output reproduction."
+}

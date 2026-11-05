@@ -1,0 +1,36 @@
+{
+  "created_epoch": 1793919148.7288444,
+  "deadline_epoch": 1793920348.7288446,
+  "scope": "Source-only decision on whether a valuable codec-to-native-attention representation gap remains beyond simple prepared caching. No method adopted.",
+  "observations": [
+    "Existing Sage1 prepared-KV synthetic components beat per-call preparation by about 6-19 percent in 4 shapes, only 1 run, not a new method or full-model result.",
+    "FA2 differences about1.34-1.37 percent, video quality unmeasured.",
+    "QVG existing storage uses low-bit PRQ and pre-RoPE contract; native Sage QK requires INT8 post-RoPE representation with scales, V FP16 or FP8. Existing PRQ decoder/caching tiny e2e benefit was closed; do not reopen it as a new method.",
+    "HyperQuant already discusses lattice integer embeddings and native MMA casts. Simple prepared caching and chunk-LSE composition already exist."
+  ],
+  "decision_question": "Is there evidence for one useful and unaddressed problem at the storage-codec/native-MMA boundary for chunked video attention, with a strong simple baseline and a cheap falsification? Can also return no candidate.",
+  "root_role": "Read primary sources and existing implementation independently.",
+  "actual_Claude_role": "Retained actual Opus1 independent source review/co-proposal before reading root new conclusions.",
+  "budget": {
+    "wall_seconds": 1200,
+    "primary_papers_max": 5,
+    "unique_code_files_max": 8,
+    "source_download_bytes_max": 20000000,
+    "GPU": 0,
+    "model_dataset_tensor_loads": 0,
+    "installs": 0,
+    "compiles": 0,
+    "new_chats": 0
+  },
+  "prohibited": [
+    "No QVG reuse or fixed-scale cache policy renamed as novelty.",
+    "No new kernel or GPU experiment in this scope.",
+    "No native account/model retries.",
+    "Do not turn unmeasured performance expectation into a bottleneck observation."
+  ],
+  "outputs": [
+    "REPORT_CODEX_KO.txt",
+    "REPORT_OPUS_KO.txt",
+    "ROOT_COMPARISON.json after both returned"
+  ]
+}

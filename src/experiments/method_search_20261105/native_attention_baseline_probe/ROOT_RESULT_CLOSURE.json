@@ -1,0 +1,18 @@
+{
+  "created_epoch": 1793919117.5289388,
+  "status": "closed_existing_synthetic_baseline_only",
+  "source_sha256": "d15153969bfe5547f9d5a3bf0a45de31cfc11c65ad5e617321e7c2779eba0c7e",
+  "original_review_inputs_unchanged": "856b70ec9bf2a2b91e37a9125cc51659e48e37fcf5caf930ed243e5776e008d0",
+  "original_report_sha256": "b21bb1e38050d326c865dbe51a8af791e4e1b6feb59c35b985f31fabaee0cabd",
+  "final_report_sha256": "4d0f87cf2da71a679e4f6508b9df42f6542c795dbef28ce5485e240625217745",
+  "actual_review_sha256": "ff3ddc1d7530b5a86acdb5eaca17138fdbb2ec2ee6d20693a73e3bde7d7635e9",
+  "actual_model": "claude-opus-5-5",
+  "review_scope": "saved scalars and hashes; no tensor reload or independent GPU output reproduction",
+  "adopted": [
+    "R1 wall timing label",
+    "R2 preparation-amortized FA2 comparison only",
+    "R3 one execution, 8 paired cycles, no between-run reproducibility"
+  ],
+  "next_GPU_authorized": false,
+  "novel_method_effect_demonstrated": false
+}

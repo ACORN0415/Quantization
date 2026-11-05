@@ -1,0 +1,94 @@
+native attention baseline probe 결과 한정 사후 검토 — Opus2
+실제 모델: claude-opus-5-5. 기존 Opus2 채팅(session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5)을 이어서 썼다.
+Task/Dispatch: 없음(terminal_handle_stale).
+배정: root msg_58ef5f440941 → 관리 run:run_37b53bde176e.
+시각(UTC, date -u로 직접 확인)
+- 수신: 정확한 수신 시각은 기록 수단이 없다. 첫 도구 호출 22:49:09Z를 수신과 읽기 시작으로 쓴다.
+- 상한: 22:54:09Z
+- 읽기 끝: 22:49:30Z
+- 작성: 22:50대
+helper: 0개(5분 안에 독립 조각 없음).
+수행: 읽기, 작은 파일 sha256, 저장 JSON scalar 재집계(python -I, json만)만 했다.
+- 하지 않은 것: GPU, tensor·pickle 로드, .pt 열람, PTX·JIT 호출, 모델, 네트워크, 설치, source 변경. 추가 실행은 0이다.
+- source d1515396 검토(이전 REVIEW_OPUS_KO 0c7ac4f9)는 반복하지 않았다.
+
+1. SHA(직접 계산, 모두 root 제시값·POSTRUN_REVIEW_INPUTS와 일치)
+- REPORT_RESULT_KO b21bb1e3
+- RESULT 5e4783e3
+- ROOT_POSTRUN_AUDIT a6719eb4
+- ROOT_EXECUTION_FINAL 05ccd952
+- ROOT_APPROVED_MANIFEST 27d6f026
+- probe.py d1515396
+- POSTRUN_REVIEW_INPUTS 856b70ec
+SMALL_*.pt 2개는 bundle에 등록된 값만 봤다(829e7260, b0ec10fe). 로드하지 않았다.
+RESULT의 code_sha·manifest_sha가 ROOT_EXECUTION_FINAL과 같다(d1515396, 27d6f026).
+읽은 범위
+- REPORT_RESULT 전문
+- ROOT_EXECUTION_FINAL 전문
+- POSTRUN_REVIEW_INPUTS 전문
+- RESULT: small, large 형상별 metadata, timings 원 scalar, actual_calls, compiled_attention_evidence 요약, GPU, cost_scope
+- AUDIT: status, checks 수, timing_summary, small_recalculated, scope
+- MANIFEST 본문: 읽지 않았다. sha만 확인했다.
+
+2. 판정
+결과 해석은 대체로 타당하다. 수정 권고 2건(R1, R2)과 근거 부족 1건(R3)이 있다. 결과를 무효로 만드는 결함은 없다.
+
+3. 직접 대조 결과(저장 scalar 기준)
+- 실행과 자원(ROOT_EXECUTION_FINAL)
+  - completed, exit 0
+  - 외부 wall 5.010490초, 내부 RESULT wall 4.653초
+  - GPU 승인 1, compute app 시작·종료 모두 공란, 소유 그룹 잔존 false
+  - source와 bound 변화 없음
+  - 관측 PID 11개는 주 GPU 실행 1개와 Triton CPU 컴파일 자식들이다. GPU 실행 11회가 아니다. 보고서도 이렇게 구분해 썼다(타당).
+  - peak RSS: 트리 1,038,802,944B, 프로세스 내부 1,007,382,528B. 8GiB 한도 안이다.
+  - GPU reserved 2.53GB, allocated 1.41GB. 4GiB fraction 안이다.
+- counter: Q 100, K 56, attention 100, FA2 48. 등록 산술과 일치한다. 형상별 delta 20/10/20/10이다.
+- PTX
+  - attention kernel PTX 2개(3c8128…, 58046967…) 각각 mma 96줄 중 32줄이 m16n8k32 s32.s8.s8.s32다(INT8 QK).
+  - 나머지는 f16 PV다. INT8 MMA 존재 주장은 타당하다.
+- small: random rel .001715 / max .002016, zero_Q rel .001398 / max .000494. 둘 다 gate(.01/.05) 안이다.
+  - root CPU 재계산 값과 소수 15자리 이상 일치한다. 차이는 1e-17 수준이다.
+- timing
+  - 저장 timings는 형상당 24행이다(측정 8사이클 × 3팔). warm 2사이클은 저장되지 않았다.
+  - Q fixture는 사이클마다 교대로 0과 1이 각 4회다.
+  - 보고서 표의 ms는 AUDIT median_wall_ms와 같다. 즉 host wall이며 CUDA event가 아니다.
+  - %는 paired_saved_percent 중앙값이다.
+  - 내가 CUDA event로 따로 paired 중앙값을 구해 보니 6.25/17.65/18.81/18.65%(매번 변환 대비), 11.44/16.88/17.58/14.90%(FA2 대비)였다. wall 기준 수치와 0.05%p 안에서 같다.
+  - paired min–max 폭도 좁다(예: K56160 매번 변환 대비 18.57–18.80%).
+- FA2 대비 출력 차이: 형상과 Q별 상대 Frobenius 약 1.34–1.37%이다. 서술용(quality_descriptive_only)으로만 기록된 값이다.
+
+4. 수정·주의 권고
+R1(수정, 표기): 표의 열 이름 'FA2 중앙시간(ms)' 등을 'wall 중앙값(ms, 8측정)'으로 고친다.
+   CUDA event 중앙값은 다른 값이다(예: K4680 FA2 1.0593 대 wall 1.0657).
+R2(수정, 해석 보강): '매번 변환' 팔은 FA2보다 빠르지 않다.
+   - K4680만 약 5.5% 빠르다.
+   - K18720: 4.069 대 4.060ms로 동등하다.
+   - K32760: +1.5% 느리다.
+   - K56160: +4.6% 느리다.
+   따라서 FA2 대비 11.4–17.6% 감소는 INT8 kernel 자체의 이득이 아니다. K/V 준비 비용을 setup으로 옮긴(호출당 0) 조건에서만 성립한다.
+   결론 문장에 'FA2 대비 이득은 준비값 재사용 팔에 한정되며, 준비 비용은 상각을 가정한다'를 명시해야 한다.
+   K56160에서 FA2 대비 감소가 14.9%로 줄어드는 것도 이 구조와 맞는다(관측). 원인 분해는 하지 않았다.
+R3(근거 부족): 표본 크기
+   - 단일 GPU 프로세스, 1회 실행, 형상당 paired 8개(Q fixture별 4개)이다.
+   - 실행 간 변동, 클럭·온도, 다른 시점의 재현은 측정되지 않았다.
+   - 범위가 좁다는 것은 실행 안의 안정성일 뿐이다. 실행 간 재현성의 근거는 아니다.
+   - %값의 유효숫자를 '약 6%, 약 15–19%' 수준으로 쓰는 것이 관측 범위에 맞다.
+기타(타당 확인)
+- setup(첫 JIT, qual, K/V 준비)은 timing과 분리돼 있다. 첫 형상 setup은 1.011초이고 이후 0.02–0.14초다. small 검증은 첫 JIT 포함 1.257초다.
+- 보고서는 순수 준비 비용과 손익분기점을 분리하지 못했다고 이미 적었다(타당).
+- 큰 형상의 full=prepared byte 동일성과 launch 수는 worker 내부 assert에 근거한다. 큰 출력 원자료는 보존되지 않았다.
+  - root 감사는 작은 텐서 산술과 저장 기록·hash 감사다. GPU 원소나 출력을 독립적으로 재생산한 것이 아니다.
+  - 보고서와 AUDIT scope 모두 이 구분을 적었다(타당, 한계 유지).
+- 범위 표기가 정확하다.
+  - 'Sage1 구성요소 + pad/mask/K 평균 어댑터, BF16 출력, FP16 V'
+  - 'core API 그대로, Sage2/2++, SOTA, 신규 방법, 영상 품질, 실제 생성 가속이 아님'
+
+5. 남은 한계와 미확인
+- 큰 출력의 독립 재계산, 실행 간 반복성, 다른 GPU
+- 실제 모델 속도와 영상 품질
+- Sage2++ 대비 성능
+- 준비 비용의 순수 측정
+- 정적 K/V가 아닌 갱신·퇴거 조건
+- MANIFEST 본문 세부(읽지 않음)
+- 정확한 수신 시각
+이 검토로 실행된 것은 없다(추가 실행 0). 원 사후 검토 '완료' 표시와 추가 GPU 실행 결정은 root의 권한이다.

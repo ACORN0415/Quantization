@@ -1,0 +1,233 @@
+{
+  "status": "passed_CPU_small_arithmetic_and_saved_record_audit",
+  "created_epoch": 1793918521.269778,
+  "checks": 51,
+  "check_names": [
+    "driver_completed",
+    "root_completed_exit0",
+    "no_owned_residual_GPUidle",
+    "source_and_manifest",
+    "bound_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_probe/probe.py",
+    "bound_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_probe/ROOT_SPEC.json",
+    "bound_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_probe/SELFTEST_CODEX.json",
+    "bound_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_probe/SELFTEST_SCOPE_ADDENDUM.json",
+    "bound_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_feasibility/adapter.py",
+    "bound_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_feasibility/CPU_IMPORT_CODEX.json",
+    "bound_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_feasibility/REPORT_OPUS_KO.txt",
+    "bound_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_feasibility/REPORT_CODEX_KO.txt",
+    "bound_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_feasibility/ROOT_FINAL_DECISION.json",
+    "bound_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_feasibility/source/sageattention/triton/quant_per_block.py",
+    "bound_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_feasibility/source/sageattention/triton/attn_qk_int8_per_block.py",
+    "bound_hash:/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torch/__init__.py",
+    "bound_hash:/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torch/version.py",
+    "bound_hash:/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/triton/__init__.py",
+    "bound_hash:/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/triton/runtime/jit.py",
+    "bound_hash:/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/triton/backends/nvidia/compiler.py",
+    "bound_hash:/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/flash_attn/__init__.py",
+    "bound_hash:/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/flash_attn/flash_attn_interface.py",
+    "bound_hash:/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/flash_attn_2_cuda.cpython-310-x86_64-linux-gnu.so",
+    "bound_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_probe/REVIEW_OPUS_KO.txt",
+    "bound_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_probe/ROOT_RUNTIME_AUTHORITY.json",
+    "bound_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_probe/READY_CODEX.json",
+    "actual_launch_counters",
+    "4_shapes",
+    "native_INT8_MMA",
+    "caps",
+    "random:stored_CPU_reference",
+    "random:native_arithmetic_gate",
+    "random:reported_metrics",
+    "random:saved_mask",
+    "random:query_padding",
+    "zero_Q:stored_CPU_reference",
+    "zero_Q:native_arithmetic_gate",
+    "zero_Q:reported_metrics",
+    "zero_Q:saved_mask",
+    "zero_Q:query_padding",
+    "zero_Q:uniform_reference",
+    "K4680:timing_rows",
+    "K4680:cycle_completeness",
+    "K18720:timing_rows",
+    "K18720:cycle_completeness",
+    "K32760:timing_rows",
+    "K32760:cycle_completeness",
+    "K56160:timing_rows",
+    "K56160:cycle_completeness",
+    "CPUaudit_noCUDA",
+    "audit_caps"
+  ],
+  "small_recalculated": [
+    {
+      "name": "random",
+      "relative_Frobenius_error": 0.0017152746607787396,
+      "max_abs_error": 0.0020164654174942287
+    },
+    {
+      "name": "zero_Q",
+      "relative_Frobenius_error": 0.0013976871943571902,
+      "max_abs_error": 0.0004938726555810957
+    }
+  ],
+  "timing_summary": [
+    {
+      "K": 4680,
+      "median_wall_ms": {
+        "fa2": 1.0656684753485024,
+        "full_components": 1.0071945143863559,
+        "prepared_KV_components": 0.9441464790143073
+      },
+      "wall_ms_minmax": {
+        "fa2": [
+          1.0606140131130815,
+          1.0816940339282155
+        ],
+        "full_components": [
+          1.006021979264915,
+          1.0109710274264216
+        ],
+        "prepared_KV_components": [
+          0.9403390577062964,
+          0.9500379674136639
+        ]
+      },
+      "median_CUDA_ms": {
+        "fa2": 1.0593279600143433,
+        "full_components": 1.0004479885101318,
+        "prepared_KV_components": 0.9374719858169556
+      },
+      "paired_saved_percent_vs_full": {
+        "median": 6.219992215879935,
+        "min": 5.741612581038862,
+        "max": 6.89435491084396
+      },
+      "paired_saved_percent_vs_FA2": {
+        "median": 11.399556142374554,
+        "min": 10.565137060891,
+        "max": 12.670592113526068
+      },
+      "setup_seconds_including_first_use_JIT_qual": 1.0112245599739254
+    },
+    {
+      "K": 18720,
+      "median_wall_ms": {
+        "fa2": 4.05953946756199,
+        "full_components": 4.068731039296836,
+        "prepared_KV_components": 3.357381501700729
+      },
+      "wall_ms_minmax": {
+        "fa2": [
+          3.8772228872403502,
+          4.061998915858567
+        ],
+        "full_components": [
+          3.9185399655252695,
+          4.10037103574723
+        ],
+        "prepared_KV_components": [
+          3.2286400673910975,
+          3.39039193931967
+        ]
+      },
+      "median_CUDA_ms": {
+        "fa2": 4.05350399017334,
+        "full_components": 4.0616960525512695,
+        "prepared_KV_components": 3.3500159978866577
+      },
+      "paired_saved_percent_vs_full": {
+        "median": 17.622626985887916,
+        "min": 16.84360178531056,
+        "max": 18.251698036409163
+      },
+      "paired_saved_percent_vs_FA2": {
+        "median": 16.830083922711026,
+        "min": 16.502803997636537,
+        "max": 17.778864809100458
+      },
+      "setup_seconds_including_first_use_JIT_qual": 0.024802068015560508
+    },
+    {
+      "K": 32760,
+      "median_wall_ms": {
+        "fa2": 6.748534564394504,
+        "full_components": 6.851096521131694,
+        "prepared_KV_components": 5.562971462495625
+      },
+      "wall_ms_minmax": {
+        "fa2": [
+          6.732985028065741,
+          6.7567500518634915
+        ],
+        "full_components": [
+          6.832120940089226,
+          6.868388969451189
+        ],
+        "prepared_KV_components": [
+          5.548640037886798,
+          5.56950899772346
+        ]
+      },
+      "median_CUDA_ms": {
+        "fa2": 6.740992069244385,
+        "full_components": 6.844415903091431,
+        "prepared_KV_components": 5.555711984634399
+      },
+      "paired_saved_percent_vs_full": {
+        "median": 18.795647216947135,
+        "min": 18.72209868656875,
+        "max": 19.013964166044
+      },
+      "paired_saved_percent_vs_FA2": {
+        "median": 17.550616611894352,
+        "min": 17.470395783631165,
+        "max": 17.675866217944264
+      },
+      "setup_seconds_including_first_use_JIT_qual": 0.13939059106633067
+    },
+    {
+      "K": 56160,
+      "median_wall_ms": {
+        "fa2": 11.522951477672905,
+        "full_components": 12.054831488057971,
+        "prepared_KV_components": 9.803789551369846
+      },
+      "wall_ms_minmax": {
+        "fa2": [
+          11.494803009554744,
+          11.545958928763866
+        ],
+        "full_components": [
+          12.02348293736577,
+          12.077022925950587
+        ],
+        "prepared_KV_components": [
+          9.778992971405387,
+          9.82527097221464
+        ]
+      },
+      "median_CUDA_ms": {
+        "fa2": 11.516416072845459,
+        "full_components": 12.048384189605713,
+        "prepared_KV_components": 9.796607971191406
+      },
+      "paired_saved_percent_vs_full": {
+        "median": 18.641821608203685,
+        "min": 18.566866351451058,
+        "max": 18.79861613125944
+      },
+      "paired_saved_percent_vs_FA2": {
+        "median": 14.89659262013513,
+        "min": 14.826062347262171,
+        "max": 15.135796156774209
+      },
+      "setup_seconds_including_first_use_JIT_qual": 0.07037350907921791
+    }
+  ],
+  "result_sha256": "5e4783e313dd71c3b5c6f7ccf6fa68453329bcf800eab89682f9af1c9c7a3f37",
+  "artifact_hashes": {
+    "SMALL_random.pt": "829e7260573489b1fe50f21956c3a3b7115004939a93eac19652731b3d1148b4",
+    "SMALL_zero_Q.pt": "b0ec10fe23d505b576b132a2458b1e101fa3dcdb4eb1b65e0d5bbacf935729b0"
+  },
+  "runtime_seconds": 1.1319029331207275,
+  "GPU_model_dataset_loads": 0,
+  "saved_tensor_loads": 2,
+  "scope": "Root independent arithmetic path on saved small tensors, scalar timings and byte-file hashes. Not independent native audit/GPU regeneration. Large full/prepared bit equality and launch counts follow worker assertions; large raw tensors not retained."
+}

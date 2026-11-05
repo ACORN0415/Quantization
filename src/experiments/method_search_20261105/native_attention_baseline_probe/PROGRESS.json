@@ -1,0 +1,810 @@
+{
+  "status": "failed",
+  "started_epoch": 1793918258.2330334,
+  "models_datasets_loads": 0,
+  "installs": 0,
+  "scope": "Synthetic existing Sage1 component baseline with pad/mask adapter, not unmodified core API, SOTA, video quality or novel method.",
+  "code_sha256": "d15153969bfe5547f9d5a3bf0a45de31cfc11c65ad5e617321e7c2779eba0c7e",
+  "manifest_sha256": "27d6f026d801cc02898f284b37d0e3277b6c173aa8a1e9784d01e3c239a7d13e",
+  "small": [
+    {
+      "name": "random",
+      "relative_Frobenius_error": 0.001715274660778739,
+      "max_abs_error": 0.0020164654174942287,
+      "full_prepared_bytes_equal": true
+    },
+    {
+      "name": "zero_Q",
+      "relative_Frobenius_error": 0.0013976871943571843,
+      "max_abs_error": 0.0004938726555810957,
+      "full_prepared_bytes_equal": true
+    }
+  ],
+  "small_validation_seconds_including_first_JIT": 1.2567162089981139,
+  "large": [
+    {
+      "K_valid": 4680,
+      "Q_valid": 4680,
+      "quality_descriptive_only": [
+        {
+          "Q_fixture": 0,
+          "full_prepared_bytes_equal": true,
+          "FA2_relative_Frobenius_difference": 0.013621256686747074,
+          "FA2_max_abs_difference": 0.0029296875
+        },
+        {
+          "Q_fixture": 1,
+          "full_prepared_bytes_equal": true,
+          "FA2_relative_Frobenius_difference": 0.01358154509216547,
+          "FA2_max_abs_difference": 0.00390625
+        }
+      ],
+      "case_setup_seconds_including_qual_and_first_use_JIT": 1.0112245599739254,
+      "timings": [
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0009500379674136639,
+          "CUDA_event_ms": 0.9431040287017822
+        },
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.0010622680420055985,
+          "CUDA_event_ms": 1.0557440519332886
+        },
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.0010109710274264216,
+          "CUDA_event_ms": 1.005568027496338
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.0010816940339282155,
+          "CUDA_event_ms": 1.0751999616622925
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.0010072150034829974,
+          "CUDA_event_ms": 1.0004479885101318
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.000944636994972825,
+          "CUDA_event_ms": 0.9379839897155762
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.001006021979264915,
+          "CUDA_event_ms": 0.9994239807128906
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0009436559630557895,
+          "CUDA_event_ms": 0.936959981918335
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.0010657840175554156,
+          "CUDA_event_ms": 1.0588159561157227
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0009493459947407246,
+          "CUDA_event_ms": 0.9431040287017822
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.0010655529331415892,
+          "CUDA_event_ms": 1.0598399639129639
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.0010071740252897143,
+          "CUDA_event_ms": 1.0004479885101318
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.0010757229756563902,
+          "CUDA_event_ms": 1.0690560340881348
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.0010061230277642608,
+          "CUDA_event_ms": 1.0004479885101318
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0009431239450350404,
+          "CUDA_event_ms": 0.936959981918335
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.0010099699720740318,
+          "CUDA_event_ms": 1.0035200119018555
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0009403390577062964,
+          "CUDA_event_ms": 0.9338880181312561
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.0010606140131130815,
+          "CUDA_event_ms": 1.0536960363388062
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0009470509830862284,
+          "CUDA_event_ms": 0.9410560131072998
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.0010619070380926132,
+          "CUDA_event_ms": 1.0557440519332886
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.0010099400533363223,
+          "CUDA_event_ms": 1.0035200119018555
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.0010748399654403329,
+          "CUDA_event_ms": 1.0680320262908936
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.001006021979264915,
+          "CUDA_event_ms": 0.9994239807128906
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0009418219560757279,
+          "CUDA_event_ms": 0.9349120259284973
+        }
+      ],
+      "timed_plus_warmup_calls": {
+        "Q_quant": 20,
+        "K_quant": 10,
+        "attention": 20,
+        "FA2": 10
+      },
+      "prepared_KV_cost_is_in_setup_not_per_call": true
+    },
+    {
+      "K_valid": 18720,
+      "Q_valid": 4680,
+      "quality_descriptive_only": [
+        {
+          "Q_fixture": 0,
+          "full_prepared_bytes_equal": true,
+          "FA2_relative_Frobenius_difference": 0.013612909242510796,
+          "FA2_max_abs_difference": 0.0012650489807128906
+        },
+        {
+          "Q_fixture": 1,
+          "full_prepared_bytes_equal": true,
+          "FA2_relative_Frobenius_difference": 0.013642149046063423,
+          "FA2_max_abs_difference": 0.001102447509765625
+        }
+      ],
+      "case_setup_seconds_including_qual_and_first_use_JIT": 0.024802068015560508,
+      "timings": [
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0033753450261428952,
+          "CUDA_event_ms": 3.3679358959198
+        },
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.004060165956616402,
+          "CUDA_event_ms": 4.05401611328125
+        },
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.004068691050633788,
+          "CUDA_event_ms": 4.061183929443359
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.004058912978507578,
+          "CUDA_event_ms": 4.05299186706543
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.004071636940352619,
+          "CUDA_event_ms": 4.065279960632324
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0033777490025386214,
+          "CUDA_event_ms": 3.3710079193115234
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.00410037103574723,
+          "CUDA_event_ms": 4.093952178955078
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.003377098008058965,
+          "CUDA_event_ms": 3.3699839115142822
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.004061998915858567,
+          "CUDA_event_ms": 4.056064128875732
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.00339039193931967,
+          "CUDA_event_ms": 3.3822720050811768
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.004060485982336104,
+          "CUDA_event_ms": 4.05401611328125
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.004077126970514655,
+          "CUDA_event_ms": 4.070400238037109
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.004061507992446423,
+          "CUDA_event_ms": 4.055039882659912
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.004068771027959883,
+          "CUDA_event_ms": 4.06220817565918
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.003339417977258563,
+          "CUDA_event_ms": 3.3320960998535156
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.00395152298733592,
+          "CUDA_event_ms": 3.9444479942321777
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0032303029438480735,
+          "CUDA_event_ms": 3.2235519886016846
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.0038850080454722047,
+          "CUDA_event_ms": 3.8789119720458984
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0032286400673910975,
+          "CUDA_event_ms": 3.2225279808044434
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.0038772228872403502,
+          "CUDA_event_ms": 3.8696959018707275
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.0039185399655252695,
+          "CUDA_event_ms": 3.911679983139038
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.003881652024574578,
+          "CUDA_event_ms": 3.875839948654175
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.003921697032637894,
+          "CUDA_event_ms": 3.9147520065307617
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.003229220979847014,
+          "CUDA_event_ms": 3.2225279808044434
+        }
+      ],
+      "timed_plus_warmup_calls": {
+        "Q_quant": 20,
+        "K_quant": 10,
+        "attention": 20,
+        "FA2": 10
+      },
+      "prepared_KV_cost_is_in_setup_not_per_call": true
+    },
+    {
+      "K_valid": 32760,
+      "Q_valid": 4680,
+      "quality_descriptive_only": [
+        {
+          "Q_fixture": 0,
+          "full_prepared_bytes_equal": true,
+          "FA2_relative_Frobenius_difference": 0.013410952873528004,
+          "FA2_max_abs_difference": 0.00146484375
+        },
+        {
+          "Q_fixture": 1,
+          "full_prepared_bytes_equal": true,
+          "FA2_relative_Frobenius_difference": 0.013422293588519096,
+          "FA2_max_abs_difference": 0.0008544921875
+        }
+      ],
+      "case_setup_seconds_including_qual_and_first_use_JIT": 0.13939059106633067,
+      "timings": [
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.005548640037886798,
+          "CUDA_event_ms": 5.541888236999512
+        },
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.006732985028065741,
+          "CUDA_event_ms": 6.725632190704346
+        },
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.006832120940089226,
+          "CUDA_event_ms": 6.8239359855651855
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.006737975054420531,
+          "CUDA_event_ms": 6.731776237487793
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.006854773033410311,
+          "CUDA_event_ms": 6.848512172698975
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.005559168988838792,
+          "CUDA_event_ms": 5.553152084350586
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.006868388969451189,
+          "CUDA_event_ms": 6.861824035644531
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.005562435952015221,
+          "CUDA_event_ms": 5.555200099945068
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.0067567500518634915,
+          "CUDA_event_ms": 6.750207901000977
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.005567646003328264,
+          "CUDA_event_ms": 5.561344146728516
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.0067462410079315305,
+          "CUDA_event_ms": 6.7399678230285645
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.006850135046988726,
+          "CUDA_event_ms": 6.8433918952941895
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.006747152074240148,
+          "CUDA_event_ms": 6.740992069244385
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.006852057995274663,
+          "CUDA_event_ms": 6.845439910888672
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.005563506972976029,
+          "CUDA_event_ms": 5.5562238693237305
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.006866716081276536,
+          "CUDA_event_ms": 6.859776020050049
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.00556950899772346,
+          "CUDA_event_ms": 5.562367916107178
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.0067556980066001415,
+          "CUDA_event_ms": 6.7491841316223145
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.00556705507915467,
+          "CUDA_event_ms": 5.560319900512695
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.00674991705454886,
+          "CUDA_event_ms": 6.744063854217529
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.006849713972769678,
+          "CUDA_event_ms": 6.8433918952941895
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.006750248023308814,
+          "CUDA_event_ms": 6.740992069244385
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.006843162002041936,
+          "CUDA_event_ms": 6.837247848510742
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.005558528937399387,
+          "CUDA_event_ms": 5.552127838134766
+        }
+      ],
+      "timed_plus_warmup_calls": {
+        "Q_quant": 20,
+        "K_quant": 10,
+        "attention": 20,
+        "FA2": 10
+      },
+      "prepared_KV_cost_is_in_setup_not_per_call": true
+    },
+    {
+      "K_valid": 56160,
+      "Q_valid": 4680,
+      "quality_descriptive_only": [
+        {
+          "Q_fixture": 0,
+          "full_prepared_bytes_equal": true,
+          "FA2_relative_Frobenius_difference": 0.013652637600898743,
+          "FA2_max_abs_difference": 0.0006103515625
+        },
+        {
+          "Q_fixture": 1,
+          "full_prepared_bytes_equal": true,
+          "FA2_relative_Frobenius_difference": 0.013698629103600979,
+          "FA2_max_abs_difference": 0.0006103515625
+        }
+      ],
+      "case_setup_seconds_including_qual_and_first_use_JIT": 0.07037350907921791,
+      "timings": [
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.009793160017579794,
+          "CUDA_event_ms": 9.785344123840332
+        },
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.011511605000123382,
+          "CUDA_event_ms": 11.505663871765137
+        },
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.012031647958792746,
+          "CUDA_event_ms": 12.024831771850586
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.011523106950335205,
+          "CUDA_event_ms": 11.515904426574707
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.01202348293736577,
+          "CUDA_event_ms": 12.016639709472656
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.009778992971405387,
+          "CUDA_event_ms": 9.773056030273438
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.012044913019053638,
+          "CUDA_event_ms": 12.0381441116333
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.009780636057257652,
+          "CUDA_event_ms": 9.774080276489258
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.011494803009554744,
+          "CUDA_event_ms": 11.488256454467773
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.009791126009076834,
+          "CUDA_event_ms": 9.784319877624512
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.01149769895710051,
+          "CUDA_event_ms": 11.491328239440918
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.0120522869983688,
+          "CUDA_event_ms": 12.04633617401123
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.011530400952324271,
+          "CUDA_event_ms": 11.521023750305176
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.012057375977747142,
+          "CUDA_event_ms": 12.050432205200195
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.009818699094466865,
+          "CUDA_event_ms": 9.811967849731445
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.012077022925950587,
+          "CUDA_event_ms": 12.0698881149292
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.009814419085159898,
+          "CUDA_event_ms": 9.80787181854248
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.011522796005010605,
+          "CUDA_event_ms": 11.516927719116211
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0098195590544492,
+          "CUDA_event_ms": 9.812992095947266
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.011537524056620896,
+          "CUDA_event_ms": 11.531264305114746
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.01205986994318664,
+          "CUDA_event_ms": 12.05247974395752
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.011545958928763866,
+          "CUDA_event_ms": 11.539456367492676
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.012072743964381516,
+          "CUDA_event_ms": 12.066816329956055
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.00982527097221464,
+          "CUDA_event_ms": 9.819135665893555
+        }
+      ],
+      "timed_plus_warmup_calls": {
+        "Q_quant": 20,
+        "K_quant": 10,
+        "attention": 20,
+        "FA2": 10
+      },
+      "prepared_KV_cost_is_in_setup_not_per_call": true
+    }
+  ]
+}

@@ -1,0 +1,1033 @@
+{
+  "status": "completed_synthetic_older_native_baseline_not_method_effect",
+  "started_epoch": 1793918258.2330334,
+  "models_datasets_loads": 0,
+  "installs": 0,
+  "scope": "Synthetic existing Sage1 component baseline with pad/mask adapter, not unmodified core API, SOTA, video quality or novel method.",
+  "code_sha256": "d15153969bfe5547f9d5a3bf0a45de31cfc11c65ad5e617321e7c2779eba0c7e",
+  "manifest_sha256": "27d6f026d801cc02898f284b37d0e3277b6c173aa8a1e9784d01e3c239a7d13e",
+  "small": [
+    {
+      "name": "random",
+      "relative_Frobenius_error": 0.001715274660778739,
+      "max_abs_error": 0.0020164654174942287,
+      "full_prepared_bytes_equal": true
+    },
+    {
+      "name": "zero_Q",
+      "relative_Frobenius_error": 0.0013976871943571843,
+      "max_abs_error": 0.0004938726555810957,
+      "full_prepared_bytes_equal": true
+    }
+  ],
+  "small_validation_seconds_including_first_JIT": 1.2567162089981139,
+  "large": [
+    {
+      "K_valid": 4680,
+      "Q_valid": 4680,
+      "quality_descriptive_only": [
+        {
+          "Q_fixture": 0,
+          "full_prepared_bytes_equal": true,
+          "FA2_relative_Frobenius_difference": 0.013621256686747074,
+          "FA2_max_abs_difference": 0.0029296875
+        },
+        {
+          "Q_fixture": 1,
+          "full_prepared_bytes_equal": true,
+          "FA2_relative_Frobenius_difference": 0.01358154509216547,
+          "FA2_max_abs_difference": 0.00390625
+        }
+      ],
+      "case_setup_seconds_including_qual_and_first_use_JIT": 1.0112245599739254,
+      "timings": [
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0009500379674136639,
+          "CUDA_event_ms": 0.9431040287017822
+        },
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.0010622680420055985,
+          "CUDA_event_ms": 1.0557440519332886
+        },
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.0010109710274264216,
+          "CUDA_event_ms": 1.005568027496338
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.0010816940339282155,
+          "CUDA_event_ms": 1.0751999616622925
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.0010072150034829974,
+          "CUDA_event_ms": 1.0004479885101318
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.000944636994972825,
+          "CUDA_event_ms": 0.9379839897155762
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.001006021979264915,
+          "CUDA_event_ms": 0.9994239807128906
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0009436559630557895,
+          "CUDA_event_ms": 0.936959981918335
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.0010657840175554156,
+          "CUDA_event_ms": 1.0588159561157227
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0009493459947407246,
+          "CUDA_event_ms": 0.9431040287017822
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.0010655529331415892,
+          "CUDA_event_ms": 1.0598399639129639
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.0010071740252897143,
+          "CUDA_event_ms": 1.0004479885101318
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.0010757229756563902,
+          "CUDA_event_ms": 1.0690560340881348
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.0010061230277642608,
+          "CUDA_event_ms": 1.0004479885101318
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0009431239450350404,
+          "CUDA_event_ms": 0.936959981918335
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.0010099699720740318,
+          "CUDA_event_ms": 1.0035200119018555
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0009403390577062964,
+          "CUDA_event_ms": 0.9338880181312561
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.0010606140131130815,
+          "CUDA_event_ms": 1.0536960363388062
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0009470509830862284,
+          "CUDA_event_ms": 0.9410560131072998
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.0010619070380926132,
+          "CUDA_event_ms": 1.0557440519332886
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.0010099400533363223,
+          "CUDA_event_ms": 1.0035200119018555
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.0010748399654403329,
+          "CUDA_event_ms": 1.0680320262908936
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.001006021979264915,
+          "CUDA_event_ms": 0.9994239807128906
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0009418219560757279,
+          "CUDA_event_ms": 0.9349120259284973
+        }
+      ],
+      "timed_plus_warmup_calls": {
+        "Q_quant": 20,
+        "K_quant": 10,
+        "attention": 20,
+        "FA2": 10
+      },
+      "prepared_KV_cost_is_in_setup_not_per_call": true
+    },
+    {
+      "K_valid": 18720,
+      "Q_valid": 4680,
+      "quality_descriptive_only": [
+        {
+          "Q_fixture": 0,
+          "full_prepared_bytes_equal": true,
+          "FA2_relative_Frobenius_difference": 0.013612909242510796,
+          "FA2_max_abs_difference": 0.0012650489807128906
+        },
+        {
+          "Q_fixture": 1,
+          "full_prepared_bytes_equal": true,
+          "FA2_relative_Frobenius_difference": 0.013642149046063423,
+          "FA2_max_abs_difference": 0.001102447509765625
+        }
+      ],
+      "case_setup_seconds_including_qual_and_first_use_JIT": 0.024802068015560508,
+      "timings": [
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0033753450261428952,
+          "CUDA_event_ms": 3.3679358959198
+        },
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.004060165956616402,
+          "CUDA_event_ms": 4.05401611328125
+        },
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.004068691050633788,
+          "CUDA_event_ms": 4.061183929443359
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.004058912978507578,
+          "CUDA_event_ms": 4.05299186706543
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.004071636940352619,
+          "CUDA_event_ms": 4.065279960632324
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0033777490025386214,
+          "CUDA_event_ms": 3.3710079193115234
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.00410037103574723,
+          "CUDA_event_ms": 4.093952178955078
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.003377098008058965,
+          "CUDA_event_ms": 3.3699839115142822
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.004061998915858567,
+          "CUDA_event_ms": 4.056064128875732
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.00339039193931967,
+          "CUDA_event_ms": 3.3822720050811768
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.004060485982336104,
+          "CUDA_event_ms": 4.05401611328125
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.004077126970514655,
+          "CUDA_event_ms": 4.070400238037109
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.004061507992446423,
+          "CUDA_event_ms": 4.055039882659912
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.004068771027959883,
+          "CUDA_event_ms": 4.06220817565918
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.003339417977258563,
+          "CUDA_event_ms": 3.3320960998535156
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.00395152298733592,
+          "CUDA_event_ms": 3.9444479942321777
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0032303029438480735,
+          "CUDA_event_ms": 3.2235519886016846
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.0038850080454722047,
+          "CUDA_event_ms": 3.8789119720458984
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0032286400673910975,
+          "CUDA_event_ms": 3.2225279808044434
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.0038772228872403502,
+          "CUDA_event_ms": 3.8696959018707275
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.0039185399655252695,
+          "CUDA_event_ms": 3.911679983139038
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.003881652024574578,
+          "CUDA_event_ms": 3.875839948654175
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.003921697032637894,
+          "CUDA_event_ms": 3.9147520065307617
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.003229220979847014,
+          "CUDA_event_ms": 3.2225279808044434
+        }
+      ],
+      "timed_plus_warmup_calls": {
+        "Q_quant": 20,
+        "K_quant": 10,
+        "attention": 20,
+        "FA2": 10
+      },
+      "prepared_KV_cost_is_in_setup_not_per_call": true
+    },
+    {
+      "K_valid": 32760,
+      "Q_valid": 4680,
+      "quality_descriptive_only": [
+        {
+          "Q_fixture": 0,
+          "full_prepared_bytes_equal": true,
+          "FA2_relative_Frobenius_difference": 0.013410952873528004,
+          "FA2_max_abs_difference": 0.00146484375
+        },
+        {
+          "Q_fixture": 1,
+          "full_prepared_bytes_equal": true,
+          "FA2_relative_Frobenius_difference": 0.013422293588519096,
+          "FA2_max_abs_difference": 0.0008544921875
+        }
+      ],
+      "case_setup_seconds_including_qual_and_first_use_JIT": 0.13939059106633067,
+      "timings": [
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.005548640037886798,
+          "CUDA_event_ms": 5.541888236999512
+        },
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.006732985028065741,
+          "CUDA_event_ms": 6.725632190704346
+        },
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.006832120940089226,
+          "CUDA_event_ms": 6.8239359855651855
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.006737975054420531,
+          "CUDA_event_ms": 6.731776237487793
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.006854773033410311,
+          "CUDA_event_ms": 6.848512172698975
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.005559168988838792,
+          "CUDA_event_ms": 5.553152084350586
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.006868388969451189,
+          "CUDA_event_ms": 6.861824035644531
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.005562435952015221,
+          "CUDA_event_ms": 5.555200099945068
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.0067567500518634915,
+          "CUDA_event_ms": 6.750207901000977
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.005567646003328264,
+          "CUDA_event_ms": 5.561344146728516
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.0067462410079315305,
+          "CUDA_event_ms": 6.7399678230285645
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.006850135046988726,
+          "CUDA_event_ms": 6.8433918952941895
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.006747152074240148,
+          "CUDA_event_ms": 6.740992069244385
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.006852057995274663,
+          "CUDA_event_ms": 6.845439910888672
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.005563506972976029,
+          "CUDA_event_ms": 5.5562238693237305
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.006866716081276536,
+          "CUDA_event_ms": 6.859776020050049
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.00556950899772346,
+          "CUDA_event_ms": 5.562367916107178
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.0067556980066001415,
+          "CUDA_event_ms": 6.7491841316223145
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.00556705507915467,
+          "CUDA_event_ms": 5.560319900512695
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.00674991705454886,
+          "CUDA_event_ms": 6.744063854217529
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.006849713972769678,
+          "CUDA_event_ms": 6.8433918952941895
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.006750248023308814,
+          "CUDA_event_ms": 6.740992069244385
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.006843162002041936,
+          "CUDA_event_ms": 6.837247848510742
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.005558528937399387,
+          "CUDA_event_ms": 5.552127838134766
+        }
+      ],
+      "timed_plus_warmup_calls": {
+        "Q_quant": 20,
+        "K_quant": 10,
+        "attention": 20,
+        "FA2": 10
+      },
+      "prepared_KV_cost_is_in_setup_not_per_call": true
+    },
+    {
+      "K_valid": 56160,
+      "Q_valid": 4680,
+      "quality_descriptive_only": [
+        {
+          "Q_fixture": 0,
+          "full_prepared_bytes_equal": true,
+          "FA2_relative_Frobenius_difference": 0.013652637600898743,
+          "FA2_max_abs_difference": 0.0006103515625
+        },
+        {
+          "Q_fixture": 1,
+          "full_prepared_bytes_equal": true,
+          "FA2_relative_Frobenius_difference": 0.013698629103600979,
+          "FA2_max_abs_difference": 0.0006103515625
+        }
+      ],
+      "case_setup_seconds_including_qual_and_first_use_JIT": 0.07037350907921791,
+      "timings": [
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.009793160017579794,
+          "CUDA_event_ms": 9.785344123840332
+        },
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.011511605000123382,
+          "CUDA_event_ms": 11.505663871765137
+        },
+        {
+          "cycle": 0,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.012031647958792746,
+          "CUDA_event_ms": 12.024831771850586
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.011523106950335205,
+          "CUDA_event_ms": 11.515904426574707
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.01202348293736577,
+          "CUDA_event_ms": 12.016639709472656
+        },
+        {
+          "cycle": 1,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.009778992971405387,
+          "CUDA_event_ms": 9.773056030273438
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.012044913019053638,
+          "CUDA_event_ms": 12.0381441116333
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.009780636057257652,
+          "CUDA_event_ms": 9.774080276489258
+        },
+        {
+          "cycle": 2,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.011494803009554744,
+          "CUDA_event_ms": 11.488256454467773
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.009791126009076834,
+          "CUDA_event_ms": 9.784319877624512
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.01149769895710051,
+          "CUDA_event_ms": 11.491328239440918
+        },
+        {
+          "cycle": 3,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.0120522869983688,
+          "CUDA_event_ms": 12.04633617401123
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.011530400952324271,
+          "CUDA_event_ms": 11.521023750305176
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.012057375977747142,
+          "CUDA_event_ms": 12.050432205200195
+        },
+        {
+          "cycle": 4,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.009818699094466865,
+          "CUDA_event_ms": 9.811967849731445
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.012077022925950587,
+          "CUDA_event_ms": 12.0698881149292
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.009814419085159898,
+          "CUDA_event_ms": 9.80787181854248
+        },
+        {
+          "cycle": 5,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.011522796005010605,
+          "CUDA_event_ms": 11.516927719116211
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.0098195590544492,
+          "CUDA_event_ms": 9.812992095947266
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "fa2",
+          "wall_seconds": 0.011537524056620896,
+          "CUDA_event_ms": 11.531264305114746
+        },
+        {
+          "cycle": 6,
+          "Q_fixture": 0,
+          "arm": "full_components",
+          "wall_seconds": 0.01205986994318664,
+          "CUDA_event_ms": 12.05247974395752
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "fa2",
+          "wall_seconds": 0.011545958928763866,
+          "CUDA_event_ms": 11.539456367492676
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "full_components",
+          "wall_seconds": 0.012072743964381516,
+          "CUDA_event_ms": 12.066816329956055
+        },
+        {
+          "cycle": 7,
+          "Q_fixture": 1,
+          "arm": "prepared_KV_components",
+          "wall_seconds": 0.00982527097221464,
+          "CUDA_event_ms": 9.819135665893555
+        }
+      ],
+      "timed_plus_warmup_calls": {
+        "Q_quant": 20,
+        "K_quant": 10,
+        "attention": 20,
+        "FA2": 10
+      },
+      "prepared_KV_cost_is_in_setup_not_per_call": true
+    }
+  ],
+  "actual_calls": {
+    "Q_quant": 100,
+    "K_quant": 56,
+    "attention": 100,
+    "FA2": 48
+  },
+  "compiled_attention_evidence": [
+    {
+      "ptx_sha256": "3c8128590ad37bcca478e814cb1affcf0672ae22a2fbc20ea1edcd5434d07879",
+      "int8_mma_present": true,
+      "mma_lines": [
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1217, %r1218 }, { %r1061, %r1062, %r1063, %r1064 }, { %r1065, %r1066 }, { %r1217, %r1218 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1217, %r1218 }, { %r1221, %r1222, %r1223, %r1224 }, { %r1225, %r1226 }, { %r1217, %r1218 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1217, %r1218 }, { %r1381, %r1382, %r1383, %r1384 }, { %r1385, %r1386 }, { %r1217, %r1218 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1217, %r1218 }, { %r1541, %r1542, %r1543, %r1544 }, { %r1545, %r1546 }, { %r1217, %r1218 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1227, %r1228 }, { %r1061, %r1062, %r1063, %r1064 }, { %r1075, %r1076 }, { %r1227, %r1228 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1227, %r1228 }, { %r1221, %r1222, %r1223, %r1224 }, { %r1235, %r1236 }, { %r1227, %r1228 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1227, %r1228 }, { %r1381, %r1382, %r1383, %r1384 }, { %r1395, %r1396 }, { %r1227, %r1228 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1227, %r1228 }, { %r1541, %r1542, %r1543, %r1544 }, { %r1555, %r1556 }, { %r1227, %r1228 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1237, %r1238 }, { %r1061, %r1062, %r1063, %r1064 }, { %r1085, %r1086 }, { %r1237, %r1238 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1237, %r1238 }, { %r1221, %r1222, %r1223, %r1224 }, { %r1245, %r1246 }, { %r1237, %r1238 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1237, %r1238 }, { %r1381, %r1382, %r1383, %r1384 }, { %r1405, %r1406 }, { %r1237, %r1238 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1237, %r1238 }, { %r1541, %r1542, %r1543, %r1544 }, { %r1565, %r1566 }, { %r1237, %r1238 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1247, %r1248 }, { %r1061, %r1062, %r1063, %r1064 }, { %r1095, %r1096 }, { %r1247, %r1248 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1247, %r1248 }, { %r1221, %r1222, %r1223, %r1224 }, { %r1255, %r1256 }, { %r1247, %r1248 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1247, %r1248 }, { %r1381, %r1382, %r1383, %r1384 }, { %r1415, %r1416 }, { %r1247, %r1248 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1247, %r1248 }, { %r1541, %r1542, %r1543, %r1544 }, { %r1575, %r1576 }, { %r1247, %r1248 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1257, %r1258 }, { %r1061, %r1062, %r1063, %r1064 }, { %r1105, %r1106 }, { %r1257, %r1258 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1257, %r1258 }, { %r1221, %r1222, %r1223, %r1224 }, { %r1265, %r1266 }, { %r1257, %r1258 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1257, %r1258 }, { %r1381, %r1382, %r1383, %r1384 }, { %r1425, %r1426 }, { %r1257, %r1258 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1257, %r1258 }, { %r1541, %r1542, %r1543, %r1544 }, { %r1585, %r1586 }, { %r1257, %r1258 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1267, %r1268 }, { %r1061, %r1062, %r1063, %r1064 }, { %r1115, %r1116 }, { %r1267, %r1268 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1267, %r1268 }, { %r1221, %r1222, %r1223, %r1224 }, { %r1275, %r1276 }, { %r1267, %r1268 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1267, %r1268 }, { %r1381, %r1382, %r1383, %r1384 }, { %r1435, %r1436 }, { %r1267, %r1268 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1267, %r1268 }, { %r1541, %r1542, %r1543, %r1544 }, { %r1595, %r1596 }, { %r1267, %r1268 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1277, %r1278 }, { %r1061, %r1062, %r1063, %r1064 }, { %r1125, %r1126 }, { %r1277, %r1278 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1277, %r1278 }, { %r1221, %r1222, %r1223, %r1224 }, { %r1285, %r1286 }, { %r1277, %r1278 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1277, %r1278 }, { %r1381, %r1382, %r1383, %r1384 }, { %r1445, %r1446 }, { %r1277, %r1278 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1277, %r1278 }, { %r1541, %r1542, %r1543, %r1544 }, { %r1605, %r1606 }, { %r1277, %r1278 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1287, %r1288 }, { %r1061, %r1062, %r1063, %r1064 }, { %r1135, %r1136 }, { %r1287, %r1288 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1287, %r1288 }, { %r1221, %r1222, %r1223, %r1224 }, { %r1295, %r1296 }, { %r1287, %r1288 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1287, %r1288 }, { %r1381, %r1382, %r1383, %r1384 }, { %r1455, %r1456 }, { %r1287, %r1288 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1287, %r1288 }, { %r1541, %r1542, %r1543, %r1544 }, { %r1615, %r1616 }, { %r1287, %r1288 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1297, %r1298 }, { %r1141, %r1142, %r1143, %r1144 }, { %r1065, %r1066 }, { %r1297, %r1298 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1297, %r1298 }, { %r1301, %r1302, %r1303, %r1304 }, { %r1225, %r1226 }, { %r1297, %r1298 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1297, %r1298 }, { %r1461, %r1462, %r1463, %r1464 }, { %r1385, %r1386 }, { %r1297, %r1298 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1297, %r1298 }, { %r1621, %r1622, %r1623, %r1624 }, { %r1545, %r1546 }, { %r1297, %r1298 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1307, %r1308 }, { %r1141, %r1142, %r1143, %r1144 }, { %r1075, %r1076 }, { %r1307, %r1308 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1307, %r1308 }, { %r1301, %r1302, %r1303, %r1304 }, { %r1235, %r1236 }, { %r1307, %r1308 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1307, %r1308 }, { %r1461, %r1462, %r1463, %r1464 }, { %r1395, %r1396 }, { %r1307, %r1308 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1307, %r1308 }, { %r1621, %r1622, %r1623, %r1624 }, { %r1555, %r1556 }, { %r1307, %r1308 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1317, %r1318 }, { %r1141, %r1142, %r1143, %r1144 }, { %r1085, %r1086 }, { %r1317, %r1318 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1317, %r1318 }, { %r1301, %r1302, %r1303, %r1304 }, { %r1245, %r1246 }, { %r1317, %r1318 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1317, %r1318 }, { %r1461, %r1462, %r1463, %r1464 }, { %r1405, %r1406 }, { %r1317, %r1318 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1317, %r1318 }, { %r1621, %r1622, %r1623, %r1624 }, { %r1565, %r1566 }, { %r1317, %r1318 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1327, %r1328 }, { %r1141, %r1142, %r1143, %r1144 }, { %r1095, %r1096 }, { %r1327, %r1328 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1327, %r1328 }, { %r1301, %r1302, %r1303, %r1304 }, { %r1255, %r1256 }, { %r1327, %r1328 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1327, %r1328 }, { %r1461, %r1462, %r1463, %r1464 }, { %r1415, %r1416 }, { %r1327, %r1328 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1327, %r1328 }, { %r1621, %r1622, %r1623, %r1624 }, { %r1575, %r1576 }, { %r1327, %r1328 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1337, %r1338 }, { %r1141, %r1142, %r1143, %r1144 }, { %r1105, %r1106 }, { %r1337, %r1338 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1337, %r1338 }, { %r1301, %r1302, %r1303, %r1304 }, { %r1265, %r1266 }, { %r1337, %r1338 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1337, %r1338 }, { %r1461, %r1462, %r1463, %r1464 }, { %r1425, %r1426 }, { %r1337, %r1338 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1337, %r1338 }, { %r1621, %r1622, %r1623, %r1624 }, { %r1585, %r1586 }, { %r1337, %r1338 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1347, %r1348 }, { %r1141, %r1142, %r1143, %r1144 }, { %r1115, %r1116 }, { %r1347, %r1348 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1347, %r1348 }, { %r1301, %r1302, %r1303, %r1304 }, { %r1275, %r1276 }, { %r1347, %r1348 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1347, %r1348 }, { %r1461, %r1462, %r1463, %r1464 }, { %r1435, %r1436 }, { %r1347, %r1348 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1347, %r1348 }, { %r1621, %r1622, %r1623, %r1624 }, { %r1595, %r1596 }, { %r1347, %r1348 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1357, %r1358 }, { %r1141, %r1142, %r1143, %r1144 }, { %r1125, %r1126 }, { %r1357, %r1358 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1357, %r1358 }, { %r1301, %r1302, %r1303, %r1304 }, { %r1285, %r1286 }, { %r1357, %r1358 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1357, %r1358 }, { %r1461, %r1462, %r1463, %r1464 }, { %r1445, %r1446 }, { %r1357, %r1358 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1357, %r1358 }, { %r1621, %r1622, %r1623, %r1624 }, { %r1605, %r1606 }, { %r1357, %r1358 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1367, %r1368 }, { %r1141, %r1142, %r1143, %r1144 }, { %r1135, %r1136 }, { %r1367, %r1368 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1367, %r1368 }, { %r1301, %r1302, %r1303, %r1304 }, { %r1295, %r1296 }, { %r1367, %r1368 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1367, %r1368 }, { %r1461, %r1462, %r1463, %r1464 }, { %r1455, %r1456 }, { %r1367, %r1368 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1367, %r1368 }, { %r1621, %r1622, %r1623, %r1624 }, { %r1615, %r1616 }, { %r1367, %r1368 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r657, %r658, %r659, %r660 }, { %r441, %r442, %r443, %r444 }, { %r445, %r446 }, { %r657, %r658, %r659, %r660 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r657, %r658, %r659, %r660 }, { %r665, %r666, %r667, %r668 }, { %r669, %r670 }, { %r657, %r658, %r659, %r660 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r671, %r672, %r673, %r674 }, { %r441, %r442, %r443, %r444 }, { %r459, %r460 }, { %r671, %r672, %r673, %r674 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r671, %r672, %r673, %r674 }, { %r665, %r666, %r667, %r668 }, { %r683, %r684 }, { %r671, %r672, %r673, %r674 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r685, %r686, %r687, %r688 }, { %r441, %r442, %r443, %r444 }, { %r473, %r474 }, { %r685, %r686, %r687, %r688 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r685, %r686, %r687, %r688 }, { %r665, %r666, %r667, %r668 }, { %r697, %r698 }, { %r685, %r686, %r687, %r688 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r699, %r700, %r701, %r702 }, { %r441, %r442, %r443, %r444 }, { %r487, %r488 }, { %r699, %r700, %r701, %r702 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r699, %r700, %r701, %r702 }, { %r665, %r666, %r667, %r668 }, { %r711, %r712 }, { %r699, %r700, %r701, %r702 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r713, %r714, %r715, %r716 }, { %r441, %r442, %r443, %r444 }, { %r501, %r502 }, { %r713, %r714, %r715, %r716 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r713, %r714, %r715, %r716 }, { %r665, %r666, %r667, %r668 }, { %r725, %r726 }, { %r713, %r714, %r715, %r716 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r727, %r728, %r729, %r730 }, { %r441, %r442, %r443, %r444 }, { %r515, %r516 }, { %r727, %r728, %r729, %r730 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r727, %r728, %r729, %r730 }, { %r665, %r666, %r667, %r668 }, { %r739, %r740 }, { %r727, %r728, %r729, %r730 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r741, %r742, %r743, %r744 }, { %r441, %r442, %r443, %r444 }, { %r529, %r530 }, { %r741, %r742, %r743, %r744 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r741, %r742, %r743, %r744 }, { %r665, %r666, %r667, %r668 }, { %r753, %r754 }, { %r741, %r742, %r743, %r744 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r755, %r756, %r757, %r758 }, { %r441, %r442, %r443, %r444 }, { %r543, %r544 }, { %r755, %r756, %r757, %r758 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r755, %r756, %r757, %r758 }, { %r665, %r666, %r667, %r668 }, { %r767, %r768 }, { %r755, %r756, %r757, %r758 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r769, %r770, %r771, %r772 }, { %r553, %r554, %r555, %r556 }, { %r445, %r446 }, { %r769, %r770, %r771, %r772 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r769, %r770, %r771, %r772 }, { %r777, %r778, %r779, %r780 }, { %r669, %r670 }, { %r769, %r770, %r771, %r772 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r783, %r784, %r785, %r786 }, { %r553, %r554, %r555, %r556 }, { %r459, %r460 }, { %r783, %r784, %r785, %r786 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r783, %r784, %r785, %r786 }, { %r777, %r778, %r779, %r780 }, { %r683, %r684 }, { %r783, %r784, %r785, %r786 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r797, %r798, %r799, %r800 }, { %r553, %r554, %r555, %r556 }, { %r473, %r474 }, { %r797, %r798, %r799, %r800 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r797, %r798, %r799, %r800 }, { %r777, %r778, %r779, %r780 }, { %r697, %r698 }, { %r797, %r798, %r799, %r800 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r811, %r812, %r813, %r814 }, { %r553, %r554, %r555, %r556 }, { %r487, %r488 }, { %r811, %r812, %r813, %r814 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r811, %r812, %r813, %r814 }, { %r777, %r778, %r779, %r780 }, { %r711, %r712 }, { %r811, %r812, %r813, %r814 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r825, %r826, %r827, %r828 }, { %r553, %r554, %r555, %r556 }, { %r501, %r502 }, { %r825, %r826, %r827, %r828 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r825, %r826, %r827, %r828 }, { %r777, %r778, %r779, %r780 }, { %r725, %r726 }, { %r825, %r826, %r827, %r828 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r839, %r840, %r841, %r842 }, { %r553, %r554, %r555, %r556 }, { %r515, %r516 }, { %r839, %r840, %r841, %r842 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r839, %r840, %r841, %r842 }, { %r777, %r778, %r779, %r780 }, { %r739, %r740 }, { %r839, %r840, %r841, %r842 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r853, %r854, %r855, %r856 }, { %r553, %r554, %r555, %r556 }, { %r529, %r530 }, { %r853, %r854, %r855, %r856 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r853, %r854, %r855, %r856 }, { %r777, %r778, %r779, %r780 }, { %r753, %r754 }, { %r853, %r854, %r855, %r856 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r867, %r868, %r869, %r870 }, { %r553, %r554, %r555, %r556 }, { %r543, %r544 }, { %r867, %r868, %r869, %r870 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r867, %r868, %r869, %r870 }, { %r777, %r778, %r779, %r780 }, { %r767, %r768 }, { %r867, %r868, %r869, %r870 };"
+      ]
+    },
+    {
+      "ptx_sha256": "58046967eca1da281898a56faedf125874060f77e080f9dcb36bb24628aa42e5",
+      "int8_mma_present": true,
+      "mma_lines": [
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1315, %r1316 }, { %r1159, %r1160, %r1161, %r1162 }, { %r1163, %r1164 }, { %r1315, %r1316 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1315, %r1316 }, { %r1319, %r1320, %r1321, %r1322 }, { %r1323, %r1324 }, { %r1315, %r1316 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1315, %r1316 }, { %r1479, %r1480, %r1481, %r1482 }, { %r1483, %r1484 }, { %r1315, %r1316 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1315, %r1316 }, { %r1639, %r1640, %r1641, %r1642 }, { %r1643, %r1644 }, { %r1315, %r1316 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1325, %r1326 }, { %r1159, %r1160, %r1161, %r1162 }, { %r1173, %r1174 }, { %r1325, %r1326 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1325, %r1326 }, { %r1319, %r1320, %r1321, %r1322 }, { %r1333, %r1334 }, { %r1325, %r1326 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1325, %r1326 }, { %r1479, %r1480, %r1481, %r1482 }, { %r1493, %r1494 }, { %r1325, %r1326 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1325, %r1326 }, { %r1639, %r1640, %r1641, %r1642 }, { %r1653, %r1654 }, { %r1325, %r1326 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1335, %r1336 }, { %r1159, %r1160, %r1161, %r1162 }, { %r1183, %r1184 }, { %r1335, %r1336 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1335, %r1336 }, { %r1319, %r1320, %r1321, %r1322 }, { %r1343, %r1344 }, { %r1335, %r1336 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1335, %r1336 }, { %r1479, %r1480, %r1481, %r1482 }, { %r1503, %r1504 }, { %r1335, %r1336 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1335, %r1336 }, { %r1639, %r1640, %r1641, %r1642 }, { %r1663, %r1664 }, { %r1335, %r1336 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1345, %r1346 }, { %r1159, %r1160, %r1161, %r1162 }, { %r1193, %r1194 }, { %r1345, %r1346 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1345, %r1346 }, { %r1319, %r1320, %r1321, %r1322 }, { %r1353, %r1354 }, { %r1345, %r1346 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1345, %r1346 }, { %r1479, %r1480, %r1481, %r1482 }, { %r1513, %r1514 }, { %r1345, %r1346 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1345, %r1346 }, { %r1639, %r1640, %r1641, %r1642 }, { %r1673, %r1674 }, { %r1345, %r1346 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1355, %r1356 }, { %r1159, %r1160, %r1161, %r1162 }, { %r1203, %r1204 }, { %r1355, %r1356 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1355, %r1356 }, { %r1319, %r1320, %r1321, %r1322 }, { %r1363, %r1364 }, { %r1355, %r1356 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1355, %r1356 }, { %r1479, %r1480, %r1481, %r1482 }, { %r1523, %r1524 }, { %r1355, %r1356 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1355, %r1356 }, { %r1639, %r1640, %r1641, %r1642 }, { %r1683, %r1684 }, { %r1355, %r1356 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1365, %r1366 }, { %r1159, %r1160, %r1161, %r1162 }, { %r1213, %r1214 }, { %r1365, %r1366 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1365, %r1366 }, { %r1319, %r1320, %r1321, %r1322 }, { %r1373, %r1374 }, { %r1365, %r1366 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1365, %r1366 }, { %r1479, %r1480, %r1481, %r1482 }, { %r1533, %r1534 }, { %r1365, %r1366 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1365, %r1366 }, { %r1639, %r1640, %r1641, %r1642 }, { %r1693, %r1694 }, { %r1365, %r1366 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1375, %r1376 }, { %r1159, %r1160, %r1161, %r1162 }, { %r1223, %r1224 }, { %r1375, %r1376 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1375, %r1376 }, { %r1319, %r1320, %r1321, %r1322 }, { %r1383, %r1384 }, { %r1375, %r1376 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1375, %r1376 }, { %r1479, %r1480, %r1481, %r1482 }, { %r1543, %r1544 }, { %r1375, %r1376 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1375, %r1376 }, { %r1639, %r1640, %r1641, %r1642 }, { %r1703, %r1704 }, { %r1375, %r1376 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1385, %r1386 }, { %r1159, %r1160, %r1161, %r1162 }, { %r1233, %r1234 }, { %r1385, %r1386 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1385, %r1386 }, { %r1319, %r1320, %r1321, %r1322 }, { %r1393, %r1394 }, { %r1385, %r1386 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1385, %r1386 }, { %r1479, %r1480, %r1481, %r1482 }, { %r1553, %r1554 }, { %r1385, %r1386 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1385, %r1386 }, { %r1639, %r1640, %r1641, %r1642 }, { %r1713, %r1714 }, { %r1385, %r1386 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1395, %r1396 }, { %r1159, %r1160, %r1161, %r1162 }, { %r1243, %r1244 }, { %r1395, %r1396 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1395, %r1396 }, { %r1319, %r1320, %r1321, %r1322 }, { %r1403, %r1404 }, { %r1395, %r1396 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1395, %r1396 }, { %r1479, %r1480, %r1481, %r1482 }, { %r1563, %r1564 }, { %r1395, %r1396 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1395, %r1396 }, { %r1639, %r1640, %r1641, %r1642 }, { %r1723, %r1724 }, { %r1395, %r1396 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1405, %r1406 }, { %r1159, %r1160, %r1161, %r1162 }, { %r1253, %r1254 }, { %r1405, %r1406 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1405, %r1406 }, { %r1319, %r1320, %r1321, %r1322 }, { %r1413, %r1414 }, { %r1405, %r1406 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1405, %r1406 }, { %r1479, %r1480, %r1481, %r1482 }, { %r1573, %r1574 }, { %r1405, %r1406 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1405, %r1406 }, { %r1639, %r1640, %r1641, %r1642 }, { %r1733, %r1734 }, { %r1405, %r1406 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1415, %r1416 }, { %r1159, %r1160, %r1161, %r1162 }, { %r1263, %r1264 }, { %r1415, %r1416 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1415, %r1416 }, { %r1319, %r1320, %r1321, %r1322 }, { %r1423, %r1424 }, { %r1415, %r1416 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1415, %r1416 }, { %r1479, %r1480, %r1481, %r1482 }, { %r1583, %r1584 }, { %r1415, %r1416 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1415, %r1416 }, { %r1639, %r1640, %r1641, %r1642 }, { %r1743, %r1744 }, { %r1415, %r1416 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1425, %r1426 }, { %r1159, %r1160, %r1161, %r1162 }, { %r1273, %r1274 }, { %r1425, %r1426 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1425, %r1426 }, { %r1319, %r1320, %r1321, %r1322 }, { %r1433, %r1434 }, { %r1425, %r1426 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1425, %r1426 }, { %r1479, %r1480, %r1481, %r1482 }, { %r1593, %r1594 }, { %r1425, %r1426 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1425, %r1426 }, { %r1639, %r1640, %r1641, %r1642 }, { %r1753, %r1754 }, { %r1425, %r1426 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1435, %r1436 }, { %r1159, %r1160, %r1161, %r1162 }, { %r1283, %r1284 }, { %r1435, %r1436 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1435, %r1436 }, { %r1319, %r1320, %r1321, %r1322 }, { %r1443, %r1444 }, { %r1435, %r1436 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1435, %r1436 }, { %r1479, %r1480, %r1481, %r1482 }, { %r1603, %r1604 }, { %r1435, %r1436 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1435, %r1436 }, { %r1639, %r1640, %r1641, %r1642 }, { %r1763, %r1764 }, { %r1435, %r1436 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1445, %r1446 }, { %r1159, %r1160, %r1161, %r1162 }, { %r1293, %r1294 }, { %r1445, %r1446 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1445, %r1446 }, { %r1319, %r1320, %r1321, %r1322 }, { %r1453, %r1454 }, { %r1445, %r1446 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1445, %r1446 }, { %r1479, %r1480, %r1481, %r1482 }, { %r1613, %r1614 }, { %r1445, %r1446 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1445, %r1446 }, { %r1639, %r1640, %r1641, %r1642 }, { %r1773, %r1774 }, { %r1445, %r1446 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1455, %r1456 }, { %r1159, %r1160, %r1161, %r1162 }, { %r1303, %r1304 }, { %r1455, %r1456 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1455, %r1456 }, { %r1319, %r1320, %r1321, %r1322 }, { %r1463, %r1464 }, { %r1455, %r1456 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1455, %r1456 }, { %r1479, %r1480, %r1481, %r1482 }, { %r1623, %r1624 }, { %r1455, %r1456 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1455, %r1456 }, { %r1639, %r1640, %r1641, %r1642 }, { %r1783, %r1784 }, { %r1455, %r1456 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1465, %r1466 }, { %r1159, %r1160, %r1161, %r1162 }, { %r1313, %r1314 }, { %r1465, %r1466 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1465, %r1466 }, { %r1319, %r1320, %r1321, %r1322 }, { %r1473, %r1474 }, { %r1465, %r1466 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1465, %r1466 }, { %r1479, %r1480, %r1481, %r1482 }, { %r1633, %r1634 }, { %r1465, %r1466 };",
+        "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 { %r1465, %r1466 }, { %r1639, %r1640, %r1641, %r1642 }, { %r1793, %r1794 }, { %r1465, %r1466 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r603, %r604, %r605, %r606 }, { %r499, %r500, %r501, %r502 }, { %r503, %r504 }, { %r603, %r604, %r605, %r606 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r603, %r604, %r605, %r606 }, { %r611, %r612, %r613, %r614 }, { %r615, %r616 }, { %r603, %r604, %r605, %r606 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r603, %r604, %r605, %r606 }, { %r723, %r724, %r725, %r726 }, { %r727, %r728 }, { %r603, %r604, %r605, %r606 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r603, %r604, %r605, %r606 }, { %r835, %r836, %r837, %r838 }, { %r839, %r840 }, { %r603, %r604, %r605, %r606 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r617, %r618, %r619, %r620 }, { %r499, %r500, %r501, %r502 }, { %r517, %r518 }, { %r617, %r618, %r619, %r620 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r617, %r618, %r619, %r620 }, { %r611, %r612, %r613, %r614 }, { %r629, %r630 }, { %r617, %r618, %r619, %r620 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r617, %r618, %r619, %r620 }, { %r723, %r724, %r725, %r726 }, { %r741, %r742 }, { %r617, %r618, %r619, %r620 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r617, %r618, %r619, %r620 }, { %r835, %r836, %r837, %r838 }, { %r853, %r854 }, { %r617, %r618, %r619, %r620 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r631, %r632, %r633, %r634 }, { %r499, %r500, %r501, %r502 }, { %r531, %r532 }, { %r631, %r632, %r633, %r634 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r631, %r632, %r633, %r634 }, { %r611, %r612, %r613, %r614 }, { %r643, %r644 }, { %r631, %r632, %r633, %r634 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r631, %r632, %r633, %r634 }, { %r723, %r724, %r725, %r726 }, { %r755, %r756 }, { %r631, %r632, %r633, %r634 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r631, %r632, %r633, %r634 }, { %r835, %r836, %r837, %r838 }, { %r867, %r868 }, { %r631, %r632, %r633, %r634 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r645, %r646, %r647, %r648 }, { %r499, %r500, %r501, %r502 }, { %r545, %r546 }, { %r645, %r646, %r647, %r648 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r645, %r646, %r647, %r648 }, { %r611, %r612, %r613, %r614 }, { %r657, %r658 }, { %r645, %r646, %r647, %r648 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r645, %r646, %r647, %r648 }, { %r723, %r724, %r725, %r726 }, { %r769, %r770 }, { %r645, %r646, %r647, %r648 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r645, %r646, %r647, %r648 }, { %r835, %r836, %r837, %r838 }, { %r881, %r882 }, { %r645, %r646, %r647, %r648 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r659, %r660, %r661, %r662 }, { %r499, %r500, %r501, %r502 }, { %r559, %r560 }, { %r659, %r660, %r661, %r662 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r659, %r660, %r661, %r662 }, { %r611, %r612, %r613, %r614 }, { %r671, %r672 }, { %r659, %r660, %r661, %r662 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r659, %r660, %r661, %r662 }, { %r723, %r724, %r725, %r726 }, { %r783, %r784 }, { %r659, %r660, %r661, %r662 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r659, %r660, %r661, %r662 }, { %r835, %r836, %r837, %r838 }, { %r895, %r896 }, { %r659, %r660, %r661, %r662 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r673, %r674, %r675, %r676 }, { %r499, %r500, %r501, %r502 }, { %r573, %r574 }, { %r673, %r674, %r675, %r676 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r673, %r674, %r675, %r676 }, { %r611, %r612, %r613, %r614 }, { %r685, %r686 }, { %r673, %r674, %r675, %r676 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r673, %r674, %r675, %r676 }, { %r723, %r724, %r725, %r726 }, { %r797, %r798 }, { %r673, %r674, %r675, %r676 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r673, %r674, %r675, %r676 }, { %r835, %r836, %r837, %r838 }, { %r909, %r910 }, { %r673, %r674, %r675, %r676 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r687, %r688, %r689, %r690 }, { %r499, %r500, %r501, %r502 }, { %r587, %r588 }, { %r687, %r688, %r689, %r690 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r687, %r688, %r689, %r690 }, { %r611, %r612, %r613, %r614 }, { %r699, %r700 }, { %r687, %r688, %r689, %r690 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r687, %r688, %r689, %r690 }, { %r723, %r724, %r725, %r726 }, { %r811, %r812 }, { %r687, %r688, %r689, %r690 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r687, %r688, %r689, %r690 }, { %r835, %r836, %r837, %r838 }, { %r923, %r924 }, { %r687, %r688, %r689, %r690 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r701, %r702, %r703, %r704 }, { %r499, %r500, %r501, %r502 }, { %r601, %r602 }, { %r701, %r702, %r703, %r704 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r701, %r702, %r703, %r704 }, { %r611, %r612, %r613, %r614 }, { %r713, %r714 }, { %r701, %r702, %r703, %r704 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r701, %r702, %r703, %r704 }, { %r723, %r724, %r725, %r726 }, { %r825, %r826 }, { %r701, %r702, %r703, %r704 };",
+        "mma.sync.aligned.m16n8k32.row.col.satfinite.s32.s8.s8.s32 { %r701, %r702, %r703, %r704 }, { %r835, %r836, %r837, %r838 }, { %r937, %r938 }, { %r701, %r702, %r703, %r704 };"
+      ]
+    }
+  ],
+  "GPU": {
+    "name": "NVIDIA GeForce RTX 4090",
+    "allocated_peak_bytes": 1411403264,
+    "reserved_peak_bytes": 2527068160,
+    "TF32_matmul": false,
+    "TF32_cuDNN": false
+  },
+  "cost_scope": "Component pipeline includes Q quantization/padding, attention, and full-path K mean/quant/V cast+pad. Prepared-cache one-time cost reported in setup; mask is a broadcast view. Checks/hook overhead present. No original core API, C++ Sage2 or complete video timing.",
+  "finished_epoch": 1793918262.8860006,
+  "wall_seconds": 4.65296745300293,
+  "peak_RSS_bytes": 1007382528
+}
