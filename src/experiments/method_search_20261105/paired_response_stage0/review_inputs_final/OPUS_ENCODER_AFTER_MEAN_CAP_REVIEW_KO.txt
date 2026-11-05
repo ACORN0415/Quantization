@@ -1,0 +1,297 @@
+업무1 실제 Claude Opus 5.5 독립 검토 — encoder·강한 기준선·비용 (첫 검토, 동결자료 범위)
+작성: 2026-11-05 약22:00 KST. 검토자: 실제 Claude Opus 5.5, provider model id claude-opus-5-5 (이 채팅의 실행 모델로 확인).
+Orca session: claude_beab681e_3eaf_41b0_9688_b8ef268b288f (관리자가 전달한 식별자). Task/Dispatch ID 없음: worker-start 연결이
+terminal_handle_stale로 실패했고 관리 Run worker-list 0건이라고 전달받았다. 자동 연결이 완료됐다고 기록하지 않는다.
+권한: 읽기와 이 보고서 1개 작성만 했다. 소스/LOCK/결과 수정, GPU, 모델·실자료 tensor 로드, 합성검사 재실행, 설치, git 변경 0.
+과거 Fable 검토는 Fable 검토로 남으며 이 문서가 대체하지 않는다. paired_response_stage0(진행 중 driver/packing)은 이번 범위가 아니며
+완료·등록·실행으로 보지 않는다. PAIRED_CAP_RESOLUTION_ROOT.json(bit_baseline.py 기반)은 진행 중 산출물로서 참고만 했다.
+
+======================================================================
+1. 판정
+======================================================================
+제안 v2: 수정필요(등록 전 보완 사항이 있으나 구조는 수용 가능). 입력·정보시점·공통 K-only 참조·post-Wo SSE·결합대조 목록과
+persistent 비용 산술은 대체로 맞다. 다만 gate의 의미(아래 A), 무효 기준선 처리 규칙(B), QKSA 연결 세부(D)를 실자료 전에
+문장으로 고정해야 한다. 이들은 기존 문턱 완화가 아니라 미정 상태인 규칙을 정하는 것이다.
+core.py(63364f9d…)·projected_metric.py(17f895a1…): 타당(명시된 adaptation 범위 안에서). 등록을 막는 구현 오류는 찾지 못했다.
+fixed_rotation_control 결과: 타당(국소 개발자료 범위). OBQ stage2 layoutfix: 타당(시험 자료 한정), 경미한 견고성 공백 1건(G).
+관리 기록 정합성: 경미 불일치 2건(F).
+
+======================================================================
+2. 직접 확인한 것 (재계산·대조 포함)
+======================================================================
+해시(sha256sum 직접 계산, 명세와 일치):
+ core.py 63364f9d4619a231…; projected_metric.py 17f895a1ae85bfe2…; fixed RESULT 4099fb0c8c4afa00…;
+ layoutfix RESULT 903804509a08ec3e…, QUALITY 3e26401cb52117427…; FINAL_READY_V2 52d7fcbb… = MANAGER_STATUS.active_final_ready_sha256;
+ SELFTEST_V3 source_sha256=현재 core, checks 90/90 (저장 기록 확인, 재실행 아님); PROJECTED_SELFTEST_V1 48/48 (저장 기록);
+ paired_response_preparation/core.py c66e2e3e… (제안이 지정한 paired core와 일치).
+ fixed_rotation_control/LOCK.json 23개 파일 현재 해시 전부 일치, LOCK sha 86a77101…; AUDIT_CODEX 311/311.
+ obq_gpu_encoder_stage2_layoutfix/LOCK.json 137개 파일 현재 해시 전부 일치.
+ diff core.py.before_amendment_v2.txt core.py = 정확히 @torch.no_grad() 4줄(104,128,148,172행). AMENDMENT_V2 주장과 일치.
+소스 전체 읽음: core.py 268행, projected_metric.py 112행, causal_obq/common.py 20–95행(hessian/frames/codes_obq/encode/restore),
+ fixed_rotation_control/diagnose.py 95–140행(evaluation), obq_capacity_codex/diagnose_obq.py attn/metric, layoutfix obq_pack.cu 전체·
+ SOURCE_DIFF.patch 전체·experiment.py preflight.
+문서 전체 읽음: 제안v2, RESOURCE_CONTRACT_ISSUE, BUDGET_CHECK, CAP_RESOLUTION(참고), PREPARATION/AMENDMENT/PROJECTED_PREPARATION,
+ Codex 독립검토 2종, INPUT_BINDING_CODEX_KO, fixed REPORT/ROOT_REVIEW/RESULT_REVIEW_CODEX, layoutfix RESULT_REPORT, POST_PILOT, PRIOR_ART.
+바이트 산술 직접 재계산(모두 일치):
+ K packet/청크 4704토큰(프레임 pad 포함)×12×128×0.5 + FP16 scale 3×98×12×128×2 + sentinel1 = 4,515,841B;
+ V 4,500,480B; 6청크 KV 54,097,926B. 한 head K8 추가 4704×128×0.5×6 = 1,806,336B.
+ PSAC dense/청크 = 28+4680·12·(r+2). rank3: 1,684,968+U 9,216 = 1,694,184 (+λ144 = 1,694,328 projected).
+ rank1: 1,011,048+3,072 = 1,014,120 (+λ48 = 1,014,168); FULL U 12·128²·4 = 786,432 → FULL+P1 1,800,600 (λ 제외 1,800,552).
+ raw M 12·128²·8 = 1,572,864 → FM3 3,267,048. FM8 = 3,394,344+1,572,864 = 4,967,208 (제안문에 숫자가 없음; 표에 추가 권장).
+ paired: DN/Dz 6×12×(32·128+32)×4 = 1,188,864, Ω 12·128·32·4 = 196,608, offset 6·12·32·8 = 18,432 → 1,403,904.
+ FULL+paired = 2,190,336 > cap → "FULL+paired 미포함"의 이유는 산술상 맞다.
+
+======================================================================
+3. 중요한 지적
+======================================================================
+[A, 중요 — gate의 실제 강도와 의미를 등록문에 명시]
+ 제안의 주 점수는 K-only 참조(공통 V4+현재BF16 V) 대비 post-Wo SSE이고, 이전 FULL/FIXED17 판정(21.40~42.08%)은 전체 BF16 참조
+ SSE다. 저장된 fixed_rotation RESULT.json의 arms.*.k_only_reference.sse로 직접 재계산하면(같은 참조 정의, diagnose.py:106,127):
+   causal 네 지점 FULL/RTN_FP32 K-only 비 = 0.460, 0.507, 0.517, 0.560 (l18c0, l18c3, l24c0, l24c3);
+   FULL의 FIXED17 대비 K-only 감소 = 52.3, 50.2, 54.6, 37.7% (전체BF16 기준 36.0, 34.7, 34.1, 21.4%).
+ 함의 두 가지.
+ (1) K-only 공간에서는 공통 V 오차 floor가 빠지므로 같은 "10%"가 전체BF16 기준보다 약한 end-to-end 개선에 해당한다
+     (예: causal l18c0 FULL 전체SSE 517 중 K-only 270; K-only 10%≈전체 5% 수준). 등록문에 "통과는 K 경로 국소 개선"이라고 쓰고,
+     전체BF16 참조 SSE를 같은 팔·같은 seed로 필수 보고 열로 고정하라. 원한다면 보조조건(전체BF16 SSE도 최선 기준선보다
+     나쁘지 않음)을 지금 추가할 수 있으나, 추가 여부를 결과 후 정하지 않는다.
+ (2) 실제 요구 강도: R_fp32 위 paired가 cap 내 최선(최소 FULL 이하)보다 10% 낮으려면 R_fp32 K-only SSE를 대략 59/54/53/50% 이상
+     줄여야 한다(기존 anchor가 새 참조에서 재현된다는 가정). 이것은 의도된 엄격한 stop 검사로서 타당하다. 다만 실패 시 종료 범위는
+     "이 cap의 R_fp32+고정 Gaussian rank32"이며 FULL+paired(cap 밖)는 미검사로 남는다고 등록문에 써야 사후 일반화를 막는다.
+
+[B, 중요 — 무효/초과 기준선의 처리 규칙이 비어 있음]
+ "실패한 baseline도 사후 제외하지 않는다"는 원칙은 있으나, 기준선 팔이 유효성 검사(무개입·shape·scale·재현 anchor)에 실패하거나
+ 실측 tensor bytes가 cap을 넘을 때 gate를 어떻게 계산하는지 없다. 남은 팔만으로 "최선 기준선"을 다시 정하면 사실상 사후 제외다.
+ 제안: cap 내 등록 기준선 중 하나라도 구현무효이면 전체 gate는 판단불가(통과 불가)로 고정. cap 판정은 점수 계산 전 데이터 비의존
+ 상한으로 확정 — PSAC는 core.py:157에서 sparse가 더 작을 때만 선택하므로 dense 바이트가 데이터와 무관한 상한이다. 따라서
+ FULL+P1(1,800,600)·RP3(1,694,328)·BIT8(1,806,361 제안값)은 실자료 전에 cap 내로 확정 가능하고, FM3/FM8은 cap 밖 참조로 확정된다.
+ margin 5,761B는 추가 metadata(팔 label, 파일 컨테이너)가 cap 산정에 들어가면 사라질 수 있으니, 무엇을 cap에 넣고 빼는지
+ (CAP_RESOLUTION의 excluded 목록)를 모든 팔에 동일 적용한다고 LOCK에 쓴다. 성능이 나쁜 유효 팔은 당연히 그대로 min에 포함한다.
+
+[C, 중간 — full-M 비용 문장의 적용 범위]
+ R_fp32+full-M PSAC(FM3/FM8)에서는 raw M을 따로 보유해야 하므로 1,572,864B를 지속비용에서 뺄 수 없다는 명세에 동의한다.
+ 단 두 가지를 정확히 쓴다. (i) FP64는 구현 선택이다. FP32 M이면 FM3=2,480,616B로 여전히 cap 밖이라 결론은 dtype에 견고하다.
+ (ii) FULL 기반 조합에서는 사정이 다르다: common.hessian(common.py:35–41)상 H_d=(UᵀU)⁻¹ (U=chol(H_d⁻¹) upper), damp=
+ (0.01/1.01)·mean diag(H_d), M_rot=H_d−damp·I, M_orig=H·M_rot·Hᵀ. 즉 FULL U가 이미 p0 raw moment 정보를 (FP32 반올림 범위로)
+ 담는다. 따라서 "full-M PSAC는 어떤 경우에도 cap에 못 들어간다"로 일반화하지 않는다. 현재 팔 목록(FM은 R_fp32 base)에는
+ 영향이 없고, 이 유도 M을 쓰는 FULL+fullM 변형을 추가하라는 요구는 아니다(추가한다면 별도 필터로 실자료 전에 등록·수치차 기록).
+ Codex가 지적한 "PSAC basis/M을 FULL U와 같은 tensor로 세지 말라"는 tensor 수준에서 맞고, 위 내용은 정보 수준 관찰이다.
+
+[D, 중간 — QKSA 연결 세부를 driver 계약으로 고정]
+ core.qksa_bias는 b=Σ(q_rot²Δ²)/(24d)로, logit=q·k/√d(d=128) 척도에서 균일오차 분산/2와 일치한다(직접 유도). 현 CPU attention도
+ /√128 척도다(obq_capacity_codex/diagnose_obq.py:133). 등록문에 다음을 명시:
+ - bias는 √d로 나눈 logits에서, softmax 전, 과거 28,080 실토큰 구간에만 뺀다; unscaled q·k에 빼면 √d배 틀린다.
+ - rotation 인자 = H128 (R_fp32·FULL 모두 z=K@H 코드 좌표: common.py:44, 75–81). FULL의 U factor를 rotation으로 넘기지 않는다.
+ - steps = 저장 scale [3,98,1,12,128]→squeeze→[3,98,12,128], frame_tokens=1560, group=16 (INPUT_BINDING §3과 일치).
+ - FULL+P1+Q는 PSAC 보정 후 잔차에 원래 Δ를 쓰는 단순 조합이며 이론적 정합성이 없다는 표시(제안 4항)는 적절.
+ core.qksa_apply는 -inf가 있는 score를 거부하므로 mask 이전 적용 순서를 driver가 지켜야 한다(Codex 지적과 동일, causal은 mask 없음).
+
+[E, 경미 — projected 필터의 성격]
+ projected M_r의 행 판정은 U span 안의 잔차만 본다. 보정 후 span 내 잔차는 INT8 반올림+BF16 반올림 수준이므로 대부분의 행이
+ "개선"으로 판정되어 dense가 될 가능성이 높다. 즉 RP3/FULLP1은 실질적으로 "거의 무필터 top-r PSAC"에 가깝다. 오류는 아니나
+ full-M 필터와 다른 필터라는 표시(명세 2·3항)에 이 성격을 덧붙여, 결과 해석에서 "PSAC 필터 효과"로 부르지 않게 한다.
+ U/lambda는 PsacPacket에 들어가지 않으므로(projected_metric.py:98–106) 실행 manifest에서 별도 artifact로 해시 바인딩하고,
+ 재시작 roundtrip은 아직 미검증이라는 Codex 지적에 동의한다. ProjectedMetric 직접 생성은 alias를 허용하므로 driver는
+ prepare_metric 경로만 쓰도록 한다.
+
+[F, 경미 — 기록 정합성]
+ - PAIRED_BUDGET_CHECK_ROOT.json의 PSAC 수치(rank3 1,694,016 등)는 header·λ 반영 전 값이다. 최종 비용표는 1,694,184(full-M
+   packet+basis)/1,694,328(projected, λ 포함)/1,800,600(FULL+P1, λ 포함)을 쓰고 BUDGET_CHECK는 역사 기록으로 표시.
+ - MANAGER_STATE.json의 업무1 final_ready_sha256=2f4d1d7e…는 역사적 FINAL_READY.json이다. 현재 활성은 FINAL_READY_V2 52d7fcbb…
+   (MANAGER_STATUS.json과 일치). 관리자 기록의 필드명을 바로잡을 필요가 있다(관리 파일이므로 나는 수정하지 않았다).
+ - 제안의 cap 문장 "1,806,336B+metadata"와 진행중 CAP_RESOLUTION의 1,806,361B는 모순은 아니나, 최종 정수는 stage0 후속검토 후 LOCK.
+ - fallback≤0.1%의 분모(query×head×endpoint×seed 중 무엇인지)를 등록문에 명시.
+
+[G, 경미 — OBQ layoutfix 견고성]
+ layoutfix gpu_frames(SOURCE_DIFF.patch)는 CPU frames의 assert sf.to(bf16)==s(common.py:47)를 갖지 않고 preflight도 유한·양수만
+ 본다(experiment.py:50–55). 시험한 자료에서 GPU/CPU 복원 차이 0이 관측됐고 모든 팔이 같은 z/scale을 공유하므로 결과의 공정성에는
+ 영향이 없지만, 향후 GPU 경로를 재사용할 때 scale의 BF16 왕복 정확성 assert를 넣어야 한다. 커널 자체는 직접 읽어 확인:
+ scale_row=(row/12/16)·12+head 인덱싱, j 순서 보존, _rn 연산·FMA 없음, nearbyintf(ties-to-even)=torch.round, nibble 순서
+ (짝수 low)가 CPU pack과 일치한다. build 실패(Ninja/NVCC0)→envfix의 전처리 dispatch 불일치→layoutfix의 명시적 2D mm은 실패를
+ 허용오차로 넘긴 것이 아니라 전처리 정의 변경이며 별도 등록됐다는 기록과 diff가 일치한다.
+
+======================================================================
+4. 업무1 기존 결과의 독립 확인
+======================================================================
+core.py(PSAC/QKSA): 수식 C=EU, Khat+ĈUᵀ, INT8[-127,127]/FP16 행 scale/ties-to-even/clamp 계수, 실제 BF16 복원 기준 엄격 감소
+ 행만 보존, dense 동점, uint16 index, 0행 signed-zero 보존이 소스와 일치. 정보시점: core는 파일 I/O·basis 선택이 없다(외부 LOCK 책임).
+ M1(raw M 상주)·C1(반복 eigvalsh/직교성 검사 시간)은 미해결 계약으로 올바르게 남아 있고, M2는 no_grad 4줄로 해결됐다(diff 확인).
+ 수정 범위는 M2만이며 M1/C1은 소스로 해결된 것이 아니다 — 구분이 기록과 일치한다. 초기 72건은 역사 기록.
+projected_metric.py: 저장 BF16 U·FP32 λ의 M_r에 대한 (EU)²·λ, before는 unquantized 계수로 계산(=EU, 일관), core SHA를 import 시
+ 확인. 48건은 명시적 M_r 대조이지 원 full-M 동등성 검증이 아니다(동의).
+fixed_rotation_control: FULL은 FIXED17 대비 전체BF16 SSE 21.40~42.08%(6지점) — RESULT에서 직접 확인. K-only로는 37.7~57.4%.
+ KV 54,097,926B 동일, FIXED17 R 786,432+12B·FULL U 786,432B 별도, 81.71초. 국소 개발자료 결과이며 FlagRot 공식 재현/전체 승리,
+ 생성 성공이 아니다. 기존 K-only NSE의 분모가 전체BF16 에너지였음을 소스(diagnose.py:106,127)로 확인 — 제안이 새 NSE 분모를
+ 새 K-only 참조 에너지로 바꾸는 것은 옳고, 이전 k_only_reference.nse를 옮겨 쓰면 안 된다.
+OBQ layoutfix: 4 native 지점 OBQ 감소 24.25~37.77%(전체BF16·native GPU 출력 기준, 새 K-only 점수와 섞지 않음).
+ fused 0.729ms / Graph 5.13ms / 빠른 RTN 0.307ms, 층당 +0.422ms는 단일 layer 두 사례의 encoder 계측이며 전체 생성 가속이 아니다.
+ U 786,432B/층과 fixed offline H 준비비용(층당 34~43ms, Stage1 재사용)은 별도 — paired/PSAC 비용표에서도 같은 방식으로 분리해야 한다.
+선행연구: 현재 FULL은 GPTQ의 KV 이식(W=K, X=Qᵀ)이며 새 수학이 아니다(PRIOR_ART 동의). PSAC/QKSA는 공개 정의 adaptation이다.
+
+======================================================================
+5. 가능한 주장 / 미입증 주장
+======================================================================
+가능: 강한 기준선 CPU 준비물(core/projected)이 명시한 adaptation대로 구현되어 있다; 비용 산술은 tensor/packet 범위에서 정확하다;
+ FULL은 시험한 고정17 회전 RTN을 국소 개발자료에서 이긴다; GPU fused OBQ는 시험 형상에서 CPU와 바이트 일치한다.
+미입증: paired의 실자료 효과(0건), 독립 보류 일반화, 전체 생성 성공(full-H pilot stop_quality 유지), 공식 QuantWM/QKSA/FlagRot
+ 재현, 전체 peak/host·device 복사/workspace, GPU 실행 비용, 신규성. 합성 통과·리뷰 합의는 이 중 어느 것의 증거도 아니다.
+
+======================================================================
+6. 가장 강한 반론
+======================================================================
+이 검사는 사실상 "R_fp32 base 위 1.4MB 요약이 FULL(0.79MB)·FULL+P1(1.8MB)보다 K-only 오차를 10% 더 줄이는가"이며, 기존 anchor상
+paired는 R_fp32 오차를 약 50~59% 이상 줄여야 한다. 실패할 사전확률이 높고, 실패해도 FULL+paired(cap 밖)나 학습형 요약에 대해선
+아무것도 말하지 않는다. 성공해도 4 endpoint는 한 생성(seed307)의 두 층×두 call로 서로 독립이 아니고, 개발에 이미 쓴 자료다.
+따라서 이 진단의 가치는 "싸게 종료할 수 있는 판별"에 있으며, 그 목적이라면 현 설계가 적절하다. 반대로 긍정 결과를 신규 방법의
+근거로 쓰려는 용도라면 독립 입력 없이는 부족하다.
+
+======================================================================
+7. 근거 있는 대안 (최대 1개, 선택 사항)
+======================================================================
+고정 K 평균 오프셋 기준선: p0로 고정한 층·head별 μ(원좌표 FP32 12×128 = 6,144B/층)를 쓰기 시 K−μ로 양자화하고 복원 때 +μ.
+근거: SageAttention의 sequence축 K mean subtraction이 기존 옵션이고(KNOWLEDGE_LEDGER L001), FlagRot C.2도 보정 기반 mean 제거를
+구현한다(PRIOR_ART §2). 현재 코덱은 16토큰 그룹·채널별 대칭 scale이므로 공통 오프셋은 그룹 maxabs를 키운다 — paired가 노리는
+"부호 있는 base-aware 보정"의 가장 싼 0차 판본이며, cap의 0.3%다. 복원 시 +μ이므로 현재 BF16 키에는 손대지 않아 softmax 불변성
+가정이 필요 없다. 불확실성: post-RoPE 좌표에서는 고주파 채널의 오프셋이 위치에 따라 회전하므로 고정 μ의 이득은 미지수이고,
+method_search_20261105 실험·리뷰 폴더의 키워드 검색(mean/centering/offset)에서는 측정 기록을 찾지 못했다(부재 증명 아님). 채택한다면 결과 전에 R_fp32+μ 한 팔만 등록하고 같은 gate·무효 규칙에 넣는다.
+채택하지 않는다면 "가장 단순한 signed 보정 기준선은 미검사"라고 한계에 적는다. 이 제안은 새 방법이 아니며 실행 권한이 아니다.
+
+======================================================================
+8. 미확인 / 남은 불확실성
+======================================================================
+- 실자료 tensor·manifest 해시 재검증, 새 K-only 참조의 실제 재현, current/past 경계와 반올림, noquant 검사는 모두 미실행(정적 계약).
+- 합성 selftest 90/48건은 저장 기록만 확인했고 재실행하지 않았다. /root/fair_comparison_codex의 원소스는 이번에 읽지 않았다.
+- paired core(c66e2e3e…) 내부와 attention adapter(업무2)는 이번 범위에서 해시만 확인, 내용 검토는 업무2 Opus 담당.
+- 원문(QuantWM D.1, QKSA 부록)은 이번에 직접 열지 않았고 준비문서·Codex 검토의 인용에 의존했다. QKSA 1/(24d) 계수는 독립 유도로만 확인.
+- paired_response_stage0의 driver·bit_baseline·cap 정수·metadata는 진행 중이며 후속 좁은 검토 대상이다. 45분/CPU4/RSS8GiB/2GiB는
+  아직 실행 승인이 아니고, 이 검토도 실험이나 사용자 권한을 대신하지 않는다.
+
+######################################################################
+후속 검토 1 — 한 head INT8 기준선(bit_baseline)과 정확 cap (부모 msg_d5a5153df5c7)
+######################################################################
+작성: 2026-11-05 KST, 같은 실제 Claude Opus 5.5(claude-opus-5-5), 같은 session claude_beab681e_3eaf_41b0_9688_b8ef268b288f.
+Task/Dispatch 없음(자동 연결 실패 상태 유지). 위 첫 검토 본문은 수정하지 않았다(앞서 같은 날 내가 한 1문장 표현 정정 외).
+범위: bit_baseline.py, BIT_FINAL_READY.json, BIT_PREPARATION_KO.txt, BIT_SELFTEST_V1.json(저장 기록), BIT_MANAGER_STATUS/ROOT_CHECK,
+PAIRED_CAP_RESOLUTION_ROOT.json. tensor/.pt 로드 0, 테스트 재실행 0, 소스·LOCK 수정 0. 진행 중 diagnose.py는 승인 대상이 아니며
+head 선택 호출부(200–224행)만 provenance 의도 확인용으로 읽었다.
+
+해시(직접 계산, BIT_FINAL_READY와 일치): bit_baseline.py 73fccb81…, bit_baseline_selftest.py 00256f6b…, BIT_SELFTEST_V1 e7f7b47e…,
+BIT_SYNTHETIC_STATE.pt 316d9e35…(해시만), causal_obq/common.py 436f7b27…, BIT_PREPARATION_KO 24143d37…. 저장 selftest 104/104.
+
+판정: 타당(합성 준비물로서). 정확 cap 1,806,361B는 산술·저장형식과 일치하며 실자료 전 정수 cap으로 잠글 근거가 된다.
+다만 아래 H1–H3을 driver/등록 계약에 넣어야 하고, 자원계약의 나머지 미결은 이 자료로 해결되지 않는다.
+
+직접 확인
+- 분리 소유 storage: packet은 packed4(11head INT4) / codes8(1head INT8) / scale(FP16 전체 head) / sentinel의 독립 tensor 4개이며
+  _owned가 storage_offset0·storage nbytes=numel·size·grad 없음을 강제(bit_baseline.py:29–33, 116–126). 12head INT4+INT8 이중 저장 없음.
+  _pack4·codes8·scale 모두 clone으로 입력과 alias 없음(97, 178–179행).
+- 바이트: count=3·98·16·128=602,112/head. packed4 602,112·11/2=3,311,616, int8 602,112, scale 903,168, sentinel1 → 4,816,897/청크;
+  K4 4,515,841과의 차 301,056 ×6 = 1,806,336. header struct '<4sIIIII' = 24B + selected_head 1B → 1,806,361. 6청크 mixed K+state
+  28,901,407, mixed KV 55,904,287 — 모두 재계산 일치. 이 중 프레임 pad 토큰(4704−4680)의 INT8 코드 18,432B가 포함된다
+  (기존 K4 형식과 같은 관례이므로 공정하나, "실토큰 INT8 비용"이라 부르지 않는다).
+- 비선택 head 동일성: scale을 전 head에 /7로 계산한 뒤 선택 head만 /127로 덮어쓴다(169–171행). 따라서 비선택 11head의 scale과
+  code4 산술은 common.frames/encode_k R_fp32(common.py:43–47, 75–77)와 같은 식·순서다. hadamard()도 같은 구성. 저장 selftest의
+  production 형상 1건에서 11head 복원/scale bytes 동일 기록 확인(재실행 아님). nibble 배열은 [F,G,16,11,128] 순서로 원 K4 packed와
+  byte 배열은 다르며 동일한 것은 복원 원소 bytes다 — 문서 표현과 일치.
+- 반올림: FP16 scale이 BF16 scale을 정확히 보존해야 하며(174행) 아니면 오류. INT8 code ≤127은 BF16에서 정확한 정수, 복원은
+  code.bf16×scale.bf16 → 역H128 FP32 → BF16로 기존 decoder 산술과 같다. 이 BF16 곱 반올림(상대 ≤2^-9)은 INT8 양자화 간격(최대값의
+  1/127)과 같은 자릿수라서 INT8 head 오차의 일부는 BF16 floor가 정한다. 기존 codec과 같은 선택이므로 결함은 아니나 결과 해석 시
+  "INT8 이론 오차"로 부르지 않는다. 범위는 [-128,127] clamp로 R_fp32의 [-8,7] 관례와 같다.
+- 공유 state 왕복: state 25B와 packet 바이트는 각각 길이 검사 후 재구성·validate(65–71, 140–150행). 저장 기록상 디스크 저장/재로드
+  포함 검사 통과. head 선택: 대칭·PSD·유한 FP64 raw moment, 토큰별 eᵀMe 합의 argmax(torch.argmax 최초 index = 최소 index 동점).
+  평가 Q·native·post-Wo 미사용. 진행 중 driver의 호출은 p0 과거 K[:, :28080]과 그 R_fp32 복원으로 보인다(diagnose.py:221; 미승인).
+- 비용 계정: head 선택용 raw M은 선택 1회에만 쓰이고 쓰기마다 필요하지 않으므로 cap 제외("calibration-only matrix")가 정당하다.
+  이는 매 write마다 M이 필요한 full-M PSAC와 다르다(첫 검토 C와 일관). 공통 H128 65,536B 별도 처리는 모든 팔에 동일하면 타당.
+
+추가 수정/계약 필요
+[H1, 중간 — packet↔state↔layer 결합이 바이트로 검증되지 않음] packet 바이트에는 selected_head나 layer 식별이 없고 from_bytes는
+ 외부 state를 그대로 신뢰한다. 같은 frames/tokens의 다른 state(다른 head 또는 다른 층의 state)를 넘기면 길이 검사를 통과하고
+ 조용히 잘못 복원된다. 소스 수정 없이 driver manifest에서 층별 state 해시·selected_head·packet 해시를 묶고 restore 전에 대조하라.
+[H2, 중간 — 실자료 유효성 실패 경로] INT8 head scale은 /127이라 INT4보다 약18배 작다. FP16 subnormal 구간에서 BF16 scale이 정확히
+ 표현되지 않으면(대략 group 최댓값 ≲1e-3 수준) 174행에서 오류로 중단된다. 조용한 오류가 아니라 좋은 설계지만, 이 경우 BIT8은
+ 구현무효가 되며 첫 검토 B의 규칙(cap 내 기준선 하나라도 무효면 gate 판단불가)이 적용된다는 것을 등록문에 쓴다. 결과를 보고
+ clamp·head를 바꾸지 않는다.
+[H3, 경미 — provenance 고정] select_head는 입력 moment가 원좌표 raw인지 구분할 수 없다(문서도 명시). 등록에 (i) PSAC와 같은
+ 원좌표 C_orig 해시, (ii) p0 K의 정확한 범위(과거 write1..6 28,080토큰인지 c7 current인지), (iii) RTN 복원이 R_fp32 산술임을 고정하고,
+ 선택 점수 12개와 선택 head를 결과 전에 기록한다. selftest의 "independent" 대조는 같은 작성자의 직접식 대조임을 감안한다.
+
+자원계약 결론에 대한 판단
+해결된 것: BIT8의 정확 tensor/packet cap 정수(1,806,361B)와 그 metadata 25B의 근거, 이중 저장 없음, 비선택 head 동일성.
+해결되지 않은 것: (1) 모든 팔에 같은 metadata 계정 규칙 — BIT8은 25B를 넣었으므로 FIXED17 label 12B, PSAC 28B header×6(이미 포함),
+ paired 상태의 header/seed/rank 기술자 등도 같은 기준으로 넣거나 빼는 규칙을 LOCK에 명시(현 margin상 판정은 바뀌지 않음:
+ FULL+P1 margin 5,761B, paired 402,457B). (2) full-M PSAC의 M 상주 정책은 cap 밖 참조로 두는 것으로 정리 가능하나 LOCK 문장 필요.
+ (3) Python/allocator/컨테이너·workspace·host/device 복사·전체 peak와 준비/write/read 시간은 여전히 별도 측정 대상이며 이 cap과
+ 같다고 주장하지 않는다. (4) 첫 검토 A·B·D(K-only gate 의미, 무효 기준선 규칙, QKSA 연결)는 이 자료와 무관하게 미결.
+미확인: 실자료 head 선택·scale 실패 여부·효과, selftest 재실행, .pt 내용, driver 전체. 실행 승인 아님; pilot stop_quality 유지.
+
+######################################################################
+후속 검토2 — 동결 V2 bit+mean/cap (root msg_f84c9ce3caa0)
+######################################################################
+작성: 2026-11-05 약22:25 KST, 같은 실제 Claude Opus 5.5(claude-opus-5-5), session claude_beab681e_3eaf_41b0_9688_b8ef268b288f.
+Task/Dispatch 없음(자동 연결 실패 유지). 첫 검토와 K8 후속 본문은 보존(이 절 이전 파일 SHA 81506c65…=AFTER_K8 보존본과 동일 확인).
+범위: mean_baseline.py 전체, MEAN_PREPARATION/FINAL_READY/SELFTEST_V1(저장 34/34), AMENDMENT_V2, diagnose.py의 bit·mean·cap·
+QKSA·decide 관련 부분(196–345, 352–383행), REGISTRATION_DRAFT 해당 행, ROOT_PRELOCK_DECISIONS. 전체 driver/fixture 독립검토는
+업무2 Opus 담당이라 하지 않았다. tensor/.pt 로드·테스트 재실행·수정 0.
+
+0. 대상 정합성(중요 사실)
+- 명세의 diagnose.py 8009d8c7…는 현재 디스크 파일이 아니다. 현재 diagnose.py는 d3e2ca25…(22:17 수정)이며 V2 원본은
+  snapshots/before_amendment_v3/diagnose.py(8009d8c7… 일치)에 보존돼 있다. 이후 DRIVER_READY_V3(d77c32de…)·SOURCES_V3(9253a332…)·
+  AMENDMENT_V3·PAIR_ENTRY_REGRESSION_V1·FIXTURE_SELFTEST_V8이 22:19에 생성됐고 MANAGER_STATUS는 V3를 활성으로 표시한다.
+  관리자 FINAL_V2_MEAN_MATERIAL_CHECK의 diagnose 해시 대조는 이 시점에 이미 비활성(V2) 기준이다.
+- V2→V3 diff를 직접 확인: 정확히 2줄(75행 SOURCES_V2→V3, 251행 미정의 reloaded 참조 제거). V2는 모든 PAIR 팔이 첫 write 전에
+  UnboundLocalError로 실패하는 결함이 있어 그 자체로는 등록 불가였다. V3 251행은 make_paired_manifest의 사전 Omega 해시 검사만
+  수행하고, 재로드 후 비교(301행)는 유지된다 — 수정은 타당하다. fixture_selftest.py는 V2와 동일, SOURCES_V3은 V2 항목에 8개
+  추가·diagnose.py만 변경. 아래 bit/mean/cap 판단은 이 2줄과 무관하므로 V3에도 그대로 적용된다. V3 READY/회귀의 독립검토는 하지 않았다.
+
+1. 판정: bit+mean/cap 부분은 수용. 최종 등록 가능 조건으로 아래 R1(문서 우선순위 명시)이 필요하고, R2(전체 루프 합성 dry-run)를
+  강하게 권고한다. 새 gate·새 팔 제안은 없다.
+
+2. mean_baseline.py (faa3c329…) 확인
+- µ provenance: make_mean은 외부 BF16 K만 받아 FP64 token 가중 합/개수 → FP32(83–99행). driver는 p0 K[:, :28080](32760 중 과거
+  6청크, 현재 4680 제외)만 전달(diagnose 226행). 평가 입력으로 재추정 없음. ✓
+- 저장: MeanState는 CPU FP32[12,128], compact 6,144B, grad 없음 검증(36–41행), to/from_bytes 길이6144 고정. prepare_mean은 detach/clone. ✓
+- 산술: µ≠0이면 (K.f32−µ).BF16 → 동결 common.encode_k R_fp32 → restore → (+µ).BF16(120–142행). 현재 BF16 K는 함수 밖, 과거 청크만.
+  µ 전부0이면 원 경로 그대로(+0/−0 모두 ne(0)=False라 signed zero 포함 byte 보존). 비0 중심화 BF16 왕복 비항등을 주장하지 않음. ✓
+- scale 실패: common의 assert를 ValueError로 변환하고, 그 뒤 _packet이 FP16 scale 유한·양수·BF16 표현가능성을 명시적으로 재검사
+  (110–111행) — python -O로 assert가 빠져도 계약이 유지된다. clamp/fallback 구제 없음. ✓
+- common.py SHA를 import 시 검증. 미세: driver의 RMU 재로드(305행)는 µ를 다시 읽기만 하고 사전 해시와 비교하지 않으며, RMU 새 K
+  packet에는 BIT8 같은 µ-hash 링크가 없다. 점수는 검증된 prepared 상태에서 만든 복원값을 쓰므로 현 결과 유효성엔 영향이 없으나,
+  이 packet을 후에 단독 재사용하면 다른 층 µ로 조용히 복원될 수 있다(H1과 같은 부류, 경미).
+
+3. 내 기존 지적의 적용 상태 (diagnose V2=V3 동일 부분)
+- A K-only gate 의미: 전체BF16 SSE 필수열(332행 fullscore, 340행 full_BF16_reference) ✓; AMENDMENT "주 gate는 K-only 국소" 명시 ✓;
+  FULL+paired 미검사 명시 ✓.
+- B 무효/초과: DENSE_EXTRA 사전 dense 상한(17행) 초과 시 즉시 오류(288행), cap 초과 오류(289행), decide에서 어느 셀이든 invalid/상한
+  위반이면 전체 invalid(370행), 주 기준선 재분류·누락 시 invalid(371–373행), 셀 누락은 partial(366행) — 남은 팔 최소로 통과 불가. ✓
+  PRIMARY_BASELINES=PAIR·FM 제외 12팔(18행), 최소 SSE 기준. b=0이면 통과 아님 ✓.
+- C FM 비용·M 상주: FM3 3,267,048 / FM8 4,967,208 dense 상한, cap 밖 참고점 고정(cap_eligible False), raw_M을 shared에 넣어 실제
+  persistent로 계상(242행) ✓; "유도-M/다른 dtype 불가능성 주장 아님" 문장 ✓.
+- D QKSA: logits/√128 후 softmax 전 qksa_apply, bias 폭=과거 28080(172–181행); rotation H128(331행); scale[:,:,0]→frame_token_steps
+  (1560,16) 후 (28080,12,128) 검사(328–330행) ✓. RP3Q/FULLP1Q는 원래 scale을 쓰는 단순 조합으로 표시 ✓.
+- E projected 필터 성격: 별도 반영 문장 없음(해석 문구 수준이라 등록 차단 아님).
+- F 기록: fallback 분모 1536(=12head×128query) mask 1회 계수, ≤1개(377행·AMENDMENT) ✓; FM8 숫자 ✓; 같은 metadata 기준 —
+  "tensor/packet 코드·scale·header·index·label·공유행렬/λ 포함, 공통 manifest/컨테이너/Python/seed descriptor 제외, 모든 팔 동일"
+  ✓. FIXED17 786,444(=R+label12), RMU 6,144, BIT8 1,806,361로 driver 상수와 문서 일치(재계산 확인).
+- H1 BIT8 binding: layer/chunk/head/state hash/packet hash 링크 생성·restore 전 검사, 재로드 후 재검사(268–271, 304, 352–354행) ✓.
+- H2 scale 실패: BIT8·RMU 모두 오류→팔 실패→전체 판단불가, clamp/다른 head 구제 없음 ✓.
+- H3 provenance: bit_selection에 scores 12개, raw_C sha, p0_K_range[0,28080], p0 source sha, reconstruction 'R_fp32'(229–231행);
+  raw C는 고정 해시 anchor(fixed_raw_C_sha256)와 대조 ✓. 선택은 PREPARE 단계에서 평가 전 기록 ✓.
+
+4. 수정/정리 필요
+[R1, 등록 전 필수 — 문서 모순] SOURCES_V2/V3가 함께 묶는 REGISTRATION_DRAFT_KO.txt 39–43행(15팔), 54–56행("sparse 실측, FM이 cap 안이면
+ 주 비교 포함"), 89행(60행)은 AMENDMENT_V2(17팔/68행, dense 사전 상한, FM 참고점 고정)와 모순된다. AMENDMENT_V2에는 "등록문의 해당
+ 행을 대체한다"는 명시적 우선순위 문장이 없다. 코드(ARMS·DENSE_EXTRA·decide)는 AMENDMENT와 일치하므로 실행 결과는 바뀌지 않지만,
+ 사전등록 문서로서 두 해석이 가능하다. 소스 수정 없이 최종 LOCK(또는 그에 묶인 문서)에 "AMENDMENT_V2/V3가 REGISTRATION_DRAFT의
+ 39–43, 54–56, 89행을 대체하며 코드 상수가 최종 기준"을 명시하면 충분하다. 역사문서를 고칠 필요는 없다.
+[R2, 강한 권고 — 실행 유효성] V2 결함은 합성 helper 51건·AST 파싱이 evaluate_layer 전체 경로를 실행하지 않아 생긴 것이다. V3 회귀도
+ 첫 write 직전까지만 검증한다(AMENDMENT_V3 자체 명시). BIT8·RMU·FM·QKSA·PAIR의 write 이후 루프·save/reload·decide는 실제
+ driver 코드로 한 번도 끝까지 돌지 않았다. 실자료 전에 작은 합성 텐서로 가짜 DataAccess를 써서 17팔 evaluate_layer와 decide를
+ 끝까지 통과시키는 dry-run 기록을 LOCK 전에 남기지 않으면, 첫 실자료 실행이 코드 오류로 invalid가 될 위험이 크다. 이것은 새 gate가
+ 아니라 기존 실행 유효성 확인이다(검토자는 실행하지 않았다).
+[경미] RMU packet↔µ hash 링크·재로드 비교(2절 마지막), REGISTRATION_DRAFT의 "paired seed는 descriptor 제외" 계정이 Omega 실저장과
+ 일관됨을 확인(문제 없음).
+
+5. 미확인/남은 실행 유효성 문제
+- 실자료 µ 값·BIT8 head·scale 실패 여부·효과 0건. RMU의 실자료 noquant 대조는 µ≠0이면 존재하지 않음(µ0 bypass는 합성만).
+- 45분/RSS8GiB 실현 가능성, 17팔 순차 실행 시간 미측정. selftest(34, 51, 6) 재실행 0, 저장 기록만 확인.
+- V3 READY/SOURCES_V3/회귀 내용과 driver 나머지는 이 검토 범위 밖(업무2). 검토는 실행 승인이 아니며 root가 LOCK을 판단한다.
+  기존 full-H pilot stop_quality 유지.

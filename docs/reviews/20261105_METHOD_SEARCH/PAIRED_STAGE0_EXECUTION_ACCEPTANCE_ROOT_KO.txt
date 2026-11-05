@@ -1,0 +1,47 @@
+Paired stage0 실제 입력 진단의 실행 결정
+2026-11-05, root. 이 결정 시점에는 실제 입력의 후보 효과를 계산하지 않았다.
+
+결정: 동결된 V4로 등록된 실자료 CPU 진단 1회를 시작한다.
+이는 연구 방법의 채택 또는 성공 판정이 아니다. 기존 full-H pilot의 stop_quality는 유지한다.
+
+검토 근거
+실제 Opus5.5 업무1은 bit/mean/cap을 범위 내에서 수용했다.
+고정 보고서 OPUS_ENCODER_AFTER_MEAN_CAP_REVIEW_KO.txt:
+309bc0c3f5cc1429e896cc63986c1379a1237c58630f8cbd00c401a6cb698e8a.
+실제 Opus5.5 업무2의 F4는 V4 hash 수정, 동일 코드의 전체 합성 실행 증거,
+등록 문서 우선순위 해결을 수용하고 추가 실행 차단 결함을 찾지 못했다.
+고정 보고서 OPUS_PILOT_AFTER_V4_REVIEW_KO.txt:
+d5af6c1400bd7e738f5788bdeb7fea727f2bdb9076b76696718b57c9d51517ef.
+둘은 실제 Claude 채팅에서 수행됐고 Task/Dispatch 자동 연결은 실패했으므로
+Task 완료로 표시하지 않는다. 이전 Fable 검토와 구분한다.
+
+root의 확인
+V3/V4 diff 및 허용 변경 외 AST 일치, 58개 source와 READY의20개 근거 해시,
+합성 68행의 완전성·유효성·시간/메모리/디스크 상한, 원본/복사 소스 일치를 확인했다.
+별도 Codex는 입력 격리와 byte hash의 singleton 반례를 독립 확인했다.
+전체 합성 실행은 36단계·68행을 완료했고 감사까지1003.742초로20분 이내였다.
+이 기록은 실제 입력 성능이나 모든 수치 범위의 안전성을 입증하지 않는다.
+
+수용하는 잔여 위험과 처리
+실파일 schema/hash, 기존 anchor의 1e-9 일치, PRF 분모·fallback 및 실제 자원 사용은
+실제 실행에서 확인한다. 실패하면 등록된 invalid/partial/stop 판단으로 기록한다.
+허용오차·팔·rank·seed·입력·바이트 분류·성공 기준을 실행 결과에 맞춰 바꾸지 않는다.
+RMU packet과 µ의 독립 재사용 hash link는 경미한 한계로 남는다. 이번 실행은
+prepared 상태와 저장/재로드 해시를 검증하며, 패킷 단독 배포 계약을 주장하지 않는다.
+
+최종 계약
+17팔×2층×2읽기=68행, 주 기준선12팔, FM3/FM8은 고정 높은 비용 참고점이다.
+추가 tensor/packet cap=1,806,361B이며 같게 사용한 메모리라고 표현하지 않는다.
+각 endpoint·각 seed에서 최선의 등록 주 기준선 대비 K-only post-Wo SSE10% 이상 감소,
+fallback 최대1/1536과 byte 조건을 모두 요구한다. full-BF16 SSE는 별도 필수 보고다.
+이는 개발 입력의 국소 판별이며 독립 보류·영상 품질·실제 가속·신규성 입증은 후속 요건이다.
+총2700초/CPU4/프로세스RSS8GiB/추가디스크2GiB/GPU0. 원본 supervisor의 단일 RUN과
+no-retry 계약을 유지한다. 준비·입력해시·저장검증·평가를 supervisor 시간 안에 포함한다.
+
+LOCK 결합
+PAIRED_REGISTRATION_PRECEDENCE_ROOT_KO.txt와 이 결정, 두 실제 Opus 고정 보고서,
+동결 V4 소스/근거를 실제 stage0 LOCK에 해시로 결합한다. 실제 input binding은
+7b65bd1c71c5f80a8391af5e21cebb06a9a904844a6fe28ef342f43bee8c526b다.
+합성 LOCK의 boolean/test_authority를 실제 승인 근거로 사용하지 않는다.
+root가 검토 내용을 수용하고 실행을 결정한 것이며, 교수 역할 검토를 사용자 권한으로
+대체하거나 별도의 사용자 승인을 요구하는 절차가 아니다.
