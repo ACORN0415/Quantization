@@ -1,0 +1,41 @@
+DINO-WM 자산 취득 독립 바이트 감사 — Codex
+2026-11-05 19:44 UTC / 원 감사 마감 19:50:09 UTC
+
+판정: 선택 자산의 저장 무결성 감사를 통과했다. 모델 로드 또는 FP32 planning 실행 성공을 뜻하지 않는다.
+
+원 취득 코드 작성자는 method_gap_codex이며 본 감사는 해당 코드 작성과 독립적이다. acquire_assets.py를 import하거나 다시 실행하지 않았다. 별도 표준 라이브러리 감사기 verify_assets.py로 로컬 ZIP과 추출 파일을 읽었고 원 취득 자료는 변경하지 않았다. 실제 Opus2의 이번 사후 감사 결과나 다른 런타임 계획 결론은 읽지 않았다. 기존 승인 증거 파일들은 내용 해석 대신 승인 manifest에 묶인 SHA를 확인했다.
+
+직접 파일로 재검증한 결과
+- 두 ZIP 전체를 독립 스트리밍 SHA256 계산해 승인 manifest 및 기존 HF LFS metadata와 대조: 모두 일치.
+  outputs.zip: 953,204,628B
+  SHA256 425b0d8c2a4194d3ec996b553575f69409aa5714176b063d8401789db9179482
+  pusht_noise.zip: 2,785,304,515B
+  SHA256 442f5dee246edf670964ed7bdecd248683cd6d00580fa0e4d458abb53f92da08
+- 선택 파일은 정확히 31개다. PushT model/config 2개, val metadata 4개, val episode_000~020 MP4 21개, train metadata 4개다. 승인 selector뿐 아니라 감사기에 별도로 구성한 이 명시적 목록과도 일치한다.
+- 31개 선택 ZIP 멤버를 각각 다시 압축 해제 스트리밍하고 추출 파일과 직접 바이트 비교했다. 전 멤버의 파일 크기·SHA256·CRC32가 ZIP 중앙 디렉터리와 원 RESULT의 기록에 모두 일치한다. 모델/데이터 pickle·tensor는 역직렬화하지 않았다.
+- 전체 선택 추출량: 711,665,947B. 두 ZIP 합계: 3,738,509,143B.
+- 실제 asset tree: ZIP 2개 + 선택 추출 31개 = 33개 일반 파일, 총 4,450,175,090B. 미승인 파일, 남은 .part, 심볼릭 링크를 발견하지 않았다. tokens.pth/train MP4/다른 환경 checkpoint는 추출되어 있지 않다. 다만 전체 ZIP 자체에는 비선택 멤버도 들어 있다.
+- 총 1,093개 조건 통과. source/spec/manifest/review evidence 및 자산을 포함한 고유 49개 파일 SHA를 보존했다.
+
+저장 기록과 소스를 대조한 결과
+- ROOT_EXECUTION_FINAL completed / exit0, worker completed_verified_selected_assets_not_model_execution. RUN·root start/final에 각각 attempt1이 기록돼 있고 RUN claim 파일은 하나다. 이는 현재 보존된 실행 기록의 일관성 확인이며 시스템의 모든 과거 활동을 별도 감시한 결과는 아니다.
+- 승인 manifest SHA bc2cb7f13e5450a1a10c9b87ff9b19d95ec8dcf74b52bda8c73a3d59904e1da8가 RUN/RESULT에 일치한다. 승인 코드 SHA bab23d80bf83de3b1136e5226fa94ff40a1e354e4e146348a6071eebd0089227 및 spec/metadata/review evidence SHA가 현재 파일과 일치한다.
+- HTTP_events의 읽은 body 합계는 3,738,509,143B로 두 ZIP 합계와 같다. 302/200/302/200 네 기록 중 200 body는 각각 해당 ZIP 크기다. 이 값은 애플리케이션이 읽은 HTTP body 기록이다. HTTP 헤더·읽지 않은 redirect body·전송 계층까지 포함한 실제 총 네트워크 트래픽을 독립 계측한 것은 아니다.
+- root 종료−시작 재계산은 73.138011694초, root 기록 wall은 73.137939215초다. 약 72.5마이크로초 차이는 별도 시계 읽기의 범위이며 1,800초 상한 판단에 영향이 없다. worker 종료−시작은 73.069396257초다. root/worker 각각의 절대 마감 전에 종료했다.
+- worker peak RSS 기록은 200,105,984B로 2GiB 상한 이하다. GPU/model payload deserialization/install 각 0회라는 기록과 실행 소스를 확인했다. 취득 당시 자원 사용을 감사 과정에서 다시 계측했다고 표현하지 않는다.
+
+디스크 및 준비 상태 기록의 해석
+원 disk_bytes_observed=4,450,272,477B는 최종 RESULT 쓰기 전에 계산한 값이며 payload보다 97,387B 크다. 현재 source/record 폴더는 112,333B여서 실제 asset+현재 record 합계는 4,450,287,423B다. 최종 RESULT/root 기록 추가로 값이 달라지므로 과거 observed 값과 현재 폴더 크기의 정확 일치는 요구하지 않았다. 둘 다 12GiB 상한 이하다. 파일 논리 길이를 합산한 값이며 파일시스템 할당 블록·디렉터리 오버헤드까지 측정한 값은 아니다.
+
+READY의 미승인/실행0 문구는 실행 이전 준비 시점의 기록이다. 승인 manifest의 nonclaims에도 초안의 'Not execution authorization' 문구가 남아 있지만, 같은 파일의 명시적 status/root_execution_authorized/actual_claude_source_review_completed=true 및 approved_epoch, root 실행 기록이 실제 승인 상태를 규정한다. 원 기록을 수정하지 않고 이 잔존 문구를 해석상 주의점으로 남긴다.
+
+감사 자원과 범위
+감사기 실행은 4.056155초, 보고된 ru_maxrss는 693,440,512B로 감사 1GiB 상한 이하다. 사용 가능 CPU affinity는 최대 2개로 제한했다. 독립적으로 스트리밍한 데이터는 5,162,626,837B이며 ZIP 전체 해시와 31개 멤버/추출 파일 양쪽 읽기가 포함된다. AUDIT JSON은 176,593B다. 보고서·소스 등을 포함한 새 출력도 8MiB보다 작다.
+
+감사에서 네트워크·GPU·모델/텐서/피클 로드·설치·취득 재실행·원본 변경은 0회다. 비선택 ZIP 멤버 전량의 압축 해제/CRC, payload 의미적 안전성, checkpoint 클래스 호환성, DINO 추가 의존성, 모델 수치 정확성, planning 품질은 검사하지 않았다. 따라서 결론은 '승인한 로컬 자산 31개가 지정된 두 ZIP에서 온 정확한 바이트로 보존됐다'까지다.
+
+산출물
+verify_assets.py SHA256 e5e90a88e76d59ddb0cb6d1b194c7c3a268e901fbd1b80eee5569ef9b33fe0f9
+AUDIT_CODEX.json SHA256 0bea658db28434029983d88c9c5a52b025b48a66ce31df6837bc6a6ac2e8a7e6
+원자료: dino_wm_asset_acquisition_preparation/{APPROVED_ACQUISITION,RUN,RESULT,ROOT_EXECUTION_STARTED,ROOT_EXECUTION_FINAL,ROOT_SPEC,READY}.json 및 승인 source/review 해시.
+직속 helper는 같은 시간/자원 상한 아래 저장 scalar·소스 계약만 독립 대조했으며 자산 바이트 검사를 중복 수행하지 않았다.

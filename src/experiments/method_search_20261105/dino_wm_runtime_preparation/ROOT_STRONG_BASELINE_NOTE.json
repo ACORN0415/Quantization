@@ -1,0 +1,21 @@
+{
+  "created_epoch": 1793907773.1145205,
+  "status": "pre_effect_strong_baseline_requirement_not_result",
+  "reason": "FP32 reference alone is not the strongest ordinary GPU execution baseline. Public checked RTN/OMSE is fake quant float F.linear, so cannot infer systems benefit from bitwidth.",
+  "requirements": [
+    "Record actual tensor dtype, autocast, matmul/cuDNN TF32 flags, float32 matmul precision and active attention kernel. A32 output dtype alone does not prove FP32 internal arithmetic.",
+    "Before attributing a need to new INT8/INT4 selection, include ordinary BF16 predictor + fixed FP32 encoder/validated observation feature reuse as a simple execution baseline where supported. FP16/TF32 can be subsequent clearly preregistered alternatives, not silently mixed with strictFP32 reference.",
+    "Do not assume BF16 preserves control or is faster; measure both action/task outcome and real end-to-end cost. No current execution-budget violation or quality preservation has been measured.",
+    "If ordinary floating low precision or direct fixed rescoring suffices, do not invent tighter memory/latency budget to require a new method."
+  ],
+  "official_implementation_reference": "https://docs.pytorch.org/docs/2.6/generated/torch.set_float32_matmul_precision.html",
+  "limits": "No model inference, tensor loading, CUDA execution or effect data. Current runtime phase only dependencies/config/pickle metadata. This note does not add experiment arms to an existing executed test; no such DINO test has run.",
+  "implementation_reference_local": {
+    "path": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torch/__init__.py",
+    "sha256": "5a190666c3853aa236c4d48ed64e2d4bbcd23bd32c21e64c0867646a6852e43f",
+    "function": "set_float32_matmul_precision",
+    "version": "2.6.0+cu124",
+    "scope": "Read installed official torch source/docstring by AST, no torch import or execution."
+  },
+  "initial_versioned_docs_URL_access": "Web access failed, not counted as verified primary citation."
+}

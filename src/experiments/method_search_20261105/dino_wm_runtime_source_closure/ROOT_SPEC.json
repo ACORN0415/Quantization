@@ -1,0 +1,46 @@
+{
+  "status": "source_metadata_preparation_only",
+  "created_epoch": 1793908226.3091958,
+  "codex_deadline_epoch": 1793909126.3091958,
+  "claude_review_seconds_from_receipt": 600,
+  "claude_hard_outer_deadline_epoch": 1793910326.3091958,
+  "pair": {
+    "codex": "fair_comparison_codex",
+    "claude": "actual retained Opus2 after asset-audit review"
+  },
+  "target": "Pin DINOv2 source and official matching vits14 weight metadata, and close minimal model-smoke source imports before any acquisition or installation.",
+  "inputs": [
+    "dino_wm_runtime_preparation/PROPOSED_ACQUISITION_MANIFEST_CODEX.json",
+    "dino_wm_runtime_preparation/SAFE_PICKLE_METADATA.json",
+    "dino_wm_runtime_preparation/PINNED_SOURCE_READBACK_CODEX.json"
+  ],
+  "allowed": [
+    "Read pinned existing raw sources and official DINOv2 repository tree/files at one recorded commit.",
+    "Read official HTTP headers and PyPI/GitHub metadata; no model/wheel payload.",
+    "Write only this folder. List exact source files/git blobs, minimal transitive import dependencies, exact official weight URL and advertised size/digests when available.",
+    "Separate core forward-model smoke closure from later actual PushT environment/planner closure."
+  ],
+  "constraints": {
+    "CPU": 2,
+    "RSS_GiB": 1,
+    "network_metadata_source_MiB": 8,
+    "new_source_files_max": 20,
+    "output_MiB": 12,
+    "GPU": 0,
+    "tensor_pickle_load": 0,
+    "installs": 0,
+    "payload_downloads": 0,
+    "git_mutation": 0
+  },
+  "decisions": [
+    "No mutable torch.hub remote acquisition. Proposed later local source path + explicitly loaded pinned weight only.",
+    "If official server has no trusted SHA metadata, report absent; do not invent one or require inaccessible provenance. Propose root decision on official HTTPS URL + fixed source-derived URL + advertised content length + independently verified SHA after one bounded acquisition.",
+    "Do not replace official DINOv2 by DINOv1 or alternative HF implementation without equivalence evidence.",
+    "No new quantization method or GPU experiment authorization."
+  ],
+  "deliverables": [
+    "REPORT_CODEX_KO.txt",
+    "SOURCE_MANIFEST_PROPOSED.json",
+    "REVIEW_OPUS_KO.txt (actual Opus, source/metadata scope only)"
+  ]
+}
