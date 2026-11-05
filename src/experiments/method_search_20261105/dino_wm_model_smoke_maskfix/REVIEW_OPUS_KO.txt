@@ -1,0 +1,56 @@
+DINO-WM model smoke maskfix delta 검토 (Opus2, root msg_e08d49caf50d)
+수신과 시작: 2026-11-05T21:28:09Z. 상한은 수신 + 300초 = 21:33:09Z이며 ROOT_SPEC outer는 21:46:05Z다. 끝 시각은 파일 말미에 적는다.
+모델: claude-opus-5-5, 기존 채팅 session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5. Task/Dispatch: 미연결(자동연결 실패). helper는 쓰지 않았다(43줄 delta, 부모 직접).
+수행: 읽기와 텍스트 diff, sha만. 코드 재실행, torch·pickle·model·tensor·raw storage 읽기, 재계산, network, GPU, 원본 수정은 모두 0이다.
+구분
+- 원 검토창 20:41 미완료, 유효 후속 20:58(001d7ca4), 그리고 이번 delta 검토는 서로 별개다.
+- 3558180b 전체 409행 검토(001d7ca4)를 재사용했고 전체를 반복하지 않았다.
+
+hash (직접 sha256)
+- maskfix: model_smoke.py 828d294d…, SOURCE_DIFF.patch c12dbb93…, REPORT_CODEX b450abeb…, ROOT_SPEC 15d7c4ab…, SELFTEST e073edca…(모두 지정값과 일치)
+- READY_CODEX c579bd48…는 이번에 직접 계산한 값이다. 지정 목록에는 없었다.
+- 진단: RESULT 0d96d56e…, MASK_BYTE_COMPARISON a2c88bd8…(일치)
+읽은 범위
+- SOURCE_DIFF 43줄 전체
+- 원 3558180b와 새 828d294d의 텍스트 diff
+  - 1-266행이 같다(HEAD_SAME).
+  - 이후 꼬리는 record 필드 한 줄을 빼면 같다(TAIL_SAME).
+  - 즉 변경은 patch의 두 hunk뿐이다.
+- 진단 JSON 두 개의 앞부분
+- 미확인: REPORT_CODEX, READY, SELFTEST 본문 세부. 진단의 6개 module 전부(내가 본 것은 layers.0 메타와 앞 2개 mask 항목).
+
+delta 판정 (소스)
+- 요구한 '관측된 두 layout만 정확히 인정'을 정확히 구현했다.
+  - old의 named_buffers는 공집합이어야 한다.
+  - fresh의 named_buffers는 정확히 transformer.layers.{0..5}.0.bias 6개여야 한다.
+  - 그 밖의 등록 buffer가 있으면 양쪽 모두 거부한다.
+- 각 module에 대해
+  - old는 'bias'가 __dict__ 안의 plain attribute이고 _buffers에 없어야 한다.
+  - fresh는 _buffers와 _non_persistent_buffers_set에 있어야 한다.
+  - 둘 다 FP32, CPU, [1,1,588,588]이어야 하고, 값이 torch.equal로 정확히 같아야 한다. 허용오차는 없다.
+  - layout을 기록한다.
+- mask를 복사하거나 대입하거나 변형하는 코드는 없다(읽기와 비교만). 따라서 forward는 각자 원래 mask를 쓴다.
+- 이전 검사(이름 집합 동일 + 값 동일)보다 값 조건은 같고, layout 조건은 더 엄격하다. gate 완화가 아니다.
+- 불변(diff 범위 밖이라 원 검토 결과가 그대로 적용됨)
+  - CPU allclose atol=rtol 1e-6과 조정 금지
+  - shape, finite, call count, GPU FP32·TF32 off
+  - validate_manifest의 limits(600초, CPU 4, RSS 8GiB, GPU allocator 8GiB, output 128MiB)
+  - checkpoint, hydra, DINO 고정값, 1회 RUN, network 차단
+  - code_sha256 바인딩은 새 sha로 갱신돼야 하므로 새 root manifest가 필요하다.
+- 일관성: 진단은 pickle의 old mask 저장 위치를 'cuda:0'으로 기록했다. torch.load(map_location='cpu')가 CPU로 옮기므로 delta의 device=cpu 요구와 맞는다(추론).
+  - GPU 단계는 fresh predictor로 WM을 만들고 old는 CPU 비교 후 삭제한다. 따라서 plain attribute mask가 .to(cuda)로 옮겨지지 않는 문제와 무관하다(원 소스 판독).
+- 차단 결함: 없음.
+
+추가 1회 예외에 대한 의견
+- 정당한 이유
+  - 원 V1 실패는 forward나 점수 산출 전 단계(named_buffers 집합 검사)에서 났다. 결과 수치 정보를 전혀 보지 않았다.
+  - 원인은 결정적인 표현(layout) 차이이고, 진단이 모델 역직렬화 없이 byte 단위로 mask 값 일치를 확인했다(root 기록이며 내가 재계산하지 않음).
+  - 수정은 값 비교를 유지하고 layout만 정확히 인정한다. 결과를 보고 기준을 완화하거나 결과에 맞춘 재시도가 아니다.
+- 한계와 조건
+  - 원 1회 실행은 실패로 보존해야 한다. V2는 '원 계획의 첫 실행'이나 '같은 권한 아래 재시도'가 아니라 명시적 추가 1회다(ROOT_SPEC과 일치).
+  - V2에서는 아직 시험되지 않은 단계가 남는다: CPU forward 동등성, DINO strict load, GPU 연결.
+    - 이 단계들이 실패하면 추가 예외 없이 판단불가나 실패로 끝내야 한다. 이를 새 manifest에 사전 기록할 것을 권한다.
+  - 원 검토의 잔여 R1(origin prefix 범위), R3(legacy 복원 범위) 등은 이 delta와 무관하게 남는다.
+  - 로컬 정적 준비 기록(9 scalar 등)은 실제 V2 실행의 증거가 아니다.
+- 이 검토는 실행 승인이 아니다. 새 root manifest와 실행 결정은 root만 한다.
+종료 UTC: 2026-11-05T21:28:58Z

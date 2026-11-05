@@ -1,0 +1,14 @@
+{
+  "status": "root_authorized_six_static_mask_storage_byte_comparison",
+  "created_epoch": 1793913903.7106752,
+  "scope": "Read only six mask storage members identified by inert metadata; compare to exact block-causal FP32 analytical bytes. No parameter/model constructor or Torch/pickle load.",
+  "maximum_mask_storage_bytes": 8297856,
+  "storage_members": 6,
+  "byteorder_member_allowed": true,
+  "CPU": 1,
+  "seconds": 60,
+  "GPU": 0,
+  "network": 0,
+  "original_metadata_only_phase_unchanged": true,
+  "interpretation": "This tests old serialized forward-mask contents, not model outputs or task quality."
+}

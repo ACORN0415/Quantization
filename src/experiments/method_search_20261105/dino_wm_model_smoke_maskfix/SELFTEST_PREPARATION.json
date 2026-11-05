@@ -1,0 +1,54 @@
+{
+  "status": "passed_pure_scalar_preparation_only",
+  "checks": 9,
+  "source_sha256": "828d294dbe62b4a42c845f70f4dacabbac91a239e30b472a7a152c99a507bbc4",
+  "contract": {
+    "predictor_kwargs": {
+      "depth": 6,
+      "heads": 16,
+      "mlp_dim": 2048,
+      "dropout": 0.1,
+      "emb_dropout": 0,
+      "pool": "mean",
+      "num_patches": 196,
+      "num_frames": 3,
+      "dim": 404
+    },
+    "wm_kwargs": {
+      "image_size": 224,
+      "num_hist": 3,
+      "num_pred": 1,
+      "train_encoder": false,
+      "train_predictor": true,
+      "train_decoder": true
+    },
+    "image_size": 224,
+    "encoder_image_size": 196,
+    "num_hist": 3,
+    "num_patches": 196,
+    "emb_dim": 404,
+    "proprio_input_dim": 4,
+    "action_input_dim": 10,
+    "predictor_input": [
+      1,
+      588,
+      404
+    ],
+    "encoded": [
+      1,
+      3,
+      196,
+      404
+    ],
+    "rollout": [
+      1,
+      5,
+      196,
+      404
+    ]
+  },
+  "GPU": 0,
+  "model_tensor_pickle_loads": 0,
+  "network": 0,
+  "runtime_imports": 0
+}

@@ -1,0 +1,254 @@
+{
+  "status": "metadata_diagnosis_complete_no_model_load",
+  "checkpoint_data_pickle_sha256": "796c66a68da478ec804e1ec764abb6f3788afb36b88c3a29fb6b0727a5ee14b2",
+  "module_observations": [
+    {
+      "path": "predictor.transformer.layers.0.0",
+      "class": "models.vit Attention",
+      "buffer_names": [],
+      "buffer_metadata": {},
+      "plain_tensor_attributes": {
+        "bias": {
+          "shape": [
+            1,
+            1,
+            588,
+            588
+          ],
+          "stride": [
+            345744,
+            345744,
+            588,
+            1
+          ],
+          "storage_offset": 0,
+          "storage_id": "8",
+          "storage_type": "torch FloatStorage",
+          "location": "cuda:0"
+        }
+      },
+      "nonpersistent_buffers_metadata": {
+        "kind": "REDUCE",
+        "class": "__builtin__ set",
+        "items": [],
+        "args": [
+          {
+            "kind": "list",
+            "class": null,
+            "items": [],
+            "args": null
+          }
+        ]
+      }
+    },
+    {
+      "path": "predictor.transformer.layers.1.0",
+      "class": "models.vit Attention",
+      "buffer_names": [],
+      "buffer_metadata": {},
+      "plain_tensor_attributes": {
+        "bias": {
+          "shape": [
+            1,
+            1,
+            588,
+            588
+          ],
+          "stride": [
+            345744,
+            345744,
+            588,
+            1
+          ],
+          "storage_offset": 0,
+          "storage_id": "20",
+          "storage_type": "torch FloatStorage",
+          "location": "cuda:0"
+        }
+      },
+      "nonpersistent_buffers_metadata": {
+        "kind": "REDUCE",
+        "class": "__builtin__ set",
+        "items": [],
+        "args": [
+          {
+            "kind": "list",
+            "class": null,
+            "items": [],
+            "args": null
+          }
+        ]
+      }
+    },
+    {
+      "path": "predictor.transformer.layers.2.0",
+      "class": "models.vit Attention",
+      "buffer_names": [],
+      "buffer_metadata": {},
+      "plain_tensor_attributes": {
+        "bias": {
+          "shape": [
+            1,
+            1,
+            588,
+            588
+          ],
+          "stride": [
+            345744,
+            345744,
+            588,
+            1
+          ],
+          "storage_offset": 0,
+          "storage_id": "32",
+          "storage_type": "torch FloatStorage",
+          "location": "cuda:0"
+        }
+      },
+      "nonpersistent_buffers_metadata": {
+        "kind": "REDUCE",
+        "class": "__builtin__ set",
+        "items": [],
+        "args": [
+          {
+            "kind": "list",
+            "class": null,
+            "items": [],
+            "args": null
+          }
+        ]
+      }
+    },
+    {
+      "path": "predictor.transformer.layers.3.0",
+      "class": "models.vit Attention",
+      "buffer_names": [],
+      "buffer_metadata": {},
+      "plain_tensor_attributes": {
+        "bias": {
+          "shape": [
+            1,
+            1,
+            588,
+            588
+          ],
+          "stride": [
+            345744,
+            345744,
+            588,
+            1
+          ],
+          "storage_offset": 0,
+          "storage_id": "44",
+          "storage_type": "torch FloatStorage",
+          "location": "cuda:0"
+        }
+      },
+      "nonpersistent_buffers_metadata": {
+        "kind": "REDUCE",
+        "class": "__builtin__ set",
+        "items": [],
+        "args": [
+          {
+            "kind": "list",
+            "class": null,
+            "items": [],
+            "args": null
+          }
+        ]
+      }
+    },
+    {
+      "path": "predictor.transformer.layers.4.0",
+      "class": "models.vit Attention",
+      "buffer_names": [],
+      "buffer_metadata": {},
+      "plain_tensor_attributes": {
+        "bias": {
+          "shape": [
+            1,
+            1,
+            588,
+            588
+          ],
+          "stride": [
+            345744,
+            345744,
+            588,
+            1
+          ],
+          "storage_offset": 0,
+          "storage_id": "56",
+          "storage_type": "torch FloatStorage",
+          "location": "cuda:0"
+        }
+      },
+      "nonpersistent_buffers_metadata": {
+        "kind": "REDUCE",
+        "class": "__builtin__ set",
+        "items": [],
+        "args": [
+          {
+            "kind": "list",
+            "class": null,
+            "items": [],
+            "args": null
+          }
+        ]
+      }
+    },
+    {
+      "path": "predictor.transformer.layers.5.0",
+      "class": "models.vit Attention",
+      "buffer_names": [],
+      "buffer_metadata": {},
+      "plain_tensor_attributes": {
+        "bias": {
+          "shape": [
+            1,
+            1,
+            588,
+            588
+          ],
+          "stride": [
+            345744,
+            345744,
+            588,
+            1
+          ],
+          "storage_offset": 0,
+          "storage_id": "68",
+          "storage_type": "torch FloatStorage",
+          "location": "cuda:0"
+        }
+      },
+      "nonpersistent_buffers_metadata": {
+        "kind": "REDUCE",
+        "class": "__builtin__ set",
+        "items": [],
+        "args": [
+          {
+            "kind": "list",
+            "class": null,
+            "items": [],
+            "args": null
+          }
+        ]
+      }
+    }
+  ],
+  "expected_fresh_registered_buffers_from_pinned_source": [
+    "predictor.transformer.layers.0.0.bias",
+    "predictor.transformer.layers.1.0.bias",
+    "predictor.transformer.layers.2.0.bias",
+    "predictor.transformer.layers.3.0.bias",
+    "predictor.transformer.layers.4.0.bias",
+    "predictor.transformer.layers.5.0.bias"
+  ],
+  "storage_payload_members_read": 0,
+  "Torch_or_pickle_loads": 0,
+  "GPU": 0,
+  "network": 0,
+  "elapsed_seconds": 0.02441859245300293,
+  "peak_RSS_bytes": 21553152
+}

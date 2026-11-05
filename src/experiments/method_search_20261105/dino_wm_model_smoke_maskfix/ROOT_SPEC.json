@@ -1,0 +1,32 @@
+{
+  "status": "root_authorized_mask_layout_compatibility_repair_preparation_not_execution",
+  "created_epoch": 1793913965.4289925,
+  "original_source_sha256": "3558180bd58aad11bea0bdb72df57ab1a6db3dd3f03c64c58519b31347ef3e2f",
+  "repaired_source_sha256": "828d294dbe62b4a42c845f70f4dacabbac91a239e30b472a7a152c99a507bbc4",
+  "original_run": "../dino_wm_model_smoke_preparation/RESULT.json",
+  "preserve_original_failure": true,
+  "observed_cause": "Legacy pickle masks are plain tensor attributes, fresh source registers identical0/1 masks as nonpersistent buffers; strict named_buffers-set equality tested representation instead of forward-mask values.",
+  "evidence": [
+    "../dino_wm_buffer_metadata_diagnosis/RESULT.json",
+    "../dino_wm_buffer_metadata_diagnosis/MASK_BYTE_COMPARISON.json"
+  ],
+  "only_code_change": "Require exactly the observed legacy/fresh layouts, compare all six forward masks exactly, reject unexpected registered buffers. Record both layouts; do not copy or change masks.",
+  "unchanged": [
+    "Input checkpoint/encoder/config/source",
+    "Weights/strict_state_dict/FP32CPU/GPUdtype",
+    "CPUallclose1e-6/finite/shape/callcount",
+    "No dataset/planner/quantization effect test",
+    "600s/CPU4/RSS8GiB/GPUallocator8GiB/output128MiB bounds"
+  ],
+  "additional_setup_attempt": "One explicit additional setup run may be authorized after actual Opus review and new root manifest. Original one run failed and stays failed; never call it a first or a retry under the old authority.",
+  "preparation_limits": {
+    "CPU": 2,
+    "seconds": 600,
+    "Torch_model_loads": 0,
+    "GPU": 0,
+    "network": 0
+  },
+  "actual_Opus_review_seconds_from_receipt": 300,
+  "actual_Opus_review_outer_epoch": 1793915165.429035,
+  "root_execution_authorized": false
+}

@@ -1,0 +1,27 @@
+{
+  "status": "root_authorized_readonly_pickle_opcode_metadata_diagnosis",
+  "created_epoch": 1793913821.1212366,
+  "purpose": "Explain original CPU smoke buffer-name mismatch without reloading or rerunning the model. Preserve original failed run.",
+  "input_checkpoint": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/outputs/pusht/checkpoints/model_latest.pth",
+  "parser": "../dino_wm_runtime_preparation/scan_pickle_metadata.py",
+  "parser_sha256": "0c5a66407861ca3832b88ca827823b2e664f89c7e1a77725ab91584130b065cc",
+  "allowed": [
+    "Read ZIP central directory and <=1MiB data.pkl only",
+    "Use existing inert opcode parser; never call serialized GLOBAL/REDUCE/BUILD",
+    "Inspect module-state dictionary keys, registered buffer names and tensor shape/storage references only"
+  ],
+  "limits": {
+    "CPU": 2,
+    "seconds": 120,
+    "RSS_bytes": 1073741824,
+    "output_bytes": 4194304,
+    "storage_payload_reads": 0,
+    "torch_pickle_model_loads": 0,
+    "GPU": 0,
+    "network": 0,
+    "installs": 0
+  },
+  "writer": "root Codex; native Codex usage limit is not retried",
+  "pair_review": "Retained actual Opus2 through manager after completed report; no new chat/model or account substitution",
+  "no_execution_gate_change": true
+}

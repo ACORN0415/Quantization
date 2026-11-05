@@ -1,0 +1,55 @@
+{
+  "status": "all_six_plain_attribute_mask_payloads_match_pinned_analytical_mask",
+  "checked_epoch": 1793913903.7783797,
+  "archive_byteorder": "little",
+  "mask_storage_bytes_read": 8297856,
+  "masks": [
+    {
+      "module": "predictor.transformer.layers.0.0",
+      "storage_member": "model_2/data/8",
+      "bytes": 1382976,
+      "sha256": "88911c5619b8f864c1ac9801fb2f6fcd22287e3a7577305d8c0f76eeb45cdd88",
+      "exact_match_analytical_block_causal_mask": true
+    },
+    {
+      "module": "predictor.transformer.layers.1.0",
+      "storage_member": "model_2/data/20",
+      "bytes": 1382976,
+      "sha256": "88911c5619b8f864c1ac9801fb2f6fcd22287e3a7577305d8c0f76eeb45cdd88",
+      "exact_match_analytical_block_causal_mask": true
+    },
+    {
+      "module": "predictor.transformer.layers.2.0",
+      "storage_member": "model_2/data/32",
+      "bytes": 1382976,
+      "sha256": "88911c5619b8f864c1ac9801fb2f6fcd22287e3a7577305d8c0f76eeb45cdd88",
+      "exact_match_analytical_block_causal_mask": true
+    },
+    {
+      "module": "predictor.transformer.layers.3.0",
+      "storage_member": "model_2/data/44",
+      "bytes": 1382976,
+      "sha256": "88911c5619b8f864c1ac9801fb2f6fcd22287e3a7577305d8c0f76eeb45cdd88",
+      "exact_match_analytical_block_causal_mask": true
+    },
+    {
+      "module": "predictor.transformer.layers.4.0",
+      "storage_member": "model_2/data/56",
+      "bytes": 1382976,
+      "sha256": "88911c5619b8f864c1ac9801fb2f6fcd22287e3a7577305d8c0f76eeb45cdd88",
+      "exact_match_analytical_block_causal_mask": true
+    },
+    {
+      "module": "predictor.transformer.layers.5.0",
+      "storage_member": "model_2/data/68",
+      "bytes": 1382976,
+      "sha256": "88911c5619b8f864c1ac9801fb2f6fcd22287e3a7577305d8c0f76eeb45cdd88",
+      "exact_match_analytical_block_causal_mask": true
+    }
+  ],
+  "comparison": "FP32 little-endian0/1 block causal mask,3frames*196patches, matching pinned generate_mask_matrix; actual old/new Torch execution equivalence remains untested.",
+  "Torch_pickle_deserializations": 0,
+  "model_constructions": 0,
+  "GPU": 0,
+  "network": 0
+}

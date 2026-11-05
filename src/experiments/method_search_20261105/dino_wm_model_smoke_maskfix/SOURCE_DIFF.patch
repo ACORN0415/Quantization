@@ -1,0 +1,43 @@
+--- original/model_smoke.py
++++ maskfix/model_smoke.py
+@@ -267,9 +267,28 @@
+         require(not strict.missing_keys and not strict.unexpected_keys, 'predictor strict load')
+         old.eval(); fresh.eval()
+         old_buffers, new_buffers = dict(old.named_buffers()), dict(fresh.named_buffers())
+-        require(set(old_buffers) == set(new_buffers), 'predictor nonpersistent buffer names')
+-        for key in old_buffers:
+-            require(torch.equal(old_buffers[key], new_buffers[key]), 'predictor buffer changed: ' + key)
++        expected_masks = {'transformer.layers.' + str(i) + '.0.bias' for i in range(6)}
++        require(set(old_buffers) == set(), 'unexpected legacy registered buffers')
++        require(set(new_buffers) == expected_masks, 'unexpected fresh registered buffers')
++        old_modules, new_modules = dict(old.named_modules()), dict(fresh.named_modules())
++        mask_comparisons = []
++        for i in range(6):
++            key = 'transformer.layers.' + str(i) + '.0'
++            om, nm = old_modules[key], new_modules[key]
++            require('bias' in om.__dict__ and 'bias' not in om._buffers,
++                    'legacy mask is not the observed plain tensor attribute')
++            require('bias' in nm._buffers and 'bias' in nm._non_persistent_buffers_set,
++                    'fresh mask is not a nonpersistent registered buffer')
++            ob, nb = om.bias, nm.bias
++            for value in (ob, nb):
++                require(isinstance(value, torch.Tensor) and value.dtype == torch.float32
++                        and value.device.type == 'cpu' and list(value.shape) == [1,1,588,588],
++                        'mask shape/dtype/device differs')
++            require(torch.equal(ob, nb), 'forward mask values changed: ' + key)
++            mask_comparisons.append({'module': key, 'shape': list(ob.shape),
++                                     'dtype': str(ob.dtype), 'torch_equal': True,
++                                     'old_layout': 'plain_tensor_attribute',
++                                     'new_layout': 'nonpersistent_registered_buffer'})
+         phase = 'cpu_predictor_equivalence'; guard(); t0 = time.perf_counter()
+         x = torch.linspace(-0.5, 0.5, 588*404, dtype=torch.float32).reshape(1, 588, 404)
+         with torch.inference_mode():
+@@ -281,7 +300,7 @@
+         record['stages'][phase] = {'completed': equivalent, 'seconds': time.perf_counter()-t0,
+             'shape': list(y_new.shape), 'atol': CPU_EQ_ATOL, 'rtol': CPU_EQ_RTOL,
+             'max_abs_difference': difference.max().item(), 'torch_equal': torch.equal(y_old,y_new),
+-            'strict_state_dict': True, 'all_nonpersistent_buffers_equal': True, 'actual_device': str(y_new.device), 'dtype': str(y_new.dtype)}
++            'strict_state_dict': True, 'forward_mask_tensor_comparisons': mask_comparisons, 'all_forward_masks_exact_equal': True, 'actual_device': str(y_new.device), 'dtype': str(y_new.dtype)}
+         require(equivalent, 'CPU old/fresh predictor equivalence failed; no tolerance adjustment')
+         write_json('PROGRESS.json', record)
+         require(not torch.cuda.is_initialized(), 'CPU forward initialized CUDA')

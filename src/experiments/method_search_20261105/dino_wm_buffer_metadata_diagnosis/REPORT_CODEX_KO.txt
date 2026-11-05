@@ -1,0 +1,11 @@
+DINO-WM 모델 연결 검사 실패 원인과 제한된 호환성 수정
+
+원 실행은 CPU에서 전체 checkpoint를 복원한 뒤 predictor의 named_buffers 집합 비교에서 중단됐다. CPU 출력 비교·DINO state_dict 복원·GPU 실행은 하지 않았다. 원 RESULT와 실패 상태는 그대로 둔다.
+
+기존 inert pickle opcode parser로 data.pkl의 객체 상태를 다시 읽었다. 원 predictor의 여섯 Attention 객체는 _buffers가 비어 있고 bias를 일반 Tensor 속성으로 저장했다. 각 bias는 FP32 [1,1,588,588], offset0, stride가연속이며 여섯 storage를 참조한다. 저장방식 차이를 값 차이로 취급한 원 named_buffers 집합 조건은 이 checkpoint의 forward 동등성 검사로 적절하지 않았다.
+
+별도 raw-storage 읽기 명세로 여섯 mask storage8,297,856B를 읽었다. 파일 byteorder는 little이며, 3프레임×196patch의 block-causal FP32 0/1 마스크와 전부 원소 바이트가 같았다. Torch·pickle 역직렬화/모델생성/GPU/네트워크0이다. 이는 mask 값에 대한 근거이며 모델 출력 동등성은 아직 모른다.
+
+새 폴더 dino_wm_model_smoke_maskfix에 원 코드의 mask 비교만 수정했다. old 등록 buffer는 정확히0, fresh는 기대 여섯개여야 한다. old plain bias와 fresh nonpersistent buffer의 형상·dtype·CPU device 및 torch.equal을 모두 요구한다. mask 복사/변형은 하지 않는다. 원 strict parameter 복사, 동일 CPU입력/output allclose1e-6, 이후DINO strict load/GPU shape·finite·callcount 및600초 상한은 그대로다. 원 실행을 성공으로 바꾸지 않으며 실제 Opus의 delta 검토와 새root manifest를 거친 명시적 추가 setup1회만 검토한다.
+
+현재는 static 준비와9개 scalar selftest만 통과했다. 실제 maskfix 모델 실행은0이다. 이는 양자화 효과나 새 방법론의 증거가 아니라 기존 모델 실행 준비의 호환성 수정이다.
