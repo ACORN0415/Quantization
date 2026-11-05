@@ -1,0 +1,447 @@
+{
+  "status": "completed",
+  "started_utc": 1793869905.4215205,
+  "endpoints": [
+    {
+      "layer": 18,
+      "call": 0,
+      "native_replay_byte_equal": true,
+      "arms": {
+        "R_bf16": {
+          "sse": 824.6787162686862,
+          "nse": 0.005633048169644829,
+          "native_attention_seconds": [
+            0.006803455829620361,
+            0.0069506878852844236,
+            0.006782112121582032,
+            0.006780543804168701,
+            0.006781504154205322
+          ],
+          "native_attention_median": 0.006782112121582032,
+          "cpu_restore_seconds": 0.23326461296528578,
+          "key_h2d_seconds": 0.030116364010609686,
+          "payload_bytes": 54097926,
+          "repeated_outputs_byte_equal": true
+        },
+        "R_fp32": {
+          "sse": 831.8055223070182,
+          "nse": 0.005681728511355698,
+          "native_attention_seconds": [
+            0.006802432060241699,
+            0.006786335945129394,
+            0.0067942080497741695,
+            0.006794784069061279,
+            0.006782495975494384
+          ],
+          "native_attention_median": 0.0067942080497741695,
+          "cpu_restore_seconds": 0.23090183804742992,
+          "key_h2d_seconds": 0.030118357040919363,
+          "payload_bytes": 54097926,
+          "repeated_outputs_byte_equal": true
+        },
+        "O_offline": {
+          "sse": 517.637537908105,
+          "nse": 0.003535773541780958,
+          "native_attention_seconds": [
+            0.00679423999786377,
+            0.0067935681343078615,
+            0.006779007911682129,
+            0.006776607990264892,
+            0.006777408123016357
+          ],
+          "native_attention_median": 0.006779007911682129,
+          "cpu_restore_seconds": 0.23383016395382583,
+          "key_h2d_seconds": 0.030120581039227545,
+          "payload_bytes": 54097926,
+          "repeated_outputs_byte_equal": true
+        },
+        "O_own_refresh": {
+          "sse": 627.4408084898845,
+          "nse": 0.004285795459613731,
+          "native_attention_seconds": [
+            0.006814720153808594,
+            0.00679695987701416,
+            0.006789472103118897,
+            0.00678710412979126,
+            0.006783455848693848
+          ],
+          "native_attention_median": 0.006789472103118897,
+          "cpu_restore_seconds": 0.2326875339495018,
+          "key_h2d_seconds": 0.030118716997094452,
+          "payload_bytes": 54097926,
+          "repeated_outputs_byte_equal": true
+        },
+        "O_first_reader": {
+          "sse": 482.3003004220877,
+          "nse": 0.0032943991046649403,
+          "native_attention_seconds": [
+            0.00714035177230835,
+            0.007142496109008789,
+            0.007135807991027832,
+            0.007132351875305176,
+            0.007139103889465332
+          ],
+          "native_attention_median": 0.007139103889465332,
+          "cpu_restore_seconds": 0.23326886701397598,
+          "key_h2d_seconds": 0.03012687200680375,
+          "payload_bytes": 54097926,
+          "repeated_outputs_byte_equal": true
+        }
+      }
+    },
+    {
+      "layer": 18,
+      "call": 3,
+      "native_replay_byte_equal": true,
+      "arms": {
+        "R_bf16": {
+          "sse": 799.293030445207,
+          "nse": 0.005098319243293896,
+          "native_attention_seconds": [
+            0.00714035177230835,
+            0.007138656139373779,
+            0.00713321590423584,
+            0.007130176067352295,
+            0.0071354880332946775
+          ],
+          "native_attention_median": 0.0071354880332946775,
+          "cpu_restore_seconds": 0.2288225790252909,
+          "key_h2d_seconds": 0.030138463946059346,
+          "payload_bytes": 54097926,
+          "repeated_outputs_byte_equal": true
+        },
+        "R_fp32": {
+          "sse": 792.9786840761922,
+          "nse": 0.00505804295865766,
+          "native_attention_seconds": [
+            0.007150591850280762,
+            0.007141568183898926,
+            0.00714576005935669,
+            0.00713651180267334,
+            0.007175871849060059
+          ],
+          "native_attention_median": 0.00714576005935669,
+          "cpu_restore_seconds": 0.2242930750362575,
+          "key_h2d_seconds": 0.030124026001431048,
+          "payload_bytes": 54097926,
+          "repeated_outputs_byte_equal": true
+        },
+        "O_offline": {
+          "sse": 524.0061423673585,
+          "nse": 0.0033423919607401664,
+          "native_attention_seconds": [
+            0.0071495680809020995,
+            0.00714572811126709,
+            0.007143136024475098,
+            0.007145408153533935,
+            0.007145120143890381
+          ],
+          "native_attention_median": 0.007145408153533935,
+          "cpu_restore_seconds": 0.22231326799374074,
+          "key_h2d_seconds": 0.030138795031234622,
+          "payload_bytes": 54097926,
+          "repeated_outputs_byte_equal": true
+        },
+        "O_own_refresh": {
+          "sse": 544.0294708246596,
+          "nse": 0.0034701114789896757,
+          "native_attention_seconds": [
+            0.00714035177230835,
+            0.007143008232116699,
+            0.007135263919830322,
+            0.007138400077819824,
+            0.007169472217559814
+          ],
+          "native_attention_median": 0.00714035177230835,
+          "cpu_restore_seconds": 0.22274208499584347,
+          "key_h2d_seconds": 0.030138031928800046,
+          "payload_bytes": 54097926,
+          "repeated_outputs_byte_equal": true
+        },
+        "O_first_reader": {
+          "sse": 499.9736127843732,
+          "nse": 0.003189099609410996,
+          "native_attention_seconds": [
+            0.0071495680809020995,
+            0.007149407863616944,
+            0.007139679908752442,
+            0.007147359848022461,
+            0.00713699197769165
+          ],
+          "native_attention_median": 0.007147359848022461,
+          "cpu_restore_seconds": 0.22239819401875138,
+          "key_h2d_seconds": 0.03012167103588581,
+          "payload_bytes": 54097926,
+          "repeated_outputs_byte_equal": true
+        }
+      }
+    },
+    {
+      "layer": 24,
+      "call": 0,
+      "native_replay_byte_equal": true,
+      "arms": {
+        "R_bf16": {
+          "sse": 397.3906164341458,
+          "nse": 0.004408116503630804,
+          "native_attention_seconds": [
+            0.007124991893768311,
+            0.007116864204406739,
+            0.007111775875091553,
+            0.007105760097503662,
+            0.007104032039642334
+          ],
+          "native_attention_median": 0.007111775875091553,
+          "cpu_restore_seconds": 0.21009340102318674,
+          "key_h2d_seconds": 0.030127551988698542,
+          "payload_bytes": 54097926,
+          "repeated_outputs_byte_equal": true
+        },
+        "R_fp32": {
+          "sse": 391.8409255438946,
+          "nse": 0.0043465557042770536,
+          "native_attention_seconds": [
+            0.007106560230255127,
+            0.0071068801879882815,
+            0.007100063800811768,
+            0.007104640007019043,
+            0.007100128173828125
+          ],
+          "native_attention_median": 0.007104640007019043,
+          "cpu_restore_seconds": 0.21835302002727985,
+          "key_h2d_seconds": 0.030132882995530963,
+          "payload_bytes": 54097926,
+          "repeated_outputs_byte_equal": true
+        },
+        "O_offline": {
+          "sse": 280.7633198207643,
+          "nse": 0.0031144102868397292,
+          "native_attention_seconds": [
+            0.007105535984039306,
+            0.007109439849853515,
+            0.007104447841644287,
+            0.007099584102630615,
+            0.007101119995117188
+          ],
+          "native_attention_median": 0.007104447841644287,
+          "cpu_restore_seconds": 0.216264066984877,
+          "key_h2d_seconds": 0.0301379410084337,
+          "payload_bytes": 54097926,
+          "repeated_outputs_byte_equal": true
+        },
+        "O_own_refresh": {
+          "sse": 323.7763213363707,
+          "nse": 0.0035915386185376725,
+          "native_attention_seconds": [
+            0.00713318395614624,
+            0.007141280174255371,
+            0.007135136127471924,
+            0.007139520168304443,
+            0.007138688087463379
+          ],
+          "native_attention_median": 0.007138688087463379,
+          "cpu_restore_seconds": 0.21626642101909965,
+          "key_h2d_seconds": 0.030134844942949712,
+          "payload_bytes": 54097926,
+          "repeated_outputs_byte_equal": true
+        },
+        "O_first_reader": {
+          "sse": 283.8710702080543,
+          "nse": 0.0031488834857650192,
+          "native_attention_seconds": [
+            0.0071485438346862796,
+            0.00715008020401001,
+            0.007150400161743164,
+            0.007131231784820557,
+            0.007144991874694824
+          ],
+          "native_attention_median": 0.0071485438346862796,
+          "cpu_restore_seconds": 0.20931771607138216,
+          "key_h2d_seconds": 0.030124134966172278,
+          "payload_bytes": 54097926,
+          "repeated_outputs_byte_equal": true
+        }
+      }
+    },
+    {
+      "layer": 24,
+      "call": 3,
+      "native_replay_byte_equal": true,
+      "arms": {
+        "R_bf16": {
+          "sse": 397.160770857379,
+          "nse": 0.004133759200702567,
+          "native_attention_seconds": [
+            0.0071485438346862796,
+            0.007142335891723633,
+            0.007138720035552978,
+            0.00714031982421875,
+            0.00714031982421875
+          ],
+          "native_attention_median": 0.00714031982421875,
+          "cpu_restore_seconds": 0.2080858569825068,
+          "key_h2d_seconds": 0.030120117007754743,
+          "payload_bytes": 54097926,
+          "repeated_outputs_byte_equal": true
+        },
+        "R_fp32": {
+          "sse": 411.195024434121,
+          "nse": 0.004279831595321529,
+          "native_attention_seconds": [
+            0.007150591850280762,
+            0.007143616199493408,
+            0.007141056060791015,
+            0.007139552116394043,
+            0.007138304233551026
+          ],
+          "native_attention_median": 0.007141056060791015,
+          "cpu_restore_seconds": 0.20775701804086566,
+          "key_h2d_seconds": 0.030124945915304124,
+          "payload_bytes": 54097926,
+          "repeated_outputs_byte_equal": true
+        },
+        "O_offline": {
+          "sse": 300.85975878373307,
+          "nse": 0.0031314316197659396,
+          "native_attention_seconds": [
+            0.007147520065307617,
+            0.00715008020401001,
+            0.0071378879547119144,
+            0.007140192031860351,
+            0.007132224082946777
+          ],
+          "native_attention_median": 0.007140192031860351,
+          "cpu_restore_seconds": 0.2080021359724924,
+          "key_h2d_seconds": 0.030126548022963107,
+          "payload_bytes": 54097926,
+          "repeated_outputs_byte_equal": true
+        },
+        "O_own_refresh": {
+          "sse": 322.28281434146646,
+          "nse": 0.0033544087099447273,
+          "native_attention_seconds": [
+            0.007173120021820068,
+            0.0071528639793396,
+            0.00713801622390747,
+            0.0071380801200866695,
+            0.007133503913879394
+          ],
+          "native_attention_median": 0.0071380801200866695,
+          "cpu_restore_seconds": 0.2222321779699996,
+          "key_h2d_seconds": 0.03013464401010424,
+          "payload_bytes": 54097926,
+          "repeated_outputs_byte_equal": true
+        },
+        "O_first_reader": {
+          "sse": 302.3103861121988,
+          "nse": 0.0031465301504010035,
+          "native_attention_seconds": [
+            0.007142399787902832,
+            0.0071378879547119144,
+            0.007137375831604004,
+            0.0071406722068786625,
+            0.007134880065917969
+          ],
+          "native_attention_median": 0.0071378879547119144,
+          "cpu_restore_seconds": 0.22168077703099698,
+          "key_h2d_seconds": 0.03013321105390787,
+          "payload_bytes": 54097926,
+          "repeated_outputs_byte_equal": true
+        }
+      }
+    }
+  ],
+  "packet_manifest_sha256": "44079f0ea622e9789ce62c5d9da0a53303127b85995fa11ee92fa2a80438a10a",
+  "decisions": {
+    "O_offline": {
+      "gains": [
+        {
+          "layer": 18,
+          "call": 0,
+          "R_bf16": 0.37231611814817966,
+          "R_fp32": 0.37769403541294877
+        },
+        {
+          "layer": 18,
+          "call": 3,
+          "R_bf16": 0.3444129719541198,
+          "R_fp32": 0.33919265058452674
+        },
+        {
+          "layer": 24,
+          "call": 0,
+          "R_bf16": 0.293482764288443,
+          "R_fp32": 0.28347627438085776
+        },
+        {
+          "layer": 24,
+          "call": 3,
+          "R_bf16": 0.24247362564473363,
+          "R_fp32": 0.2683283091818275
+        }
+      ],
+      "decision": "signal"
+    },
+    "O_own_refresh": {
+      "gains": [
+        {
+          "layer": 18,
+          "call": 0,
+          "R_bf16": 0.23916939274390125,
+          "R_fp32": 0.2456880945564377
+        },
+        {
+          "layer": 18,
+          "call": 3,
+          "R_bf16": 0.31936167325062925,
+          "R_fp32": 0.3139418729036261
+        },
+        {
+          "layer": 24,
+          "call": 0,
+          "R_bf16": 0.18524417047973807,
+          "R_fp32": 0.1737046841471367
+        },
+        {
+          "layer": 24,
+          "call": 3,
+          "R_bf16": 0.18853311306216936,
+          "R_fp32": 0.21622880825227375
+        }
+      ],
+      "decision": "undecided"
+    },
+    "O_first_reader": {
+      "gains": [
+        {
+          "layer": 18,
+          "call": 0,
+          "R_bf16": 0.41516582044909867,
+          "R_fp32": 0.42017660680536895
+        },
+        {
+          "layer": 18,
+          "call": 3,
+          "R_bf16": 0.37448020470554166,
+          "R_fp32": 0.3694993032923266
+        },
+        {
+          "layer": 24,
+          "call": 0,
+          "R_bf16": 0.28566237231447955,
+          "R_fp32": 0.2755451212401381
+        },
+        {
+          "layer": 24,
+          "call": 3,
+          "R_bf16": 0.23882113165512298,
+          "R_fp32": 0.26480047629897097
+        }
+      ],
+      "decision": "signal"
+    }
+  },
+  "finished_utc": 1793869915.6213768,
+  "peak_cuda_bytes": 245594112,
+  "max_rss_bytes": 1648488448
+}

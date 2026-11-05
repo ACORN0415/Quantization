@@ -1,0 +1,43 @@
+causal_obq 실제 결과 독립 감사 — Claude Fable 5.1, 2026-11-05 18:15 KST (읽기 전용, GPU 0, 파일 변경 0, 10분)
+원자료(직접 읽음): LOCK.json c3d0d6f1…, DRIVER_STATUS.json, reference/·capture/·packets/ manifest.json, RUN.json, NATIVE_RESULT.json 1b3e932f…(조정자 통보와 일치), capture.log/reference.log.
+코드 해시: common 436f7b27 / capture 2f378ad4 / replay 89483a35 / selftest cd2a1e1f / 명세 971ce0f9 / driver 7d345860 — LOCK 항목·내 사전 검토 해시와 전부 일치.
+
+1. 판단: 등록 기준 안에서 결과 타당. 결정(offline·first_reader = signal, own_refresh = undecided)은 내가 SSE에서 독립 재계산한 값과 일치한다.
+ - 재계산 이득(전체 참조 SSE, R_bf16/R_fp32 대비):
+   L18 call0: offline 37.2/37.8%, own 23.9/24.6%, first 41.5/42.0%
+   L18 call3: offline 34.4/33.9%, own 31.9/31.4%, first 37.5/37.0%
+   L24 call0: offline 29.4/28.4%, own 18.5/17.4%, first 28.6/27.6%
+   L24 call3: offline 24.3/26.8%, own 18.9/21.6%, first 23.9/26.5%
+   → min(4 endpoint × 2 RTN): offline 24.3%, first 23.9% ≥ 20% → signal; own 17.4% → 20% 미달·−10% 초과 아님 → undecided. 등록 규칙 그대로.
+ - first_reader / offline SSE 비: L18 0.93·0.95, L24 1.01·1.00. 온라인(첫 읽기 q)이 오프라인(p0 고정 H) 대비 일관된 우위 없음. own_refresh(clean q, t=0)는 둘 모두에 열세(offline 대비 ×1.04–1.21).
+   해석: "H 공급원이 어디든 q 공분산 구조가 층 수준에서 안정적"이 가장 단순한 설명이고, 그 중 clean t=0 q가 가장 덜 맞는다. 보정 자료 하나(p0, 다른 prompt, 다른 seed)로 고정한 H가 충분하다는 강한 단순 기준선 인정에 동의한다.
+
+2. 무결성 체크리스트(모두 통과)
+ - reference/capture 각 model_forwards 40, 같은 source_sha256 e916506f…, capture 8/8 청크 latent가 무훅 참조와 바이트 일치(훅이 궤적을 바꾸지 않음).
+ - capture artifacts 31, 층 18/24 call 수 40/40, events 28 = writes 12(call4, t=0) + first_reader 12(c+1 call0, t=1000) + reads 4(c7 call0 t=1000, call3 t=625), 과거 K/V 바이트 일치 4/4.
+ - native 재생: 4 endpoint 모두 BF16 원본 윈도 재구성 출력이 저장 native_av와 바이트 일치. 모든 팔 payload 54,097,926B 동일. 반복 출력 바이트 동일.
+ - packets: 12 rows, 팔별 3회 반복 코드 해시 동일, 평가 read 파일 미개방(코드 경로상).
+ - 자원: 대기 1294s(≤7200), 실험 180.5s(≤1800), 생성 2, 모델 프로세스 RSS 35.5GB(≤40), CUDA peak 9.25GB(≤22, build 후 2.84GB·encode 후 4.94GB 기록), replay RSS 0.9/1.6GB.
+ - 입력 신선도: prompt 문장을 저장소 전체(txt/json/py/md/log)에서 grep → causal_obq 밖 0건. seed 307은 기존 101/202와 다름. 이는 저장소 검색 범위의 진술이며, sfq_data의 과거 prompt 목록은 확인하지 않았다.
+
+3. 주장 범위(지금 말할 수 있는 것 / 아닌 것)
+ - 말할 수 있는 것: 개발에 쓰지 않은 prompt·seed 1개, 층 2개, 청크 7의 두 denoise call(t=1000, t=625), q 128개 단일 읽기에서, 같은 payload의 K 코드 선택만 바꾼 OBQ(고정 p0 H 또는 첫 읽기 H)가 RTN 대비 post-Wo SSE를 24–42% 줄였다.
+ - 아닌 것: 전체 생성 rollout 개선(MUSIQ/DINO) 아님. 누적(FR−TF) 효과 아님. 청크 8 이후·더 먼 거리 읽기 미측정(청크 1–5는 거리 2–6에서 읽혔으나 청크 6은 거리 1만). 통계 주장 불가(prompt 1, seed 1).
+ - 이 run은 K-only 참조·V-only 바닥을 기록하지 않았다(등록 주지표가 전체 참조뿐). capacity에서 V4 바닥이 전체 SSE의 28–34%였으므로 K 효과는 위 수치보다 클 가능성이 있으나 이 자료로는 못 말한다.
+ - first_reader call0 endpoint는 청크 6 H가 평가 q와 같은 입력(배포상 합법). call3(t=625)이 미사용 미래 endpoint이며 거기서도 37/24% → 전이 확인. 다만 두 endpoint가 같은 청크 7 안이라 "다음 청크 이후 읽기"의 증거는 아니다.
+
+4. 비용(이 자료에서 읽히는 것)
+ - CPU 4스레드 encode 중앙값(청크·층·12head당): RTN_bf16 0.045s, RTN_fp32 0.056s, O_offline 0.18s, 온라인 두 팔 0.22s(H 구성 0.031s 포함). 왕복 검증 포함 수치.
+ - 같은 머신에서 GPU 청크 생성(5 forward)은 0.9–2.4s. CPU OBQ를 30층에 그대로 쓰면 청크당 ≈5.4s로 생성 시간을 넘는다 → 등록문대로 "이 경로 직접 배포 가능"은 아니며, GPU encoder 비용 측정(root 다음 업무)이 방법 주장의 전제다. 128단계 순차 루프 지연이 진짜 장애인지는 거기서 결정된다.
+ - GPU attention 읽기 시간은 팔 간 동일(6.8–7.2ms), restore 0.22s/h2d 0.03s도 동일 — 읽기 경로 비용 차이 없음(예상대로).
+
+5. 다음 단계에 대한 의견(교수 역할, 승인 요구 아님)
+ - 새 방법 주장 보류에 동의. 현재 증거는 "GPTQ형 코드 최적화가 KV K에도 통한다 + 고정 보정 H로 충분"이며, 이 둘은 각각 GPTQ·오프라인 보정(SAW-INT4/OSCAR/HeadQ 계열)의 조합으로 읽힐 수 있다. 차별점이 남으려면 (i) GPU encoder 비용이 생성 대비 작고, (ii) 전체 rollout에서 K4h8 대비 이득이 보류 입력·seed 2개에서 재현돼야 한다.
+ - 순서: GPU encoder 비용(업무 1) → 통과 시 rollout 등록(고정 p0 H 팔 하나로 충분, first_reader는 비용만 더 들고 이득 없음). own_refresh는 종료해도 됨(열세 일관).
+ - 가장 강한 반론 유지: 보류 prompt 1개·seed 1개이며 call0/call3이 같은 청크. p7 같은 약점 prompt에서의 효과는 미지.
+
+6. 기록상 주의
+ - LOCK review_sha256에 QCOV_RESULT_FABLE_REVIEW_KO.txt(1f2b68de2549)가 들어 있다. 이 파일은 내가 작성하지 않았다(첫 줄: qcov 회전 대조 실측 결과 판정 검토 — qcov_rotation_baseline_codex/RESULT.json — Claude Fable 5.1 — 2026-11-05 KST
+Task/Dispatch ID: 없음. 읽기 전용, GPU 0, 파일 수정 0. 읽은 것: RESULT.json(2층 전체), REGISTRATION_LOCK.json, AUDIT_RESULT.json(상단), AUDIT_ATTEMPT_NOTE_KO.txt, RUN_LOG.txt.). 다른 Fable 세션(업무 1)의 것이면 그렇게 표기하고, 내 검토로 귀속하지 말 것. 나는 qcov 결과를 읽지 않았다.
+ - call3의 timestep 625: 설정 denoising_step_list는 [1000,750,500,250](src/configs/a1.yaml)이고 causal_inference.py:33이 scheduler timesteps[1000-step]으로 재매핑하므로 250→625로 기록된 것. call3은 4개 중 마지막 denoise call이 맞다(model_pre가 4개 call 모두 timestep을 assert했으므로 매핑 일관).
+확인/미확인: 위 1–4의 수치는 파일에서 직접 재계산. GPU 실행 자체·sfq_data prompt 이력·qcov 결과·Codex 감사 보고서는 읽지 않음.

@@ -1,0 +1,30 @@
+구조화한 H의 스칼라 GPTQ 재귀 검토 — Codex — 2026-11-05
+범위: 10분 수학·원문·공식 코드 대조와 합성 CPU 검사. 실캡처 효과 측정0, GPU0, 기존 실험/LOCK 변경0.
+
+판단: 제안한 재귀는 양의 대각 D와 rank-one u u^T로 이루어진 H에 대한 고정순서 GPTQ의 정확한 실수 연산 특수화다. 신규 알고리즘이라는 근거는 없다. 남은 판별 질문은 'query 평균으로 만든 rank-one 항만으로 full-H의 실제 출력 이득을 보존하는가'이다.
+
+1. 독립 도출과 구현 조건
+H=D+u u^T, D=diag(d_j)>0. 아직 양자화하지 않은 좌표 R={j,...,d-1}에서 Woodbury를 쓰면
+ (H_R^-1)_{kj}/(H_R^-1)_{jj} = -(u_j u_k/d_k)/(1+sum_{t>j}u_t²/d_t), k>j.
+GPTQ의 갱신 w_k ← w_k − e_j (H_R^-1)_{kj}/(H_R^-1)_{jj}이므로, 토큰·head마다 스칼라 S=0 하나를 두고
+ w_j = x_j + (u_j/d_j) S,
+ c_j = clamp(round(w_j/s_j), -8, 7), z_j=s_j c_j, e_j=w_j-z_j,
+ S ← S + e_j u_j / (1+sum_{k>j}u_k²/d_k)
+로 같은 갱신을 얻는다. 부호는 +이며 tail은 현재 j를 제외한다. 마지막 채널 분모는1이고 마지막 S 갱신은 생략 가능하다. scale는 원본에서 사전에 고정한 동일 grid여야 한다. 채널별·토큰별 scale가 달라도 유도는 성립한다. clamp 뒤 실제 잔여 e를 쓰므로 clipping도 알고리즘 동등성에 포함된다. 양자화 순서를 바꾸면 d/u/x/scale 모두 같은 순서로 바꿔야 한다.
+이는 구조 H를 사용하는 기존 GPTQ와 같다는 뜻이며, 실제 full query moment와 같거나 정수 문제의 전역 최적해라는 뜻이 아니다.
+
+2. 합성 검사
+seed=9000+100*s+d(s=0..7), d∈{1,2,3,8,32,128}, 행7, d_j=exp(U[-1.5,1.5]), u_j~N(0,strength²), strength∈{0,.2,2,20}, x~N(0,25), scale~U[.15,1.15]로 고정했다. FP64 inverse/upper-Cholesky를 평가 dtype으로 변환하는 dense GPTQ와 위 재귀를 같은 round/clamp로 비교했다.
+FP64/FP32 각각192사례·38,976개 code: 불일치0. 반올림 전 값의 최대 절대 차이는 FP64 2.666e-11, FP32 1.717e-4. 따라서 실수식은 같아도 부동소수점 비트 동등성이 일반적으로 보장되지는 않는다. 특히 반올림 경계·작은 d·큰 u에서 실제 코드 검사가 필요하다. 이 검사는 실행 도구 stdout으로 수행했으며 실자료나 효과 수치는 사용하지 않았다.
+
+3. 근사와 비용의 정확한 의미
+u=mu=E[q], d_j=Var(q_j)+lambda이면 H_struct=diag(Var(q))+mu mu^T+lambda I. 대각은 원래 E[q_j²]+lambda와 같고, 버리는 것은 centered covariance의 off-diagonal 전부다. 평균이 작다는 이유만으로 centered 상관도 작지는 않다. 반례: mu=0, H=[[1,.8],[.8,1]], x=(.49,.49), unit-grid이면 구조 H는대각이되어RTN(0,0); full-H GPTQ는(0,1)을선택해오차를줄인다. 따라서 mean항충분성은 관측해야 한다.
+회전 후 통계는 평균·원소제곱평균으로 O(Nd), 보상은 O(Md), 상태는 토큰×head별1개+head별O(d) 계수다. 원래 full 갱신 O(Md²)와 dense factor 비용을 줄일 여지가 있다. Hadamard 회전·scale·패킹·128개 순차 의존은 남는다. Python에서128번 launch하면 GPU가 빨라진다고 보장할 수 없다. 분산은 E[q²]−mu² 소거에 주의하고, tail은 역방향 누적합으로 계산해 total−prefix 소거를 피한다. lambda는 full/structured에서 동일한 원래 mean diag로 고정해야 한다.
+
+4. 가까운 선행과 차별점 한계
+- GPTQ 공식 gptq.py: inverse Cholesky와 순차 잔여 보상이 이미 구현되어 있다. 이번 재귀는 그 연산을 특수한 H에서 간소화한 것이다. https://github.com/IST-DASLab/gptq/blob/main/gptq.py
+- QuIP §3·§5.1: adaptive rounding with linear feedback와 LDLQ/OPTQ 동등성을 이미 분석했다. '오차를 스칼라 상태에 누적한다'는 설명만으로 신규성이 생기지 않는다. https://proceedings.neurips.cc/paper_files/paper/2023/file/0df38cd13520747e1e64e5b123a78ef8-Paper-Conference.pdf
+- FIMA-Q(CVPR2025) §3.3, Eq15–21: rank-one 및 diagonal-plus-low-rank 곡률 근사 자체가 선행이다. 해당 논문은 KL/FIM 기반 블록 복원 손실과 AdaRound 최적화이며, 우리 query moment+고정 grid의 closed-form GPTQ와 구체적인 정보·변수는 다르다. 공식 utils/block_recon.py 288–332,434–442에서 Adam 및 fisher_dplr 손실을 확인했다. https://arxiv.org/html/2506.11543v1#S3.SS3 ; https://raw.githubusercontent.com/ShiheWang/FIMA-Q/main/utils/block_recon.py
+- Frame Quantization of Neural Networks(2025) Definition3.1은 sigma-delta 누적상태로 finite-frame 계수를 양자화한다. 우리 식은 채널마다 가변인 query 통계 계수와 tail분모를 가진다. 고정 계수의 표준 sigma-delta와 동일하다고 할 수 없지만, 오차 누적 자체도 새 발상이 아니다. https://link.springer.com/article/10.1007/s00041-025-10182-7
+
+다음 판별 행동 하나: 새로운 GPU 구현 전에, 잠근 동일 입력/scale/정보시점에서 RTN·full-H·structured-H의 post-Wo SSE와 통계+encode 전체 CPU 비용을 비교하는 작은 검사로 mean항의 충분성을 확인한다. 계속할 신호는 두 층·두 읽기마다 기존20% 출력감소를 유지하면서 full-H의 RTN 대비 감소분을80% 이상 회수하고, 같은 범위의 통계+encoder 시간을 의미 있게 줄이는 경우로 결과 전에 정할 수 있다. 이는 제안 기준이며 아직 등록·측정하지 않았다. 단순 mean/bias 보존 선택이 같은 효과를 내는지도 강한 저비용 기준선으로 둬야 한다. 그 검사 전에는 데이터에 맞춘 새 방법 이름이나 신규성 주장을 붙이지 않는다.

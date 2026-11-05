@@ -103,4 +103,54 @@ causal_obq에새문장+seed307, BF16참조/계측각1회,4개nativeBF16read endp
 기존R8dquality종료와GPU유휴를확인후최대30분/2생성으로실행예정. 대기시간은별도최대2시간.
 각GPU단계직전GPU재확인;실패재시도0;동시driver방지와자기자식프로세스만종료하도록실행조정코드검토중.
 
-상태: 실제방법효과/독립보류입력/실제GPU비용/신규성의종합검증은아직미완료. 사용자요청한연속연구목표는active.
+D004 [검토 후 실제 실행 대기 등록]
+2026-11-05 17:47 KST: causal_obq/LOCK.json SHA c3d0d6f1f4f919155d2dd30ea103b7faaccc1523eaae7c6d1c99027060fceb2d,
+실제Fable코드/driver검토와Codex driver검토후큐실행. 실행세션4095, DRIVER_STATUS.json이최종상태권위.
+GPU대기중은실험시작아님. R8d결과의성공여부는독립후속실험의과학적전제가아니므로종료·유휴만요구.
+단계진입후실패시자동재시도없음. 자기프로세스종료정리중단계manifest가running이어도driver stopped이면미완료.
+완료CPU진단커밋e03aa93, 회전대조+후속사전등록커밋5cf72c3. 기존다른연구미추적파일은포함하지않음.
+
+D005 [GPU 비용 계획의 검토 의견 구분; 실행 전]
+OBQ_GPU_COST_CODEX_KO/FABLE_KO의공통점: 배치Torch/Graph를강한기준선으로허용하고H/factor/회전/scale/실제pack비용분리.
+채택하지않은Fable단정: launch추정치를엄밀상한으로표시,준비비용무시가능,고정U회전과Hadamard비용동일가정,
+2층시간×30을실측배포지연으로간주. 모두실제조건에서측정필요. 온라인H는매쓰기준비비용이추가됨.
+정확성의견차이: 동일factor/scale에서보상kernel만바꿀때는먼저모든코드bit일치를목표로한다.
+블록화/새통계산술로부동소수점순서가바뀌면별도수치변형으로등록하고출력검증한다. 판정을사후2%허용으로완화하지않음.
+모든28미측정층의같은개발캡처CPU확장을먼저준비:2층선택효과를전체모델효과로일반화하지않기위함.
+
+E010 [30층 개발 입력 진단 완료, GPU 0회]
+all_layer_capacity_codex/RESULT.json SHA b11c397be56bf935ce90a2ff9429b6623abf6c901a99574e0d91fa785a203bfa.
+신규28층+이전18/24층2개 재사용을 구분했다. 같은p0고정H→p4 c7call0,128query로30/30층에서 두RTN보다 SSE가작음.
+pooled SSE BF16RTN6980.119317,FP32RTN9749.596859,OBQ1843.424499; 감소73.590%/81.092%.
+최소개선층25도18.656%/20.073%개선. 등록 pooled20%/24층이상개선/10%악화없음 조건통과.
+259.33초,RSS2.442GiB. Fable ALL_LAYER_RESULT_FABLE_REVIEW_KO.txt는 판정과 범위를수용.
+30층동시양자화rollout이나30개의독립입력검증이아님. 마지막3층의BF16기준SSE비중67.1%로pooled결과를크게좌우함.
+Fable의다른query수/headINT8실험과비교는미검증가설이며동등품질을입증한결과로사용하지않음.
+
+E011 [새 입력의 인과 정보시점 제한 native attention 진단 완료]
+causal_obq/NATIVE_RESULT.json SHA 1b3e932f350978a96e891356282e3818a8e1546c9030f038f3bee0ec3cd2b2b9.
+새문장+seed307,기존R8d종료뒤2회BF16생성(참조/계측),8청크latent원소바이트일치. 대기1294.2초,실험180.49초.
+층18/24의call0/call3 네endpoint: frozen-p0 H는BF16RTN대비37.23/34.44/29.35/24.25% SSE감소.
+첫reader H는41.52/37.45/28.57/23.88%감소. 두방법은각endpoint두RTN대비20%개선등록gate통과.
+own-refresh H는층24에서18.52/18.85%로미달하여판단불가. 이를후속성공으로집계않음.
+첫reader는frozen보다층18에서좋지만층24에서나빠온라인정보의일관된추가이득없음. 고정offline H를강한기준선으로유지.
+모든팔pastKV54097926B. actual native attention은4680query를실행하지만저장된출력점수/bit검사는고정128query에한정.
+별도읽기전용감사:104개파일hash,8latent전원소bytes,72packet의실제bytes/scale/code,24query정보시점연결통과.
+native출력의별도GPU재계산은하지않음. 모든원본tensor의실행전후능동hash기록이있다고주장하지않음.
+CPUencoder중앙값RTN44.8ms/offline183.2ms/firstreader219.3ms. firstreader의H준비31~39ms는별도이며219.3에포함되지않음.
+진단CPU시간에는pack/unpack검증이포함돼배포GPU비용이아님. Fable CAUSAL_RESULT_FABLE_REVIEW_KO.txt의합산오해는이기록으로정정.
+새입력한개이며전체양자화rollout,자체양자화가바꾼query,최종영상품질은미검증. 알려진GPTQ이식자체신규성없음.
+
+E012 [구조화 H 수학 확인, 실제 효과는 미측정]
+H=diag(Var(q)+lambda)+mean(q)mean(q)^T 특수형은토큰×head당스칼라상태로GPTQ보상을계산가능.
+두모델독립유도/합성검사통과. 실수대수동등성은일반FP32코드bit일치보장이아님.
+FIMA-Q(arXiv2506.11543v1) DPLR-FIM,QuIP LDLQ,GPTQ의선행으로저랭크곡률/feedback자체신규성주장않음.
+mean에너지/tr(H)는전체출력개선회수율의상한이아님. Fable의상한표현채택않음.
+
+D006 [다음 두 업무, 각각 Codex1+Fable1]
+업무1: fixed-offline H의batchedTorch/CUDA Graph 인코더비용,2사례/15분/GPU기타작업0후실행.
+업무2: 같은freshcausal자료에서D+mu muT와더단순cI+mu muT의효과/CPU비용,네endpoint/10분/CPU만.
+각등록/코드검토후잠금. 업무2는결과에따라rank4/16을자동추가하지않으며,FP32scalar후보와dense참조의수치차이는구분.
+복잡한온라인선택기를추가하기보다고정통계/단순화가효과를유지하는지확인한다.
+
+상태: 국소효과와새입력native경로신호는있으나,전체생성품질/실제GPU비용/신규성의종합검증은아직미완료. 연속연구목표active.

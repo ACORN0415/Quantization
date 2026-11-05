@@ -1,0 +1,27 @@
+28층 CPU 확장 코드 검토(실행 전) — all_layer_capacity_codex — Claude Fable 5.1 — 2026-11-05 KST
+Task/Dispatch ID: 없음. 읽기 전용, GPU 0, 측정 0. 읽은 것: REGISTRATION_DRAFT_KO.txt 전체, run_all_layers.py 전체(158행), SELFTEST.json.
+해시 확인: run_all_layers.py 325bd8406a1885ea…, REGISTRATION_DRAFT_KO.txt 12bfea4832315886… — 메시지·SELFTEST 기록과 일치.
+
+== 판단: 무효로 만드는 오류 없음. 잠금·실행 가능 ==
+확인한 것
+- 원본 재사용: diagnose_obq.py를 importlib로 그대로 로드하고 run_layer(layer)만 호출(136행). 양자화·H·factor·scale·attention·metric 변경 없음. verify_old(64-71행)가 옛 LOCK의
+  모든 파일 해시·옛 SELFTEST code_sha·옛 RESULT [18,24] 완료를 검사. old.RUN_START=BEGIN(126행)으로 원본 내부 guard도 살아 있음.
+- 재사용 2층: 옛 RESULT.json rows를 deepcopy하고 measurement_origin='reused_original_capacity'로 표기(131-132행). 신규는 'new_cpu_extension'. provenance 분리 적절.
+- 판정 decide(30-54행): 30행 필수 assert, 악화 = OBQ > 1.1×기준(초과), 개선 = 양쪽 기준보다 엄격히 작음, pooled ≤ 0.8, 개선층 ≥ 24, 모두 충족 시만 continue. 등록문 1~5와 일치.
+  0 분모 시 비율 None·절대차 기록. 합성 6검사(양성/악화/경계 110=통과/23층 부족/불완전 거부/0 분모) 통과.
+- 상한: 600 s(SIGALRM + 층 경계 guard), RSS 8 GiB, 새 디스크 2 GiB(116행), 불완전 시 incomplete_or_invalid·유효 행 보존·judgement 없음(142-145행). 미완료로 전체 gate를 판정하지 않음 ✓.
+- 잠금: LOCK이 옛 LOCK의 모든 참조 + 옛 SELFTEST/RESULT + 초안 + 자기 코드 + 두 manifest.json 해시를 보존(57-61행). run 시 재검증(124-125행). RESULT 덮어쓰기 거부(122행).
+
+== 실패 시 "무효"(거짓 결과 아님)로 떨어질 수 있는 지점 — 알고만 둘 것 ==
+1. 시간: 옛 실행이 층당 9.2 s(로드·해시 2회 포함)였으므로 28층 ≈ 4.3분. 600 s 상한은 2.3배 여유. 단 같은 시각에 GPU 큐 작업(VAE decode·캡처)이 CPU 코어를 쓰면 느려질 수 있다.
+   초과 시 TimeoutError → incomplete_or_invalid, 유효 행만 보존. 상한을 늘리지 말고 "CPU 경합" 사유를 기록하면 된다. 가능하면 GPU 큐의 CPU 집중 구간과 겹치지 않게 시작.
+2. 원본 run_layer의 단정문(FP16 scale 왕복, diag=FP32 RTN 코드 일치, Cholesky PD)이 어떤 층에서 깨지면 그 층에서 예외 → 전체 incomplete. 층27-29의 q 공분산 극비등방은
+   FP64 역행렬 + 1% damping으로 안정할 것으로 예상하나 측정 전 단정 불가. 실패 층이 생기면 그 층을 건너뛰고 계속하도록 코드를 고치지 말 것(등록 규칙과 같음).
+
+== 해석 주의(변경 요구 아님) ==
+- 기준 3(pooled 20%)은 reference_energy 차이(l18 1e5 vs l28/29 2e7) 때문에 사실상 층27-29의 20% 감소 조건이다. 세 기준이 AND이므로 gate를 더 엄격하게 만들 뿐 느슨하게 하지 않는다.
+  보고 시 "pooled 미달 = massive 층 미달"로 읽히도록 l27-29 분리 표기를 권고(등록문의 층별 SSE/NSE/절대차/비율 기록으로 충분).
+- 기준 4(24층 개선)는 tiny-SSE 층(l0/l8, NSE ~5e-5)에서 FP 잡음 수준의 차이로도 '개선/비개선'이 갈릴 수 있다. 등록대로 절대차를 함께 보고하면 해석 가능. 문턱 변경 불필요.
+
+== 미확인 ==
+실행 없음. 원본 run_layer가 전 층에서 예외 없이 도는지는 실행에서만 판명. 이 검토는 승인이 아니라 권고다.

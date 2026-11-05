@@ -1,0 +1,27 @@
+30층 CPU 확장 결과 검토 — all_layer_capacity_codex/RESULT.json — Claude Fable 5.1 — 2026-11-05 KST
+Task/Dispatch ID: 없음. 읽기 전용, GPU 0, 재계산 없음(저장 스칼라·해시만). 읽은 것: RESULT.json(30행 전체·judgement), LOCK.json, AUDIT_RESULT.json(상단), RESULT_REPORT_KO.txt(40행).
+
+== 판단: 실행 유효, 등록 gate 통과 판정 타당, 범위 서술 적절 ==
+유효성(직접 확인)
+- RESULT.json sha b11c397be56bf935… = 메시지. 코드 sha 325bd8406a1885ea… = LOCK 기록 = 실행 전 검토본(변경 없음). prior RESULT 518d4792… 참조 일치.
+- status completed, 신규 28/28, 재사용 2(measurement_origin 표기), 259.3 s(상한 600), RSS 2,622,210,048 B = 2.442 GiB, GPU 0. payload 30층 모두 54,097,926 B.
+- 모든 층에서 OBQ_DIAG code sha = B0_FP32_RTN code sha(대각 대조 유효), cpu_vs_native NSE 최대 ~3e-6, Cholesky factor 대각 최소 0.082(l28)·최대 10.4(l0) — 유한·양수.
+판정식 재확인
+- 악화층 0, 양쪽 RTN보다 작은 층 30/30, pooled BF16 대비 73.59% / FP32 대비 81.09% 감소 → 등록 기준 1~5 충족, decision continue_all_layer_risk_gate. 사후 변경 없음.
+- 층별 감소율(BF16 대비) 최소 0.187(l25), 중앙값 0.469, 최대 0.932(l28). 최소층도 10% 악화 금지선에서 멀다.
+- pooled 지배: 저장 SSE로 계산한 l27-29 비중 67.1%(BF16)/76.3%(FP32) — 보고서 값과 일치. 층별 NSE 합으로 보면 감소 52.2%(3.44e-2 → 1.64e-2). 두 집계가 다른 수치지만 같은 방향.
+  보고서가 "reference_energy만으로 추론하지 않음"을 명시한 것은 적절하다.
+
+== 관측(결과에서 읽은 것, 기준 아님) ==
+1. massive 층에서 비트 추가 없이 head INT8 규칙과 같은 자릿수: l28 OBQ NSE 3.75e-4 vs fair_comparison의 norm head INT8(frame) 7.64e-4; l29 2.29e-4 vs 3.43e-4(p0)/2.51e-4(p4).
+   q 개수(128 vs 4680)와 prompt가 달라 직접 비교는 아니지만, "전 head INT4 OBQ가 K4h8 수준 이상"이라는 가설은 같은 128 q 설정의 한 팔 추가로 즉시 확인 가능(CPU 1분, 등록 후).
+   이것이 맞으면 K4h8 경로의 바이트 +3.3%를 쓰지 않고 같은 효과를 얻는다는 뜻이며, 원고의 head 규칙 서술을 다시 써야 한다.
+2. K 재구성 SSE는 30층 모두 1.45~1.94배 증가. 텐서/출력 괴리가 전층에서 일관. rollout 누적 위험(R-8 선례)이 전층에 걸쳐 있다는 뜻이므로 causal/rollout 검사의 핵심 질문으로 유지.
+3. 감소율이 작은 층(l10 0.198, l25 0.187, l22 0.239, l16 0.269)은 B0 NSE가 6e-4~2e-3인 중간 손상 층이다. tiny-SSE 층이 아니므로 "효과가 작은 층"으로 읽는 것이 맞다.
+
+== 범위 서술에 대한 동의 ==
+- "30층 동시 양자화 생성이 아니라 같은 개발 prompt call0의 국소 개입 30개 결과", "30층 OSCAR 비교 아님", "층을 독립 표본으로 세지 않음", "독립 입력 일반화·first-reader 이득·GPU 비용 미입증" — 모두 적절.
+- 추가 권고 문구: 전층 동시 적용 시 상주 factor 23.6 MB(30층 × 786 KB)와 쓰기 비용(OBQ_GPU_COST 설계)은 별도 측정 전 "미측정"으로 둔다.
+
+== 미확인 ==
+attention 재실행 없음(감사 범위와 같음). 관측 1의 K4h8 대조는 제안이며 실행하지 않았다. 이 검토는 승인이 아니라 권고다.

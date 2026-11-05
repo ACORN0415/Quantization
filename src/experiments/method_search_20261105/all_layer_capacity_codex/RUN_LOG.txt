@@ -1,0 +1,146 @@
+RESULT 0 B0_BF16_RTN {"nse": 5.072775789183687e-05, "logit_mse": 0.007303616648657114, "quantize_seconds": 5.509937182068825e-07, "packed_payload_bytes": 54097926}
+RESULT 0 B0_FP32_RTN {"nse": 5.801096997932221e-05, "logit_mse": 0.007306853151829682, "quantize_seconds": 5.909241735935211e-07, "packed_payload_bytes": 54097926}
+RESULT 0 OBQ_FULL {"nse": 6.3257736176900015e-06, "logit_mse": 0.0009044084704015803, "quantize_seconds": 1.2842579829739407, "packed_payload_bytes": 54097926}
+RESULT 0 OBQ_DIAG {"nse": 5.801096997932221e-05, "logit_mse": 0.007306853151829682, "quantize_seconds": 0.08980731305200607, "packed_payload_bytes": 54097926}
+LAYER_DONE 0 count 1 seconds 9.258909204043448
+RESULT 1 B0_BF16_RTN {"nse": 8.657007937537776e-05, "logit_mse": 0.013927170449045968, "quantize_seconds": 7.520429790019989e-07, "packed_payload_bytes": 54097926}
+RESULT 1 B0_FP32_RTN {"nse": 9.293528685493831e-05, "logit_mse": 0.013911420751007752, "quantize_seconds": 7.009366527199745e-07, "packed_payload_bytes": 54097926}
+RESULT 1 OBQ_FULL {"nse": 2.583796504264084e-05, "logit_mse": 0.00387613801541733, "quantize_seconds": 1.39208766608499, "packed_payload_bytes": 54097926}
+RESULT 1 OBQ_DIAG {"nse": 9.293528685493831e-05, "logit_mse": 0.013911420751007752, "quantize_seconds": 0.09601119405124336, "packed_payload_bytes": 54097926}
+LAYER_DONE 1 count 2 seconds 9.573572416906245
+RESULT 2 B0_BF16_RTN {"nse": 0.00011052798118598761, "logit_mse": 0.01899213945403683, "quantize_seconds": 4.0105078369379044e-07, "packed_payload_bytes": 54097926}
+RESULT 2 B0_FP32_RTN {"nse": 0.00011489779389442781, "logit_mse": 0.018998919306601494, "quantize_seconds": 4.409812390804291e-07, "packed_payload_bytes": 54097926}
+RESULT 2 OBQ_FULL {"nse": 4.7711466937971576e-05, "logit_mse": 0.005992483687744162, "quantize_seconds": 1.3071978510124609, "packed_payload_bytes": 54097926}
+RESULT 2 OBQ_DIAG {"nse": 0.00011489779389442781, "logit_mse": 0.018998919306601494, "quantize_seconds": 0.0951592099154368, "packed_payload_bytes": 54097926}
+LAYER_DONE 2 count 3 seconds 9.364268247969449
+RESULT 3 B0_BF16_RTN {"nse": 2.2704526196965383e-05, "logit_mse": 0.034084523576435675, "quantize_seconds": 4.6100467443466187e-07, "packed_payload_bytes": 54097926}
+RESULT 3 B0_FP32_RTN {"nse": 2.3169698533182308e-05, "logit_mse": 0.03406232622848719, "quantize_seconds": 4.909234121441841e-07, "packed_payload_bytes": 54097926}
+RESULT 3 OBQ_FULL {"nse": 1.0061111300141987e-05, "logit_mse": 0.011573584657754689, "quantize_seconds": 1.0961257478920743, "packed_payload_bytes": 54097926}
+RESULT 3 OBQ_DIAG {"nse": 2.3169698533182308e-05, "logit_mse": 0.03406232622848719, "quantize_seconds": 0.08998561801854521, "packed_payload_bytes": 54097926}
+LAYER_DONE 3 count 4 seconds 9.058769891038537
+RESULT 4 B0_BF16_RTN {"nse": 0.0008157360729303579, "logit_mse": 0.01972906423408134, "quantize_seconds": 5.520414561033249e-07, "packed_payload_bytes": 54097926}
+RESULT 4 B0_FP32_RTN {"nse": 0.000876287274296246, "logit_mse": 0.019715466419348633, "quantize_seconds": 5.509937182068825e-07, "packed_payload_bytes": 54097926}
+RESULT 4 OBQ_FULL {"nse": 0.00040773848788694454, "logit_mse": 0.008444883057271873, "quantize_seconds": 1.3083811810938641, "packed_payload_bytes": 54097926}
+RESULT 4 OBQ_DIAG {"nse": 0.000876287274296246, "logit_mse": 0.019715466419348633, "quantize_seconds": 0.09624722704757005, "packed_payload_bytes": 54097926}
+LAYER_DONE 4 count 5 seconds 9.438446308020502
+RESULT 5 B0_BF16_RTN {"nse": 0.0009593307579280547, "logit_mse": 0.019104726348920575, "quantize_seconds": 6.810296326875687e-07, "packed_payload_bytes": 54097926}
+RESULT 5 B0_FP32_RTN {"nse": 0.000969283370234956, "logit_mse": 0.01908510759178449, "quantize_seconds": 4.909234121441841e-07, "packed_payload_bytes": 54097926}
+RESULT 5 OBQ_FULL {"nse": 0.0004222906523272485, "logit_mse": 0.006828671689839778, "quantize_seconds": 1.1019960260018706, "packed_payload_bytes": 54097926}
+RESULT 5 OBQ_DIAG {"nse": 0.000969283370234956, "logit_mse": 0.01908510759178449, "quantize_seconds": 0.08167577197309583, "packed_payload_bytes": 54097926}
+LAYER_DONE 5 count 6 seconds 9.132532562012784
+RESULT 6 B0_BF16_RTN {"nse": 0.00021464466262911068, "logit_mse": 0.024005904884301568, "quantize_seconds": 4.009343683719635e-07, "packed_payload_bytes": 54097926}
+RESULT 6 B0_FP32_RTN {"nse": 0.00020151672539344299, "logit_mse": 0.02401975812503446, "quantize_seconds": 5.810288712382317e-07, "packed_payload_bytes": 54097926}
+RESULT 6 OBQ_FULL {"nse": 7.580469037820971e-05, "logit_mse": 0.010063488994128676, "quantize_seconds": 1.1230713450349867, "packed_payload_bytes": 54097926}
+RESULT 6 OBQ_DIAG {"nse": 0.00020151672539344299, "logit_mse": 0.02401975812503446, "quantize_seconds": 0.08262620202731341, "packed_payload_bytes": 54097926}
+LAYER_DONE 6 count 7 seconds 9.018932475009933
+RESULT 7 B0_BF16_RTN {"nse": 0.00023532457822365683, "logit_mse": 0.02244890966932304, "quantize_seconds": 6.309710443019867e-07, "packed_payload_bytes": 54097926}
+RESULT 7 B0_FP32_RTN {"nse": 0.00023178714678722933, "logit_mse": 0.022408387159721484, "quantize_seconds": 6.010523065924644e-07, "packed_payload_bytes": 54097926}
+RESULT 7 OBQ_FULL {"nse": 0.00011865236971179067, "logit_mse": 0.00923973383470416, "quantize_seconds": 1.1099748769775033, "packed_payload_bytes": 54097926}
+RESULT 7 OBQ_DIAG {"nse": 0.00023178714678722933, "logit_mse": 0.022408387159721484, "quantize_seconds": 0.08635140198748559, "packed_payload_bytes": 54097926}
+LAYER_DONE 7 count 8 seconds 9.16430370695889
+RESULT 8 B0_BF16_RTN {"nse": 0.00014709550999292333, "logit_mse": 0.017667575066978147, "quantize_seconds": 4.0105078369379044e-07, "packed_payload_bytes": 54097926}
+RESULT 8 B0_FP32_RTN {"nse": 0.00015835283253874596, "logit_mse": 0.01765779472203077, "quantize_seconds": 1.0320218279957771e-06, "packed_payload_bytes": 54097926}
+RESULT 8 OBQ_FULL {"nse": 7.815946593322844e-05, "logit_mse": 0.007051090703692266, "quantize_seconds": 1.1812452180311084, "packed_payload_bytes": 54097926}
+RESULT 8 OBQ_DIAG {"nse": 0.00015835283253874596, "logit_mse": 0.01765779472203077, "quantize_seconds": 0.09028620994649827, "packed_payload_bytes": 54097926}
+LAYER_DONE 8 count 9 seconds 9.303805842064321
+RESULT 9 B0_BF16_RTN {"nse": 0.001612493143417123, "logit_mse": 0.022090004199521535, "quantize_seconds": 4.6996865421533585e-07, "packed_payload_bytes": 54097926}
+RESULT 9 B0_FP32_RTN {"nse": 0.0015585695157305163, "logit_mse": 0.022069576807968564, "quantize_seconds": 6.409827619791031e-07, "packed_payload_bytes": 54097926}
+RESULT 9 OBQ_FULL {"nse": 0.0008018327663167034, "logit_mse": 0.011951890893291189, "quantize_seconds": 1.1161375161027536, "packed_payload_bytes": 54097926}
+RESULT 9 OBQ_DIAG {"nse": 0.0015585695157305163, "logit_mse": 0.022069576807968564, "quantize_seconds": 0.09677206398919225, "packed_payload_bytes": 54097926}
+LAYER_DONE 9 count 10 seconds 9.097631965996698
+RESULT 10 B0_BF16_RTN {"nse": 0.0006404224578990216, "logit_mse": 0.020451631078985746, "quantize_seconds": 6.710179150104523e-07, "packed_payload_bytes": 54097926}
+RESULT 10 B0_FP32_RTN {"nse": 0.0006431163905318659, "logit_mse": 0.02043854509527687, "quantize_seconds": 4.91039827466011e-07, "packed_payload_bytes": 54097926}
+RESULT 10 OBQ_FULL {"nse": 0.00051360419540257, "logit_mse": 0.014560960338867602, "quantize_seconds": 1.112817125977017, "packed_payload_bytes": 54097926}
+RESULT 10 OBQ_DIAG {"nse": 0.0006431163905318659, "logit_mse": 0.02043854509527687, "quantize_seconds": 0.0821235419716686, "packed_payload_bytes": 54097926}
+LAYER_DONE 10 count 11 seconds 9.110335894976743
+RESULT 11 B0_BF16_RTN {"nse": 0.0008739956180131045, "logit_mse": 0.02392923859109763, "quantize_seconds": 4.91039827466011e-07, "packed_payload_bytes": 54097926}
+RESULT 11 B0_FP32_RTN {"nse": 0.0008973072880260033, "logit_mse": 0.023903677186327358, "quantize_seconds": 6.520422175526619e-07, "packed_payload_bytes": 54097926}
+RESULT 11 OBQ_FULL {"nse": 0.0005815889354320963, "logit_mse": 0.013054254741687333, "quantize_seconds": 1.1128708319738507, "packed_payload_bytes": 54097926}
+RESULT 11 OBQ_DIAG {"nse": 0.0008973072880260033, "logit_mse": 0.023903677186327358, "quantize_seconds": 0.08236530097201467, "packed_payload_bytes": 54097926}
+LAYER_DONE 11 count 12 seconds 9.106790054007433
+RESULT 12 B0_BF16_RTN {"nse": 0.0003332833370516354, "logit_mse": 0.029713086618197857, "quantize_seconds": 5.509937182068825e-07, "packed_payload_bytes": 54097926}
+RESULT 12 B0_FP32_RTN {"nse": 0.00035431776056661526, "logit_mse": 0.029691713131456982, "quantize_seconds": 8.41100700199604e-07, "packed_payload_bytes": 54097926}
+RESULT 12 OBQ_FULL {"nse": 0.0001724233071064273, "logit_mse": 0.011203106320801548, "quantize_seconds": 1.1106602980289608, "packed_payload_bytes": 54097926}
+RESULT 12 OBQ_DIAG {"nse": 0.00035431776056661526, "logit_mse": 0.029691713131456982, "quantize_seconds": 0.09230360307265073, "packed_payload_bytes": 54097926}
+LAYER_DONE 12 count 13 seconds 9.513003439991735
+RESULT 13 B0_BF16_RTN {"nse": 0.001149726527022609, "logit_mse": 0.02689480002228483, "quantize_seconds": 5.209585651755333e-07, "packed_payload_bytes": 54097926}
+RESULT 13 B0_FP32_RTN {"nse": 0.0011508774641853625, "logit_mse": 0.02688116977983726, "quantize_seconds": 6.910413503646851e-07, "packed_payload_bytes": 54097926}
+RESULT 13 OBQ_FULL {"nse": 0.0008120781255321912, "logit_mse": 0.017668438057935488, "quantize_seconds": 1.0967206769855693, "packed_payload_bytes": 54097926}
+RESULT 13 OBQ_DIAG {"nse": 0.0011508774641853625, "logit_mse": 0.02688116977983726, "quantize_seconds": 0.10071389796212316, "packed_payload_bytes": 54097926}
+LAYER_DONE 13 count 14 seconds 9.34749635704793
+RESULT 14 B0_BF16_RTN {"nse": 0.0005407070069453104, "logit_mse": 0.022150840798933417, "quantize_seconds": 5.009351298213005e-07, "packed_payload_bytes": 54097926}
+RESULT 14 B0_FP32_RTN {"nse": 0.000540303055474474, "logit_mse": 0.022121480679391375, "quantize_seconds": 5.509937182068825e-07, "packed_payload_bytes": 54097926}
+RESULT 14 OBQ_FULL {"nse": 0.00032780919277558497, "logit_mse": 0.010784172371072227, "quantize_seconds": 1.1027935979655012, "packed_payload_bytes": 54097926}
+RESULT 14 OBQ_DIAG {"nse": 0.000540303055474474, "logit_mse": 0.022121480679391375, "quantize_seconds": 0.08351192600093782, "packed_payload_bytes": 54097926}
+LAYER_DONE 14 count 15 seconds 9.11910650099162
+RESULT 15 B0_BF16_RTN {"nse": 0.0014443510434603549, "logit_mse": 0.025510328822020707, "quantize_seconds": 4.5099295675754547e-07, "packed_payload_bytes": 54097926}
+RESULT 15 B0_FP32_RTN {"nse": 0.0014390607082204463, "logit_mse": 0.025488788425141774, "quantize_seconds": 5.210749804973602e-07, "packed_payload_bytes": 54097926}
+RESULT 15 OBQ_FULL {"nse": 0.0010019870387763341, "logit_mse": 0.015483568691603682, "quantize_seconds": 1.155840588035062, "packed_payload_bytes": 54097926}
+RESULT 15 OBQ_DIAG {"nse": 0.0014390607082204463, "logit_mse": 0.025488788425141774, "quantize_seconds": 0.09187390003353357, "packed_payload_bytes": 54097926}
+LAYER_DONE 15 count 16 seconds 9.20882307505235
+RESULT 16 B0_BF16_RTN {"nse": 0.00030604241898397395, "logit_mse": 0.020558835029990407, "quantize_seconds": 5.010515451431274e-07, "packed_payload_bytes": 54097926}
+RESULT 16 B0_FP32_RTN {"nse": 0.0003004790237237702, "logit_mse": 0.020543982868083475, "quantize_seconds": 6.409827619791031e-07, "packed_payload_bytes": 54097926}
+RESULT 16 OBQ_FULL {"nse": 0.00022361942022042287, "logit_mse": 0.011483120355316212, "quantize_seconds": 1.0861379759153351, "packed_payload_bytes": 54097926}
+RESULT 16 OBQ_DIAG {"nse": 0.0003004790237237702, "logit_mse": 0.020543982868083475, "quantize_seconds": 0.09806359303183854, "packed_payload_bytes": 54097926}
+LAYER_DONE 16 count 17 seconds 9.119538474013098
+RESULT 17 B0_BF16_RTN {"nse": 0.0009713768899198408, "logit_mse": 0.0297713193353063, "quantize_seconds": 4.708999767899513e-07, "packed_payload_bytes": 54097926}
+RESULT 17 B0_FP32_RTN {"nse": 0.0009831921169098285, "logit_mse": 0.02973001476152052, "quantize_seconds": 7.719499990344048e-07, "packed_payload_bytes": 54097926}
+RESULT 17 OBQ_FULL {"nse": 0.0004942215903408769, "logit_mse": 0.013527982384600562, "quantize_seconds": 1.0949141490273178, "packed_payload_bytes": 54097926}
+RESULT 17 OBQ_DIAG {"nse": 0.0009831921169098285, "logit_mse": 0.02973001476152052, "quantize_seconds": 0.08203789498656988, "packed_payload_bytes": 54097926}
+LAYER_DONE 17 count 18 seconds 8.981666431995109
+RESULT 19 B0_BF16_RTN {"nse": 0.000881555540513582, "logit_mse": 0.03751332301487756, "quantize_seconds": 7.309718057513237e-07, "packed_payload_bytes": 54097926}
+RESULT 19 B0_FP32_RTN {"nse": 0.0008816799087040543, "logit_mse": 0.03756099425495709, "quantize_seconds": 4.5099295675754547e-07, "packed_payload_bytes": 54097926}
+RESULT 19 OBQ_FULL {"nse": 0.0005160361907748591, "logit_mse": 0.014240029505755552, "quantize_seconds": 1.1027894989820197, "packed_payload_bytes": 54097926}
+RESULT 19 OBQ_DIAG {"nse": 0.0008816799087040543, "logit_mse": 0.03756099425495709, "quantize_seconds": 0.08835345506668091, "packed_payload_bytes": 54097926}
+LAYER_DONE 19 count 19 seconds 9.007797531899996
+RESULT 20 B0_BF16_RTN {"nse": 0.00025268238285405836, "logit_mse": 0.03275947091295458, "quantize_seconds": 4.6100467443466187e-07, "packed_payload_bytes": 54097926}
+RESULT 20 B0_FP32_RTN {"nse": 0.00025496281543072654, "logit_mse": 0.03274101894555453, "quantize_seconds": 5.608890205621719e-07, "packed_payload_bytes": 54097926}
+RESULT 20 OBQ_FULL {"nse": 0.00014203165316587177, "logit_mse": 0.011847628932057624, "quantize_seconds": 1.1171252399217337, "packed_payload_bytes": 54097926}
+RESULT 20 OBQ_DIAG {"nse": 0.00025496281543072654, "logit_mse": 0.03274101894555453, "quantize_seconds": 0.0994814729783684, "packed_payload_bytes": 54097926}
+LAYER_DONE 20 count 20 seconds 9.33933586103376
+RESULT 21 B0_BF16_RTN {"nse": 0.0008159703371046983, "logit_mse": 0.0287531665112838, "quantize_seconds": 5.509937182068825e-07, "packed_payload_bytes": 54097926}
+RESULT 21 B0_FP32_RTN {"nse": 0.0008414487464102269, "logit_mse": 0.028745069947120012, "quantize_seconds": 4.91039827466011e-07, "packed_payload_bytes": 54097926}
+RESULT 21 OBQ_FULL {"nse": 0.000465477730211125, "logit_mse": 0.012423538521432178, "quantize_seconds": 1.0836597110610455, "packed_payload_bytes": 54097926}
+RESULT 21 OBQ_DIAG {"nse": 0.0008414487464102269, "logit_mse": 0.028745069947120012, "quantize_seconds": 0.09816918603610247, "packed_payload_bytes": 54097926}
+LAYER_DONE 21 count 21 seconds 9.115478230058216
+RESULT 22 B0_BF16_RTN {"nse": 0.0021541216016668675, "logit_mse": 0.024671597877688373, "quantize_seconds": 4.708999767899513e-07, "packed_payload_bytes": 54097926}
+RESULT 22 B0_FP32_RTN {"nse": 0.002186310386861465, "logit_mse": 0.024657339177521966, "quantize_seconds": 5.910405889153481e-07, "packed_payload_bytes": 54097926}
+RESULT 22 OBQ_FULL {"nse": 0.001639038513972332, "logit_mse": 0.015407938911211335, "quantize_seconds": 1.098147267010063, "packed_payload_bytes": 54097926}
+RESULT 22 OBQ_DIAG {"nse": 0.002186310386861465, "logit_mse": 0.024657339177521966, "quantize_seconds": 0.09981078992132097, "packed_payload_bytes": 54097926}
+LAYER_DONE 22 count 22 seconds 9.177819083095528
+RESULT 23 B0_BF16_RTN {"nse": 0.0012952230496996887, "logit_mse": 0.03624299968490351, "quantize_seconds": 4.6100467443466187e-07, "packed_payload_bytes": 54097926}
+RESULT 23 B0_FP32_RTN {"nse": 0.00130485388550044, "logit_mse": 0.03623213376976927, "quantize_seconds": 6.009358912706375e-07, "packed_payload_bytes": 54097926}
+RESULT 23 OBQ_FULL {"nse": 0.0008877147214486115, "logit_mse": 0.01734133350890328, "quantize_seconds": 1.087137877009809, "packed_payload_bytes": 54097926}
+RESULT 23 OBQ_DIAG {"nse": 0.00130485388550044, "logit_mse": 0.03623213376976927, "quantize_seconds": 0.10256224905606359, "packed_payload_bytes": 54097926}
+LAYER_DONE 23 count 23 seconds 9.268721653032117
+RESULT 25 B0_BF16_RTN {"nse": 0.0008566950662095309, "logit_mse": 0.027073657481173585, "quantize_seconds": 4.91039827466011e-07, "packed_payload_bytes": 54097926}
+RESULT 25 B0_FP32_RTN {"nse": 0.000871883857336787, "logit_mse": 0.02706182469996632, "quantize_seconds": 5.710171535611153e-07, "packed_payload_bytes": 54097926}
+RESULT 25 OBQ_FULL {"nse": 0.0006968729461839317, "logit_mse": 0.017285586320420987, "quantize_seconds": 1.0977621210040525, "packed_payload_bytes": 54097926}
+RESULT 25 OBQ_DIAG {"nse": 0.000871883857336787, "logit_mse": 0.02706182469996632, "quantize_seconds": 0.08277910202741623, "packed_payload_bytes": 54097926}
+LAYER_DONE 25 count 24 seconds 9.08301844901871
+RESULT 26 B0_BF16_RTN {"nse": 0.0008408190784433377, "logit_mse": 0.041496348359382616, "quantize_seconds": 4.00003045797348e-07, "packed_payload_bytes": 54097926}
+RESULT 26 B0_FP32_RTN {"nse": 0.000821929485845882, "logit_mse": 0.04147726153321382, "quantize_seconds": 6.809132173657417e-07, "packed_payload_bytes": 54097926}
+RESULT 26 OBQ_FULL {"nse": 0.00045874492179244427, "logit_mse": 0.02106744987299242, "quantize_seconds": 1.1053610399831086, "packed_payload_bytes": 54097926}
+RESULT 26 OBQ_DIAG {"nse": 0.000821929485845882, "logit_mse": 0.04147726153321382, "quantize_seconds": 0.08396171301137656, "packed_payload_bytes": 54097926}
+LAYER_DONE 26 count 25 seconds 8.955673409043811
+RESULT 27 B0_BF16_RTN {"nse": 0.001184093069702379, "logit_mse": 0.20833240405685943, "quantize_seconds": 4.6100467443466187e-07, "packed_payload_bytes": 54097926}
+RESULT 27 B0_FP32_RTN {"nse": 0.0010683962658867478, "logit_mse": 0.2080856935540751, "quantize_seconds": 8.019851520657539e-07, "packed_payload_bytes": 54097926}
+RESULT 27 OBQ_FULL {"nse": 0.000343811170578133, "logit_mse": 0.052484247950671595, "quantize_seconds": 1.1101483330130577, "packed_payload_bytes": 54097926}
+RESULT 27 OBQ_DIAG {"nse": 0.0010683962658867478, "logit_mse": 0.2080856935540751, "quantize_seconds": 0.09731179301161319, "packed_payload_bytes": 54097926}
+LAYER_DONE 27 count 26 seconds 9.292713563889265
+RESULT 28 B0_BF16_RTN {"nse": 0.0055201507057238515, "logit_mse": 8.499913731163387, "quantize_seconds": 4.909234121441841e-07, "packed_payload_bytes": 54097926}
+RESULT 28 B0_FP32_RTN {"nse": 0.00897209920595145, "logit_mse": 8.358813660229378, "quantize_seconds": 5.710171535611153e-07, "packed_payload_bytes": 54097926}
+RESULT 28 OBQ_FULL {"nse": 0.00037455688684952677, "logit_mse": 0.3550724682839082, "quantize_seconds": 1.192496046074666, "packed_payload_bytes": 54097926}
+RESULT 28 OBQ_DIAG {"nse": 0.00897209920595145, "logit_mse": 8.358813660229378, "quantize_seconds": 0.1014901049202308, "packed_payload_bytes": 54097926}
+LAYER_DONE 28 count 27 seconds 9.335728366975673
+RESULT 29 B0_BF16_RTN {"nse": 0.0028148173521134984, "logit_mse": 1.7474070396809347, "quantize_seconds": 5.409820005297661e-07, "packed_payload_bytes": 54097926}
+RESULT 29 B0_FP32_RTN {"nse": 0.0047382243064069745, "logit_mse": 1.7641245768958351, "quantize_seconds": 4.7101639211177826e-07, "packed_payload_bytes": 54097926}
+RESULT 29 OBQ_FULL {"nse": 0.00022904158826729632, "logit_mse": 0.07350903196645044, "quantize_seconds": 1.1051871050149202, "packed_payload_bytes": 54097926}
+RESULT 29 OBQ_DIAG {"nse": 0.0047382243064069745, "logit_mse": 1.7641245768958351, "quantize_seconds": 0.08102378400508314, "packed_payload_bytes": 54097926}
+LAYER_DONE 29 count 28 seconds 8.942191412090324
+{
+  "status": "completed",
+  "new_layers_completed": 28,
+  "decision": "continue_all_layer_risk_gate",
+  "elapsed_seconds": 259.32854856702033
+}

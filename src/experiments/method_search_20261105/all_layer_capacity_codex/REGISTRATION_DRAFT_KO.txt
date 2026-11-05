@@ -1,0 +1,35 @@
+전층 fixed-p0 OBQ capacity 위험 점검: 사전 등록 초안
+2026-11-05, Codex. 실제 28개 층 점수 측정 전. root/Claude 검토 및 별도 실행 지시 후 lock/run.
+
+목적
+처음 양성으로 확인한 층18/24 외 나머지28개 층에서도 동일 fixed-p0-H OBQ를 그대로 적용했을 때 전체 적용의 위험을 확인한다. 독립 보류 입력 검증이 아니고, 기존 causal 성공 기준을 구제하거나 사후로 유리한 층을 고르는 검사가 아니다.
+
+입력/방법
+- p00_s101 통계→p04_s101 평가, 전체0..29층, chunk7 call0, 기존128 Query 위치.
+- 신규 측정층은0..29에서18/24를 제외한28개. 순서는 오름차순. 18/24는 기존 RESULT.json을 해시 고정하여 재사용한다.
+- 보존된 obq_capacity_codex/diagnose_obq.py의 run_layer(layer)를 import 후 그대로 호출한다. 원본 함수·양자화 경계·코드·통계·factor·scale·반올림·attention·metric 변경 없음.
+- B0_BF16_RTN/B0_FP32_RTN/OBQ_FULL/OBQ_DIAG 네 팔 모두 기존 순서 유지. 새 H 탐색/층별 tuning 없음.
+- K frame1560+pad8/group16, INT4 실제 packing; V 기존 chunk4680+pad8/group16. 현재 청크 BF16. 원본 함수가 실제 code roundtrip·scale 보존·동일 payload·source tensor 보존·diag=FP32 RTN을 확인한다.
+- 각 p0/p4 원본 파일은 저장 manifest hash와 크기를 실행 중 검증한다. 새 folder에만 결과를 쓴다. 기존 결과·등록·코드 변경0.
+- 과거18/24와 이번28개는 provenance를 분리하며 같은30개 개발층의 표다. 층을 독립 통계 표본으로 취급하지 않는다.
+
+사전 전체 적용 자원 gate: 다음 조건을 모두 만족해야 continue_all_layer_risk_gate.
+1. 신규28개 층 모두 유효 완료하여 전체30층 자료가 있어야 한다.
+2. 신규28개와 재사용2개를 포함한 어느 층에서도 OBQ_FULL SSE가 B0_BF16_RTN 또는 B0_FP32_RTN SSE의1.1배를 초과하면 안 된다.
+3. 전체30층 pooled SSE에서 OBQ_FULL 합이 각 RTN 기준선 SSE 합의0.8배 이하여야 한다(각각20% 이상 감소).
+4. 같은30층 중24층 이상에서 OBQ_FULL SSE가 두 RTN보다 모두 엄격히 작아야 한다.
+5. above 값이 finite이고 동일 source/byte/control 조건이 성립해야 한다.
+
+미달: not_safe_for_uniform_all_layer_use. 원인이 pooled 이득 부족인지, 악화층인지, 개선층 수 부족인지 따로 기록한다. 사후 좋은 층 선택/다른 H 탐색/문턱 완화 없이 이번 규칙의 전체 적용이 안전하다고 확인되지 않았다고 보고한다.
+작은 SSE 층의 큰 비율을 숨기지 않도록 각 층 SSE·NSE·절대 차이·비율을 모두 기록한다. 기준선 SSE=0이면 비율은 정의하지 않고 절대 비교로 판정한다.
+무효/미완료: 파일·코드 hash 불일치, 수치 검사 실패, 자원 상한 등은 incomplete_or_invalid로 기록하고 남은 층을 임의 계속하지 않는다. 유효하게 완료된 행만 보존하며 전체 gate는 판정하지 않는다.
+
+검증 및 비용
+- 기존 알고리즘의 SELFTEST.json과 등록 lock/code hash를 확인한다. wrapper의 순수 수치 gate만 합성30행으로 positive/층악화/개선층수부족/불완전 입력 조건을 검사한다. 합성 검증에서 실제 캡처 tensor를 로드하지 않는다.
+- 실제 실행 시작부터600초, CPU4threads, RSS8GiB, 새 folder2GiB. SIGALRM과 층 경계 검사를 사용하고 기존 run_layer의 RSS 검사도 유지한다.
+- preflight는 파일/manifest 존재와28개대상목록만 확인한다. 캡처 hash 검증·load·계산·저장 모두600초 실행 시간에 포함한다.
+- 신규층 첫 행 시간과 남은 층 예상 범위를 보고한다. 예상은 상한을 늘리는 근거가 아니다.
+- GPU0, 모델로드0, 생성0. 본 검사는 CPU proxy이며 GPU 비용이나 전체 생성 품질을 입증하지 않는다.
+
+보고
+전체30층 표(재사용2개 표시), 신규28개 완료수, 악화층 목록, 두 기준선별 pooled SSE 감소율, 양쪽 모두 개선된층수, 실제 bytes/control/hash 검증범위, elapsed/RSS/새disk, 계산 재감사를 남긴다.

@@ -1,0 +1,1174 @@
+{
+  "passed": true,
+  "scope": "independent scalar decision + 60 source-file hashes; no attention rerun",
+  "locked_file_hash_count": 12,
+  "raw_file_hash_count": 60,
+  "raw_hashes": [
+    {
+      "layer": 0,
+      "role": "calibration",
+      "sha256": "4c5fe5549dacae2d011f59666845ab8232d8f542c0564ee717bbfae692e5b0ff",
+      "bytes": 234755198
+    },
+    {
+      "layer": 0,
+      "role": "evaluation",
+      "sha256": "cb5458f5d9575159f522c2c1763641bb396cac30bcd2470b9bff1d2b287dcbbe",
+      "bytes": 234755198
+    },
+    {
+      "layer": 1,
+      "role": "calibration",
+      "sha256": "ac1e8d89beaa16f51c483e18e7ab99a7d25bfdc08203f69ea7717f2a08459fcb",
+      "bytes": 234755198
+    },
+    {
+      "layer": 1,
+      "role": "evaluation",
+      "sha256": "e4fa9290f65755eab321f19146762a9fe81102d24ddc9e22f2e6126b0e360f32",
+      "bytes": 234755198
+    },
+    {
+      "layer": 2,
+      "role": "calibration",
+      "sha256": "4f1fdf6f3aef57e0bb919b58c5e7875eed299aec48d73a03860e25723d631f19",
+      "bytes": 234755198
+    },
+    {
+      "layer": 2,
+      "role": "evaluation",
+      "sha256": "ba592710a43f1724b375a89b00e35a9bae2efee4ee4734a2a1c8d2a97ef43fa2",
+      "bytes": 234755198
+    },
+    {
+      "layer": 3,
+      "role": "calibration",
+      "sha256": "91812c5a58c98c1e6994d56bd4b30e19b6d0e0f8f313899ca29891131ff0a9d8",
+      "bytes": 234755198
+    },
+    {
+      "layer": 3,
+      "role": "evaluation",
+      "sha256": "70f2bfb6a539bd1d90ea656623f2e540eda72868d1c7c28e17cdd7d35a7b348b",
+      "bytes": 234755198
+    },
+    {
+      "layer": 4,
+      "role": "calibration",
+      "sha256": "8435c33f80b7e25def325b02b84a5bbfeb25f2a36c52380e9f6870710b2cf833",
+      "bytes": 234755198
+    },
+    {
+      "layer": 4,
+      "role": "evaluation",
+      "sha256": "8c2deef5c9b164a06d993d8b5ffc4232db4a7397ac9c2c1a57b442a7d0bb9e86",
+      "bytes": 234755198
+    },
+    {
+      "layer": 5,
+      "role": "calibration",
+      "sha256": "1e3b392967bb75abe16674e29784bcf0e4acf57af6d612a6f753ecc8f8f52464",
+      "bytes": 234755198
+    },
+    {
+      "layer": 5,
+      "role": "evaluation",
+      "sha256": "13bb4e06786d6cfa5c327d654d18e4dd0bbcb22cd33f52c814761feb4889f179",
+      "bytes": 234755198
+    },
+    {
+      "layer": 6,
+      "role": "calibration",
+      "sha256": "d47a626199deba332994e7da1e5a160e9556a99937f9dd4c6d170d101811da1d",
+      "bytes": 234755198
+    },
+    {
+      "layer": 6,
+      "role": "evaluation",
+      "sha256": "9572f6ad74bddb8dcefaf06594bcd1032910d16d493d869270e4f21b4084f412",
+      "bytes": 234755198
+    },
+    {
+      "layer": 7,
+      "role": "calibration",
+      "sha256": "defbb10fea11b83aa0085ea115887a61fac68a52eaca7afd405974bc4a65e7a7",
+      "bytes": 234755198
+    },
+    {
+      "layer": 7,
+      "role": "evaluation",
+      "sha256": "9835eecb277c5d939c0f22dcca0f11de23e23fb06d6da7c36c26a94b70c96740",
+      "bytes": 234755198
+    },
+    {
+      "layer": 8,
+      "role": "calibration",
+      "sha256": "e99fc538e7091e4ef2de2cf71a68fc9d2324efca0bff68e74864948753968b7b",
+      "bytes": 234755198
+    },
+    {
+      "layer": 8,
+      "role": "evaluation",
+      "sha256": "270a288a115deaf0150012f90eba66a8f0d74ea40bf1f67ccfd89e30c3167a87",
+      "bytes": 234755198
+    },
+    {
+      "layer": 9,
+      "role": "calibration",
+      "sha256": "70d3b43def5bc998138c2b57a2a56b631954fd8765af6e09607954258273bb21",
+      "bytes": 234755198
+    },
+    {
+      "layer": 9,
+      "role": "evaluation",
+      "sha256": "f7c83c1dcc53817891faede18e9049971fbf84302c6708ab11837576e9377d08",
+      "bytes": 234755198
+    },
+    {
+      "layer": 10,
+      "role": "calibration",
+      "sha256": "11369f4415d085918c7bc82e9082948bdce21a861744df8bc33227a96d9d074e",
+      "bytes": 234755198
+    },
+    {
+      "layer": 10,
+      "role": "evaluation",
+      "sha256": "c9d56bf013417119a616c179d05b94ae54362d60f9e2fd9336b2d5e6f893afc0",
+      "bytes": 234755198
+    },
+    {
+      "layer": 11,
+      "role": "calibration",
+      "sha256": "f8d3d68623b2a415b72d53acdd8284c39ff2725585ef36422f497cab931effe1",
+      "bytes": 234755198
+    },
+    {
+      "layer": 11,
+      "role": "evaluation",
+      "sha256": "c6c9c7bab0820e7cef7407a256ea0c4fe21392efe29565eb40dfba340ff4fb58",
+      "bytes": 234755198
+    },
+    {
+      "layer": 12,
+      "role": "calibration",
+      "sha256": "96971d778f0ff43190ff4238b564a0bb60347774f714a8765bebbc39c7c8ba32",
+      "bytes": 234755198
+    },
+    {
+      "layer": 12,
+      "role": "evaluation",
+      "sha256": "a1008925383c240ffa5580829d482330fcff6099dbc1c9e36255baf9d6586554",
+      "bytes": 234755198
+    },
+    {
+      "layer": 13,
+      "role": "calibration",
+      "sha256": "c5097a275474732afdb15bb2c6a78ed3ae595218f15b06ee27aba3162419beca",
+      "bytes": 234755198
+    },
+    {
+      "layer": 13,
+      "role": "evaluation",
+      "sha256": "dcf417f60327b7a665827056cea1000a5ba8466149391606b609778d6b038ef6",
+      "bytes": 234755198
+    },
+    {
+      "layer": 14,
+      "role": "calibration",
+      "sha256": "d520025a7445780fe93b025aa3cb9b3dd114c0469468f99daf7a88f0531f9fa6",
+      "bytes": 234755198
+    },
+    {
+      "layer": 14,
+      "role": "evaluation",
+      "sha256": "074bfe4786652286ed8b60560c26613d0ecd8845239c6dc0526ae6559d226bc6",
+      "bytes": 234755198
+    },
+    {
+      "layer": 15,
+      "role": "calibration",
+      "sha256": "6f6d38d7d2fb669f2a635cf1bc9a0dabc04efb00f86668c9fb348fc28ec046cb",
+      "bytes": 234755198
+    },
+    {
+      "layer": 15,
+      "role": "evaluation",
+      "sha256": "f26303c8af05d0d713f24b62c46ded01e725335591e227baf2c620db79b4928f",
+      "bytes": 234755198
+    },
+    {
+      "layer": 16,
+      "role": "calibration",
+      "sha256": "5d15ae57a5d0eac1a543707ba951e33ce3de00748ef49c6a258db0b0ea1ff818",
+      "bytes": 234755198
+    },
+    {
+      "layer": 16,
+      "role": "evaluation",
+      "sha256": "d88985868774c51d11cbfb2399a30cce2469db19da35fa5eb2995bf0fcbcc8b7",
+      "bytes": 234755198
+    },
+    {
+      "layer": 17,
+      "role": "calibration",
+      "sha256": "06088175c7547231328ad7c25fc83bdb03aa9ecdde915fbd92922139bdd3938c",
+      "bytes": 234755198
+    },
+    {
+      "layer": 17,
+      "role": "evaluation",
+      "sha256": "e6164715c1c0f57c592a7af4407ec9d707bcb6b9f7e2b7b7a812b5ce4738cd78",
+      "bytes": 234755198
+    },
+    {
+      "layer": 18,
+      "role": "calibration",
+      "sha256": "4f38ad533ff8e307fb53f21651ea695452b4dd7f26e1c1728f84f363cba3e698",
+      "bytes": 234755198
+    },
+    {
+      "layer": 18,
+      "role": "evaluation",
+      "sha256": "ed13f832f564420fcbb691bd08bb08328c57571a83a448cd995a94b4bec09a98",
+      "bytes": 234755198
+    },
+    {
+      "layer": 19,
+      "role": "calibration",
+      "sha256": "91d752755b78ba5141959b9ec64050db48fa5fb5ba4d0baee10208b28d776446",
+      "bytes": 234755198
+    },
+    {
+      "layer": 19,
+      "role": "evaluation",
+      "sha256": "0f7554180e05950c2572377e2d799df9d8f048744394124ed2c3f2b928231d07",
+      "bytes": 234755198
+    },
+    {
+      "layer": 20,
+      "role": "calibration",
+      "sha256": "a1ca8a1413b1fafd4f63ea9a5ea435084b016f41ae20f0a2c63a65734ef722bf",
+      "bytes": 234755198
+    },
+    {
+      "layer": 20,
+      "role": "evaluation",
+      "sha256": "05f7dd79830e687eff3561d4733cddf80400408c0c4b523a9518190996ce8082",
+      "bytes": 234755198
+    },
+    {
+      "layer": 21,
+      "role": "calibration",
+      "sha256": "c3440a4fe6164795c077ef27057308f20fcc70a4826706c6be8413ad05754f02",
+      "bytes": 234755198
+    },
+    {
+      "layer": 21,
+      "role": "evaluation",
+      "sha256": "387acc01126a739ecd1b787415f417f1ac4f5d0f22bd9fad16eddba76661ab25",
+      "bytes": 234755198
+    },
+    {
+      "layer": 22,
+      "role": "calibration",
+      "sha256": "3b701d917add4e1f2a097e23929714332e5a13c9d1e6dd2dbe01eb80bf763ccd",
+      "bytes": 234755198
+    },
+    {
+      "layer": 22,
+      "role": "evaluation",
+      "sha256": "acd09bb50ae22c2fea8b6b312fee0064b8248a432a690ebd3c08d209270227d8",
+      "bytes": 234755198
+    },
+    {
+      "layer": 23,
+      "role": "calibration",
+      "sha256": "a39ce74d2c00587a4166b1feaa51a90dbca39913a12c949102a6abc8256f92cd",
+      "bytes": 234755198
+    },
+    {
+      "layer": 23,
+      "role": "evaluation",
+      "sha256": "5f8572c8d0b30e0daa3b72f0664024bcce7f7b64e3f574e391d2bb9d831c9853",
+      "bytes": 234755198
+    },
+    {
+      "layer": 24,
+      "role": "calibration",
+      "sha256": "97197b6d4a772bdaefabdcfeb59de3153390736a055191f17cf4bb580e1fa3cb",
+      "bytes": 234755198
+    },
+    {
+      "layer": 24,
+      "role": "evaluation",
+      "sha256": "e9a97dd7c9d345815df524db80c16bcf8911010eb0d83d23111e6a597720bcf4",
+      "bytes": 234755198
+    },
+    {
+      "layer": 25,
+      "role": "calibration",
+      "sha256": "76a6ae43fbf02ed58269cefa77ce098a0631ef4cd9e2cce1eedcc81fd512b1e8",
+      "bytes": 234755198
+    },
+    {
+      "layer": 25,
+      "role": "evaluation",
+      "sha256": "11c3f802061302ca873c93b77d49ff5de11d1414f0efeccd5ed1db89351c3d87",
+      "bytes": 234755198
+    },
+    {
+      "layer": 26,
+      "role": "calibration",
+      "sha256": "e780dd05926e190d975a50fc1fb085d0b7917c5ec921199dd8d55b341b73a22a",
+      "bytes": 234755198
+    },
+    {
+      "layer": 26,
+      "role": "evaluation",
+      "sha256": "05dd2a588a6f4b74a6460094e7defe5117fcd2b0b32fd1b7225653481ddbd743",
+      "bytes": 234755198
+    },
+    {
+      "layer": 27,
+      "role": "calibration",
+      "sha256": "d8a61835148ca327b5fe6e26cb3b87e35c3353ffebe0e133451d2da15ab57f4c",
+      "bytes": 234755198
+    },
+    {
+      "layer": 27,
+      "role": "evaluation",
+      "sha256": "9e4651b16e9a358b7938c2e29ec7e8a6d2cca861a04ad3a48236aafd22824b30",
+      "bytes": 234755198
+    },
+    {
+      "layer": 28,
+      "role": "calibration",
+      "sha256": "7769a53b6f9d8d2b2c09c15a98f959fe5eb6c1ec4688812db33c30c8b06c645b",
+      "bytes": 234755198
+    },
+    {
+      "layer": 28,
+      "role": "evaluation",
+      "sha256": "bef1e07a80521acd4e5fb37acf230756235b76508e81d1bb8899581295840893",
+      "bytes": 234755198
+    },
+    {
+      "layer": 29,
+      "role": "calibration",
+      "sha256": "d27d88aa70d210405a05f9de8a922ab1cf6bc240145f53ce6052992f5b603f13",
+      "bytes": 234755198
+    },
+    {
+      "layer": 29,
+      "role": "evaluation",
+      "sha256": "442da4bf2e2ed987dbcf8f810ea97a0e195db6f5a5f84a0297a2e3563312cb00",
+      "bytes": 234755198
+    }
+  ],
+  "result_sha256": "b11c397be56bf935ce90a2ff9429b6623abf6c901a99574e0d91fa785a203bfa",
+  "lock_sha256": "cfb0a3d77d4aa41f74aa01a8d56baddafd56ad53048ec74be913a25ccd3ff5a8",
+  "code_sha256": "325bd8406a1885eafdd3fb3b31fe5299649bebefdd99035d6c868be0f4383d7e",
+  "decision": "continue_all_layer_risk_gate",
+  "improved_both_count": 30,
+  "worsens_over_10_percent": [],
+  "pooled": {
+    "B0_BF16_RTN": {
+      "baseline_sse_sum": 6980.119316724362,
+      "OBQ_FULL_sse_sum": 1843.4244990191326,
+      "decrease_percent": 73.5903583395446,
+      "passes_20_percent": true
+    },
+    "B0_FP32_RTN": {
+      "baseline_sse_sum": 9749.596858634592,
+      "OBQ_FULL_sse_sum": 1843.4244990191326,
+      "decrease_percent": 81.09230026894363,
+      "passes_20_percent": true
+    }
+  },
+  "per_layer": [
+    {
+      "layer": 0,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 0.6831775315033849,
+      "OBQ_FULL_nse": 6.3257736176900015e-06,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 0.03706023934622203,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 5.4785495829839554,
+          "nse": 5.072775789183687e-05,
+          "decrease_percent": 87.52995622006794,
+          "absolute_sse_decrease": 4.79537205148057,
+          "SSE_share_percent": 0.07848790736080047,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 6.265129558187185,
+          "nse": 5.801096997932221e-05,
+          "decrease_percent": 89.09555620265476,
+          "absolute_sse_decrease": 5.5819520266838,
+          "SSE_share_percent": 0.0642603960864142,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 1,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 2.0598015533677607,
+      "OBQ_FULL_nse": 2.583796504264084e-05,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 0.11173777686386181,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 6.901363310860338,
+          "nse": 8.657007937537776e-05,
+          "decrease_percent": 70.15370064453276,
+          "absolute_sse_decrease": 4.8415617574925776,
+          "SSE_share_percent": 0.09887170974749207,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 7.40879739989442,
+          "nse": 9.293528685493831e-05,
+          "decrease_percent": 72.19789606614005,
+          "absolute_sse_decrease": 5.348995846526659,
+          "SSE_share_percent": 0.07599080769511946,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 2,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 4.224752169322324,
+      "OBQ_FULL_nse": 4.7711466937971576e-05,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 0.22917956073439794,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 9.78702517978313,
+          "nse": 0.00011052798118598761,
+          "decrease_percent": 56.833132727099624,
+          "absolute_sse_decrease": 5.562273010460807,
+          "SSE_share_percent": 0.14021286364451427,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 10.173963098575612,
+          "nse": 0.00011489779389442781,
+          "decrease_percent": 58.47486246619271,
+          "absolute_sse_decrease": 5.949210929253288,
+          "SSE_share_percent": 0.10435265422862265,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 3,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 0.8158943834431975,
+      "OBQ_FULL_nse": 1.0061111300141987e-05,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 0.04425971250123489,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 1.8411977415041192,
+          "nse": 2.2704526196965383e-05,
+          "decrease_percent": 55.686759490771834,
+          "absolute_sse_decrease": 1.0253033580609217,
+          "SSE_share_percent": 0.026377740235651998,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 1.8789203633030833,
+          "nse": 2.3169698533182308e-05,
+          "decrease_percent": 56.576425516572684,
+          "absolute_sse_decrease": 1.0630259798598858,
+          "SSE_share_percent": 0.019271774931278768,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 4,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 23.09148715547383,
+      "OBQ_FULL_nse": 0.00040773848788694454,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 1.2526407871741194,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 46.19764778141552,
+          "nse": 0.0008157360729303579,
+          "decrease_percent": 50.0158811878662,
+          "absolute_sse_decrease": 23.10616062594169,
+          "SSE_share_percent": 0.6618461044172408,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 49.6268489241259,
+          "nse": 0.000876287274296246,
+          "decrease_percent": 53.46976957820107,
+          "absolute_sse_decrease": 26.535361768652074,
+          "SSE_share_percent": 0.5090143689395176,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 5,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 22.249545232897034,
+      "OBQ_FULL_nse": 0.0004222906523272485,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 1.2069680773330176,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 50.54498122134344,
+          "nse": 0.0009593307579280547,
+          "decrease_percent": 55.98070333538515,
+          "absolute_sse_decrease": 28.295435988446407,
+          "SSE_share_percent": 0.7241277538084155,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 51.06936199199873,
+          "nse": 0.000969283370234956,
+          "decrease_percent": 56.43269395771389,
+          "absolute_sse_decrease": 28.8198167591017,
+          "SSE_share_percent": 0.52380998653057,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 6,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 5.927536237828323,
+      "OBQ_FULL_nse": 7.580469037820971e-05,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 0.32155025828192607,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 16.784106757016964,
+          "nse": 0.00021464466262911068,
+          "decrease_percent": 64.6836359918279,
+          "absolute_sse_decrease": 10.85657051918864,
+          "SSE_share_percent": 0.24045587181872743,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 15.75756970101014,
+          "nse": 0.00020151672539344299,
+          "decrease_percent": 62.38292864763062,
+          "absolute_sse_decrease": 9.830033463181817,
+          "SSE_share_percent": 0.16162278224924423,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 7,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 9.977327470849719,
+      "OBQ_FULL_nse": 0.00011865236971179067,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 0.5412387367184581,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 19.78814569468897,
+          "nse": 0.00023532457822365683,
+          "decrease_percent": 49.579270211621804,
+          "absolute_sse_decrease": 9.810818223839252,
+          "SSE_share_percent": 0.28349294326927316,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 19.49068756610169,
+          "nse": 0.00023178714678722933,
+          "decrease_percent": 48.80977165627374,
+          "absolute_sse_decrease": 9.513360095251972,
+          "SSE_share_percent": 0.1999127538164826,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 8,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 7.67271346633306,
+      "OBQ_FULL_nse": 7.815946593322844e-05,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 0.4162206518583014,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 14.439987362810442,
+          "nse": 0.00014709550999292333,
+          "decrease_percent": 46.864818690258694,
+          "absolute_sse_decrease": 6.7672738964773815,
+          "SSE_share_percent": 0.20687307347615447,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 15.54508972323314,
+          "nse": 0.00015835283253874596,
+          "decrease_percent": 50.64220533339415,
+          "absolute_sse_decrease": 7.87237625690008,
+          "SSE_share_percent": 0.15944341031358494,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 9,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 86.7566100298844,
+      "OBQ_FULL_nse": 0.0008018327663167034,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 4.706274115161576,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 174.46834888267347,
+          "nse": 0.001612493143417123,
+          "decrease_percent": 50.27372552930702,
+          "absolute_sse_decrease": 87.71173885278907,
+          "SSE_share_percent": 2.499503818862342,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 168.63392637572915,
+          "nse": 0.0015585695157305163,
+          "decrease_percent": 48.5532882413091,
+          "absolute_sse_decrease": 81.87731634584475,
+          "SSE_share_percent": 1.7296502493472938,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 10,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 54.42260569993998,
+      "OBQ_FULL_nse": 0.00051360419540257,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 2.952255746242805,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 67.86054167705201,
+          "nse": 0.0006404224578990216,
+          "decrease_percent": 19.802282217349678,
+          "absolute_sse_decrease": 13.437935977112033,
+          "SSE_share_percent": 0.9721974453138387,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 68.14599657553579,
+          "nse": 0.0006431163905318659,
+          "decrease_percent": 20.138220240691986,
+          "absolute_sse_decrease": 13.723390875595811,
+          "SSE_share_percent": 0.6989621987824375,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 11,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 54.626417966045636,
+      "OBQ_FULL_nse": 0.0005815889354320963,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 2.9633119227346603,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 82.09105610753231,
+          "nse": 0.0008739956180131045,
+          "decrease_percent": 33.45630991214236,
+          "absolute_sse_decrease": 27.464638141486674,
+          "SSE_share_percent": 1.1760695252134472,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 84.28063185773986,
+          "nse": 0.0008973072880260033,
+          "decrease_percent": 35.18508729472815,
+          "absolute_sse_decrease": 29.654213891694226,
+          "SSE_share_percent": 0.8644524802386873,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 12,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 18.786131645494457,
+      "OBQ_FULL_nse": 0.0001724233071064273,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 1.0190887478977504,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 36.312403178980276,
+          "nse": 0.0003332833370516354,
+          "decrease_percent": 48.26524823240297,
+          "absolute_sse_decrease": 17.52627153348582,
+          "SSE_share_percent": 0.5202261097740232,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 38.60417832162725,
+          "nse": 0.00035431776056661526,
+          "decrease_percent": 51.33653282559343,
+          "absolute_sse_decrease": 19.818046676132795,
+          "SSE_share_percent": 0.395956662427924,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 13,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 93.86263730909724,
+      "OBQ_FULL_nse": 0.0008120781255321912,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 5.091753817910123,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 132.88914036423367,
+          "nse": 0.001149726527022609,
+          "decrease_percent": 29.36771428287468,
+          "absolute_sse_decrease": 39.02650305513643,
+          "SSE_share_percent": 1.9038233350228178,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 133.02216943382263,
+          "nse": 0.0011508774641853625,
+          "decrease_percent": 29.43835023244521,
+          "absolute_sse_decrease": 39.15953212472539,
+          "SSE_share_percent": 1.3643863573293642,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 14,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 26.532929240381936,
+      "OBQ_FULL_nse": 0.00032780919277558497,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 1.4393282314789588,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 43.76491285551022,
+          "nse": 0.0005407070069453104,
+          "decrease_percent": 39.373969901458835,
+          "absolute_sse_decrease": 17.231983615128282,
+          "SSE_share_percent": 0.6269937642849387,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 43.73221695793181,
+          "nse": 0.000540303055474474,
+          "decrease_percent": 39.328643535484886,
+          "absolute_sse_decrease": 17.199287717549876,
+          "SSE_share_percent": 0.44855410528283535,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 15,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 102.51220951143202,
+      "OBQ_FULL_nse": 0.0010019870387763341,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 5.560965993778304,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 147.7699920710396,
+          "nse": 0.0014443510434603549,
+          "decrease_percent": 30.6271807457702,
+          "absolute_sse_decrease": 45.25778255960759,
+          "SSE_share_percent": 2.1170124086128843,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 147.22874359824348,
+          "nse": 0.0014390607082204463,
+          "decrease_percent": 30.372149482463527,
+          "absolute_sse_decrease": 44.716534086811464,
+          "SSE_share_percent": 1.5101008352755882,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 16,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 21.344238490957924,
+      "OBQ_FULL_nse": 0.00022361942022042287,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 1.1578580246880181,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 29.211427042896105,
+          "nse": 0.00030604241898397395,
+          "decrease_percent": 26.93188710152863,
+          "absolute_sse_decrease": 7.867188551938181,
+          "SSE_share_percent": 0.41849466631473675,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 28.680406816047274,
+          "nse": 0.0003004790237237702,
+          "decrease_percent": 25.579024635677804,
+          "absolute_sse_decrease": 7.33616832508935,
+          "SSE_share_percent": 0.2941701819254904,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 17,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 44.04715463340476,
+      "OBQ_FULL_nse": 0.0004942215903408769,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 2.3894200525620555,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 86.57328800246097,
+          "nse": 0.0009713768899198408,
+          "decrease_percent": 49.121541240119406,
+          "absolute_sse_decrease": 42.52613336905621,
+          "SSE_share_percent": 1.2402837841902132,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 87.6263118695442,
+          "nse": 0.0009831921169098285,
+          "decrease_percent": 49.73295840753742,
+          "absolute_sse_decrease": 43.57915723613944,
+          "SSE_share_percent": 0.8987685659221816,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 18,
+      "origin": "reused_original_capacity",
+      "OBQ_FULL_sse": 289.6673852586657,
+      "OBQ_FULL_nse": 0.002747023647689765,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 15.71354755308909,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 480.76937229476493,
+          "nse": 0.004559314931500988,
+          "decrease_percent": 39.7492016024125,
+          "absolute_sse_decrease": 191.10198703609922,
+          "SSE_share_percent": 6.887695617793263,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 484.6391365632025,
+          "nse": 0.004596013346639752,
+          "decrease_percent": 40.2302943767956,
+          "absolute_sse_decrease": 194.97175130453678,
+          "SSE_share_percent": 4.970863345328876,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 19,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 63.34252266492274,
+      "OBQ_FULL_nse": 0.0005160361907748591,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 3.436133277963196,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 108.20937136506407,
+          "nse": 0.000881555540513582,
+          "decrease_percent": 41.462997274769144,
+          "absolute_sse_decrease": 44.86684870014133,
+          "SSE_share_percent": 1.5502510265948388,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 108.22463733877797,
+          "nse": 0.0008816799087040543,
+          "decrease_percent": 41.47125439964262,
+          "absolute_sse_decrease": 44.88211467385523,
+          "SSE_share_percent": 1.1100421782356094,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 20,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 20.6844545763128,
+      "OBQ_FULL_nse": 0.00014203165316587177,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 1.1220668157181803,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 36.798820219851734,
+          "nse": 0.00025268238285405836,
+          "decrease_percent": 43.79044096322896,
+          "absolute_sse_decrease": 16.114365643538935,
+          "SSE_share_percent": 0.5271947161659799,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 37.130925796285105,
+          "nse": 0.00025496281543072654,
+          "decrease_percent": 44.29318921430651,
+          "absolute_sse_decrease": 16.446471219972306,
+          "SSE_share_percent": 0.3808457553134685,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 21,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 43.73904119874667,
+      "OBQ_FULL_nse": 0.000465477730211125,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 2.372705864656772,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 76.67339998283039,
+          "nse": 0.0008159703371046983,
+          "decrease_percent": 42.95408680384432,
+          "absolute_sse_decrease": 32.93435878408372,
+          "SSE_share_percent": 1.098454002055824,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 79.06750204607538,
+          "nse": 0.0008414487464102269,
+          "decrease_percent": 44.68139239651404,
+          "absolute_sse_decrease": 35.32846084732871,
+          "SSE_share_percent": 0.8109822712930983,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 22,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 107.27274745029655,
+      "OBQ_FULL_nse": 0.001639038513972332,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 5.819210252840585,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 140.98420542468043,
+          "nse": 0.0021541216016668675,
+          "decrease_percent": 23.911513969126087,
+          "absolute_sse_decrease": 33.711457974383876,
+          "SSE_share_percent": 2.0197964967000255,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 143.09091578900453,
+          "nse": 0.002186310386861465,
+          "decrease_percent": 25.031755608807373,
+          "absolute_sse_decrease": 35.81816833870798,
+          "SSE_share_percent": 1.467659820849701,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 23,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 67.32149913288028,
+      "OBQ_FULL_nse": 0.0008877147214486115,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 3.651980277396843,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 98.22565212724345,
+          "nse": 0.0012952230496996887,
+          "decrease_percent": 31.462405517378823,
+          "absolute_sse_decrease": 30.904152994363173,
+          "SSE_share_percent": 1.407220244672535,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 98.95602449614049,
+          "nse": 0.00130485388550044,
+          "decrease_percent": 31.968266231728048,
+          "absolute_sse_decrease": 31.63452536326021,
+          "SSE_share_percent": 1.014975551614747,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 24,
+      "origin": "reused_original_capacity",
+      "OBQ_FULL_sse": 89.46789659630703,
+      "OBQ_FULL_nse": 0.0018141496658396837,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 4.853352911600774,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 133.09967990234273,
+          "nse": 0.0026988757867832873,
+          "decrease_percent": 32.78128342461004,
+          "absolute_sse_decrease": 43.6317833060357,
+          "SSE_share_percent": 1.9068396092232403,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 137.19145156925504,
+          "nse": 0.0027818450582719795,
+          "decrease_percent": 34.786099590802046,
+          "absolute_sse_decrease": 47.72355497294801,
+          "SSE_share_percent": 1.4071499935687433,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 25,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 69.80549198411438,
+      "OBQ_FULL_nse": 0.0006968729461839317,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 3.7867291023449656,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 85.81481158738467,
+          "nse": 0.0008566950662095309,
+          "decrease_percent": 18.655660144365747,
+          "absolute_sse_decrease": 16.009319603270285,
+          "SSE_share_percent": 1.2294175456538747,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 87.33626688721807,
+          "nse": 0.000871883857336787,
+          "decrease_percent": 20.072732128271642,
+          "absolute_sse_decrease": 17.53077490310369,
+          "SSE_share_percent": 0.8957936225831734,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 26,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 89.60388888659665,
+      "OBQ_FULL_nse": 0.00045874492179244427,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 4.860730067017878,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 164.23213794757763,
+          "nse": 0.0008408190784433377,
+          "decrease_percent": 45.44070971346794,
+          "absolute_sse_decrease": 74.62824906098098,
+          "SSE_share_percent": 2.352855739214622,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 160.54254733673858,
+          "nse": 0.000821929485845882,
+          "decrease_percent": 44.18682749648156,
+          "absolute_sse_decrease": 70.93865845014193,
+          "SSE_share_percent": 1.646658314846694,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 27,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 108.32242332581092,
+      "OBQ_FULL_nse": 0.000343811170578133,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 5.876151878389822,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 373.0647568482984,
+          "nse": 0.001184093069702379,
+          "decrease_percent": 70.96417677163251,
+          "absolute_sse_decrease": 264.74233352248746,
+          "SSE_share_percent": 5.344675927737158,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 336.61289247377533,
+          "nse": 0.0010683962658867478,
+          "decrease_percent": 67.81988279481897,
+          "absolute_sse_decrease": 228.29046914796442,
+          "SSE_share_percent": 3.452582679617762,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 28,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 181.0268868765997,
+      "OBQ_FULL_nse": 0.00037455688684952677,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 9.820141100051684,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 2667.941058972725,
+          "nse": 0.0055201507057238515,
+          "decrease_percent": 93.21473440098025,
+          "absolute_sse_decrease": 2486.914172096125,
+          "SSE_share_percent": 38.22199790453924,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 4336.300425985492,
+          "nse": 0.00897209920595145,
+          "decrease_percent": 95.82531492071473,
+          "absolute_sse_decrease": 4155.273539108893,
+          "SSE_share_percent": 44.47671517971648,
+          "worsens_over_10_percent": false
+        }
+      }
+    },
+    {
+      "layer": 29,
+      "origin": "new_cpu_extension",
+      "OBQ_FULL_sse": 133.57709134022213,
+      "OBQ_FULL_nse": 0.00022904158826729632,
+      "improves_both": true,
+      "OBQ_SSE_share_percent": 7.246138445664422,
+      "comparisons": {
+        "B0_BF16_RTN": {
+          "sse": 1641.601935236813,
+          "nse": 0.0028148173521134984,
+          "decrease_percent": 91.86300354105316,
+          "absolute_sse_decrease": 1508.024843896591,
+          "SSE_share_percent": 23.518250344281878,
+          "worsens_over_10_percent": false
+        },
+        "B0_FP32_RTN": {
+          "sse": 2763.3331822199743,
+          "nse": 0.0047382243064069745,
+          "decrease_percent": 95.16608810693937,
+          "absolute_sse_decrease": 2629.7560908797523,
+          "SSE_share_percent": 28.343050715709005,
+          "worsens_over_10_percent": false
+        }
+      }
+    }
+  ],
+  "packed_payload_bytes": 54097926,
+  "execution_seconds": 259.32854856702033,
+  "max_rss_GiB": 2.4421234130859375,
+  "audit_seconds": 6.132227553986013
+}

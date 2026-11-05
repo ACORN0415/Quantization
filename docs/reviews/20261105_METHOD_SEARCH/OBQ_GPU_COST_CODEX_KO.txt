@@ -1,0 +1,102 @@
+OBQ GPU 쓰기 비용: 제한된 실행 설계 검토
+Codex 독립 검토, 2026-11-05. GPU·새 캡처·모델 로드·실험·기존 코드 변경 0.
+읽은 구현: src/experiments/method_search_20261105/causal_obq/common.py 및 replay.py.
+이 문서는 다음 비용 검사의 설계안이다. 진행 중 causal 실험의 코드·등록·큐를 바꾸지 않는다.
+
+판단
+
+현 common.codes_obq를 그대로 GPU에 옮긴 12-head Python loop는 충분히 강한 실행 기준선이 아니다. 먼저 모든 head와 token row를 배치한 Torch 구현에 CUDA Graph를 허용해야 한다. 그 경로도 느릴 때 하나의 warp가 token row 하나를 맡아 128채널 순차 보상을 register 안에서 수행하고 마지막에 기존 INT4 형식으로 pack하는 커널을 비교할 수 있다.
+
+단, code 보상 가속과 first-reader Query 통계·factor 준비의 비용은 다르다. fused 보상만 빨라져도 매 청크 FP64 covariance 및 factor 준비가 지배하면 실제 실행 가치는 없다. 첫 비용 검사의 목적은 이 구분을 같은 실제 형상에서 확인하는 것이다. 일반 GPTQ 커널을 새 알고리즘이라고 부르지 않는다.
+
+1. 형상과 같은 연산의 정의
+
+원본 K/Q: 4680 tokens × 12 heads × 128 features, BF16.
+K는 프레임 1560개씩 3개이며 각 프레임에 pad8을 더하므로 보상 대상은 4704×12개의 행이다. 그룹은 3×98×16, scale은 [3,98,1,12,128] FP16이다. 각 채널의 scale을 같은 16-token 그룹이 공유한다. 토큰·head별 행 사이에는 보상 의존성이 없고 한 행 안 128채널 순서만 유지해야 한다.
+
+K는 FP32 Hadamard 곱 후 BF16 반올림, native BF16 absmax/7 및 clamp로 scale 결정, FP16 저장, FP32 code 연산을 사용한다. 행별 scale을 FP32로 확장한 전역 배열을 반드시 만들 필요는 없다. 원래의 그룹별 scale 주소에서 읽는 최적화는 양자화 규칙을 바꾸지 않는다.
+
+최종 K payload는 3,612,672-byte nibble code + 903,168-byte FP16 scale + sentinel 1 byte = 4,515,841 bytes/청크다. 패딩 코드를 실제 보존하는 현재 형식을 유지한다. code의 최종 [frame,group,token,head,channel] 순서·low/high nibble 순서와 metadata dtype까지 같아야 한다. V 경로·reader·현재 청크의 처리 규칙은 그대로다.
+
+FP32 보상 workspace를 모두 materialize하면 28,901,376 bytes, 동일 크기의 scale 확장도 약28.9MB다. factor U는 12×128×128 FP32=786,432 bytes, H는 FP64=1,572,864 bytes다. 서로 다른 층의 factor와 CUDA Graph private pool까지 포함한 실제 peak를 보고한다. 이 계산은 배열 크기의 산술이며 새 측정이 아니다.
+
+2. 가장 단순하고 강한 기준선
+
+A. 같은 RTN encoder: 동일 K 회전, scale 계산, 실제 pack, metadata 생성까지 포함. 가능한 같은 graph 조건을 허용한다. 기존 code assignment 외에 불필요한 복사/복원/모델 실행을 끼워 넣지 않는다.
+
+B. 배치 Torch OBQ:
+- w=[H,N,D]를 준비하고 head Python loop를 제거한다. feature j=0..127 순서는 유지한다.
+- 각 j에서 모든 [H,N] code와 오차를 동시에 계산하고, U[:,j,j+1:]로 남은 feature를 갱신한다. 기존 float32 곱/뺄셈/나눗셈 순서를 보존한다.
+- workspace 복제/초기화와 layout 변환, code pack도 encoder 시간에 포함한다. 입력 w를 제자리 갱신한 상태로 다음 반복을 시작하면 안 된다.
+- U가 준비된 구간에 CUDA Graph를 허용한다. graph replay마다 원본 K/scale/factor가 올바르게 들어가고 w가 다시 초기화되어야 한다. 외부 K/Q 주소가 달라 static buffer 복사가 필요하면 그 복사도 측정한다.
+- CUDA Graph는 주로 host dispatch 비용을 줄인다. 128단계의 전역 workspace 읽기/쓰기를 없애는 최적화라고 해석하지 않는다.
+
+torch.compile은 선택 가능한 추가 단순 최적화다. 별도의 새 알고리즘 팔로 세지 않는다. fixed shape·고정 128-loop에 대해 한 번의 bounded compile 시도(예: 3분 상한)를 허용하고 실제 생성 코드·kernel count·정확성을 확인한다. compile이 잘 된다고 가정하거나 eager보다 느린 결과를 숨기지 않는다. 이미 충분히 빠른 batch+graph가 있으면 compile 때문에 검사를 늘리지 않는다.
+
+같은 immutable 입력으로 정확성 검사를 통과한 eager/graph/compile 가운데 사전 허용한 가장 빠른 경로를 fused 비교 기준으로 삼되 각 수치를 함께 공개한다. Python head-loop 대비 가속만으로 시스템 기여를 주장하지 않는다.
+
+3. fused 후보 하나: warp당 한 행, block당 4개 행
+
+제안은 CUDA C++의 보상+packing 커널 한 개다. 처음에는 K 회전·scale 계산까지 한꺼번에 fuse하지 않는다. 모든 비교가 공유하는 전처리를 분리해 구현 혼입을 줄인다.
+
+- grid는 (head, ceil(4704/4)), block은 4 warps=128 threads. 한 warp가 token/head 행 하나를 처리한다.
+- lane마다 feature lane+32m, m=0..3의 w를 FP32 register 4개에 보관한다. 대응 scale 4개도 준비할 수 있다.
+- j단계에서 j%32 lane이 w[j], scale[j], U[j,j]로 code와 normalized error를 계산한다. warp shuffle로 그 행의 error를 전달한다. 모든 lane이 자신이 맡은 k>j 성분만 기존 순서로 보상한다.
+- 마지막에 lane별 code를 모아 인접 feature 두 개를 같은 byte로 쓰며 기존 nibble 순서를 보존한다. 각 byte의 writer를 하나로 정해 atomic이나 바이트 쓰기 race가 없어야 한다. pad 행도 같은 code와 scale을 생성한다.
+- 128단계의 의존성은 사라지지 않지만 전역 w를 각 단계마다 다시 읽고 쓰는 것을 줄인다. 처음 설정은 4warp/block 하나로 제한하고 결과가 안 좋다고 autotune 수십 개로 넓히지 않는다.
+
+U 전체를 block shared memory에 올리는 방식은 첫 구현에서 피한다. head당 full U가64KiB여서 SM89의 shared memory100KiB/SM 조건에서 한 SM에 해당 block 하나만 들어갈 수 있다. 4warp block이면 공유메모리 때문에 점유율을 크게 제한할 수 있다. U는 read-only global/L1/L2를 통해 행 방향으로 coalesced load하는 편이 단순하다. 이때도 factor load와 cache 경쟁이 사라지는 것은 아니다.
+
+Register pressure: w4개+scale4개+codes+error+주소/loop 상태 정도의 시작 구조는 작지만, 128-loop를 모두 펼친 뒤 compiler가 factor를 과도하게 유지하면 register 수와 code size가 늘 수 있다. ptxas register/spill 보고 및 local-memory traffic을 반드시 확인한다. 전체 128×128 factor를 thread-local register 배열로 만들면 안 된다. 런타임 인덱스로 w[128]을 선언하는 식도 spill 위험이 크므로 lane당4개를 명시적으로 유지한다.
+
+SM89에서 필요한 기능은 FP32 연산, warp shuffle, integer bit packing뿐이다. Hopper 전용 TMA/WGMMA/cluster 기능이나 FP64 Tensor Core를 요구하지 않는다. CUDA SM89 target으로 빌드하고 최근 문서에 나오는 compute capability10.0 전용 float2 intrinsics는 쓰지 않는다. 실제 빌드 성공은 아직 검증하지 않았다.
+
+NVIDIA의 Ada guide는 SM89에 48 resident warps, 64K 32-bit registers/SM, 최대255 registers/thread,100KiB shared/SM,99KiB/block을 명시한다. 이 한계로부터 가능성을 판단했을 뿐 실제 occupancy나 속도 측정은 아니다.
+https://docs.nvidia.com/cuda/ada-tuning-guide/index.html#occupancy
+
+4. 정확성: 속도보다 먼저 고정할 판정
+
+첫 GPU 구현 대조는 동일한 미리 계산한 FP32 factor U·동일 rotated BF16 K·동일 FP16 scale을 입력한다. batch Torch, graph/compile, fused의 최종 code·packed byte·scale·sentinel이 전 원소 일치해야 같은 방법의 가속으로 인정한다. zero/clip/ties-to-even/pad/head 경계와 실제 두 층 입력을 포함한다. 원본 CPU 경로와도 비교하되 GPU 통계 산출 오차와 보상 커널 오차를 분리한다.
+
+FMA 및 reciprocal 근사로 code가 달라질 수 있다. 최우선 구현은 fast-math를 사용하지 않고 곱과 뺄셈의 반올림을 분리한다. CUDA의 scalar __fmul_rn, __fsub_rn, __fdiv_rn과 round-to-nearest-even 변환을 사용할 수 있다. __fdividef 같은 근사 나눗셈이나 e*(1/Ujj)로의 무단 치환은 피한다. 불일치가 있으면 먼저 어느 중간 연산에서 갈라졌는지 조사하며 '작은 오차'를 이유로 판정을 완화하지 않는다.
+https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__INTRINSIC__SINGLE.html
+
+두 번째 단계인 전체 encoder에서는 GPU의 covariance/factor 준비가 CPU와 다른 code를 만들 수 있다. 이는 fused 보상 정확성 성공과 별개다. 최초 비용 검사에서 통계 dtype·damping·inverse symmetrize·upper Cholesky 순서를 고정하고, 변경이 필요한 경우 새 수치 구현으로 별도 정확성 검토해야 한다. FP64 통계를 FP32로 조용히 바꿔 얻은 속도를 기존 결과의 비용으로 보고하지 않는다.
+
+5. factor 준비와 정보 시점별 총비용
+
+offline-H 경로: 보정 통계/분해는 offline 1회 비용·상주 factor 메모리로 보고하고, 각 쓰기에는 실제 K encoder만 잰다. 최초 GPU 전송/준비 비용과 amortization 횟수를 함께 적는다.
+
+first-reader-H 경로: 현재 reader Q 생성 후 회전, FP64 Q^TQ/4680, damping, inverse, symmetrize, Cholesky, FP32 factor 변환을 매 해당 청크의 online 비용에 포함한다. 현재 reference는 hessian()/factorize()가 CPU용이므로 GPU 이전은 새 구현 검증 대상이다. batch linalg가 숫자를 바꿀 수도 있다. GPU factor 계산이 graph capture 불가능하거나 오류 점검 때문에 동기화하면 해당 구간을 밖에서 실행하고 그 시간까지 포함한다.
+
+Q covariance만 약1.84 GFLOP의 FP64 산술이다(12×2×4680×128²의 산술 추정). code 보상 update는 약0.92 GFLOP의 FP32 곱/뺄셈에 더해 순차 나눗셈·round·shuffle가 있다. 이 숫자를 이론 peak로 나누어 예상 지연을 확정하면 안 된다. 특히 FP64 통계가 코드 보상보다 큰 장애일 가능성을 계측해야 한다.
+
+GPU에서 Q를 CPU로 가져와 H를 만들 경우 전송·CPU 계산·동기화·factor 복귀까지 online 경로다. 그 왕복을 빼놓고 GPU code kernel만 보고 배포 가능하다고 하면 안 된다.
+
+6. 공정한 타이머 설계 하나
+
+예정된 causal 실행이 끝나고 GPU가 비어 있을 때만 별도 등록 후 시작한다. 지금은 실행하지 않는다. 이미 캡처된 실제 입력을 사용하며 새 모델 생성은 필요 없다.
+
+구간을 세 층으로 기록한다.
+  T_code: resident rotated K/scale/U에서 최종 packed codes까지. layout/초기화/packing 포함.
+  T_encoder: original K 및 필요한 Q가 GPU에 존재하는 순간부터 packed packet/scale/metadata가 reader에 전달 가능할 때까지. offline-H와 online-H를 따로 측정.
+  T_write_to_attention: 실제 같은 reader 호출에 packet을 연결해 다음 attention이 끝날 때까지. 동일 reader 형식이어도 encoder와의 cache/allocator 경쟁이 바뀔 수 있어 필요 시 마지막에 확인한다.
+
+CUDA events는 같은 stream에서 시작/끝을 기록하고 끝 event를 synchronize하여 GPU 경과시간을 잰다. 별도로 host wall time을 시작 전·끝 후 동기화하여 dispatch/CPU factor 비용 포함 시간을 잰다. warmup과 compile/graph capture는 steady-state에서 제외하되 초회 비용과 peak 메모리는 별도 남긴다. .item()/hash/정확성 검사는 timed loop 밖으로 옮기되 실제 경로가 원래 요구하는 오류 점검은 제외하지 않는다.
+
+권장 최소 반복: 정확성 통과 후 5회 warmup, 20 paired timing rounds. AB/BA 순서 교차. 매 round 원본 입력으로 workspace 재초기화. 각 round의 GPU시간·host시간·paired 차이와 중앙값/IQR을 함께 기록한다. 전체 node가 하나의 반복 kernel에 유리하게 계속 cache-hot인 상황을 숨기지 않도록 실제 서로 다른 head/layer 입력들을 순환한다. 일부러 cache를 flush해 한쪽만 불리하게 만들지는 않는다.
+
+각 방식은 별도 process에서 메모리를 재고 peak allocated/reserved와 graph private pool을 보고한다. 같은 입력·통계·pack metadata·출력상주 조건으로 비교한다. 같은 factor를 쓰는 것이 허용된 offline-H와 매번 새 factor가 필요한 online-H를 같은 표 한 줄로 섞지 않는다.
+
+PyTorch2.6 CUDA Graph는 정적 shape/control과 주소 유지, side-stream warmup을 요구하며 CPU-GPU synchronize 연산을 capture 안에 넣을 수 없다. graph가 replay하는 입력의 주소·내용을 보존하고 새 입력 복사 비용을 포함하는 이유다.
+https://docs.pytorch.org/docs/2.6/notes/cuda.html#cuda-graphs
+
+7. 자원 선택 결론
+
+우선 batch Torch+Graph의 전체 encoder 비용을 확인한다. 이미 가용 write 예산에 충분하면 fused 개발은 필요하지 않다. 전체 encoder에서 code 구간이 작으면 fused도 접는다. code가 비용을 지배하고 정확한 fused가 그 비용을 줄일 여지가 있을 때 위 커널 하나를 작성할 이유가 생긴다.
+
+지금은 허용 write 예산 자체가 실측되지 않았으므로 임의의1ms/5%를 성공 문턱으로 확정하지 않는다. 실제 pipeline의 청크 주기·활성 층 수·write 횟수에 맞춰 (T_encoder_OBQ−T_encoder_RTN)을 보고 다음 등록에서 예산을 고정해야 한다. 동일형상이라고 두 층의 시간을30배해 전체 생성 지연이 이미 입증됐다고 하지 않는다.
+
+품질은 causal 실험의 판정을 따른다. 속도만 좋아져 품질 실패를 구제하지 않는다. 반대로 알려진 GPTQ가 실제 비용으로 실행된다고 해도 자동으로 새 연구의 신규성이 생기지는 않는다. 확보할 수 있는 좁은 시스템 가치는 기존 reader/패킹/캐시 수명을 유지하면서, 확인된 품질 이득을 실제 online write 예산 안에 넣는 것이다.
+
+검토 종료. 코드·커널 작성 및 새 GPU 검사는 하지 않았다. 조회한 공식 문서는 지원 범위와 계측 제약 확인용이며 새 후보 문헌 탐색으로 확대하지 않았다.

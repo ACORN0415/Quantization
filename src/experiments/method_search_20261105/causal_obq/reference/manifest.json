@@ -1,0 +1,70 @@
+{
+  "status": "completed",
+  "mode": "reference",
+  "started_utc": 1793869738.126506,
+  "seed": 307,
+  "text": "A brown dog walks across a shallow stream on smooth stones, pauses to look toward the riverbank, then continues forward. A continuous low tracking shot in soft afternoon light, with reeds moving gently in the background.",
+  "model_forwards": 40,
+  "artifacts": [
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/reference/latent.pt",
+      "sha256": "e54e97da9c146981aa3740ad16c953d8cbf8ea717daa275e689dc8433b1e4842",
+      "bytes": 4793495
+    }
+  ],
+  "chunks": [
+    {
+      "chunk": 0,
+      "seconds": 0.8736181119456887,
+      "finite": true
+    },
+    {
+      "chunk": 1,
+      "seconds": 0.9481075151124969,
+      "finite": true
+    },
+    {
+      "chunk": 2,
+      "seconds": 1.0923879819456488,
+      "finite": true
+    },
+    {
+      "chunk": 3,
+      "seconds": 1.2358920159749687,
+      "finite": true
+    },
+    {
+      "chunk": 4,
+      "seconds": 1.3798040850088,
+      "finite": true
+    },
+    {
+      "chunk": 5,
+      "seconds": 1.5233092020498589,
+      "finite": true
+    },
+    {
+      "chunk": 6,
+      "seconds": 1.6668547749286518,
+      "finite": true
+    },
+    {
+      "chunk": 7,
+      "seconds": 1.6891693100333214,
+      "finite": true
+    }
+  ],
+  "events": [],
+  "source_sha256": "e916506f6085f9c050cbd44b7e1b79d4a8aae9d77379fe5e2384fee5bad5a758",
+  "after_build_peak_cuda_bytes": 2839042560,
+  "after_encode_peak_cuda_bytes": 4944591872,
+  "replay_assumed_residual_tokens": 0,
+  "sampling_seconds": 10.413163518998772,
+  "layer_call_counts": {
+    "18": 0,
+    "24": 0
+  },
+  "finished_utc": 1793869797.34161,
+  "max_rss_bytes": 35531337728,
+  "peak_cuda_bytes": 9253649920
+}

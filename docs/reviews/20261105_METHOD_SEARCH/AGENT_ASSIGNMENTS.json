@@ -25,14 +25,42 @@
       "scope": "OBQ prior art and same-calibration covariance-rotation baseline",
       "codex": "/root/fair_comparison_codex",
       "claude_session": "claude_7167c0b2_86fb_4a17_b991_393ed0d47c37",
-      "delivered_messages": ["msg_155904fd98b8", "msg_9f5a70ce089c", "msg_ac5579a50e88"]
+      "delivered_messages": [
+        "msg_155904fd98b8",
+        "msg_9f5a70ce089c",
+        "msg_ac5579a50e88"
+      ]
     },
     "work_2": {
       "scope": "OBQ capacity audit and causal information-constrained fresh-input capture/replay",
       "codex": "/root/method_gap_codex",
       "claude_session": "claude_131e855b_fd2a_4531_a3a5_9b092b5af23d",
-      "delivered_messages": ["msg_c89244ba9b8d", "msg_1a5508754a21"]
+      "delivered_messages": [
+        "msg_c89244ba9b8d",
+        "msg_1a5508754a21"
+      ]
     },
     "gpu_constraint": "Existing R8d generation and quality work must finish before new GPU work. Preparation and CPU diagnostics may proceed."
+  },
+  "phase_3": {
+    "work_1": {
+      "scope": "fixed-offline OBQ GPU eager and CUDA Graph encoder costs",
+      "codex": "/root/fair_comparison_codex",
+      "claude_session": "claude_7167c0b2_86fb_4a17_b991_393ed0d47c37",
+      "delivered_messages": [
+        "msg_4c9a6dcf4d01",
+        "msg_e739fb2f0395"
+      ]
+    },
+    "work_2": {
+      "scope": "structured query-moment scalar recurrence, prior art and limited CPU effect diagnostic",
+      "codex": "/root/method_gap_codex",
+      "claude_session": "claude_131e855b_fd2a_4531_a3a5_9b092b5af23d",
+      "delivered_messages": [
+        "msg_a711df8c261f",
+        "msg_8ff3273b966f"
+      ]
+    },
+    "gpu_constraint": "R8d and causal diagnostic completed; check idle before cost test. Work2 CPU only."
   }
 }

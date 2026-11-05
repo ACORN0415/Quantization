@@ -1,0 +1,42 @@
+{
+  "status": "completed",
+  "stages": [
+    {
+      "name": "reference",
+      "started_utc": 1793869735.7189274,
+      "status": "completed",
+      "finished_utc": 1793869798.6889615,
+      "returncode": 0
+    },
+    {
+      "name": "capture",
+      "started_utc": 1793869798.7079005,
+      "status": "completed",
+      "finished_utc": 1793869862.1822257,
+      "returncode": 0
+    },
+    {
+      "name": "cpu_packets",
+      "started_utc": 1793869862.183102,
+      "status": "completed",
+      "finished_utc": 1793869903.123018,
+      "returncode": 0
+    },
+    {
+      "name": "native_read",
+      "started_utc": 1793869903.1456087,
+      "status": "completed",
+      "finished_utc": 1793869916.1846862,
+      "returncode": 0
+    }
+  ],
+  "driver_sha256": "7d345860c28b5f52d53a5748a074900594d071ae6df888d87c0f4dbba7324d01",
+  "prior_quality": "/home/acorn0415/Quantization/src/experiments/kv_alignment_compounding/r8c/quality.json",
+  "maximum_wait_seconds": 7200,
+  "experiment_limit_seconds": 1800,
+  "updated_utc": "2026-11-05T09:11:56.185436+00:00",
+  "waiting_seconds": 1294.2128989429912,
+  "experiment_started_utc": 1793869735.6956656,
+  "elapsed_experiment_seconds": 180.48969340499025,
+  "native_result_sha256": "1b3e932f350978a96e891356282e3818a8e1546c9030f038f3bee0ec3cd2b2b9"
+}

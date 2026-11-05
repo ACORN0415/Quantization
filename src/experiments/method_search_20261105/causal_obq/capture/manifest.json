@@ -1,0 +1,469 @@
+{
+  "status": "completed",
+  "mode": "capture",
+  "started_utc": 1793869801.0196652,
+  "seed": 307,
+  "text": "A brown dog walks across a shallow stream on smooth stones, pauses to look toward the riverbank, then continues forward. A continuous low tracking shot in soft afternoon light, with reeds moving gently in the background.",
+  "model_forwards": 40,
+  "artifacts": [
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_wo.pt",
+      "sha256": "98616ff026d5f305f2d4886aea646f3dc778c1b2955053c4d5d398ef177c4ee0",
+      "bytes": 4722962
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_wo.pt",
+      "sha256": "eea073b2d30ac069c4cc2ba1a28f5c43592397064d5ddc8fbf5afaf478e31965",
+      "bytes": 4722962
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write1.pt",
+      "sha256": "b1f98005ab4aa08767444aff45822321bf701b6d26ad1537a8f8934255ed25e8",
+      "bytes": 43132713
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_write1.pt",
+      "sha256": "809fa7565d82a67a8bf2c94b8320e1ac4fda4ad59ae0f03440c3379db68fcb74",
+      "bytes": 43132713
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_first_reader1.pt",
+      "sha256": "0a76fd06bc7881bebbe943b8841fbe6d09febfccbe2efb753b3b08e871b97ef8",
+      "bytes": 14378318
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_first_reader1.pt",
+      "sha256": "82f154a062df07b7f16a2300712cf6287d9dd2b44e1c60b54dc0fecbfbf78498",
+      "bytes": 14378318
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write2.pt",
+      "sha256": "ca089f24959e9eccf85ae5ca5104ef8eac470a2514bee5f851603a07321bebb0",
+      "bytes": 43132713
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_write2.pt",
+      "sha256": "78bbfe1d4a0c240dd6bb118171acd2c62cf26ec5fb20829ba825adc8e2742605",
+      "bytes": 43132713
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_first_reader2.pt",
+      "sha256": "e24e8ece46fa4e6130c99b33e9198266a3fca53eb091d2fbfc36e08a18fdc0e2",
+      "bytes": 14378318
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_first_reader2.pt",
+      "sha256": "a0f308e53fdbeb0cce3c33bc1c1679c93fe1a9de442a45176928f0f64f480b89",
+      "bytes": 14378318
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write3.pt",
+      "sha256": "347d57ed4061aa6cb183463506209b76bed80856dd331edb374a4b83cc50f34a",
+      "bytes": 43132713
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_write3.pt",
+      "sha256": "0f1534f78f7f0a4bb147e42e4032a9ef48b8d69451fd3e075dc057666615174e",
+      "bytes": 43132713
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_first_reader3.pt",
+      "sha256": "839f92386b28e0c4037752bfbebb587c8ed4b18d34766928581e0df0917d35a7",
+      "bytes": 14378318
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_first_reader3.pt",
+      "sha256": "5f435ec4d2bd862f4d4c0aa42d977f95a7014f57a710eeb9a55cc8a73879c579",
+      "bytes": 14378318
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write4.pt",
+      "sha256": "1c3f4e7ecd597e3e2159d1c4d1f05a62aa9a0365d6dd2977d85286cbbbf0e8bc",
+      "bytes": 43132713
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_write4.pt",
+      "sha256": "8606f615f6d7e0ff3e0d0b18237dcabef17088d98e6c70136d1536820922722c",
+      "bytes": 43132713
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_first_reader4.pt",
+      "sha256": "c6648f0cede5020fbc036952df089d48fca3a425d1d2873f3aa8f4bd8cfd0f01",
+      "bytes": 14378318
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_first_reader4.pt",
+      "sha256": "82c79ce1122f05ad44bad81ee2ab271e13c5848f691f2a3b71a1898a8e67d6b8",
+      "bytes": 14378318
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write5.pt",
+      "sha256": "bf4f852040a1ee57a4f56a12f9e269f95913a7cb7256a8073d2542371c4f5c5b",
+      "bytes": 43132713
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_write5.pt",
+      "sha256": "d77368d8a6ec800bec27268c128442509c98a7f461515efaef06fef89b21fadb",
+      "bytes": 43132713
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_first_reader5.pt",
+      "sha256": "9cfa8e4c863821311a2946eaa647ae24380b74d2d66041087d19f8742a692564",
+      "bytes": 14378318
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_first_reader5.pt",
+      "sha256": "aa692919f152a697122311beafab8fb097510e02ad3f039110f2b9a17defee86",
+      "bytes": 14378318
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write6.pt",
+      "sha256": "2475e03b005a6ed3d4f296fdfe88991a0f875213764a23130f66e77e508766f0",
+      "bytes": 43132713
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_write6.pt",
+      "sha256": "903d76a77c92167c6d70a3331bcfe15b58d069fbbaae14230864e336734dca58",
+      "bytes": 43132713
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_first_reader6.pt",
+      "sha256": "c65ec34068b0a36c2e70daecf938d396242942c02272e24e3185ac157cc7d829",
+      "bytes": 14378318
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_read0.pt",
+      "sha256": "30ab32e2371632622ab7a3902e25a68325bdf7e8024a1dec3a5f45126047c8e8",
+      "bytes": 43526240
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_first_reader6.pt",
+      "sha256": "be3b0451313cf77e11a607c144b0284016c82d04f1b6e98e84c1908cf88efed4",
+      "bytes": 14378318
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_read0.pt",
+      "sha256": "d97a01cc0ba1d6e96b975a53b5ed397dc4a1acd6e808377417976388e352a91b",
+      "bytes": 43526240
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_read3.pt",
+      "sha256": "7347ebf254d1baef77e660ddac8288bbb52bed1b52e06904fa1feca8ca2ebfff",
+      "bytes": 43526240
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_read3.pt",
+      "sha256": "26a7e7229afe7590cdee081d43e2338b1b6d19408ef33b733be2941be0243b66",
+      "bytes": 43526240
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/latent.pt",
+      "sha256": "e54e97da9c146981aa3740ad16c953d8cbf8ea717daa275e689dc8433b1e4842",
+      "bytes": 4793495
+    }
+  ],
+  "chunks": [
+    {
+      "chunk": 0,
+      "seconds": 0.8745464920066297,
+      "finite": true,
+      "reference_byte_equal": true
+    },
+    {
+      "chunk": 1,
+      "seconds": 1.0617157410597429,
+      "finite": true,
+      "reference_byte_equal": true
+    },
+    {
+      "chunk": 2,
+      "seconds": 1.2514141419669613,
+      "finite": true,
+      "reference_byte_equal": true
+    },
+    {
+      "chunk": 3,
+      "seconds": 1.3895151589531451,
+      "finite": true,
+      "reference_byte_equal": true
+    },
+    {
+      "chunk": 4,
+      "seconds": 1.5342768309637904,
+      "finite": true,
+      "reference_byte_equal": true
+    },
+    {
+      "chunk": 5,
+      "seconds": 1.6771411130903289,
+      "finite": true,
+      "reference_byte_equal": true
+    },
+    {
+      "chunk": 6,
+      "seconds": 1.8259876270312816,
+      "finite": true,
+      "reference_byte_equal": true
+    },
+    {
+      "chunk": 7,
+      "seconds": 2.3928701049881056,
+      "finite": true,
+      "reference_byte_equal": true
+    }
+  ],
+  "events": [
+    {
+      "kind": "refresh_write",
+      "layer": 18,
+      "chunk": 1,
+      "call": 4,
+      "timestep": 0.0,
+      "q_sha256": "609dd7d3b335995981519b2a70b58f21facbb739264b0af65d08542ef1d1eeab"
+    },
+    {
+      "kind": "refresh_write",
+      "layer": 24,
+      "chunk": 1,
+      "call": 4,
+      "timestep": 0.0,
+      "q_sha256": "11aa53861f56001d099c73f5a046b4faef1b42f47764e06acf198d17abf4df56"
+    },
+    {
+      "kind": "first_reader_available",
+      "layer": 18,
+      "chunk": 2,
+      "call": 0,
+      "timestep": 1000.0,
+      "source_chunk": 1,
+      "q_sha256": "31697126a0985d14bfba10cc51ffffb93261310f4e4fd692da1e396c5e14a72b"
+    },
+    {
+      "kind": "first_reader_available",
+      "layer": 24,
+      "chunk": 2,
+      "call": 0,
+      "timestep": 1000.0,
+      "source_chunk": 1,
+      "q_sha256": "0a31bb12a9d472d50743b299177723a8777ce2b5553bfce9cbbd1d70793f9021"
+    },
+    {
+      "kind": "refresh_write",
+      "layer": 18,
+      "chunk": 2,
+      "call": 4,
+      "timestep": 0.0,
+      "q_sha256": "1cc024d26f9e05acf160e87a82d8420c8bda50f49d4b8e673934bcdb688880a2"
+    },
+    {
+      "kind": "refresh_write",
+      "layer": 24,
+      "chunk": 2,
+      "call": 4,
+      "timestep": 0.0,
+      "q_sha256": "8201f360f1e23b1e1dca59ad5101f4ebe493e7e7a460ef9e7541389c030a7647"
+    },
+    {
+      "kind": "first_reader_available",
+      "layer": 18,
+      "chunk": 3,
+      "call": 0,
+      "timestep": 1000.0,
+      "source_chunk": 2,
+      "q_sha256": "e4274c1ab8769f0d59db1028555c3bf3cc66eb2a4feb3d81424cddcefcd312f6"
+    },
+    {
+      "kind": "first_reader_available",
+      "layer": 24,
+      "chunk": 3,
+      "call": 0,
+      "timestep": 1000.0,
+      "source_chunk": 2,
+      "q_sha256": "7f7a905233beabf1459726b1ce7fdabe8dca64e4b03e2dbe68bc01ccdd4ce360"
+    },
+    {
+      "kind": "refresh_write",
+      "layer": 18,
+      "chunk": 3,
+      "call": 4,
+      "timestep": 0.0,
+      "q_sha256": "6909ce1c4b951817a3b8ece4e03f52d68e83bb7e49c936d7cc3a11c1251d997e"
+    },
+    {
+      "kind": "refresh_write",
+      "layer": 24,
+      "chunk": 3,
+      "call": 4,
+      "timestep": 0.0,
+      "q_sha256": "ea26864c39111665a9dc727c3090b2fa72020b96049e748bcc87a33ac8078b03"
+    },
+    {
+      "kind": "first_reader_available",
+      "layer": 18,
+      "chunk": 4,
+      "call": 0,
+      "timestep": 1000.0,
+      "source_chunk": 3,
+      "q_sha256": "aefdebee089f204a4bb9e175d7209ceff6f7fec4bc8758c52a47a1826773fb83"
+    },
+    {
+      "kind": "first_reader_available",
+      "layer": 24,
+      "chunk": 4,
+      "call": 0,
+      "timestep": 1000.0,
+      "source_chunk": 3,
+      "q_sha256": "8c099863ee88cbc9bad6346174f086aad6116f864c56ea6761e0f4cbe0308f34"
+    },
+    {
+      "kind": "refresh_write",
+      "layer": 18,
+      "chunk": 4,
+      "call": 4,
+      "timestep": 0.0,
+      "q_sha256": "b7cb628c17342263a988ec022481e70d28e1f8c6b8060f6a50d1a0094f85c598"
+    },
+    {
+      "kind": "refresh_write",
+      "layer": 24,
+      "chunk": 4,
+      "call": 4,
+      "timestep": 0.0,
+      "q_sha256": "b1b4c5976d42a1c826c15eb1251137e5d90b05217e7232e4176345e697542e57"
+    },
+    {
+      "kind": "first_reader_available",
+      "layer": 18,
+      "chunk": 5,
+      "call": 0,
+      "timestep": 1000.0,
+      "source_chunk": 4,
+      "q_sha256": "bb3b0c5e4846fe46724f49cdbd84dbda88c3a8de8ec91b9b3c6efbe1d3d9a8ae"
+    },
+    {
+      "kind": "first_reader_available",
+      "layer": 24,
+      "chunk": 5,
+      "call": 0,
+      "timestep": 1000.0,
+      "source_chunk": 4,
+      "q_sha256": "25b459368e75b9581f5c7eaafe015f5b18ff49f0388214e5c6d06d924338ba6e"
+    },
+    {
+      "kind": "refresh_write",
+      "layer": 18,
+      "chunk": 5,
+      "call": 4,
+      "timestep": 0.0,
+      "q_sha256": "1d7115efd45a79d5d4a2346be14d554f7c3b30867446b5e291b8a1deb77d4fb4"
+    },
+    {
+      "kind": "refresh_write",
+      "layer": 24,
+      "chunk": 5,
+      "call": 4,
+      "timestep": 0.0,
+      "q_sha256": "0bc35658add6d3e0dd0187b10f41cd647f44ebdc73e7af61dd0660345c102f41"
+    },
+    {
+      "kind": "first_reader_available",
+      "layer": 18,
+      "chunk": 6,
+      "call": 0,
+      "timestep": 1000.0,
+      "source_chunk": 5,
+      "q_sha256": "2683c0e484e8d1a60aa19678feb35a4f8414c218ab4cb88d3946d6f9def9105a"
+    },
+    {
+      "kind": "first_reader_available",
+      "layer": 24,
+      "chunk": 6,
+      "call": 0,
+      "timestep": 1000.0,
+      "source_chunk": 5,
+      "q_sha256": "1000f427941f5cedbd0677332fe89275d173691a186f2a325b89871037847048"
+    },
+    {
+      "kind": "refresh_write",
+      "layer": 18,
+      "chunk": 6,
+      "call": 4,
+      "timestep": 0.0,
+      "q_sha256": "c855f05d127ec7531d9d2b6b48ebcfc8833916517b730f71925553b9fef3b2d6"
+    },
+    {
+      "kind": "refresh_write",
+      "layer": 24,
+      "chunk": 6,
+      "call": 4,
+      "timestep": 0.0,
+      "q_sha256": "1eb0e894dff0db3d39e8aefb95810930f416ea8b1e33b8b13c96f6701fa05e8c"
+    },
+    {
+      "kind": "first_reader_available",
+      "layer": 18,
+      "chunk": 7,
+      "call": 0,
+      "timestep": 1000.0,
+      "source_chunk": 6,
+      "q_sha256": "7381bf5b8b2201a0d9bd31185a2c6ce04bae878fecbbe50191f26d72a6b26696"
+    },
+    {
+      "kind": "evaluation_read",
+      "layer": 18,
+      "chunk": 7,
+      "call": 0,
+      "timestep": 1000.0,
+      "past_raw_byte_equal": true,
+      "q_sha256": "7381bf5b8b2201a0d9bd31185a2c6ce04bae878fecbbe50191f26d72a6b26696"
+    },
+    {
+      "kind": "first_reader_available",
+      "layer": 24,
+      "chunk": 7,
+      "call": 0,
+      "timestep": 1000.0,
+      "source_chunk": 6,
+      "q_sha256": "5c657ed1542fcb248571702f899e4c95dc9e497982626c4506501a0431b9ab31"
+    },
+    {
+      "kind": "evaluation_read",
+      "layer": 24,
+      "chunk": 7,
+      "call": 0,
+      "timestep": 1000.0,
+      "past_raw_byte_equal": true,
+      "q_sha256": "5c657ed1542fcb248571702f899e4c95dc9e497982626c4506501a0431b9ab31"
+    },
+    {
+      "kind": "evaluation_read",
+      "layer": 18,
+      "chunk": 7,
+      "call": 3,
+      "timestep": 625.0,
+      "past_raw_byte_equal": true,
+      "q_sha256": "00162c1bfb56eb9adbc55c4422dd4d7fed54e67a2a11aa3dd45a8c4aa5791f52"
+    },
+    {
+      "kind": "evaluation_read",
+      "layer": 24,
+      "chunk": 7,
+      "call": 3,
+      "timestep": 625.0,
+      "past_raw_byte_equal": true,
+      "q_sha256": "cacc10e4a316f99a6bc1383c83a1da55a17123f3832c5d7a1c1d16d209614a84"
+    }
+  ],
+  "source_sha256": "e916506f6085f9c050cbd44b7e1b79d4a8aae9d77379fe5e2384fee5bad5a758",
+  "after_build_peak_cuda_bytes": 2839042560,
+  "after_encode_peak_cuda_bytes": 4944591872,
+  "replay_assumed_residual_tokens": 0,
+  "sampling_seconds": 12.021565348957665,
+  "layer_call_counts": {
+    "18": 40,
+    "24": 40
+  },
+  "finished_utc": 1793869860.8005857,
+  "max_rss_bytes": 35535396864,
+  "peak_cuda_bytes": 9253649920
+}

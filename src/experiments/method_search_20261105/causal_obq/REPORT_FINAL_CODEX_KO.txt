@@ -1,0 +1,74 @@
+Causal OBQ 재생 진단 최종 보고 — Codex 업무2 — 2026-11-05
+
+판단: 고정 오프라인 H와 첫 읽기 H는 등록한 출력오차 감소 기준을 통과했다. 자기 청크 refresh H는 판단 불가이다. 첫 읽기 H가 고정 H보다 일관되게 좋다는 근거는 없고, 신규 방법의 효과·차별성 입증까지 끝난 상태도 아니다.
+
+1. 이번에 실제로 한 일
+개발 후 처음 검사한 새 문장(dog/stream)과 seed307 하나를 고정했다. 무계측 BF16 생성1회와 passive capture BF16 생성1회, 각각8청크·40forward를 실행했다. 두 생성은 raw BF16 kv_cache 경로다. 그 뒤 저장된 query/K/V를 사용해 인과적으로 사용 가능한 정보만으로 CPU에서 실제 정수 packet을 만들고, 원래 GPU attention의 full query4680/full KV32760 형상으로 읽었다.
+따라서 결과는 인과 정보 제약의 재생 진단이다. 모델의 캐시 쓰기 경로를 GPU 양자화기로 교체한 실행도, 양자화된 모델의 전체 영상 생성도 아니다. 생성 영상의 MUSIQ/DINO나 장기 궤적 개선은 측정하지 않았다.
+
+2. 다섯 팔과 정보 시점
+R_bf16: 기존 BF16 산술 RTN. R_fp32: 같은 scale에서 FP32 산술 RTN.
+O_offline: 개발 입력 p0의 해당 층 c7 call0 query로 계산한 H와 Cholesky factor를 고정·재사용한다.
+O_own_refresh: 과거 청크 i 자신의 clean refresh(call4, 실제 timestep0) query로 H를 만들어 청크 i만 양자화한다.
+O_first_reader: 청크 i+1의 첫 denoise(call0, 실제 timestep1000) query로 직전 청크 i를 양자화한다. 현재 ChunkStore residual_tokens=0 정책은 이 query가 만들어진 뒤 직전 pending K를 인코딩하므로 이 정보는 인과적으로 사용 가능하다. 기존 quantizer에 이 query를 전달하는 배포 구현은 이번 검사에 포함되지 않는다.
+c7 call0 평가에서는 가장 최근 청크6의 H와 평가 query가 같은 입력이다. 배포 가능한 정보 조건이지만 독립 query 일반화 증거는 아니다. c7 call3(실제 warped timestep625)는 별도 endpoint이고, 모든 packet은 두 읽기 사이에 고정했다. 모든 과거 청크를 c7 query로 다시 최적화하지 않았다.
+모든 K head는4bit, Hadamard128·frame1560+padding8·group16·원본 BF16 absmax/7→FP16 scale가 같다. V4는 모든 팔 공통이고 현재 K/V는 BF16이다. 두 온라인 H도 lambda=.01 mean(diagH), 고정128채널순서만 사용했다. 결과 후 H 혼합·damping·정밀도 선택을 바꾸지 않았다.
+
+3. 결과 — 각 endpoint별 post-Wo SSE 감소율(양수=개선)
+층/call | offline vs BF16 / FP32 RTN | own-refresh vs BF16 / FP32 | first-reader vs BF16 / FP32 | first-reader vs offline
+18/0 | 37.23% / 37.77% | 23.92% / 24.57% | 41.52% / 42.02% | +6.83%
+18/3 | 34.44% / 33.92% | 31.94% / 31.39% | 37.45% / 36.95% | +4.59%
+24/0 | 29.35% / 28.35% | 18.52% / 17.37% | 28.57% / 27.55% | -1.11%
+24/3 | 24.25% / 26.83% | 18.85% / 21.62% | 23.88% / 26.48% | -0.48%
+
+사전 기준은 두 RTN 대비 네 endpoint 모두20% 이상 감소하면 signal, 어느 endpoint라도10% 이상 악화하면 stop_arm, 그 사이면 undecided였다. 판정은 그대로 재현됐다.
+- O_offline: signal. BF16 RTN 대비24.25~37.23% 감소.
+- O_first_reader: signal. BF16 RTN 대비23.88~41.52% 감소.
+- O_own_refresh: undecided. 모든 지점에서 개선됐지만 층24의18.52%,18.85% 감소가20%에 못 미쳤다. 실패나 무효로 바꾸어 부르지 않는다.
+첫 읽기 H는 층18에서 고정 H보다 SSE가6.83%/4.59% 작았지만 층24에서는1.11%/0.48% 컸다. 온라인 H가 더 복잡한 만큼의 일관된 추가 이득은 확인되지 않았다. 고정 오프라인 H를 단순하고 강한 기준선으로 유지한다.
+이 수치는 query128개에 대한 native attention 출력차를 공통 FP32 Wo로 투영한 SSE이다. 등록된 기준 전체 BF16 K/V 참조에 대한 손실이며, 공통 V4 손실을 독립적인 양수 항으로 분해하거나 이를 제거 불가능한 바닥이라고 해석하지 않는다. 층2개·읽기2개는 독립 표본4개가 아니다. p값/신뢰구간은 계산하지 않았다.
+
+4. 저장량과 비용
+각 팔의 과거6청크·한 층 K+V 실제 tensor payload는54,097,926 B로 같았다. 청크당 K4,515,841 B, V4,500,480 B이다. K의 uint8 nibble payload, FP16 scale, sentinel과 V packed/scales를 실제로 검사했다. 현재 BF16 청크, H/factor, workspace, 원본 trace, Python 객체는 이 payload에서 제외된다. 동일 payload는 전체 메모리/시간 동등을 뜻하지 않는다.
+
+CPU 인코딩: 각 층·청크별 warmup1회 후3회, 회전한 팔 순서로 측정했다. 아래 중앙값은 2층×6청크=12개 개별 중앙값의 중앙값이며, 괄호는 그12개 중앙값의 범위다. 원본 K→회전/scale→code→pack 및 pack/unpack 검증을 포함하는 진단 시간이다. production encoder 성능이나 GPU encoder 시간으로 해석하지 않는다.
+팔 | CPU encode 중앙값 ms (범위) | H 추가 시간 ms (청크별 중앙값 범위) | native GPU read ms (4endpoint 중앙값 범위)
+R_bf16 | 44.80 (33.33~45.23) | 없음 | 6.782~7.140
+R_fp32 | 56.07 (45.99~57.14) | 없음 | 6.794~7.146
+O_offline | 183.23 (176.16~186.54) | 별도 1회 준비 | 6.779~7.145
+O_own_refresh | 219.20 (211.76~224.98) | 30.79~37.65 | 6.789~7.140
+O_first_reader | 219.34 (212.39~222.97) | 30.91~38.53 | 7.138~7.149
+
+고정 H 준비 전체는 층18 0.411초, 층24 0.399초였다. 이 시간은 자료 로드·H 구성·해시 검증·factor 구성까지 포함한다. factor_seconds 0.00361/0.00282초는 그 안의 부분구간이므로 더하지 않는다. 기존 p0 보정 영상을 생성한 과거 비용은 포함되지 않는다.
+고정 H는 층별 FP64 H1,572,864 B와 FP32 factor786,432 B를 사용했다. 온라인 두 팔은 청크마다 H 및 factor 구성 비용이 있다. 원본 trace와 인코더 작업 버퍼도 실제 메모리 비용이다.
+GPU read는 두 번 warmup 후5회 측정한 순수 native attention 구간이다. 모든 팔이 복원된 BF16 K/V를 같은 형상으로 읽는다. 이 표로 저비트 압축이 attention을 가속했다고 말할 수 없다. 팔 실행 순서가 GPU에서 교차되지 않았고 차이가 작으므로 읽기 시간의 미세한 순위를 방법의 우열로 주장하지 않는다.
+별도 기록의 CPU K 복원은 약0.208~0.234초, K H2D 전송은 약0.0301초다. V 전송과 파일 검증 등은 이 두 구간에 포함되지 않으므로 이들을 단순 합산해 전체 추론시간으로 쓰지 않는다. 현재 CPU 재생은 정확성과 비용 규모를 보는 구현이며 GPU 쓰기 encoder 실측이 아니다.
+
+실행 전체: 기존 R8d 작업 대기1,294.213초(21분34초)는 실험 상한과 별도였다. 실제 실험180.490초(3분0.49초), 생성2회, model forward80회, VAE0회. driver 단계별 wall time은 reference62.970초/capture63.474초/CPU packets40.940초/native read13.039초였다. 모델 로드 등을 제외한 BF16 sampling은10.413초, 계측 sampling은12.022초다. 이 차이는 계측 비용이며 후보 양자화 성능 차이가 아니다.
+프로세스 | 최대 RSS bytes | 최대 CUDA allocated bytes
+reference | 35,531,337,728 | 9,253,649,920
+capture | 35,535,396,864 | 9,253,649,920
+packets | 917,098,496 | 0
+native | 1,648,488,448 | 245,594,112
+감사 출력 전 폴더 전체 1,208,572,046 B(약1.126 GiB). 모델프로세스40GiB/CPU replay8GiB/CUDA allocated22GiB/추가disk4GiB 및30분 상한 안에서 완료했다. 프로세스별 peak를 더해 전체 동시 메모리로 해석하지 않는다.
+
+5. 검증·감사 범위
+실행에서 기록한 항목: model forward40+40, 계측 층별40call, 각8청크 BF16 latent 일치, 실제 과거 K/V와 저장된 refresh K/V의4회 일치, 원래 native GPU attention과 재생한 BF16 참조의4회 비트 일치, 후보20조건의5회 반복 출력 일치이다.
+이번 별도 읽기 전용 CPU 감사에서 직접 다시 확인한 항목:
+- 잠긴 source/명세/결과14개와 검토기록5개의 현재 해시, 전체 model source fingerprint.
+- reference1개·capture31개·packet72개, 총104개 보존 산출물의 파일 크기와 SHA256.
+- 저장된 참조/계측 latent를 직접 로드한8청크의 형상·dtype·모든 원소 바이트 일치.
+- packet72개의 실제 tensor dtype/바이트, code hash, scale hash; 각 팔 동일 scale/payload.
+- 온라인 H의 원본 query24개에 대해 trace context·event·H 입력 해시 연결. source청크 i와 first reader i+1call0의 관계. c7call0 자기 읽기와 call3의 query가 다름.
+- p0 source파일과 기존 capacity raw H 해시의 기록 연결, 모든 endpoint의 감소율·등록 판정·median 산술·상한.
+이번 감사는 H/OBQ/attention을 다시 계산하지 않았다. native4회 비트 일치는 실행 시 저장된 검사기록과 코드의 확인이며 별도 GPU 재검증이 아니다. 실행 중 모든 원본 입력 tensor에 대해 전후 능동 hash 비교를 수행한 기록은 없으므로 그런 검사를 했다고 주장하지 않는다. 보존 파일의 현재 해시 일치는 확인했다.
+첫 감사 시도는 마지막 JSON 출력에서 변수명 가림 오류가 나 빈 AUDIT_FINAL_CODEX.json만 생성했다. 실험/원본 파일은 바뀌지 않았다. 출력 코드만 고치고 새 AUDIT_FINAL_CODEX_V2.json에 감사를 완료했다. 결과나 판정 기준을 변경한 재실험이 아니다.
+
+6. 남은 연구 판단
+이전 p0→p4 개발 자료의 양성 효과는 이번 새 입력의 native attention에도 남았다. 자기 청크의 clean query만이 아니라 인코딩할 때 이미 존재하는 첫 reader query도 쓸 수 있다는 실행 조건을 구체화했다. 하지만 고정 오프라인 H도 동일 기준을 통과했고 첫 reader H가 이를 일관되게 넘지 못했다.
+따라서 고정 H를 기준선에서 빼거나 온라인 선택이 반드시 필요하다고 결론 내리지 않는다. OBQ/GPTQ의 알려진 순차 보상에 정보를 공급하는 방식의 진단이며, 선행연구 대비 신규성·전체 양자화 생성 품질·실제 GPU encode 비용은 아직 입증되지 않았다.
+다음 하나의 판별 행동은 고정 오프라인 H를 강한 기준선으로 유지한 GPU 인코딩 비용 확인이다. 같은 grid/packet 정확성을 유지하면서 온라인 H까지 포함한 실제 쓰기 지연을 감당할 수 있는지 먼저 보고, 그다음 전체 생성 실험 범위를 정해야 한다. 본 감사 작업에서는 새 GPU 실행을 하지 않았다.
+
+산출물: NATIVE_RESULT.json / packets/manifest.json / capture/manifest.json / reference/manifest.json / DRIVER_STATUS.json / AUDIT_FINAL_CODEX_V2.json / audit_final_readonly.py.
+최종 결과 SHA256: 1b3e932f350978a96e891356282e3818a8e1546c9030f038f3bee0ec3cd2b2b9.
+Claude 검토: 사전 설계·코드·driver 검토는 LOCK.json의 실제 Fable 검토파일 해시로 보존됐다. 본 보고서 작성 시 별도의 Fable 실측결과 독립 검토 완료는 아직 통보받지 않았다. 최종 연구 판단은 그 검토와 함께 주 작업자가 통합한다.
