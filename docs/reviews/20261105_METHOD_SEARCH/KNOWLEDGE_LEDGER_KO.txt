@@ -174,4 +174,21 @@ sharedGraph는매호출z/scale/U를복사하고반환packet수명을보존해야
 고정z/scale/U에서는정확코드일치,CPU와다른GPU회전은별도수치변형으로기록. GPU품질은네nativeendpoint에서두RTN대비20%유지로판정.
 실험GPU/compile전체45분,신규생성0,튜닝탐색없음. fullrollout효과나신규성은여전히별도검증.
 
+E014 [평균 기반 H 구조 CPU 검사 완료, 다음 단계 기준미달]
+structured_h_stage1/RESULT.json SHAace53504caf1ea37066a1f41e3987c1e36477e39e3c3a2f318f2d638ba3a3e6d.
+같은fresh자료의두번째사용,모든팔CPU FP32attention으로재계산. D/C의RTN대비SSE감소12.23~22.15%,full-H감소분회수43.20~71.67%.
+두후보모두네endpoint의80%회수조건미달,output_decision=undecided,preferred=null. 10%악화는없으므로손상/구현실패판정아님.
+통계1회+6청크encode총CPU비용은빠른FULL(headloop)대비40.97~43.81%감소했지만RTN보다는느림. 통계준비만은FULL보다느렸음.
+56.394초,RSS2928246784B,GPU0,24새packet,같은pastKV54097926B. source/packet/산술감사109파일보호기록통과.
+scalar와dense same-H FP32code차이D85/C67개(각86704128개중). dense는진단코드만계산했고품질팔로평가하지않음.
+ROOT/Fable 코드·판정검토완료,등록대로이구조후보GPU개발/rank확장안함.
+Fable의추가통계는탐색설명용. 평균방향이손상의절반을원인으로설명한다거나나머지%가Sigma때문이라는가산인과분해는채택않음.
+마찬가지로고유값에너지비중만으로rank4/16의출력회수율을예측하거나배제하지않음. 종결근거는사전범위/실측gate임.
+
+E015 [융합 GPU 구현의 첫 시도는 빌드환경실패]
+obq_gpu_encoder_stage2: /usr/local/bin/ninja의Python모듈누락으로첫load실패,두번째는JIT재빌드생략뒤없는.so import실패.
+실제NVCC컴파일/커널/품질/타이밍0. original LOCK/BUILD/RESULT/SUPERVISOR보존. 방법효과실패로집계하지않음.
+정상/usr/bin/ninja와CUDA12.4호환hostcompiler를프로세스환경에고정하는별도envfix검토.
+수학/커널/품질기준불변,처음supervisor시작+2700초절대마감공유,전역설치/환경수정없이유효실행회복을진행.
+
 상태: 국소효과와새입력native경로신호는있으나,전체생성품질/전체GPUencoder비용/신규성의종합검증은아직미완료. 연속연구목표active.

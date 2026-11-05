@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "synthetic": [
+    {
+      "mode": "D_MEAN",
+      "fp32_dense_code_differences": 3,
+      "codes": 7225344
+    },
+    {
+      "mode": "C_MEAN",
+      "fp32_dense_code_differences": 3,
+      "codes": 7225344
+    }
+  ],
+  "diagonal_exact": true,
+  "baseline_packets_exact": true,
+  "input_preserved": true,
+  "code_sha256": "c429c76c2ac4305009d8b54ae42742486bf350c628e28611ef55827599d415c7",
+  "common_sha256": "436f7b2762397ecce840b91feb535094a9008c54066e4e796c3df248f9071c35",
+  "time_utc": 1793871362.911327,
+  "GPU_calls": 0
+}

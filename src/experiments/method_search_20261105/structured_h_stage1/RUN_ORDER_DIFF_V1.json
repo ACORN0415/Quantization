@@ -1,0 +1,32 @@
+{
+  "old_code_sha256": "5ddd40f9f3c835861f01cd51ac6aab36b3a2bc95e44171a0059cd1cbeac056b7",
+  "new_code_sha256": "b3c8655b7f35b9cac13180566213c972814c8027d4c22a1ac02ab071ae679b5f",
+  "changed_functions": [
+    "check_lock",
+    "run"
+  ],
+  "unchanged_function_AST_sha256": {
+    "guard": "7e4b037bf088fcce3532c272127fd3462531cd1ff06b4bc74ed75a791242ecc4",
+    "sha": "9f99a5b818e86f5236f35e7848fbd338f3d954037d9d8f88a6db01b6a4bac159",
+    "save": "1765583dd365747dd1cdeb69bae686788db6b3bbb233af579a17fcbcfdddeb0c",
+    "tsha": "709e8617f8da8d1969c3d4b004adbdda89485aefc25d7587f14bbd20ca416940",
+    "load": "d997ba73d4ec2fbbe34dddf535c20193b20714ebefc38a2a620c513668084bc5",
+    "statistics_full": "39ae4e2bdb6b95ec9f7f073785f722df85dff7e50a63d2cf7a868c5554faf80f",
+    "statistics_mean": "f199faa217d5e54b82d0cf561b0437114dc128b87d02a1a9d10071383ec552b0",
+    "scalar_codes": "5e1e550a5f57066dc26b8893f87bb98086d0681aaa81d8685cd0177488ec16d7",
+    "dense_same_h": "e4126041972f05d17217e096ccd848f89eb6542cd2196078e6472543c0f3ad23",
+    "batch_codes": "610f08c4943d817501f607f8be038692f081cf67bf2d9874169463c74b56d1cb",
+    "check_batch_source": "194ce79969baba2a9f24739880ab51614dc504f70f8927979f6acb7ff4c64095",
+    "encode": "ca8c528981808698be442fed6a466122b0d6506993010375b96bc89f4e9db045",
+    "attention": "a9fb1dcfc8688dd38783d9ca36f7ee47a14436924381b4a584f3ab21339afd1f",
+    "metric": "9a148113fb6d279313fa4f9f726fc445b69b04167a6d3d8e4509b1148765a17b",
+    "independent_fp64_test": "726701b97fe03a8ffdb81483f37715a86a93a93bca8c827867b8422176c6f7a5",
+    "math_test": "df1b1233f8922c328ad98bb80e72eff2626c32d16bcb4a22dffb0f7c7ce75679"
+  },
+  "selftest_source": "SELFTEST_V3.json",
+  "selftest_sha256": "309b6386b4c0b2b28a7968a6c67506db049c9e21a4c5daa6d0c485502e2d93fd",
+  "change": "Start 600s budget before lock source reads; per-hash guard; record lock verification time. No mathematical changes.",
+  "new_real_capture_reads": 0,
+  "new_GPU_calls": 0,
+  "time_utc": 1793871867.2256813
+}

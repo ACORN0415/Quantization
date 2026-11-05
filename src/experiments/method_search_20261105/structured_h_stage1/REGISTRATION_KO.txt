@@ -1,0 +1,36 @@
+Structured H CPU 판별 명세 v2 — 2026-11-05
+상태: 실자료 점수 계산 전 준비. root/Fable 검토와 LOCK.json 없이는 run 불가.
+질문: 고정 p0 H의 효과를 평균+분산 구조로 보존하면서 encoder 비용을 줄일 수 있는가? 새 방법 신규성·GPU 가속은 별개다.
+권한/상한: GPU0/새생성0, 실자료 최초읽기부터전체600초, CPU4threads, peakRSS4GiB,추가disk1GiB. 시간/메모리/파일 첫상한에서중단, 재시도·rank확장·채널재정렬·추가prompt없음.
+주입력: causal_obq에봉인된 fresh_dog_stream_307, 층18/24, chunk7 call0/3, query128 floor(i*4680/128).
+과거6청크1..6+현재청크7, fullKV32760. p0_s101의층별c7call0 query만고정보정자료. 평가query와원본출력은코드선택에사용하지않는다.
+
+팔:
+R_bf16/R_fp32/FULL: causal_obq에서이미저장한R_bf16/R_fp32/O_offline의실제packet그대로재사용. 코드/scale/payload해시검증. 결과SSE는이번모든팔공통CPU FP32attention으로재계산한다. 기존nativeGPU SSE와혼합하지않는다. CPU원본참조와저장nativeAV의차이는별도.
+D_MEAN: H_D=diag(v+lambda)+mu mu^T, mu=E[q_rot], v=E[(q_rot-mu)^2]. 통계FP64, q_rot는기존과같이BF16q→FP32Hadamard→FP64.
+C_MEAN: H_C=cI+mu mu^T, c=mean(v)+lambda. 같은trace를유지하는강한단순기준선이다.
+lambda=.01*mean(E[q_rot^2])로원래fullH의평균대각과같게고정한다. var를평균제곱차로불안정하게계산하지않고centered제곱으로계산한다.
+실제두후보는d/u를FP32로고정하고reversecumsum tail을쓴다. scalar S는token×head별하나, 초기0.
+ w_j=x_j+(u_j/d_j)S; code=clamp(round(w_j/scale_j),-8,7); e=w_j-code*scale_j;
+ S+=e*u_j/(1+sum_{k>j}u_k^2/d_k).
+현재j제외tail,순서0..127고정,최종S업데이트생략가능. clipping과기존원본scale유지. 모든headK4/Hadamard/frame1560+8pad/g16/FP16storedscale;V4공통,현재K/V BF16은기존causal과같다.
+
+수치 대조:
+같은FP32 d/u를FP64로승격해H를구성하고inverse/upperCholesky→FP32를쓰는dense same-H의코드를실자료에서한번계산한다. scalar와code불일치개수/최대차이를기록한다. dense결과로평가후보를추가하거나좋은쪽을고르지않는다. 최종후보는FP32scalar고정이며대수동등성을FP32비트동등성으로확대하지않는다.
+합성검사: 동등grid/가변scale/clip/zero-mean/diagonal, scalar vs dense FP64와FP32,원래RTN·Vpacket·payload,입력불변. 실제캡처점수계산전만수행.
+
+주 판정:
+각각4endpoint에서두RTN모두대비SSE>=20%감소하고, full-H가얻은감소분의>=80%회수해야signal.
+회수율=(SSE_RTN-SSE_candidate)/(SSE_RTN-SSE_FULL), RTN2개각각계산. 분모<=0이면그endpoint판단불가.
+C_MEAN도같은기준을통과하면C_MEAN우선. D만통과하면D후속검토. 둘다기준미달이면이번구조후보에서rank/순서변경으로확장하지않는다. 어느endpoint라도RTN대비10%이상악화면stop_arm,나머지미달은undecided로기록한다.
+GPUscalar커널개발검토는출력기준통과와CPU의통계+encode준비비용감소를함께확인한경우에만한다. CPU비용우위는GPU속도증거가아니다. 이threshold는자원배분규칙이며통계적유의성/논문성공조건아님.
+
+비용:
+실험전체wall 및정보수집IO/검증별도. 모든encoder는원본K→회전/scale→code→uint8pack+왕복검증범위를동일하게측정한다. 상태reset/출력할당포함. 기존capacity의사전계산RTNtimer는사용하지않는다.
+각통계와encoder는고정warmup1+3회,encoder팔순서chunk/repetition으로rotate. FULL의H/factor는층별1회미리준비·재사용; D/C는mu/variance와O(d)계수준비비를기록. 실제코드는원본FP32scalar이고통계를밀어넣은추가후처리없음.
+FULL 비용에는 기존head-loop와head-batched두구현을허용한다. obq_gpu_cost_stage1/benchmark.py의batch_codes를AST동일복사하고원본SHA256 3f1fc5b32a52a406a99f470ba81b93a9fc856021ef1baed455447cc43f189f10을고정한다. 두구현이모든chunk에서기존FULL의packed/scale/sentinel과정확히같아야유효하다. 같은1+3반복/동일범위로시간을기록하고층별6청크총시간이더작은구현을비용기준선으로쓴다. 이는하나의동일출력기준선의실행최적화이며새품질팔이아니다. 통계해시검증은모든경로에서준비타이머밖에둔다.
+공통회전/scale/pack/reset과코드선택을설명용component구간으로별도측정하되,비교주시간은모든팔에서같은end-to-end encoder구간이다. component median합을end-to-end median과같다고하지않는다. 한층6청크의encode합+고정통계준비합이FULL보다작으면CPU비용감소신호로기록한다(크기/범위함께보고).
+cachepayload동등은상주통계/원본K/평가버퍼를포함한totalmemory동등아님. 가중치/decoder/새모델다운로드없음.
+
+출처: math/prior검토 docs/reviews/20261105_METHOD_SEARCH/STRUCTURED_H_CODEX_KO.txt와기존causal LOCK/결과/manifest를새LOCK에해시로연결한다. 새파일만쓰기,기존원자료·LOCK·결과덮어쓰기금지.
+합성검사 최신본은 SELFTEST_V3.json이다. 초기SELFTEST/SELFTEST_V2는수정전코드기록으로보존하며최종코드검증을대신하지않는다. FP64는남은H의inverse로직접보상하는독립참조와24사례비교,FP32는실형상dense참조와차이를기록한다. FP32불일치율의임의통과상한을두지않으며최종효과평가는등록된scalar만사용한다.

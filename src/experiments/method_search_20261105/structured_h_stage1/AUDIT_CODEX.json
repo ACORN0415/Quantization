@@ -1,0 +1,337 @@
+{
+  "passed": true,
+  "auditor_sha256": "99cfafec95000e7eb807e1bc891bd3bf432950aa808b0451ea338d42b1559bf7",
+  "result_sha256": "ace53504caf1ea37066a1f41e3987c1e36477e39e3c3a2f318f2d638ba3a3e6d",
+  "protected_files_hashed_before_and_after": 109,
+  "locked_source_files": 83,
+  "new_packet_files": 24,
+  "existing_packet_files_inspected": 48,
+  "new_packet_checks": [
+    {
+      "layer": 18,
+      "chunk": 1,
+      "arm": "D_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 18,
+      "chunk": 1,
+      "arm": "C_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 18,
+      "chunk": 2,
+      "arm": "D_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 18,
+      "chunk": 2,
+      "arm": "C_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 18,
+      "chunk": 3,
+      "arm": "D_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 18,
+      "chunk": 3,
+      "arm": "C_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 18,
+      "chunk": 4,
+      "arm": "D_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 18,
+      "chunk": 4,
+      "arm": "C_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 18,
+      "chunk": 5,
+      "arm": "D_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 18,
+      "chunk": 5,
+      "arm": "C_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 18,
+      "chunk": 6,
+      "arm": "D_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 18,
+      "chunk": 6,
+      "arm": "C_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 24,
+      "chunk": 1,
+      "arm": "D_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 24,
+      "chunk": 1,
+      "arm": "C_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 24,
+      "chunk": 2,
+      "arm": "D_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 24,
+      "chunk": 2,
+      "arm": "C_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 24,
+      "chunk": 3,
+      "arm": "D_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 24,
+      "chunk": 3,
+      "arm": "C_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 24,
+      "chunk": 4,
+      "arm": "D_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 24,
+      "chunk": 4,
+      "arm": "C_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 24,
+      "chunk": 5,
+      "arm": "D_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 24,
+      "chunk": 5,
+      "arm": "C_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 24,
+      "chunk": 6,
+      "arm": "D_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    },
+    {
+      "layer": 24,
+      "chunk": 6,
+      "arm": "C_MEAN",
+      "payload_bytes": 4515841,
+      "scale_bytes_equal_full": true
+    }
+  ],
+  "decisions": {
+    "D_MEAN": {
+      "decision": "undecided",
+      "endpoint_baseline_checks": [
+        {
+          "layer": 18,
+          "call": 0,
+          "baseline": "R_bf16",
+          "gain": 0.20751099197049636,
+          "recovery": 0.557073265814378,
+          "passed": false
+        },
+        {
+          "layer": 18,
+          "call": 0,
+          "baseline": "R_fp32",
+          "gain": 0.2139497461668229,
+          "recovery": 0.5666035981545412,
+          "passed": false
+        },
+        {
+          "layer": 18,
+          "call": 3,
+          "baseline": "R_bf16",
+          "gain": 0.1793804401621254,
+          "recovery": 0.5200755409787018,
+          "passed": false
+        },
+        {
+          "layer": 18,
+          "call": 3,
+          "baseline": "R_fp32",
+          "gain": 0.17215294397359715,
+          "recovery": 0.5076121436542472,
+          "passed": false
+        },
+        {
+          "layer": 24,
+          "call": 0,
+          "baseline": "R_bf16",
+          "gain": 0.13482542388152957,
+          "recovery": 0.4596393792644738,
+          "passed": false
+        },
+        {
+          "layer": 24,
+          "call": 0,
+          "baseline": "R_fp32",
+          "gain": 0.12231226696798546,
+          "recovery": 0.43203393870389456,
+          "passed": false
+        },
+        {
+          "layer": 24,
+          "call": 3,
+          "baseline": "R_bf16",
+          "gain": 0.1605351000741271,
+          "recovery": 0.6645681368573437,
+          "passed": false
+        },
+        {
+          "layer": 24,
+          "call": 3,
+          "baseline": "R_fp32",
+          "gain": 0.18899943598051003,
+          "recovery": 0.7071217578066571,
+          "passed": false
+        }
+      ],
+      "cost_reduced_both_layers": true
+    },
+    "C_MEAN": {
+      "decision": "undecided",
+      "endpoint_baseline_checks": [
+        {
+          "layer": 18,
+          "call": 0,
+          "baseline": "R_bf16",
+          "gain": 0.21508063643654213,
+          "recovery": 0.5773943414533659,
+          "passed": false
+        },
+        {
+          "layer": 18,
+          "call": 0,
+          "baseline": "R_fp32",
+          "gain": 0.22145788936335375,
+          "recovery": 0.5864874308153981,
+          "passed": false
+        },
+        {
+          "layer": 18,
+          "call": 3,
+          "baseline": "R_bf16",
+          "gain": 0.16957661968387502,
+          "recovery": 0.49165144282019646,
+          "passed": false
+        },
+        {
+          "layer": 18,
+          "call": 3,
+          "baseline": "R_fp32",
+          "gain": 0.16226277766762418,
+          "recovery": 0.4784498859327532,
+          "passed": false
+        },
+        {
+          "layer": 24,
+          "call": 0,
+          "baseline": "R_bf16",
+          "gain": 0.13761736724402326,
+          "recovery": 0.469157518181699,
+          "passed": false
+        },
+        {
+          "layer": 24,
+          "call": 0,
+          "baseline": "R_fp32",
+          "gain": 0.12514459064949562,
+          "recovery": 0.4420383314450367,
+          "passed": false
+        },
+        {
+          "layer": 24,
+          "call": 3,
+          "baseline": "R_bf16",
+          "gain": 0.16318589604526854,
+          "recovery": 0.6755416531719501,
+          "passed": false
+        },
+        {
+          "layer": 24,
+          "call": 3,
+          "baseline": "R_fp32",
+          "gain": 0.19156034951946335,
+          "recovery": 0.716703149803204,
+          "passed": false
+        }
+      ],
+      "cost_reduced_both_layers": true
+    }
+  },
+  "numeric_differences_from_execution_record": {
+    "D_MEAN": {
+      "codes": 86704128,
+      "different_codes": 85,
+      "max_abs_difference": 1
+    },
+    "C_MEAN": {
+      "codes": 86704128,
+      "different_codes": 67,
+      "max_abs_difference": 1
+    }
+  },
+  "disk_bytes_before_audit_output": 108583241,
+  "time_utc": 1793872750.0248482,
+  "GPU_calls": 0,
+  "scope": "SHA and sizes; actual packet dtype/shape/payload/scales; medians and decision arithmetic. No H/encoder/attention SSE rerun. Runtime code assertions are execution evidence, not a second independent effect measurement."
+}

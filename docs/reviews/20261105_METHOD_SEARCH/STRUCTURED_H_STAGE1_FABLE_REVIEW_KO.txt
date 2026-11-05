@@ -1,0 +1,69 @@
+structured_h_stage1 검토 — Claude Fable 5.1, 2026-11-05 (GPU 0, 파일 변경 0)
+Part 1: 등록안 REGISTRATION_KO.txt (sha256 a3e60c8c…b95c7, 34행 전문 읽음). Part 2(코드 대조)는 코드 완성 연락 후 같은 파일에 추가한다.
+참고: diagnose.py(현재 sha256 앞 16자 c429c76c2ac43050, 18:36)와 SELFTEST.json이 이미 존재하나 "코드 준비 중" 통보에 따라 아직 읽지 않았다. 최종본 해시를 받으면 그 버전을 검토한다.
+
+== Part 1. 등록안 판단: 범위·비교 조건·gate 타당. 수정 요청 0, 명시 권고 3(아래 B). ==
+
+A. 확인한 점
+ 1. 정보 범위: D/C 통계는 p0_s101 층별 c7 call0 q만(6행·10행). 평가 q·원본 출력은 코드 선택에 불사용. FULL 팔은 causal의 O_offline packet(같은 p0 H) 재사용 → 회수율의 분자·분모가 같은 보정원을 공유한다. 공정.
+ 2. 평가 일관성: 모든 팔 SSE를 공통 CPU FP32 attention으로 재계산하고 native GPU SSE와 섞지 않는다(9행). 따라서 FULL의 CPU 재계산 이득이 causal native의 24–38%와 약간 달라도 문제 없다. 같은 자료로 다시 재는 것이므로 "fresh 입력"이라는 성격은 유지되나, 이 입력은 이미 causal 결정에 쓰였으므로 두 번째 사용임을 결과에 적을 것.
+ 3. 통계 정의: λ = .01·mean(E[q_rot²]) = full H의 damping과 동일(12행). diag(H_D) = v+λ+μ² = diag(H_full)+λ 로 full과 같은 대각. C_MEAN은 trace 동일(11행). 재귀식(14–15행)은 내 유도·합성 검사와 일치(c_j는 j 제외 tail, 순서 0..127 고정).
+ 4. 수치 대조(18–20행): dense same-H를 진단으로만 계산하고 후보 선택에 쓰지 않음. FP32 스칼라를 최종 후보로 고정. 합성 검사에 zero-mean(→대각→FP32 RTN 동일)·diagonal·clip·가변 scale 포함. 충분.
+ 5. 주 판정(22–26행): 4 endpoint × 2 RTN 모두 ≥20% & full 감소분 ≥80% 회수, 분모≤0은 판단불가, C 통과 시 C 우선, 미달 시 rank/순서 확장 없음, −10% 악화 시 stop. 사전 고정된 자원배분 규칙으로 적절. 80% 회수는 full 이득 24–38% 기준 19–30% 절대 이득을 요구하므로 20% gate와 같은 급 — 두 조건이 거의 중복이라 "둘 다 통과"가 실질적으로 회수율 조건 하나로 결정된다는 점만 인지.
+ 6. 자원(4행): 600초/4스레드/4GiB/1GiB, 재시도·확장 금지. 작업량(패킷 로드, 2층×6청크×2후보 encode ≈ 수 초, dense 진단 ≈ 수 초, attention 128q 작음)에 비해 충분.
+
+B. 명시 권고(기준 변경 아님, 결과 전 문장 추가)
+ 1. 비용 비교식의 대칭(30–31행): "D/C의 encode합 + 고정통계준비합 < FULL"에서 FULL 쪽도 "encode합 + H/factor 준비합(층별 1회)"로 같은 항을 포함한다고 명시. 현재 문장은 FULL 쪽 준비비 포함 여부가 모호하다.
+ 2. 벡터화 수준 교란: 스칼라 재귀는 S가 [N,H]라 12 head를 한 번에 처리(128 iteration)할 수 있고, FULL은 head별 U가 달라 head 루프(12×128 iteration) 구현이 자연스럽다. Python 루프 오버헤드가 CPU 시간을 지배하면 "비용 감소"가 구현 벡터화 차이를 재게 된다. 두 팔의 루프 구조(head 루프 여부)를 결과에 적고, CPU 초 외에 연산량(FULL O(N·D²/2), 스칼라 O(N·D)) 을 함께 보고할 것. 등록안의 "CPU 비용 우위 ≠ GPU 속도 증거"(26행)는 유지.
+ 3. 기록 통계: ‖μ‖²/tr(H)와 중심 Σ의 top-16 에너지(head별)를 기술 통계로만 기록(상한·판정 아님 — 조정자 지적 수용). 회수율 해석에 참고용.
+
+C. 가장 강한 반론(결과 해석 시)
+ - D/C가 통과하면 "평균 query 방향 정렬 오차 상쇄"가 full-H 이득의 핵심이라는 뜻이고, 이는 QuIP-LDLQ 특수형·WoodFisher 대수·방향성 오차 확산의 조합이다. 기여로 남는 것은 "KV K에서 rank-1+diag(또는 cI+μμᵀ)로 충분하다"는 실증과 O(ND) 통계·O(N) 상태의 비용 구조뿐이며, 그것도 업무 1의 full-H GPU 비용과 나란히 재야 한다. FlagRot(2611.03992 §C.1)·FIMA-Q(2506.11543) DPLR과의 식 대조는 Codex 확인분을 따르되, "centering + per-channel 고정 선택"이 이미 있으므로 목적식 신규성은 주장하지 않는다(조정자 요약과 일치).
+ - 미달하면 rank-1은 부족하다는 뜻이며, 등록대로 확장하지 않고 full-H 비용 경로만 남긴다.
+
+Part 2(코드 대조): 대기 중. 코드 완성·최종 해시 통보 후 10분 내 추가.
+
+== Part 2. 코드 대조 — 2026-11-05 18:5x KST (GPU 0, 파일 변경 0) ==
+대상 해시(직접 sha256sum, 조정자 통보와 일치): diagnose.py 5ddd40f9…c056b7(255행 전문 읽음), REGISTRATION_KO.txt d542b785…a2ba2(36행 재독), SELFTEST_V3.json 309b6386…2d93fd, 참조 obq_gpu_cost_stage1/benchmark.py 3f1fc5b3…189f10(해시만 확인, 본문 미독), causal_obq/common.py 436f7b27(기검토).
+판단: 실행을 무효로 만드는 오류 없음. 정보 누출 없음. 비용 비교는 대칭이며 내 Part 1 권고 B1·B2가 코드에 반영돼 있다. 저위험 주의 2개(D), 기록 권고 2개(E).
+
+A. 수학·구현 동일성(직접 확인)
+ - statistics_mean(32–40행): μ=E[q_rot], v=E[(q_rot−μ)²](centered), damp=.01·mean(E[q_rot²]) = full H의 damping과 같은 정의. D_MEAN d=v+λ, C_MEAN d=mean(v)+λ 상수(trace 동일). term=u²/d, inclusive=역누적합, tail=j 제외(한 칸 shift, 끝 0), alpha=u/d, beta=u/(1+tail). 내 유도 S←S+e·u_j/(1+Σ_{k>j}u_k²/d_k)와 일치. d/u는 FP32 고정(등록 13행).
+ - scalar_codes(42–49): w=x_j+alpha_j·S, code=clamp(round(w/scale)), j<127일 때 S+=e·beta_j. 상태 [N,12] head 일괄. 정확.
+ - independent_fp64_test(96–122): 남은 부분행렬 H[j:,j:]의 역행렬로 직접 OBS 보상하는 독립 참조(Cholesky·cumsum 미사용) vs 스칼라 재귀, dim 1/2/8/32 × strength 0/.2/2 × 2 = 24사례, 코드 차이 0, 사전양자화값 최대차 1.4e-14. 이는 내 /tmp 검사(밀집 GPTQ 대조)와 다른 경로의 독립 증거다. 충분.
+ - dense_same_h(50–52): FP32 d/u → FP64 H → 잠긴 codes_obq. 진단 전용, 선택 불사용(208행 dense_reference_evaluated_as_arm False). 합성에서 FP32 불일치 3/7.2M(두 모드) — 순서 효과 수준.
+ - batch_codes(55–65): benchmark.py와 AST 동일(67–71행 해시+AST 비교, check_lock에서도 호출). 갱신식은 head별 codes_obq와 같은 U 사용. 실자료에서 causal FULL packet과 packed/scale/sentinel 동일 assert(201행), 셀프테스트 full_batched_packet_exact.
+ - 대각(μ=0) → FP32 RTN 코드 동일(146–147행). R_bf16/R_fp32/FULL encode가 causal encode_k와 패킷 동일(137–141행).
+
+B. 정보 범위·누출
+ - 통계 입력은 p0_s101 l{layer}_c7.pt의 q만(171–178행). raw H 해시를 causal packets manifest의 raw_H_sha256과 assert(184행) → FULL과 같은 보정원. λ 일치 assert(185행).
+ - 평가 read 파일(q, k_current, v_current, native_av)은 모든 코드 생성·저장이 끝난 뒤 217행에서 처음 열린다. 어느 팔의 코드 선택에도 평가 q·원본 출력 불사용. 누출 없음.
+ - R/FULL 팔은 causal의 실제 packet을 재사용하고 재계산 packet과 동일성 assert(203행). 평가는 다섯 팔 모두 같은 CPU FP32 attention(85–90행), 참조=원본 K·V, 팔=복원 K + V4 과거 + BF16 현재(221행) — causal과 같은 정의, native SSE 비혼합. cpu_vs_saved_native 기록(219행).
+ - 입력은 fresh_dog_stream_307의 두 번째 사용(causal 결정에 이미 사용). 등록문에 그 문장은 없다 → 결과 보고에 명시(E1).
+
+C. 비용 공정성·자원 gate
+ - encode(73–83): 모든 구현이 같은 end-to-end 범위(frames→code→pack+왕복)이며 component 구간도 기록. FULL/FULL_BATCH는 factor 선계산, D/C는 alpha/beta 선계산 → 통계 준비 시간은 stats에 별도 측정(176–182행, warmup1+3회, 해시 동일 assert).
+ - 비용식(237–241): cand = Σ_chunk encode + stat(D/C); full = Σ_chunk encode + stat(FULL: hessian+factorize) 중 FULL/FULL_BATCH의 작은 쪽. 대칭이고 보수적(빠른 full 구현을 기준선). Part 1 B1·B2 해소. 등록 32행 문구("고정통계준비합이 FULL보다")는 코드대로 "FULL의 encode합+H/factor 준비합"으로 읽어야 한다 — 문장은 그대로여도 되나 결과 보고에 식을 그대로 적을 것.
+ - 벡터화: 스칼라·FULL_BATCH 모두 head 일괄 128 iteration, FULL은 head 루프. 둘 다 재서 작은 쪽 채택 → 교란 해소.
+ - 자원: 600s(START=check_lock 후), RSS 4GiB, 신규 디스크 1GiB(HERE rglob). 추정 작업량: encode 6구현×4회×6청크×2층 ≈ 288회(≈30–60s), dense 진단 24회(≈5s), attention 2층×2call×6회(작음) → 총 2분 안팎. 메모리: 과거 K/V/V4 float 3×172MB + attention kt/vt 2×200MB + encode workspace <200MB ≈ 1.3GB. 상한 내. 신규 artifact 12개×4.5MB=54MB.
+ - 결정(226–244): 등록 23–25행과 일치(4 endpoint×2 RTN, ≥20% & 회수≥80%, 분모≤0→None→undecided, ≤−10%→stop). preferred는 출력 signal AND CPU 비용 감소(두 층) — 등록 26행("GPU 커널 검토는 둘 다 확인 시")과 일치하며 출력 결정과 비용은 별도 필드로도 남는다.
+
+D. 저위험 주의(무효 아님, 수정 여부는 root 판단; 수정 시 해시 재통보)
+ 1. 185행 λ 일치 assert가 atol 1e-12, rtol 0이다. λ=.01·mean(E[q²])를 두 경로가 다른 합산 순서(FP64, 4680 토큰)로 계산하므로 차이가 ~1e-13–1e-12 수준일 수 있어 경계에 있다. 실패하면 조용한 오류가 아니라 run 'failed'로 멈추지만, 그러면 600s 상한 안에서 재실행 여부가 등록 밖 판단이 된다. rtol 1e-9로 두는 편이 안전하다(수학적 의미 변화 없음).
+ 2. 20행 디스크 guard가 HERE 전체(rglob)를 매 호출 합산한다 — 파일 수가 적어 비용은 무시되나, RESULT.json 임시 .tmp 포함 시점에 따라 수 바이트 차이가 날 뿐 문제 없음.
+
+E. 기록 권고(기준 변경 아님)
+ 1. 결과 보고에 "평가 입력은 causal 결정에 이미 쓰인 fresh prompt의 두 번째 사용"과 "FULL/D/C 통계는 동일 p0 call0 q(해시 일치)" 두 문장.
+ 2. 기술 통계로 ‖μ‖²/tr(H)와 중심 Σ top-16 에너지(head별)를 함께 기록하면 회수율 해석에 도움(판정 아님). 코드에는 없으므로 결과 후 별도 스크립트로 계산해도 된다(캡처만 필요).
+
+F. LOCK에 포함할 해시(check_lock이 전 항목을 검사하므로 누락 시 실행 불가): diagnose.py, REGISTRATION_KO.txt, SELFTEST_V3.json, causal_obq/common.py, obq_gpu_cost_stage1/benchmark.py, causal_obq/LOCK.json·capture/manifest.json·packets/manifest.json·NATIVE_RESULT.json, p0 캡처 manifest, STRUCTURED_H_CODEX_KO.txt, 이 검토 파일.
+결론: 이 코드·등록안으로 CPU 실행해도 된다. 실자료 효과는 0이며 결과가 나오면 같은 파일에 Part 3(결과 감사)을 추가한다.
+
+== Part 2b. 실행 상한 수정본 확인 — 2026-11-05 ==
+해시(직접): diagnose.py b3c8655b…79b5f, RUN_ORDER_DIFF_V1.json 984aac31…2824827, REGISTRATION d542b785(불변), SELFTEST_V3 309b6386(불변). 조정자 통보와 일치.
+변경 확인(150–170행 직접 읽음): run()이 START를 먼저 잡고 guard() 후 check_lock()을 호출하므로 LOCK 원자료 해시 읽기 시간이 600초 상한에 포함된다. check_lock은 해시 항목마다 guard() 호출. lock_validation_seconds·lock_checked_utc 기록. 수학·통계·encoder·결정 로직 불변 주장(RUN_ORDER_DIFF_V1의 16개 함수 AST sha256)은 내가 독립 재현하지 못했다: 현재 파일에서 ast.dump(기본/annotate_fields=False/include_attributes 양쪽/indent), ast.unparse, 소스 세그먼트 등 8가지 관례로 sha256을 계산했으나 16개 모두 JSON 값과 불일치(0/16). JSON이 쓴 해시 방법을 모르므로 "불변" 확인은 현재 JSON의 자기 주장 + 내 스팟 리드(guard 15–20행, λ assert 189행, check_lock/run 154–170행)에만 의존한다. 구버전(5ddd40f9) 파일이 디스크에 없어 직접 diff도 못 했다. → 정정: 앞서 회신에서 "전부 일치"라고 쓴 것은 오류이며 철회한다. 독립 확인에는 (a) JSON 해시 생성 코드/방법 또는 (b) 구버전 diagnose.py 사본 중 하나가 필요하다.
+판단: Part 2 결론 유지(실행 가능). 189행 λ assert(atol 1e-12, rtol 0)는 그대로이며 저위험 주의로 남는다. SELFTEST_V3는 구 해시(5ddd40f9) 기준 통과이고 수정이 check_lock/run에 한정됐으므로 재실행 없이도 수학 검증 근거로 유효하다 — LOCK에 RUN_ORDER_DIFF_V1.json을 포함해 그 연결을 남길 것.
+
+== Part 2c. AST 해시 재현 — 2026-11-05 ==
+시스템 python3 3.13.5에서 ast.dump(n, include_attributes=False).encode()의 sha256으로 RUN_ORDER_DIFF_V1의 16개 함수 해시가 현재 diagnose.py(b3c8655b)에서 16/16 일치했다. torch env Python 3.10.22에서의 0/16은 AST 필드의 버전 차이(3.12+ type_params 등)이며 수학 변경의 증거가 아니었다. Part 2b의 "독립 재현 실패"는 해석기 차이로 설명되고, 현재 파일과 JSON의 일관성은 확인됐다.
+남는 전제: JSON의 해시가 구버전(5ddd40f9)에서 계산됐다는 작성자 기록. 구버전 파일이 없어 그 자체는 재현 못 하나, 내가 Part 2에서 구버전 전문을 읽었고 스팟 리드가 일치하므로 "수정이 check_lock/run에 한정"을 받아들인다. Part 2 결론(CPU 실행 가능) 조건부 해제. 이후 Part 3(결과 감사)은 LOCK snapshot 불변을 위해 새 파일 STRUCTURED_H_RESULT_FABLE_REVIEW_KO.txt로 쓴다.

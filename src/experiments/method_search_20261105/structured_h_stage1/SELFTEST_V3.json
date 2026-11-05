@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "independent_fp64": {
+    "cases": 24,
+    "codes": 1806,
+    "code_differences": 0,
+    "max_prequant_abs_difference": 1.4210854715202004e-14
+  },
+  "synthetic": [
+    {
+      "mode": "D_MEAN",
+      "fp32_dense_code_differences": 3,
+      "codes": 7225344
+    },
+    {
+      "mode": "C_MEAN",
+      "fp32_dense_code_differences": 3,
+      "codes": 7225344
+    }
+  ],
+  "diagonal_exact": true,
+  "baseline_packets_exact": true,
+  "input_preserved": true,
+  "code_sha256": "5ddd40f9f3c835861f01cd51ac6aab36b3a2bc95e44171a0059cd1cbeac056b7",
+  "common_sha256": "436f7b2762397ecce840b91feb535094a9008c54066e4e796c3df248f9071c35",
+  "batch_source_sha256": "3f1fc5b32a52a406a99f470ba81b93a9fc856021ef1baed455447cc43f189f10",
+  "full_batched_packet_exact": true,
+  "time_utc": 1793871712.6181424,
+  "GPU_calls": 0
+}

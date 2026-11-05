@@ -1,0 +1,58 @@
+Structured H CPU 진단 결과 — Codex — 2026-11-05
+
+결론: 두 구조 모두 계산을 정상 완료했고 RTN보다 오차를 줄였지만, 등록한 출력 기준을 충족하지 못했다. D_MEAN과 C_MEAN의 판정은 모두 undecided이며 preferred=null이다. CPU 비용 감소는 확인됐으나 이 결과로 스칼라 GPU 커널 개발에 넘어가지 않는다. 등록대로 rank·채널 순서·추가 입력을 붙여 이 후보를 확대하지 않는다. 이는 실행 실패나 모든 저랭크 근사의 부정이 아니다.
+
+1. 질문과 비교 범위
+동일한 p0_s101 c7 call0 query를 고정 보정원으로 사용했다. FULL은 전체 query second moment에 damping을 적용한 기존 GPTQ/OBQ packet이다. D_MEAN은 centered 채널 분산+평균 outer product, C_MEAN은 평균 분산 하나+평균 outer product를 사용한다. 통계 FP64, 실제 encoder는 FP32 스칼라 재귀로 고정했다. 모든 head K4, 같은 Hadamard/frame1560+8pad/g16, 같은 원본 scale·저장 dtype·INT4 payload, 공통 과거 V4와 현재 BF16 K/V 조건이다. 평가 query로 코드를 선택하지 않았다.
+평가는 causal_obq의 dog_stream_307 입력을 재사용한 층18/24 × c7 call0/3 네 endpoint다. 이 입력은 앞선 causal 판단에 이미 사용됐으므로, 이번 결과는 새로 확보한 최초 보류 입력 평가가 아니다. FULL·D·C 모두 같은 p0 보정원을 쓰며 raw H 해시 일치를 실행 중 확인했다. 두 통계 계산 경로의 lambda 최대 차이는 층18 1.527e-16, 층24 1.596e-16으로 등록 허용치1e-12 안이다. 허용치를 바꾸지 않았다.
+기존 RTN_BF16/RTN_FP32/FULL packet을 정확히 재사용했다. 모든 효과 수치는 같은 CPU FP32 attention·post-Wo SSE로 재계산했으며 과거 native GPU SSE와 섞지 않았다.
+
+2. 효과: RTN 대비 감소와 full-H 감소분 회수
+아래 각 쌍은 BF16 RTN / FP32 RTN 기준이다. 두 기준을 각각 통과해야 하며, endpoint를 합산해 탈락한 층을 가리지 않았다.
+
+층/읽기  D 감소율(%)     D 회수율(%)     C 감소율(%)     C 회수율(%)
+18 / 0  20.75 / 21.39   55.71 / 56.66  21.51 / 22.15   57.74 / 58.65
+18 / 3  17.94 / 17.22   52.01 / 50.76  16.96 / 16.23   49.17 / 47.84
+24 / 0  13.48 / 12.23   45.96 / 43.20  13.76 / 12.51   46.92 / 44.20
+24 / 3  16.05 / 18.90   66.46 / 70.71  16.32 / 19.16   67.55 / 71.67
+
+두 후보 모두 18/call0에서만 두 RTN 대비20% 기준을 넘었다. FULL 이득80% 회수 기준은 어느 endpoint에서도 충족하지 못했다. 10% 악화 조건에는 해당하지 않아 stop_arm이 아닌 undecided이며, 사전에 정한 다음 단계 진입 조건을 충족하지 못한 것이다.
+
+같은 CPU 경로의 post-Wo SSE 원값:
+층/읽기   RTN_BF16   RTN_FP32    FULL        D_MEAN      C_MEAN
+18 / 0    823.913310  830.662210  517.003826  652.942241  646.705511
+18 / 3    798.704822  791.731751  523.221721  655.432799  663.263158
+24 / 0    397.145246  391.483163  280.651145  343.599970  342.491163
+24 / 3    396.800272  410.727089  300.947992  333.099901  332.048064
+
+CPU 원본 참조와 저장 native BF16 AV 사이 post-Wo SSE는0.221–0.435, NSE는2.30e-6–2.84e-6이었다. 따라서 두 경로를 비트 동등하다고 하지 않는다. 새 후보의 native GPU 평가나 최종 영상 품질은 측정하지 않았다.
+
+3. 비용과 저장량
+각 통계·encoder는 warmup1+측정3회이며 encoder 구현 순서를 교차했다. 주 비용은 한 층의 통계 준비1회+6개 청크 encoder 시간 중앙값의 합이다. encoder는 원본 K→회전/scale→code→패킹·왕복 검증과 상태 초기화/출력 할당을 모두 포함한다. 구성 요소별 중앙값 합을 전체 중앙값으로 대체하지 않았다.
+FULL은 head-loop와 batched 두 구현이 실제 기존 packet과 같은지 검사한 뒤, 총시간이 더 짧은 쪽을 비용 기준선으로 삼았다. 두 층 모두 head-loop가 더 빨랐다. FULL의 준비비도 H+factor를 포함했다.
+
+층     FULL loop / batch 총초    D 총초 / 감소율      C 총초 / 감소율
+18     1.089436 / 1.551971      0.643126 / 40.97%    0.638887 / 41.36%
+24     1.060137 / 1.524554      0.596222 / 43.76%    0.595657 / 43.81%
+
+통계 준비만 보면 FULL은 층18/24 40.33/33.05ms, D는59.72/38.19ms, C는59.31/38.06ms였다. 이번 CPU 구현에서 평균·분산 통계 자체가 더 빠르지는 않았다. 주 시간 감소는 encoder 구간에서 나왔다. 청크별 end-to-end 중앙값의 중앙값은 FULL171.79–174.97ms, D96.62–97.60ms, C96.45–96.86ms였다. RTN_BF16은35.40–37.55ms, RTN_FP32는43.71–50.27ms였다. 스칼라 후보도 RTN보다는 느렸다.
+이 시간에는 진단용 패킹 왕복 검증이 포함된다. CPU 비용 우위를 GPU 속도·전체 생성 속도 우위로 해석하지 않는다. 이론상 full feedback은O(MD²), 구조 feedback은O(MD)이지만 순차128채널 의존과 공통 전처리는 남는다.
+모든 팔의 과거6청크 K+V payload는54,097,926바이트로 같았다. K 청크4,515,841바이트, V 청크4,500,480바이트다. 실제 저장한 새 candidate packet은24개다. 동일 payload는 통계·factor·작업 버퍼를 포함한 전체 메모리 동등성을 뜻하지 않는다. 결과의 resident_encoder_state_bytes는 이 진단에서 유지한 텐서의 크기이며 프로덕션 최소 상주량이나 경로별 peak 메모리 측정이 아니다.
+
+4. 수치·유효성·감사
+같은 FP32 d/u로 구성한 dense same-H와 실제 scalar의 코드 차이를 기록했다. D는86,704,128개 중85개, C는86,704,128개 중67개 달랐고 최대 차이는1 code였다. dense 결과를 품질 평가 팔로 추가하거나 더 좋은 쪽을 고르지 않았다. 순수 실수식의 동등성과 FP32 코드 비트 동등성을 구분한다.
+사전 합성 SELFTEST_V3에서 FP64 독립 remaining-H inverse 참조24사례/1,806code 일치, FP32 diagonal=RTN·baseline packet·FULL batched packet·입력 보존·pack 왕복을 확인했다. 실행 순서만 변경한 코드 연결은 시스템 Python3.13.5의 AST 해시16/16으로 재현했다. Python3.10 AST 스키마와의 불일치는 AST_INTERPRETER_RECORD.json에 명시했고, Fable Part2c 검토 snapshot을 잠금에 포함했다.
+실행 중 실제 재계산 baseline과 기존 packet 일치, 반복3회의 packed hash 일치, candidate scale/payload 동등, K 입력 해시 전후 일치 assert를 통과했다. 이는 실행 기록과 잠긴 코드가 뒷받침한다.
+별도 audit_readonly.py는109개 보호 파일(LOCK source83개+새 packet24개+LOCK/RESULT)의 해시를 읽기 전후 다시 확인했다. 새24 packet 및 기존48 packet의 dtype/shape/payload와 scale 관계를 검사했고,20개 점수의 NSE 산술·통계/encoder 중앙값·16개 endpoint/RTN 판정·비용 선택을 독립 재계산했다. H·양자화·attention SSE를 다시 실행하지 않았으므로 독립 효과 재현이라고 부르지 않는다. GPU 호출0.
+
+5. 자원과 다음 판단
+원자료 LOCK 검증을 포함한 전체 실행56.394초(그중 LOCK 검증0.553초), peakRSS2,928,246,784바이트로600초/4GiB 안에 완료했다. CPU4 threads, GPU0, 새 생성0, 실행 재시도0. 감사 출력 직전 stage 디스크108,583,241바이트로1GiB 안이다. 외부600초 timeout도 적용했으며 정상 종료 코드0이었다.
+이번 근거가 지지하는 것은 '평균 기반 구조가 일부 오차를 줄이고 이 CPU 구현의 encoder 비용을 낮춘다'까지다. '평균 항만으로 full-H 효과가 충분히 보존된다'는 진행 가설은 등록 기준에서 지지되지 않았다. 구조 근사 자체나 GPTQ 특수화의 신규성도 확보하지 않았다.
+다음 판별 행동 하나: 이 후보의 GPU 구현을 시작하지 않고, 별도로 이미 등록·진행한 fixed full-H GPU 비용 검사에서 정확한 packet과 실제 실행 비용이 함께 성립하는지 확인해 남은 full-H 경로의 자원 배분을 결정한다. 이번 결과를 구제하기 위한 rank 추가·순서 탐색은 하지 않는다.
+
+주요 기록:
+RESULT.json sha256 ace53504caf1ea37066a1f41e3987c1e36477e39e3c3a2f318f2d638ba3a3e6d
+AUDIT_CODEX.json sha256 c94fc6b6779b2f7e47ebd78c86400147e6b11aec209684026e7711fdfc446b85
+LOCK.json sha256 bc01c591a1c9a6929d4069d291dfe4f79190c307142d3585341ec71feb05f7c6
+diagnose.py sha256 b3c8655b7f35b9cac13180566213c972814c8027d4c22a1ac02ab071ae679b5f
+실행 전 실제 Claude Fable 검토: FABLE_REVIEW_SNAPSHOT_KO.txt Part2/2b/2c. 결과에 대한 Fable 독립 감사는 root가 별도로 취합한다.

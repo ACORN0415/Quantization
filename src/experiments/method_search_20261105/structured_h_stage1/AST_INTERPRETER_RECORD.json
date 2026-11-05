@@ -1,0 +1,27 @@
+{
+  "interpreter": "/home/acorn0415/anaconda3/bin/python3",
+  "version": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 16:09:02) [GCC 11.2.0]",
+  "serialization": "ast.dump(n, include_attributes=False).encode()",
+  "hash": "hashlib.sha256(...).hexdigest()",
+  "matches": {
+    "guard": true,
+    "sha": true,
+    "save": true,
+    "tsha": true,
+    "load": true,
+    "statistics_full": true,
+    "statistics_mean": true,
+    "scalar_codes": true,
+    "dense_same_h": true,
+    "batch_codes": true,
+    "check_batch_source": true,
+    "encode": true,
+    "attention": true,
+    "metric": true,
+    "independent_fp64_test": true,
+    "math_test": true
+  },
+  "matched_count": 16,
+  "notes": "Python 3.10 and 3.13 AST schemas differ; compare using the authoring interpreter. No numerical selftest rerun.",
+  "time_utc": 1793872603.3546686
+}
