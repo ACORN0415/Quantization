@@ -1,0 +1,50 @@
+{
+  "status": "bounded_problem_and_execution_feasibility_review_not_adoption",
+  "start_epoch": 1793904443.9028976,
+  "deadline_epoch": 1793905643.9028976,
+  "task": "Determine whether quantized DINO-WM action-sequence selection leaves a meaningful testable decision after strong simple baselines. No method name or speculative new algorithm required.",
+  "source_failure": "An Empirical Study of World Model Quantization (2602.02110), reported PushT low-bit planning loss/task success mismatch. Literature observation only; our own planning failure not measured.",
+  "root_question": "Does cheap full-precision rescoring of a low-precision planner shortlist already resolve the consequential choice, or is there a concrete remaining limitation worth a minimal test? Do not assume a new adaptive selector is needed.",
+  "sources": {
+    "paper": "https://arxiv.org/html/2602.02110v1",
+    "code_repo": "https://github.com/huawei-noah/noah-research/tree/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM",
+    "code_commit": "be738be37a0535f75f541a6c1201ce19f95499b0",
+    "related": [
+      "https://arxiv.org/abs/2607.28405",
+      "https://arxiv.org/abs/2609.36828"
+    ],
+    "upstream": "https://github.com/gaoyuezhou/dino_wm",
+    "asset_metadata": "https://huggingface.co/datasets/gaoyuezhou/dino_wm"
+  },
+  "review_required": [
+    "Distinguish planning horizon/optimizer iterations/environment steps, exact success metric and causal meaning of paper figures. A plausible image is not successful control.",
+    "Strong baselines: full FP32 predictor; encoder high precision and existing group128 quant; fixed W8A8 or W4A16 where supported; quantized shortlist then exact predictor rescore. Costs must include duplicated weights/selection/rollouts and actual lowbit implementation.",
+    "Check exact quantization code path: actual packed/integer vs fake quant+floating compute. No acceleration claim from bitwidth alone.",
+    "Identify exact planner CEM/GD, candidate selection/ranking, model and task assets/version/size, minimal runnable diagnostic on4090/64GiB without big framework migration. Do not install/download weights.",
+    "Closest prior objective/selection/fidelity methods, whether current question already solved. Setting difference alone not novelty.",
+    "Deliver one go/no-go next action, strongest objection, one minimal test only if justified; no expanding candidate list. Missing assets/runtime can make no-go."
+  ],
+  "resources": {
+    "wall_seconds": 1200,
+    "CPU_threads": 4,
+    "RSS_bytes": 2147483648,
+    "output_bytes": 16777216,
+    "primary_papers_max": 4,
+    "public_code_repositories_max": 2,
+    "source_files_max": 14,
+    "GPU": 0,
+    "model_tensor_loads": 0,
+    "model_dataset_downloads": 0,
+    "installation": 0
+  },
+  "pair": [
+    "fair_comparison_codex",
+    "existing actual Claude Opus1 via manager"
+  ],
+  "independence": "One native helper allowed for source/assets vs paper/decision; total shared cap. Do not read counterpart interim or conclusion. Report exact accessed source scope.",
+  "writer_scope": "Own named review text only. No upstream/project code changes/commit/GPU.",
+  "deliverables": [
+    "DINO_WM_PLANNING_CHOICE_REVIEW_CODEX_KO.txt",
+    "management/DINO_WM_PLANNING_CHOICE_REVIEW_OPUS_KO.txt"
+  ]
+}
