@@ -1,0 +1,134 @@
+{
+  "status": "registered_development_material_screen_not_method_test",
+  "start_epoch": 1793896645.9137225,
+  "absolute_deadline_epoch": 1793898445.9137225,
+  "wall_cap_seconds": 1800,
+  "CPU_threads_cap": 4,
+  "RSS_cap_bytes": 2147483648,
+  "output_cap_bytes": 67108864,
+  "GPU_calls": 0,
+  "model_or_metric_network_calls": 0,
+  "new_video_or_VAE": 0,
+  "input_selection": "Fixed p00 through p11 seed303 BF16, same twelve historical development clips; no replacement. Previously heldout for a different study, development for this question.",
+  "visual_screen": "Decode existing MP4 on CPU. Deterministic frames every8 indices plus final500:64 frames/video, actualPTS labels. Two32-frame contact sheets/video. No new quality metric.",
+  "question": "Is there an identifiable entity or scene-specific visual state seen early, absent for longer than short21-latent nominal5.25s context, and identifiable upon later return while relevant events proceed? Continuous tracking alone not sufficient.",
+  "classification": [
+    "candidate_event: specify entity, seen/absent/return intervals, identifiable attributes, task relevance, uncertainties. This does not prove longKV necessity or compression damage.",
+    "no_candidate_identified_in_sampled_frames: not proof of absence in fullvideo or model incapability.",
+    "unassessable: visual resolution, missingframes, changingidentity or ambiguousevent."
+  ],
+  "no_invented_quality_gate": "No candidate ranking, videoquality score, threshold tuning, new method success, or holdout evidence.5.25s is workload temporal context conversion, not a quality threshold.",
+  "maximum_followup": "Only if both independent readers identify a concrete candidate, root may inspect existing dense frames in at most two earliest chronological candidate clips within same30min. No newvideos or parameter searches.",
+  "decision": "If no defensible event found or ambiguous, close current8-generation longcontext utility plan. If found, finalize a task/evaluation contract separately before any GPU. Research goal remains active in either outcome.",
+  "review": "Codex method_gap and actualClaudeOpus1 independently inspect same images without the other conclusions. Native helpers may split sixclips each, shared budgets. Root integrates, does not count AI agreement as human-evaluation validation.",
+  "inputs": [
+    {
+      "id": 0,
+      "prompt": "A golden retriever carries a blue rubber ball across a grassy field, drops it beside a bench, and looks toward its owner. A continuous low tracking shot in soft daylight.",
+      "video": "/home/acorn0415/sfq_data/mechanism/fr/p00_s303_BF16/video.mp4",
+      "video_bytes": 3762233,
+      "video_sha256": "56c7521a75b026dd952a28f317585919fb2b4768969e5e5e13459286f1f2bbe4",
+      "sampling": "/home/acorn0415/sfq_data/mechanism/fr/p00_s303_BF16/sampling.json",
+      "sampling_sha256": "5e76a294277090f06472a85dced38d5e32e49f4e9ec0d8ff8f8807fdc3b75324"
+    },
+    {
+      "id": 1,
+      "prompt": "A worker drives a snowplow along a quiet street, pushing fresh snow into a growing bank beside parked cars. A continuous wide street-level view under pale winter light.",
+      "video": "/home/acorn0415/sfq_data/mechanism/fr/p01_s303_BF16/video.mp4",
+      "video_bytes": 3824292,
+      "video_sha256": "9e3e14f3f7b5c75703afce5a9a4ee86c372105a61305ba8222c197d2f01665ce",
+      "sampling": "/home/acorn0415/sfq_data/mechanism/fr/p01_s303_BF16/sampling.json",
+      "sampling_sha256": "c4f40b5d68d34fa939f33764f5a84622aeeba36676354812407c71d7bc4f72fb"
+    },
+    {
+      "id": 2,
+      "prompt": "A pianist plays an upright piano with both hands, shifting between the keys while the sleeves of a gray sweater move gently. A continuous close side view of the hands and keyboard.",
+      "video": "/home/acorn0415/sfq_data/mechanism/fr/p02_s303_BF16/video.mp4",
+      "video_bytes": 3906951,
+      "video_sha256": "f85d4c071db68db4f5451fdc7074d4ec0df5523ebe59dea8ffcea0fc32013c76",
+      "sampling": "/home/acorn0415/sfq_data/mechanism/fr/p02_s303_BF16/sampling.json",
+      "sampling_sha256": "a0165101bef49998030a7f4b57a68fb9adcaca03ee849fb72f9b96e2825a0b61"
+    },
+    {
+      "id": 3,
+      "prompt": "A chestnut horse walks across a meadow, lowers its head to graze, then takes several more steps. A continuous medium shot with distant hills and a light breeze.",
+      "video": "/home/acorn0415/sfq_data/mechanism/fr/p03_s303_BF16/video.mp4",
+      "video_bytes": 3914256,
+      "video_sha256": "6233b83d9821861e4629ab1f4cfebce8caca980aec703be9feb86b2be46ce5e1",
+      "sampling": "/home/acorn0415/sfq_data/mechanism/fr/p03_s303_BF16/sampling.json",
+      "sampling_sha256": "d3fbcfb5402ef2f68697350ef22750cd2736e9a860eb4d9a1aa517d0d96024a5"
+    },
+    {
+      "id": 4,
+      "prompt": "A pair of robotic grippers stacks colored wooden blocks into a small tower on a workbench. A fixed continuous view keeps the grippers and every block visible.",
+      "video": "/home/acorn0415/sfq_data/mechanism/fr/p04_s303_BF16/video.mp4",
+      "video_bytes": 4021182,
+      "video_sha256": "22171f16678e5ec80fb0b651e2cb465155794fb9e8a72e4a2e7725ea9f16590d",
+      "sampling": "/home/acorn0415/sfq_data/mechanism/fr/p04_s303_BF16/sampling.json",
+      "sampling_sha256": "cbfedcd4a6379e10bbe9674c7dd1f6595dedb35c1ceaada68a07ea8da7b312f5"
+    },
+    {
+      "id": 5,
+      "prompt": "A lighthouse beam sweeps across a rocky shoreline as small waves break against the stones at dusk. A fixed wide shot includes the tower, water, and darkening sky.",
+      "video": "/home/acorn0415/sfq_data/mechanism/fr/p05_s303_BF16/video.mp4",
+      "video_bytes": 3790741,
+      "video_sha256": "94316f82f6b7bf2f6166723fd1d97910b75a733732eb147d7a4fa6ed02b364ab",
+      "sampling": "/home/acorn0415/sfq_data/mechanism/fr/p05_s303_BF16/sampling.json",
+      "sampling_sha256": "d4adcfb44cc91390a73ea2bfaff8ef32edd0a73ba202b8a14a6aec166104f172"
+    },
+    {
+      "id": 6,
+      "prompt": "A person folds a square sheet of blue paper into a crane, turning the paper carefully between both hands. A continuous overhead view on a plain wooden desk.",
+      "video": "/home/acorn0415/sfq_data/mechanism/fr/p06_s303_BF16/video.mp4",
+      "video_bytes": 4089051,
+      "video_sha256": "be82d6b57bca87a393af521b30ea18bc2576d7f08dcf29c087f58063380b5160",
+      "sampling": "/home/acorn0415/sfq_data/mechanism/fr/p06_s303_BF16/sampling.json",
+      "sampling_sha256": "4c4597105fefb38415bb55d481373e8d542a4de144a9ae81e643504a8e555cef"
+    },
+    {
+      "id": 7,
+      "prompt": "A drummer strikes a snare and cymbal in a steady rhythm, with the drumsticks and cymbal edge visibly moving. A continuous medium shot inside a softly lit practice room.",
+      "video": "/home/acorn0415/sfq_data/mechanism/fr/p07_s303_BF16/video.mp4",
+      "video_bytes": 3904111,
+      "video_sha256": "b66db2e3d47a6ebdc0a34be3c7eef2aaa1de4ca3dda3f9630b32124d8d14ebb3",
+      "sampling": "/home/acorn0415/sfq_data/mechanism/fr/p07_s303_BF16/sampling.json",
+      "sampling_sha256": "1ee767d8554150968fce86e388b2c42ef5878c83e11594cfe6cc5c88015ed51d"
+    },
+    {
+      "id": 8,
+      "prompt": "White bedsheets hang from a clothesline and billow in gusts of wind above a sunlit courtyard. A continuous fixed view shows cloth folds, shadows, and the line.",
+      "video": "/home/acorn0415/sfq_data/mechanism/fr/p08_s303_BF16/video.mp4",
+      "video_bytes": 3953785,
+      "video_sha256": "9b59aa83ee0295c33038bf1d75371c4b7a745c6a72d887dfef1442f1e8f5f2f1",
+      "sampling": "/home/acorn0415/sfq_data/mechanism/fr/p08_s303_BF16/sampling.json",
+      "sampling_sha256": "51f03ed4ca4fe7ed5210ae1e27b5b30986422d24e50f2b1820f9b567fb2c30cb"
+    },
+    {
+      "id": 9,
+      "prompt": "A skateboarder rolls through an open concrete plaza, makes a small jump, lands, and continues forward. A smooth continuous side tracking shot in afternoon light.",
+      "video": "/home/acorn0415/sfq_data/mechanism/fr/p09_s303_BF16/video.mp4",
+      "video_bytes": 3707232,
+      "video_sha256": "806e4b5bde21494f66a8d020d136c9d245b56d30378ed9c304e949d575c70a93",
+      "sampling": "/home/acorn0415/sfq_data/mechanism/fr/p09_s303_BF16/sampling.json",
+      "sampling_sha256": "7619d94af844c2b788e894318ffed17d5a5ae9bdc403991dc4d779cbc6c36eb5"
+    },
+    {
+      "id": 10,
+      "prompt": "A brass mechanical orrery rotates its small planets around a central sphere while interlocking gears turn below. A continuous close view with warm light on the metal surfaces.",
+      "video": "/home/acorn0415/sfq_data/mechanism/fr/p10_s303_BF16/video.mp4",
+      "video_bytes": 3868619,
+      "video_sha256": "f404618ec468091639216f92e57bff2acca968459922829249f442de274754e1",
+      "sampling": "/home/acorn0415/sfq_data/mechanism/fr/p10_s303_BF16/sampling.json",
+      "sampling_sha256": "76244da66d04f95bf841a20e6d7705b3d3381efcb67e7b9f9da0da72f983d31c"
+    },
+    {
+      "id": 11,
+      "prompt": "An astronaut walks slowly across a dusty lunar plain, leaving footprints while the loose straps of a backpack sway. A continuous full-body tracking view with a dark sky and distant ridges.",
+      "video": "/home/acorn0415/sfq_data/mechanism/fr/p11_s303_BF16/video.mp4",
+      "video_bytes": 3857106,
+      "video_sha256": "1d7afbfeb58d99cbe26401153426f6d9f7ec865f4c26c383946aa6e0ffcd0722",
+      "sampling": "/home/acorn0415/sfq_data/mechanism/fr/p11_s303_BF16/sampling.json",
+      "sampling_sha256": "ee6c84919418c25f1b3ea2155541fdd6c5c772478f8b3942c20520271a050c52"
+    }
+  ]
+}
