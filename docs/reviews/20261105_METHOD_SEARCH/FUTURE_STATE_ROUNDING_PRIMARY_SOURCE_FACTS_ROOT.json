@@ -1,0 +1,18 @@
+{
+  "observed_epoch": 1793903622.1345754,
+  "sources": [
+    {
+      "url": "https://arxiv.org/html/2208.11945",
+      "title": "Efficient Adaptive Activation Rounding for Post-Training Quantization",
+      "version": "v3 24Aug2023",
+      "observed_scope": "abstract/introduction describes runtime adaptive activation rounding border function depending on activation value, coarse-grained for overhead. Not weight-only."
+    },
+    {
+      "url": "https://arxiv.org/html/2610.40345v1",
+      "title": "A Unified Hessian-Guided Framework for Post-Training Quantization",
+      "version": "v1 29Oct2026",
+      "observed_scope": "common output Fisher proxy for transforms, weight scales/rounding and activation clipping; cannot infer dynamic activation rounding support solely from title."
+    }
+  ],
+  "limits": "Root read primary HTML only. No effect data, sourceabsence/novelty conclusion not asserted. Shared same public source facts to both reviewers without injecting either conclusion."
+}

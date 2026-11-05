@@ -1,0 +1,90 @@
+미채택 VAE state-operator 초안 독립 비판 (Opus2, root msg_66fd427e4679)
+시작 UTC: 2026-11-05T17:57:14Z. 절대마감은 18:15:00Z다.
+부모: claude-opus-5-5, 기존 채팅 session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5. Task/Dispatch: 미연결(자동연결 실패).
+대상: ROOT_UNADOPTED_VAE_METHOD_HYPOTHESIS_KO.txt sha 98438c3f…(직접 확인).
+독립성: 다른 generic 후보 검토(Opus1과 method_gap)와 Codex 보고서·임시안, 동시 fair 비판안을 읽지 않았다.
+수행: 읽기와 문서 1개 작성만. 실행, import, 로드, 다운로드, 수정은 모두 0이다.
+
+1. 소스 사실 (직접, local src/wan/modules/vae.py sha a4c1d936…; upstream과 동일)
+- CausalConv3d.forward(17-37행): cache_x(직전 입력 frame들)를 현재 입력과 시간축으로 cat하고, 남는 시간 padding만 F.pad한 다음 하나의 Conv3d를 호출한다.
+  - cache는 conv의 '입력 activation'이다. 층마다 CACHE_T=2 frame을 clone해 저장한다(14행; 111/131/158행 등).
+  - 따라서 시간 tap은 3개(kernel_t=3 가정; t−2, t−1, t)이고 저장 슬롯은 2개다.
+- decode(545-569행): latent frame마다 decoder를 1회 호출하고, 출력을 torch.cat([out, out_], 2)로 매번 누적한다.
+  - 126 latent에서 cat이 반복되며, 전체 출력이 상주하고 복사가 누적된다.
+  - root 기준선 1이 지적한 누적 cat이 소스로 확인된다.
+- 이 저장소의 실측(VAE 정밀도 진단 RESULT): decode peak GPU allocated는 BF16 약 5.73e9B, FP32 약 1.02e10B였다.
+  - 이것이 state, 출력 누적, 중간 activation에 어떻게 나뉘는지는 측정되지 않았다.
+
+2. 가설 식의 성격 (부모 분석)
+- y = Σ_l s_x,l·s_w,l·Conv2D_int8(q_x,l, q_w,l) + b 는 Conv3D를 시간 tap별 Conv2D 합으로 분해한 것이다. 이 분해는 정확한 항등식이다.
+- 여기에 슬롯마다 activation scale을 하나씩 두는 형태다.
+  - 축소 차원 K = Cin×k_t에서 시간 tap 단위로 K-group scale을 두는 group-wise W8A8 GEMM이다.
+  - 수식 자체는 신규가 아니다(root도 인정).
+- 일반적인 INT8 tensor-core GEMM/conv 커널은 출력쪽 scale(행=토큰·위치, 열=출력 채널)만 epilogue에서 지원한다.
+  - K-group activation scale은 group마다 별도의 정수 누산과 FP 재스케일 후 합이 필요하다. 즉 tap 3개 = INT8 conv 3회 + FP32 출력 3개의 합이다.
+  - 이것은 기존 연산자(per-tensor INT8 conv 또는 int8 GEMM)를 조합해 구현할 수 있다. 새 kernel 없이도 정의할 수 있다.
+  - 단 출력 버퍼와 dequant 패스가 3배다. 하나의 Conv3D INT8(공유 scale)보다 메모리 트래픽이 커질 수 있다(추정, 미측정).
+- '저장 state를 다시 양자화하지 않는다'는 이점은 '매 호출 동적 공유 scale'과 비교할 때만 성립한다.
+  - 정적(사전 calibrated) 공유 scale이라면 저장된 INT8 code를 그대로 재사용하므로 재양자화가 없다.
+  - 따라서 이 차별점은 '정적 scale이 품질상 실패한다'가 먼저 관측돼야 의미가 있다.
+- activation 분포 문제: cache되는 것은 conv 입력(정규화와 SiLU 이후 등)이다.
+  - 채널 outlier가 있으면 per-tensor·per-slot scale만으로는 부족하다. per-input-channel 보정(SmoothQuant식으로 가중치에 흡수)이 필요할 수 있다.
+  - 슬롯별 scale은 시간축 분포 변화만 다룬다. 채널축 outlier를 해결하지 않는다(추론).
+- BF16과 FP32의 근접(late RGB RMSE 0.0016)은 INT8 안전성의 근거가 아니다(root 동의).
+
+3. 판정 (helper 1차 문헌 대조 결과를 아래에서 통합)
+1차 문헌 대조 (helper가 WebFetch로 arXiv html 본문을 열람; 인용은 요약 모델을 거쳤으며 글자 단위 대조는 하지 않음)
+- LightVAE https://arxiv.org/abs/2610.14726 (본문 앞부분 약 100k자 열람, 부록 C.2 이후 미열람)
+  - causal temporal cache를 다룬다. 다만 압축 방식은 rank-r 저차원 history projection 캐시다(4.2절, 서론).
+  - S=W0+W1+W2와 rank-r 시간 보정으로 분해하며, full-rank에서만 정확하다(부록 B.1).
+  - 본문에서 state 양자화는 확인하지 못했다.
+  - 공식 repo https://github.com/ModelTC/LightVAE README에 "optional quantized Lite decoder"와 파일 lightvae-lite-h3-decoder-int8-convrot.safetensors가 있다. 그러나 scale 단위, W8A8 여부, 정수 kernel 사용 여부는 미확인이다.
+- LatentQuant https://arxiv.org/abs/2610.03959 (본문 전체)
+  - W4A4 NVFP4다. FP32 per-tensor scale과 16원소 블록별 E4M3 scale을 쓴다(3.2절). activation은 1×16 channel block 단위다(부록 A.1).
+  - 커널은 NVFP4 operator-specialized conv다(부록 F). INT8 W8A8은 아니다.
+  - causal cache와 시간 슬롯별 scale은 확인하지 못했다.
+- Cache-Aware Conv3D Lowering https://arxiv.org/abs/2609.31938 (본문 전체)
+  - causal Conv3D를 cache와 현재 입력을 이은 tap별 Conv2D 합으로 lowering한다(초록, 4.1-4.2절). 수식상 등가이며, 누산 순서 때문에 비트 단위로는 같지 않다(6.3, 7.2절).
+  - 양자화는 쓰지 않는다(5.1절, BF16).
+  - 공식 repo 링크는 미확인이다.
+- 보유 MixLLM 검토 문서는 이번 시간 안에 찾아 읽지 않았다(미확인).
+- helper: native general-purpose 1개(depth 1, 읽기 전용 웹 열람). model 인자를 생략했다(도구 설명상 부모 상속).
+  - helper가 자기 보고한 ID는 "claude-opus-5-5"다. 별도 provider ID는 관측하지 못했다.
+  - 분담: helper는 3개 1차 문헌과 공식 repo README, 부모는 소스 사실, 식과 scale/API 분석, 판정, 통합.
+
+구체 scale/API 대조 요약
+- 초안의 '시간 슬롯(tap)별 activation scale + tap별 INT8 Conv2D 누산 후 FP 재스케일 합'에 대해:
+  - Conv3D lowering 논문은 같은 tap 분해를 BF16으로 이미 제시했다. 양자화는 없다.
+  - LatentQuant은 K축 16원소 channel-block scale(NVFP4)이다. 시간 슬롯 축 scale이 아니다.
+  - LightVAE는 cache를 저랭크 projection으로 줄인다. int8 decoder의 scale 단위는 미확인이다.
+  - 따라서 '시간 슬롯별 scale을 가진 INT8 state를 정수 연산까지 소비'하는 정확히 같은 조합은 확인한 1차 텍스트에 없다.
+- 그러나 구현 측면에서는 기존 연산자 조합(tap별 per-tensor INT8 conv 또는 GEMM + FP 합)으로 표현할 수 있다. group-wise K scale GEMM의 특수 경우다.
+- 차별점은 '정적 공유 scale이 실패하는 경우'에만 생긴다. 그런 관측은 없다.
+
+판정: 현재 근거로는 채택 불가(근거 부족). 간단한 기준선이 먼저다.
+- 가장 강한 반론 1: VAE decode의 비용과 메모리 병목이 causal conv state인지 측정되지 않았다.
+  - 소스상 decode는 latent frame마다 torch.cat으로 출력을 누적한다. 전체 출력 상주와 반복 복사가 그 자체로 큰 peak/시간 후보다.
+  - state는 층마다 2 frame뿐이다. state INT8화의 이득이 기준선 1(누적 cat 제거, 출력 streaming)보다 클 근거가 없다.
+- 가장 강한 반론 2: 정적 공유 scale W8A8, 또는 'INT8 state 저장 + BF16 compute'(기준선 3)가 품질과 메모리를 충분히 충족하면 슬롯별 scale과 tap별 정수 연산은 불필요하다.
+  - 채널 outlier는 슬롯 scale로 해결되지 않는다. SmoothQuant식 채널 흡수가 더 직접적인 대응이다.
+- 가장 강한 반론 3: LightVAE 공식 repo에 이미 int8 Lite decoder가 공개돼 있다. 같은 decoder 정밀도 감소 목표의 강한 선행·기준선 후보이며 세부는 미확인이다.
+- 신규성: 식과 tap lowering은 기존이다. 'cache 슬롯 scale 수명 + temporal tile' 정책 차이는 측정 근거가 생기기 전까지 주장할 수 없다.
+
+남는 결정 1개와 최소 go/no-go 검사 (제안이며 실행 승인이 아님)
+- 결정: VAE decoder에 연산자 또는 정밀도 개입을 할 가치가 있는가. 아니면 출력 누적과 streaming 같은 간단한 기준선으로 끝나는가.
+- 최소 검사: 기존 latent 1개로 decoder replay 1회를 프로파일링한다(양자화 없음, 생성 없음). 다음을 분리해 기록한다.
+  - CausalConv3d 연산 시간 비중
+  - feat_cache state 바이트 대 peak allocated
+  - 누적 cat의 시간과 메모리
+- go 조건: Conv 연산이나 state가 지배적이고 누적 cat 제거 후에도 남을 때만, 다음으로 정적 W8A8 대 기준선 3을 비교한다.
+- no-go 조건: cat이나 출력 상주가 지배적이거나 Conv 비중이 작으면 이 초안을 기각한다.
+- 임계값은 실행 전 root가 사전에 고정한다.
+
+미확인
+- LightVAE int8 decoder의 scale 단위와 kernel, 부록 C.2 이후
+- LatentQuant과 Conv3D lowering의 공식 코드
+- MixLLM 보유 검토
+- 실제 GPU 비중, state 바이트, peak 분해, INT8 품질
+
+추가 실행 0.
+종료 UTC: 2026-11-05T17:58:56Z

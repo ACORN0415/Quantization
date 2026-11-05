@@ -1,0 +1,19 @@
+BF16 출력 순차 전달 기준선 — 실제 GPU 결과, 독립 결과검토 대기
+
+목적과 판정
+원 BF16 VAE의 full latent denormalization·conv2·126회 decoder와 feature cache 계약을 유지하고 출력 누적만 CPU 순차 전달로 교체했다. 동일 latent·가중치를 새로 적재한 두 경로에서 501 RGB 프레임의 shape/dtype/논리 원소 바이트가 worker의 직접 비교에서 모두 일치했다. 등록된 trace 계약도 통과했다. 이는 강한 기존 실행 기준선의 확보이며 새로운 양자화 방법의 효과가 아니다.
+
+실제 실행
+ROOT 실행 1회, 64.757702초/600초, exit0. whole video decode 2회, decoder.forward 252회, generator 0회. source/LOCK commit b89ad1d가 GPU 실행 전에 완료됐다. GPU 사용 전·후 다른 compute process가 없음을 root가 확인했다. 모든 준비·실제 Claude 검토는 원18:28:54UTC 마감 내 완료됐고 root의 최종 LOCK/커밋 통합은 그 후였다. 준비 코드나 검토 상한을 연장하지 않았다.
+
+자원과 시간
+native peak allocated 5,727,909,376B (5.334531GiB), stream 4,527,433,216B (4.216501GiB): 이 관측에서 20.9584% 감소.
+reserved는 각각 14,482,931,712B / 6,455,033,856B이며 allocated와 다른 지표다. feature state steady/last 고유 storage는 두 팔 모두 1,888,573,440B/32tensor, first는920,325,120B/30tensor였다. 출력 누적을 줄여도 이 내부 상태는 남는다. 전체 peak에서 state 바이트를 차감해 동시구성이나 잠재절약 상한을 주장하지 않는다.
+각 팔 decode+CPU emit+검증 경과시간은 30.959408 / 30.374861초다. 고정 native→stream 단회, 두 번째 팔만 CPU 원소 비교 비용이 추가되어 반복 성능·배포 속도 향상이나 Pareto 결과로 해석하지 않는다.
+RSS sample peak 4,298,276,864B, process-lifetime ru_maxrss 4,294,295,552B로 각각12GiB 상한 이내. 두 계측 방식의 수치는 구분한다. CPU에는 reference 전체 RGB를 저장한 검증 비용이 포함된다.
+
+근거의 범위
+실제 출력 바이트 비교는 worker가 수행했다. 원 RGB를 디스크에 보존하지 않았으므로 이후 저장 JSON/501 hash/trace 감사는 독립 501 원소 재생산이 아니다. 이 한 latent·501프레임·RTX4090·BF16·고정 flags의 비교이며 다른 길이·batch·VAE·원래 생성 harness 전체를 검증하지 않았다. 이전 precision probe와는 affine 위치가 다르고 이번 두 팔에 공통으로 GPU float/clamp/affine을 적용했다.
+
+연구 판단
+BF16 기준선을 더 강하게 만든 뒤에도 남은 state 압축 후보는 가까운 선행과 단순 RTN/scale 선택 대비 독립 이득이 필요하다. 일반적인 tap 분해/group scale 초안은 기존 계산과 겹쳐 별도 종료했다. future-state rounding은 아직 수학·선행 독립 비판 중인 미채택 가설이며 효과 실험을 시작하지 않았다.

@@ -1,0 +1,18 @@
+{
+  "status": "not_adopted_current_operator_scale_draft",
+  "time": 1793903516.2729776,
+  "agreement": "Temporal lowering and groupwise integer partial sums/scales are known; fixed-scale W8A8 also reuses historical codes without requantization. No measured failing strong static baseline or useful runtime gap.",
+  "scope_correction": "Pinned LightVAE convert_h3_int8 targets transformer linear weights only, not evidence of causal Conv3D state INT8. Does not establish absence elsewhere or novelty.",
+  "next": "Native BF16 streaming output baseline is separately locked and running. Do not build a new INT8 temporal-scale kernel now.",
+  "nonclaims": [
+    "Not all VAE quantization excluded",
+    "BF16-FP32 similarity does not establish INT8 safety",
+    "Whole decoder time not removable time bound"
+  ],
+  "evidence": {
+    "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/VAE_STATE_OPERATOR_DRAFT_CRITIQUE_CODEX_KO.txt": "9a1835b9d66142345570a4475c30a06ff053a01efaeeda59a9f012e19e73ca08",
+    "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/VAE_STATE_OPERATOR_DRAFT_CRITIQUE_OPUS_KO.txt": "e830c8ff95656ad74bc83c41dba9d62a732562a011caca0cceec77c4c5c1da6e",
+    "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/VAE_STATE_OPERATOR_DRAFT_CRITIQUE_OPUS_LIGHTVAE_SCOPE_ADDENDUM_KO.txt": "dac11605ea2a07aeec1ece20bc68886c9be788cdb75b15e8f257cc52f3007cb7",
+    "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/LIGHTVAE_INT8_CODE_SCOPE_ROOT.json": "5d5a381b9786d7e0001bb6cdf2f1f454056958246ab9988d5b582b46feddeeb0"
+  }
+}

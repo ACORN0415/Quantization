@@ -1,0 +1,36 @@
+VAE state-operator 초안 비판 — LightVAE INT8 source 범위 정정 부록 (Opus2, root msg_3cd64878999e)
+작성 UTC: 2026-11-05T18:03:33Z~2026-11-05T18:04:02Z이며 원마감 18:15:00Z 안이다.
+모델: claude-opus-5-5, 기존 채팅 session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5. Task/Dispatch: 미연결(자동연결 실패).
+원 비판 VAE_STATE_OPERATOR_DRAFT_CRITIQUE_OPUS_KO.txt는 수정하지 않았다. 직접 sha256 e830c8ff95656ad74bc83c41dba9d62a732562a011caca0cceec77c4c5c1da6e(e830c8ff…와 일치).
+입력은 root facts JSON LIGHTVAE_INT8_CODE_SCOPE_ROOT.json(sha 5d5a381b…)과 그 안의 source_text뿐이다.
+- 출처: LightVAE commit 38b0587d47df9188e3e05973265352962b20ada4, comfyui/convert_h3_int8.py, sha 8549e2a6…, 2630B.
+- 새 웹 열람, repo, 다운로드, 실행은 0이다. helper는 쓰지 않았다. 교차 비판안은 열람하지 않았다.
+
+변환기의 실제 범위 (source_text 직접 판독)
+- 양자화 대상: 이름이 "decoder.transformer_blocks."로 시작하고 ".weight"로 끝나며 weight.ndim==2인 텐서만이다.
+  - 그 밖은 continue로 건너뛴다. block마다 linear 4개를 기대한다는 검사가 있다.
+- 방식: TensorWiseINT8Layout.quantize(is_weight=True, per_channel=True, convrot=True, convrot_groupsize=256, stochastic_rounding=0).
+  - weight의 출력 채널별 INT8 scale에 ConvRot 회전(group 256)을 쓴다.
+  - config format은 "int8_tensorwise"다. 저장되는 것은 weight와 weight_scale뿐이다.
+  - activation 양자화나 정수 커널 실행 경로는 이 변환기에 없다. runtime 동작은 미확인이다.
+- 따라서 'lightvae-lite-h3-decoder-int8-convrot' 파일명과 README의 'optional quantized Lite decoder'는 이 변환기 범위에서 H3 transformer linear의 weight INT8이다.
+  - Wan CausalConv3d 필터나 시간 cache state의 양자화, state를 정수로 소비하는 conv 커널의 증거가 아니다.
+
+원 판정에 미치는 영향
+- 정정: 원 비판의 '가장 강한 반론 3'에서 LightVAE 공식 repo의 int8 Lite decoder를 같은 decoder 정밀도 감소 목표의 강한 선행·기준선 후보로 둔 해석을 범위 정정한다.
+  - 그것은 transformer linear weight-only INT8이다. 초안이 다루는 causal Conv3D state와 연산자 경계에 대한 직접 선행이나 기준선이 아니다.
+  - 남는 의미는 '디코더 일부 linear의 weight INT8이 공개 구현에 있다' 정도다.
+  - 이 변환기 하나로 repo의 다른 양자화 구현이 없다는 것을 증명하지는 않는다(미확인으로 남김).
+- 유지: 나머지 반론과 판정은 이 정정과 독립적으로 그대로다.
+  - 식은 tap-group W8A8 GEMM이고 기존 연산 조합으로 표현할 수 있다.
+  - 재양자화 회피 이점은 정적 scale 대비 없다.
+  - 채널 outlier는 슬롯 scale로 해결되지 않는다.
+  - 병목은 측정되지 않았고, 누적 cat이 우선 후보다.
+  - 그래서 '현재 근거로 채택 불가(근거 부족), 간단 기준선 우선'과 남는 결정 1개(decoder replay 프로파일 go/no-go 제안)를 유지한다.
+- 이 정정으로 초안의 '확인한 1차 텍스트에 같은 조합 없음' 진술은 약간 강해진다. LightVAE INT8도 Conv3D state 범위가 아니기 때문이다. 그러나 이것이 신규성이나 효과의 근거는 아니다.
+
+미확인
+- LightVAE repo의 다른 파일이나 runtime(ComfyUI)의 activation·conv 양자화
+- 체크포인트 내용
+- 실제 성능과 품질
+추가 실행 0.

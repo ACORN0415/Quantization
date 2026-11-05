@@ -1,0 +1,9 @@
+미채택 후속 수학 가설 — 현재 연산자 scale 초안과 별도, 실행 권한 없음
+기존 state-only 저장양자화와 tap-scale 실행 초안의 비채택을 바꾸지 않는다. 이 가설은 아직 선행중복·실용가치·효과를 확인하지 않았다.
+
+고정 causal Conv3d가 한 호출에서 새 시간 feature를 2개 이상 처리하고 마지막2개를 새로 저장할 때만 고려한다. 두 feature 모두 현 호출에 존재하므로 과거 원본이나 미래 입력을 몰래 사용하는 문제가 없다. 새 feature가1개인 저해상도 경로에는 이 joint-write 가정을 적용하지 않는다.
+PyTorch kernel의 시간 index0=가장 오래된 W_old, index1=바로 전 W_prev,index2=현재 W_cur다. 현 호출의 출력은 BF16로 이미 계산하고 저장 state만 나중에 양자화한다면, 그 state의 오차 e_old/e_new가 다음 호출 첫두 preactivation에 주는 조건부 영향은 W_old*e_old+W_prev*e_new와 W_old*e_new다(stride1, 다음 호출도 최소2개 입력). 이 두 현재저장오차의 국소 선형 효과이며 다음 층/RGB/다른상태오차 전체를 표현하지 않는다.
+즉 국소 손실은 두 norm제곱합이며 교차항이 존재한다. 입력채널/공간오차의 off-diagonal을 버린 작은 proxy는 a_c e_old²+b_c e_new²+2c_c e_old e_new다. a=||W_old[:,c,:,:]||²,b=a+||W_prev[:,c,:,:]||²,c=<W_old[:,c,:,:],W_prev[:,c,:,:]>. 이 수식과Hessian자체가신규라는주장금지. 경계·공간/채널 교차오차는 이proxy가생략한다.
+가능한방법변수는 같은저장grid/같은metadata/같은4bit코드예산에서각featurepair의floor/ceil 4조합 중이proxy를줄이는rounding선택이다. shared-grid 독립RTN코드도후보에포함해proxy비증가를보일수있지만그것은구현자체를따르는성질이고발견이아니다. 필요한관측은 독립RTN대비 실제미래Conv출력오차와 전체고정latent RGB오차가 줄어드는가이며, proxy만개선하면종료해야한다.
+비교해야할기존방법은 동일sharedscale RTN, 클리핑/scale을고른단순RTN, 기존Hessian/activation rounding·statequant·LightVAE 방식이다. 메모리문제나runtime이득미측정상태에서새방법채택안함. 태생적으로알려진2차metric rounding일수있으므로가장가까운선행을먼저확인해야한다. 낮은비용의미리계산된future-tap계수와직접state-write causal정보경계가실제로남는차이인지질문으로만남긴다.
+원모델weight계수의크기만으로효과를주장하면이전MoE교차항검사와같은실수를반복한다. 실제선택변경·정확국소출력손실·미사용입력·전체실제메모리/시간을분리검증해야한다. 현재원체크포인트/활성화의새계산이나CPU/GPU효과실험은0이다.

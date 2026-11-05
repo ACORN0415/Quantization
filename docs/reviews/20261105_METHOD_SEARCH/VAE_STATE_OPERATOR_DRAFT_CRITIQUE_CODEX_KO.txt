@@ -1,0 +1,112 @@
+VAE 상태 저장과 정수 연산 결합 초안: 독립 기술비판
+작성: fair_comparison_codex, 2026-11-05 UTC
+대상: ROOT_UNADOPTED_VAE_METHOD_HYPOTHESIS_KO.txt
+범위: 읽기 전용 원문·공개 API·소스 검토. 새 GPU/VAE/모델 실행, 텐서 로드, 코드 구현, 다운로드, 실제 효과 측정은 모두 0회.
+독립성: generic VAE 검토(method_gap/Opus1)와 이 초안에 대한 Opus2의 결론·임시안을 읽지 않았다. native helper window_frontier_check에는 기존 Wan 소스의 시간축 수식·scale 조건만 분담했다. 이 문서는 실제 Opus의 검토를 대신하지 않는다.
+
+1. 판정
+
+현재 초안을 새로운 방법으로 채택하지 않는다. 시간축 Conv3D를 여러 Conv2D의 합으로 계산하는 부분, 정수 부분합에 그룹별 scale을 곱한 뒤 합치는 부분, 저장된 양자화값과 scale을 함께 재사용하는 부분은 각각 이미 공개된 계산 또는 API로 표현된다. 특히 고정 scale W8A8도 과거 상태를 매번 새 scale로 재양자화할 필요가 없다. 따라서 “과거 상태의 재양자화를 없앴다”는 비교만으로는 강한 기준선에 대한 이점이 성립하지 않는다.
+
+다만 “서로 다른 시간의 scale을 유지하는 실제 Conv 실행이 항상 불필요하다”까지 결론 내리지는 않는다. 남는 조건은 좁다. 실제 Wan 형상에서 고정 scale 또는 고정 채널 보정으로는 요구한 오차를 만족하지 못하고, 시간별 scale은 그 오차를 줄이며, 기존 API로 구성한 정수 경로의 추가 비용까지 포함해 이득이 있는가이다. 현재 세 조건 중 직접 관측한 것은 없다. 따라서 다음 자원은 새 커널 제작보다, 이 조건이 있는지를 드러내는 한 번의 기존 latent 복원 계측에만 조건부로 배정할 수 있다. 그것도 본 문서에서 실행하지 않았다.
+
+이 판정은 VAE 양자화 분야 전체의 종료나 선행연구 부재 증명이 아니다. 현재 초안의 수학과 상태 수명만으로는 신규성 근거가 부족하다는 판단이다.
+
+2. 무엇이 이미 다뤄졌는가
+
+가. Cache-Aware Conv3D Lowering
+원문 §3.2, §4.1–4.3, 식 (1)–(4), Algorithm 1은 원래 가중치·편향을 유지한 채 시간 tap별 Conv2D 결과를 합한다. 유효 시간 구간만 배치에 접고, 편향은 한 번 더하며, 실제 cache 길이로 왼쪽 시간 padding을 조정한다. 따라서 초안의 temporal-tap 분해 자체는 직접 겹친다. 해당 lowering은 양자화 scale 정책을 제안하지 않지만, 원래 Conv3D와 비교할 가장 가까운 단순 실행 기준선이다. 부동소수점 합산 순서가 달라질 수 있어 “수학적으로 같은 연산”과 “비트 일치”는 구분해야 한다.
+출처: https://arxiv.org/html/2609.31938
+
+나. MixLLM
+기존 보유 논문 본문·Fig. 3과 공식 코드 한 저장소를 확인했다. 그룹별 W4A8/W8A8 정수 곱의 결과를 scale로 변환하고 FP32로 누적하는 실행은 이미 다룬다. 고정 SHA의 ops.mixllm_gemm은 양자화된 2차원 activation과 별도 scale_act를 직접 받는다. 즉 기존에 저장한 정수 activation과 scale을 다시 소비한다는 계약을 API 수준에서 표현할 수 있다. forward의 quantize를 반드시 다시 호출해야만 하는 것은 아니다.
+공개 구현의 그룹은 입력축 128이며 activation scale은 [K/128, padded_M], weight scale은 [K/128, padded_N]인 FP16 배열이다. 이는 프레임마다 하나의 scalar를 쓰는 초안보다 더 세밀한 그룹 scale이다. 다만 이 API는 2차원 GEMM이며 공간 합성곱의 gather/implicit lowering API가 아니다. 이를 Wan Conv3D에 그대로 연결할 수 있다고 주장하지 않는다. Makefile은 sm_80으로 고정되어 있고 이번 검토에서 SM89 빌드·실행은 하지 않았다.
+논문: https://arxiv.org/abs/2412.14590
+고정 코드: https://github.com/microsoft/MixLLM/tree/00263510f9760d3a1d958a388e0e7c25961a7d59
+직접 대조한 파일: mixllm/nn/modules/ops.py, linear.py, test/test_kernel.py, kernels/Makefile. kernels.cu와 mq_mma_tensor_op_sm80.h는 일부 읽었으며 전체 커널 검증을 주장하지 않는다.
+API: https://github.com/microsoft/MixLLM/blob/00263510f9760d3a1d958a388e0e7c25961a7d59/mixllm/nn/modules/ops.py
+테스트: https://github.com/microsoft/MixLLM/blob/00263510f9760d3a1d958a388e0e7c25961a7d59/mixllm/test/test_kernel.py
+
+다. LightVAE
+원문 §4.2의 시간축 저랭크 경로는 현재 입력의 공간 응답과 두 시간 지연용 투영값을 함께 계산하고, 원래 큰 feature 대신 투영된 과거 상태를 저장한다. 따라서 “상태의 저장 형식과 이를 소비하는 연산을 함께 바꾼다”는 넓은 기여는 이미 존재한다. 학습·구조 변경을 수반하는 저랭크 방법이므로, 원 가중치를 유지하는 이번 정수 실행 초안과 같은 방법이라고도 할 수 없다. 본문 확인만으로 Wan의 시간 상태를 INT8로 저장해 정수 Conv에서 직접 읽는 구현이 제공됐다고 판정하지 않았다.
+출처: https://arxiv.org/html/2610.14726
+독립성 보충: root가 별도로 보낸 LightVAE convert_h3_int8.py의 transformer linear 대상 조건은 전달받았다. 이번 독립 공개 저장소 예산은 MixLLM 한 곳으로 사용했으므로 그 두 번째 저장소를 직접 열지는 않았고, 해당 관측을 독립 코드 검증으로 집계하지 않는다. README의 INT8 명칭을 Wan 상태 INT8 지원의 근거로 사용하지 않았다.
+
+라. LatentQuant
+원문 §3.2 및 부록 A.1, F.1–F.4는 NVFP4 가중치·activation 양자화, 채널 방향 16원소 블록 scale, operator별 native 실행을 다룬다. 출력 오차를 다루는 보정/학습과 함께 실제 activation packing 비용을 포함하는 점이 중요하다. 본문상의 resident state는 모델·packed weight의 저장량이며, 이를 시간 feature cache 압축 성과로 읽으면 안 된다. B300의 NVFP4 결과는 4090의 INT8 상태 경로를 입증하지 않는다. 이 논문은 “VAE 전체를 저정밀 연산으로 빠르게 한다”는 넓은 목표의 가까운 선행이지만, 이번 특정 시간 슬롯 정책이 해결됐다는 직접 증거로는 부족하다.
+출처: https://arxiv.org/html/2610.03959
+
+마. 이미 표현 가능한 가장 강한 API 조합
+NVIDIA cuDNN 문서의 cudnnConvolutionForward에는 INT8 입력·가중치, INT32 연산, FLOAT 출력을 쓰는 INT8_EXT_CONFIG가 있다. 문서의 NHWC implicit-GEMM 계열 제약을 만족한다면 tap별 정수 Conv2D → GPU 상의 scale 곱 → 부분합 합산이라는 기존 연산 조합을 만들 수 있다. 호출자가 거대한 im2col 텐서를 직접 생성하거나, 과거 INT8 입력 전체를 BF16으로 먼저 복원하는 것이 이 정의의 필수 조건은 아니다.
+그러나 이것은 API 표현 가능성이다. 사용 중인 cuDNN에서 모든 Wan 형상의 알고리즘 선택, workspace, SM89 실행 및 속도는 미검증이다. 최신 문서의 legacy API는 9.0부터 deprecated 표시이므로 설치 버전의 실제 지원을 확인해야 한다. alpha/beta는 host scalar이므로 프레임·출력 채널별 GPU scale을 모두 alpha 하나에 넣을 수도 없다. 별도 GPU pointwise scale/sum 또는 지원되는 graph 구성이 필요하다. 부분 FP32 출력과 여러 호출 비용을 숨기면 안 된다. PyTorch F.conv2d에 INT8만 전달하면 이 경로가 자동 선택된다는 주장도 하지 않는다.
+출처: https://docs.nvidia.com/deeplearning/cudnn/backend/latest/api/cudnn-cnn-library.html
+
+정리하면, 수학적 연산과 기존 API 조합은 있다. Wan의 실제 형상에서 충분히 빠르고 정확한 하나의 융합 구현까지 이미 있다는 사실은 이번 범위에서 확인하지 못했다. 후자의 미확인이 신규성의 증거는 아니다.
+
+3. 초안 수식이 성립하는 scale 범위를 먼저 제한해야 한다
+
+대칭 양자화를 가정하고 다음처럼 쓴다.
+  x[t-l,c,h,w] ≈ s_x[t-l] q_x[t-l,c,h,w]
+  W[o,c,l,i,j] ≈ s_w[o,l] q_w[o,c,l,i,j]
+그러면
+  y[t,o,h,w] ≈ b[o] + Σ_l s_x[t-l] s_w[o,l]
+                    · Σ_(c,i,j) q_x[t-l,c,h+i,w+j] q_w[o,c,l,i,j]
+이다. activation scale은 해당 Conv2D의 입력 채널·공간 reduction에 걸쳐 같아야 하고, weight scale은 입력 채널·공간 reduction에 걸쳐 같아야 한다. 출력 채널별 weight scale은 바깥에 둘 수 있다.
+
+실제 activation의 채널 편차 때문에 채널 그룹마다 scale을 두면 시간 tap뿐 아니라 그룹별 정수 부분합도 필요하다. 공간 위치별 scale은 3×3 receptive field에서 입력 위치마다 달라 단순 Conv2D 출력 하나에 곱할 수 없다. 공간 1×1 시간 합성곱은 예외적으로 출력 위치별 scale을 바깥에 둘 여지가 있지만, 이를 모든 CausalConv3d에 일반화할 수 없다. 따라서 프레임 scalar의 낮은 표현력과 더 세밀한 scale의 추가 연산/레이아웃 비용 사이에 선택이 남는다. 이것은 아직 측정하지 않은 조건이다.
+
+필수 수치 계약도 있다. 비대칭 양자화이면 zero-point 보정이 추가되고, padding의 실수 0은 해당 정수 zero-point로 표현해야 한다. 편향은 tap마다 반복하지 않고 마지막에 한 번 더한다. 각 정수 부분합을 INT8로 다시 포화시킨 뒤 합치는 방식은 위 식과 다르다. INT32 누산의 실제 reduction 길이와 overflow 조건도 확인해야 한다. 같은 scale 정책이라도 scale 저장 dtype, rounding, clipping, 부분합 변환·합산 순서가 달라지면 별도 수치 variant이다. 식이 같다는 이유로 BF16 원본과 비트 일치를 요구하거나 보장해서는 안 된다.
+
+4. 로컬 Wan과 맞물릴 때 빠지기 쉬운 점
+
+소스: /home/acorn0415/Quantization/src/wan/modules/vae.py
+- 14행: CACHE_T=2. 이것은 누적 길이가 커지는 KV 캐시가 아니라 각 연산의 짧은 입력 feature 상태이다. 17–36행은 상태를 현재 입력에 concat하고 남은 왼쪽 padding을 적용한다.
+- 101–137행: upsample3d의 첫 호출은 'Rep' 상태를 기록하면서 time_conv를 건너뛴다. 다음 호출의 왼쪽 0 처리와 이후 두 프레임 상태 사용을 일반적인 동일 FIR 초기화로 바꾸면 안 된다.
+- 186–220행과 423–470행: 저장 상태는 해당 convolution의 입력 마지막 두 프레임이다. 원본 BF16은 이 상태를 재양자화하지 않는다. INT8로 바꾼다면 시간 슬롯 번호가 아니라 저장 feature와 scale이 함께 이동해야 한다.
+- 76–85행의 time_conv는 3×1×1이고, residual/head 등에는 3×3×3이 있다. 같은 scale 설계·동일한 성능 가정을 적용할 수 없다. 업샘플 이후 현재 시간 길이도 늘어나므로 각 호출을 무조건 “과거 2 + 현재 1”로 세면 안 된다.
+- 57–63행의 spatial upsample, RMSNorm·SiLU·residual 및 223–262행 SDPA가 존재한다. VAE 전체를 INT8 Conv 하나로 치환하는 경로가 아니다. 과거 상태만 INT8로 저장하고 현재 feature를 BF16으로 두면, 전체 정수 Conv에는 현재 feature의 별도 quantize가 여전히 필요하다.
+- 545–568행: 원본 decode는 latent 시간축을 반복하며 상태를 유지하고 output을 누적 concat한다. output 누적과 실제 convolution을 분리해 비용을 측정해야 한다.
+
+따라서 전체 BF16 복원 약 28.8초를 새 경로의 제거 가능한 시간으로 사용할 수 없다. cache 읽기 비용, convolution, packing, scale reduction, 별도 부분 출력, 출력 누적이 어느 정도인지 아직 모른다. BF16→FP32 복원 차이가 작았다는 기존 결과도 INT8 clipping이나 activation 양자화의 안전성을 말하지 않는다.
+
+5. 반드시 이겨야 하는 비교와 남은 의사결정
+
+기준선 1: 원 가중치 BF16 streaming. output 누적과 불필요한 복사 제거의 비용을 정직하게 반영한다. channels-last의 실행 가능성/품질은 확인 전 가정하지 않는다. 이 기준선만으로 실제 요구를 충족하면 양자화 연구의 필요성을 먼저 재평가한다.
+
+기준선 2: 원 가중치의 공개 exact temporal lowering. 동일 상태 수명과 padding을 보존한다. 원 Conv3D보다 빠를지 미리 가정하지 않는다. 이 비교는 temporal decomposition의 효과를 분리한다.
+
+기준선 3: INT8 상태 저장 + BF16 compute. 압축률·state lifetime의 대조이며, 전체 정수 연산 가속의 대조를 대신하지 않는다. scale 저장과 현재 activation 처리까지 포함한다.
+
+기준선 4: 고정 scale W8A8 state/compute. scale을 미리 정했으므로 과거 상태의 공유 scale 재양자화가 원천적으로 필요 없다. 고정 채널 보정/SmoothQuant 계열도 강한 가능한 대조지만, 이번 범위에서 해당 VAE 구현·학습 없는 적용 가능성을 독립 검증한 것은 아니다. 임의로 모든 normalization/SiLU/residual에 보정을 접어 넣을 수 있다고 가정하면 안 된다.
+
+기준선 5: 기존 API로 합성한 시간별 scale W8A8. 위 cuDNN 경로처럼 tap별 정수 결과를 GPU에서 scale/sum하는 구현이다. 새 융합 커널을 언젠가 만들더라도 이것이 직접 대조여야 한다. 새로운 구현의 이득이 시간별 정밀도 때문인지, 단순히 여러 호출과 중간 출력 제거 때문인지 구분할 수 있다.
+
+같은 정수 weight 후보를 사용하지 않으면 temporal scale 정책의 효과와 weight 양자화 차이가 섞인다. W를 tap별 양자화한 결과와 Conv3D 전체의 공통 scale로 양자화한 결과를 비교하면서 그 차이를 activation 상태 수명의 효과라고 부르면 안 된다.
+
+누가 결정하는가: 배포자가 각 convolution에 고정 calibration scale로 충분한지, 각 입력 시간 feature에서 scale을 산출해 저장할 비용을 지불할지 결정한다.
+사용 가능한 정보: 미리 고정한 weight/보정 입력과 현재 도착한 feature. 과거 정수 feature+scale은 읽을 수 있지만 평가 영상의 미래 activation 분포로 scale/설정을 선택할 수 없다.
+아직 없는 증거: 실제 요구를 만족하지 못하는 강한 고정 scale 기준선, 이를 해결하는 시간별 scale, 그리고 그 해결이 남기는 전체 실행 이득. 셋이 없으면 새 의사결정 정책을 만들 이유가 없다.
+
+6. 허용될 경우 가장 작은 판별 검사는 무엇인가
+
+새 영상 생성이나 커널 작성 없이 기존 latent 하나를 원 BF16 VAE로 한 번 복원하면서 실제 호출 형상·상태 수명·메모리와 연산 시간을 함께 기록하는 단계가 먼저다. 이는 아직 실행하지 않은 제안이며, root가 별도 등록한 경우에만 진행한다. 전체 복원 비용에 대한 기존 숫자만으로 operator 후보를 고르지 않는다.
+
+그 한 번의 관측에서 먼저 필요한 것은 (a) INT8 경로를 적용할 수 있는 convolution의 실제 시간 비중, (b) 과거 feature 상태의 고유 저장 바이트와 중간 출력/workspace의 peak, (c) 3×1×1/3×3×3 및 현재 T=1/2/4 호출의 실제 빈도다. 합산 구간이 중첩된다면 전체 시간에서 단순 차감한 가속 상한으로 부르지 않는다.
+
+정밀도 문제도 함께 보려면 모든 feature를 저장하기보다 사전에 정한 소수 형상의 입력만 제한해 관찰한다. 초기 calibration 구간으로 정한 static scale/채널 보정을 고정하고, 이후 구간에서 같은 weight·rounding·clipping 조건의 static 대 시간별 scale을 비교한다. 같은 개발 영상의 앞뒤 분할은 독립 보류 영상이 아니며, “미사용 시간 구간”으로만 표시한다. 상태 MSE 하나보다 해당 convolution의 실제 출력 오차와 clipping을 본다. 이는 국소 진단이므로 전체 INT8 VAE의 누적 품질 보존을 입증하지 않는다.
+
+그다음 필요한 실행 검사는 기존 API가 지원하는 소수 실제 형상의 BF16/lowering/static INT8/시간별 scale INT8 비교다. 입력 packing, 현재 feature quantize, scale 산출, layout, FP32 부분 출력과 합산, 최종 cast를 포함한다. 실행 지원을 확인하지 못했다면 “새 커널이 필요하다”로 바로 넘어가지 말고 그 형상과 API 제약을 기록한다. 관측 전에 임의의 속도·오차 수치를 성공 기준으로 선언하지 않고 실제 배포 요구와 자원 상한을 먼저 정해야 한다.
+
+종료 판단은 다음과 같이 좁힐 수 있다.
+- 고정 W8A8 또는 고정 보정이 요구 오차/비용을 만족하면 시간별 상태 scale 방향을 종료한다.
+- 시간별 scale이 국소 오차를 개선해도 기존 API 조합이 충분히 빠르면 새 융합 방법의 필요성은 없다.
+- 오차 이득은 있지만 실제 convolution 비중이나 추가 비용 때문에 전체 실익이 없으면 이 초안을 종료한다.
+- 시간별 scale의 필요한 오차 이득과 단순 실행의 구체적 비용 장애가 함께 남을 때만, 그 장애 하나의 구현 문제로 다시 정의한다. 그때도 기존 groupwise GEMM/implicit convolution의 적용과 구별되는 기여가 별도로 필요하다.
+
+현재는 첫 관측조차 없으므로 새 kernel·선택기 개발을 시작할 근거가 없다. 현 초안은 방법 채택 대상에서 제외하되, 위 한 번의 계측이 실제 의사결정에 필요한지는 root가 다른 독립 검토와 함께 결정하는 것이 타당하다.
+
+7. 검토 범위와 미확인
+
+3개 지정 primary 논문과 보유 MixLLM 논문, 공개 저장소 1개(Microsoft/MixLLM 고정 SHA), NVIDIA 공식 API 문서, 기존 로컬 Wan 코드만 사용했다. MixLLM 공개 파일은 web에서 읽었으며 새 저장소 clone/설치/다운로드는 하지 않았다. 함수의 수학·API 계약과 논문이 실제 보고한 대상만 대조했으며, 실제 INT8/Conv 실행·SM89 성능·VAE activation 분포·새 품질 결과는 없다. 공식 API의 표현 가능성을 현재 설치 환경의 실행 성공으로 대체하지 않았다.
+
+LightVAE와 LatentQuant의 모든 공개 구현을 검증하거나 선행연구 전체를 조사한 결과가 아니다. 이번 범위에 똑같은 cache-slot 정책이 없다는 이유로 신규성을 확정하지 않는다. 반대로 현재 문헌만으로 모든 형태의 시간별 scale이 불필요하다고 증명하지도 않는다. 결론은 “기존 계산을 조합한 현재 초안에는 독자적인 방법론의 근거가 없고, 남는 실용 조건은 아직 미관측”이다.

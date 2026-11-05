@@ -1,0 +1,24 @@
+{
+  "status": "bounded_independent_predata_critique",
+  "start_epoch": 1793903516.2731528,
+  "deadline_epoch": 1793904716.2731528,
+  "hypothesis": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/ROOT_UNADOPTED_FUTURE_STATE_ROUNDING_KO.txt",
+  "question": "Does future-tap-aware jointly rounding two newly written finite causal convolution states define a useful unsolved decision beyond generic activation/Hessian rounding? Verify math first; identify strongest direct existing baseline and failure test. No adoption or effect assumption.",
+  "roles": [
+    "method_gap_codex",
+    "existing actual Opus2 via manager"
+  ],
+  "resources": {
+    "wall_seconds": 1200,
+    "primary_sources_max": 6,
+    "public_repositories_max": 1,
+    "CPU_threads": 4,
+    "RSS_bytes": 2147483648,
+    "output_bytes": 8388608,
+    "GPU": 0,
+    "model_or_tensor_loads": 0,
+    "new_experiments": 0
+  },
+  "independence": "Do not read other reviewer interim or conclusion. One native helper allowed for distinct math vs prior-art, shared total budget. Report complete overlap/no candidate if appropriate. Preserve causal write information boundary T>=2; local conditional loss is not global RGB.",
+  "deliverables": "Math/error-bound correction, closest papers with exact objectives/code scope, decisive simplest strong baseline, adopt/no-adopt/small evidence test. Must not label a generic 2x2 Hessian as novelty."
+}
