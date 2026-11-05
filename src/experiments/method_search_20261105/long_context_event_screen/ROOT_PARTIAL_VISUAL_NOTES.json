@@ -1,0 +1,35 @@
+{
+  "created_epoch": 1793897082.957669,
+  "observer": "root",
+  "scope": "Four contact sheets actually viewed with view_image detailoriginal; independent reviewers conclusions not read. Not all12clips or full501frames reviewed byroot.",
+  "images": [
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p00_sheet0.jpg",
+      "sha256": "c881f8f2edd95bd67f3822d2ae4a8dd7b8ed634c87ff3d42041d0fd0d6d1f3fc"
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p04_sheet1.jpg",
+      "sha256": "f558995a97ddf6cf53076ce032a2856d9d0c2ec1aeb9e634f6fcdf1386de19d9"
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p06_sheet0.jpg",
+      "sha256": "f34d1efe7877b05656b4b15f084c01cad33d59af67abdde94da8f55d619e874d"
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p06_sheet1.jpg",
+      "sha256": "d1fe3a2ac4a7db1c832a619c04ed0c5e56398f688a81712183745def3363edf7"
+    }
+  ],
+  "observations": {
+    "p00_first_half": "Dog remains visible in the0–15.5s sampled frames. Ball moves relative to dog; no longabsence/return established fromthishalf.",
+    "p04_second_half": "Robotgrippers and blocktower remain visible in16–31.25s samples. Similarposes and growingcolorededge/woodtable artifacts visible. Cause notidentified; not evidenceofquantization damage becauseclipisBF16.",
+    "p06_both_halves": "Bluepaper andhands transform andpartlydisappear; visible paperreturns aftershortblanktable spans around17–20s and26–27.5s. These sampled intervals do notestablish >5.25s absence followedbyreturn. Paper-specific persistentvisualstate ambiguous. Fullcontinuous absence not verified."
+  },
+  "classification": "No candidate established bythese four rootviews; waitfor completepairedscreen beforeoverall decision.",
+  "prohibited_inferences": [
+    "Does notprove12clips containnoevents.",
+    "Does notprove longKV unnecessary.",
+    "Does notdiagnose artifactcause orscore methods.",
+    "No newGPU/video/model/metriccalls."
+  ]
+}

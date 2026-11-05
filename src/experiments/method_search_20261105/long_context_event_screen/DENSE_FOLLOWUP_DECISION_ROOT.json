@@ -1,0 +1,28 @@
+{
+  "created_epoch": 1793897322.2905927,
+  "original_deadline_epoch": 1793898445.9137225,
+  "basis": {
+    "EVENT_SCREEN_CODEX_KO.txt": "deb65d1c0a48129a415fb80bd2f73da571f46e38cf573e886e3f3a7645c2d08d",
+    "EVENT_SCREEN_OPUS_KO.txt": "3839c1e348914753d0e660aac1a1c0fd39ae37ea20a293f3a422c4c69b267fe2"
+  },
+  "selection": "Both independent readers identify p00blueball return as candidate, identity uncertain. Select onlyp00, earliest/only sharedcandidate; no otherclipsearch.",
+  "dense_interval_frames": [
+    136,
+    376
+  ],
+  "full_resolution_frames": [
+    0,
+    32,
+    80,
+    136,
+    152,
+    160,
+    352,
+    360,
+    368,
+    376
+  ],
+  "purpose": "Check sampledabsence continuity and whether state/identity is meaningfully identifiable. No longKV benefit or method effect inferred.",
+  "resource": "Same30min/2GiBRSS/64MiBoutputs/noGPU/no newvideo,noVAE. Two readers independently report,rootintegrates.",
+  "decision": "If identity/task relevance remainambiguous, close8generationutilityplan; no seed/prompts/thresholdchanges."
+}

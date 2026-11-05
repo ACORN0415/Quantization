@@ -1,0 +1,158 @@
+{
+  "status": "completed",
+  "created_utc": 1793897164.859626,
+  "registration_sha256": "4bda946904c3ee8d674227ff857f1db23c7e2f6183fa422af5895d029ccc97c7",
+  "frames_ready_sha256": "c4ae735ddc5a395b200a111ba5119461c7cd161a270721271944353cd9981092",
+  "prepare_frames_sha256": "5e5e22e2b8332f9556bf0a2eb42c05de053710b374aa02debf8530619d8b38e5",
+  "sampling": "64 samples/clip: frames 0..496 every 8 + final 500, 16 fps; sheet0 frames 0-248, sheet1 256-500",
+  "parent": {
+    "model": "claude-opus-5-5 (actual Claude Opus 5.5 chat)",
+    "session": "claude_beab681e_3eaf_41b0_9688_b8ef268b288f",
+    "task_dispatch": null,
+    "viewed_jpgs": [
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p00_sheet0.jpg",
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p00_sheet1.jpg",
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p01_sheet0.jpg",
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p01_sheet1.jpg",
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p02_sheet0.jpg",
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p02_sheet1.jpg",
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p03_sheet0.jpg",
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p03_sheet1.jpg",
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p04_sheet0.jpg",
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p04_sheet1.jpg",
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p05_sheet0.jpg",
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p05_sheet1.jpg"
+    ]
+  },
+  "helper": {
+    "type": "Agent tool subagent_type fork (tool contract: runs on parent model, no override)",
+    "observed_provider_model_id": null,
+    "viewed_jpgs": [
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p06_sheet0.jpg",
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p06_sheet1.jpg",
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p07_sheet0.jpg",
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p07_sheet1.jpg",
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p08_sheet0.jpg",
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p08_sheet1.jpg",
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p09_sheet0.jpg",
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p09_sheet1.jpg",
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p10_sheet0.jpg",
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p10_sheet1.jpg",
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p11_sheet0.jpg",
+      "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p11_sheet1.jpg"
+    ],
+    "note": "parent did not re-view child sheets; child results are labelled child-viewed only"
+  },
+  "started_utc": "2026-11-05T16:44:19Z",
+  "clips": {
+    "p00": {
+      "class": "candidate_event",
+      "viewer": "parent_direct_Read",
+      "initial_visible": {
+        "object": "blue rubber ball",
+        "frames": "0-152",
+        "pts": "0.0-9.5s (frame152 at right edge)"
+      },
+      "absent": {
+        "frames": "160-352",
+        "pts": "10.0-22.0s",
+        "duration_s": 12.5
+      },
+      "reappear": {
+        "frame": 360,
+        "pts": "22.5s",
+        "continues": "visible near dog paws through ~frame 440-456 (27.5-28.5s)"
+      },
+      "identity": "spherical blue ball of similar size beside the same golden retriever; dog interacts with it again (paw/nose contact).",
+      "relevance": "related object returns into the dog play action; bench also persists continuously (not counted).",
+      "uncertainty": [
+        "strong colour/contrast drift in sheet1 makes the ball darker/purplish; same-object identity vs regenerated ball not provable",
+        "ball may have been off-frame or occluded by dog between samples (0.5s gaps)",
+        "sampled frames only; no dense check"
+      ]
+    },
+    "p01": {
+      "class": "no_candidate_identified_in_sampled_frames",
+      "viewer": "parent_direct_Read",
+      "note": "yellow loader with plow visible continuously 0-500; cars pass/vary but no identifiable initial object absent >5.25s then reappearing; late colour drift."
+    },
+    "p02": {
+      "class": "no_candidate_identified_in_sampled_frames",
+      "viewer": "parent_direct_Read",
+      "note": "pianist hands/keyboard continuously visible; strong late colour artefacts."
+    },
+    "p03": {
+      "class": "no_candidate_identified_in_sampled_frames",
+      "viewer": "parent_direct_Read",
+      "note": "grazing bay horse continuously visible; scene colour drift to red sky/green grass."
+    },
+    "p04": {
+      "class": "no_candidate_identified_in_sampled_frames",
+      "viewer": "parent_direct_Read",
+      "note": "two robot arms and stacking tower continuously visible; small wooden blocks appear from ~frame 80; tower layer colours drift later (identity drift noted), no absence/reappearance."
+    },
+    "p05": {
+      "class": "no_candidate_identified_in_sampled_frames",
+      "viewer": "parent_direct_Read",
+      "note": "lighthouse continuously visible; breaking waves on rocks early (0-~72) then calm water and do not clearly return; artefact frames 192, 280, 376, 480."
+    },
+    "p06": {
+      "class": "no_candidate_identified_in_sampled_frames",
+      "viewer": "native_fork_helper_Read_not_parent_viewed",
+      "note": "child: blue paper absent/return gaps 17.0-20.0s and 26.0-27.5s (<5.25s); patterned blue cylinder 4.5-12.0s then gone without return."
+    },
+    "p07": {
+      "class": "no_candidate_identified_in_sampled_frames",
+      "viewer": "native_fork_helper_Read_not_parent_viewed",
+      "note": "child: drummer continuously visible."
+    },
+    "p08": {
+      "class": "no_candidate_identified_in_sampled_frames",
+      "viewer": "native_fork_helper_Read_not_parent_viewed",
+      "note": "child: four white cloths on line continuously visible; heavy colour drift after 16s."
+    },
+    "p09": {
+      "class": "no_candidate_identified_in_sampled_frames",
+      "viewer": "native_fork_helper_Read_not_parent_viewed",
+      "note": "child: initial skate bowl 0-5.0s then gone without return; skater continuous."
+    },
+    "p10": {
+      "class": "no_candidate_identified_in_sampled_frames",
+      "viewer": "native_fork_helper_Read_not_parent_viewed",
+      "note": "child: orrery continuously visible; individual planets not identifiable across occlusion."
+    },
+    "p11": {
+      "class": "no_candidate_identified_in_sampled_frames",
+      "viewer": "native_fork_helper_Read_not_parent_viewed",
+      "note": "child: astronaut continuous; bright celestial body changes form after 11s so identity of return not establishable (ambiguity kept as uncertainty, not reclassified)."
+    }
+  },
+  "summary": {
+    "candidate_event": [
+      "p00"
+    ],
+    "no_candidate_identified_in_sampled_frames": [
+      "p01",
+      "p02",
+      "p03",
+      "p04",
+      "p05",
+      "p06",
+      "p07",
+      "p08",
+      "p09",
+      "p10",
+      "p11"
+    ],
+    "unassessable": []
+  },
+  "additional_execution": {
+    "decode": 0,
+    "GPU": 0,
+    "model": 0,
+    "code_run_on_media": 0,
+    "downloads": 0
+  },
+  "codex_event_screen_read": false,
+  "nonclaims": "Screen of sampled frames only; not proof of absence, not evidence that long KV is required, not compression damage, not held-out effect or human-evaluation validity."
+}
