@@ -1,0 +1,16 @@
+{
+  "status": "root_next_resource_proposal_before_Opus_result_or_next_review",
+  "created_epoch": 1793915871.0285819,
+  "current_run_disposition": "Close registered fixed-candidate run as reuse-equivalence failure. No new GPU under this authority, no tolerance/arm/input replacement to rescue it.",
+  "observed": "All16 candidate ranks and chosen1 agree in stored scores; timing not reached; no practical need for a selector or actual packed low-bit backend measured.",
+  "preferred_next_resource": "If measuring ordinary execution cost remains necessary, a separately registered direct-path-only FP32/BF16/FP16 profile with original encode_obs batched identically, no reuse or new selector, can answer the still-unmeasured cost question. Reuse is not considered numerically equivalent. Reuse failed data remain failed and exposed episode0 remains development.",
+  "why_not_new_method_now": "The only current deviation is a strict numerical-equivalence failure of a simple implementation optimization, not a demonstrated decision failure, task degradation or resource violation. Do not relabel it as a new quantization problem.",
+  "required_before_any_followup": [
+    "Bounded separate source+run authority and independent review, no current exception under failed authority.",
+    "Timing winner/noise reported on repeated same input, not different search seeds.",
+    "No practical speedup/quality/novelty implication from one recorded case.",
+    "If no concrete further cost decision can be stated, do not run for the sake of collecting another result; return to evidence-grounded new-gap search."
+  ],
+  "new_method_adopted": false,
+  "GPU_followup_authorized": false
+}

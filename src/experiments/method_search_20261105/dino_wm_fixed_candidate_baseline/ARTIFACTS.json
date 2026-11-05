@@ -1,0 +1,55 @@
+{
+  "status": "preserved_failed_run_artifacts",
+  "created_epoch": 1793915907.0761983,
+  "files": {
+    "RESULT.json": {
+      "bytes": 24108,
+      "sha256": "92aa26fda4788ac36863cea84a874c85355098e2dd1cf296300c70b5d7cee99b"
+    },
+    "PROGRESS.json": {
+      "bytes": 23302,
+      "sha256": "fb3016dc10d452e2dfada17767550e489de83a91625e30d42b1d384d9967eaba"
+    },
+    "RUN.json": {
+      "bytes": 124,
+      "sha256": "f5f82e55a6db486583c8b638d8cbc019c189f6d6cd8192f471d055e478b21fb5"
+    },
+    "ROOT_EXECUTION_STARTED.json": {
+      "bytes": 589,
+      "sha256": "0216fb4132d3072f7d55d87011e5d0b7212c2a4c8e945214454ec381ca573fa5"
+    },
+    "ROOT_EXECUTION_FINAL.json": {
+      "bytes": 962,
+      "sha256": "e79ae47d46d2e2f765a6456533ad8ce929a4257a740c0be64e36234472028113"
+    },
+    "ROOT_STDOUT.log": {
+      "bytes": 2468,
+      "sha256": "6610b62f21ca961e2ae719dbc03178f04249ae288036f900d7c7811656ec94b1"
+    },
+    "INPUTS.pt": {
+      "bytes": 1510280,
+      "sha256": "128e8729ce1390eb6428cc73891531a9761dbee2b09c0a01fcae2fad3b805439"
+    },
+    "GOAL_FEATURES.pt": {
+      "bytes": 302588,
+      "sha256": "f271c620623b690d77ee74bc2717d89bfba65a19ed6e9890002ce09d94c9c4cc"
+    },
+    "ROOT_POSTRUN_AUDIT_SPEC.json": {
+      "bytes": 1268,
+      "sha256": "61bc054004578fff7cf683c6a712897f7b7b27ca2bdbd3c6a9a502acdb8a2eae"
+    },
+    "ROOT_POSTRUN_AUDIT.json": {
+      "bytes": 13205,
+      "sha256": "a875928f089079ad315236cf686356f0153f6ac294f57a1214a3df88524b0c53"
+    },
+    "REPORT_RESULT_CODEX_KO.txt": {
+      "bytes": 2354,
+      "sha256": "e026469f160261ac1faf85353f0d9faf908ba24710ba3fb0447aa8d8125fdff1"
+    },
+    "NEXT_RESOURCE_CODEX.json": {
+      "bytes": 1677,
+      "sha256": "0f887ca7e05a584ee4d05e1dae54931124d6b19fcd728470a49911a756e13d6c"
+    }
+  },
+  "generated_tensor_scope": "INPUTS.pt/GOAL_FEATURES.pt retained locally; no FINAL_LATENTS.pt due gate failure. No model checkpoint is copied here."
+}

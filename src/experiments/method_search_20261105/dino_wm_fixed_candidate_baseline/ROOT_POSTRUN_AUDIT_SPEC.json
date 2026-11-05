@@ -1,0 +1,25 @@
+{
+  "status": "root_authorized_readonly_postrun_artifact_recalculation_not_new_experiment",
+  "created_epoch": 1793915577.168446,
+  "input_score_or_output_values_not_read_before_this_spec": true,
+  "read_scope": [
+    "RESULT.json",
+    "ROOT_EXECUTION_FINAL.json",
+    "INPUTS.pt",
+    "GOAL_FEATURES.pt",
+    "FINAL_LATENTS.pt",
+    "bound source/dependency hashes"
+  ],
+  "CPU": 2,
+  "wall_seconds": 120,
+  "RSS_bytes": 2147483648,
+  "GPU": 0,
+  "model_loads": 0,
+  "dataset_original_loads": 0,
+  "tensor_artifact_loads_max": 3,
+  "weights_only": true,
+  "score_recalculation": "FP64 CPU final visual384 MSE +0.1*final first-patch proprio10 MSE versus saved FP32 goal features. Compare to worker GPUFP32 scores at atol1e-6,rtol1e-5. This is arithmetic validation, not task quality gate.",
+  "timing": "Reaggregate8 crossed repetitions, paired per-cycle wall changes versus directFP32/reuseFP32, median/min/max; no inferential claim from a single case.",
+  "failure_rule": "Audit mismatch is invalid arithmetic/integrity requiring explanation. Do not change scientific arms, reuse1e-5gate or generate another result.",
+  "nonclaims": "Root reanalysis is not independent native audit, no independent model/tensor-output regeneration or goal encoder reconstruction."
+}

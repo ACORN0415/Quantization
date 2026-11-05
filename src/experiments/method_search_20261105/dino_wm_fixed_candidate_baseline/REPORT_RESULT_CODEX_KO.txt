@@ -1,0 +1,8 @@
+고정 후보 기준선 실행 결과 — 사전 동등성 조건 실패
+
+실행 전source4046ce10/manifest06ec7bb6를커밋009f0fc로고정하고root단일GPU프로세스로1회실행했다. 전체3.5204초/900초,root표본RSS1,939,116,032B,exit1,소유그룹잔류0·종료GPUidle이다. 원환경guard·source/manifest는불변이다.
+원입력및goal은episode0기록영상0/25프레임이며OpenCV대체및goal비재연을명시했다. CPU checkpoint1/DINO1/dataset3/seq_length1복원과정규화·RGB변환이진행됐다. 네팔은각16후보를평가했으나FP32관측재사용의최종latentallclose(atol=rtol1e-5)가실패했다. 최대절대차이는0.00010395050048828125이다. 이최대값하나로상대오차항을포함한전체판정통계를재구성할수는없고,worker가torch.allclose=False를기록했다. batch4원encoder와batch1재사용의연산형상차이는가능한원인이나중간feature를보존/재계산하지않아확정하지않는다. 허용오차를늘리지않고timing전에중단했다.
+저장점수에서는네팔16후보전체순위와선택이같았다. 후보1이모두1위이며FP32기준1-2위차이는0.4367668181657791이다. 따라서이거친후보집합에서선택오류를관측하지못했다. 다른입력·가까운후보·실제CEM또는저비트INT4가안전하다는뜻은아니다.
+완료되지않은것은8회교차시간측정·최종latent저장·최종GPUpeak및actualLinear dtype기록이다. source설정상BF16/FP16사본경로를사용했지만실행후dtype검사필드는gate뒤에있어RESULT에없다. 속도나팔별peak메모리결론을만들지않는다.
+ROOT_POSTRUN_AUDIT 97검사는해시/입력변환/seed후보/저장scalar순위대조다. CPU에서INPUTS와GOALFEATURES2개만읽었고model/GPU재실행0이다. FINAL_LATENTS가없으므로점수의독립재생산은수행하지못했다. 초기inline감사스크립트1건은괄호구문오류로실행전실패했고수정한감사만돌았으며원실험코드/결과를바꾸지않았다.
+현재실험은사전조건실패로종료한다. 새방법론효과·새선택기필요·실제성공률·양자화가속의근거는없다. 추가생성이나관측재사용구제를허용하지않는다. 일반부동소수비용비교를별도후속으로할지는기존실패와구분한자원판단이필요하다.
