@@ -1,0 +1,22 @@
+{
+  "scope": "code preparation only; actual GPU execution separately preregistered after prior CPU stage and code reviews",
+  "started_utc": 1793893797.1031623,
+  "absolute_preparation_deadline_utc": 1793895537.1031623,
+  "note": "Conservative deadline accounts for approximately60seconds already spent on worker dispatch. Parent code-preparation budget30minutes not multiplied by helpers.",
+  "GPU_calls_authorized_during_preparation": 0,
+  "actual_PRQ_calls_authorized_during_preparation": 0,
+  "model_loads_authorized": 0,
+  "owners": {
+    "probe.py": "fair_comparison_codex",
+    "verify_record.py": "method_gap_codex"
+  },
+  "next_execution_proposed_limits": {
+    "wall_seconds": 600,
+    "attempts": 1,
+    "allocator_GPU_GiB": 8,
+    "RSS_GiB": 8,
+    "CPU_threads": 4,
+    "disk_GiB": 1
+  },
+  "proposal": "docs/reviews/20261105_METHOD_SEARCH/QVG_ACTUAL_CODEC_PROPOSAL_ROOT_KO.txt"
+}
