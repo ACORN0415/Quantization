@@ -1,4 +1,4 @@
-BF16 출력 순차 전달 기준선 — 실제 GPU 결과, 독립 결과검토 대기
+BF16 출력 순차 전달 기준선 — 실제 GPU 결과 및 독립 결과검토 완료
 
 목적과 판정
 원 BF16 VAE의 full latent denormalization·conv2·126회 decoder와 feature cache 계약을 유지하고 출력 누적만 CPU 순차 전달로 교체했다. 동일 latent·가중치를 새로 적재한 두 경로에서 501 RGB 프레임의 shape/dtype/논리 원소 바이트가 worker의 직접 비교에서 모두 일치했다. 등록된 trace 계약도 통과했다. 이는 강한 기존 실행 기준선의 확보이며 새로운 양자화 방법의 효과가 아니다.
@@ -17,3 +17,6 @@ RSS sample peak 4,298,276,864B, process-lifetime ru_maxrss 4,294,295,552B로 각
 
 연구 판단
 BF16 기준선을 더 강하게 만든 뒤에도 남은 state 압축 후보는 가까운 선행과 단순 RTN/scale 선택 대비 독립 이득이 필요하다. 일반적인 tap 분해/group scale 초안은 기존 계산과 겹쳐 별도 종료했다. future-state rounding은 아직 수학·선행 독립 비판 중인 미채택 가설이며 효과 실험을 시작하지 않았다.
+
+독립 사후 검토 완료
+Codex 저장기록 감사1,767조건 통과와 실제Claude Opus5.5의18:35:34–18:36:11UTC 사후검토를 결합해 시험범위의 exact-output 실행기준선으로 수용했다. Claude는 .pt/.pth를 제외한23개작은LOCK파일 해시·저장결과·감사를 읽었으며 코드감사재실행·모델/tensor/GPU로드0, 보고서/verify_result.py본문/유휴기록은미열람이었다. root의직접GPU유휴관측과독립감사/Claude범위를구분한다. 추가재현실험0, 기준변경0.

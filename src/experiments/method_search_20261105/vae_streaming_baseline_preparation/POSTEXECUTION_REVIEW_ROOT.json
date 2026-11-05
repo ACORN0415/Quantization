@@ -1,0 +1,19 @@
+{
+  "status": "accepted_exact_output_execution_baseline_only",
+  "created_epoch": 1793903874.4024348,
+  "independent_actual_Claude_review": "claude-opus-5-5 existing Opus1, completed2026-11-05T18:36:11Z",
+  "root_accepts": "Actual one-latent GPU worker equality + preserved native trace + reduced observed allocated peak. Not a new quantization methodology.",
+  "audit": "1767 saved record checks; original RGB not stored, no independent replay.",
+  "observed_allocated_reduction_percent": 20.958365106647946,
+  "limitation": "1fixedorder trial. No production speed/quality/Pareto/generalization claim. Cache storage measured at3 decoder boundaries, not peak simultaneous decomposition.",
+  "evidence": {
+    "RESULT.json": "5c613d3d856387db6aab866861e3f3d2ead009813275ab94c302d7f53e7148d7",
+    "LOCK.json": "4251016b7d044491fc031c5800fbe13cc40265ccdb76f3e4ec2460464ea6e2f5",
+    "ROOT_EXECUTION_FINAL.json": "f6c7764ceec3bdfde9761bf15cac2fcb76e351c7e7fa93a1657d14f1e464610d",
+    "ROOT_GPU_IDLE_AFTER.json": "0ad2a85216c6549a61924e7713acdfeca54311267413897626a9cf374913cab1",
+    "AUDIT_CODEX.json": "0dd2f0cd283bdd3507db6da3f806e9871e06874a7268d9c1c478aabcc9152f77",
+    "verify_result.py": "8246801fe60c49f8304852896dd77b175064498c5f51044f1cddf1ddb2fcbc68",
+    "REPORT_AUDIT_CODEX_KO.txt": "374ca4160504c2815d26d109614bb304ef304e4bc6a1b57eaf16b0cd0ff01039",
+    "OPUS_POSTEXECUTION_FIXED_KO.txt": "ca71c8ca0ec275fc733225e7accbeae92a7f91895b53cc830d56164840c9d38f"
+  }
+}

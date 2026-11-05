@@ -1,0 +1,32 @@
+BF16 streaming baseline 실제 결과 — 한정 사후 검토 (실제 Opus1, root msg_6053fdea365c)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음(역사적 terminal_handle_stale).
+실제 시작 2026-11-05T18:35:34Z, 관리자 고정 마감 18:45:25Z. 추가 실행 0(GPU/model/tensor load/코드·감사 재실행/수정 없음). helper 0(저장 JSON 몇 개라 분할 불필요).
+이전 검토(설계 6193853c, 전체 source 1689936f, layout 부록 1f38b7c2)는 불변이며 source 검토 범위를 소급 확대하지 않는다.
+직접 계산 SHA: worker.py 2258ca9de39cffcbb66feb2fc2a0ff554208be7003a53cc8df24d95927ac6512, RESULT.json 5c613d3d856387db6aab866861e3f3d2ead009813275ab94c302d7f53e7148d7,
+LOCK.json 4251016b7d044491fc031c5800fbe13cc40265ccdb76f3e4ec2460464ea6e2f5, ROOT_EXECUTION_FINAL f6c7764c…, AUDIT_CODEX 0dd2f0cd….
+
+판정: 저장 기록상 실행이 등록 계약대로 완료됐고 exact 출력 baseline으로 유효하다(범위 한정). 속도·메모리 개선 확정이나 새 방법 효과는 아니다.
+
+직접 읽은 저장 근거(JSON 필드)
+ - LOCK: status approved_for_one_native_streaming_probe, root_execution_authorized True, limits = worker LIMITS 동일, gate 문자열 일치, 25항목 해시.
+   LOCK의 worker.py 해시 = 현재 2258ca9d(snapshot의 dac8은 별도 경로로 함께 결합). LOCK 내 .pt/.pth 제외 23개 작은 파일의 현재 해시를 직접 재계산해 불일치 0.
+ - ROOT_EXECUTION_FINAL: completed, exit 0, wall 64.758s(<600), ROOT_attempts 1.
+ - RESULT: status completed_exact_streaming_baseline, whole_video_decodes 2, decoder_forward_calls 252, generator_calls 0(기록 상수), source_and_input_hashes_unchanged True,
+   watchdog_completed_cleanly True, process peak RSS 4,294,295,552B(<12GiB), 출력 디스크 관측 최대 409,359B, runtime torch 2.6.0+cu124/CUDA 12.4/cuDNN 90100/RTX 4090,
+   TF32·autocast·benchmark off, deterministic True. decode AST inverse_equals_native True.
+ - trace: 두 팔 모두 conv2 1회 입력 [1,16,126,60,104], decoder 126회, clear 2회(0→0, 32→0), 두 팔 trace 완전 동일.
+   cache 표본: i=0 30 tensor/30 storage/920,325,120B, i=64·125 32/32/1,888,573,440B, list slots 33, 비텐서 슬롯 3(i=0, 'Rep' 2 + 미사용 1)·1 → W1 정적 산출값과 일치.
+ - 501 프레임: per_frame 501행 모두 logical_bytes_equal True, native/stream 프레임 sha 501개 일치, 두 팔 frame_sha256 목록 동일.
+ - 자원(서술용): GPU peak allocated native 5,727,909,376B → stream 4,527,433,216B, decode+emit+검증 30.959s → 30.375s.
+감사: AUDIT_CODEX.json 존재(한 번 읽음): passed_saved_record_audit, 1767검사, failures 0, record_sha256의 RESULT 5c613d3d·LOCK 4251016b·FINAL f6c7764c가 현재와 일치,
+ tensor/GPU/model load 0. 스스로 밝힌 한계: 저장 스칼라·해시·trace만 감사, 501 바이트 비교는 worker 관측의 범위·해시 정합 확인이지 RGB 재실행 아님, storage 그룹별
+ nbytes는 저장 안 돼 논리 바이트·그룹 수만 재계산, generator 0은 소스 경로 근거.
+
+해석 한계
+ - 501 원소 바이트 동일은 worker가 실행 중 비교한 결과다. raw RGB를 저장하지 않아 독립 재계산은 불가하며 이 검토도 재계산하지 않았다.
+ - 비용은 native→stream 고정 단일 순서, 계측 포함 1회 측정이다. GPU peak 감소(약 1.2GB)는 이 실행의 서술이며 속도 개선·공정 benchmark·Pareto 결론이 아니다.
+ - 정규화 계약은 두 팔 공통 GPU float/clamp/affine이며 이전 precision probe의 CPU affine 계약과 다르다. 이 결과를 과거 RGB와 바이트 동일하다고 확장하거나 품질 효과로
+   해석하지 않는다.
+ - W1: 정적 산출과 실제 trace가 일치(유일 실행 무효 위험은 실현되지 않음). W2: cuDNN 알고리즘 교란은 이번에 불일치가 없어 문제되지 않았으나 원리적 잔여로 남는다.
+ - GPU idle 사후 확인(ROOT_GPU_IDLE_AFTER.json)은 root 보고로만 받아들였고 내용을 읽지 않았다. EXECUTION.log, PROGRESS, REPORT_KO, verify_result.py 미열람.
+실제 끝: 2026-11-05T18:36:11Z
