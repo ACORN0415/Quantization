@@ -1,0 +1,75 @@
+기존 latent VAE 정밀도 probe — 가치·계약 독립 설계 (실제 Opus1, root msg_ed3dd0c5c741)
+부모: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음(역사적 terminal_handle_stale).
+실제 시작 2026-11-05T17:12:01Z, 절대 마감 17:25:00Z. 동시 Codex vae_precision_probe_preparation 폴더·결론은 읽거나 찾지 않았다.
+읽기/stat만: GPU·VAE·모델·latent/tensor load·코드 실행·다운로드 0. .pt/.pth 내용 미열람.
+helper 1개(Agent 도구 subagent_type fork; 도구 계약상 부모 모델 실행, 별도 provider ID 미관측): vae.py 로드·decode·temporal cache 경로 추적
+(source/stat만). 부모: wan_wrapper decode, mechanism_worker 호출부, latent stat 산술, gate 비판·정보가치·자원·통합. helper를 독립 Opus 검토로 세지 않는다.
+
+1. 판정: 실행 가치 있음(저비용·단일 판별). 단 root gate는 정의가 불완전해 아래 단일 기준으로 바꾸기를 권한다.
+ 근거: latent를 고정하면 두 arm의 차이는 decode 경로만의 것이다. 원 decode는 latent 프레임을 하나씩 temporal feature cache로 이어 처리하므로
+ (vae.py decode 545–569, CausalConv3d CACHE_T=2) BF16 오차가 시간에 따라 누적될 기전이 source상 존재한다 — 후반 색 변화가 decode 정밀도에서
+ 왔을 가능성을 싸게 가를 수 있다. 반대로 FP32에서도 변화가 남으면 원인은 latent 쪽(generator/KV/하네스)에 더 무게가 실린다(배제는 아님).
+
+2. source 사실(행 근거)
+ - 현행 경로: mechanism_worker.py:251 `WanVAEWrapper().to(gpu, dtype=bfloat16)`, 252 latent torch.load(weights_only), 254
+   `decode_to_pixel(latent.to(gpu,bfloat16), use_cache=False)*.5+.5` clamp(0,1), 256 501프레임·유한성 검사. 즉 BF16 arm = 원 생산 경로.
+ - 가중치 로드(helper, vae.py 612–636): meta device에서 생성 후 `load_state_dict(torch.load(path, map_location='cpu'), assign=True)` → 로드 직후 dtype은
+   체크포인트 저장 dtype. wrapper(wan_wrapper 68–71)는 dtype 변환 없음; dtype은 호출자의 `.to()`가 결정.
+ - 체크포인트: 상대경로 wan_models/…/Wan2.1_VAE.pth(cwd 의존). 실제 후보 /home/acorn0415/sfq_data/ckpt/wan_models/Wan2.1-T2V-1.3B/Wan2.1_VAE.pth,
+   507,609,880B(stat). FP32 저장이 크기와 맞지만 미확인(내용 미열람).
+ - latent: /home/acorn0415/sfq_data/mechanism/fr/p00_s303_BF16/latent.pt 25,160,855B(stat). 126×16×60×104×2B = 25,159,680B와 거의 같아 BF16 저장으로
+   추정(shape·dtype 미확인). BF16→FP32 승격은 무손실이므로 두 arm의 latent "값"은 같게 만들 수 있다.
+ - scale: wan_wrapper 96–98이 mean/1/std를 latent dtype으로 캐스팅 → BF16 arm은 정규화 상수도 BF16. vae.decode 545–552 `z/scale[1]+scale[0]`.
+ - 출력: wan_wrapper 107 `.float().clamp_(-1,1)` 공통. vae.py Upsample 59–63은 내부 float 보간 후 type_as, RMS_norm 39–53은 upcast 없음.
+   autocast는 WanVAE 클래스(671, 678)에만 있고 wrapper 경로엔 없음.
+ - use_cache=True의 cached_decode(571–594)는 clear_cache를 하지 않아 호출 간 상태가 남는다 → 두 arm 모두 use_cache=False 고정 필수.
+
+3. fresh load·동일 입력·개입 경계(계약)
+ - 각 arm은 같은 절대경로 체크포인트에서 새 WanVAEWrapper를 만든다. BF16 arm `.to(gpu, bfloat16)`, FP32 arm `.to(gpu, float32)`. BF16 모듈을 `.float()`로
+   올려 FP32 arm으로 쓰지 않는다. 실행 시 체크포인트 sha256, 로드 직후 state_dict dtype 집합, 파라미터 수를 기록한다(현재 미확인).
+ - 같은 latent 파일 sha256 검증 후 한 번 CPU로 로드, BF16 arm은 그대로 bf16, FP32 arm은 `.float()`(무손실). 두 arm 입력 바이트 동등을 기록.
+ - 개입 경계 = {VAE 가중치 dtype, decoder 활성 연산 dtype, mean/std 정규화 상수 dtype}의 묶음. 이 셋을 분리하지 않는다(분리는 새 팔이라 범위 밖).
+   출력 FP32 승격·clamp·*.5+.5·use_cache=False·clear_cache는 공통.
+ - 결정성: `torch.backends.cuda.matmul.allow_tf32=False`, **`torch.backends.cudnn.allow_tf32=False`**(conv3d는 cuDNN이라 기본 TF32면 FP32 arm이 실제로는
+   TF32가 됨), cudnn.benchmark=False, autocast 없음, 같은 GPU·드라이버·torch 버전 기록.
+ - 한 프로세스 순서: BF16 arm 구성→decode→출력 CPU 이동→모델/텐서 del·empty_cache·peak 기록 reset → FP32 arm 구성→decode→CPU. arm별 peak allocated를
+   따로 기록. 501×3×480×832 FP32 출력은 arm당 약 2.4GB(CPU 둘 합 ~4.8GB, RSS 12GiB 안). GPU FP32 decode peak는 미측정(22GiB 상한 안인지 실행이 판정).
+
+4. root gate 비판
+ "late RMSE≥0.02 AND early→late meanRGB 변화 50% 감소"
+ - 단위/구간 미정: RMSE가 [0,1] RGB인지, 어떤 late 프레임인지, 프레임별 평균인지 pooled인지 없다. 0.02의 근거 없음(BF16 decode 고유 차이의 기대 크기 미측정).
+ - meanRGB는 3벡터인데 "변화"의 집계(노름? 채널별?)와 기준 프레임 창이 없다. 한 프레임 비교는 내용 변화(조명·장면)에 민감하다. 단 latent가 같으므로
+   내용은 두 arm 공통이고, 차이는 decode 기여만이다 — 이 점에서 상대 비교는 타당하다.
+ - AND 결합의 문제: RMSE는 텍스처 잡음으로 커질 수 있어 색 변화 설명 여부와 무관하다. 질문(후반 색 변화가 decode 정밀도 때문인가)에 직접 답하는 것은 두 번째 항뿐.
+ - 50% 감소는 BF16 변화량이 작으면 불안정하다. 변동성: 단일 latent·결정적 decode라 반복 잡음은 작지만 클립 1개라 일반화 불가.
+ - MP4 대신 raw float 출력 사용은 맞다.
+
+5. 단일 대안 기준(결과 전 고정 제안)
+ 각 arm의 프레임별 평균 RGB m(t)∈[0,1]^3를 구하고, early = frame 0–80 평균, late = frame 400–500 평균, D_arm = ‖m_late − m_early‖₂.
+ R = D_FP32 / D_BF16.
+ - 신호(decode 정밀도가 후반 색 변화의 주요 기여): R ≤ 0.5 → 평가 경로 FP32 decode 채택 여부를 root가 추가 검토.
+ - 정지: R > 0.5 → VAE 정밀도 개입 확대 중지, 색 변화는 latent 쪽 원인 탐색 대상(원인 확정 아님).
+ - 판정 불가: D_BF16이 저장 8프레임 육안으로도 무시할 수준이거나(사전 하한을 root가 고정), 무효 조건 발생.
+ - 보조 보고(판정 아님): 프레임별 두 arm 간 RMSE·MAE·q99 곡선, 시간에 따른 증가 여부.
+ 이는 품질 개선·인과 증명이 아니며 FP32 출력을 정답으로 보지 않는다.
+
+6. 무효·자원·저장
+ 무효: 체크포인트/latent sha 불일치, fresh load 아님, 입력 바이트 불일치, TF32/benchmark 미해제, use_cache≠False, 비유한·501 아님, OOM/600s 초과.
+ 자원: root 단일 GPU 프로세스, 2 decode, 600s, CPU4, RSS12GiB, allocator22GiB, disk256MiB. 저장: arm별 고정 8프레임(0,80,160,240,320,400,480,500)
+ PNG 8장 + 지표 JSON 1개, 파일명에 arm·frame 표시, 501프레임 전체 저장·추가 생성 없음.
+ 구분 가능: 같은 latent에서 decode 정밀도 묶음의 기여. 남는 것: latent/generator/KV/하네스/인코딩 원인, 정밀도 셋의 개별 기여, 다른 클립 일반화.
+
+7. 미확인
+ 체크포인트 저장 dtype·sha, latent 실제 shape/dtype, FP32 decode GPU peak, upstream 원 Self-Forcing의 VAE dtype 관례, quality.json/sampling.json 본문(미열람).
+실제 끝: 2026-11-05T17:13:38Z
+
+[root 명세 결합 부록 — root msg_fe33716a392b, 본문(SHA f916b7e7818cde1baf9fe687367ac7a809ce9e80302dff8761d9d5f9f5854578) 불변, 2026-11-05T17:14:04Z~, 현 마감 17:23:00Z]
+- 읽은 것: ROOT_PREPARATION_SPEC.json SHA 3b7062f200b865cf815b0c98b0e9501391fb7044998e18544b1f5bcad805d7db(직접 계산 일치)만. 같은 폴더 다른 파일 미열람.
+- 일치: 2 decode·같은 latent·새 generator 0, FP32 arm은 원 체크포인트 재로드(BF16 가중치 승격 금지), arm별 fresh 상태, TF32/autocast/benchmark off,
+  비압축 RGB 비교(MP4 금지), 600s/CPU4/RSS 12,884,901,888B/allocator 23,622,320,128B/disk 268,435,456B — 본문 3·6절과 같다. 모순 없음.
+- 명확화 필요 1: 명세의 "wrapper normalization 보존"은 코드 경로 보존이다. wrapper가 mean/1/std를 latent dtype으로 캐스팅하므로(wan_wrapper 96–98)
+  정규화 상수 정밀도는 arm에 따라 달라지며 개입 묶음에 포함된다(본문 3절). 이를 "정규화 동일"로 기록하지 않아야 한다.
+- 명확화 필요 2: 명세 gate의 "early-late channel mean change"는 채널별이라 3값의 집계가 없다. 본문 5절의 단일 기준(L2 노름, early 0–80/late 400–500,
+  R=D_FP32/D_BF16≤0.5)으로 고정하거나 채널별 결합 규칙을 결과 전에 정해야 한다. RMSE≥0.02 항은 본문 4절 비판 유지.
+- 명세의 "BF16 VAE 경로가 공식 예제와 일치"는 root 관측으로 받아들이며 내가 확인하지 않았다(미확인). 판정 불변: 실행 가치 있음, GPU 권한 없음.
+부록 끝: 2026-11-05T17:14:19Z

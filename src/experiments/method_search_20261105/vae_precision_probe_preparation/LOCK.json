@@ -1,0 +1,39 @@
+{
+  "status": "approved_for_one_two_arm_precision_probe",
+  "root_execution_authorized": true,
+  "created_epoch": 1793899658.8799324,
+  "limits": {
+    "wall_seconds": 600,
+    "CPU_threads": 4,
+    "RSS_bytes": 12884901888,
+    "GPU_allocator_bytes": 23622320128,
+    "output_bytes": 268435456,
+    "VAE_decodes": 2,
+    "generator_calls": 0
+  },
+  "decision_rule": "late_RGB_RMSE_ge_0.02_sensitivity_only",
+  "sha256": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/worker.py": "bc3050540c89beedfc66943ba753f640293ca7347f04c2969aaf9fc8d327e970",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/selftest.py": "f89c3109742e7964ad1e815933ef1faeaeb85c94104a5697e09d375039d0765f",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/SELFTEST_V2.json": "708fe200d0bac0e6893375c4ff3d0f2f906eb8f5f1e8cc7d6a89fff2185366ed",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/PROPOSAL_KO.txt": "c5b77de76bb261248a030426471c0844563fb64a4dca327c87ed9ff2f7297ba2",
+    "/home/acorn0415/Quantization/src/utils/wan_wrapper.py": "da919629bac4472cd9072223f1ab03200de276e202ab0d9b91e6789d500ff8fa",
+    "/home/acorn0415/Quantization/src/wan/modules/vae.py": "a4c1d9362f25a1bef463ac51caed4097317c007d4d87887b02a3a733fdbc48d5",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/READY_V2.json": "11921f6b298343011e9e0a4f47d1ef1b7d89f0181cb1864ece33dc3fcc48044e",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/ROOT_CRITERIA_DECISION.json": "70e6f95aedc406e92ce082b16058d21fa7aced1be17c81c6b873cb056cb9f022",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/PREEXECUTION_REVIEW_TIMING_EXCEPTION_ROOT.json": "ebec6da56331ce8c7a22949bddf4baa492ae2fa7b1201983fb185d4d337ef482",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/OPUS_DESIGN_FIXED_KO.txt": "4038f16eb399eb65a7ce4926f6ec78d915142d53a40191708906684807e8e447",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/OPUS_SOURCE_FIXED_KO.txt": "67d32f678d8356c6f2e6b20694a1eb57624a639a79575e96a3f3fbaa5c51f2a0",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/PREEXECUTION_ROOT_DECISION.json": "82ed698037df1ac4857daef630f34f167075c6f16e8a628a850e80a5475d2a51",
+    "/home/acorn0415/sfq_data/mechanism/fr/p00_s303_BF16/latent.pt": "b7a553d50254e290707fb32a31c05233667d57d85ccc140eca7273e1762367cf",
+    "/home/acorn0415/Quantization/src/wan_models/Wan2.1-T2V-1.3B/Wan2.1_VAE.pth": "38071ab59bd94681c686fa51d75a1968f64e470262043be31f7a094e442fd981"
+  },
+  "environment_versions": {
+    "torch": "2.6.0+cu124",
+    "numpy": "1.24.4",
+    "Pillow": "12.3.0",
+    "psutil": "7.2.2"
+  },
+  "attempt_limit": 1,
+  "prelaunch_metadata_issue": "SystemPython lackedtorchpackage metadata; noLOCK/RUN/GPUwascreated. RebuiltusingtaskenvPython metadataonly; sources unchanged."
+}

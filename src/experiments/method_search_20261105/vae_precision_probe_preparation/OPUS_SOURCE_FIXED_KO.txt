@@ -1,0 +1,29 @@
+VAE 정밀도 probe 최종 worker source 좁은 검토 (실제 Opus1)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음(역사적 terminal_handle_stale).
+시간 구분: 원 준비마감 17:23:00Z 안에 source 검토는 착수되지 않았다(미충족). 이 검토는 root PREEXECUTION_REVIEW_TIMING_EXCEPTION_ROOT.json의
+source 읽기 전용 후속 예외(17:28:00Z까지 1회)로 수행했다. 실제 시작 2026-11-05T17:25:00Z. 원 15분 내 완료로 소급하지 않는다.
+helper 0: 남은 약3분에 독립 분할 여지가 없어 부모 직접. 실행 0(import/selftest/load/GPU 없음).
+source: worker.py bc3050540c89beedfc66943ba753f640293ca7347f04c2969aaf9fc8d327e970(직접 계산 = 명세 bc305054… = READY_V2.source_sha256 기재값). READY_V2 11921f6b…(status pending Opus source review·root LOCK,
+root_execution_authorized false). 읽은 행: worker.py 1, 17–45, 59–73, 77–105, 160–224(grep+sed). 미열람: PROPOSAL_KO, SELFTEST/V2 본문, AMENDMENT_V2,
+READY.json, selftest.py, PRE_ROOT_ROBUSTNESS_FIX, worker 나머지 행(마지막 diff 대조 미수행 — 원 64c6 버전과의 diff는 확인하지 못했다).
+
+판정: 확인한 범위에서 차단 결함 없음. 단 diff·selftest 미확인이라 최종 수용 근거로는 부분적이다.
+확인(행):
+ - fresh load: arm마다 cls()로 새 wrapper 생성(183), 로드 직후 모든 floating 파라미터 FP32 assert(185) 후 .to(cuda, arm dtype)(186). BF16→FP32 재사용 없음.
+   wrapper는 원 WanVAEWrapper AST를 그대로 실행하고 AST 해시를 남긴다(59–69). 체크포인트 sha는 LOCK 값을 기록(190).
+ - 동일 latent: BF16 저장 assert(177), arm별 cast 후 torch.equal(z.cpu().float(), latent.float())(188). 정밀도 묶음: mean/std는 wrapper 규칙대로 latent dtype(191 기록).
+ - 결정성: cuda matmul·cuDNN allow_tf32=False, cudnn.benchmark=False(160–162), cudnn_deterministic 기록(171), autocast cuda/cpu disabled + inference_mode(195).
+ - decode: use_cache=False(196), 출력 FP32·(1,501,3,480,832) assert(198), arm 후 clear_cache·del·empty_cache(201–203).
+ - RGB: CPU에서 *.5+.5 clamp(0,1)(205) — 원 worker 254와 같은 식.
+ - 통계: 프레임별 FP64 MSE/MAE/q99(84–89), 501행 assert(94), late = rows[249:501] 252프레임 pooled RMSE = sqrt(mean MSE)(95) — ROOT_CRITERIA의 249..500 inclusive·
+   FP64·RGB[0,1] 정의와 일치. 판정 문자열 0.02 이상 review/미만 stop(105). meanRGB drift(375:501 vs 0:126)는 설명용(97–98).
+ - 저장: SELECTED 프레임만 FP32 .pt + PNG, 전체 RGB는 메모리만(207–216).
+ - watchdog race: output_bytes가 rglob 중 stat에서 FileNotFoundError를 건너뛴다(28–36) — .tmp rename 경합 최소 수리로 타당. 자원 상한 경로 자체는 미열람.
+잔여(차단 아님):
+ - GPU peak는 reset을 한 번만 해 FP32 arm 값이 누적 최대다(168, 208 'cumulative'로 정직히 표기). arm별 peak 분리는 불가.
+ - PNG는 (x*255).to(uint8) 절삭 — 시각 확인용이며 지표엔 무관.
+ - ROOT_CRITERIA의 RMSE 0.02는 엔지니어링 민감도 플래그일 뿐 품질·인과·FP32 정답이 아니라는 root 해석에 동의. 내 이전 설계의 drift 비율 기준은 root가
+   채택하지 않았고 그 원문은 보존한다.
+미확인: 원 64c6 대비 diff, selftest 17조건 내용, 600s/CPU4/RSS/allocator/disk 상한 강제 코드, LOCK 검증 경로, SELECTED 실제 값(0,80,…,500 여부).
+실제 끝: 2026-11-05T17:25:38Z
+추가(끝 직후): worker.py 10행 SELECTED=(0,80,160,240,320,400,480,500) 확인 — 위 미확인 목록의 SELECTED 항목 해소.

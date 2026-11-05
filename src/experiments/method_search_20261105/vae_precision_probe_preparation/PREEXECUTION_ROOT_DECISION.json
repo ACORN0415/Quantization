@@ -1,0 +1,19 @@
+{
+  "created_epoch": 1793899635.2494602,
+  "status": "root_accepts_limited_independent_source_review_for_bounded_precision_diagnostic",
+  "source_review_scope": "ActualOpus read corefreshload/input/TF32/decode/statistics/fixedframes andtemporaryfilefix; didnotreadallresourceguard/selftest/diff. RootreadfullinitialworkerandchangedV2guard/outputscan/shutdown plus17testrecord andboundhashes; no liveGPUguardtestclaimed.",
+  "review_completion_utc": "2026-11-05T17:25:38Z",
+  "review_followup_deadline_utc": "2026-11-05T17:28:00Z",
+  "timing_exception_disclosed": true,
+  "accepted_limits": [
+    "FP32parameterdtype andGPUfit areunverifieduntilattempt; failure is inconclusive, no retry.",
+    "RSS watchdog sample0.1s andfinalru_maxrss; notcontinuouspreventivebound.",
+    "GPUpeak cumulative acrossarms, noarm-by-arm costclaim.",
+    "CPU RGB affine sharedbybotharms; historicalGPUaffine bitidentitynotclaimed.",
+    "EngineeringRMSEflagnotqualityproof,newmethodsuccessorFP32groundtruth."
+  ],
+  "external_guard": "GNUtimeout600s SIGTERM plus5s cleanupkill; any rootelapsed>600 ornonzeroexit disqualifiesvalidcompletion. Worker no ownedchildlaunch.",
+  "new_data_before_decision": "Checkpoint andlatent filehash read, no model/tensorloadorGPUcompute.",
+  "GPU_idle_before_lock": true,
+  "goal_achieved": false
+}
