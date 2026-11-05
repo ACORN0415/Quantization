@@ -1,0 +1,292 @@
+{
+  "status": "completed",
+  "arm": "FM8",
+  "layer": 18,
+  "rows": [
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "arm": "FM8",
+      "primary_Konly": {
+        "sse": 244.28432862787213,
+        "reference_energy": 146852.98462082312,
+        "nse": 0.0016634617897526454
+      },
+      "full_BF16_reference": {
+        "sse": 492.35251593579375,
+        "reference_energy": 146426.62994953973,
+        "nse": 0.003362452008254673
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.41538340541633517,
+        "reference_energy": 146400.0824123404,
+        "nse": 2.8373167458088915e-06
+      },
+      "extra_persistent_bytes": 4967208,
+      "cap_eligible": false,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 4967208,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.2165793019812554,
+      "read_seconds": 0.4719061569776386
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "arm": "FM8",
+      "primary_Konly": {
+        "sse": 247.16087357982383,
+        "reference_energy": 157209.540959252,
+        "nse": 0.0015721747679670842
+      },
+      "full_BF16_reference": {
+        "sse": 484.86170735866017,
+        "reference_energy": 156805.60529639435,
+        "nse": 0.0030921197392285394
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.4349561565454338,
+        "reference_energy": 156775.79066798568,
+        "nse": 2.774383434407732e-06
+      },
+      "extra_persistent_bytes": 4967208,
+      "cap_eligible": false,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 4967208,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5708193050231785,
+      "read_seconds": 0.5729929029475898
+    }
+  ],
+  "state_artifact": {
+    "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_packet_contract_fix/prepared/l18_FM8_state.pt",
+    "sha256": "a12cda188e9bec4bbdeaa0f59749dd9a2cb294ed85038d4b85d306a18b61fb69",
+    "bytes": 6470396
+  },
+  "paired_manifest": null,
+  "packet_state_links": [],
+  "source_loads": [
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_packet_contract_fix/prepared/layer18.pt",
+      "sha256": "6c59f8dbd2491715a075a321ef39634dcd3b2ba4faab2b8872daa0d9b80a5b3c",
+      "load_hash_seconds": 0.005413615959696472
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_wo.pt",
+      "sha256": "98616ff026d5f305f2d4886aea646f3dc778c1b2955053c4d5d398ef177c4ee0",
+      "load_hash_seconds": 0.004052483011037111
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write1.pt",
+      "sha256": "b1f98005ab4aa08767444aff45822321bf701b6d26ad1537a8f8934255ed25e8",
+      "load_hash_seconds": 0.031756698968820274
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c1_V.pt",
+      "sha256": "6be15596582fdfe314066f7dcfd11c7c4ffdf6943a55e9523849dd7e094edb69",
+      "load_hash_seconds": 0.0036122530000284314
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c1_R_fp32.pt",
+      "sha256": "72920136ff74da059f5764eefb48a765a90de527a334a863489d5e667487ed95",
+      "load_hash_seconds": 0.002762080985121429
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write2.pt",
+      "sha256": "ca089f24959e9eccf85ae5ca5104ef8eac470a2514bee5f851603a07321bebb0",
+      "load_hash_seconds": 0.0207507029408589
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c2_V.pt",
+      "sha256": "86bb2de89d5c8b0170a0b02737e76ffb410f5f46141c186158d2c9268ebe85da",
+      "load_hash_seconds": 0.002674698014743626
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c2_R_fp32.pt",
+      "sha256": "63ce820d00c061ca0c180473df570f9b5d5c649016068a6882194cb437db0674",
+      "load_hash_seconds": 0.0026744890492409468
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write3.pt",
+      "sha256": "347d57ed4061aa6cb183463506209b76bed80856dd331edb374a4b83cc50f34a",
+      "load_hash_seconds": 0.02086332393810153
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c3_V.pt",
+      "sha256": "daef2ee08cdb4e8175830a9aaeffec4c604e5b899356d6464d973d4f29e8397b",
+      "load_hash_seconds": 0.002585952985100448
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c3_R_fp32.pt",
+      "sha256": "037624722971792f01f34302f661efc586954bada37cec2d17e93331ec31ea5f",
+      "load_hash_seconds": 0.0027901940047740936
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write4.pt",
+      "sha256": "1c3f4e7ecd597e3e2159d1c4d1f05a62aa9a0365d6dd2977d85286cbbbf0e8bc",
+      "load_hash_seconds": 0.020671556936576962
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c4_V.pt",
+      "sha256": "cbcad19022e970c8b760806854eb4c77a022d50a1c8ba0ed29813f2b5c02ccfb",
+      "load_hash_seconds": 0.0025573400780558586
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c4_R_fp32.pt",
+      "sha256": "c2ad66cc01e6f89b7155c95030f0b873dbc595980d299ccf6b518280bf7a6f92",
+      "load_hash_seconds": 0.0026891360757872462
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write5.pt",
+      "sha256": "bf4f852040a1ee57a4f56a12f9e269f95913a7cb7256a8073d2542371c4f5c5b",
+      "load_hash_seconds": 0.020574224996380508
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c5_V.pt",
+      "sha256": "4d7f58e9ff1f37772b1e241917f8d82d89f425d6415d1f232894d9e91440678f",
+      "load_hash_seconds": 0.0025632811011746526
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c5_R_fp32.pt",
+      "sha256": "78377a097f4026888169f951b8187231f826a90b2a3b7a1d61e1821b7871f047",
+      "load_hash_seconds": 0.002649330999702215
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write6.pt",
+      "sha256": "2475e03b005a6ed3d4f296fdfe88991a0f875213764a23130f66e77e508766f0",
+      "load_hash_seconds": 0.02085457695648074
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c6_V.pt",
+      "sha256": "0a009468d316b02608860f976e6b892799732d0d0318fa25fc414be52b099e2d",
+      "load_hash_seconds": 0.0026718840235844254
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c6_R_fp32.pt",
+      "sha256": "9990cd6b44161eff00cea504b313a54ef5ecdf1f72c882bbf903193dfb12e45d",
+      "load_hash_seconds": 0.002747784019447863
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_packet_contract_fix/prepared/l18_FM8_state.pt",
+      "sha256": "a12cda188e9bec4bbdeaa0f59749dd9a2cb294ed85038d4b85d306a18b61fb69",
+      "load_hash_seconds": 0.01229036704171449
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_read0.pt",
+      "sha256": "30ab32e2371632622ab7a3902e25a68325bdf7e8024a1dec3a5f45126047c8e8",
+      "load_hash_seconds": 0.021277685067616403
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_read3.pt",
+      "sha256": "7347ebf254d1baef77e660ddac8288bbb52bed1b52e06904fa1feca8ca2ebfff",
+      "load_hash_seconds": 0.021378563018515706
+    }
+  ],
+  "write_seconds_including_validation": 0.9542784919030964,
+  "write_diagnostics": [
+    {
+      "dense_bytes": 561628,
+      "sparse_bytes": 673948,
+      "selected_bytes": 561628,
+      "sparse_index_width_bytes": 2,
+      "active_rows": 56160,
+      "total_rows": 56160,
+      "clipped_coefficients": 0,
+      "basis_bytes_shared": 24576,
+      "before_query_error": 228989.92259265314,
+      "after_screened_query_error": 106277.6741682498
+    },
+    {
+      "dense_bytes": 561628,
+      "sparse_bytes": 673948,
+      "selected_bytes": 561628,
+      "sparse_index_width_bytes": 2,
+      "active_rows": 56160,
+      "total_rows": 56160,
+      "clipped_coefficients": 0,
+      "basis_bytes_shared": 24576,
+      "before_query_error": 231083.555360751,
+      "after_screened_query_error": 107079.85921498918
+    },
+    {
+      "dense_bytes": 561628,
+      "sparse_bytes": 673948,
+      "selected_bytes": 561628,
+      "sparse_index_width_bytes": 2,
+      "active_rows": 56160,
+      "total_rows": 56160,
+      "clipped_coefficients": 0,
+      "basis_bytes_shared": 24576,
+      "before_query_error": 231021.50920133584,
+      "after_screened_query_error": 107021.06970892588
+    },
+    {
+      "dense_bytes": 561628,
+      "sparse_bytes": 673948,
+      "selected_bytes": 561628,
+      "sparse_index_width_bytes": 2,
+      "active_rows": 56160,
+      "total_rows": 56160,
+      "clipped_coefficients": 0,
+      "basis_bytes_shared": 24576,
+      "before_query_error": 229348.48093828445,
+      "after_screened_query_error": 106731.41637174581
+    },
+    {
+      "dense_bytes": 561628,
+      "sparse_bytes": 673948,
+      "selected_bytes": 561628,
+      "sparse_index_width_bytes": 2,
+      "active_rows": 56160,
+      "total_rows": 56160,
+      "clipped_coefficients": 0,
+      "basis_bytes_shared": 24576,
+      "before_query_error": 228636.26074681518,
+      "after_screened_query_error": 106312.98214595488
+    },
+    {
+      "dense_bytes": 561628,
+      "sparse_bytes": 673948,
+      "selected_bytes": 561628,
+      "sparse_index_width_bytes": 2,
+      "active_rows": 56160,
+      "total_rows": 56160,
+      "clipped_coefficients": 0,
+      "basis_bytes_shared": 24576,
+      "before_query_error": 229272.467073119,
+      "after_screened_query_error": 106832.87243073063
+    }
+  ],
+  "legacy_K_encode_cost": "not remeasured: reused artifact, never zero cost",
+  "shared_tensor_bytes": 1597440,
+  "correction_packet_tensor_bytes": 3369768,
+  "cache_KV_payload_bytes": 54097926,
+  "extra_persistent_bytes": 4967208,
+  "common_H128_bytes_separate": 65536,
+  "worker_wall_seconds": 12.092036845977418,
+  "peak_RSS_bytes": 3496529920
+}

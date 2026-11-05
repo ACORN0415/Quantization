@@ -1,0 +1,3032 @@
+{
+  "status": "completed",
+  "decision": "stop_fixed_Gaussian_rank32",
+  "comparisons": [
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "seed": 17,
+      "best_baseline": "FULLP1Q",
+      "gain": -1.236262493216274,
+      "passed": false
+    },
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "seed": 29,
+      "best_baseline": "FULLP1Q",
+      "gain": -1.422982508795429,
+      "passed": false
+    },
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "seed": 43,
+      "best_baseline": "FULLP1Q",
+      "gain": -1.2326329695499818,
+      "passed": false
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "seed": 17,
+      "best_baseline": "FULLP1",
+      "gain": -1.0018548474448505,
+      "passed": false
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "seed": 29,
+      "best_baseline": "FULLP1",
+      "gain": -1.003266622153816,
+      "passed": false
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "seed": 43,
+      "best_baseline": "FULLP1",
+      "gain": -1.0002103976093402,
+      "passed": false
+    },
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "seed": 17,
+      "best_baseline": "FULLP1",
+      "gain": -0.9747613146932741,
+      "passed": false
+    },
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "seed": 29,
+      "best_baseline": "FULLP1",
+      "gain": -1.2431785522859262,
+      "passed": false
+    },
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "seed": 43,
+      "best_baseline": "FULLP1",
+      "gain": -1.2892963192580118,
+      "passed": false
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "seed": 17,
+      "best_baseline": "FULLP1",
+      "gain": -0.8055570627065904,
+      "passed": false
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "seed": 29,
+      "best_baseline": "FULLP1",
+      "gain": -0.8615950820069829,
+      "passed": false
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "seed": 43,
+      "best_baseline": "FULLP1",
+      "gain": -1.6813031715917228,
+      "passed": false
+    }
+  ],
+  "rows": [
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "arm": "R_bf16",
+      "primary_Konly": {
+        "sse": 580.7241528655179,
+        "reference_energy": 146852.98462082312,
+        "nse": 0.003954459314292845
+      },
+      "full_BF16_reference": {
+        "sse": 823.9133095231056,
+        "reference_energy": 146426.62994953973,
+        "nse": 0.005626799645713594
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.41538340541633517,
+        "reference_energy": 146400.0824123404,
+        "nse": 2.8373167458088915e-06
+      },
+      "extra_persistent_bytes": 0,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 0,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5557365840068087,
+      "read_seconds": 0.548293792991899
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "arm": "R_bf16",
+      "primary_Konly": {
+        "sse": 558.6247901650838,
+        "reference_energy": 157209.540959252,
+        "nse": 0.003553377147191575
+      },
+      "full_BF16_reference": {
+        "sse": 798.7048217933816,
+        "reference_energy": 156805.60529639435,
+        "nse": 0.005093598664943563
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.4349561565454338,
+        "reference_energy": 156775.79066798568,
+        "nse": 2.774383434407732e-06
+      },
+      "extra_persistent_bytes": 0,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 0,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5799748320132494,
+      "read_seconds": 0.5606740249786526
+    },
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "arm": "R_fp32",
+      "primary_Konly": {
+        "sse": 586.5548416387333,
+        "reference_energy": 146852.98462082312,
+        "nse": 0.003994163572182259
+      },
+      "full_BF16_reference": {
+        "sse": 830.662210440358,
+        "reference_energy": 146426.62994953973,
+        "nse": 0.005672890311868911
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.41538340541633517,
+        "reference_energy": 146400.0824123404,
+        "nse": 2.8373167458088915e-06
+      },
+      "extra_persistent_bytes": 0,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 0,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5547555449884385,
+      "read_seconds": 0.5560136210406199
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "arm": "R_fp32",
+      "primary_Konly": {
+        "sse": 551.1642245976793,
+        "reference_energy": 157209.540959252,
+        "nse": 0.003505920958961
+      },
+      "full_BF16_reference": {
+        "sse": 791.7317510875691,
+        "reference_energy": 156805.60529639435,
+        "nse": 0.005049129140447727
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.4349561565454338,
+        "reference_energy": 156775.79066798568,
+        "nse": 2.774383434407732e-06
+      },
+      "extra_persistent_bytes": 0,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 0,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.2727548220427707,
+      "read_seconds": 0.4895783069077879
+    },
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "arm": "FULL",
+      "primary_Konly": {
+        "sse": 270.103811517985,
+        "reference_energy": 146852.98462082312,
+        "nse": 0.001839280367473617
+      },
+      "full_BF16_reference": {
+        "sse": 517.0038262491346,
+        "reference_energy": 146426.62994953973,
+        "nse": 0.003530804652318366
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.41538340541633517,
+        "reference_energy": 146400.0824123404,
+        "nse": 2.8373167458088915e-06
+      },
+      "extra_persistent_bytes": 786432,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 786432,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5788153980392963,
+      "read_seconds": 0.5678370540263131
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "arm": "FULL",
+      "primary_Konly": {
+        "sse": 279.3794359675924,
+        "reference_energy": 157209.540959252,
+        "nse": 0.001777115016448056
+      },
+      "full_BF16_reference": {
+        "sse": 523.221721351294,
+        "reference_energy": 156805.60529639435,
+        "nse": 0.003336753940411116
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.4349561565454338,
+        "reference_energy": 156775.79066798568,
+        "nse": 2.774383434407732e-06
+      },
+      "extra_persistent_bytes": 786432,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 786432,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.1785072200000286,
+      "read_seconds": 0.5646788569865748
+    },
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "arm": "FIXED17",
+      "primary_Konly": {
+        "sse": 566.1376203584185,
+        "reference_energy": 146852.98462082312,
+        "nse": 0.003855131864157854
+      },
+      "full_BF16_reference": {
+        "sse": 808.3039651402171,
+        "reference_energy": 146426.62994953973,
+        "nse": 0.005520197831629177
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.41538340541633517,
+        "reference_energy": 146400.0824123404,
+        "nse": 2.8373167458088915e-06
+      },
+      "extra_persistent_bytes": 786444,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 786444,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5369938439689577,
+      "read_seconds": 0.5607944689691067
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "arm": "FIXED17",
+      "primary_Konly": {
+        "sse": 560.9421988064071,
+        "reference_energy": 157209.540959252,
+        "nse": 0.003568118037771008
+      },
+      "full_BF16_reference": {
+        "sse": 801.7479665819509,
+        "reference_energy": 156805.60529639435,
+        "nse": 0.005113005782328284
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.4349561565454338,
+        "reference_energy": 156775.79066798568,
+        "nse": 2.774383434407732e-06
+      },
+      "extra_persistent_bytes": 786444,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 786444,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.116439223056659,
+      "read_seconds": 0.5981985980179161
+    },
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "arm": "BIT8",
+      "primary_Konly": {
+        "sse": 583.2563526529209,
+        "reference_energy": 146852.98462082312,
+        "nse": 0.003971702408084511
+      },
+      "full_BF16_reference": {
+        "sse": 827.4338466363624,
+        "reference_energy": 146426.62994953973,
+        "nse": 0.005650842656977802
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.41538340541633517,
+        "reference_energy": 146400.0824123404,
+        "nse": 2.8373167458088915e-06
+      },
+      "extra_persistent_bytes": 1806361,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1806361,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5924185069743544,
+      "read_seconds": 0.5653796709375456
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "arm": "BIT8",
+      "primary_Konly": {
+        "sse": 548.1812647873994,
+        "reference_energy": 157209.540959252,
+        "nse": 0.0034869465392656134
+      },
+      "full_BF16_reference": {
+        "sse": 788.6343192186483,
+        "reference_energy": 156805.60529639435,
+        "nse": 0.005029375816814519
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.4349561565454338,
+        "reference_energy": 156775.79066798568,
+        "nse": 2.774383434407732e-06
+      },
+      "extra_persistent_bytes": 1806361,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1806361,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5727927590487525,
+      "read_seconds": 0.5797734280349687
+    },
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "arm": "RMU",
+      "primary_Konly": {
+        "sse": 552.836882358744,
+        "reference_energy": 146852.98462082312,
+        "nse": 0.003764560072007921
+      },
+      "full_BF16_reference": {
+        "sse": 793.8763630562197,
+        "reference_energy": 146426.62994953973,
+        "nse": 0.00542166655976306
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.41538340541633517,
+        "reference_energy": 146400.0824123404,
+        "nse": 2.8373167458088915e-06
+      },
+      "extra_persistent_bytes": 6144,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 6144,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.292868859018199,
+      "read_seconds": 0.5656447989167646
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "arm": "RMU",
+      "primary_Konly": {
+        "sse": 568.9531550722762,
+        "reference_energy": 157209.540959252,
+        "nse": 0.0036190752266094736
+      },
+      "full_BF16_reference": {
+        "sse": 811.3497051997822,
+        "reference_energy": 156805.60529639435,
+        "nse": 0.005174239171273035
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.4349561565454338,
+        "reference_energy": 156775.79066798568,
+        "nse": 2.774383434407732e-06
+      },
+      "extra_persistent_bytes": 6144,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 6144,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5393747839843854,
+      "read_seconds": 0.5663787049707025
+    },
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "arm": "RP3",
+      "primary_Konly": {
+        "sse": 321.38840175762493,
+        "reference_energy": 146852.98462082312,
+        "nse": 0.0021885043915685827
+      },
+      "full_BF16_reference": {
+        "sse": 567.7482707233006,
+        "reference_energy": 146426.62994953973,
+        "nse": 0.0038773566728876646
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.41538340541633517,
+        "reference_energy": 146400.0824123404,
+        "nse": 2.8373167458088915e-06
+      },
+      "extra_persistent_bytes": 1694328,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1694328,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.3849370370153338,
+      "read_seconds": 0.5573502070037648
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "arm": "RP3",
+      "primary_Konly": {
+        "sse": 325.58709397532516,
+        "reference_energy": 157209.540959252,
+        "nse": 0.0020710390221145413
+      },
+      "full_BF16_reference": {
+        "sse": 563.0692228149965,
+        "reference_energy": 156805.60529639435,
+        "nse": 0.0035908743297197927
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.4349561565454338,
+        "reference_energy": 156775.79066798568,
+        "nse": 2.774383434407732e-06
+      },
+      "extra_persistent_bytes": 1694328,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1694328,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.548535979934968,
+      "read_seconds": 0.5752210109494627
+    },
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "arm": "RP3Q",
+      "primary_Konly": {
+        "sse": 319.94685892520084,
+        "reference_energy": 146852.98462082312,
+        "nse": 0.002178688160484508
+      },
+      "full_BF16_reference": {
+        "sse": 564.8566526813768,
+        "reference_energy": 146426.62994953973,
+        "nse": 0.003857608775644381
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.41538340541633517,
+        "reference_energy": 146400.0824123404,
+        "nse": 2.8373167458088915e-06
+      },
+      "extra_persistent_bytes": 1694328,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1694328,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.2703332849778235,
+      "read_seconds": 1.1423785699298605
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "arm": "RP3Q",
+      "primary_Konly": {
+        "sse": 325.56206522032903,
+        "reference_energy": 157209.540959252,
+        "nse": 0.0020708798157785683
+      },
+      "full_BF16_reference": {
+        "sse": 560.7178824833172,
+        "reference_energy": 156805.60529639435,
+        "nse": 0.003575879072839564
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.4349561565454338,
+        "reference_energy": 156775.79066798568,
+        "nse": 2.774383434407732e-06
+      },
+      "extra_persistent_bytes": 1694328,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1694328,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5608939439989626,
+      "read_seconds": 1.1975155510008335
+    },
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "arm": "FULLP1",
+      "primary_Konly": {
+        "sse": 263.1517988360656,
+        "reference_energy": 146852.98462082312,
+        "nse": 0.0017919404192943576
+      },
+      "full_BF16_reference": {
+        "sse": 509.80986213066046,
+        "reference_energy": 146426.62994953973,
+        "nse": 0.0034816744898543846
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.41538340541633517,
+        "reference_energy": 146400.0824123404,
+        "nse": 2.8373167458088915e-06
+      },
+      "extra_persistent_bytes": 1800600,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1800600,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.4211445009568706,
+      "read_seconds": 0.556298371986486
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "arm": "FULLP1",
+      "primary_Konly": {
+        "sse": 275.5875696415472,
+        "reference_energy": 157209.540959252,
+        "nse": 0.0017529951932941416
+      },
+      "full_BF16_reference": {
+        "sse": 519.825524952485,
+        "reference_energy": 156805.60529639435,
+        "nse": 0.003315095298856884
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.4349561565454338,
+        "reference_energy": 156775.79066798568,
+        "nse": 2.774383434407732e-06
+      },
+      "extra_persistent_bytes": 1800600,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1800600,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.613322632969357,
+      "read_seconds": 0.570699795964174
+    },
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "arm": "RQ",
+      "primary_Konly": {
+        "sse": 583.5619331839769,
+        "reference_energy": 146852.98462082312,
+        "nse": 0.003973783268285242
+      },
+      "full_BF16_reference": {
+        "sse": 826.2333876965371,
+        "reference_energy": 146426.62994953973,
+        "nse": 0.005642644292102239
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.41538340541633517,
+        "reference_energy": 146400.0824123404,
+        "nse": 2.8373167458088915e-06
+      },
+      "extra_persistent_bytes": 0,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 0,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.561252731946297,
+      "read_seconds": 1.143162501975894
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "arm": "RQ",
+      "primary_Konly": {
+        "sse": 547.5538978379734,
+        "reference_energy": 157209.540959252,
+        "nse": 0.003482955897567928
+      },
+      "full_BF16_reference": {
+        "sse": 785.814016211224,
+        "reference_energy": 156805.60529639435,
+        "nse": 0.005011389833455739
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.4349561565454338,
+        "reference_energy": 156775.79066798568,
+        "nse": 2.774383434407732e-06
+      },
+      "extra_persistent_bytes": 0,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 0,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5820603519678116,
+      "read_seconds": 1.1912506120279431
+    },
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "arm": "FULLQ",
+      "primary_Konly": {
+        "sse": 269.80631371630426,
+        "reference_energy": 146852.98462082312,
+        "nse": 0.001837254546871817
+      },
+      "full_BF16_reference": {
+        "sse": 515.2604119987354,
+        "reference_energy": 146426.62994953973,
+        "nse": 0.00351889825079154
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.41538340541633517,
+        "reference_energy": 146400.0824123404,
+        "nse": 2.8373167458088915e-06
+      },
+      "extra_persistent_bytes": 786432,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 786432,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5545691630104557,
+      "read_seconds": 1.1398108239518479
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "arm": "FULLQ",
+      "primary_Konly": {
+        "sse": 279.9831427672239,
+        "reference_energy": 157209.540959252,
+        "nse": 0.001780955157421357
+      },
+      "full_BF16_reference": {
+        "sse": 521.4890495846138,
+        "reference_energy": 156805.60529639435,
+        "nse": 0.003325704132826718
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.4349561565454338,
+        "reference_energy": 156775.79066798568,
+        "nse": 2.774383434407732e-06
+      },
+      "extra_persistent_bytes": 786432,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 786432,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5745592559687793,
+      "read_seconds": 1.1832457120763138
+    },
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "arm": "FULLP1Q",
+      "primary_Konly": {
+        "sse": 262.91318480297446,
+        "reference_energy": 146852.98462082312,
+        "nse": 0.001790315569559725
+      },
+      "full_BF16_reference": {
+        "sse": 508.1259941626398,
+        "reference_energy": 146426.62994953973,
+        "nse": 0.003470174751257649
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.41538340541633517,
+        "reference_energy": 146400.0824123404,
+        "nse": 2.8373167458088915e-06
+      },
+      "extra_persistent_bytes": 1800600,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1800600,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5670430740574375,
+      "read_seconds": 1.1397322490811348
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "arm": "FULLP1Q",
+      "primary_Konly": {
+        "sse": 276.35382077927807,
+        "reference_energy": 157209.540959252,
+        "nse": 0.0017578692685764393
+      },
+      "full_BF16_reference": {
+        "sse": 518.2571059428855,
+        "reference_energy": 156805.60529639435,
+        "nse": 0.0033050929841651677
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.4349561565454338,
+        "reference_energy": 156775.79066798568,
+        "nse": 2.774383434407732e-06
+      },
+      "extra_persistent_bytes": 1800600,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1800600,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5574289290234447,
+      "read_seconds": 1.1930736489593983
+    },
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "arm": "FM3",
+      "primary_Konly": {
+        "sse": 321.3902038452628,
+        "reference_energy": 146852.98462082312,
+        "nse": 0.002188516662940816
+      },
+      "full_BF16_reference": {
+        "sse": 567.7499263952818,
+        "reference_energy": 146426.62994953973,
+        "nse": 0.0038773679800657495
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.41538340541633517,
+        "reference_energy": 146400.0824123404,
+        "nse": 2.8373167458088915e-06
+      },
+      "extra_persistent_bytes": 3267048,
+      "cap_eligible": false,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 3267048,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.4050941180903465,
+      "read_seconds": 0.5461683189496398
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "arm": "FM3",
+      "primary_Konly": {
+        "sse": 325.59135940071775,
+        "reference_energy": 157209.540959252,
+        "nse": 0.002071066154217126
+      },
+      "full_BF16_reference": {
+        "sse": 563.0729043459537,
+        "reference_energy": 156805.60529639435,
+        "nse": 0.0035908978080320016
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.4349561565454338,
+        "reference_energy": 156775.79066798568,
+        "nse": 2.774383434407732e-06
+      },
+      "extra_persistent_bytes": 3267048,
+      "cap_eligible": false,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 3267048,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.6005381860304624,
+      "read_seconds": 0.5524942800402641
+    },
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "arm": "FM8",
+      "primary_Konly": {
+        "sse": 244.28432862787213,
+        "reference_energy": 146852.98462082312,
+        "nse": 0.0016634617897526454
+      },
+      "full_BF16_reference": {
+        "sse": 492.35251593579375,
+        "reference_energy": 146426.62994953973,
+        "nse": 0.003362452008254673
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.41538340541633517,
+        "reference_energy": 146400.0824123404,
+        "nse": 2.8373167458088915e-06
+      },
+      "extra_persistent_bytes": 4967208,
+      "cap_eligible": false,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 4967208,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.2165793019812554,
+      "read_seconds": 0.4719061569776386
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "arm": "FM8",
+      "primary_Konly": {
+        "sse": 247.16087357982383,
+        "reference_energy": 157209.540959252,
+        "nse": 0.0015721747679670842
+      },
+      "full_BF16_reference": {
+        "sse": 484.86170735866017,
+        "reference_energy": 156805.60529639435,
+        "nse": 0.0030921197392285394
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.4349561565454338,
+        "reference_energy": 156775.79066798568,
+        "nse": 2.774383434407732e-06
+      },
+      "extra_persistent_bytes": 4967208,
+      "cap_eligible": false,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 4967208,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5708193050231785,
+      "read_seconds": 0.5729929029475898
+    },
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "arm": "PAIR17",
+      "primary_Konly": {
+        "sse": 587.9428941469307,
+        "reference_energy": 146852.98462082312,
+        "nse": 0.004003615559227544
+      },
+      "full_BF16_reference": {
+        "sse": 832.0496775124329,
+        "reference_energy": 146426.62994953973,
+        "nse": 0.005682365822386042
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.41538340541633517,
+        "reference_energy": 146400.0824123404,
+        "nse": 2.8373167458088915e-06
+      },
+      "extra_persistent_bytes": 1403904,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1403904,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": {
+        "finite_min": -0.013957069475366277,
+        "finite_p1": -0.00018102735111877557,
+        "finite_p50": 9.795009247657208e-11,
+        "finite_p99": 0.0006797994257132318,
+        "finite_max": 0.038890040220516175,
+        "total_pairs": 1536,
+        "finite_pairs": 1536,
+        "nonfinite_pairs": 0,
+        "nan_pairs": 0,
+        "positive_infinity_pairs": 0,
+        "negative_infinity_pairs": 0,
+        "above_log10_fraction_all_pairs": 0.0,
+        "scope": "descriptive only; positive infinity included in upper-tail count"
+      },
+      "read_diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 0,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 0,
+        "exact_zero_bypass": false
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.334635231993161,
+      "read_seconds": 0.5035223850281909
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "arm": "PAIR17",
+      "primary_Konly": {
+        "sse": 551.6863121824766,
+        "reference_energy": 157209.540959252,
+        "nse": 0.0035092419252434003
+      },
+      "full_BF16_reference": {
+        "sse": 792.3316566455916,
+        "reference_energy": 156805.60529639435,
+        "nse": 0.005052954931986801
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.4349561565454338,
+        "reference_energy": 156775.79066798568,
+        "nse": 2.774383434407732e-06
+      },
+      "extra_persistent_bytes": 1403904,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1403904,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": {
+        "finite_min": -0.017365937756286497,
+        "finite_p1": -0.00013568601044462896,
+        "finite_p50": 1.9976242881880904e-11,
+        "finite_p99": 0.000769159784766068,
+        "finite_max": 0.019603617088000312,
+        "total_pairs": 1536,
+        "finite_pairs": 1536,
+        "nonfinite_pairs": 0,
+        "nan_pairs": 0,
+        "positive_infinity_pairs": 0,
+        "negative_infinity_pairs": 0,
+        "above_log10_fraction_all_pairs": 0.0,
+        "scope": "descriptive only; positive infinity included in upper-tail count"
+      },
+      "read_diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 0,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 0,
+        "exact_zero_bypass": false
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.1974086849950254,
+      "read_seconds": 0.533236128045246
+    },
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "arm": "PAIR29",
+      "primary_Konly": {
+        "sse": 637.0340481093074,
+        "reference_energy": 146852.98462082312,
+        "nse": 0.00433790331026734
+      },
+      "full_BF16_reference": {
+        "sse": 881.2367830186631,
+        "reference_energy": 146426.62994953973,
+        "nse": 0.006018282216304147
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.41538340541633517,
+        "reference_energy": 146400.0824123404,
+        "nse": 2.8373167458088915e-06
+      },
+      "extra_persistent_bytes": 1403904,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1403904,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": {
+        "finite_min": -0.0026262924413765574,
+        "finite_p1": -0.0002913698217792378,
+        "finite_p50": 2.432785084198149e-10,
+        "finite_p99": 0.006718363113862772,
+        "finite_max": 0.16811467495427349,
+        "total_pairs": 1536,
+        "finite_pairs": 1536,
+        "nonfinite_pairs": 0,
+        "nan_pairs": 0,
+        "positive_infinity_pairs": 0,
+        "negative_infinity_pairs": 0,
+        "above_log10_fraction_all_pairs": 0.0,
+        "scope": "descriptive only; positive infinity included in upper-tail count"
+      },
+      "read_diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 0,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 0,
+        "exact_zero_bypass": false
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.3493175209732726,
+      "read_seconds": 0.49661210097838193
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "arm": "PAIR29",
+      "primary_Konly": {
+        "sse": 552.0753797434018,
+        "reference_energy": 157209.540959252,
+        "nse": 0.0035117167595222305
+      },
+      "full_BF16_reference": {
+        "sse": 792.6850449837111,
+        "reference_energy": 156805.60529639435,
+        "nse": 0.005055208603578781
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.4349561565454338,
+        "reference_energy": 156775.79066798568,
+        "nse": 2.774383434407732e-06
+      },
+      "extra_persistent_bytes": 1403904,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1403904,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": {
+        "finite_min": -0.011147294274958312,
+        "finite_p1": -0.0003835758168282135,
+        "finite_p50": 8.148715035739477e-11,
+        "finite_p99": 0.0025787476784545293,
+        "finite_max": 0.11169435451308485,
+        "total_pairs": 1536,
+        "finite_pairs": 1536,
+        "nonfinite_pairs": 0,
+        "nan_pairs": 0,
+        "positive_infinity_pairs": 0,
+        "negative_infinity_pairs": 0,
+        "above_log10_fraction_all_pairs": 0.0,
+        "scope": "descriptive only; positive infinity included in upper-tail count"
+      },
+      "read_diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 0,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 0,
+        "exact_zero_bypass": false
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.176481185015291,
+      "read_seconds": 0.6059648639056832
+    },
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "arm": "PAIR43",
+      "primary_Konly": {
+        "sse": 586.988644520508,
+        "reference_energy": 146852.98462082312,
+        "nse": 0.003997117566497696
+      },
+      "full_BF16_reference": {
+        "sse": 831.0059294616237,
+        "reference_energy": 146426.62994953973,
+        "nse": 0.005675237692406072
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.41538340541633517,
+        "reference_energy": 146400.0824123404,
+        "nse": 2.8373167458088915e-06
+      },
+      "extra_persistent_bytes": 1403904,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1403904,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": {
+        "finite_min": -0.012338449598878127,
+        "finite_p1": -0.0002540587240383954,
+        "finite_p50": 3.341327214906283e-12,
+        "finite_p99": 0.0006474308044442139,
+        "finite_max": 0.015641176082720473,
+        "total_pairs": 1536,
+        "finite_pairs": 1536,
+        "nonfinite_pairs": 0,
+        "nan_pairs": 0,
+        "positive_infinity_pairs": 0,
+        "negative_infinity_pairs": 0,
+        "above_log10_fraction_all_pairs": 0.0,
+        "scope": "descriptive only; positive infinity included in upper-tail count"
+      },
+      "read_diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 0,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 0,
+        "exact_zero_bypass": false
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.336831946973689,
+      "read_seconds": 0.4979015439748764
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "arm": "PAIR43",
+      "primary_Konly": {
+        "sse": 551.2331222489108,
+        "reference_energy": 157209.540959252,
+        "nse": 0.0035063592125861368
+      },
+      "full_BF16_reference": {
+        "sse": 791.7905878417623,
+        "reference_energy": 156805.60529639435,
+        "nse": 0.005049504361436045
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.4349561565454338,
+        "reference_energy": 156775.79066798568,
+        "nse": 2.774383434407732e-06
+      },
+      "extra_persistent_bytes": 1403904,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1403904,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": {
+        "finite_min": -0.005597484334236191,
+        "finite_p1": -0.00023953880895492155,
+        "finite_p50": 2.3946400418111325e-12,
+        "finite_p99": 0.00033633273384840707,
+        "finite_max": 0.006586093245480999,
+        "total_pairs": 1536,
+        "finite_pairs": 1536,
+        "nonfinite_pairs": 0,
+        "nan_pairs": 0,
+        "positive_infinity_pairs": 0,
+        "negative_infinity_pairs": 0,
+        "above_log10_fraction_all_pairs": 0.0,
+        "scope": "descriptive only; positive infinity included in upper-tail count"
+      },
+      "read_diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 0,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 0,
+        "exact_zero_bypass": false
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.333557410049252,
+      "read_seconds": 0.6046116719953716
+    },
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "arm": "R_bf16",
+      "primary_Konly": {
+        "sse": 233.7276936725297,
+        "reference_energy": 90463.87989799374,
+        "nse": 0.0025836576314887108
+      },
+      "full_BF16_reference": {
+        "sse": 397.14524626734874,
+        "reference_energy": 90169.58861785341,
+        "nse": 0.004404425620155427
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.22412142407084112,
+        "reference_energy": 90149.75355275426,
+        "nse": 2.4861013506785537e-06
+      },
+      "extra_persistent_bytes": 0,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 0,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5965092569822446,
+      "read_seconds": 0.5534870760748163
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "arm": "R_bf16",
+      "primary_Konly": {
+        "sse": 223.3192851017781,
+        "reference_energy": 96340.32409610719,
+        "nse": 0.0023180250554170776
+      },
+      "full_BF16_reference": {
+        "sse": 396.8002718824991,
+        "reference_energy": 96096.32216888556,
+        "nse": 0.004129193115061553
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.2208937377423026,
+        "reference_energy": 96077.3841857741,
+        "nse": 2.2991231455176283e-06
+      },
+      "extra_persistent_bytes": 0,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 0,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.621959033072926,
+      "read_seconds": 0.5685711570549756
+    },
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "arm": "R_fp32",
+      "primary_Konly": {
+        "sse": 228.6624420657933,
+        "reference_energy": 90463.87989799374,
+        "nse": 0.0025276656531162604
+      },
+      "full_BF16_reference": {
+        "sse": 391.4831632770306,
+        "reference_energy": 90169.58861785341,
+        "nse": 0.004341631910246041
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.22412142407084112,
+        "reference_energy": 90149.75355275426,
+        "nse": 2.4861013506785537e-06
+      },
+      "extra_persistent_bytes": 0,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 0,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5688235389534384,
+      "read_seconds": 0.5853378619067371
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "arm": "R_fp32",
+      "primary_Konly": {
+        "sse": 235.6039649531075,
+        "reference_energy": 96340.32409610719,
+        "nse": 0.0024455384301808416
+      },
+      "full_BF16_reference": {
+        "sse": 410.7270886169152,
+        "reference_energy": 96096.32216888556,
+        "nse": 0.004274118710756466
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.2208937377423026,
+        "reference_energy": 96077.3841857741,
+        "nse": 2.2991231455176283e-06
+      },
+      "extra_persistent_bytes": 0,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 0,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.1742390010040253,
+      "read_seconds": 0.5782516769832
+    },
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "arm": "FULL",
+      "primary_Konly": {
+        "sse": 118.22788727900885,
+        "reference_energy": 90463.87989799374,
+        "nse": 0.001306907103833282
+      },
+      "full_BF16_reference": {
+        "sse": 280.6511454872672,
+        "reference_energy": 90169.58861785341,
+        "nse": 0.0031124811567754982
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.22412142407084112,
+        "reference_energy": 90149.75355275426,
+        "nse": 2.4861013506785537e-06
+      },
+      "extra_persistent_bytes": 786432,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 786432,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.586710839997977,
+      "read_seconds": 0.5811261449707672
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "arm": "FULL",
+      "primary_Konly": {
+        "sse": 132.046490808782,
+        "reference_energy": 96340.32409610719,
+        "nse": 0.0013706253538970355
+      },
+      "full_BF16_reference": {
+        "sse": 300.9479915469889,
+        "reference_energy": 96096.32216888556,
+        "nse": 0.0031317326694156357
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.2208937377423026,
+        "reference_energy": 96077.3841857741,
+        "nse": 2.2991231455176283e-06
+      },
+      "extra_persistent_bytes": 786432,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 786432,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.223416346940212,
+      "read_seconds": 0.4887349420459941
+    },
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "arm": "FIXED17",
+      "primary_Konly": {
+        "sse": 260.4715932162598,
+        "reference_energy": 90463.87989799374,
+        "nse": 0.0028792883249089607
+      },
+      "full_BF16_reference": {
+        "sse": 425.70248682807625,
+        "reference_energy": 90169.58861785341,
+        "nse": 0.0047211315184351186
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.22412142407084112,
+        "reference_energy": 90149.75355275426,
+        "nse": 2.4861013506785537e-06
+      },
+      "extra_persistent_bytes": 786444,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 786444,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5311397090554237,
+      "read_seconds": 0.562782144988887
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "arm": "FIXED17",
+      "primary_Konly": {
+        "sse": 212.10881658315756,
+        "reference_energy": 96340.32409610719,
+        "nse": 0.0022016618541947403
+      },
+      "full_BF16_reference": {
+        "sse": 382.8979544910676,
+        "reference_energy": 96096.32216888556,
+        "nse": 0.003984522465054795
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.2208937377423026,
+        "reference_energy": 96077.3841857741,
+        "nse": 2.2991231455176283e-06
+      },
+      "extra_persistent_bytes": 786444,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 786444,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.533118405030109,
+      "read_seconds": 0.5639555510133505
+    },
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "arm": "BIT8",
+      "primary_Konly": {
+        "sse": 197.18313925650358,
+        "reference_energy": 90463.87989799374,
+        "nse": 0.0021796891696315205
+      },
+      "full_BF16_reference": {
+        "sse": 358.920935600637,
+        "reference_energy": 90169.58861785341,
+        "nse": 0.00398050984929936
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.22412142407084112,
+        "reference_energy": 90149.75355275426,
+        "nse": 2.4861013506785537e-06
+      },
+      "extra_persistent_bytes": 1806361,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1806361,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.302506077103317,
+      "read_seconds": 0.4810179809574038
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "arm": "BIT8",
+      "primary_Konly": {
+        "sse": 204.97423470951827,
+        "reference_energy": 96340.32409610719,
+        "nse": 0.0021276058247950264
+      },
+      "full_BF16_reference": {
+        "sse": 380.1070907723552,
+        "reference_energy": 96096.32216888556,
+        "nse": 0.003955480107806122
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.2208937377423026,
+        "reference_energy": 96077.3841857741,
+        "nse": 2.2991231455176283e-06
+      },
+      "extra_persistent_bytes": 1806361,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1806361,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.578328915988095,
+      "read_seconds": 0.5699447779916227
+    },
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "arm": "RMU",
+      "primary_Konly": {
+        "sse": 239.2912215354609,
+        "reference_energy": 90463.87989799374,
+        "nse": 0.002645157623189316
+      },
+      "full_BF16_reference": {
+        "sse": 401.7053204160607,
+        "reference_energy": 90169.58861785341,
+        "nse": 0.004454997816597821
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.22412142407084112,
+        "reference_energy": 90149.75355275426,
+        "nse": 2.4861013506785537e-06
+      },
+      "extra_persistent_bytes": 6144,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 6144,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5841934320051223,
+      "read_seconds": 0.5706644459860399
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "arm": "RMU",
+      "primary_Konly": {
+        "sse": 218.6495562922197,
+        "reference_energy": 96340.32409610719,
+        "nse": 0.0022695538793714174
+      },
+      "full_BF16_reference": {
+        "sse": 385.7994610347788,
+        "reference_energy": 96096.32216888556,
+        "nse": 0.004014716196492424
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.2208937377423026,
+        "reference_energy": 96077.3841857741,
+        "nse": 2.2991231455176283e-06
+      },
+      "extra_persistent_bytes": 6144,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 6144,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.52627027395647,
+      "read_seconds": 0.5675723229069263
+    },
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "arm": "RP3",
+      "primary_Konly": {
+        "sse": 155.7410651505967,
+        "reference_energy": 90463.87989799374,
+        "nse": 0.001721582860763975
+      },
+      "full_BF16_reference": {
+        "sse": 319.0990780767097,
+        "reference_energy": 90169.58861785341,
+        "nse": 0.0035388769425252617
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.22412142407084112,
+        "reference_energy": 90149.75355275426,
+        "nse": 2.4861013506785537e-06
+      },
+      "extra_persistent_bytes": 1694328,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1694328,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.612630142015405,
+      "read_seconds": 0.566702855983749
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "arm": "RP3",
+      "primary_Konly": {
+        "sse": 141.84273066634827,
+        "reference_energy": 96340.32409610719,
+        "nse": 0.0014723090460527079
+      },
+      "full_BF16_reference": {
+        "sse": 315.28520313996125,
+        "reference_energy": 96096.32216888556,
+        "nse": 0.0032809289265603708
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.2208937377423026,
+        "reference_energy": 96077.3841857741,
+        "nse": 2.2991231455176283e-06
+      },
+      "extra_persistent_bytes": 1694328,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1694328,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.577734140912071,
+      "read_seconds": 0.5759036029921845
+    },
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "arm": "RP3Q",
+      "primary_Konly": {
+        "sse": 155.38237352276656,
+        "reference_energy": 90463.87989799374,
+        "nse": 0.0017176178348526983
+      },
+      "full_BF16_reference": {
+        "sse": 317.3881608710295,
+        "reference_energy": 90169.58861785341,
+        "nse": 0.003519902505224331
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.22412142407084112,
+        "reference_energy": 90149.75355275426,
+        "nse": 2.4861013506785537e-06
+      },
+      "extra_persistent_bytes": 1694328,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1694328,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.3421601420268416,
+      "read_seconds": 1.1676180840004236
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "arm": "RP3Q",
+      "primary_Konly": {
+        "sse": 140.46337666373694,
+        "reference_energy": 96340.32409610719,
+        "nse": 0.00145799153139254
+      },
+      "full_BF16_reference": {
+        "sse": 312.5108496637655,
+        "reference_energy": 96096.32216888556,
+        "nse": 0.0032520583786186928
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.2208937377423026,
+        "reference_energy": 96077.3841857741,
+        "nse": 2.2991231455176283e-06
+      },
+      "extra_persistent_bytes": 1694328,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1694328,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.567863452946767,
+      "read_seconds": 1.2024572399677709
+    },
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "arm": "FULLP1",
+      "primary_Konly": {
+        "sse": 116.44359534394717,
+        "reference_energy": 90463.87989799374,
+        "nse": 0.001287183298740314
+      },
+      "full_BF16_reference": {
+        "sse": 278.3043353159009,
+        "reference_energy": 90169.58861785341,
+        "nse": 0.0030864545306442397
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.22412142407084112,
+        "reference_energy": 90149.75355275426,
+        "nse": 2.4861013506785537e-06
+      },
+      "extra_persistent_bytes": 1800600,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1800600,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.617652295040898,
+      "read_seconds": 0.5515721190022305
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "arm": "FULLP1",
+      "primary_Konly": {
+        "sse": 130.6621545322511,
+        "reference_energy": 96340.32409610719,
+        "nse": 0.0013562561238833401
+      },
+      "full_BF16_reference": {
+        "sse": 299.23122092542917,
+        "reference_energy": 96096.32216888556,
+        "nse": 0.0031138675671639328
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.2208937377423026,
+        "reference_energy": 96077.3841857741,
+        "nse": 2.2991231455176283e-06
+      },
+      "extra_persistent_bytes": 1800600,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1800600,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.557406894979067,
+      "read_seconds": 0.5810995150823146
+    },
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "arm": "RQ",
+      "primary_Konly": {
+        "sse": 226.65185944003184,
+        "reference_energy": 90463.87989799374,
+        "nse": 0.002505440400031509
+      },
+      "full_BF16_reference": {
+        "sse": 388.125727827117,
+        "reference_energy": 90169.58861785341,
+        "nse": 0.0043043972338836735
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.22412142407084112,
+        "reference_energy": 90149.75355275426,
+        "nse": 2.4861013506785537e-06
+      },
+      "extra_persistent_bytes": 0,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 0,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.46137978695333,
+      "read_seconds": 1.2035660500405356
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "arm": "RQ",
+      "primary_Konly": {
+        "sse": 231.54834618118596,
+        "reference_energy": 96340.32409610719,
+        "nse": 0.002403441636237366
+      },
+      "full_BF16_reference": {
+        "sse": 405.2912826447238,
+        "reference_energy": 96096.32216888556,
+        "nse": 0.004217552487934347
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.2208937377423026,
+        "reference_energy": 96077.3841857741,
+        "nse": 2.2991231455176283e-06
+      },
+      "extra_persistent_bytes": 0,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 0,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.573299005976878,
+      "read_seconds": 1.20551952207461
+    },
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "arm": "FULLQ",
+      "primary_Konly": {
+        "sse": 120.800749569498,
+        "reference_energy": 90463.87989799374,
+        "nse": 0.0013353478726063025
+      },
+      "full_BF16_reference": {
+        "sse": 281.8500746064321,
+        "reference_energy": 90169.58861785341,
+        "nse": 0.003125777536824941
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.22412142407084112,
+        "reference_energy": 90149.75355275426,
+        "nse": 2.4861013506785537e-06
+      },
+      "extra_persistent_bytes": 786432,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 786432,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.551237521925941,
+      "read_seconds": 1.1511613889597356
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "arm": "FULLQ",
+      "primary_Konly": {
+        "sse": 132.80800797080335,
+        "reference_energy": 96340.32409610719,
+        "nse": 0.0013785298027263924
+      },
+      "full_BF16_reference": {
+        "sse": 300.33041949068433,
+        "reference_energy": 96096.32216888556,
+        "nse": 0.0031253060753237286
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.2208937377423026,
+        "reference_energy": 96077.3841857741,
+        "nse": 2.2991231455176283e-06
+      },
+      "extra_persistent_bytes": 786432,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 786432,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5971289050066844,
+      "read_seconds": 1.2019121090415865
+    },
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "arm": "FULLP1Q",
+      "primary_Konly": {
+        "sse": 119.0326578964532,
+        "reference_energy": 90463.87989799374,
+        "nse": 0.0013158031474072675
+      },
+      "full_BF16_reference": {
+        "sse": 279.5202916523825,
+        "reference_energy": 90169.58861785341,
+        "nse": 0.0030999397461711166
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.22412142407084112,
+        "reference_energy": 90149.75355275426,
+        "nse": 2.4861013506785537e-06
+      },
+      "extra_persistent_bytes": 1800600,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1800600,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.6392844769870862,
+      "read_seconds": 1.1436875900253654
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "arm": "FULLP1Q",
+      "primary_Konly": {
+        "sse": 131.48163632592474,
+        "reference_energy": 96340.32409610719,
+        "nse": 0.0013647622380298543
+      },
+      "full_BF16_reference": {
+        "sse": 298.67182707762333,
+        "reference_energy": 96096.32216888556,
+        "nse": 0.003108046388629933
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.2208937377423026,
+        "reference_energy": 96077.3841857741,
+        "nse": 2.2991231455176283e-06
+      },
+      "extra_persistent_bytes": 1800600,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1800600,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.175212793983519,
+      "read_seconds": 1.2019694750197232
+    },
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "arm": "FM3",
+      "primary_Konly": {
+        "sse": 155.7399520152756,
+        "reference_energy": 90463.87989799374,
+        "nse": 0.0017215705560151365
+      },
+      "full_BF16_reference": {
+        "sse": 319.09901829791625,
+        "reference_energy": 90169.58861785341,
+        "nse": 0.003538876279565672
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.22412142407084112,
+        "reference_energy": 90149.75355275426,
+        "nse": 2.4861013506785537e-06
+      },
+      "extra_persistent_bytes": 3267048,
+      "cap_eligible": false,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 3267048,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.285581319942139,
+      "read_seconds": 0.5556190630886704
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "arm": "FM3",
+      "primary_Konly": {
+        "sse": 141.8425233739474,
+        "reference_energy": 96340.32409610719,
+        "nse": 0.0014723068943846204
+      },
+      "full_BF16_reference": {
+        "sse": 315.28506792165297,
+        "reference_energy": 96096.32216888556,
+        "nse": 0.0032809275194481606
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.2208937377423026,
+        "reference_energy": 96077.3841857741,
+        "nse": 2.2991231455176283e-06
+      },
+      "extra_persistent_bytes": 3267048,
+      "cap_eligible": false,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 3267048,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.573317972011864,
+      "read_seconds": 0.5659786919131875
+    },
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "arm": "FM8",
+      "primary_Konly": {
+        "sse": 126.19808094183165,
+        "reference_energy": 90463.87989799374,
+        "nse": 0.001395010705754954
+      },
+      "full_BF16_reference": {
+        "sse": 289.85393571339546,
+        "reference_energy": 90169.58861785341,
+        "nse": 0.0032145420663037706
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.22412142407084112,
+        "reference_energy": 90149.75355275426,
+        "nse": 2.4861013506785537e-06
+      },
+      "extra_persistent_bytes": 4967208,
+      "cap_eligible": false,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 4967208,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.6362456450005993,
+      "read_seconds": 0.5606562619796023
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "arm": "FM8",
+      "primary_Konly": {
+        "sse": 124.32801075575375,
+        "reference_energy": 96340.32409610719,
+        "nse": 0.001290508537543704
+      },
+      "full_BF16_reference": {
+        "sse": 297.43167975320097,
+        "reference_energy": 96096.32216888556,
+        "nse": 0.003095141135895673
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.2208937377423026,
+        "reference_energy": 96077.3841857741,
+        "nse": 2.2991231455176283e-06
+      },
+      "extra_persistent_bytes": 4967208,
+      "cap_eligible": false,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 4967208,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.6698592010652646,
+      "read_seconds": 0.5688412479357794
+    },
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "arm": "PAIR17",
+      "primary_Konly": {
+        "sse": 229.9483074290247,
+        "reference_energy": 90463.87989799374,
+        "nse": 0.002541879783271648
+      },
+      "full_BF16_reference": {
+        "sse": 392.79219284781345,
+        "reference_energy": 90169.58861785341,
+        "nse": 0.004356149327823831
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.22412142407084112,
+        "reference_energy": 90149.75355275426,
+        "nse": 2.4861013506785537e-06
+      },
+      "extra_persistent_bytes": 1403904,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1403904,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": {
+        "finite_min": -0.004092554942091968,
+        "finite_p1": -0.000602806562480299,
+        "finite_p50": 1.3543564289358815e-08,
+        "finite_p99": 0.0008732270013699119,
+        "finite_max": 0.031163556425432466,
+        "total_pairs": 1536,
+        "finite_pairs": 1536,
+        "nonfinite_pairs": 0,
+        "nan_pairs": 0,
+        "positive_infinity_pairs": 0,
+        "negative_infinity_pairs": 0,
+        "above_log10_fraction_all_pairs": 0.0,
+        "scope": "descriptive only; positive infinity included in upper-tail count"
+      },
+      "read_diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 0,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 0,
+        "exact_zero_bypass": false
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.3676257979823276,
+      "read_seconds": 0.5045876029180363
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "arm": "PAIR17",
+      "primary_Konly": {
+        "sse": 235.9179759441659,
+        "reference_energy": 96340.32409610719,
+        "nse": 0.0024487978233166292
+      },
+      "full_BF16_reference": {
+        "sse": 411.0730466167492,
+        "reference_energy": 96096.32216888556,
+        "nse": 0.004277718827722712
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.2208937377423026,
+        "reference_energy": 96077.3841857741,
+        "nse": 2.2991231455176283e-06
+      },
+      "extra_persistent_bytes": 1403904,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1403904,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": {
+        "finite_min": -0.019486578288985784,
+        "finite_p1": -0.0002483576189611367,
+        "finite_p50": 2.8977643975281913e-08,
+        "finite_p99": 0.00023589983072230025,
+        "finite_max": 0.007944489561449455,
+        "total_pairs": 1536,
+        "finite_pairs": 1536,
+        "nonfinite_pairs": 0,
+        "nan_pairs": 0,
+        "positive_infinity_pairs": 0,
+        "negative_infinity_pairs": 0,
+        "above_log10_fraction_all_pairs": 0.0,
+        "scope": "descriptive only; positive infinity included in upper-tail count"
+      },
+      "read_diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 0,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 0,
+        "exact_zero_bypass": false
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5838699290761724,
+      "read_seconds": 0.6082271600607783
+    },
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "arm": "PAIR29",
+      "primary_Konly": {
+        "sse": 261.2037756266036,
+        "reference_energy": 90463.87989799374,
+        "nse": 0.00288738196859492
+      },
+      "full_BF16_reference": {
+        "sse": 424.5227937065208,
+        "reference_energy": 90169.58861785341,
+        "nse": 0.004708048469708401
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.22412142407084112,
+        "reference_energy": 90149.75355275426,
+        "nse": 2.4861013506785537e-06
+      },
+      "extra_persistent_bytes": 1403904,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1403904,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": {
+        "finite_min": -0.5664390714314005,
+        "finite_p1": -0.008491356219737123,
+        "finite_p50": 1.3162104738581058e-10,
+        "finite_p99": 0.0005872583073407019,
+        "finite_max": 0.06592136891403673,
+        "total_pairs": 1536,
+        "finite_pairs": 1536,
+        "nonfinite_pairs": 0,
+        "nan_pairs": 0,
+        "positive_infinity_pairs": 0,
+        "negative_infinity_pairs": 0,
+        "above_log10_fraction_all_pairs": 0.0,
+        "scope": "descriptive only; positive infinity included in upper-tail count"
+      },
+      "read_diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 0,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 0,
+        "exact_zero_bypass": false
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.3434903260786086,
+      "read_seconds": 0.5053509559947997
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "arm": "PAIR29",
+      "primary_Konly": {
+        "sse": 243.24002428167503,
+        "reference_energy": 96340.32409610719,
+        "nse": 0.002524799730163079
+      },
+      "full_BF16_reference": {
+        "sse": 418.2021257881633,
+        "reference_energy": 96096.32216888556,
+        "nse": 0.004351905633320589
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.2208937377423026,
+        "reference_energy": 96077.3841857741,
+        "nse": 2.2991231455176283e-06
+      },
+      "extra_persistent_bytes": 1403904,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1403904,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": {
+        "finite_min": -0.1546787023451876,
+        "finite_p1": -0.00463690614132996,
+        "finite_p50": -9.041656312588451e-12,
+        "finite_p99": 0.00046931719796963094,
+        "finite_max": 0.15277648388324672,
+        "total_pairs": 1536,
+        "finite_pairs": 1536,
+        "nonfinite_pairs": 0,
+        "nan_pairs": 0,
+        "positive_infinity_pairs": 0,
+        "negative_infinity_pairs": 0,
+        "above_log10_fraction_all_pairs": 0.0,
+        "scope": "descriptive only; positive infinity included in upper-tail count"
+      },
+      "read_diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 0,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 0,
+        "exact_zero_bypass": false
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.3402107930742204,
+      "read_seconds": 0.6026982130715623
+    },
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "arm": "PAIR43",
+      "primary_Konly": {
+        "sse": 266.5738942220676,
+        "reference_energy": 90463.87989799374,
+        "nse": 0.002946743988016587
+      },
+      "full_BF16_reference": {
+        "sse": 429.6587574489875,
+        "reference_energy": 90169.58861785341,
+        "nse": 0.004765007404768351
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.22412142407084112,
+        "reference_energy": 90149.75355275426,
+        "nse": 2.4861013506785537e-06
+      },
+      "extra_persistent_bytes": 1403904,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1403904,
+      "fallback_rate": 0.0006510416666666666,
+      "fallback_count": 1,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": {
+        "finite_min": -0.2159365954525556,
+        "finite_p1": -0.017656027227356083,
+        "finite_p50": 6.558621452907128e-08,
+        "finite_p99": 0.0038127825588976714,
+        "finite_max": 1.03700082650202,
+        "total_pairs": 1536,
+        "finite_pairs": 1535,
+        "nonfinite_pairs": 1,
+        "nan_pairs": 0,
+        "positive_infinity_pairs": 0,
+        "negative_infinity_pairs": 1,
+        "above_log10_fraction_all_pairs": 0.0,
+        "scope": "descriptive only; positive infinity included in upper-tail count"
+      },
+      "read_diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 1,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 1,
+        "exact_zero_bypass": false
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.388449726975523,
+      "read_seconds": 0.5000536990119144
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "arm": "PAIR43",
+      "primary_Konly": {
+        "sse": 350.34484935433267,
+        "reference_energy": 96340.32409610719,
+        "nse": 0.0036365338464590968
+      },
+      "full_BF16_reference": {
+        "sse": 526.1539682723874,
+        "reference_energy": 96096.32216888556,
+        "nse": 0.005475276851362659
+      },
+      "CPU_vs_native_floor": {
+        "sse": 0.2208937377423026,
+        "reference_energy": 96077.3841857741,
+        "nse": 2.2991231455176283e-06
+      },
+      "extra_persistent_bytes": 1403904,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1403904,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": {
+        "finite_min": -0.4871266257354139,
+        "finite_p1": -0.0063738552505180415,
+        "finite_p50": 2.8018005966911004e-08,
+        "finite_p99": 0.005106008188105236,
+        "finite_max": 2.7658879073682687,
+        "total_pairs": 1536,
+        "finite_pairs": 1536,
+        "nonfinite_pairs": 0,
+        "nan_pairs": 0,
+        "positive_infinity_pairs": 0,
+        "negative_infinity_pairs": 0,
+        "above_log10_fraction_all_pairs": 0.0006510416666666666,
+        "scope": "descriptive only; positive infinity included in upper-tail count"
+      },
+      "read_diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 0,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 0,
+        "exact_zero_bypass": false
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.5920646940357983,
+      "read_seconds": 0.6035200810292736
+    }
+  ]
+}
