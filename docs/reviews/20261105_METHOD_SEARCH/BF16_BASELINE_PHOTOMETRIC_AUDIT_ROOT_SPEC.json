@@ -1,0 +1,15 @@
+{
+  "created_epoch": 1793897927.375109,
+  "status": "read_only_independent_audit_not_experiment",
+  "question": "Compare original BF16 generation and VAE pipeline with held official source configurations to identify any explicit mismatch that could explain shared late photometric changes. Do not infer bug from BF16 dtype alone.",
+  "deadline_utc": "2026-11-05T17:17:00Z",
+  "deadline_note": "Conservative fixeddeadline earlier than dispatched17:19; no extension.",
+  "workers": [
+    "native fair_comparison_codex",
+    "existingactualOpus2 via manager"
+  ],
+  "source_observation": "mechanism_worker.py251 VAE BF16;254 use_cacheFalse; observed latecolor/texture changes in p00/p04/p06 BF16, causeunknown.",
+  "allowed": "read sources/settings/old reports/images and write one independentreport each; one helper sharedscope ifneeded",
+  "forbidden": "newGPU,model,metric,VAE,tensorloads,downloads,newexperiments,sourceedits,broadliteraturesearch",
+  "next_decision": "Only a concrete source mismatch or numeric risk with strongbaseline relevance could justify one separatelyregistered savedlatent validation. No test authorizedbythisaudit."
+}

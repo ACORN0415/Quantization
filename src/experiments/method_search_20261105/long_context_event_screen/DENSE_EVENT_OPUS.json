@@ -1,0 +1,109 @@
+{
+  "status": "completed",
+  "created_utc": 1793897629.0723083,
+  "started_utc": "2026-11-05T16:52:17Z",
+  "decision_sha256": "ce8633593dc496417b6dd71bacc74a56f214d93d21f2d90958856f9107d00eed",
+  "dense_ready_sha256": "734306559e647d64137f52084ac619ef347e2d925e587be40ae42dcdfd3d58c0",
+  "interval": "frames 136-376 consecutive (241), pts = frame/16 s",
+  "readers": {
+    "parent": {
+      "model": "claude-opus-5-5 (actual Claude Opus 5.5 chat)",
+      "session": "claude_beab681e_3eaf_41b0_9688_b8ef268b288f",
+      "viewed": [
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/sheet08.jpg",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/sheet09.jpg",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/sheet10.jpg",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/sheet11.jpg",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/sheet12.jpg",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/sheet13.jpg",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/sheet14.jpg",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/sheet15.jpg",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/original_frame000.png",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/original_frame032.png",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/original_frame080.png",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/original_frame136.png",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/original_frame152.png",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/original_frame160.png",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/original_frame352.png",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/original_frame360.png",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/original_frame368.png",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/original_frame376.png"
+      ],
+      "frames_direct": "264-376 contact tiles; full-res 0,32,80,136,152,160,352,360,368,376"
+    },
+    "helper": {
+      "type": "Agent tool subagent_type fork (tool contract: parent model, no override)",
+      "observed_provider_model_id": null,
+      "viewed": [
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/sheet00.jpg",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/sheet01.jpg",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/sheet02.jpg",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/sheet03.jpg",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/sheet04.jpg",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/sheet05.jpg",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/sheet06.jpg",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/dense_p00/sheet07.jpg"
+      ],
+      "frames": "136-263",
+      "parent_reviewed_these_sheets": false
+    }
+  },
+  "visibility": [
+    {
+      "frames": "136-155",
+      "pts": "8.50-9.69s",
+      "state": "visible",
+      "reader": "helper; parent full-res 136,152 agree"
+    },
+    {
+      "frames": "156-161",
+      "pts": "9.75-10.06s",
+      "state": "partial at right edge (exiting frame)",
+      "reader": "helper; parent full-res 160 shows sliver at right edge"
+    },
+    {
+      "frames": "162-263",
+      "pts": "10.13-16.44s",
+      "state": "not visible; no occlusion cue, consistent with off-frame (inference)",
+      "reader": "helper only"
+    },
+    {
+      "frames": "264-356",
+      "pts": "16.50-22.25s",
+      "state": "not visible",
+      "reader": "parent"
+    },
+    {
+      "frames": "357",
+      "pts": "22.31s",
+      "state": "faint partial appearance near front paws, lower left",
+      "reader": "parent"
+    },
+    {
+      "frames": "358-376",
+      "pts": "22.38-23.50s",
+      "state": "visible near front paws",
+      "reader": "parent"
+    }
+  ],
+  "q1_brief_reappearance_breaks_absence": false,
+  "q1_note": "no reappearance in 162-356 in dense frames read (child 162-263, parent 264-356). Not-visible is not physical absence; ball exited at the right edge while the camera tracked the dog.",
+  "q2_identity_established": false,
+  "q2_evidence": {
+    "early": "full-res 0/32/80/136/152: plain matte blue sphere, no seam/pattern/marking identifiable; exits right side behind the dog",
+    "late": "full-res 360: glossy blue-white sphere; 368: blue with dark blotch pattern; 376: pinkish-red patch; sheet13 358-359 orange/red patches; strong global colour shift",
+    "spatial": "returns at lower left in front of the dog, not where it exited (right/behind); with a tracking camera this is possible but unverified",
+    "conclusion": "only generic attributes (blue-ish sphere near same dog) match; surface appearance changes frame to frame; same-object identity vs regenerated object cannot be established; blue colour is in the prompt so it is not visual-memory evidence"
+  },
+  "q3_valid_task_requirement": false,
+  "recommendation": "Identity and task relevance remain ambiguous; recommend ending the current 8-generation long-context utility plan. No GPU registration/start.",
+  "nonclaims": "Not evidence of long-KV necessity, quality, compression damage, held-out effect, human-evaluation validity, novelty or research completion.",
+  "additional_execution": {
+    "decode": 0,
+    "code_on_media": 0,
+    "GPU": 0,
+    "model": 0,
+    "downloads": 0
+  },
+  "codex_dense_or_event_screen_read": false
+}
