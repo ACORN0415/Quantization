@@ -1,0 +1,35 @@
+{
+  "status": "source_audit_complete_no_explicit_harness_defect_found",
+  "created_epoch": 1793898747.6255648,
+  "deadline_utc": "2026-11-05T17:17:00Z",
+  "reports": [
+    {
+      "source": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/BF16_BASELINE_PHOTOMETRIC_AUDIT_CODEX_KO.txt",
+      "copy": "CODEX_SOURCE_REVIEW_FIXED_KO.txt",
+      "sha256": "3821b3c1737fde502e223a1d25cf2a9a822402a90302a805d5e69006f2000330"
+    },
+    {
+      "source": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/BF16_BASELINE_PHOTOMETRIC_AUDIT_OPUS_KO.txt",
+      "copy": "OPUS_SOURCE_REVIEW_FIXED_KO.txt",
+      "sha256": "fec15f1fe94abe5f348a9ab533c1421f8941a04721f2a420b6aee2a2bd8d75a6"
+    }
+  ],
+  "agreement": "VAE BF16 anduse_cacheFalse matchheldofficialexamples; originaldecodeusesinternaltemporalfeaturecache. No clearRGB/sampler/refreshbug identified. Sourceequality doesnotprovenumeric precisionirrelevance.",
+  "stronger_provenance": "Codex directlycheckedofficialcheckout33593df andwholefilehashmatching; Opus reliedpartlyonNOTICE/localandQVGsources. DonotexpandOpusscope.",
+  "known_workload_changes": [
+    "officialdefault21latent to126latentwith21window",
+    "chunk-specificRNG differsfromreleaseglobalRNG",
+    "differentprompts",
+    "RGB8conversionGPUvsCPUlocation"
+  ],
+  "not_proven": [
+    "Causeofphotometricdrift",
+    "BF16modelqualitysufficiency",
+    "FP32decoderqualityadvantage",
+    "Novelmethodutility"
+  ],
+  "root_next_choice": "Prepareonesavedlatent BF16/FP32 rawRGBpair toquantifydecoderprecisioneffectbeforeinterpretingBF16appearanceasencoderqualitytarget. Sourceauditdoesnotmakethistestmandatory. IndependentdesignandexactregistrationrequiredbeforeGPU.",
+  "important_causal_limit": "SimilarFP32appearancewouldonlyweakenBF16-decoder-precision explanation for thiscase; itdoesnotexcludeallVAEorlatent/harnesscauses.",
+  "new_GPU_model_tensor_calls": 0,
+  "whole_goal_achieved": false
+}

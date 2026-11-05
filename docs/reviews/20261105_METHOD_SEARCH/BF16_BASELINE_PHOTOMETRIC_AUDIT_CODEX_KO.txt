@@ -1,0 +1,88 @@
+BF16 기준 영상의 후반 색·질감 변화: 독립 소스 감사
+작성: 2026-11-05 UTC. 검토자: native Codex fair_comparison_codex. VAE 경로는 하위 native Codex window_frontier_check가 독립 대조하고 본인이 근거를 통합했다. 실제 Opus2 독립 결론은 읽지 않았다.
+범위: 로컬 소스·기존 JSON·작은 소스 파일 해시·두 기존 PNG만 읽었다. 새 GPU/VAE/모델/metric 실행, torch import, 텐서 로드, 원자료 점수 재계산, 다운로드, 원본 수정은 모두 0회다. 이 TXT만 새로 작성한다. root의 보수적 마감 17:17 UTC를 적용했다.
+
+판단
+현재 읽은 범위에서는 후반 색·질감 변화를 설명하는 명시적인 VAE/샘플러/RGB 구현 오류를 발견하지 못했다. 특히 BF16 VAE와 use_cache=False는 공식 Self-Forcing 예제와 같은 설정이다. 그렇다고 126 latent 프레임에서의 변화가 모델 고유 장기 드리프트라고 입증된 것도 아니다. 소스 일치는 수치 영향의 부재나 영상 품질의 충분성을 증명하지 않는다.
+확인된 차이는 공식 기본 예제의 21 latent 생성에서 126 latent 생성·21프레임 rolling 창으로 범위를 늘린 점, 청크별 독립 난수 스트림, 프롬프트, RGB8 변환 위치다. 이 중 어느 차이가 색 변화를 발생시켰는지는 이번 자료로 분리되지 않는다.
+현재 BF16을 '오류가 확인된 기준선'으로 폐기하거나, FP32 VAE가 해결책이라고 전제할 근거는 없다. 반대로 이 BF16에 근접했다는 사실만으로 장기 영상의 내용·색·동작 보존이 충분하다고 주장해서도 안 된다.
+
+1. 실제 영상의 출처와 이번 육안 확인
+long_context_event_screen/FRAMES_READY.json의 p00/p04/p06는 모두 /home/acorn0415/sfq_data/mechanism/fr/pXX_s303_BF16/video.mp4에서 왔다. 개발 seed101 영상과 구분해야 한다. 각 sampling.json은 BF16, seed303, 126 latent=42청크, 501 pixel 프레임, observe=false/profile=false/warmup_chunks=0를 기록한다. 같은 저장 source_sha256은 48285b2d2c4eadd25461b2f2970b9e65afb3780dd806bbd36b669cc1ffe80c9a다.
+본인이 실제 본 것은 dense_p00/original_frame000.png와 original_frame368.png 두 장이다. 전자는 비교적 자연스러운 잔디·털색이고 후자는 강한 녹색과 자주색 색조·명암 변화를 보인다. 이는 두 시점의 육안 비교이며 전체 시간 경과나 원인을 판정한 것은 아니다. p04/p06의 전체 시트에 대한 독립 육안 판정은 이번 보고서에 추가하지 않는다.
+prepare_frames.py:28–51은 MP4를 PyAV로 읽고 RGB 이미지로 축소·JPEG 저장한다. prepare_dense.py는 지정 프레임을 원래 832×480 PNG로 저장한다. 따라서 p00에서 본 변화는 연락처 시트의 추가 JPEG/축소만으로 생긴 현상은 아니다. PNG 자체도 기존 MP4의 복원 결과여서 최초 VAE 원시 RGB와 MP4 인코딩 영향을 분리하지 못한다.
+세 원영상의 저장 SHA256(이번에 영상 전체를 다시 해시하지 않음):
+p00 56c7521a75b026dd952a28f317585919fb2b4768969e5e5e13459286f1f2bbe4
+p04 22171f16678e5ec80fb0b651e2cb465155794fb9e8a72e4a2e7725ea9f16590d
+p06 be82d6b57bca87a393af521b30ea18bc2576d7f08dcf29c087f58063380b5160
+
+2. 공식 소스와 같은 부분
+공식 로컬 checkout /home/acorn0415/sfq_data/upstream/Self-Forcing의 HEAD는 33593df3e81fa3ec10239271dd2c100facac6de1이며 이번 git status --short 출력은 비어 있었다. src/vendor/UPSTREAM.md:9–11에 기록된 반입 revision과 같다. 고정 QVG 사본도 비교 가능한 보조 자료이며, 그것을 공식 Self-Forcing 원본과 혼동하지 않았다.
+이번에 소스 전체 SHA256을 계산해 공식 checkout과 일치를 확인한 파일: src/utils/wan_wrapper.py, utils/scheduler.py, wan/modules/vae.py, wan/modules/model.py, wan/modules/attention.py, configs/default_config.yaml.
+
+가중치·dtype:
+- src/scripts/p3_tf_fr.py:26–35는 self_forcing_dmd.pt의 generator_ema를 load_state_dict하고 pipeline 전체를 BF16으로 변환한다. 공식 inference.py:69–79도 --use_ema일 때 generator_ema, 이후 pipeline.to(bfloat16)와 generator/VAE GPU 이동을 수행한다. 공식 README:66–73의 예제도 같은 DMD checkpoint와 --use_ema다. 'EMA 대신 잘못된 raw generator를 사용'한 흔적은 없다.
+- WanDiffusionWrapper는 src/utils/wan_wrapper.py:126–139에서 causal model을 생성하고 eval(), 같은 FlowMatchScheduler를 사용한다. VAE도 같은 파일:68–71에서 eval()/requires_grad_(False)다. 이 경로에서 훈련 모드 dropout이 남았다는 근거는 없다.
+- model_name 기본값은 Wan2.1-T2V-1.3B이다. 훈련용 YAML의 real_name=14B를 읽어 생성기도 14B여야 한다고 판단하면 안 된다. 실제 wrapper의 생성자 기본값·EMA 가중치 로드 경로는 1.3B다.
+
+샘플러·현재 청크:
+- configs/a1.yaml의 [1000,750,500,250], warp=true, 3프레임 블록, timestep_shift=5.0은 공식 self_forcing_dmd.yaml과 대응한다. default_config.yaml은 전체 일치하며 context_noise=0, independent_first_frame=false다.
+- kvq/lockstep.py:77–93은 denoise 4회 후 마지막 pred를 저장하고 timestep0으로 한 번 refresh한다. 공식 pipeline/causal_inference.py:188–235도 같은 호출 의미다. 배치1인 현재 경로에서 scheduler 인수의 shape/다음 timestep 대응은 같다. 현재 noisy KV가 마지막까지 그대로 남도록 refresh를 누락한 차이는 보이지 않는다.
+- BF16은 mechanism_worker.py:172에서 bf16_cache를 쓰며 quantized store를 타지 않는다. kvq/lockstep.py:6–19의 30층 K/V [1,32760,12,128], cross K/V [1,512,12,128], is_init=false로 실행마다 새 캐시를 만든다. 이전 프롬프트 cross-attention 캐시를 재사용하는 경로가 아니다.
+
+BF16 cache/RoPE:
+- src/wan/modules/causal_model.py와 공식 파일의 차이는 store 분기와 선택적 write_observer 삽입이다. BF16 캐시에 둘 다 없으므로 기존 dense rolling/attention 계산 본문이 그대로 실행된다(:194–257).
+- 쿼리와 새 K 모두 absolute current_start//1560으로 RoPE를 계산하고 K를 post-RoPE로 저장한다(:195–200). 최초 새 청크에서만 오래된 구간을 밀고, 같은 청크의 이후 denoise/refresh는 같은 슬롯을 덮어쓴다(:228–250). 이미 회전한 과거 K를 퇴거 후 다시 0부터 회전시키는 코드가 아니다.
+- causal_rope_apply(:28–56)의 FP64 complex 계산과 반환 dtype은 공식과 같다. 시간 주파수 테이블 길이는1024(:504–509), 이번 시간 index는0..125로 이 테이블 범위 안이다. 단, 범위 안이라는 사실이 훈련 분포 밖 장기 위치의 품질을 보장하지는 않는다.
+
+3. 공식 기본 예제와 다른 부분 및 의미
+A. 생성 길이와 attention 창: 공식 inference.py:28 기본값은21 latent, 공식 예제 YAML은 local_attn_size를 지정하지 않아 wrapper 기본 -1이다. 현재 a1.yaml은 local_attn_size=21,sink_size=0을 명시하고126 latent까지 계속 생성한다. 캐시의 21프레임 길이 자체는 공식 기본 21프레임 생성 때의 문맥량과 맞지만, 8번째 생성청크 이후 퇴거하며42청크를 생성하는 것은 기본 예제와 같은 실행 조건이 아니다. 공식 causal_model에는 rolling 분기가 존재하므로 임의로 추가한 수식이라고 할 수는 없다. 장기 품질이 기본 예제와 같다고도 할 수 없다.
+B. 난수: 공식 inference.py:161–163은 전체 sampled_noise를 global CUDA RNG에서 생성하고 pipeline:206–211은 global torch.randn_like로 재노이즈한다. lockstep.py:70–88은 초기 청크별 seed*1000003+c와 재노이즈 seed*1000003+7919+c의 별도 Generator를 쓴다. 목적은 팔 사이 RNG 소비를 분리하는 것이며, 공식과 같은 정수 seed가 같은 영상을 뜻하지 않는다. 이것만으로 잘못된 Gaussian 샘플러라고 판정할 근거는 없다. BF16에는 PRQ/kmeans가 없고 전용 generator를 쓰므로, 이번 색 변화에 QVG의 전역 RNG 소비가 원인이라는 주장은 성립하지 않는다.
+C. 프롬프트: 공식 README:61/72는 상세하고 긴/확장 프롬프트를 권하고 예제는 MovieGenVideoBench_extended.txt다. 현재 mechanism_prompts_v0.txt는 각2문장의 행동 지시를 쓴다. 이는 입력 분포 차이이며 후반 색 변화를 직접 설명하는 증거는 아니다. 프롬프트가 짧다는 이유로 기존 결과를 무효로 만들지 않는다.
+D. pipeline 전체 호출 대신 lockstep helper를 사용하며 텍스트 인코더를 인코딩 후 CPU로 이동한다. 모델 수학/refresh 내용은 위와 같이 대조했고 별도 무개입 검증이 있다. 전체 공식 release CLI를126프레임에 그대로 재현했다는 표현은 피해야 한다.
+
+4. VAE·temporal cache·RGB
+- mechanism_worker.py:251/254의 BF16 VAE + BF16 latent + use_cache=False는 공식 inference.py:73과 pipeline:255의 조합과 같다. QVG 공식사본 inference.py:105도 BF16이다. QVG wrapper의 VAE 관련 차이는 checkpoint 경로 문자열이며 VAE 본체는 현재/공식/QVG 세 파일이 전체 일치한다.
+- use_cache=False는 생성3프레임마다 temporal cache를 지운다는 뜻이 아니다. wan_wrapper.py:89–111은 전체 latent를 [B,C,T,H,W]로 넘기며, vae.py:545–568은 호출 시작/끝에 clear_cache하고 내부에서 latent1프레임씩 decoder를 호출하면서 feature cache를 이어간다. 따라서 126 latent를 한 번 호출한 결과501 pixel frames가 되는 구조이며 worker:256도 이 길이를 검사한다. 생성청크별로 VAE를 독립 복원한 뒤 잘못 이어붙이는 경로는 없다.
+- wrapper:96–107의 mean/std는 latent dtype으로 변환하고 VAE 출력은 FP32로 변환한 뒤 [-1,1] clamp한다. worker와 공식 pipeline 모두 다음에 ×0.5+0.5, [0,1] clamp한다. 이중 범위 변환이나 RGB/BGR swap은 발견하지 못했다.
+- 명시적 구현 차이는 worker:257이 GPU에서 ×255→uint8→CPU, 공식 inference.py:173–192는 FP32를 CPU로 옮기고 ×255 후 write_video에 전달한다는 점이다. 현재 torchvision/io/video.py:113은 내부 uint8 변환, :161은 rgb24 입력을 사용한다. GPU/CPU 변환·인코딩 바이트 동등성은 이번에 실행 검증하지 않았다. 소스에는 색공간을 의도적으로 다르게 처리하는 경로가 없다.
+- 관측 가능한 수치 위험은 BF16 가중치/연산, BF16로 반올림한 latent rescale 상수, temporal convolution feature-cache의 유한정밀도이며 공식 경로에도 공유된다. '공식과 같으므로 영향0'도 'BF16이므로 late drift의 원인'도 이번 증거를 넘는다. 별도 WanVAE 클래스의 dtype=float32 기본값을 실제 사용 경로의 dtype 계약으로 잘못 가져오면 안 된다.
+- 저장 quality.json의 MUSIQ 입력은 인코딩 전 float RGB501프레임이고 auxiliary는 인코딩 전 RGB8이다. MP4나 sheet의 색 변환 문제만으로 이 원시 지표가 계산됐다고 해석하면 안 된다. 높은 MUSIQ가 물체/행동/장기 색 보존을 보증하는 지표도 아니다.
+
+5. 이미 수행한 대조가 해결한 부분과 남긴 부분
+이번에는 아래 저장 JSON과 대조 코드를 읽고 스칼라/개수만 확인했다. 텐서를 다시 열어 결과를 재현한 감사는 아니다.
+- /home/acorn0415/sfq_data/verify/g2_comparison.json: pristine official checkout 경로와 우리 release RNG 경로의21 latent 최종출력3개가 equal=true,max_abs=0. reference_run.py:24–33은 공식 inference 결과를 관찰해 저장하는 hook이다. verify.py:151–160 및 command JSON에 실행범위가 남아 있다. 짧은 official 경로를 잘못 옮겼을 가능성을 줄이는 근거다.126 latent/청크 RNG/VAE FP32 대조는 아니다.
+- verify/g3_comparison.json:63 latent,2프롬프트×21청크42개가 equal=true; global RNG7777 draws/청크를 삽입해도 청크 RNG 경로가 유지됐다는 기록이다(verify.py:161–165). global RNG release 방식과 chunk 방식의 영상이 같다는 검사가 아니다.
+- src/experiments/p3_pilot_results/anchor_validity.json:2×21청크의 TF identity 및 g3_base 참조 일치. g3_base/stats.json은 rng=chunk,63 latent,a1.yaml을 기록하므로 이를 공식 release126 비교로 확대하면 안 된다.
+- tools/mechanism_run.py:57–75와 저장 gates.json 계열은 기존 BF16126 latent/policy 경로에 대한 무개입 일치를 검사한다. 자체 과거 기준과의 연결 검사이며 장기 품질의 외부 참조는 아니다.
+- mechanism/performance/BF16_g16_r0/quality.json의 old_raw_musiq_max_abs_diff=0.0은 이전 p00/seed101의42개 표본 프레임 점수 대조(worker:276–281)다.501 RGB 전체 바이트 또는 FP32 VAE 대조가 아니다.
+- kv_channel_budget_global_baseline/REPORT_KO.txt:46–55에는 seed101의p00/p04 identity2실행×42청크 latent와 B-3 BF16 일치, 새 VAE decode raw RGB8 전체 일치가 기록돼 있다. 감사 JSON은 그 저장 결과를 확인한 기록이다. 이는 같은 BF16 복원 경로의 재현성을 지지한다. 현재 시각적으로 본 seed303 세 영상의 FP32 VAE 대조는 아니며 색 변화 원인을 분리하지 않는다.
+검토한 소스·지정 보고서·검색 범위에서는 같은 저장 latent의 BF16 대 FP32 VAE 원시RGB 비교 기록을 찾지 못했다. 저장소 전체에 절대로 없다고 증명한 것은 아니다.
+
+6. 다음 자원 판단
+본 소스 감사만으로는 새 '수정'을 시행할 명시적 결함이 없고, FP32 재복원을 반드시 실행해야 한다는 판단도 내리지 않는다. 기존8생성 계획을 다시 열거나 원 후보의 품질 판정을 구제할 근거가 아니다.
+다만 이후 판단이 'BF16 기준의 색 변화가 decoder 수치 탓이면 결론이 달라진다'에 실제로 달려 있다면, 가장 좁은 추가 검사는 이미 선택한 p00_s303_BF16의 동일 latent 한 개에 대한 BF16/FP32 VAE 원시RGB 짝 비교 한 건이다. 생성·attention·KV·seed·프롬프트는 전혀 다시 실행하지 않는다. 이것은 한 비교 업무이지만 정확한 원시 기준을 얻으려면 BF16과FP32 두 번의 VAE 복원이 필요하다. 현재 folder에는 latent/MP4/metric만 있고 원시RGB 배열은 없다. FP32 한 번만 복원해 기존 lossy MP4와 대조하면 dtype과 인코딩 차이가 섞인다.
+두 팔은 원 checkpoint를 각각 새로 읽어 dtype을 지정해야 한다. 이미 BF16으로 반올림된 VAE를 .float()만 하는 것은 FP32 원가중치 대조가 아니다. latent는 저장된 동일BF16 값을 FP32로 승격할 뿐이며, generator BF16 오차를 되돌리는 검사가 아니다. temporal cache는 전체126경로에서 동일하게 유지해야 하고 후반 짧은 slice만 독립 decode하면 문맥 초기화 차이가 생긴다. MP4 인코딩 전에 동일 위치 RGB·프레임별 색 변화의 존재와 두 출력 차이를 비교해야 한다. 기존 BF16 decode 기록 약28.64초는 비용 참고이고 FP32 실행시간·메모리를 예측하거나 보장하지 않는다.
+두 팔 모두 같은 late 변화가 있으면 '이 입력에서 VAE dtype이 주원인이라는 설명'은 약해지지만 generator/harness 각각의 원인을 식별한 것은 아니다. FP32에서 변화가 크게 줄면 dtype 연관성의 후속 근거이지 공식 구현 버그나 일반 해법 확정이 아니다. 이 검사는 별도 등록이 필요한 조건부 권고이며 이번 업무에서는 실행하지 않았다.
+
+7. 환경·해시·보존의 범위
+공식 source revision/현재 작은 source hashes는 이번에 읽기 전용 재계산했다. 영상/latent/모델 체크포인트는 torch.load도 새 해시 계산도 하지 않았다. p00/p04/p06의 sampling·quality source fingerprint 일치는 저장된 기록의 일치이며 현재 모든 코드가 그 당시 fingerprint와 같음을 새로 입증하지 않았다. 각 모듈과 공식 source 대응을 오늘 직접 확인한 것과, 과거 runtime의 결과 기록을 구분했다.
+- src/checkpoints/self_forcing_dmd.pt는 stat/readlink로 /home/acorn0415/sfq_data/ckpt/checkpoints/self_forcing_dmd.pt,5,676,252,553B임을 확인했다. 저장 SHA a0413986d9734e02c09504e1520f5697ba6df731bb2f0f35577485e9cc8f56a3. verify/checkpoint.json 저장 MD5 ef41ae42bfb87abe43d5f640fb634d0c.
+- VAE 경로는 /home/acorn0415/sfq_data/ckpt/wan_models/Wan2.1-T2V-1.3B/Wan2.1_VAE.pth,507,609,880B. 저장 SHA38071ab59bd94681c686fa51d75a1968f64e470262043be31f7a094e442fd981.
+저장 SHA 근거는 kv_reuse_stage1/manifest.json 및 full_obq_rollout_pilot/LOCK.json이다. 원시 checkpoint의 공식 배포 서버와 새 대조는 하지 않았다.
+kv_reuse_stage1/environment.json은 torch2.6.0+cu124, triton3.2.0, flash-attn2.7.4.post1을 기록한다. 이 후속실험 환경 기록을 seed303 mechanism 영상 당시의 완전한 환경 증명으로 사용하지 않는다. 현재 source는 FA2 가능시FA2, 환경에 따라SDPA fallback 가능 구조이다. seed303의 실제 low-level attention dispatch/driver/라이브러리 바이너리까지 이번에 재확인한 것은 아니다. 당시 영상에 fallback이 발생했다는 증거도 없다.
+
+현재 읽은 핵심 소스 SHA256:
+tools/mechanism_worker.py dc662434011c78f6dd291758372b465f1a456f36c0b2bbf7e389a54443bc4446
+src/scripts/p3_tf_fr.py 03a1ded8b1c8626d75e4c974221808393d122e6a4e04b077fb0d12dc9c11c201
+src/kvq/lockstep.py 2ef170749c3a0a344273ccbb07629eaa9103cc01f2b7b99e64285be9c9569eff
+src/configs/a1.yaml dc2fc01f43264c195a770faebfdbe790689c781fe2c052438cf6bea94cf0fa88
+src/utils/wan_wrapper.py da919629bac4472cd9072223f1ab03200de276e202ab0d9b91e6789d500ff8fa
+src/utils/scheduler.py 4194ef1324bb06527621749c7f9a82f431ccf011823aa65099cb7bdf116b642e
+src/wan/modules/vae.py a4c1d9362f25a1bef463ac51caed4097317c007d4d87887b02a3a733fdbc48d5
+src/wan/modules/model.py f15214485a5297e6f9e79684bbad80acbcdc88c3272596b256a739a734529449
+src/wan/modules/causal_model.py 8da6416213a6bf790148afee7ff766bd676427be04433352621cd6a07d03de7d
+src/wan/modules/attention.py 02ad719a76e6bdec79d18fc62b094ef2ad7c28b2d593c9f395ae1226041b7c9d
+src/pipeline/causal_inference.py 946cc46b51a608065f0ec09900f8466dd90b7f86079cfb8e0189ed4c9ebe70ea
+
+완료 UTC: 2026-11-05T17:10:28.262431+00:00

@@ -1,0 +1,21 @@
+{
+  "created_epoch": 1793898087.3540773,
+  "scope": "Root direct source read only, paired audit conclusions not yet read.",
+  "sources": [
+    {
+      "path": "src/utils/wan_wrapper.py",
+      "sha256": "da919629bac4472cd9072223f1ab03200de276e202ab0d9b91e6789d500ff8fa"
+    },
+    {
+      "path": "src/wan/modules/vae.py",
+      "sha256": "a4c1d9362f25a1bef463ac51caed4097317c007d4d87887b02a3a733fdbc48d5"
+    },
+    {
+      "path": "tools/mechanism_worker.py",
+      "sha256": "dc662434011c78f6dd291758372b465f1a456f36c0b2bbf7e389a54443bc4446"
+    }
+  ],
+  "observation": "mechanism_worker251setsVAEtoBF16;254callsdecode_to_pixel(use_cacheFalse). Wrapper89-117dispatchesmodel.decode,whichvae.py545-568clearsthefeaturecacheatentry/exitbutiterateslatentframeswithfeat_cacheinternally. Thususe_cacheFalse doesnotmean decoder runswithouttemporalfeaturecache ordecodesallframesinparallel.",
+  "consequence": "Any future comparison must preserve intended temporalcontext and freshreset, not simplytoggleuse_cacheunderassumptionofdisablinginternalcaches. BF16dtype and thisflagalone do notestablishabug.",
+  "numeric_execution": 0
+}

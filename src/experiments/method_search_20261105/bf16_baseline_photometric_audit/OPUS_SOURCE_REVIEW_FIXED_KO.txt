@@ -1,0 +1,93 @@
+BF16 후반 색·질감 변화 — 기준선 하네스 소스 감사 (Opus2, root msg_0f533b486c28)
+시작 UTC: 2026-11-05T17:01:35Z. 부모 절대마감은 17:19:00Z다.
+부모: claude-opus-5-5, 기존 채팅 session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5. Task/Dispatch: 미연결(terminal_handle_stale).
+독립성: BF16_BASELINE_PHOTOMETRIC_AUDIT_CODEX 문서, 임시본, helper 결론을 찾거나 읽지 않았다.
+수행: 읽기와 이미지 Read만. 실행, VAE, 모델, tensor·latent 로드, 새 PNG·MP4, 다운로드는 모두 0이다. latent.pt는 존재만 확인하고 열지 않았다.
+
+판정 요약
+- 하네스와 보유 원 예제(공식 Self-Forcing에서 유래한 local src) 사이에서 명시적 불일치는 발견하지 못했다.
+- VAE 경로(bf16, use_cache=False, 일괄 decode, 정규화, RGB 변환)는 원 예제와 동등하다.
+- 차이는 단순 설정차뿐이다: 길이 126 대 기본 21, 노이즈 RNG 배치 방식.
+- source만으로는 후반 색·질감 변화가 모델 내재 드리프트인지 VAE/하네스 원인인지 구분할 수 없다.
+- 기존 latent에 단 1회 VAE dtype만 바꿔 복원 대조하는 것은 원인 분리에 정보 가치가 있다(아래, 실행 권고가 아님).
+
+1. provenance
+- local src NOTICE: guandeh17/Self-Forcing commit 33593df3e81fa3ec10239271dd2c100facac6de1에서 유래했다.
+  - 수정 파일: inference.py, pipeline/__init__.py, pipeline/causal_inference.py, wan/__init__.py, wan/modules/causal_model.py.
+  - 이 commit의 공식 원본은 로컬에서 hash로 대조하지 않았다. NOTICE의 주장만 확인했다.
+- 고정 upstream /home/acorn0415/sfq_data/qvg-reuse-reference@0601468f/experiments/Self-Forcing은 QVG가 변경한 clone이다(causal_model이 prerope로 바뀜). 공식 원본과 같다고 보지 않는다.
+- 파일 sha256(앞 10자리) 비교, local 대 upstream
+  - wan/modules/vae.py: a4c1d9362f, 동일.
+  - utils/wan_wrapper.py: da919629ba 대 21727964b1. diff상 체크포인트 경로(25,30,69,128,130행)만 다르다.
+  - pipeline/causal_inference.py: 946cc46b51 대 824d8cfbd2.
+  - wan/modules/causal_model.py: 8da6416213 대 c3575f16dc.
+  - inference.py: 523fe91e0a 대 3dc3765638.
+- 하네스 tools/mechanism_worker.py sha dc662434…(일치).
+- 생성 당시 BF16 산출물 sampling.json의 source_sha256은 6개 폴더(p00/p04/p06 × s303/s404) 모두 48285b2d2c…다.
+  - 현재 소스 hash와의 일치는 계산하지 않았다(source_hash 함수 실행 금지). 미확인이다.
+
+2. generator·sampler·cache (부모)
+- 하네스 경로: p3_tf_fr.build로 config = default_config + a1.yaml을 만들고, self_forcing_dmd.pt generator_ema를 로드한 뒤 pipe.to(bf16)을 한다.
+  - local inference.py:81 pipeline.to(bf16)과 같다.
+- a1.yaml: denoising_step_list [1000,750,500,250], warp_denoising_step true, timestep_shift 5.0, local_attn_size 21, sink_size 0, num_frame_per_block 3. default_config의 context_noise는 0이다.
+  - warp는 pipeline __init__(local causal_inference.py:29-33)에서 timesteps[1000−list]로 변환된다.
+  - run_chunk는 그 pipe.denoising_step_list와 scheduler.add_noise를 쓴다. 원 inference와 같은 리스트다.
+- run_chunk(kvq/lockstep.py:77-93, sha 2ef17074…)
+  - block마다 4 step으로 denoise하며, 사이마다 add_noise에 다음 t를 쓴다.
+  - 마지막에 timestep=context_noise로 cache 갱신 호출을 한다. 원 causal_inference inference 루프의 구조와 같다.
+  - 차이(단순 설정차, 분포는 동등): 초기 노이즈를 chunk마다 seed×1000003+c로 생성하고, 재노이즈 generator도 chunk별로 둔다. 원 예제는 전체 [1,T,16,60,104] randn을 한 번 생성한다.
+- BF16 cache(lockstep.py:6-13): capacity = local_attn_size(21)×1560 dense BF16.
+  - local causal_model.py:228-244의 rolling 경로(RoPE된 K 저장, 넘치면 shift, sink 0)를 쓴다.
+  - 공식 Self-Forcing의 rolling 구조와 같은 계열이다(local 수정본 기준). 공식 원본과의 행 단위 대조는 미확인이다.
+  - 앞서 문제였던 '선할당' 하네스(capacity 180)와 달리 21 window다.
+- 원 예제 기본 num_output_frames는 21이다(local inference.py 25행, helper 관찰). 126 latent는 학습·기본 길이의 6배를 rolling window로 외삽한 것이다.
+  - 이 자체가 후반 드리프트의 그럴듯한 내재 원인이지만, source만으로는 입증할 수 없다(추측).
+
+3. VAE와 RGB (helper가 분담, 부모가 행으로 대조)
+- dtype: 하네스 251행은 WanVAEWrapper를 bf16으로 쓰고 latent도 bf16이다. 원 예제도 pipeline.to(bf16)이라 VAE가 bf16이다. autocast는 없다. 동등하다.
+- use_cache=False: 하네스 254행과 원 pipeline(local causal_inference.py:288, upstream 423)이 같다.
+  - vae.decode(545-569)는 호출 안에서 latent frame을 causal feat_cache로 순차 decode하고 시작과 끝에 clear한다.
+  - 126 latent 일괄 decode는 원 pipeline의 'output 전체 decode'와 같은 방식이다.
+- 정규화: wrapper 97-98에서 mean/std를 latent dtype(bf16)으로 캐스팅하고 z×std+mean을 한다. 동등하다.
+- 범위와 정수 변환
+  - wrapper 107은 float().clamp(−1,1)이다. 하네스는 ×.5+.5와 clamp(0,1)로, 원 pipeline 289와 같다.
+  - 하네스 257행은 ×255 후 .to(uint8)로 절사한다. 원 예제 154/169는 255.0× float를 write_video에 넘긴다.
+  - torchvision 내부의 uint8 변환 방식(절사)과 codec 기본값은 미확인이다(helper). 동등으로 추정한다.
+  - fps 16은 같다. MUSIQ는 인코딩 전 float 입력을 쓴다(의도된 차이).
+- 수치 위험(일반): bf16 mean/std와 VAE 연산의 정밀도. 원 예제와 같으므로 하네스 고유 문제는 아니다.
+
+4. 이미지 Read (직접 열람; 해석은 관찰 수준)
+- 읽은 것: p00_sheet1.jpg(frame 256-500), p06_sheet1.jpg(frame 256-500).
+- 읽지 않은 것: p04_sheet1, p06_sheet0, dense_p00/original_frame*.png. 시간을 배분하느라 미열람했다.
+- p00(개와 공): 후반으로 갈수록 채도와 대비가 과해진다. 녹색과 보라·마젠타 색조가 늘고, 윤곽에 halo가 생기며, 배경은 줄무늬로 포스터화된다. 점진적으로 누적된다.
+- p06(나무 위 파란 종이): 나무 결이 수평 줄무늬로 강해지고 적색 쪽으로 이동한다. 사각형이 사라졌다가 다시 나타나는 시간적 불연속도 보인다.
+- 시간적 불연속(물체 소실과 재등장)은 VAE 정밀도만으로는 설명하기 어렵다. latent(생성) 측 원인을 시사한다(추측). 색 포화는 양쪽 모두 가능하다.
+- 시트가 어느 seed(s303/s404)의 BF16인지는 확인하지 않았다.
+
+5. 단 1회 VAE 복원 대조의 가치 (실행 권고가 아님, root 판단)
+- 가치가 있다. 기존 BF16 latent.pt가 있다(~/sfq_data/mechanism/fr/p0{0,4,6}_s{303,404}_BF16/latent.pt, sampling.json의 latent sha 기록 있음; 열지 않음).
+- 설계(변수 하나): 같은 latent와 같은 VAE 가중치(Wan2.1_VAE.pth, 기존 hash)를 쓰고, VAE와 latent 입력 dtype만 fp32로 바꾼다. use_cache=False와 일괄 decode는 고정한다.
+  - 하네스가 해 둔 sampling의 source/latent sha 검사를 그대로 둔다.
+  - 기존 bf16 decode 결과(기존 video.mp4는 손실 압축이므로, 기존 quality.json의 raw 지표나 같은 프레임의 float 결과)와 후반 프레임을 비교한다.
+- 구분할 수 있는 것
+  - fp32에서도 후반 색 포화가 같으면 VAE bf16 정밀도가 원인이 아니다. 원인은 latent 측(모델 내재 드리프트 또는 생성 하네스)이다.
+  - fp32에서 크게 줄어들면 VAE 정밀도 기여가 있다.
+- 남는 교란
+  - latent 측 원인이라는 결과가 나와도 '하네스(run_chunk, rolling, noise 배치)'와 '모델 내재 126 외삽'은 구분되지 않는다. 이는 원 pipeline.inference로 같은 조건을 생성해야 구분되며, 새 생성이 필요하다(이번 범위 밖).
+  - fp32 기준 자체가 원 공식 출력은 아니다.
+  - 비교 지표와 허용치를 사전에 정하지 않으면 해석이 갈린다. 새 metric과 threshold는 계획하지 않는다. 같은 기존 지표만 쓴다.
+- use_cache=True 변형은 decode가 원래 호출 안에서 causal cache를 쓰므로 정보가 적다. 권하지 않는다.
+
+helper
+- native general-purpose 1개(depth 1, 읽기 전용, 부모에게만 반환). model 인자를 생략했다(도구 설명상 부모 상속).
+- helper가 자기 보고한 ID는 "claude-opus-5-5"다. 그 외 provider 근거는 관측하지 못했다.
+- 분담: helper는 VAE dtype/use_cache/정규화/RGB/MP4와 local·upstream 차이, 부모는 provenance, generator/sampler/cache, config, 이미지, 통합, 권고.
+미확인
+- 공식 Self-Forcing 원본과의 행 단위 대조
+- 생성 당시 source hash(48285b2d)와 현재 소스의 관계
+- torchvision 변환과 codec
+- latent dtype 실값
+- 나머지 이미지 3종
+- causal_model rolling 경로 세부의 수치 위험
+추가 실행 0.
+종료 UTC: 2026-11-05T17:03:32Z

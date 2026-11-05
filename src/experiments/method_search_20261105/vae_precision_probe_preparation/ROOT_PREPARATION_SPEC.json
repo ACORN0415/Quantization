@@ -1,0 +1,29 @@
+{
+  "status": "design_and_code_preparation_only_no_GPU_authority",
+  "created_epoch": 1793898621.2528806,
+  "preparation_absolute_deadline_utc": "2026-11-05T17:23:00Z",
+  "reason": "ObservedlatephotometricchangesinexistingBF16clips; sourceVAE BF16 pathmatchesofficialexamples. Numeric precisioncontribution unmeasured; not a confirmedbug ornewmethod.",
+  "paired_workers": [
+    "native method_gap_codex",
+    "existingactualOpus1 via middlemanager"
+  ],
+  "proposed_execution_not_authorized": {
+    "saved_latent": "/home/acorn0415/sfq_data/mechanism/fr/p00_s303_BF16/latent.pt",
+    "new_generator_calls": 0,
+    "VAE_decodes": 2,
+    "arms": [
+      "fresh originalcheckpoint BF16 VAE andBF16latent",
+      "fresh originalcheckpoint FP32 VAE andsame latentvaluescastFP32"
+    ],
+    "critical_contract": "ReloadoriginalcheckpointforFP32, donotupcastalreadyroundedBF16weights. Preservewrappernormalizationandtemporalcontext,freshstateperarm. TF32off,autocastoff,benchmarkoff. CompareuncompressedRGB,bewarehistoricalMP4lossy.",
+    "wall_seconds": 600,
+    "CPU_threads": 4,
+    "RSS_bytes": 12884901888,
+    "GPU_allocator_bytes": 23622320128,
+    "disk_bytes": 268435456,
+    "new_videos_or_seeds": 0
+  },
+  "provisional_practical_gate_subject_to_independent_critique": "lateRGB_RMSE>=0.02 plus50percent reduction ofearly-latechannelmeanchange wouldtriggeronlyevaluationprecisionreview. Thisisnot a validatedqualitymetric, causalproof ormethodsuccess. Reviewersmayrejectgateandrecommenddifferentdefensibledecisionorexecutionunnecessary.",
+  "limits": "NumericallysimilarFP32outputwouldnotexcludeallVAEorlatentcauses; largeoutputdifferencewouldnotproveFP32qualitybetter. No fullmodel ornoveltyclaim.",
+  "fallback": "PreparationcanreturnnoREADYorunnecessary. No GPUuntilrootintegratesbothsourceauditandindependentdesign/sourcechecks andregistersexactcriteria."
+}
