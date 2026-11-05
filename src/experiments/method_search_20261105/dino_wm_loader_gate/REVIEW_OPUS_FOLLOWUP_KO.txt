@@ -1,0 +1,30 @@
+DINO-WM loader gate — 명시적 source 후속 검토 (실제 Opus1, root msg_1c22c30f32bf)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음(역사적 terminal_handle_stale).
+실제 수신·시작 2026-11-05T19:29:02Z(epoch 1793906942). root authority의 latest_dispatch 19:27:52Z보다 약70s 늦게 도착했다(전달 지연 기록).
+검토 마감 = min(수신+600s=19:39:02Z, hard outer 19:37:52Z) = 19:37:52Z. 원 19:21:22Z 미완료 보고서(REVIEW_OPUS_KO.txt, source 0/8)는 그대로 보존하며 소급 통과가 아니다.
+FOLLOWUP_SOURCE_REVIEW_ROOT.json SHA 24bfb694…. 상대 REVIEW_CODEX_KO.txt는 폴더에 있으나 읽지 않았다. helper 0(8파일을 부모가 병렬로 직접 요청).
+읽은 source 8/8(모두 WebFetch 요약 도구 경유 — 원문 전체를 직접 본 것이 아니며 행 번호 미확인), prefix .../noah-research/be738be3…/QuantWM/:
+ plan.py, datasets/pusht_dset.py, conf/env/pusht.yaml, models/dino.py, env/__init__.py, preprocessor.py, datasets/traj_dset.py, datasets/img_transforms.py. 실패 0.
+실행 0(import/torch/pickle/다운로드/설치/GPU 없음).
+
+판정: "checkpoint + hydra + val만으로 충분"은 아니다(현 source 그대로 실행 시). 단 train 통계·token은 필요 없다.
+1) 필수 asset selector
+ - 모델: {ckpt_base_path}/outputs/{model_name}/hydra.yaml + checkpoints/model_{epoch}.pth(plan.py load_model; 기본 epoch 'final'로 주석). → outputs.zip의 outputs/pusht/ yaml과
+   outputs/pusht/checkpoints/의 해당 .pth. 정확 member 이름은 이번에 대조하지 않았다.
+ - 데이터: conf/env/pusht.yaml dataset → datasets.pusht_dset의 train/val 슬라이스 로더, data_path = $DATASET_DIR/pusht_noise. 로더는 data_path/train과 data_path/val을
+   둘 다 읽는다(각 states.pth, rel_actions.pth(relative 기본 True), seq_lengths.pkl, velocities.pth(with_velocity True), 선택 shapes.pkl, obses/episode_XXX.mp4).
+   plan.py는 dset["valid"]만 쓰지만 train 디렉터리가 없으면 원 코드 경로가 실패한다 → 수정 없이 val만으로는 부족. 최소 adapter(val만 로드)는 가능해 보이나 동등성 미검증.
+ - checkpoint 키: proprio_encoder·action_encoder는 checkpoint에서 직접 꺼내며 재생성 경로가 없어 반드시 포함돼야 함. predictor는 config로 새로 만든 뒤 state_dict를 strict 로드.
+2) normalization·token: pusht_dset의 action/state/proprio 평균·표준편차는 하드코딩 상수(action_scale 100 후 정규화). train 전체 통계 계산 불필요. img transform은 Resize/
+   CenterCrop 224 + Normalize(0.5,0.5). token 파일 없음. Preprocessor는 파일 읽기·통계 계산 없음.
+3) eager RAM: train·val 각각 states/actions/velocities/seq_lengths 파일 전체를 torch.load 후 n_rollout로 자른다(conf n_rollout null → 전체). 영상은 lazy(VideoReader로 요청 시
+   episode 전체 프레임). 실제 바이트는 asset 크기 미확인이라 계산하지 못했다.
+4) 추가 pretrained: models/dino.py는 torch.hub.load("facebookresearch/dinov2","dinov2_vits14") — GitHub repo와(관례상) 가중치를 네트워크에서 받는다. plan.py는 checkpoint에
+   encoder가 없을 때만 config로 재생성한다. checkpoint에 encoder가 들어 있는지는 로드하지 않아 미확인 → 없으면 hub 다운로드가 추가로 필요.
+5) import 의존: plan.py — hydra, omegaconf, wandb(기본 off지만 import), submitit, gym, env.venv; pusht_dset — decord; env/__init__ — gym.envs.registration, env.pusht.pusht_wrapper
+   (내부 의존 pymunk 등은 미열람). 로컬 배포판 메타에 hydra-core·gym·decord·wandb·submitit(목록 미포함) 부재 표시 — 모듈 부재 증명은 아니나 준비 확인 항목이다.
+6) 보안: checkpoint와 dataset 파일을 weights_only 없이 torch.load/pickle.load한다 — 신뢰 출처 확인이 실행 조건.
+go/no-go(한 번의 acquisition smoke): 조건부 go. 필요한 것 = outputs.zip의 PushT yaml+pth, pusht_noise의 train/val 디렉터리(또는 root가 등록한 val-only adapter와 그 동등성 검사),
+ DINOv2 vits14 hub 자산(checkpoint에 encoder가 없으면), 위 import 준비. 이 판정은 asset 획득·실행 승인이 아니며 root가 manifest와 별도 LOCK 후 결정한다.
+미확인: checkpoint 키 구성(encoder 포함 여부), outputs.zip 정확 member 이름, pusht_noise 개별 파일 크기·eager RAM 바이트, env/pusht 내부 의존, 요약 도구가 놓친 세부.
+실제 끝: 2026-11-05T19:30:19Z

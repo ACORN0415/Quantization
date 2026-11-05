@@ -1,0 +1,23 @@
+{
+  "status": "accepted_source_gate_for_bounded_selected_acquisition_not_runtime_ready",
+  "created_epoch": 1793907262.8759758,
+  "pair": "Codex42bdefc + actualOpus1 followup19:29:02–19:30:19",
+  "original_review": "0/8 incomplete preserved; followup is not retroactive pass",
+  "timing": "Actual followup receipt70s after latest-dispatch target, recorded as operational deviation. Source reading completed before hardouter19:37:52, within600s actual review cap. No outer cap extension or effect-data changes.",
+  "root_direct_verification": "Read pinned raw plan.py/pusht_dset.py/traj_dset.py/pusht.yaml. Factory constructs train+val using metadata; train trajectory slicer reads lengths and NumPy RNG, no train video fetch in constructors. Planning receives valid.",
+  "choice": "Use original train+val factory: include four train metadata in addition to two PushT model/config and25val files; exclude tokens/abs_actions/train videos/other checkpoints. Avoid extra val-only loader adaptation/RNG changes.",
+  "limitations": [
+    "Exact stored hydra flags/checkpoint keys not yet read",
+    "DINOv2 extra payload and dependency imports unresolved",
+    "No actual runtime/GPU/FP32 baseline or quantized control result",
+    "Selected metadata may be insufficient if future calibration accesses train videos; scope FP32 preparation only"
+  ],
+  "evidence": {
+    "ROOT_SPEC.json": "1026fda5aca2b787faad46b0f864402f4d68f6fc2a6d8547c72a0a45e668db78",
+    "REVIEW_CODEX_KO.txt": "42bdefc450d0cb53f38bdff4656b941ffc47de169e80cf7cb1a446c1ddd2bef2",
+    "REVIEW_OPUS_KO.txt": "2d8002d8bc4aaa3d2b9e2e620b29c3aa17a50e94258860adbc73e1a1236859f0",
+    "FOLLOWUP_SOURCE_REVIEW_ROOT.json": "24bfb6949df7f72d8eff98676cac950a11e8a04592b6a14ffa595e0509b3ba95",
+    "REVIEW_OPUS_FOLLOWUP_KO.txt": "8798023a88ab032df91958ab56905d5adc50cac5afe3daab9ebe336baede651b",
+    "ROOT_LOCAL_PACKAGE_METADATA.json": "a396e0bc386721a8500d85b0d7437411d7d232bc851bc753aff15723d3a38bba"
+  }
+}
