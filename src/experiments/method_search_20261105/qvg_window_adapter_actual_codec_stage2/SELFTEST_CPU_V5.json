@@ -1,0 +1,62 @@
+{
+  "status": "passed",
+  "checks": 13,
+  "CPU_threads": 4,
+  "GPU_calls": 0,
+  "actual_PRQ_calls": 0,
+  "model_loads": 0,
+  "source_sha256": "3f90a88649595436094c184a555db2767d7a2331732767ae1dd95a85d339629d",
+  "supervisor_dummy": [
+    {
+      "mode": "normal",
+      "caught": null,
+      "peak_group_RSS_bytes": 8237056,
+      "worker_pid": 604881,
+      "worker_exit_code": 0,
+      "remaining_group_members": {},
+      "owned_cleanup_verified": true
+    },
+    {
+      "mode": "interrupt",
+      "caught": "KeyboardInterrupt",
+      "peak_group_RSS_bytes": 8105984,
+      "worker_pid": 604883,
+      "remaining_group_members": {},
+      "worker_exit_code": -15,
+      "owned_cleanup_verified": true
+    },
+    {
+      "mode": "sigterm",
+      "caught": "InterruptedError",
+      "peak_group_RSS_bytes": 8110080,
+      "worker_pid": 604887,
+      "remaining_group_members": {},
+      "worker_exit_code": -15,
+      "owned_cleanup_verified": true
+    },
+    {
+      "mode": "early_interrupt",
+      "caught": "KeyboardInterrupt",
+      "peak_group_RSS_bytes": 0,
+      "worker_pid": 604888,
+      "remaining_group_members": {},
+      "worker_exit_code": -15,
+      "owned_cleanup_verified": true
+    },
+    {
+      "mode": "early_sigterm",
+      "caught": "InterruptedError",
+      "peak_group_RSS_bytes": 0,
+      "worker_pid": 604890,
+      "remaining_group_members": {},
+      "worker_exit_code": -15,
+      "owned_cleanup_verified": true
+    }
+  ],
+  "freqs_shape": [
+    1024,
+    64
+  ],
+  "freqs_dtype": "torch.complex128",
+  "scope": "small synthetic INT2 unpack/metadata/hash contract, not actual PRQ"
+}

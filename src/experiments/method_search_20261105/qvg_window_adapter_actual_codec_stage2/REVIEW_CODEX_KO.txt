@@ -1,0 +1,44 @@
+QVG 실제 코덱 stage2 독립 Codex 코드 검토
+작성 시각: 2026-11-05T16:15:10.464159+00:00
+검토자: /root/method_gap_codex. probe.py 작성자와 별도. 실제 Claude/Opus 검토를 대신하지 않는다.
+
+판단
+현재 동결 후보에는 등록된 1회 호환성 검사를 막는 추가 코드 오류를 발견하지 못했다. 실제 Opus 검토와 root의 최종 LOCK/기동 전제는 그대로다. GPU, 실제 PRQ, 모델, 영상 생성, 보존 캡처의 효과 계산은 이 검토에서 모두 0회다. 이는 실행 전 코드 검토 결과이며, 630개 실제 GPU 읽기나 12개 FA2 결과가 통과했다는 보고가 아니다.
+
+검토한 최종 소스와 합성 기록
+probe.py SHA256: 3f90a88649595436094c184a555db2767d7a2331732767ae1dd95a85d339629d
+verify_record.py SHA256: 3c4a99bc39aa8891a2c3ad90d6507556104447f0606ca11abc482d59efcbdd92
+SELFTEST_CPU_V5.json SHA256: 86a6ed20b3120fb48c1f2bccf6329cfe0938268e6866c6ee024ceee2945950af
+동결 CPU adapter SHA256: cce683d4a2ec1db16dfe986d0202970d1ce3f83458427597f3145e55e8a46d09
+upstream revision: 0601468f2dbba6a17ac7086faec6d41527cad188
+SELFTEST_CPU_V5는 작성자가 실행한 CPU 합성 13검사의 저장 기록이며, 위 probe 소스 해시와 일치함을 읽기 전용으로 확인했다. 본 검토자가 실제 코덱을 재실행한 것은 아니다.
+
+1. 실제 경로와 비교의 의미
+probe는 원본 ChunkedKVCache와 compress_kv_cache, triton_prq_quantize_tensor/dequantize_tensor, uncompress_kv_cache를 사용한다. K/V 내부 PRQ 호출 10개를 실제 호출 지점에서 세고, 원본 compress 호출은 24프레임 그룹 5개다. 소스 트리의 quant_videogen Python 파일 및 실제 로드된 flash_attn Python/확장 파일이 실행 LOCK과 일치해야 실제 연산으로 진행한다. native attention wrapper의 fa_version=2 및 실제 varlen 진입을 계측하고, SDPA 호출은 계수 증가 후 즉시 거부한다.
+
+세 window와 all-history 참조에 같은 합성 현재 K/V를 기록한다. 압축 직전 4개 store의 원본 범위를 비교하며, 실제 코덱에 전달하는 contiguous BHSD 인수도 따로 해시하여 변경을 검사한다. 한 번 만든 실제 packet을 네 저장소가 공유하는 것은 이 비교에서 정당하다. 동일 encoder 입력과 원본 그룹 구성을 통제하는 호환성 검사이기 때문이다. 각 window별 독립 양자화 실행의 동등성이나 난수 의존성을 시험한 것은 아니다.
+
+630개 attention callback은 Q/K/V 전달을 검사한다. 그중 지정된 12곳에서만 실제 FA2를 각 3회 호출한다. 나머지 callback은 None을 반환하므로 실제 attention 연산을 630번 실행했다고 쓰면 안 된다. window21의 block9, window63의 block21은 부분 span 읽기이며, window126의 block21은 부분 span이 아닌 full-horizon 중간 지점으로 기록한다. post-attend absolute current index와 capacity/frontier를 별도로 남긴다.
+
+2. INT2 형식과 독립 복원
+원본 quant_pack의 symmetric INT2는 signed code를 [-1,+1]로 제한하고 +1 offset 뒤 6/4/2/0 shift 순서로 packed uint8에 넣는다. CPU 참조는 이를 uint8 bit 추출 후 -1로 복원한다. 2의 보수 INT2나 기존 INT4 해석을 사용하지 않는다. scale은 원본 기본 FP8 e4m3fn, 축은 각 B/H/token의 D64 그룹이며 비대칭 zero와 clipping은 사용하지 않는다. 잔차 복원과 centroid gather를 FP32에서 합한 뒤 BF16으로 반환한다. 이 설정에서 실제 decoder와 CPU 원소 바이트 비교 10개가 예정돼 있다.
+
+packet digest는 tensor dtype/shape/논리 원소 바이트와 container/info/config를 포함한다. CPU 산출물 변환 뒤 내용 digest도 확인하고, 읽기 이후 같은 packet의 내용이 그대로인지 검사한다. 파일 SHA는 별도로 저장한다. verify_record.py는 파일 SHA와 저장된 판정/메타데이터만 다시 확인하며, packet을 torch.load하여 이 복원 식을 독립 재계산하지 않는다.
+
+3. RoPE와 판정
+원본 causal_rope_apply 및 causal_rope_apply_long_input의 AST를 그대로 사용한다. freqs는 원본 model.py의 rope_params(1024,44/42/42)를 연결한 complex128 [1024,64]이며 grid [3,30,52]다. 모델을 생성하거나 가중치를 로드하지 않는다. all-history 원본 long RoPE를 먼저 적용하고 window를 자른 참조와, adapter가 absolute start를 적용한 3프레임 segment를 비교한다. dtype/shape와 uint8 논리 바이트를 모두 비교하므로 +0/-0도 구분한다.
+
+FA2 동일 입력 반복의 비트 불일치는 수치 결정성의 판단 불가이며, adapter 품질 실패로 바꾸지 않는다. native repeat가 같은데 adapter 결과가 다르거나, 입력/packet/schedule/binding이 어긋나면 실패다. 등록/소스/불완전 결과 문제는 연구 효능의 음성 결과로 표현하지 않는다.
+
+4. 자원·감독 경로
+supervisor 최초 진입 시각부터 source verification, 준비, 실제 연산, 정리를 포함하여 600초다. 외부 감독은 1.5초의 정리 여유를 두고 중단하며, worker 내부 guard와 별도로 process-group RSS/디스크를 감시한다. CUDA per-process allocator 한도와 peak 기록, RSS 8GiB, 디스크 1GiB, CPU4 조건을 유지한다. 매우 긴 원본 RoPE의 FP64 임시 버퍼 때문에 실제 8GiB 충족은 아직 미측정이다. raw V 로드를 long RoPE 뒤로 미뤘고 임시 decoded/output 참조를 해제했으나, 실행 전 검토로 peak 통과를 보증하지 않는다. 감독의 폴링 간 순간 RSS 초과 가능성 또한 실측 최대 기록/판정과 구분한다.
+
+SIGTERM을 예외 경로로 연결하고 BaseException 정리 경로를 유지한다. Popen 직후 신호 발생 시 소유 정보 등록 전에 빠지는 문제는 Python signal 예외를 보류했다가 PID/starttime 등록 뒤 전달하는 것으로 수정됐다. 정리에서는 살아 있는 직접 Popen 자식과 이미 관측한 PGID 멤버의 시작 시각을 확인한다. 작성자 CPU 합성은 정상 종료, 중간 SIGINT/SIGTERM, 최초 소유 등록 전 SIGINT/SIGTERM 5경로에서 잔존 그룹 없음이다. 이는 임의 악성 process 탈출/setsid에 대한 범용 보증이 아니라 본 단일 Python worker 감독 계약이다.
+
+5. 읽기 전용 감사기의 범위와 자체 검사
+verify_record.py는 torch/GPU/codec/model을 import하지 않는다. 성공 기록에 대해 630개 유일한 (window,block,step), 12개 정확한 endpoint/label, group 5개, PRQ10/FA2 36, 실제 span 읽기 기반 decoder 계수, raw/QK byte verdict, codec 인수 보존, native FP8/INT2 manifest, source와 LOCK 일치, supervisor completed/worker exit0/owned cleanup, 시간·RSS·allocator·디스크를 검사한다. 결과 파일은 읽기 전후 SHA를 비교한다. 출력은 stdout 또는 새로운 audit JSON의 exclusive 생성만 가능하고 원 RESULT/LOCK/RUN/packet은 덮어쓰지 않는다. 실패/판단 불가 원기록의 감사 통과는 실험 성공을 뜻하지 않도록 record_status와 감사 status를 분리한다.
+
+본 검토자는 stdlib만 사용하는 구조 fixture 13사례를 실행했다. 정상 가짜 기록 6,420조건 통과, 읽기 누락·endpoint 중복·잘못된 부분지점 label·PRQ 누락·SDPA·RoPE 계수·인수 변경·scale dtype·frontier·packet 변경·native 반복 불일치·decoder 계수 변조 12가지는 모두 거부했다. 이 fixture의 artifact 파일 확인은 의도적으로 stub으로 처리했고 실제 데이터·수치 연산·최종 파일 감사 실행은 아니다. py_compile도 통과했다.
+
+범위와 다음 단계
+고정된 stage2 범위는 실제 코덱/읽기/RoPE/FA2의 연결 가능성이다. 전체 Self-Forcing inference, 다층 모델, 영상 품질, 속도/메모리 Pareto 또는 신규 방법을 입증하지 않는다. 실제 성공 판단에는 root의 단 1회 실행 결과와 저장 자료 감사, 실제 Opus 검토가 필요하다. 준비 단계에서 하위 검토자를 1명 생성하려 했으나 실제 동시 한도에 도달하여 생성되지 않았다. 반복 생성 없이 기존 코드/원본을 직접 대조했으며 하위 검토 완료로 표시하지 않는다.

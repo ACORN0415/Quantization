@@ -1,0 +1,44 @@
+{
+  "status": "passed",
+  "checks": 10,
+  "CPU_threads": 4,
+  "GPU_calls": 0,
+  "actual_PRQ_calls": 0,
+  "model_loads": 0,
+  "source_sha256": "8500d4dd23db7a4bbdad42cb2dc4d2be643d915c3616749fe45875fb27617ca4",
+  "supervisor_dummy": [
+    {
+      "mode": "normal",
+      "caught": null,
+      "peak_group_RSS_bytes": 8241152,
+      "worker_pid": 602642,
+      "worker_exit_code": 0,
+      "remaining_group_members": {},
+      "owned_cleanup_verified": true
+    },
+    {
+      "mode": "interrupt",
+      "caught": "KeyboardInterrupt",
+      "peak_group_RSS_bytes": 7925760,
+      "worker_pid": 602644,
+      "remaining_group_members": {},
+      "worker_exit_code": -15,
+      "owned_cleanup_verified": true
+    },
+    {
+      "mode": "sigterm",
+      "caught": "InterruptedError",
+      "peak_group_RSS_bytes": 8015872,
+      "worker_pid": 602647,
+      "remaining_group_members": {},
+      "worker_exit_code": -15,
+      "owned_cleanup_verified": true
+    }
+  ],
+  "freqs_shape": [
+    1024,
+    64
+  ],
+  "freqs_dtype": "torch.complex128",
+  "scope": "small synthetic INT2 unpack/metadata/hash contract, not actual PRQ"
+}

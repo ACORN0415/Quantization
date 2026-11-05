@@ -1,0 +1,103 @@
+QVG actual codec stage2 — probe.py 소스·guard 검토 (Opus2, root msg_9e693bf7ab7e 배정)
+시작 UTC: 2026-11-05T16:14:50Z. 작성 UTC: 2026-11-05T16:15:51Z. 준비 마감은 16:18:57.103 UTC다.
+부모: claude-opus-5-5, 기존 session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5. Task/Dispatch: 미연결(terminal_handle_stale).
+이전 partial 보고서들(PROBE_REVIEW 4ebcfe2a, RECORD 역할 공지)은 수정하지 않았다.
+
+검토한 정확한 버전
+- 관측 사본과 원본 probe.py가 모두 sha256 3f90a88649595436094c184a555db2767d7a2331732767ae1dd95a85d339629d다(직접 대조).
+- 같은 폴더의 READY.json(sha 6e2d4e8b…, status "preparation_complete_NOT_GPU_authorization")도 probe.py를 3f90a886으로 묶는다(직접 확인).
+- root가 지정했던 a88e54de 버전은 읽지 않았다.
+- record는 현재 3c4a99bc다. Opus1 범위이므로 소스는 읽지 않았다.
+- REGISTRATION 440dd538(일치). source LOCK은 없다.
+- 이 검토는 실행 수용이 아니다. GPU·PRQ·import·실행은 0이다.
+읽은 범위
+- probe 176-455(rope_functions, verify_lock, worker 전체). guard 부분 456-562는 helper에 배정했다.
+- upstream attention.py의 import와 호출 방식, compress.get_quantize_fn의 triton 분기.
+- 시간 제약으로 1-175(유틸·hash·independent_unpack_cpu)와 563-630(selftest/main)은 grep 목록만 보았다.
+
+판정: 소스 수준에서 실행을 막는 결함은 없다. 잔여 2건이 있다.
+binding과 계수(관찰)
+- 원 경로를 실제로 쓴다.
+  - compress_kv_cache(원본)와 get_quantize_fn(triton-nstages-kmeans-int2)을 쓴다.
+  - 계수 래퍼는 module 속성을 교체하는 방식이다: cm.triton_prq_quantize_tensor, uc.triton_prq_dequantize_tensor, uc/kc.uncompress_kv_cache, flash_attn.flash_attn_varlen_func.
+  - upstream attention.py:119는 flash_attn.flash_attn_varlen_func를 호출 시점에 module 속성으로 찾는다. 따라서 패치가 실제 entry를 센다.
+  - SDPA는 ContractFailure로 금지한다.
+  - 교체가 우회되면 계수 불일치로 fail이 된다(false pass 아님).
+- 층 1개, compress 5회(j=8..40), PRQ 10회, FA2 36회(checkpoint 12 × 실제·기준·반복 3), 630 읽기 = 42×5×3. 모두 require로 강제한다.
+- uncompress 기대 횟수 = packed span 읽기 수 + 독립 decode 5, decode는 그 2배.
+- RoPE: 원 causal_model의 두 함수와 model.py의 rope_params를 AST로만 실행한다. 모델 import는 없다.
+  - freqs = cat(rope_params(1024,44/42/42))로, head_dim 128에서 원 모델 식 d−4(d//6), 2(d//6)×2와 같다. grid는 3×30×52이고 30×52=1560 토큰이다.
+- 공유 packet
+  - 그룹마다 compress 1회. 세 창과 무퇴거 참조 4개 store에 같은 dict 객체를 넣고 'is'로 확인한다.
+  - 압축 전후에 인자와 source의 내용 hash를 비교한다.
+  - 각 block 끝에서 전체 packet content_digest가 불변인지 확인한다.
+  - 압축 입력이 세 창의 pending과 bytes 단위로 같은지 확인한다.
+  - offload/onload는 호출하지 않는다.
+- 비교: 매 읽기마다 raw K/V(read 관찰)와 RoPE Q/K가 무퇴거 참조 slice와 exact로 같아야 한다.
+  - checkpoint에서는 native FA2를 실제·기준·반복으로 비교한다. 반복이 불일치하면 Inconclusive이고, 실제와 기준이 불일치하면 fail이다(등록과 일치).
+- 예외 분류: Inconclusive, Timeout, Memory, OOM은 inconclusive이고 그 밖은 failed다. finally에서 RESULT를 저장한다.
+  - worker 내부 guard는 600초 deadline, RSS, GPU allocator 8GiB, disk 1GiB를 검사한다.
+  - verify_lock: approved status, 필수 source와 quant_videogen 전체 hash, adapter cce683d4, upstream revision과 clean 상태.
+
+잔여(비차단, 기록 필요)
+R1. result['effective_config']의 scale_precision=float8_e4m3fn, use_percentile_clipping=False, num_bits=2는 하드코딩된 서술이다. 실행 객체에서 읽은 값이 아니다.
+    'functions default'라는 출처는 미확인이다. 결과 해석 전에 upstream 기본값과 대조해야 한다.
+R2. CPU SELFTEST V5와 dummy log의 근거가 현재 3f90a886에 대한 것인지는 READY의 결합 목록으로만 확인했다. 내용은 읽지 않았다.
+
+미확인
+- guard/supervisor(456-562). helper 결과는 마감 전에 통합하지 못했다. 아래 helper 절 참조.
+- 1-175 유틸, selftest/main.
+- 실제 GPU 메모리 적합성.
+- 결과 값.
+
+helper
+- native general-purpose 1개(depth 1, 읽기 전용). model 인자를 생략했다(도구 설명상 부모 상속).
+- 분담은 guard/SIGTERM/finally/자원(456-562)이다.
+- 이 보고서 작성 시점까지 결과가 도착하지 않아 통합하지 못했다. 따라서 guard 부분은 이 검토에서 미검토(판단불가)로 남긴다.
+R2 보완(16:15:56Z 관찰): SELFTEST_CPU_V5.json의 source_sha256은 3f90a886이다.
+- 13 checks 통과, supervisor_dummy 5, freqs complex128.
+- scope는 "small synthetic INT2 unpack/metadata/hash contract, not actual PRQ"다.
+- 따라서 CPU 근거는 현재 버전에 결합돼 있다. 실제 PRQ와 GPU 동작의 증거는 아니다.
+
+helper 결과 통합 (도착 후, guard 456-562)
+- helper가 자기 보고한 모델 ID는 "claude-opus-5-5"다(model 생략, 상속). 그 외 provider 근거는 관측하지 못했다. helper도 sha 3f90a886 일치를 보고했다.
+- 부모가 결론을 해당 행 서술과 대조해 통합했고, 판정 근거로는 helper 진술을 인용한다.
+- 충족
+  - 정상 종료, 첫 SIGTERM/SIGINT(SIGTERM은 InterruptedError로 변환; Popen 전후 신호 지연 후 재발생), timeout, RSS/disk 초과 시 finally에서 killpg(SIGTERM)→1초 대기→SIGKILL→재확인을 한다. (pid, starttime)으로 신원을 확인한다.
+  - 600초: 감독 deadline과 worker deadline이 같은지 확인하고, 완료 시각이 초과하면 inconclusive.
+  - 1회: 기존 RESULT 거부, ATTEMPT_CLAIM 'x', 재시도 루프 없음.
+  - GPU 사용 중이면 거부.
+- 수정 권고 (실행 전, 정상 경로를 막지는 않음)
+  G1. finally 도중 두 번째 SIGTERM/SIGINT가 오면 정리가 중단된다. 492에서 원래 핸들러를 복원하기 때문이다. 최소 수정은 finally 진입 시 신호를 defer/ignore하는 것이다.
+  G2. 524 proc.wait(timeout=.2)의 TimeoutExpired와 523의 ProcessLookupError를 잡지 않는다. CUDA 프로세스가 느리게 종료되면 재확인 SIGKILL과 정리 검증 기록(525-533)을 건너뛴다. 결과는 inconclusive로 fail-closed지만 고아 프로세스가 남을 수 있다.
+- 한계(기록)
+  - RSS/disk는 0.2초 샘플 감시이며 setrlimit을 쓰지 않는다. 순간 급증을 놓칠 수 있다.
+  - 마지막 샘플 이후 생긴 미등록 후손과 setsid 후손은 추적하지 못한다(owned_cleanup_verified=False로 보고만 됨).
+  - SIGHUP/SIGQUIT/감독 SIGKILL에는 핸들러가 없다.
+  - idle_gpu는 1회 조회라 조회 직후 GPU를 잡는 경우를 막지 못한다.
+  - allocator fraction은 CUDA context와 Triton의 직접 할당을 포함하지 않을 것으로 추정한다.
+최종 판정
+- probe 3f90a886은 binding, 계수, packet 공유, RoPE, FA2 비교 계약 면에서 소스 수준 차단 결함이 없다.
+- guard는 정상 경로와 첫 신호에서는 성립한다. G1·G2는 실행 전 수정을 권고한다. root가 수정하지 않고 실행한다면 '재신호/느린 종료 시 고아 가능, 결과는 inconclusive'를 조건으로 기록해야 한다.
+- R1(하드코딩된 effective config)도 해결이 필요하다.
+- source LOCK이 없으므로 실행 수용이 아니다.
+종료 UTC: 2026-11-05T16:16:27Z
+
+최종 READY 결합 부록 (root msg_ebc6ad5d2b3f; 위 본문은 수정하지 않음)
+작성 UTC: 2026-11-05T16:17:03Z이며 준비 마감 16:18:57.103 이전이다.
+직접 sha256으로 확인한 것
+- READY.json 6e2d4e8bc5658a08…: status preparation_complete_NOT_GPU_authorization, source_frozen true.
+- READY가 묶은 값: probe.py 3f90a886, SELFTEST_CPU_V5 86a6ed20, SYNTHETIC_PACKET_V5 39cd10a7, READY_KO c10bd991, PREPARATION 8a4b765d, REGISTRATION 440dd538.
+- 현재 probe.py는 3f90a88649595436094c184a555db2767d7a2331732767ae1dd95a85d339629d로, 위 본문에서 검토한 버전과 같다.
+  - 따라서 이 검토의 대상은 최종 3f90 버전이다. a88e54de 초안은 읽지 않았다.
+- SELFTEST_CPU_V5 86a6ed20…의 source는 3f90a886이다. 이것이 V4(이전 source 67f21683)의 근거를 대체한다.
+  - V4 기록은 이전 source에 대한 것이므로 최종 근거로 옮기지 않는다.
+  - V5는 저장된 CPU 합성 기록이다(13 checks, supervisor dummy 5). 나는 재실행하지 않았다. 실제 PRQ와 GPU에 대한 증거는 0이다.
+- verify_record.py의 현재 sha는 3c4a99bc39aa8891…다.
+  - 관리자 관측값과 같다. 그러나 READY.json의 sha256 목록에는 verify_record.py가 없다.
+  - record의 최종 결합은 최종 LOCK/record 측(Opus1 범위)에서 묶어야 한다. 이 보고서에서는 미결합으로 기록한다.
+최종 판정(본문 유지)
+- probe 3f90a886에 소스 수준 차단 결함은 없다.
+- 실행 전 수정 권고 R1(하드코딩된 effective config), G1(finally 중 재신호), G2(느린 종료 시 미처리 예외)는 READY 버전에도 그대로 남는다(동일 hash).
+- source LOCK이 없으므로 실행 수용이 아니다. GPU·PRQ·실행·재검사는 0이다.
+종료 UTC: 2026-11-05T16:17:03Z

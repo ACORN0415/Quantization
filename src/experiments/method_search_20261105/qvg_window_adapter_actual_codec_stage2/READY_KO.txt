@@ -1,0 +1,83 @@
+QVG 실제 코덱 연결 검사: 실행 전 준비 완료
+
+이 문서는 코드 준비 기록이며 GPU 실행 승인이나 실제 코덱 성공 결과가 아니다.
+원 CPU stage1 adapter와 upstream 파일을 변경하지 않았다. 현재 GPU/실제 PRQ/
+모델·영상 실행은 모두 0회다. 실제 Opus 및 독립 Codex의 최종 소스 판단은 root가
+별도 결합해야 한다. GPU worker는 root의 최종 LOCK 없이는 시작하지 않는다.
+
+최종 probe.py SHA256
+3f90a88649595436094c184a555db2767d7a2331732767ae1dd95a85d339629d
+SELFTEST_CPU_V5.json SHA256
+86a6ed20b3120fb48c1f2bccf6329cfe0938268e6866c6ee024ceee2945950af
+CPU 13검사 통과: 작은 INT2 독립 복원식, 원소 바이트·signed zero·singleton stride,
+info/config 포함 내용 hash, 작은 FP8 패킷 저장·재로드, 원본 RoPE 주파수 구성,
+정상/실행 중 SIGINT·SIGTERM/초기 소유등록 전 SIGINT·SIGTERM 프로세스 정리.
+이전 CPU 검사 기록과 로그는 보존했다. 실제 PRQ 결과를 합성 검사로 대신하지 않는다.
+
+실행 명령(root 전용; 현재 실행하지 않음)
+/home/acorn0415/sfq_data/env/bin/python \
+  /home/acorn0415/Quantization/src/experiments/method_search_20261105/qvg_window_adapter_actual_codec_stage2/probe.py \
+  run --lock /root가_확정한_절대경로/LOCK.json
+
+LOCK 계약
+status='approved_for_one_GPU_probe'
+sha256={절대경로:SHA256,...}
+probe, CPUstage1 adapter, PREPARATION, Wan causal_model/model/attention,
+quant_videogen 전체 .py를 필수 검증한다. 실행 환경에서 실제 로드된 flash_attn
+Python/extension 파일도 LOCK에 있어야 한다. 원본 HEAD/clean 및 adapter의
+cce683d4... 해시를 강제한다. root가 만든 NATIVE_SOURCE_CANDIDATES_ROOT.json은
+후보 경로 목록이지 실행 승인 LOCK가 아니다. 리뷰/등록 파일은 root가 최종 결합한다.
+
+실행 흐름과 비교 계약
+- 감독 진입 시각부터 총600초, ATTEMPT_CLAIM.json을 exclusive 생성해 단1회로 제한.
+  root가 GPU 유휴/검토 완료를 확인하며 감독과 worker에서도 실제 compute PID 확인.
+- 원본 PRQ compress_kv_cache를 5회 호출한다. 내부 K/V encoder는10회여야 한다.
+  원64block,1stage,2iteration,256centroid,symmetric INT2 그대로이며 scale은 실제
+  함수의 FP8 e4m3fn 기본값이다. QuantizeConfig에 가상의 scale_precision 필드를 만들지 않는다.
+- 원본 cache class와 실제 uncompress/decoder를 사용한다. 각24frame 압축 입력의
+  마지막 다섯 번째 overwrite 값이 무퇴거 참조 및 세 창에서 일치하는지 확인한다.
+  cache source와 실제 compressor에 전달한 contiguous BHSD 인수의 전후 hash를 각각 검사한다.
+- encoder는 같은 그룹당 한 번만 실행하고 동일 packed dict를 참조+세 창에 공유한다.
+  offload/onload는 호출하지 않는다. info/config/scalar/container까지 내용 hash에 넣어
+  매 블록 후 패킷 불변을 확인하고, CPU snapshot을 packet_00..04.pt에 보존한다.
+- 기존 kv_reuse_preflight의 독립 INT2 unpack 식을 그대로 사용한다. shift6/4/2/0,
+  code-1, D축64 scale 반복, 한 stage centroid gather, FP32 합산 후 BF16이다.
+  clipping/다중stage/zeros가 있는 패킷은 이 검사 범위에서 거부한다.
+- 전체630 read에서 dtype/shape/원소바이트를 확인한다. 참조는 무퇴거 전체 prefix를
+  원본 long-input RoPE로 계산한 뒤 같은 window를 slice하며, q/k/v는 동일하다.
+  원 model.py rope_params AST의 (1024,44)/(1024,42)/(1024,42)를 이어 붙인
+  1024×64 complex128 주파수와 grid[3,30,52]를 사용한다. 모델을 import/로드하지 않는다.
+- W21 checkpoint block7/8/9/41, W63와W126은7/8/21/41, 모두step4다.
+  W126에는부분span이없으므로block21을intermediate_full_horizon_not_partial로표시한다.
+  각12endpoint에서 native attention wrapper fa_version=2를 사용한다. adapter1회와
+  동일 참조입력2회, 총36회 varlen entry를 실제 호출지점에서 계수한다.
+  나머지618callback은 QKV 전달 검증 후 None을 반환하며 attention 값을 만들지 않는다.
+  이를 전체630회 native attention 검증이나 fake attention 계산으로 표현하지 않는다.
+  SDPA로 넘어가면 실제 함수 entry에서 계수한 뒤 즉시 실패한다.
+- native 같은입력 반복이 다르면 판단불가, 바이트/패킷/경로가 다르면 실패한다.
+  허용오차를 변경하거나 다른 seed로 재시도하지 않는다.
+
+비용·감독
+GPU allocator 8GiB/RSS8GiB/CPU4/신규disk1GiB를 유지한다. 전체 prefix RoPE의
+FP64 임시값이 크므로 rawK와 RoPE를 먼저 계산하고 그 임시값이 해제된 뒤 rawV를
+읽는다. 세 window도 순차 처리하고 slice/callback 참조와 불필요 decoder 출력을
+해제한다. 이것은 메모리 절감 실측이 아니며 실제 peak가 상한에 걸리면 판단불가다.
+정상/실패/시간초과에서 소유 process group을 정리한다. 생성 중 신호는 소유 PID와
+시작시각을 등록할 때까지 defer한 뒤 처리하며, 종료 후 재사용된 PID/PGID에
+무조건 신호를 보내지 않는다. cleanup을 위해 동일600초 안에1.5초를 남긴다.
+SIGKILL처럼 감독 자체를 잡을 수 없는 강제 종료까지 Python이 처리한다고 주장하지 않는다.
+
+산출물 schema
+RESULT.json: status, started/completed/deadline/wall, source_sha256, binding,
+codec_config/effective_config, reads630, compressions5, attention_records12,
+cache_read_records 및 실제 counters, peak RSS/GPU, output disk, CPU thread수.
+reads는 window/block/step/start/end/frontier/capacity/global/local 주소와4개 byte verdict.
+compressions는 source/actual argument hash·보존 verdict·독립 decoder verdict·패킷 전후
+hash 및 실제 packet 파일의 path/hash/size. info/config 원형은 저장 CPU snapshot에 포함.
+SUPERVISOR.json: completed일 때만 성공 후보. worker_exit_code0, 절대마감,
+소유 group 정리 확인, 최대 groupRSS, RESULT 파일hash를 함께 확인해야 한다.
+감사 verify_record.py는 별도 작성자의 파일이며 저장 scalar/hash 감사를 수행한다.
+감사만으로 실제 텐서 비교나 CPU unpack을 독립 재실행했다고 말하지 않는다.
+
+통과해도 확인되는 것은 기존 QVG 기준선의 제한된 실행 연결 가능성이다.
+전체 원본 pipeline/영상 품질/속도/장기 창 유용성/새 방법 신규성은 입증하지 않는다.

@@ -1,0 +1,56 @@
+QVG actual-codec stage2 — verify_record 독립판정 source 예비검토 (실제 Opus1, root msg_9e693bf7ab7e 배정)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음(역사적 terminal_handle_stale).
+실제 시작 2026-11-05T16:14:50Z, 준비 마감 16:18:57Z 직전 종료. 읽기 전용: import/실행/torch/GPU/PRQ/수정 0.
+reviewed SHA: verify_record.py 3c4a99bc39aa8891a2c3ad90d6507556104447f0606ca11abc482d59efcbdd92(관리 고정사본과 원본 동일, 262행 전부 읽음).
+참조 SHA: probe.py 3f90a886…(현재, 내용 미검토 — Opus2 범위), REGISTRATION 440dd538…, READY.json은 probe 쪽 준비 기록이며 verify_record 해시는 포함하지 않는다.
+root 지정 a88e54de/28f451dc 버전은 읽지 않았다(현재 파일과 다르고 사본 없음). sourceLock/최종 binding은 미생성 → 이 검토는 예비이며 최종 수용 아님.
+helper: 이번에는 만들지 않았다. 사유: 배정 후 마감까지 약4분이라 분담·대조 시간이 없었다. 부모가 전부 직접 수행.
+
+판정: 예비 수용 가능(구조·무결성 감사기로서). 차단 결함 없음. 단 아래 V1은 실행 결과 해석 전에 명시가 필요하다.
+
+1. 독립성/닫힌 고리 — 선언값과 관측의 구분
+ verify_record는 docstring·scope에 밝힌 대로 수치 판정을 재계산하지 않는다. raw_k_equal/raw_v_equal/q_rope_equal/k_rope_equal,
+ independent_decode_equal, repeat_equal, adapter_reference_equal, source_matches_windows, codec_arguments_unchanged, packet before/after hash,
+ counters(compress 5, prq 10, fa2 36, sdpa 0, decode/uncompress/rope)는 모두 probe가 기록한 값을 읽어 "있는지·기대값과 같은지"만 본다.
+ 따라서 이 감사가 독립적으로 보장하는 것은 (a) 630 읽기·12 endpoint·5 압축의 정확한 coverage와 중복 없음, (b) 절대 window/capacity/frontier/
+ index 산술(독립 재계산), (c) 저장 artifact·bound source의 바이트 해시, (d) 자원·시계·supervisor·LOCK 결합이다. 수치 동등성 boolean은
+ probe의 자기 보고이며, 이를 독립 관측으로 표시하면 안 된다(보고서 사용자 주의). 이는 설계상 한계이지 결함이 아니다.
+ 독립 재계산 항목: window/frontier/index 산술, RoPE 호출 수 공식(210 + Σ5(1+min(b+1,W/3))), uncompress 기대치(5+관측 span 합)와 decode=2배.
+
+2. 누락·false pass 방지
+ - coverage는 집합 일치+중복 금지로 정확하다. 기대 checkpoint(W126 block21 = intermediate_full_horizon_not_partial) 등록과 일치.
+ - 비통과 record는 사유 필드만 확인한다. audit의 status='passed'는 "감사 검사 통과"이고 record_status가 따로 있으므로, 소비자가 audit status를
+   실험 성공으로 읽지 않게 해야 한다(경미).
+ - 'some_bound_sources_verified'(>5개)는 약하지만 required_names 11개·flash .so 결합 검사가 보완한다.
+ - packet manifest의 dtype/shape/logical bytes 검사는 있다. 다만 packet 내용 hash는 probe 기록값 비교(before==after)와 artifact 파일 해시뿐이다.
+
+3. [V1, 중간 — 판정 분류의 독립 검증 부재]
+ record status가 'failed'/'inconclusive'이면 이유 필드만 확인하고 그 분류가 등록 규칙(바이트/packet/호출수 불일치 = fail, native 반복
+ 비결정성·OOM·시간초과·검토미완 = inconclusive)에 맞는지 보지 않는다. 예: repeat_equal=False가 아닌 raw_k 불일치를 'inconclusive'로 기록해도
+ 감사가 잡지 못한다. 실행 전, 비통과 record에도 분류 근거 필드(원인 종류·해당 검사)를 요구하고 이를 등록 규칙과 대조하는 검사를 넣거나,
+ 최소한 결과 해석 시 비통과 분류를 사람 검토로 확인한다고 등록에 명시할 것을 권고한다.
+
+4. 자원·supervisor 결합
+ peak RSS·GPU allocator 8GiB, 디스크 1GiB, worker wall ≤600s, started≤completed≤deadline, claim/supervisor 동일 600s 창·attempt 1,
+ supervisor 완료·worker exit0·result sha 결합, 그룹 RSS·정리(remaining_group_members 빈 dict), LOCK status·source 일치를 확인한다. ✓
+ 이 값들도 SUPERVISOR/ATTEMPT_CLAIM이 기록한 값이며 감사가 OS 수준으로 재관측하지 않는다.
+
+5. 미확인
+ probe.py 내용(실제 호출 계수가 진짜 계측인지), 원 native binding의 실제 import 경로, SELFTEST_CPU_V5 내용, 비결정성 분류 로직(probe 측).
+ 최종 READY/sourceLock의 verify_record 해시가 3c4a99bc와 다르면 변경 범위 재검토가 필요하고, 누락되면 이 검토는 inconclusive다.
+실제 끝: 2026-11-05T16:15:27Z
+
+[최종 READY binding 부록 — root msg_ebc6ad5d2b3f, 본문(SHA cc5388a7fba74ecc94c0f68135f2e896536fcc3ab333ace9c7963f100aa6b968) 불변, 2026-11-05T16:16:42Z~]
+- 최종 READY.json 6e2d4e8b…(직접 계산 일치), READY_KO c10bd991…, probe.py 3f90a886…, SELFTEST_CPU_V5 86a6ed20…, REGISTRATION 440dd538… 일치.
+  probe는 a88 초안이 아니라 최종 3f90a886이다(내 검토 범위 아님, Opus2 담당).
+- verify_record.py 현재 SHA 3c4a99bc… = 내가 본문에서 검토한 reviewed SHA와 동일. 따라서 본문 판정이 최종 verify_record에 그대로 적용된다.
+- 단 READY.json의 sha256 목록(probe, SELFTEST_V5, SYNTHETIC_PACKET_V5, READY_KO, PREPARATION, REGISTRATION)에는 verify_record가 없다. READY_KO 79행은
+  "별도 작성자의 감사 파일"이라고만 적는다. 즉 verify_record 3c4a99bc의 결합은 관리자 관측과 이 검토의 해시뿐이고 READY/source lock에 묶이지 않았다.
+  root의 최종 LOCK에 verify_record 3c4a99bc를 넣어야 감사기 버전이 고정된다(넣지 않으면 실행 후 감사기 교체를 막을 수 없음).
+- 이름 수준 호환: verify_record가 읽는 record 필드명 31개(raw_k_equal, repeat_equal, expected_uncompress_calls, owned_cleanup_verified 등)가 모두
+  probe.py 3f90a886 소스에 문자열로 존재함을 grep으로 확인했다. 의미·값 생성 경로의 대응은 확인하지 않았다(Opus2 범위).
+- V5/V4 근거: SELFTEST_CPU_V5는 probe 쪽 CPU 기록이며 verify_record의 실행 검증이 아니다. verify_record 자체의 13개 가짜 record 검증 완료는
+  writer 확인을 root가 보고한 것으로, 저장 파일을 내가 보지 않았다(미확인). V4(67f21683) 근거를 V5/현 소스로 자동 이전하지 않는다.
+- helper: 이번 부록도 0(마감 2분 전, 부모 직접). 판정 변경 없음: 예비 수용 가능, 차단 결함 없음, V1(비통과 분류 미검증) 유지,
+  추가 조건 = 최종 LOCK에 verify_record 해시 결합. 실행·GPU·LOCK 승인 아님.
+부록 끝: 2026-11-05T16:17:06Z

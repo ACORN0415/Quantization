@@ -1,0 +1,18 @@
+{
+  "status": "preparation_complete_NOT_GPU_authorization",
+  "created_utc": 1793895243.9100232,
+  "sha256": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/qvg_window_adapter_actual_codec_stage2/probe.py": "3f90a88649595436094c184a555db2767d7a2331732767ae1dd95a85d339629d",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/qvg_window_adapter_actual_codec_stage2/SELFTEST_CPU_V5.json": "86a6ed20b3120fb48c1f2bccf6329cfe0938268e6866c6ee024ceee2945950af",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/qvg_window_adapter_actual_codec_stage2/SYNTHETIC_PACKET_V5.pt": "39cd10a7070dd43e2aa5fb8b1468447b45654ad9274af2af9792c147cb1f0adb",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/qvg_window_adapter_actual_codec_stage2/READY_KO.txt": "c10bd9916bf50ce8bc7463ca6707ddf57f94b3942a9495ad03988b0e185bbc17",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/qvg_window_adapter_actual_codec_stage2/PREPARATION.json": "8a4b765d8a1bf8e7afeb03535f3802746629ff018c5471b42ad1b8bc6b8a3ddf",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/qvg_window_adapter_actual_codec_stage2/REGISTRATION.json": "440dd53833fdfbb2ad0389fd281280393b21e48952ba86fbd6b8095fe9895907"
+  },
+  "GPU_calls": 0,
+  "actual_PRQ_calls": 0,
+  "model_loads": 0,
+  "source_frozen": true,
+  "independent_reviews": "root/actual Opus acceptance is separately recorded; not claimed here",
+  "command": "/home/acorn0415/sfq_data/env/bin/python /home/acorn0415/Quantization/src/experiments/method_search_20261105/qvg_window_adapter_actual_codec_stage2/probe.py run --lock <root final absolute LOCK path>"
+}

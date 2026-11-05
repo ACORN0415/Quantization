@@ -1,0 +1,63 @@
+{
+  "updated_utc": 1793894907.191508,
+  "source_scope": "Entire first probe.py and verify_record.py draft read by root; not final source acceptance",
+  "GPU_or_PRQ_execution_by_root": 0,
+  "findings": [
+    {
+      "id": "R1",
+      "issue": "Read-only audit lacked exact checkpoint coverage and complete resource/supervisor binding",
+      "owner": "method_gap_codex",
+      "action": "Require12 exact window/block/step records, fixed counters/config and native fallback0, supervisorcompleted+workerexit0/caps",
+      "status": "requested_before_final_READY"
+    },
+    {
+      "id": "R2",
+      "issue": "Supervisor exceptBaseException does not catch default SIGTERM; child in new session can survive parent termination",
+      "owner": "fair_comparison_codex",
+      "action": "SIGTERM handler raises through cleanup; CPU dummy normal/interrupt/SIGTERM proof",
+      "status": "revised_source_read_and_CPU_V2_record_checked_by_root; final source/Opus review pending"
+    },
+    {
+      "id": "R3",
+      "issue": "Synthetic256-row linspace phase table differs from original1024-row model RoPE parameters",
+      "owner": "fair_comparison_codex",
+      "action": "Extract original rope_params AST frommodel.py and followcausal_model594-599 construction, recordhash/shape/dtype",
+      "status": "revised_source_read_and_CPU_V2_record_checked_by_root; final source/Opus review pending"
+    },
+    {
+      "id": "R4",
+      "issue": "W126 never has a partially visible packed span",
+      "action": "Preserve W126 no-eviction reference; labelblock21 intermediate_not_partial; realpartial coverage W21/63",
+      "status": "accepted_and_preregistered_before_GPU_observation"
+    }
+  ],
+  "memory_review": "Full-prefix FP64 reference RoPE may peak near8GiB. Writer sequences rawK/RoPE before rawV, frees sequential window state, shares read-only packets and uses unchanged cap. Actual peak unmeasured.",
+  "remaining": "Final source READY, independent Codex review and actual Opus reviews; execution LOCK not created, GPU0.",
+  "CPU_V2_record": {
+    "sha256": "73c38460fa9f9fdaa26f56828e6b200acaa751bfc3e377829c469ea01bb0331f",
+    "source_sha256": "8500d4dd23db7a4bbdad42cb2dc4d2be643d915c3616749fe45875fb27617ca4",
+    "checks": 10,
+    "signals": [
+      [
+        "normal",
+        true
+      ],
+      [
+        "interrupt",
+        true
+      ],
+      [
+        "sigterm",
+        true
+      ]
+    ],
+    "root_reexecuted": false
+  },
+  "runtime_binding_discovery": {
+    "method": "importlib.util.find_spec flash_attn; no module/torch/GPU import",
+    "bound_candidate_files": 59,
+    "package_extension_total_bytes": 604351966,
+    "library_environment": "/home/acorn0415/sfq_data/env",
+    "actual_library_hashes_frozen": false
+  }
+}

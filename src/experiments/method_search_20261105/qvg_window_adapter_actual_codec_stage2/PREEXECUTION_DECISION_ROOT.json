@@ -1,0 +1,14 @@
+{
+  "status": "preparation_pass_ready_for_registered_single_execution",
+  "decided_utc": 1793895480.0634615,
+  "probe_sha256": "3f90a88649595436094c184a555db2767d7a2331732767ae1dd95a85d339629d",
+  "verifier_sha256": "3c4a99bc39aa8891a2c3ad90d6507556104447f0606ca11abc482d59efcbdd92",
+  "reviewer_model": "claude-opus-5-5",
+  "R1_default_config_resolution": "Root read functions.py261-271,317-324 and compress TRITON_PRQ branch: defaults FP8e4m3fn and clippingFalse are passed to real.prq; num_bits2 from get_quantize_fn. Effective config is source-derived annotation, not runtime introspection; actual scales dtype checked by independent unpack.",
+  "V1_failure_classification": "Any failed/inconclusive result requires root manual traceback/counter/reason review against registered categories; audit success alone never constitutes experimental success.",
+  "G1_G2_guard_residual": "Repeated signal during cleanup or unusually slow termination can interrupt cleanup; source unchanged. Accept bounded normal/first-signal probe only. Root must verify owned GPU process exit and GPU idle after run; no later GPU launch until cleanup confirmed. No universal signal-cleanup guarantee.",
+  "runtime_claims": "No actual PRQ/GPU/model/video observation before this decision; one-layer compatibility only.",
+  "caps_unchanged": true,
+  "independent_Codex_review": "REVIEW_CODEX_KO.txt9ee26076",
+  "goal_achieved": false
+}
