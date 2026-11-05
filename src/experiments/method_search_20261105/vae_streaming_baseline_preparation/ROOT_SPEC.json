@@ -1,0 +1,36 @@
+{
+  "status": "preparation_only",
+  "start_epoch": 1793901534.4134738,
+  "code_preparation_deadline_epoch": 1793902734.4134738,
+  "final_source_review_deadline_epoch": 1793903334.4134738,
+  "separate_phases": "20mincodeandCPUstatic/syntheticpreparation +10minactualClaudesourcereview,all30min; no silent extension.",
+  "question": "Can native BF16 decoder outputs be emitted toCPUwithout accumulating fullGPUvideo,withall501logicalRGBbytes unchanged? Actual memory/time andfeaturestatepayload measured,notnewmethodclaim.",
+  "inputs": "existingp00_s303_BF16latent andsameoriginalVAEcheckpoint, bothfreshBF16arms",
+  "baseline_contract": [
+    "Preservenative latentdenormalization, full126frameconv2call, exact126decoder.forwardcallshapes/order, nativecacheboundaries. Do not call cached_decode onshorterchunksandassumeconv2mathunchanged.",
+    "Onlychangeoutputaccumulation/float/stacklifetime. Canextractoriginalnative decodeAST andreplaceoutputcatwithslabemitter, withstrictASTwhitelisting. Do notmodifyupstream/corefiles.",
+    "Botharms useidenticalGPUFP32float/clamp/affine order; streaming emitsrawRGBslabs toCPU anddoesnotretainGPUlist. FullreferenceandstreamRGBcomparedperframe logicalbytes/dtype/shape onCPU.",
+    "Freshcheckpointarms, TF32off/autocastoff/benchmarkoff/deterministicTrue. Resetpeakstats onlyafterpreviousarmGPUtensorsfreed; reportcommonmodel/timeprovenance andsingle-orderlatencydescriptiveonly.",
+    "Observeuniqueactualfeaturestate tensor/storage bytes andcountatfirst/steady(index64)/lastbeforeclear,distinguishtransientbuffers/outputmemory. Stateinspectionmaynotaddquant/decodeoperations."
+  ],
+  "proposed_execution_not_authorized": {
+    "GPU_processes": 1,
+    "whole_video_decodes": 2,
+    "native_decoder_forward_calls": 252,
+    "new_generator_calls": 0,
+    "wall_seconds": 600,
+    "CPU_threads": 4,
+    "RSS_bytes": 12884901888,
+    "GPU_allocator_bytes": 23622320128,
+    "output_bytes": 268435456
+  },
+  "gate": "all501exactRGBlogicalbyteidentity andregisteredcallshape/cachecontracts required; mismatchinvalidatesstreamingimplementation,numericprecisiontolerancemustnotberelaxed. Reportpeak/timechangesdescriptively,do notinventqualityorresearchsuccesspercentage.",
+  "failure": "No automaticretry/addquantarm/otherseed;runtimeinvalidorincompletepreserved.",
+  "limits": "No claimofzerofloatingdifferencewithoutactualtest,nospeed/Pareto/generalizationornewmethodsuccessclaimfromtwodecodes.",
+  "workers": [
+    "method_gap_codexcodewriter",
+    "existingactualOpus1independentdesignandfinalcodereviewer"
+  ],
+  "permission": "source/stat/metadata andCPUsynthetic tests;model/VAE/GPU/originallatentload0duringpreparation. OnehelperforAST/mathorcachecontractallowedsharedtime.",
+  "writer_scope": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation"
+}

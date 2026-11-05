@@ -1,0 +1,28 @@
+{
+  "created_epoch": 1793901534.4133766,
+  "status": "do_not_adopt_standalone_state_quantization",
+  "references": [
+    {
+      "source": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/VAE_STATE_QUANTIZATION_REVIEW_CODEX_KO.txt",
+      "copy": "CODEX_FIXED_KO.txt",
+      "sha256": "77eac0c8de220f95f628142963cb067e2202f14c83f61b07c8414ff926fb11bd"
+    },
+    {
+      "source": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/VAE_STATE_QUANTIZATION_REVIEW_OPUS_KO.txt",
+      "copy": "OPUS_FIXED_KO.txt",
+      "sha256": "fcf734e9d8a4361bbf2296e8f8f82e5a8e06d1b0ca6383d6b5d33ea81f727283"
+    }
+  ],
+  "agreement": "No actualfailedmemory/time requirementobserved,existingBF16fits24GB,andstrongoutputstreaminguncompared. NarrowINT8portnotnoveltyevidence.",
+  "root_resolved_differences": [
+    "Exactstatepayloadsourceestimate1,888,573,440B(1.759GiB), notGPUpeak; Opusrounded1.9GBiscompatibleestimate. State remainsafteroutputstreaming.",
+    "CodexfullLightVAEpaper/codeconfirmsprojectedhistory storage; Opusabstract-onlyreadingcannotexcludestatecompression. Broadstatecompressionnoveltyalreadyweak.",
+    "SpatialtilingisnotautomaticallyexactbecausemiddleAttentionBlockusesglobalspatialattention. ExactConv3Dloweringcanincreasememory,notuniversalpackingfix.",
+    "Noactualdeploymentcapacityfailureexists; rootwillnotmanufacturetinycaptojustifycompression.",
+    "RootchoosesoneBF16streamingreferencecomparisonasstrongbaselineimplementationwork,notnewmethodsuccess."
+  ],
+  "next_resource": "PrepareexactarithmeticBF16native-vsCPU-output-streaming2decode comparison,verifyall501RGBbytes andactualstatepayload/lifetimes/peak;noextraquantizationarm. ExecutionseparatelyregisteredaftercodeandactualClaudesourcereview.",
+  "separate_draft": "Storedstate+integeroperator scale-boundarydraft isseparatelycriticizedbyfair/Opus2before18:15;notadoptedanddoesnotreopenthisgenericstate-onlycandidate.",
+  "new_GPU_or_tensor_calls": 0,
+  "goal_achieved": false
+}
