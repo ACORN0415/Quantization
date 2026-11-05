@@ -1,0 +1,26 @@
+DINO-WM setup — ROOT_MANIFEST_DRAFT 결합 부록 (실제 Opus1, root msg_0fa5ebab1c8a)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음.
+시각: draft 자료 수신·시작 2026-11-05T20:13:59Z, 보수 상한 20:20:45.778Z(원 완성 source accepted+600s), outer 20:32:56Z. 새 600s 부여 없음.
+원 REVIEW_OPUS_KO.txt(01422978…) 불변. 실행·원격 요청·바이트 재검증 0, helper 0.
+SHA(직접 계산): ROOT_MANIFEST_DRAFT 3f06e1c86a127971…, setup_runtime.py 86360bd95ea5af8c…(동결본 그대로), ROOT_LICENSE_READBACK 91ef5cdb4d460309…, ROOT_SPEC ab2bae6667186c09….
+읽은 범위: draft JSON 전 필드(파이썬 json으로 요약), runner의 check_manifest/imports 계약(이전 전체 검토 기준). LICENSE readback 본문과 SOURCE_MANIFEST_PROPOSED·evidence 파일 내용은 미열람.
+
+판정: draft는 동결 runner 스키마와 양립하며, 현재 상태로는 runner가 실행을 거부한다(의도대로).
+ - 결합: runner_sha256 = 현재 setup_runtime.py, root_spec_sha256 = 현재 ROOT_SPEC(직접 대조 일치). interpreter·bwrap SHA, env guard 11개, expected torch 2.6.0+cu124·경로 지정.
+ - 거부 유지: status ROOT_DRAFT_PENDING…(승인 문자열 아님), root_execution_authorized False, actual_claude_source_review_completed False, complete False, approved_stages [] →
+   check_manifest가 첫 줄부터 거부.
+ - artifact: 26개 = source 25(revision be738be3…/QuantWM과 7764ea0f…/dinov2 두 고정 commit, 모두 40자 git blob·revision 보유) + weight 1, wheel/sdist 0, 합계 88,383,366B
+   (root 요약과 일치). HTTP cap 100,663,296B ≥ 합계. host는 raw.githubusercontent.com·dl.fbaipublicfiles.com뿐. protected 이름 첫 토큰 검사(R2)에 걸리는 경로 0.
+ - LICENSE 추가: sources/dinov2_repo/LICENSE, 11,359B, sha256·git blob·revision 고정 — runner 계약(source에 blob·revision 필수)과 양립. 다른 코드 변경 없음.
+ - package 0: packages []이며 artifacts에 wheel/sdist가 없어 install 단계는 빈 overlay 경로(runner 228행)로 간다.
+ - 공식 weight: sha256 None, root_accepts_first_acquired_sha False, official_provenance 경로·해시 지정, first_acquired_sha_is_not_published_trusted_digest True.
+   → 현재는 runner 69–71행에서 거부된다. 실제 취득하려면 root가 승인 시 root_accepts_first_acquired_sha를 True로 명시해야 한다(조용한 수용 불가 — 바람직). pending에
+   "first acquisition SHA must be independently checked before model load"가 남아 있고, 이는 runner가 강제하지 않는 향후 model 단계 조건이다(이전 R1 유지).
+ - model_epoch 'latest'와 root_exact_model_checkpoint(model_latest.pth)가 draft에 기록 — 이전 runtime 검토의 파일명 지적은 이 설정에서 반영됨.
+ - CPU imports: accelerate·numpy·einops(environment), dinov2.models.vision_transformer(source), source_python_paths ['sources/dinov2_repo']. runner의 scope·경로 규칙과 양립.
+   잔여: checkpoint 클래스 모듈(models.vit/vqvae/proprio, QuantWM source 경로)은 import 목록·sys.path에 없어 이 단계가 unpickle에 필요한 프로젝트 모듈의 import 가능성을 확인하지 않는다
+   (차단 아님, 범위 한계로 기록). vision_transformer 모듈 수준에서 nn.Module 생성이 있으면 deny로 실패할 수 있음(미확인).
+ - 한도: acquire 600s/256MiB/2GiB/HTTP 96MiB, install 60s, imports 120s, CPU 2 — runner의 양수·CPU 2 요구와 양립.
+미확인: LICENSE readback 내용, source closure provenance 파일, env guard 11개의 구체 경로, dinov2 vision_transformer의 import 부작용.
+root의 실제 승인·prelaunch commit·실행을 대신하지 않는다.
+실제 끝: 2026-11-05T20:14:33Z

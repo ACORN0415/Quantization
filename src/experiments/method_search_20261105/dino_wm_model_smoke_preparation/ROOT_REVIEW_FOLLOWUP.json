@@ -1,0 +1,20 @@
+{
+  "status": "explicit_readonly_followup_after_original_review_window_missed",
+  "created_epoch": 1793912011.7775173,
+  "original_code_deadline_epoch": 1793910072.9752107,
+  "original_claude_outer_epoch": 1793911272.9752107,
+  "prepared_epoch": 1793909639.52297,
+  "prepared_before_original_code_deadline": true,
+  "source_sha256": "3558180bd58aad11bea0bdb72df57ab1a6db3dd3f03c64c58519b31347ef3e2f",
+  "cause": "Codex final response failed on usage limit; frozen READY/report existed before the code deadline. Root addressed account-warning question; no final Opus code review file exists at readback. Do not mark original review completed.",
+  "new_scope": "One read-only final-source review of frozen model_smoke/READY/report/example by the same actual Opus2. Root may read/complete authority metadata, no model execution before review.",
+  "actual_review_seconds_from_receipt": 600,
+  "hard_outer_epoch": 1793913211.7775173,
+  "source_changes": 0,
+  "GPU_or_model_loads_before_review": 0,
+  "no_account_model_retry_or_substitution": true,
+  "outputs": [
+    "REVIEW_OPUS_FOLLOWUP_KO.txt"
+  ],
+  "root_execution_authorized": false
+}
