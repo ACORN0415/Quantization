@@ -1,0 +1,39 @@
+BF16 출력 streaming baseline — 최종 worker source 전체 검토 (실제 Opus1, root msg_9b811e1bf898)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음(역사적 terminal_handle_stale).
+실제 시작 2026-11-05T18:10:11Z, 관리자 고정 마감 18:20:06Z. 첫 독립 설계(6193853c…)는 worker 미열람 상태로 작성됐고 그대로 보존한다.
+helper 0: 남은 시간이 짧아 분할보다 부모 단독 전체 판독이 정확하다고 판단. 실행 0(selftest/import/load/GPU 없음), source·기록 수정 0.
+SHA(직접 계산): worker.py dac8d2c40d081d50940d566a730aa50c462d78e6c610a85e2695678c8e41622a, selftest.py 2ea3174a…, SELFTEST.json 911d473a…, READY.json 83089c30….
+SELFTEST.source_sha256 = 현재 worker, selftest_sha256 = 현재 selftest.py → 기록과 소스 버전 일치. READY.files의 worker 해시도 일치.
+읽은 범위: worker.py 1–289 전체. selftest.py는 읽지 않았고 SELFTEST.json 요약·40개 검사 이름만 확인. PROPOSAL_KO 미열람. 원 vae.py/wan_wrapper 해당 행은 첫 설계 때 읽은 것과 대조.
+
+판정: 차단 결함 없음 — 실행 계약으로 수용 가능(실행 승인 아님). 잔여 위험 2건(아래 W1·W2)은 결과 해석 전에 root가 알고 있어야 한다.
+
+설계 계약·반례 적용(행)
+ - AST: 원 WanVAE_.decode를 추출(38–45), 화이트리스트로 첫 출력 emit+del, 이후 cat을 emit+del, return None만 바꾸고(46–74), 역변환이 원 AST와 정확히 같음을
+   assert(70–71). 원 decode 첫/마지막 clear_cache·루프·_conv_idx 리셋·decoder 호출문을 문자열 AST로 고정 검사. denorm·conv2는 원 코드 그대로 전체 126에 1회.
+ - reference(R7): 원 wrapper 클래스 AST를 그대로 exec(82–89), native 팔은 decode_to_pixel 원 경로 사용(248–252). stream 팔만 재구성 decode.
+   stream 입력 준비는 원 wrapper의 device/dtype·scale·zs 대입 3개를 그대로 복사(90–96).
+ - trace: conv2 1회 (1,16,126,60,104), decoder 126회 입력 (1,16,1,60,104), 출력 T=1 후 4, 합 501, clear 2회 assert(138–149). 두 팔 trace 동일 assert(273).
+ - 후처리(설계 2c): 두 팔 모두 GPU에서 float→clamp(-1,1)→×.5→+.5→clamp(0,1). native는 wrapper의 .float().clamp_ 후 mul_/add_/clamp_(251),
+   stream은 normalize_slab(100–104). in-place는 .float()가 만든 새 텐서에만 적용(R1 안전). 이전 precision probe의 CPU affine과 다르다는 점을 결과에 기록(282).
+ - 비교: CPU에서 프레임별 [3,480,832] FP32 contiguous로 논리 원소 바이트 비교(106–117, 232–239), 501개 전부 일치 assert, 완화 없음. reference는 미리 할당한
+   CPU [501,3,480,832]에 프레임 단위로 채워 전체 추가 contiguous 사본을 만들지 않음(R5). GPU→CPU는 동기 .to('cpu')라 non_blocking 수명 문제 없음.
+ - state 관찰(R2, R6): forward hook에서 i=0/64/125 시점 feat_cache의 tensor 수·storage data_ptr로 unique 저장소 바이트만 읽음, 문자열('Rep') 슬롯 별도 기록(119–133).
+   GPU 연산 추가 없음.
+ - 팔 수명(R4): 팔마다 gc/empty_cache 후 memory_allocated==0 assert, peak reset, 새 wrapper 생성·FP32 체크포인트 assert 후 BF16(212–220), 끝에 hook 제거·
+   clear_cache 원복·del 후 다시 0 assert(266–268). 순서 고정(native→stream), peak·시간은 서술용.
+ - 입력(R8): latent sha는 LOCK, shape/dtype/유한 assert, 실행 전후 digest 동일(203–206, 275). 체크포인트 sha를 팔마다 LOCK과 대조.
+ - LOCK·한도: LOCK status·limits·gate 문자열·필수 9개 파일 해시 결합(150–157), 실행 전후 전 파일 해시 재검증. RUN.json open('x')로 1회. watchdog 스레드 0.1s
+   주기로 wall 600s·RSS 12GiB·출력 256MiB·GPU allocator 22GiB 감시, 초과 시 WATCHDOG_FAILURE 후 os._exit(124); set_per_process_memory_fraction로 22GiB 제한.
+   디스크 합산은 rglob 중 FileNotFoundError 무시(23–28). SIGINT/SIGTERM은 KeyboardInterrupt로 FAILURE 기록.
+
+잔여(차단 아님)
+ W1 assert_trace가 state 상수(tensor 수 30/32/32, unique storage 920,325,120 / 1,888,573,440 / 1,888,573,440B)를 하드코딩한다(147–149). selftest는 toy decoder라
+   이 상수를 검증하지 못했다. 내 정적 추정(~1.9GB)과 크기는 맞지만, 실제 모델과 1바이트라도 다르면 유일한 실행이 무효가 된다. 관찰값은 기록하되 assert에서
+   빼거나, 상수의 산출 근거를 LOCK 전에 명시할 것을 권고.
+ W2 (설계 R3) cuDNN 알고리즘이 가용 workspace에 따라 달라질 가능성은 다루지 않는다. 바이트 불일치는 assert 실패로 일괄 "inconclusive_invalid_or_resource_failure"가
+   되어 구현 오류와 알고리즘 차이를 구분하지 못한다. gate 완화 없이 결과 해석 시 이 교란을 함께 기록할 것.
+ 기타: psutil 의존(가용성 미확인), watchdog과 본 스레드가 state dict를 동시에 기록(저장 내용의 경미한 시점 불일치 가능), 체크포인트를 팔마다 500MB 재해시(수 초).
+
+미확인: selftest.py 본문과 40개 검사의 실제 판정 로직, PROPOSAL_KO, 실제 GPU에서 trace 상수·바이트 일치·메모리/시간. 40 synthetic은 실제 모델/GPU 근거가 아니다.
+실제 끝: 2026-11-05T18:11:24Z

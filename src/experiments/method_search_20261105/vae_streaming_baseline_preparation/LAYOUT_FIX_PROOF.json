@@ -1,0 +1,33 @@
+{
+  "status": "passed",
+  "worker_diff_only": "stream argument zs -> zs[0].unsqueeze(0)",
+  "AST_after_inverse_equals_previous": true,
+  "python": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 16:09:02) [GCC 11.2.0]",
+  "original_worker_sha256": "dac8d2c40d081d50940d566a730aa50c462d78e6c610a85e2695678c8e41622a",
+  "new_worker_sha256": "2258ca9de39cffcbb66feb2fc2a0ff554208be7003a53cc8df24d95927ac6512",
+  "actual_source_wrapper_invoked_on_fake_CPU_decoder": true,
+  "synthetic_shape": [
+    1,
+    126,
+    16,
+    60,
+    104
+  ],
+  "native_decode_stride": [
+    99840,
+    6240,
+    99840,
+    104,
+    1
+  ],
+  "old_direct_zs_stride": [
+    12579840,
+    6240,
+    99840,
+    104,
+    1
+  ],
+  "GPU_calls": 0,
+  "original_tensor_loads": 0,
+  "model_loads": 0
+}

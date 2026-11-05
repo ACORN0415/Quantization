@@ -1,0 +1,21 @@
+{
+  "status": "source_prepared_CPU_synthetic_passed_actual_Claude_review_pending_NOT_execution_authority",
+  "completed_utc": 1793902075.3406634,
+  "actual_Claude_final_source_review_completed": false,
+  "GPU_calls": 0,
+  "VAE_model_loads": 0,
+  "original_tensor_loads": 0,
+  "new_effect_measurements": 0,
+  "selftest": 40,
+  "files": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/worker.py": "dac8d2c40d081d50940d566a730aa50c462d78e6c610a85e2695678c8e41622a",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/selftest.py": "2ea3174a44c6d9a0d192ad3eba5e6db4346a1e5605228f645a7ee1e7ee46bebd",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/SELFTEST.json": "911d473aac95ad48bbd53b462170c224aad11dcdd170c177ca465643a26cc0e2",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/SELFTEST_V1.json": "74261c54d1d8602b8e587de8bdeead0a1871e812859b1e05bebdec5b69795781",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/PROPOSAL_KO.txt": "1790eaade852cdb48f21d888749326d0ff7ddc20e6936e938b64a331f394a04c",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/ROOT_SPEC.json": "0296bc4b308da8df23a790b2adb4f4acfda423983265ded0f45afd6bb6fcf4f0"
+  },
+  "native_helper": "event_sheet_review: read-only independent AST/lifetime/normalization contract review; no source edit or tensors",
+  "source_frozen": true,
+  "execution": "root final review+LOCK required; no RUN/LOCK created during preparation"
+}

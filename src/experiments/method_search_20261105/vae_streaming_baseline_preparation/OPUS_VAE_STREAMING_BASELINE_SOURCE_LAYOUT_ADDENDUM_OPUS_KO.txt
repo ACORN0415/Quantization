@@ -1,0 +1,23 @@
+BF16 streaming baseline — layout delta 부록 (실제 Opus1, root msg_a48efc649dc5 / msg_7c995c3df34f)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음(역사적 terminal_handle_stale).
+실제 시작 2026-11-05T18:24:52Z, 원 review 절대 마감 18:28:54Z. 앞선 전체 source 검토(18:10:11–18:11:24, 보고서 SHA 1689936fdfc7341582966eea758dbb492f2b4e1f7c1b28a1217d562c79c29e84 현재 직접 확인·불변)와 구분되는 root 승인 delta.
+helper 0(1줄 diff라 분할할 독립 조각 없음). 실행 0.
+최종 SHA(직접 계산): worker.py 2258ca9de39cffcbb66feb2fc2a0ff554208be7003a53cc8df24d95927ac6512, SELFTEST.json 5cfcf9d1…, READY.json eaca4674…, selftest.py a01480bc….
+READY.files의 worker·selftest·SELFTEST 해시와 SELFTEST.source_sha256/selftest_sha256이 현재 파일과 일치. snapshot_pre_layout_fix의 worker dac8d2c4·SELFTEST 911d473a·READY 83089c30·
+selftest 2ea3174a는 원본과 같은 값으로 보존.
+
+1. diff: `diff snapshot_pre_layout_fix/worker.py worker.py`를 직접 실행한 결과 252행 1줄만 다르다(stream(vae.model,zs,scale) → stream(vae.model,zs[0].unsqueeze(0),scale)).
+   AST 화이트리스트·trace·후처리·501 바이트 gate·한도·LOCK·watchdog 코드는 변하지 않았다. LAYOUT_DIFF.patch 내용도 같은 1줄.
+2. 의미: 원 wrapper는 for u in zs: decode(u.unsqueeze(0), scale)로 batch 차원 stride가 99840이 되고, 이전 stream은 zs를 그대로 넘겨 12579840이었다.
+   값·shape는 같지만 stride가 다르면 conv2 등 커널 경로가 달라질 수 있어, 원 경로와 같은 형태로 맞춘 수정은 타당하다(설계 계약 "원 호출 형상 유지"에 부합).
+3. 45 합성: 기존 40 + 'production wrapper expected singleton stride', 'original unsliced zs stride difference reproduced', 'same synthetic storage without copy',
+   'same synthetic logical values', 'no CUDA initialized'. 이름·LAYOUT_FIX_PROOF(stride [99840,…] vs [12579840,…], CPU fake decoder)만 확인했고 selftest.py 본문은
+   읽지 않았다. CPU toy 근거이며 실제 GPU 수치 동등의 증거가 아니다.
+4. W1: ROOT_STATE_COUNT_DERIVATION.json의 그룹(1×16@60×104, 11×384@60×104, 1×192@120×208, 6×384@120×208, 6×192@240×416, 7×96@480×832)을
+   count·C·2·H·W·2로 직접 합산 → 32 tensor, 1,888,573,440B로 하드코딩 값과 일치. first 920,325,120B = (steady − Rep 두 time_conv 47,923,200B)/2 로도 일치
+   (384@60×104와 384@120×208, 직접 산술). 33 slots는 1×1 shortcut 미사용 1개 포함이라는 설명. → 정적 산출 근거는 명확해졌다. 단 실제 trace 측정이 아니며
+   런타임 불일치 시 유일 실행 무효라는 위험은 그대로(이 해소는 근거 명시이지 검증 아님).
+5. W2: cuDNN workspace/알고리즘 교란은 root가 수용. 바이트 불일치는 inconclusive, gate 완화·자동 재시도 없음 — 그대로 보존.
+판정: 기존 전체 source 판정(차단 결함 없음, 실행 계약 수용 가능, 실행 승인 아님) 유지. layout 수정으로 원 호출 형태와의 정합성이 개선됐다. 실행 LOCK 미작성.
+미확인: selftest.py 수정 본문, AMENDMENT_LAYOUT_KO 본문, 실제 GPU 결과.
+실제 끝: 2026-11-05T18:25:27Z

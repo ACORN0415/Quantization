@@ -1,0 +1,11 @@
+--- snapshot_pre_layout_fix/worker.py
++++ worker.py
+@@ -249,7 +249,7 @@
+                     zs,scale=prepare(vae,z)
+                     assert zs.shape==(1,16,126,60,104)
+                     stream=compile_decode(torch,fn,emit)
+-                    assert stream(vae.model,zs,scale) is None
++                    assert stream(vae.model,zs[0].unsqueeze(0),scale) is None
+                     del stream,zs,scale
+             torch.cuda.synchronize();arm['decode_emit_validation_seconds']=time.monotonic()-t0
+             assert cursor[0]==501;assert_trace(rows)

@@ -1,0 +1,50 @@
+{
+  "status": "approved_for_one_native_streaming_probe",
+  "root_execution_authorized": true,
+  "created_epoch": 1793903421.100979,
+  "gate": "all501_RGB_logical_bytes_equal_and_trace_contract",
+  "limits": {
+    "wall_seconds": 600,
+    "CPU_threads": 4,
+    "RSS_bytes": 12884901888,
+    "GPU_allocator_bytes": 23622320128,
+    "output_bytes": 268435456,
+    "whole_video_decodes": 2,
+    "decoder_forward_calls": 252,
+    "generator_calls": 0
+  },
+  "sha256": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/LAYOUT_DIFF.patch": "b35beb3168c7b690e1175c2d5ef405436898c48add4f820eb726d76127b3a683",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/READY.json": "eaca4674fa037973bddb0542ca795d2dd562df0561c62d7803b5fdc9502d2cd7",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/ROOT_STATE_COUNT_DERIVATION.json": "3fb82246df8ec7502d43919bba4c8687a3f2c57200fc9fc52b9c9b38d1262601",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/SELFTEST_V1.json": "74261c54d1d8602b8e587de8bdeead0a1871e812859b1e05bebdec5b69795781",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/OPUS_VAE_STREAMING_BASELINE_SOURCE_OPUS_KO.txt": "1689936fdfc7341582966eea758dbb492f2b4e1f7c1b28a1217d562c79c29e84",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/ROOT_SPEC.json": "0296bc4b308da8df23a790b2adb4f4acfda423983265ded0f45afd6bb6fcf4f0",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/OPUS_VAE_STREAMING_BASELINE_DESIGN_OPUS_KO.txt": "6193853c894fd4ec9ea5c0a426ff8efac371d4e37952cf507448f73d6d86b8cd",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/PROPOSAL_KO.txt": "1790eaade852cdb48f21d888749326d0ff7ddc20e6936e938b64a331f394a04c",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/ROOT_PREEXECUTION_DECISION.json": "04d5edd7900e65d1a0bf201d306032ad93d6fc7fefbe9e9860f6295feef1c6ec",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/worker.py": "2258ca9de39cffcbb66feb2fc2a0ff554208be7003a53cc8df24d95927ac6512",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/OPUS_VAE_STREAMING_BASELINE_SOURCE_LAYOUT_ADDENDUM_OPUS_KO.txt": "1f38b7c29e69b504cf403ca5296db3f8be84d414f66b514578ee5e2c4d507763",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/AMENDMENT_LAYOUT_KO.txt": "83237c1e0d810575ed7d0813f94889636fcd9cdfe643147d1f43419fc0c673ca",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/selftest.py": "a01480bc11a1218fa368e20f6f5bda50f1a9ee6093cf8a714c1e962581e7b770",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/LAYOUT_FIX_PROOF.json": "fb5ff5b8d34854d94598c8a455fec14eb419b5d0d42553cfe6517c8b79f4e1e9",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/SELFTEST.json": "5cfcf9d1a063aa49c3944c662ef54c1c7fc2f5d8a434edef6838e8438378fe65",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/SELFTEST_PRE_LAYOUT_FIX.json": "911d473aac95ad48bbd53b462170c224aad11dcdd170c177ca465643a26cc0e2",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/snapshot_pre_layout_fix/READY.json": "83089c30cb657a2cca7a8ac77ccddfa2af400b4876017e29130f002bb6737170",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/snapshot_pre_layout_fix/PROPOSAL_KO.txt": "1790eaade852cdb48f21d888749326d0ff7ddc20e6936e938b64a331f394a04c",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/snapshot_pre_layout_fix/worker.py": "dac8d2c40d081d50940d566a730aa50c462d78e6c610a85e2695678c8e41622a",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/snapshot_pre_layout_fix/selftest.py": "2ea3174a44c6d9a0d192ad3eba5e6db4346a1e5605228f645a7ee1e7ee46bebd",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/snapshot_pre_layout_fix/SELFTEST.json": "911d473aac95ad48bbd53b462170c224aad11dcdd170c177ca465643a26cc0e2",
+    "/home/acorn0415/Quantization/src/utils/wan_wrapper.py": "da919629bac4472cd9072223f1ab03200de276e202ab0d9b91e6789d500ff8fa",
+    "/home/acorn0415/Quantization/src/wan/modules/vae.py": "a4c1d9362f25a1bef463ac51caed4097317c007d4d87887b02a3a733fdbc48d5",
+    "/home/acorn0415/sfq_data/mechanism/fr/p00_s303_BF16/latent.pt": "b7a553d50254e290707fb32a31c05233667d57d85ccc140eca7273e1762367cf",
+    "/home/acorn0415/Quantization/src/wan_models/Wan2.1-T2V-1.3B/Wan2.1_VAE.pth": "38071ab59bd94681c686fa51d75a1968f64e470262043be31f7a094e442fd981"
+  },
+  "environment_packages": {
+    "torch": "2.6.0+cu124",
+    "triton": "3.2.0",
+    "flash-attn": "2.7.4.post1",
+    "psutil": "7.2.2"
+  },
+  "external_guard": "Root subprocess timeout600s; SIGTERM then5s cleanup then SIGKILL. Only exit0 + completed worker + root elapsed<=600 accepted. No retry."
+}

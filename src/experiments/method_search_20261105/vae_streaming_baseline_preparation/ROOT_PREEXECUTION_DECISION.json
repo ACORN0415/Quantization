@@ -1,0 +1,15 @@
+{
+  "status": "root_accepts_one_baseline_probe",
+  "created_epoch": 1793903420.854645,
+  "source_preparation_and_actual_review_completed_before_original_deadline": true,
+  "review_finished_utc": "2026-11-05T18:25:27Z",
+  "original_review_deadline_utc": "2026-11-05T18:28:54Z",
+  "integration_note": "Root LOCK/commit integration occurs after review deadline; frozen source unchanged. No extension of code/review/data allowance. GPU execution is separately capped at600s.",
+  "W1": "Static native-source state derivation independently checked; retain strict trace gate; mismatch invalid.",
+  "W2": "cuDNN algorithm/workspace can vary despite same flags. Any byte difference invalidates implementation comparison, with no retry or relaxed tolerance.",
+  "claims": "Strong BF16 execution baseline only; no new methodology/quality/speed/generalization claim.",
+  "root_review": "Read full worker and selftest source plus one-line final layout diff; actual Claude full oldworker + final layout delta; selftest body not independently read by Claude.",
+  "attempts": 1,
+  "generator_calls": 0,
+  "whole_video_decodes": 2
+}

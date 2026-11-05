@@ -1,0 +1,49 @@
+BF16 출력 streaming baseline — 독립 설계계약·반례 검토 (실제 Opus1, root msg_e72715040ac3)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음(역사적 terminal_handle_stale).
+실제 시작 2026-11-05T18:01:45Z. 단계 구분: code/CPU 준비 마감 18:18:54Z(Codex 작성), 완성 READY의 실제 source 검토 마감 18:28:54Z(별도 전달 예정).
+이 문서는 첫 독립 설계 검토이며 worker source는 읽지 않았다. 읽음: ROOT_SPEC.json SHA 0296bc4b308da8df23a790b2adb4f4acfda423983265ded0f45afd6bb6fcf4f0,
+vae.py 14–36(CausalConv3d), 100–160(Resample cache·'Rep'), 425–470(Decoder3d.forward cache), 505–506(conv2 1×1×1), 545–569(decode), 596–610(clear_cache),
+wan_wrapper.py 89–113(decode_to_pixel). 실행 0. helper 0: 독립 분할할 조각이 작아 부모가 직접 수행(분할 시 형식 분할이 됨).
+
+판정: ROOT_SPEC의 계약은 타당하고 exact 501프레임 논리 원소 바이트 동일 gate는 원리상 달성 가능하다. 단 아래 반례·계약을 source에 명시해야 한다.
+
+1. exact 동일이 원리상 가능한 이유
+ decode의 out/out_ 누적 cat(559–566)은 다음 decoder.forward 입력이나 feat_cache로 되먹이지 않는다. cache는 각 conv 입력의 x[...,-2:].clone()이며(438, 456 등)
+ head 출력과 alias가 없다. 이후 .float()·clamp·*.5+.5·clamp는 원소별 연산이라 slab 단위로 나눠도 원소값이 같다. 따라서 decoder 연산 경로가 같으면 동일해야 한다.
+
+2. 핵심 불변조건(source에 assert로 둘 것)
+ a) denorm: z/scale[1]+scale[0]를 원 decode와 같은 dtype(BF16 latent dtype의 mean/1/std)로 1회, 전체 126프레임에. conv2(1×1×1, 506)도 전체 126프레임 1회.
+    짧은 cached_decode 호출로 대체 금지(ROOT_SPEC과 동일).
+ b) 126회 decoder.forward: 입력 x[:,:,i:i+1] 형상 (1,16,1,60,104), 순서 0..125, 매 호출 전 _conv_idx=[0], 시작·끝 clear_cache. 출력 형상: i=0은 T=1,
+    i≥1은 T=4(temporal upsample), 합 501. 각 호출의 출력 형상과 _conv_idx 종료값(=_conv_num)을 기록·대조.
+ c) 출력 후처리 순서: BF16 out_ → .float() → clamp(-1,1) → 공통 affine(*.5+.5) → clamp(0,1). 두 팔이 같은 장치(GPU)·같은 순서. 원 worker는 affine을 GPU에서
+    했고(이전 mechanism_worker 254) 직전 precision probe는 CPU에서 했다 — 이번 두 팔은 한 가지로 고정해야 한다. clamp(-1,1)을 생략하고 affine 후 clamp만
+    하는 단축은 FP32 반올림 때문에 원소가 달라질 수 있으므로 금지.
+ d) 레이아웃: decoder 출력은 [1,3,t,H,W](채널 먼저). wrapper는 [B,T,C,H,W]로 permute. stream slab도 같은 논리 [T,3,480,832] 순서로 CPU에 저장하고
+    비교는 같은 shape·dtype(FP32)·논리 row-major 원소 바이트로 한다(view의 storage 바이트를 비교하면 stride 차이로 거짓 불일치/일치 가능).
+ e) GPU 출력 리스트를 유지하지 않는다: slab을 CPU로 복사한 뒤 GPU 참조 해제. 비동기 non_blocking 복사를 쓰면 원본 해제 전 동기화 필요.
+
+3. 구체 반례/위험
+ R1 in-place 후처리: out_에 clamp_/mul_ 등 in-place를 쓰면 out_이 cache와 storage를 공유할 경우 다음 프레임을 오염. 현재 source상 alias는 없지만 계약으로
+    "decoder 출력에 in-place 금지 또는 out_ storage가 feat_cache storages에 없음을 data_ptr로 assert".
+ R2 첫 프레임: i=0만 T=1이고 Resample upsample3d는 첫 호출에 'Rep' 문자열을 cache에 넣는다(107). state 관찰 시 문자열 항목은 tensor 수에서 제외하고 별도 count.
+ R3 cuDNN 알고리즘 선택: benchmark off·deterministic on이어도 휴리스틱이 가용 workspace에 따라 다른 알고리즘을 고를 수 있다(PyTorch 휴리스틱 경로; 이번에
+    확인 안 함). streaming은 여유 메모리를 늘리므로, 바이트 불일치가 나면 구현 오류와 알고리즘 차이를 구분할 수 없다. gate 완화는 하지 않되,
+    불일치 시 "구현 무효" 판정과 함께 이 교란 가능성을 기록한다. 가능하면 두 팔에서 CUDA/cuDNN 버전과 deterministic 설정을 기록.
+ R4 팔 순서: reference 팔(누적 cat+GPU float)이 먼저면 allocator 단편화가 다음 팔 peak에 영향. 팔마다 fresh 모델·이전 팔 텐서 해제 후 reset_peak.
+    단일 순서이므로 peak/시간은 서술용(ROOT_SPEC과 동일).
+ R5 CPU 비교 메모리: reference 전체 FP32 2.4GB + stream 전체 2.4GB = 약 4.8GB CPU(12GiB 안). reference를 permute 후 .cpu()로 옮기면 비연속 텐서가 되고,
+    전체 .contiguous()는 2.4GB 추가 사본. 프레임별로 contiguous 비교해 전체 추가 사본을 피할 것.
+ R6 state 관찰의 섭동: first(i=0 후)/steady(i=64)/last(i=125 후, clear 전)에서 feat_cache 텐서의 untyped_storage data_ptr로 unique 저장소 수·nbytes만 합산.
+    .to()/.contiguous()/.clone() 등 GPU 연산 추가 금지. 관찰 후 다시 decode에 영향 없음을 보장하려면 관찰 코드를 읽기 전용 메타데이터로 제한.
+ R7 reference 팔의 정확성: reference는 원 WanVAEWrapper.decode_to_pixel 경로 그대로여야 하며(원 AST·해시 기록), stream 팔만 decode 루프를 AST 화이트리스트로
+    재구성. 두 팔이 같은 재구성 코드를 쓰면 비교가 무의미해진다.
+ R8 latent 동일: 같은 latent 파일 sha, BF16 dtype, 두 팔 입력 tensor 바이트 동일 assert.
+
+4. 판정 기준·자원
+ gate: 501프레임 전부 논리 원소 바이트 동일 + 호출 형상/순서/cache 계약 충족. 아니면 구현 무효(허용오차 완화 없음, 재시도 없음).
+ peak·시간·state 바이트는 서술 보고. 품질·연구 성공·속도 Pareto 주장 없음. 제안 상한(실행 권한 없음): 1 GPU 프로세스, 2 decode(decoder.forward 252),
+ 600s, CPU4, RSS 12GiB, allocator 22GiB, 출력 256MiB.
+5. 미확인
+ cuDNN 휴리스틱의 workspace 의존 여부(R3), Resample 내부 cache 경로의 모든 분기, 실제 worker 구현(별도 검토 대상).
+실제 끝: 2026-11-05T18:02:52Z

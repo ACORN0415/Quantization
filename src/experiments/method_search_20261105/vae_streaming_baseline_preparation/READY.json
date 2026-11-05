@@ -1,0 +1,23 @@
+{
+  "status": "layout_contract_fixed_CPU_synthetic_passed_actual_Claude_diff_review_pending_NOT_execution_authority",
+  "completed_utc": 1793902983.0265636,
+  "actual_Claude_final_source_review_completed": false,
+  "GPU_calls": 0,
+  "VAE_model_loads": 0,
+  "original_tensor_loads": 0,
+  "new_effect_measurements": 0,
+  "selftest": 45,
+  "files": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/worker.py": "2258ca9de39cffcbb66feb2fc2a0ff554208be7003a53cc8df24d95927ac6512",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/selftest.py": "a01480bc11a1218fa368e20f6f5bda50f1a9ee6093cf8a714c1e962581e7b770",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/SELFTEST.json": "5cfcf9d1a063aa49c3944c662ef54c1c7fc2f5d8a434edef6838e8438378fe65",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/PROPOSAL_KO.txt": "1790eaade852cdb48f21d888749326d0ff7ddc20e6936e938b64a331f394a04c",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/ROOT_SPEC.json": "0296bc4b308da8df23a790b2adb4f4acfda423983265ded0f45afd6bb6fcf4f0",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/LAYOUT_FIX_PROOF.json": "fb5ff5b8d34854d94598c8a455fec14eb419b5d0d42553cfe6517c8b79f4e1e9",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/LAYOUT_DIFF.patch": "b35beb3168c7b690e1175c2d5ef405436898c48add4f820eb726d76127b3a683",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_streaming_baseline_preparation/AMENDMENT_LAYOUT_KO.txt": "83237c1e0d810575ed7d0813f94889636fcd9cdfe643147d1f43419fc0c673ca"
+  },
+  "native_helper": "event_sheet_review: read-only independent AST/lifetime/normalization contract review; no source edit or tensors",
+  "source_frozen": true,
+  "execution": "root final review+LOCK required; no RUN/LOCK created during preparation"
+}

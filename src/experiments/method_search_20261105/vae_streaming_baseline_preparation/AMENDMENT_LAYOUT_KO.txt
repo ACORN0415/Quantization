@@ -1,0 +1,2 @@
+원본 worker/selftest/READY/SELFTEST/명세를 snapshot_pre_layout_fix에 보존했다. 실제 wrapper는 for u in zs 다음 u.unsqueeze(0)를 decode에 전달한다. 직접 zs를 넘기던 stream 호출은 singleton 배치 stride가 달라 원 wrapper와 metadata를 일치시키기 위해 zs[0].unsqueeze(0)로 한 줄만 바꿨다. 산술·source/helper AST·팔·기준·상한은 동일하다. 실제 byte 불일치가 관측된 것이 아니라 실행 전 layout 차이를 제거한 것이다.
+원 wrapper 메서드를 CPU fake decoder에 실제 호출하여 생산 형상의 shape/stride/storage offset/pointer/size/dtype/device와 값을 검사했다. 같은 저장소를 참조하며 복사하지 않는다. 전체 45 합성 검사 통과. 실제 VAE/latent/GPU 실행 0회, 실제 출력 동등성 미검증. 원준비 30분 마감과 실제 Opus 제한 diff 검토는 유지한다.

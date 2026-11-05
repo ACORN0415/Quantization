@@ -1,0 +1,50 @@
+BF16 원출력 스트리밍 기준선: 실행 준비 명세
+작성: Codex /root/method_gap_codex. 실제 GPU 실행 권한 없음.
+준비 시각·상한은 ROOT_SPEC.json을 따른다: 준비 20분(18:18:54 UTC까지), 별도 실제 Claude 소스 검토 10분(18:28:54 UTC까지). 두 독립 설계의 첫 반환 전 Opus 결론을 읽지 않았다.
+
+목적과 범위
+동일 모델/입력/BF16 연산으로 전체 영상 GPU 보관을 없앨 수 있는지 검사한다. 원출력의 logical byte equality가 주 유효성 기준이다. 품질 개선·손실 압축·신규 방법론의 실험이 아니다. 기존 VAE 상태 양자화 후보의 비채택과 BF16/FP32 정밀도 후보 종료를 변경하지 않는다.
+
+입력과 두 팔
+- 기존 /home/acorn0415/sfq_data/mechanism/fr/p00_s303_BF16/latent.pt의 latent, CPU BF16 [1,126,16,60,104]. 로드 전후 파일 SHA 및 tensor SHA를 검증한다.
+- 원 Wan2.1_VAE.pth를 팔마다 새로 CPU FP32로 로드하고 BF16 CUDA로 옮긴다. 앞 팔 모델을 재사용하지 않는다.
+- 팔 1 native_BF16: 변경되지 않은 WanVAEWrapper AST, 원 native decode, 기존 output cat/float/stack 포함.
+- 팔 2 stream_BF16: 원 native decode 함수 AST를 추출하고 출력 누적만 화이트리스트로 바꾼 함수. 새 decoder 구현이나 cached_decode 짧은 호출을 사용하지 않는다.
+- native model source와 wrapper 원파일은 변경하지 않으며 실제 native VAE module을 import한다. 준비 합성검사는 이 클래스를 구성하거나 가중치를 로드하지 않는다.
+
+산술·시간 캐시 계약
+원 decode의 시작 clear_cache, latent denormalization, 전체 [1,16,126,60,104] conv2(z) 단 1회, 각 [1,16,1,60,104] decoder.forward 126회의 순서/형상/kwargs, _conv_idx 초기화, 마지막 clear_cache를 보존한다. 내부 convolution/cache cat, operator, weight는 바꾸지 않는다.
+변경은 (1) 첫 out을 emit하고 삭제, (2) 이후 out_을 emit/삭제하는 것으로 출력 out=torch.cat([out,out_],2)를 교체, (3) 반환값 None뿐이다. 변환 AST를 역변환하면 원 함수 AST와 완전히 일치해야 한다. 원 분기/호출/cat/종료 구문이 예상과 다르면 실행 전 거부한다. AST 직렬화 Python 버전도 기록한다.
+
+RGB 연산은 두 팔 모두 GPU에서 FP32 float -> clamp(-1,1) -> mul(.5) -> add(.5) -> clamp(0,1) 순서다. native는 원 wrapper의 float/clamp/stack 뒤 affine, stream은 slab마다 동일 원소 연산이다. 형상·배치 범위가 달라도 실제 같다는 가정으로 통과시키지 않고 전체 501프레임 CPU logical bytes를 확인한다. 이것은 이전 precision worker의 CPU affine 정규화와 다른 새 공통 실행 계약이다. 그 이전 결과를 이번 동일성 증거로 재사용하지 않는다.
+
+stream wrapper 입력 준비는 원 WanVAEWrapper.decode_to_pixel의 zs, device/dtype, scale 세 assignment AST를 그대로 추출해 실행한다. model mean/std의 CPU FP32 원속성을 latent BF16으로 변환하고 BF16 reciprocal을 계산하는 원 규칙을 보존한다.
+
+출력 수명·동일성 검사
+native 결과 전체 한 벌만 CPU contiguous [501,3,480,832] FP32에 보존한다(2,400,952,320B). stream은 완료 slab을 기본 blocking CPU 복사해 프레임별 비교한 뒤 버린다. GPU/CPU에 stream 전체 리스트나 마지막 전체 cat을 만들지 않는다. 두 팔 모두 프레임별 작은 contiguous byte view로 hash하며 전체 RGB contiguous 복사를 추가하지 않는다.
+각 프레임에서 shape/dtype와 uint8 원소 배열을 비교해 +0/-0도 구분한다. 501개 모두 정확히 같아야 유효하다. 임의 허용오차·RMSE threshold가 없다. 불일치한 첫 프레임을 실패로 남기고 streaming 구현을 무효 처리한다.
+
+계측
+- native conv2 forward hook 1회/팔 및 decoder hook 126회/팔로 실제 형상/순서/출력 T=1,4,...을 기록한다. decoder 총252회, wholevideo2회, generator0회.
+- decoder index0,64,125 직후이자 clear 이전 _feat_map을 관찰한다. tensor 개수·shape/dtype/logical bytes·unique storage bytes·unused/Rep slot을 구분하며, 복원·양자화·추가 forward를 호출하지 않는다.
+- 정적 예상 first 30개/920,325,120B, 정상/마지막32개/1,888,573,440B를 검사한다. 실제 저장량이지 allocator 정렬·다른 workspace·output까지 포함한 peak가 아니다. source와 이 계약이 맞지 않으면 별도 유효성 실패다.
+- 팔별 모델 준비 전 이전 CUDA tensor allocated=0을 확인하고 peak를 reset한다. 따라서 팔의 peak는 새 모델+H2D+decode+RGB/CPU emit 전체이며 누적 peak를 팔 차이로 사용하지 않는다. 전체 monitor 최대도 별도 유지한다.
+- 시간은 setup과 decode/emit/검증 전체를 분리한다. native→stream 순서 각1회여서 단일 순서 기술값이다. stream은 CPU 바이트 비교가 추가되어 타이밍에 포함된다. hook/hash/D2H 검증비용도 포함한 실행이며 최소 프로덕션 속도나 반복측정 우위를 주장하지 않는다.
+
+실행 상한과 중단
+원래 준비와 별개인 실제 실행 시계는 worker.run entry에서 시작하며 LOCK 읽기/입력 SHA/모델 import·로드/2회decode/검사·저장 모두600초에 포함한다. CPU4, RSS12GiB, CUDA allocated22GiB, 디스크256MiB, GPU단일프로세스, 전체영상2복원 상한이다. 100ms watchdog은 시간/RSS/디스크/allocator peak를 감시하고, 사라진 atomic tmp 파일만 무시한다. watchdog 자체 오류도 실패로 기록하고 프로세스를 종료한다. root가 독립 외부 timeout도 사용해야 한다.
+실패·OOM·timeout·hook/원소 불일치·입력 해시 변경은 모두 inconclusive_invalid_or_resource_failure이며 자동 재시도나 추가 팔이 없다. 원 RUN은 exclusive-create하여 같은 폴더의 두 번째 시도를 거부한다. 실행 후 source/input 재해시를 통과해야 완료다.
+
+실행 LOCK 요구
+status=approved_for_one_native_streaming_probe
+root_execution_authorized=true
+limits=worker.LIMITS와 정확히 같음
+gate=all501_RGB_logical_bytes_equal_and_trace_contract
+sha256에 worker.py/selftest.py/SELFTEST.json/PROPOSAL_KO.txt/ROOT_SPEC.json 및 원 wrapper/vae/latent/checkpoint를 절대경로로 포함. root는 실제 Claude의 최종 소스 검토 근거도 LOCK에 결합한다. 준비 READY는 GPU 실행 승인이 아니다.
+
+CPU 합성 확인 범위
+실제 native 함수 AST와 작은 fake causal decoder를 연결해 길이1/3/126에서 시간 이력·전체 conv2 입력·개별 decoder 입력·RGB exact-byte·무개입 입력 보존을 확인한다. 합성 reference는 변환 전 native 함수 AST이고, 출력은 변환 후 함수와 대조한다. source AST whitelist 역변환, 잘못된 cat축/종료변경 거부, 정규화 식/잘못된 shape/dtype, signed-zero, singleton stride, alias storage 중복 제거, 원 wrapper input-prep 추출도 검사한다.
+이는 실제 VAE 품질/커널/GPU 동일성/실제 캐시 수명이나 메모리 절감 검증이 아니다. 실제 결과는 root 승인 실행 후에만 얻는다.
+
+판단
+모든 유효성 검사를 통과하면 정확한 출력 스트리밍 기준선을 확보했다고만 말한다. peak/time 변화는 실측 그대로 보고하며 성공 퍼센트를 발명하지 않는다. 현재 native는24GB에서 동작했고 명시된 더 작은 deployment 요구는 없으므로 이 검사의 성공만으로 저장 state 양자화 연구를 다시 채택하지 않는다.

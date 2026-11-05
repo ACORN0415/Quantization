@@ -1,0 +1,53 @@
+{
+  "created_epoch": 1793903024.135061,
+  "source": "src/wan/modules/vae.py ctor dim96,dim_mult1/2/4/4,num_res_blocks2,z_dim16,CACHE_T2,temporal_upsample reverse[True,True,False]",
+  "steady_tensor_groups": [
+    {
+      "count": 1,
+      "C": 16,
+      "H": 60,
+      "W": 104
+    },
+    {
+      "count": 11,
+      "C": 384,
+      "H": 60,
+      "W": 104
+    },
+    {
+      "count": 1,
+      "C": 192,
+      "H": 120,
+      "W": 208
+    },
+    {
+      "count": 6,
+      "C": 384,
+      "H": 120,
+      "W": 208
+    },
+    {
+      "count": 6,
+      "C": 192,
+      "H": 240,
+      "W": 416
+    },
+    {
+      "count": 7,
+      "C": 96,
+      "H": 480,
+      "W": 832
+    }
+  ],
+  "formula": "count*C*Ttail2*H*W*BF16bytes2",
+  "steady_tensor_count": 32,
+  "steady_unique_owned_storage_bytes": 1888573440,
+  "first_condition": "Two time_convs holdRep nottensors; remaining30tails haveT1",
+  "first_bytes": 920325120,
+  "list_slots": 33,
+  "unused_slot": "1x1shortcut countedbycount_conv3dbutneverstoresfeaturetail",
+  "actual_measurement": false,
+  "root_W1_resolution": "Constantsderivedfromheldnativecode andindependentCodexsourcecount; retainstrictassertions asvaliditychecks, notassume actualmeasurement. Runtime disagreement invalidatesthisattempt, no thresholdchange.",
+  "W2_resolution": "MemoryavailabilitycouldinfluencecuDNNalgorithm evenundersameflags; exactbytefailure remainsinconclusive and no automaticretry.",
+  "new_GPU_or_model_calls": 0
+}
