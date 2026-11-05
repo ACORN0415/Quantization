@@ -1,0 +1,120 @@
+{
+  "status": "registered_pending_frozen_source_and_actual_Opus_reviews",
+  "created_utc": 1793894445.467787,
+  "scope": "One-layer real PRQ INT2/cache/absolute RoPE/native FA2 compatibility on synthetic inputs; no model/video or performance claim",
+  "upstream_revision": "0601468f2dbba6a17ac7086faec6d41527cad188",
+  "adapter_sha256": "cce683d4a2ec1db16dfe986d0202970d1ce3f83458427597f3145e55e8a46d09",
+  "seed": 20261106,
+  "batch_size": 1,
+  "heads": 12,
+  "head_dim": 128,
+  "frame_tokens": 1560,
+  "grid": [
+    3,
+    30,
+    52
+  ],
+  "horizon_frames": 126,
+  "windows": [
+    21,
+    63,
+    126
+  ],
+  "blocks": 42,
+  "writes_per_block": 5,
+  "sink": 0,
+  "initial_latent": false,
+  "codec": {
+    "quant_type": "triton-nstages-kmeans-int2",
+    "quant_block_size": 64,
+    "num_prq_stages": 1,
+    "kmeans_max_iters": 2,
+    "cache_num_k_centroids": 256,
+    "cache_num_v_centroids": 256,
+    "asymmetric": false,
+    "clipping": false,
+    "effective_scale_dtype": "torch.float8_e4m3fn"
+  },
+  "original_group_ranges": [
+    [
+      0,
+      24
+    ],
+    [
+      24,
+      48
+    ],
+    [
+      48,
+      72
+    ],
+    [
+      72,
+      96
+    ],
+    [
+      96,
+      120
+    ]
+  ],
+  "calls": {
+    "compress_kv_cache": 5,
+    "internal_K_V_PRQ": 10,
+    "reference_read_checks": 630,
+    "native_attention_endpoints": 12,
+    "FA2_calls": 36
+  },
+  "checkpoints": {
+    "21": [
+      7,
+      8,
+      9,
+      41
+    ],
+    "63": [
+      7,
+      8,
+      21,
+      41
+    ],
+    "126": [
+      7,
+      8,
+      21,
+      41
+    ],
+    "step": 4,
+    "W126_block21": "intermediate_full_horizon_not_partial"
+  },
+  "resource_caps": {
+    "attempts": 1,
+    "total_execution_wall_seconds": 600,
+    "GPU_allocator_bytes": 8589934592,
+    "RSS_bytes": 8589934592,
+    "CPU_threads": 4,
+    "disk_bytes": 1073741824,
+    "GPU_owner": "root exclusive; idle check before launch"
+  },
+  "pass": [
+    "630 same-window all-history reference rawK/V and absoluteRoPE Q/K byte comparisons pass",
+    "10 independent CPU unpack comparisons equal native decoder for5 K/V packet pairs",
+    "All12 nativeFA2 endpoint outputs equal exact same-input reference and native repeat",
+    "Packet full-content hashes unchanged including tensor/scalar/container/info/config",
+    "Correct schedule/counters/bindings and unmodified source hashes",
+    "Supervisor completed and worker exit0; all execution caps hold"
+  ],
+  "fail": [
+    "Byte mismatch, packet mutation, invalid schedule/call counts, hidden fallback or wrong native bindings"
+  ],
+  "inconclusive": [
+    "OOM/time/resource cap",
+    "Native same-input FA2 repeat mismatch",
+    "Incomplete source or review/record coverage"
+  ],
+  "not_claimed": [
+    "Whole upstream inference/model integration",
+    "Video quality or long-context utility",
+    "Speed gain, peak-memory Pareto gain or new-method novelty"
+  ],
+  "execution_authority": "Root writes final source-bound LOCK only after CPUstage1 pass, independent Codex source review, actual Opus source/audit contract reviews and idle GPU check. Preparation does not start PRQ/GPU."
+}
