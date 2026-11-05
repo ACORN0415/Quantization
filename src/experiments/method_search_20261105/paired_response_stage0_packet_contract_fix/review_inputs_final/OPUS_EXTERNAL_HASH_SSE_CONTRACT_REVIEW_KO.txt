@@ -1,0 +1,61 @@
+Opus1 외부 hash·four-arm SSE 계약 소스 대조 (root msg_121b7cbf860c)
+작성 2026-11-05 약14:10 UTC. 실제 Claude Opus 5.5(claude-opus-5-5), 같은 session claude_beab681e_3eaf_41b0_9688_b8ef268b288f.
+Task/Dispatch 없음(terminal_handle_stale, 자동 연결 미완료). 읽기 약2분(14:08:38~14:10 UTC), 마감 14:39 UTC 이전.
+source-only: .pt/가중치 로드0, Python 실험모듈 import/실행0, SSE·attention 재계산0, 수정0. 작은 JSON(INPUT_BINDINGS, RESULT,
+packets manifest)은 표준 json으로 읽어 문자열/scalar를 비교했다. fair_comparison Codex 결과는 보지 않았다.
+대상 해시 직접 확인: INPUT_BINDINGS_DRAFT 7b65bd1c…, diagnose.py f3e250ad… (명세와 일치).
+
+판정: 알려진 K code_sha256 결함 1건 외에, 읽은 범위의 외부 hash 식과 four-arm SSE 경로에서 소스상 불일치를 찾지 못했다.
+단 소스 수식 동등성은 FP32 바이트/SSE 1e-9 일치의 보장이 아니다(아래 4절).
+
+1. 알려진 결함(확인만)
+- producer causal_obq/replay.py:50,57: code_sha256 = tsha(packet['packed']) → packed uint8[3,612,672].
+- consumer paired_response_stage0/diagnose.py:265: tsha(c.unpack(kp['packed'],kp['shape'])) → unpacked int8[3,98,16,12,128].
+  의미가 다른 바이트열이라 항상 불일치. V4 invalid 원인과 일치. (scale 비교는 아래처럼 일치)
+
+2. hash 필드별 producer / consumer
+- scale_sha256: producer replay.py:57 tsha(ps[arm]['scale']) (common.py:19: contiguous().view(uint8) bytes). consumer diagnose.py:265
+  tsha(kp['scale']) (diagnose.py:30–34: contiguous flat view(uint8) bytes). 둘 다 FP16[3,98,1,12,128] 원소 바이트 → 동등.
+- offline_rotated_raw_H / damped_H: producer replay.py:21,26 hoff,hraw=hessian(p0 q,return_raw=True); H_sha256=tsha(hoff)(damped),
+  raw_H_sha256=tsha(hraw). fixed_rotation calibrate(diagnose.py:60,68–69)도 같은 c.hessian. consumer diagnose.py:212–214
+  hd,hr=c.hessian(q,return_raw=True); tsha(hr)/tsha(hd). 이름 매핑 raw↔hraw, damped↔hoff 정확. binding 값 l18 bb4421df/fc675b01,
+  l24 a4765f76/9d9d1867이 packets manifest offline의 raw_H/H와, l18은 fixed RESULT calibration raw_rotated/damped와 일치(문자열 비교).
+- fixed_raw_C_sha256: producer fixed diagnose.py:31–33 raw_moment = bmm(qhᵀqh)/qh.shape[1], qh=q[0].permute(1,0,2).double();
+  consumer diagnose.py:211 raw=bmm(qh.transpose(1,2),qh)/4680, 같은 qh. shape[1]=4680이면 동일식. l18 20702e30 = RESULT 기록과 일치.
+- fixed_U_sha256: producer calibrate u=c.factorize(hd) → tsha(u); consumer factor=c.factorize(hd) → tsha(factor). 동일식.
+- fixed_matrix_sha256: producer tsha(r) (diagnose.py:72) 및 layer{L}_fixed.pt {'R':r} (197행); consumer tsha(fixed['R']). 동일 tensor 의미.
+- whole-file sha(p0 calibration, Wo, writes, reads, packets, fixed state): binding은 manifest에서 복사("copied_from_manifest_not_rehashed")
+  한 파일 SHA256이며 consumer access.load가 파일 바이트를 해시하는 것으로 보인다(DataAccess 본문 미확인).
+- packet payload_bytes(K 4,515,841, V 4,500,480)는 tensor 바이트, artifact bytes(.pt)는 직렬화 크기 — 이름이 분리돼 있어 혼동 없음.
+
+3. four-arm SSE anchor 대조
+- 매핑: R_bf16↔RTN_BF16, R_fp32↔RTN_FP32, FULL↔OBQ_FULL, FIXED17↔FIXED17_FP32_RTN.
+- binding anchors[call][arm]의 16개 값이 fixed RESULT rows[causal_layer{18,24}_c7_call{0,3}].arms[*].k_only_reference.sse와 정확히
+  같은 float(문자열 비교 16/16). 즉 anchor는 "K-only 참조 대비 SSE"이며 전체BF16 sse나 nse가 아니다. consumer 비교 대상도
+  primary(K-only) sse(diagnose.py:336,342–343) → 의미 일치.
+- QIDS: consumer diagnose.py:19 arange(128)*4680//128, producer old(obq_capacity_codex/diagnose_obq.py:34) arange(128)*CHUNK//128. 동일.
+  binding Q128_indices도 QIDS와 대조(86행). 층18/24, call0/3, chunk7, past ids 1..6(315–317행).
+- 참조: producer fixed diagnose.py:103–106 q=q[0,QIDS].float(), kref=old.attn(q,k[0].float(),v4), v4=V4 과거6+현재BF16 V(95–100행).
+  consumer: query=data['q'][0,QIDS].float(), reference=attention_window(query, raw past K FP32, V4 past, current K FP32, current V FP32)
+  (316–320행). 둘 다 [과거 원K;현재K], [V4 과거;현재BF16 V] 순서. fullref는 원 V(origv) 사용 — producer reference(103행)와 같은 정의.
+- attention: old.attn(diagnose_obq.py:128–135)와 adapter attention_window(53–63행) 모두 FP32, query block32, bmm(q,kᵀ)/sqrt(128),
+  softmax(-1), bmm(p,v). adapter는 logsumexp를 추가 계산할 뿐 out 경로는 같다. mask 없음 동일.
+- SSE: old.metric delta=(out-ref).reshape(Q,-1)@wo.t() FP32, energy=delta.double().square().sum(); adapter post_wo_difference
+  (85–90행) 동일. bias는 delta에서 제외, energy에만 사용 — 동일. Wo는 양쪽 .float().
+- decoded K: R_bf16/R_fp32/FULL은 consumer가 저장 causal packet을 common.restore 경로로 복원(packet_restore_checked). producer는
+  재인코딩 후 causal packet과 packed/scale/sentinel 동일성 assert(fixed diagnose.py:113–118)를 했으므로 같은 packet 기반.
+- FIXED17: producer encode(fixed 41–53행)는 6청크 K를 한 번에 rot.make_frames(einsum FP32 → BF16, 프레임1560+pad8, g16, /7)
+  + old.rtn_codes(z,sf,True) + rot.rotate(inverse) FP32 → BF16. consumer fixed17_encode(diagnose.py:160–171)는 청크별 같은 식
+  (einsum FP32→BF16, pad, /7, FP16 scale, z.float()/scale.float() round clamp, BF16 dequant, einsum Rᵀ FP32→BF16).
+  프레임 단위 group이므로 청크 분할은 수식상 동등.
+
+4. 소스 동등 ≠ 바이트 일치 (미확인/위험)
+- FIXED17 consumer는 저장 packet을 읽지 않고 재인코딩한다. einsum 배치 크기(28080 vs 4680 토큰)·BLAS 경로에 따라 FP32 바이트가
+  달라질 가능성이 있고, 차이가 BF16 반올림 경계를 넘으면 code가 달라져 anchor 1e-9 불일치가 날 수 있다(수식 오류는 아님).
+  old.rtn_codes(…,True)의 본문은 읽지 않았다(= z.float()/sf.float() round clamp로 가정, 미확인).
+- attention block/BLAS가 같은 형상이므로 R 계열 SSE 바이트 일치 가능성은 높지만 실행으로 확인되지 않았다.
+- 과거 raw K: producer는 read 캡처의 k[0](현재 포함 전체)를, consumer는 write1..6 파일의 k를 쓴다. capture manifest의 "past raw byte
+  equality" 기록에 의존하며 이번에 바이트로 확인하지 않았다.
+- 미확인: DataAccess.load/verified의 파일해시 식, p0 manifest JSON 본문, capture/manifest의 read/write 필드 전부, l24 fixed RESULT
+  calibration 문자열(l18만 대조), V packet scale/code 해시 consumer 검사 여부, 나머지 13팔 경로.
+새 실험·허용오차·팔·기준 제안 없음. 검토는 실행 승인이 아니다.

@@ -1,0 +1,53 @@
+V5 guard S1/S2 정리 수정 — Opus2 좁은 재검토
+작성 시각(직접 확인한 date -u): 2026-11-05T14:24:07Z. 원 절대마감 1793889540.4246237(14:39:00.424624 UTC)은 그대로다.
+실제 모델: claude-opus-5-5. 기존 Opus2 채팅(session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5).
+Task/Dispatch: 없음(worker-start terminal_handle_stale). 배정: root msg_aa6820decfb3 → 관리자.
+수행: 읽기와 hash 확인만. selftest·dummy·감독기·driver 실행 0, process 조작 0, tensor 0, 소스·LOCK·git 수정 0.
+기존 보고서들은 수정하지 않았다.
+
+대상 hash(직접 확인)
+- READY_V5_GUARD_FIX 431cb494…
+- run_guarded_once.py 1ed7f767…(원본 snapshot dc671f67…)
+- SOURCES_V5 4867cf0c…: 76항목 전부 재해시 일치. guard 1ed7f767과 driver b4c53566이 포함돼 있다.
+- GUARD_INTERRUPT_SELFTEST b449d9b7…, guard_interrupt_selftest.py 959dbae1…
+- driver diagnose.py b4c53566…: 변경 없음.
+- diff(snapshot↔현재)는 guard 파일 한정이다. ABSOLUTE_DEADLINE_UTC, cap, LOCK 요구 필드, 1회 claim, 재시도 없음은 diff에 등장하지 않으므로 불변이다.
+
+판정: S1 해소, S2 해소(범위 한정). 정상 실행을 막는 새 결함은 없다.
+
+S1 (interrupt 경로 정리)
+- 추가된 것: SIGTERM 핸들러 terminate_as_interrupt가 KeyboardInterrupt를 던진다. try 직전에 설치하고 finally에서 원래대로 복원한다.
+- except Exception을 except BaseException으로 바꿨다.
+  - 진입하자마자 SIGTERM/SIGINT를 SIG_IGN으로 바꿔 정리 중 재중단을 막는다.
+  - child가 있으면 kill_owned를 호출한다.
+  - 상태는 inconclusive_interrupted로 기록하고 finally에서 GUARDED_STATUS를 쓴다.
+- 직접 interrupt와 SIGTERM 모두 정리 경로를 지난다는 것을 소스로 확인했다.
+- 잔여(불가피하거나 경미):
+  (a) SIGKILL이나 전원 장애는 잡을 수 없다. 이 경우 supervisor가 고아로 남을 수 있다.
+  (b) 핸들러 설치(78행)는 ONCE_CLAIM 생성(53행)보다 뒤에 있다. 그 사이에 SIGTERM이 오면 claim만 남고 status는 없다.
+      이때 child는 아직 없으므로 정리할 대상도 없다. C1에 따라 판단 불가다.
+  둘 다 C1(GUARDED_STATUS completed + exit 0일 때만 유효)이 유효성을 보호한다.
+
+S2 (관측 사이에 생긴 후손)
+- kill_owned의 동작
+  - child.pid로 다시 얻은 Process의 (pid, create_time)이 owned에 있을 때만 동작한다. owned에는 Popen 직후 track이 넣어 두었으므로 PID 재사용에 안전하다.
+  - supervisor를 suspend(SIGSTOP)해 추가 fork를 막는다.
+  - children(recursive=True)를 새로 수집해 track하고 기존 owned와 합친다.
+  - 이후 신원이 같은 대상만 terminate하고, 2초 뒤 남은 대상을 kill한다.
+- 정지된 supervisor는 SIGTERM을 보류하지만 2초 뒤 SIGKILL로 종료된다(Linux 신호 의미에 따른 추론).
+- 후손(arm child)은 정지되지 않았으므로 terminate로 종료된다.
+- 잔여(경미): supervisor가 이미 외부 SIGKILL 등으로 사라진 뒤 init에 재부모화된 후손은, 이전 폴링에서 관측되지 않았다면 수집되지 않는다.
+  driver supervisor 자신의 except 경로는 자식을 killpg로 정리하므로, 이 경우는 supervisor가 외부에서 강제 종료된 때로 한정된다.
+
+selftest 저장 기록(실행하지 않음)
+- guard 소스에서 track/kill_owned/terminate_as_interrupt를 AST로 추출해 유한 dummy에 적용했다.
+- normal / KeyboardInterrupt / SIGTERM 3건:
+  - interrupt 2건에서는 처음에 관측되지 않은 후손 PID가 있었고, 정리 후 owned=2였다.
+  - 3건 모두 no_running_or_stopped_dummy_remains=true(zombie/dead 단언).
+- 기록상 guard sha 1ed7f767, selftest sha 959dbae1(현재 파일과 일치). research driver 기동 0, LOCK/RUN/ONCE 생성 0.
+- 범위
+  - 추출한 함수에 대한 dummy 검사다. 실제 driver supervisor 계층, 전체 execute 흐름, psutil 버전별 동작은 검증하지 않았다.
+  - 소스 판단과는 일치한다.
+
+조건(변경 없음): C1은 root가 수용했다. S4 결합은 root 예정이며 이번 범위 밖이다. 새 LOCK/RUN/ONCE_CLAIM은 없다. 이 검토는 실행 승인이 아니며 결정은 root가 한다.
+미확인: 실제 execute 전체, 실제 driver와 결합한 interrupt 동작, 남은 시간 안에 실행이 끝날 수 있는지.

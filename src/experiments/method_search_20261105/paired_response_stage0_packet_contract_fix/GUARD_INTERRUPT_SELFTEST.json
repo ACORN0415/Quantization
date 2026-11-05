@@ -1,0 +1,34 @@
+{
+  "status": "passed",
+  "cases": 3,
+  "rows": [
+    {
+      "mode": "normal",
+      "status": "completed",
+      "initially_unobserved_descendant_pid": null,
+      "owned_after_cleanup": 1,
+      "no_running_or_stopped_dummy_remains": true
+    },
+    {
+      "mode": "KeyboardInterrupt",
+      "status": "inconclusive_interrupted",
+      "initially_unobserved_descendant_pid": 568826,
+      "owned_after_cleanup": 2,
+      "no_running_or_stopped_dummy_remains": true
+    },
+    {
+      "mode": "SIGTERM",
+      "status": "inconclusive_interrupted",
+      "initially_unobserved_descendant_pid": 568830,
+      "owned_after_cleanup": 2,
+      "no_running_or_stopped_dummy_remains": true
+    }
+  ],
+  "scope": "exact extracted cleanup functions and signal handler on finite dummy processes; no research driver or authorization flow execution",
+  "guard_sha256": "1ed7f767a0d816ce08ede6f908a46c77022853255efd4064ce98a0bae203be98",
+  "selftest_sha256": "959dbae1c7997ca51cb7689f87b0143f86749aea3d061f169f119d0f25e144ae",
+  "research_driver_starts": 0,
+  "LOCK_RUN_ONCE_files_created": false,
+  "actual_tensor_reads": 0,
+  "GPU_calls": 0
+}

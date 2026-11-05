@@ -1,0 +1,31 @@
+V5 수리 추가 실행의 최종 root 결정
+2026-11-05, 실제 추가 실행 전 작성.
+
+PAIRED_PACKET_CONTRACT_REPAIR_EXCEPTION_ROOT_KO.txt의 명시적 추가1회 예외를 실행한다.
+원 V4는 invalid로 보존하고, 같은 입력/17팔/rank/seed/10%/fallback/byte cap/anchor 기준을 유지한다.
+V5 driver b4c53566728ae093d0a215e23fce9def2d035b44f38d0f3f2427fbce2f3749ab는
+packed hash 비교와 manifest명만 바뀌었다. 실제 후보 효과 점수는 아직0이다.
+
+실제 Opus1의 외부 hash·SSE 계약 검토와 Codex의82개 전사/16개SSE 대조를 읽었다.
+K-only 참조와 평가식은 맞지만, 청크별/일괄 복원의 FP32 수치 일치는 미확인이다.
+불일치 시 anchor 허용오차를 바꾸지 않는다.
+실제 Opus2는 V5 표현 수리와 생산자 독립 회귀를 수용했고, 이후14:24:07UTC의
+OPUS_V5_GUARD_FIX_RECHECK_KO.txt에서 guard의 S1/S2 수리도 범위 내에서 수용했다.
+root가 diff, 회귀 소스, 감독기와76개 source 해시를 별도로 확인했다.
+
+현재 guard 1ed7f767a0d816ce08ede6f908a46c77022853255efd4064ce98a0bae203be98는
+원 절대마감1793889540.4246237(14:39:00.424624UTC), CPU4, 프로세스RSS8GiB,
+원stage0+새폴더 합계disk2GiB, GPU0, 단1회 claim을 강제한다.
+관측한 자기 supervisor의 신원을 확인하고 정지시킨 후 후손을 재수집해 정리한다.
+SIGKILL/전원 장애 등 모든 상황의 정리를 보장한 것은 아니므로 완료 상태를 엄격히 확인한다.
+
+C1 수용: GUARDED_STATUS.status == completed 이고 supervisor_exit_code == 0이어야
+결과를 유효하게 해석한다. RESULT만 존재하거나 guard가 중단·초과·오류이면 판단불가다.
+C2/S4 수용: 최종 LOCK에 실제 Opus 고정 사본, source/회귀/예외 문서와 원
+RUN/LOCK/FAILURE/PREPARE/log/prepared 상태 파일8개의 해시를 결합한다.
+C3 수용: 남은 원마감 안에서만 실행하며 시간이나 자원을 연장하지 않는다.
+
+실자료 호출 수는 원 실패1회와 이번 수리1회, 최대2회다. 이번 실행도 무효라면
+추가 예외 없이 이 진단을 판단불가로 끝낸다. 유효 실행의 기준 미달이면 등록한 후보를 종료한다.
+성공해도 개발 입력의 국소 판별일 뿐 독립 보류·영상품질·실제효율·신규성 입증을 대신하지 않는다.
+기존 full-H pilot stop_quality와 전체 연구 목표는 그대로다.

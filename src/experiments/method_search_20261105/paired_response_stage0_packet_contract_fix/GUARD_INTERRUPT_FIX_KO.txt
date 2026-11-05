@@ -1,0 +1,23 @@
+V5 외부 감독기 중단 정리 보완 — 연구 driver 실행0
+실제 Opus2 S1/S2 검토와 root 지시에 따른 외부 guard만의 변경이다.
+원 guard/READY/SOURCES/MANAGER는 snapshots/before_guard_interrupt_fix/에 보존했다.
+diagnose/bit/mean/입력/과학 기준은 변경하지 않았다. 절대 마감14:39:00.4246237UTC도 동일하다.
+
+S1: except BaseException에서 자식을 정리한다. SIGTERM handler는 KeyboardInterrupt를
+발생시켜 같은 정리 경로로 연결한다. interrupt 상태는 inconclusive_interrupted다.
+정리 중 SIGINT/SIGTERM 재진입을 잠시 막고 finally에서 원 handler를 복원한다.
+completed와 supervisor_exit_code0인 경우만 유효한 실행이다.
+
+S2: cleanup 진입 때 이 wrapper가 만든 supervisor의 PID/create_time이 owned와 일치하는지
+확인하고 먼저 suspend한다. 직접/재귀 후손을 다시 수집해 owned에 등록한 뒤 기존 관측
+목록과 함께 terminate→2초 wait→동일 identity kill로 정리한다. 정지된 supervisor도
+최종 kill 대상이므로 stopped 상태로 남기지 않는다. 타 작업 process는 대상으로 하지 않는다.
+
+검사: 정상·직접 KeyboardInterrupt·SIGTERM, 세 개의 유한 dummy process 사례가 통과했다.
+실제 guard의 track/kill_owned/signal handler AST를 추출해 실행했다. interrupt 두 사례는
+마지막 polling에서 관측하지 않은 후손을 일부러 둔 뒤 수집·정리함을 확인했다.
+남은 실행/정지 상태의 dummy가 없었고 상태는 정상만 completed, 중단은 판단불가였다.
+이는 cleanup/handler의 실제 동작 검사이며 root LOCK/실험 supervisor 전체 기동 검사가 아니다.
+연구 driver/실제 tensor/GPU0, 새 LOCK/RUN/ONCE_CLAIM 생성0.
+S3 분류는 확대 수정하지 않았다. S4 원 실패/준비 산출물은 root의 새 LOCK evidence가 담당한다.
+최종 SOURCES/READY는 이 guard 수정을 반영하며 실제 Opus 좁은 재검토·root 실행결정이 남는다.

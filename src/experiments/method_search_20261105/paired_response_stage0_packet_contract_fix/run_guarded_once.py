@@ -28,6 +28,9 @@ def validate_original():
  if sha(ORIGINAL/'LOCK.json')!=binding['original_lock_sha256'] or sha(ORIGINAL/'diagnose.py')!=binding['original_driver_sha256']:raise PermissionError('Original source/LOCK changed')
  return run
 
+def terminate_as_interrupt(signum,frame):
+ raise KeyboardInterrupt('SIGTERM received by validity-repair wrapper')
+
 def execute():
  # This clock never resets the old 45-minute allowance. UTC and monotonic both
  # enforce the remaining original time even if the wall clock moves backwards.
@@ -53,7 +56,15 @@ def execute():
   try:owned[(process.pid,process.create_time())]=process
   except psutil.NoSuchProcess:pass
  def kill_owned():
-  # Only observed descendants of the subprocess created by THIS invocation.
+  # Freeze our own supervisor identity before collecting descendants missed by polling.
+  if child is not None:
+   try:
+    supervisor=psutil.Process(child.pid)
+    if (supervisor.pid,supervisor.create_time()) in owned:
+     supervisor.suspend()
+     for descendant in supervisor.children(recursive=True):track(descendant)
+     track(supervisor)
+   except (psutil.NoSuchProcess,psutil.ZombieProcess):pass
   targets=[]
   for (pid,created),process in list(owned.items()):
    try:
@@ -64,6 +75,8 @@ def execute():
    try:
     if (process.pid,process.create_time()) in owned:process.kill()
    except (psutil.NoSuchProcess,psutil.ZombieProcess):pass
+ old_sigterm=signal.signal(signal.SIGTERM,terminate_as_interrupt)
+ old_sigint=signal.getsignal(signal.SIGINT)
  try:
   log=(HERE/'guarded_supervisor.log').open('x');child=subprocess.Popen([sys.executable,str(HERE/'diagnose.py'),'--supervisor'],cwd=d.ROOT,stdout=log,stderr=subprocess.STDOUT,start_new_session=True,env=dict(os.environ));track(psutil.Process(child.pid));state['supervisor_pid']=child.pid
   write(HERE/'GUARDED_STATUS.json',state)
@@ -87,13 +100,15 @@ def execute():
   validate_original();d.verify_lock()
   if time.time()>=ABSOLUTE_DEADLINE_UTC or time.monotonic()>=mono_deadline:raise TimeoutError('Final verification exceeded original deadline')
   state['status']='completed';state['original_record_unchanged']=True
- except Exception as exc:
-  state.update(status='incomplete_budget' if isinstance(exc,(TimeoutError,MemoryError,OSError)) else 'invalid_repaired_execution',error=repr(exc))
+ except BaseException as exc:
+  signal.signal(signal.SIGTERM,signal.SIG_IGN);signal.signal(signal.SIGINT,signal.SIG_IGN)
+  state.update(status='inconclusive_interrupted' if isinstance(exc,(KeyboardInterrupt,SystemExit)) else 'incomplete_budget' if isinstance(exc,(TimeoutError,MemoryError,OSError)) else 'invalid_repaired_execution',error=repr(exc))
   if child is not None:kill_owned()
   raise
  finally:
   if log is not None:log.close()
   state['finished_utc']=time.time();state['wrapper_elapsed_seconds']=time.time()-began;state['elapsed_from_original_run_seconds']=time.time()-original['started_utc'];write(HERE/'GUARDED_STATUS.json',state)
+  signal.signal(signal.SIGTERM,old_sigterm);signal.signal(signal.SIGINT,old_sigint)
 
 if __name__=='__main__':
  ap=argparse.ArgumentParser();ap.add_argument('--execute',action='store_true');args=ap.parse_args()

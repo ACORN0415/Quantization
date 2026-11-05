@@ -1,0 +1,104 @@
+동결 V5 표현 수리·producer 독립 회귀·원마감 감독기 — Opus2 좁은 검토
+작성: 2026-11-05 약 14:20 UTC. 원 절대마감 1793889540.4246237(14:39:00.424624 UTC) 전에 작성했다.
+실제 모델: claude-opus-5-5. 기존 Opus2 채팅(session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5)을 이어서 썼다.
+Task/Dispatch: 없음(worker-start terminal_handle_stale).
+배정: root msg_36f34e6e5248 → 관리자.
+기존 OPUS_PILOT/F4/원인 보고서/고정 사본은 수정하지 않았다. 외부 hash·four-arm SSE 계약은 Opus1 범위이므로 다루지 않았다.
+수행: 읽기와 작은 파일 sha256만. tensor 로드 0, 회귀·감독기·driver 실행 0, process 조작 0, 소스·LOCK 수정 0.
+
+판정
+- 표현 수리와 producer 독립 회귀: 수용.
+- 원마감 감독기: 정상 경로는 수용. interrupt 경로에서 자식 정리가 보장되지 않는다(수정 권고, S1). 정상 실행을 막는 결함은 아니다.
+- 실제 소스 결함으로 정상 실행을 차단하는 항목은 없다. 다만 아래 조건 C1~C3을 기록해야 한다.
+
+1. diff (직접 diff, V4 f3e250ad ↔ V5 b4c53566)
+- 차이는 정확히 두 줄이다.
+  - 79행: SOURCES_V4→SOURCES_V5.
+  - 265행: tsha(c.unpack(kp['packed'],kp['shape'])) → tsha(kp['packed']).
+- 그 밖의 바이트는 같다. ARMS/PRIMARY/DENSE_EXTRA/CAP/LIMIT, seed/rank/Omega, QIDS, anchor 허용오차, decide, 수식 모두 변경이 없다.
+- 복사된 bit/mean/OMEGA/INPUT_BINDINGS는 원본과 sha가 같다(직접 확인). INPUT_BINDINGS는 7b65bd1c로, 실제 binding이다.
+- 원본 V4 diagnose f3e250ad, LOCK 6554e38a, RUN 6d667837, FAILURE fcfe7850은 현재 그대로다(직접 확인).
+- SOURCES_V5는 72항목이며 현재 파일과 모두 일치한다(직접 재해시, mismatch 0). run_guarded_once.py와 회귀 기록도 포함된다.
+
+2. 회귀 (packet_contract_regression.py e148370b, 저장 JSON 6/6; 재실행하지 않음)
+- 실제 V4·V5 소스 evaluate_layer에서 'packet tensor anchor' If 노드를 AST로 추출해 exec한다. consumer가 실제로 쓰는 조건문을 시험한 것이다.
+- producer anchor 구성
+  - code: bytes(packed.tolist())의 sha256. scale: int16 view 바이트의 sha256.
+  - 이는 driver의 tsha/unpack과 독립적인 계산이며, causal replay의 packed uint8 계약을 따른다.
+  - 독립 nibble pack/unpack을 Python 루프로 구현했다.
+- 저장 결과
+  - V4 거부 / V5 통과: 정상 packed.
+  - V4 통과(이전 반례 보존) / V5 거부: unpacked 해시.
+  - V5 거부: payload 1비트 변조, scale 변조.
+  - 모든 사례에서 입력이 보존됐다.
+- 텍스트 역치환 후 원문과 AST가 동일하다는 단언도 소스에 있다.
+- 한계
+  - 8원소 소형 합성이며 tsha 경로의 실제 .pt는 쓰지 않았다.
+  - synthetic_full의 잘못된 schema는 역사로 보존됐을 뿐 재생성하지 않았다. 따라서 수정 후 전체 경로 합성 완주는 없다.
+  - V5와 V4의 차이가 이 한 줄뿐이므로 V4 합성 완주 증거를 다른 분기에 그대로 적용하는 것은 타당하다(추론).
+
+3. run_guarded_once.py (dc671f67) 소스 검토
+충족(소스 기준)
+- --execute가 없으면 출력만 하고 실행하지 않는다.
+- 원 RUN을 확인한다: sha 6d667837, status invalid, started 1793886840.4246237, stage 체인, started+2700=절대마감. 원 LOCK과 driver sha도 ORIGINAL_RUN_BINDING으로 확인한다.
+- HERE에 RUN.json이나 ONCE_CLAIM이 있으면 거부한다.
+- LOCK 필드를 요구한다: root/Opus/validity true, validity_repair_additional_run_authorized=true, maximum_additional_runs=1, original_run_sha256, absolute_deadline_utc, pending 없음.
+- driver.verify_lock(SOURCES_V5 전체 hash 포함)을 하고, wrapper 자신의 hash가 LOCK sources에 있는지 확인한다.
+- ONCE_CLAIM은 open('x')로 배타 생성하며, 검증을 마친 뒤에 생성한다. 따라서 검증 실패는 claim을 소모하지 않는다.
+- supervisor는 1회만 Popen한다. 재시도 루프가 없고, 실패하면 RuntimeError("no further retry").
+- 마감
+  - 시작 시 남은 시간 = 절대 UTC 마감 − now. 이것으로 monotonic 마감을 만든다.
+  - 루프와 완료 후 최종 검증에서 UTC와 monotonic 둘 다 검사한다.
+  - 원 시작 기준 2700초를 공유하며 새 45분을 주지 않는다.
+  - driver 내부 Budget은 자체 2700초를 갖지만 wrapper가 더 엄격하게 상한을 강제한다.
+- 자원
+  - 원 stage0과 V5 폴더의 합계 디스크 ≤2GiB를 시작 전, 루프 중, 완료 후에 검사한다. 현재 약 11.7MB+0.17MB.
+  - 자식·후손의 RSS ≤8GiB(0.25초 간격), wrapper RSS도 검사한다.
+  - CUDA_VISIBLE_DEVICES='', OMP/MKL 4.
+- 정리: kill_owned는 이 실행에서 관측한 (pid, create_time) 쌍만 terminate하고, 2초 뒤 같은 쌍만 kill한다. 다른 process는 건드리지 않는다.
+- 완료 후 validate_original과 verify_lock을 다시 해서 원 기록이 그대로임을 확인한다.
+
+결함·한계
+[S1, 수정 권고 — interrupt 경로] 정리는 except Exception에서만 일어난다.
+  - KeyboardInterrupt(BaseException)나 SIGTERM이 오면 kill_owned가 호출되지 않는다.
+    - SIGTERM 핸들러가 없으므로 기본 동작으로 wrapper가 즉시 종료되고 finally도 실행되지 않는다.
+  - supervisor는 start_new_session으로 분리돼 있으므로 wrapper가 interrupt되면 고아로 계속 돈다. 그때 남는 것은 자체 2700초 Budget뿐이어서 원 절대마감을 넘겨 RESULT를 쓸 수 있다.
+  - 정상 경로에는 영향이 없다.
+  - 최소 수정: except BaseException에서 정리하고, signal.SIGTERM 핸들러가 예외를 던지게 한다. 2줄 수준이다.
+  - 수정하지 않는다면 조건 C1로 대체한다.
+[S2, 경미 — 관측 간격 race] kill_owned는 0.25초 폴링에서 이미 관측한 후손만 정리한다.
+  - 마지막 폴링 직후에 생성된 arm child는 정리 대상에서 빠질 수 있다.
+  - supervisor가 SIGTERM으로 죽어도 그 child는 별도 session이라 계속 돈다.
+  - 창이 0.25초 이하이고 child 수명은 초 단위라 확률은 낮다.
+[S3, 경미 — 분류] OSError에 PermissionError와 FileExistsError가 포함된다.
+  - 루프 안이나 완료 후 verify_lock에서 PermissionError가 나면 'incomplete_budget'으로 분류돼 'invalid'와 섞인다.
+  - 해석상 둘 다 판정 불가라 영향은 작다.
+[S4, 경미 — 원 산출물 binding 범위] validate_original은 원 RUN, LOCK, driver만 hash로 묶는다.
+  - FAILURE_arm_18_R_bf16.json(fcfe7850), PREPARE_18.json, prepared/layer18.pt, log는 wrapper가 확인하지 않는다.
+  - 새 LOCK의 review_evidence에 포함하거나 실행 전후 기록이 필요하다.
+- V5는 새 HERE(…_packet_contract_fix)를 쓴다.
+  - driver의 DataAccess는 HERE/prepared만 허용하고, save_tensor는 기존 파일이 있으면 거부한다. 따라서 원 prepared나 RUN을 재사용할 경로가 없다(소스 기준).
+
+4. 조건 (새 과학 규칙이 아니라 기존 계약을 기록하는 것)
+C1. 결과는 GUARDED_STATUS.json의 status=='completed'와 supervisor_exit_code==0일 때만 유효하다.
+    driver RESULT.json이 있더라도 wrapper가 완료로 기록하지 않았다면(마감 초과·interrupt·자원 초과) 판단 불가로 처리한다.
+    S1을 수정하지 않는다면 실행 중 wrapper를 interrupt하지 않는다는 운영 조건도 함께 적는다.
+C2. 새 LOCK이 묶어야 하는 것
+  - root 예외 문서 PAIRED_PACKET_CONTRACT_REPAIR_EXCEPTION_ROOT_KO.txt(3b609447)
+  - 원인 보고서들(Opus2 OPUS_STAGE0_INVALID_PACKET_REVIEW_KO.txt, Codex 진단)
+  - 이 보고서와 Opus1의 외부 hash/SSE 계약 검토
+  - READY_V5 7e370626, SOURCES_V5 540108209, 회귀 기록
+  - 원 V4 FAILURE/PREPARE_18의 hash(S4)
+  - 필수 필드 일곱 개를 정확히 같게 설정
+  LOCK_PROPOSAL_ROOT_V5.json은 아직 모든 authority가 false이고 pending 3건인 초안이다. 실행된 LOCK이 아니다.
+C3. 남은 시간: 지금(약 14:20 UTC) 기준 약 19분이다.
+  - V4 합성 완주에서 supervisor만 466초가 걸렸다. LOCK 작성과 검토까지 포함하면 여유가 작다.
+  - 마감에 걸리면 incomplete_budget(판단 불가)이며 연장하지 않는다.
+
+5. 미확인
+- V5 수정 후 전체 경로 합성 완주와 실자료 완주
+- S1 상황의 실제 동작(실행하지 않음)
+- psutil 버전별 children(recursive) 동작
+- Opus1 범위인 외부 hash와 SSE anchor 계약
+- 실제 새 LOCK
+실제 후보 점수는 0이고 원 V4는 invalid다. 기존 pilot stop_quality는 유지한다. 이 검토는 실행 승인이 아니며 결정은 root가 한다.

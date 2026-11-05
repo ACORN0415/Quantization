@@ -1,0 +1,167 @@
+실제 stage0 'packet tensor anchor' 무효 — Opus2 독립 원인 검토
+작성: 2026-11-05 약 14:05 UTC (23:05 KST)
+실제 모델: claude-opus-5-5. 기존 Opus2 채팅(session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5)을 재사용했다.
+Task/Dispatch: 없음. worker-start는 terminal_handle_stale 상태다.
+배정: root msg_85d90fc6a30b → 관리자. 다른 worker의 결과를 보거나 그에 의존하지 않았다.
+기존 OPUS_PILOT_REVIEW_KO.txt, AFTER_V4 사본, 합성 기록은 수정하지 않았다.
+
+1. 판정
+원인은 계약 불일치(해시 대상의 의미 불일치)다. 파일 손상이 아니다.
+- scale 비교: 일치했다.
+- code 비교: 어긋났다.
+  - producer(causal_obq/replay.py:52·57)는 code_sha256을 packed nibble 텐서의 해시로 기록했다.
+    식: tsha(packet['packed']), uint8 [3,612,672]
+  - consumer(paired_response_stage0/diagnose.py:265)는 unpack한 int8 code의 해시와 비교한다.
+    식: tsha(c.unpack(kp['packed'], kp['shape'])), int8 [3,98,16,12,128]
+- 두 값은 같은 정보를 담지만 바이트열이 다르다. 따라서 해시는 항상 다르다.
+- 이는 실자료 유효성 실패이며 연구 후보의 효과 실패가 아니다. 후보 점수는 계산되지 않았다.
+
+2. 근거
+소스로 확인한 것(로드 없음):
+- causal_obq/common.py
+  - 19행: tsha = sha256(x.contiguous().view(uint8)).
+  - 27~34행: pack/unpack.
+  - 75~83행: encode_k가 {'packed','scale'(FP16 [3,98,1,12,128]),'sentinel','shape','kind'}를 반환한다.
+- replay.py
+  - 52행: hashes[arm].append(tsha(packet['packed'])).
+  - 57행: 'code_sha256':hashes[arm][0], 'scale_sha256':tsha(ps[arm]['scale']).
+- INPUT_BINDINGS_DRAFT.json(7b65bd1c…)
+  - layer18 c1 R_bf16의 code_sha256=6c3a4609…, scale_sha256=3414b0e0…는 manifest에서 옮겨 적은 값이다(hash_status=copied_from_manifest).
+  - 해시 대상의 의미는 binding 어디에도 명시되지 않았다.
+- diagnose.py에서 code_sha256을 쓰는 곳은 265행 한 곳뿐이다(grep으로 확인).
+  - 이 비교는 모든 K 팔이 base packet(R_bf16/R_fp32/O_offline)을 읽을 때 수행된다.
+  - 같은 producer에서 나온 모든 packet에 같은 방식으로 적용되므로, 다른 팔과 청크에서도 같은 불일치가 날 것으로 추론한다(미관측).
+- prepare_18은 통과했다. prepare는 packet code anchor를 쓰지 않고, 거기서 쓰는 H와 fixed hash는 같은 tsha 의미이기 때문이다.
+
+허용된 단일 tensor 로드(정확히 1회, CPU thread 1, weights_only=True, map_location=cpu)
+- 대상: causal_obq/packets/l18_c1_R_bf16.pt
+  - 로드 전 파일 sha256 fb372d36…, 크기 4,517,694B. binding 기록과 일치했다.
+- 관찰한 것:
+  - 키는 {kind, packed, scale, sentinel, shape}, kind=K, shape=(3,98,16,12,128).
+  - packed는 uint8 (3,612,672), stride (1), contiguous.
+  - scale은 FP16 (3,98,1,12,128), stride (150528,1536,1536,128,1), contiguous. sentinel은 uint8 (1,).
+  - tsha(scale) == 기대 scale_sha256: 구 tsha와 V4 tsha 모두 True.
+  - tsha(packed) == 기대 code_sha256: 구·신 tsha 모두 True.
+  - tsha(unpack(packed, shape)) == 기대 code_sha256: False. 이것이 diagnose.py:265의 실패 조건이다.
+  - unpack을 다시 pack하면 원래 packed와 같다(True).
+- 이 로드에서 하지 않은 것: attention/SSE/오차/점수 계산, 재양자화, 다른 파일 로드, 새 파일 출력.
+
+추론(관찰을 넘어서는 부분):
+- 파일은 무결하고(파일 hash, 두 텐서 hash, packed↔code 왕복이 모두 일치), V4 tsha의 stride 처리도 원인이 아니다(구·신 tsha 결과가 같음).
+- 실패 원인은 consumer가 '같은 이름, 다른 해시 대상'을 가정한 데 있다.
+- 한 패킷 밖으로의 일반화는 소스로 추론한 것이며, 다른 패킷은 관찰하지 않았다.
+
+3. 이전 검사들이 놓친 이유
+- 합성 완주(paired_response_stage0_synthetic_full)
+  - build_inputs.py:42가 code_sha256을 d.tsha(c.unpack(kp['packed'], kp['shape']))로 만들었다.
+  - 즉 합성 fixture가 producer가 아니라 consumer의 해석으로 anchor를 생성했다. 그래서 driver와 같은 가정을 공유하는 닫힌 고리가 되었고, 실제 producer 계약과의 차이는 원리적으로 검출될 수 없었다.
+  - 합성 검사는 runtime 경로 완주의 증거로는 여전히 유효하다. 다만 외부 producer 계약의 증거는 아니다.
+- 제 F4 검토
+  - '실파일 내용(packet kind/shape 키 등)과 hash는 manifest에서 옮겨 적었고 대조하지 않음'을 미확인으로 남겼다. 이번 실패는 그 미확인 범위에 속한다.
+  - 그러나 F4는 binding과 producer를 키 이름과 개수 수준으로만 비교했다. 해시 필드가 어떤 식으로 계산됐는지(replay.py:52·57)는 대조하지 않았다.
+  - 따라서 이 결함은 F4가 적어 둔 위험 범주 안에 있었지만, F4가 구체적으로 찾지 못한 검토 누락이다. 이를 숨기지 않는다.
+  - 소스만으로 발견할 수 있었다(replay.py 한 줄과 diagnose.py:265 한 줄의 대조).
+
+4. 최소 수정 가능성 (제안만, 실행·결정은 root)
+- 수정안(권고 1개): diagnose.py:265의 code anchor를 producer 계약에 맞춘다.
+  if tsha(kp['scale'])!=row['K'][b]['scale_sha256'] or tsha(kp['packed'])!=row['K'][b]['code_sha256']: raise ValueError('packet tensor anchor')
+  - 검증을 지우거나 완화하는 수정이 아니다.
+    - packed↔unpacked는 shape이 주어지면 일대일 대응이고, 왕복 일치를 관찰했다. 따라서 packed 해시는 같은 정보에 대한 동등한 강도의 anchor다.
+    - shape/kind는 packet_restore_checked가 이미 검사한다.
+  - 팔, 입력, 기준, 허용오차, 원본 hash는 바꾸지 않는다.
+- 함께 고쳐야 할 것:
+  (a) 합성 fixture build_inputs.py:42를 producer 계약(tsha(packed))으로 바꿔야 회귀가 의미를 가진다.
+      더 나은 방법은 실제 replay.py의 식과 같은 helper를 쓰는 것이다.
+  (b) binding 또는 amendment에 "code_sha256 = sha256(packed uint8 nibble bytes, producer replay.py:52)"를 명시한다.
+- 실행 전에 확인할 계약 목록(이번 실패와 같은 종류의 위험): binding의 모든 외부 해시 필드를 producer 계산식과 일대일로 대조한다.
+  - code_sha256: packed, 불일치였다.
+  - scale_sha256: FP16 scale, 일치함을 관찰했다.
+  - offline_rotated_raw/damped_H_sha256: common.tsha이며 prepare 통과로 간접 확인됐다.
+  - fixed_matrix/U/raw_C_sha256: prepare 통과로 간접 확인됐다.
+  - anchors(SSE): fixed_rotation RESULT의 산출 식과 driver 산출 경로가 같은지는 여전히 미확인이다. 다음 단계의 rel/abs 1e-9 비교에서 같은 종류의 '의미 불일치'가 날 수 있다.
+    이것이 code 수정 뒤에 남는 가장 가능성 높은 다음 실패 지점이다. fixed_rotation_control/diagnose.py의 k_only_reference 계산식과 diagnose.py의 primary 계산을 소스로 대조하기를 권한다.
+- 재실행 여부: 원 LOCK/RUN/FAILURE와 no-retry 원칙이 있다. 한정된 유효성 수정 후 새 버전(V5)과 새 LOCK으로 재실행할지는 root가 결정한다. 이 검토는 재시작을 승인하지 않는다.
+
+5. 실제로 한 작업
+- 읽은 것:
+  - diagnose.py(f3e250ad, 255~268행과 grep), FAILURE_arm_18_R_bf16.json, RUN.json
+  - INPUT_BINDINGS_DRAFT의 해당 행
+  - causal_obq/common.py 19~96행, replay.py 1~70행, packets/manifest.json의 첫 행
+  - synthetic build_inputs.py:42, PAIRED_INPUT_BINDING_CODEX_KO 검색
+  - 관리자 ACTUAL_STAGE0_INVALID_85D90FC6A30B.json 앞부분
+- hash를 계산한 것: diagnose/INPUT_BINDINGS/LOCK(6554e38a 일치)/RUN/FAILURE와 대상 .pt 파일.
+- tensor 로드: 위 .pt 1개를 1회. 다른 .pt, 실캡처, 모델, 가중치, GPU, 테스트, supervisor는 모두 0이다.
+- 소스·LOCK·manifest·기록 수정 0, git 0. 새 출력은 이 보고서 1개뿐이다.
+
+6. 미확인
+- 다른 47개 K packet(2층×6청크×3 base 중 이번 1개를 뺀 것)의 실제 hash 관찰.
+- SSE anchor 산출식의 일치.
+- 수정 후 전체 실자료 경로.
+- 합성 fixture를 수정한 뒤의 재검증.
+기존 pilot stop_quality와 실자료 효과 0은 그대로다.
+
+======================================================================
+추가 A — Codex 보고서 대조 (root msg_c54ddf668c7f)
+======================================================================
+대상: PAIRED_ACTUAL_PACKET_ANCHOR_DIAG_CODEX_KO.txt f3b05737… / .json 9f0c6f60…(hash 일치 확인). 읽기만 했으며 Codex의 실행 결과를 내 관찰로 표기하지 않는다.
+- 원인 판정은 같다.
+  - replay.py는 code_sha256을 packed uint8의 해시로 기록했다.
+  - driver:265와 synthetic build_inputs:42는 이를 unpacked int8의 해시로 해석했다.
+  - scale은 일치하고, V4 tsha는 원인이 아니며, 파일은 무결하다.
+- 수정 제안도 같다: 비교 대상을 tsha(kp['packed'])로 하고, 나머지 검사는 유지한다.
+- Codex가 추가로 지적한 사항에 동의한다.
+  - fixed_rotation_control/diagnose.py:54는 같은 이름 code_sha256에 unpacked code의 해시를 저장한다(이 줄은 소스로 직접 확인함).
+  - 즉 필드 이름의 의미가 producer마다 다르다. binding의 각 해시 필드에 producer와 표현을 명시해야 한다.
+- 추가 tensor 로드는 0이다. 이 검토 전체에서 tensor 로드는 앞서 한 1회뿐이다.
+
+======================================================================
+추가 B — root의 명시적 1회 예외(V5 별도 경로 추가 실행) 제안에 대한 의견
+======================================================================
+판정: 조건부 수용 가능. 통계 판정과 범위 해석을 왜곡하지 않는다고 판단한다. 근거와 남는 한계는 아래와 같다.
+
+근거(관찰)
+- V4 RUN은 4.03초 만에 끝났다.
+- 접근한 파일:
+  - prepare_18(PREPARE_18.json source_loads): p0 l18_c7, l18_wo, fixed state, 자기 저장 state.
+  - arm R_bf16: 실패 지점 기준으로 state, Wo, 평가 write1, V packet, K packet 하나.
+- 열리지 않은 것: read 파일(Q, native_av, 현재 K/V). 계산되지 않은 것: attention, SSE, 점수, decide.
+- 따라서 결과 정보가 전혀 관측되지 않았다.
+
+근거(추론)
+- 실패는 입력값과 무관한 결정적 schema 불일치다. 모든 K 팔에 똑같이 적용되는 첫 write 검사에서 났고, 어느 팔이나 seed가 유리한지에 대한 정보가 없다.
+- 예외를 쓸지 결정하는 것이 결과에 의존하지 않으므로 forking path(결과를 보고 분석을 바꾸는 문제)나 다중 시도에 의한 선택 편향이 생기지 않는다.
+- 판정 규칙(17팔, 12 주 기준선, 10%, fallback ≤1/1536, cap, seed, rank)이 그대로이면 판정 분포도 바뀌지 않는다.
+
+숨기면 안 되는 한계
+- 이것은 '1회 실행' 계획의 예외다. 실자료 실행은 2회째이고, 평가 자료 write1과 p0는 이미 한 번 열렸다. 다만 내용 점수는 나오지 않았다.
+- 개발 자료라는 성격과 '국소 판별일 뿐'이라는 범위는 그대로다. 예외가 성공 또는 실패 결론의 증거 강도를 높이지 않는다.
+- 같은 종류의 계약 불일치가 다른 필드에 남아 있으면 V5도 invalid가 될 수 있다.
+  - 가장 가능성이 높은 지점은 SSE anchor(rel/abs 1e-9)다.
+  - 기존 no-retry 원칙에 따라 그 경우 추가 예외 없이 판단불가로 끝난다는 것을 사전에 기록해 두면 예외가 연쇄되는 것을 막는다.
+  - 이는 새 과학 규칙이 아니라 기존 원칙을 확인하는 것이다.
+- 남은 마감 시간(14:39 UTC)이 짧다. 시간이나 자원을 초과하면 partial_budget(판단불가)이다. 연장하거나, 미완료를 음성 결과로 합쳐서는 안 된다.
+
+V5 동결 자료에서 사실로 확인돼야 할 최소 사항(기존 계약 범위)
+1. source diff
+   - V4 대비 변경이 diagnose.py:265의 code anchor 대상(tsha(kp['packed']))과 경로/manifest 이름뿐이어야 한다.
+   - ARMS, PRIMARY_BASELINES, DENSE_EXTRA, CAP, LIMIT, anchor 허용오차, decide, QIDS, seed/Omega binding은 바이트 단위로 같아야 한다.
+2. 독립 producer schema 회귀
+   - anchor를 consumer 코드가 아니라 producer 식으로 만들어야 한다: causal_obq common.encode_k → common.tsha(packet['packed']), 또는 실제 manifest 값.
+   - 양성 사례: packed 해시이면 통과.
+   - 음성 사례: unpacked 해시, 다른 scale, 1-nibble 변조는 각각 'packet tensor anchor'로 거부되어야 한다.
+   - synthetic builder가 driver와 같은 helper를 공유해 닫힌 구조가 되지 않게 해야 한다.
+3. binding의 모든 외부 해시 필드를 producer 식과 대조한 표
+   - code(packed, causal replay:52)
+   - scale(FP16, replay:57)
+   - offline raw/damped H(causal common.tsha)
+   - fixed R/U/raw C(fixed_rotation)
+   - SSE anchors: fixed_rotation k_only_reference 계산 식이 driver primary와 같은지. 같은 QIDS, V4 restore, 현재 BF16, FP32 q-block32, delta@Wo.T, FP64 합이어야 한다. 소스 대조로 확인한다.
+4. V4 보존
+   - 원 V4 RUN/LOCK/FAILURE/log/PREPARE_18/prepared와 source hash가 변하지 않았다는 전후 기록이 있어야 한다.
+   - V5는 별도 HERE를 쓴다. save_tensor는 FileExistsError를 내고 supervisor는 RUN.json이 있으면 거부하므로, 같은 디렉터리를 쓰면 실패한다. 따라서 V4 prepared를 재사용하지 않는다.
+   - 선택 사항이지만 무결성 확인으로 유용하다: V5 PREPARE_18의 state 해시가 V4 PREPARE_18 state_tensor_hashes와 같다면 결정성이 확인된다. 이는 판정 규칙이 아니다.
+5. 새 LOCK
+   - review_evidence에 이 보고서와 Codex 진단, V5 diff/회귀 기록, 예외 기록을 묶는다.
+   - input_bindings_sha256은 실제 binding이어야 한다(binding에 의미 주석을 추가한다면 새 hash로 바뀐다).
+   - 외부 감독기가 14:39 UTC 마감과 RSS/disk를 강제한다는 기록이 있어야 한다.
+V5 동결 자료가 아직 없으므로 이 의견은 V5 구현의 검증이나 실행 승인이 아니다. 결정권은 root에 있다.
