@@ -1,0 +1,8 @@
+고정 행동 후보의 일반 부동소수 기준선 — 코드 준비
+
+관측은 합성연결 성공뿐이다. 새로운 선택기나 양자화 방법은 채택하지 않는다. Opus의54만 후보 CEM 및 seed차이 잡음/과반판정은 채택하지 않고, 작은 실제 기록입력·동일16후보의 점수와 비용을 먼저 측정하도록 준비했다.
+입력은 사전에 고정한 val episode0 관측0/목표25이며 5묶음×5원시행동이다. 후보0은정규화0,1은기록행동,2..15는seed20261106 Gaussian이다. 원CEM을 실행하거나 논문재현이라 주장하지 않는다. 원PlanWorkspace의 simulator replay 대신 기록영상 자체를 사용하고, 현재없는decord 대신기존OpenCV로RGB를만든다. 모든팔이같은수치입력을공유하며 이적응을숨기지않는다.
+비교는 원FP32 rollout·FP32관측특징1회재사용·BF16 predictor·FP16 predictor이다. encoder/action/proprio/순환상태/목적함수는FP32이며 저정밀predictor입출력경계만명시적으로cast한다. 목표는원소스objective(alpha0.1,mode last)로평가하고 실제과제정답으로취급하지않는다. 원FP32와재사용FP32의16후보최종latent전체가atol=rtol1e-5를충족해야비용측정을진행한다. 이는작업품질기준아니다.
+고정microbatch4,각팔warmup2+반복8,순서4회전교차로whole scoring wall/CUDAevent를기록한다. 목표특징공통준비/CPU복원/GPU복사및추가predictor상주는따로보고하며누적peak를팔별실제사용량으로표현하지않는다. 재사용팔의관측encode1회와원팔4회,각predictor20회/decoder0회를실제hook에서검사한다. 실제Linear입력/가중치dtype도기록한다. 고정후보FP32점수차이는제어성공이나실제배포정책이득이아니다.
+소스4개를고정GitBlob과대조해읽었고pip/install0이다. CPU toy는고정원VWorldModel.rollout함수AST를직접사용해두후보순서의전체출력정확일치/미변경입력/5회predict/마지막행동민감도를확인했다. 실제checkpoint/자료tensor/GPUload는0이다.
+실제Opus의신규source검토및root별도manifest가필요하며현재승인예시는UNAPPROVED이다. 제안실행상한900초/CPU4/RSS8GiB/GPUallocator8GiB/disk128MiB/단1회이다. 실패시기준/후보를바꾸지않고그한정실패로기록한다.

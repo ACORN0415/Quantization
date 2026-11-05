@@ -1,0 +1,28 @@
+DINO-WM 다음 자원 판단 — 최소 관측 1개 독립 제안 (실제 Opus1, root msg_0a1539463159 업무1)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음.
+실제 수신·시작 2026-11-05T21:33:43Z, 상한 min(수신+480s=21:41:43Z, 공유 outer 21:53:35.742864Z). 독립성: 같은 폴더의 NEXT_OBSERVATION_CODEX.json·REPORT_*·Opus2 결과는 열지 않았다.
+읽은 것: dino_wm_runtime_preparation/ROOT_PRIOR_SCOPE_UPDATE.json(전체), dino_wm_planning_choice_review/ROOT_DECISION.json(앞부분), 이전 내 DINO-WM 검토·부록(대화 기억).
+새 외부 문헌·원격 fetch 0, pt/weights/tensor load 0, 이번 검토자의 추가 실행 0. (과거 root의 실제 GPU/model 실행 — maskfix smoke 3.9169s — 은 있었고 이번 reviewer 추가 실행과 구분한다.)
+
+관측(root 보고): maskfix 합성 연결 완료 — old/fresh predictor torch.equal, mask exact, DINO strict, GPU FP32 shape 통과. 실제 입력 양자화 효과·BF16/FP16 기준선·제어 가치는 미측정.
+문헌(scope update 범위, root readback): encoder 고정밀 + predictor 저정밀은 기존 강한 단순 기준선(2602.11882); DINO-WM PushT에서 FP16/TF32/FP32 보고(2610.12910);
+ 결정 경계·미래 결과 기반 calibration(OnPTQ), task-aware precision(QuantWAMs), 행동 불일치 기반 degradation 예측(PreDE), 고정 후보 채점 감사(ARC-Bench)는 이미 있다.
+ → 새 선택기·calibration 방식 이름을 붙일 근거는 없다. fake-quant 비트폭은 실제 비용 이득으로 계상하지 않는다.
+
+결정 시점에 실제 가진 정보: 합성 연결된 FP32 모델, 보존된 PushT val(states/rel_actions/velocities/seq_lengths + 영상 21개), 원 CEM 설정(300/30/30, horizon 5).
+없는 정보: 실제 PushT env(gym·pymunk 미준비) closed-loop 성공률, 배포 메모리·지연 요구(측정된 위반 없음), 우리 checkpoint에서의 정밀도 영향.
+
+가장 싼 중요한 결정: "보통 부동소수 저정밀(BF16 predictor + FP32 encoder)만으로도 계획 결정이 바뀌는가?" — 바뀌지 않으면 저비트 신규 방법을 위한 자원 투입 근거가 없다.
+최소 관측 1개(설계안, 실행 권한 아님): env 없이 world model만으로 하는 open-loop reference-score 비교.
+ - 입력: val에서 결과 전 고정한 start/goal 쌍 N=20(goal_H 5, frameskip 5, 고정 seed로 추출 목록 저장).
+ - 팔 3개: FP32 seed a, FP32 seed b(같은 정밀도 seed 간 잡음 바닥), BF16 predictor + FP32 encoder seed a. 원 CEM 설정 그대로, 반환된 최종 mu를 기록(best-sample 로그와 구분).
+ - 측정: 각 반환 mu를 FP32 모델로 다시 rollout한 objective(마지막 프레임 latent MSE) = reference score. 이는 과제 성공의 oracle이 아니다.
+ - 판정(결과 전 고정): d_noise = |J(FP32a)−J(FP32b)|, d_bf16 = J(BF16a)−J(FP32a).
+   신호(다음 자원으로 env closed-loop 준비 정당화): 20쌍 중 d_bf16이 d_noise의 90퍼센타일을 넘는 쌍이 과반.
+   중단: 그 외 — BF16 저정밀이 reference score 결정에 측정 가능한 손상을 주지 않음 → 저비트 신규 방법·selector 자원 보류(배포 비용 요구가 새로 생기기 전까지).
+   무효: CEM 반환 경로 불일치, mask/shape 오류, 같은 seed FP32 재실행이 비결정적이라 d_noise 정의가 무너짐, 시간·메모리 상한 초과.
+ - 비용: 준비 = 기존 smoke 경로에 CEM 루프·val 쌍 로더·BF16 cast 추가(새 패키지 0, env 0). 실행 = 3팔×20쌍×30 반복×300 후보 rollout(encoder 반복 포함) — GPU 1개, 상한은 root가 정함
+   (encoder hoisting은 동등성 미검증이라 사용하지 않음).
+ - 이 관측이 말하지 못하는 것: 실제 env 성공·제어 가치, 저비트(W8A8/W4) 영향, 실제 저비트 실행 비용. 가설: BF16에서 손상이 없으면 저비트 문제의 실용 동기는 배포 비용 요구에 달려 있다.
+대안 권고: root가 배포 메모리·지연 요구를 갖고 있지 않다면 이 관측도 생략하고 DINO-WM 저정밀 방법 탐색을 보류하는 것이 정당하다(현재 관측된 문제 없음).
+실제 끝: 2026-11-05T21:34:38Z

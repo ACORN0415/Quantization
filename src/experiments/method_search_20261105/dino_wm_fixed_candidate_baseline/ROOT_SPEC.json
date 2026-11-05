@@ -1,0 +1,41 @@
+{
+  "status": "root_authorized_code_and_fixed_source_preparation_not_execution",
+  "created_epoch": 1793914635.150309,
+  "preparation_deadline_epoch": 1793916435.150309,
+  "question": "For a tiny recorded PushT input and identical fixed candidate actions, what reference-score differences and real scoring cost remain after ordinary floating-point baselines?",
+  "prior_result": "Synthetic DINO-WM connection accepted after actual Opus review, no quantization/control/latency evidence yet.",
+  "design_choice": "Do not adopt the proposed540000-rollout CEM plan. Different FP32 search seeds estimate search variation, not hardware noise; BF16 agreement cannot establish low-bit safety.",
+  "input": "predetermined val episode0, observationframe0, goalframe25,16 fixed action candidates,5 macroactions of10 = frameskip5 relative actions. Development only. CV2 RGB decode instead of absent decord is explicit adaptation, same precomputed tensors used for all arms; not paper pipeline reproduction.",
+  "arms": [
+    "FP32 original rollout",
+    "FP32 reuse of observation features, numerical equivalence gate first",
+    "Same FP32 encoder/action/proprio plus fixed BF16 predictor (explicit input/output casts)",
+    "Same FP32 encoder/action/proprio plus fixed FP16 predictor (explicit input/output casts)"
+  ],
+  "fixed_candidates": "Candidate0 zero, candidate1 recorded episode0 first25 actions normalized/grouped5x10, candidates2..15 independent CPU Gaussian(seed20261106), no CEM/search/elite/returned-mu claim.",
+  "reference_objective": "Pinned original create_objective_fn(alpha=0.1,base=1,mode=last). Base unused inlast mode. FP32 objective preference only; not task oracle.",
+  "runtime_limits_proposal": {
+    "wall_seconds": 900,
+    "GPU_processes": 1,
+    "CPU": 4,
+    "RSS_bytes": 8589934592,
+    "GPU_allocator_bytes": 8589934592,
+    "output_bytes": 134217728,
+    "model_checkpoint_loads": 1,
+    "DINO_weight_loads": 1,
+    "dataset_tensor_loads": 3,
+    "seq_length_pickle_loads": 1,
+    "video_files": 1
+  },
+  "execution_authorized": false,
+  "preparation_only_limits": {
+    "CPU": 2,
+    "seconds": 1800,
+    "network": "at most4 pinned public source files,32KiB total",
+    "model_tensor_loads": 0,
+    "GPU": 0,
+    "package_installs": 0
+  },
+  "actual_Opus_source_review_required": true,
+  "outcome_rule": "No effect/performance threshold is a task-quality or research-adoption gate. Report valid same-candidate score/regret and repeated crossed-order timing. Invalid contracts or caps stop this run; no tolerance/arm changes from outcomes."
+}

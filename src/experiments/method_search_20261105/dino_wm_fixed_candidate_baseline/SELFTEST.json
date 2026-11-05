@@ -1,0 +1,27 @@
+{
+  "status": "passed_CPU_toy_recurrence_not_real_model",
+  "cases": [
+    "ordered candidates",
+    "permuted candidates",
+    "final-action sensitivity negative control"
+  ],
+  "original_function": "AST-extracted pinned VWorldModel.rollout, no module/model construction",
+  "output_torch_equal": true,
+  "source_call_counts": [
+    [
+      5,
+      5
+    ],
+    [
+      5,
+      5
+    ]
+  ],
+  "cached_input_and_actions_unchanged": true,
+  "driver_sha256": "234beae779e6a92f764cc46f455e055c0d6039d751e4ab05bb1941cedc71d799",
+  "selftest_sha256": "95acaf4d7479ffcab072697291ec0931fdc1c0c35115e2e910e4f8acb9d7c2c2",
+  "runtime_seconds": 0.7626183032989502,
+  "GPU": 0,
+  "weights_dataset_pickle_model_loads": 0,
+  "network": 0
+}

@@ -1,0 +1,29 @@
+{
+  "status": "root_next_resource_decision_after_independent_comparison",
+  "created_epoch": 1793914708.890466,
+  "Codex_source_sha": "10e47d9bfe124ff8d2817644d22119829d164e1efce41386d4739a796d16301b",
+  "Opus_source_sha": "ba9f96caa0cbfbeb400269e370cd47b95e4898a8080a7e8cc7b6e572703e82fc",
+  "independence": "Root proposal committed f3f0706 before reading Opus1 new proposal. Root directly wrote Codex side after native quota error; not an independent native audit.",
+  "shared": "No new quantization methodology yet. Test ordinary lower floating-point precision and compare real scoring cost before complex selectors. FP32 reference score is not environment oracle.",
+  "not_adopted": [
+    {
+      "item": "Three20-pair full30x300 CEM runs",
+      "reason": "540000 candidate rollouts plus repeated encoder and new loader/CEM preparation are excessive for the first unresolved cost/representation check."
+    },
+    {
+      "item": "FP32 seedA/B difference as noise floor",
+      "reason": "Different search seeds measure optimizer sampling variation, not hardware timing or same-input numerical noise. Repeated same-input crossed timings address the latter separately."
+    },
+    {
+      "item": "BF16 adequate implies no low-bit research need",
+      "reason": "Ordinary BF16 and INT4 quantization are different interventions; BF16 behavior alone cannot establish INT4 safety. Concrete remaining resource need and actual low-bit implementation remain separate questions."
+    },
+    {
+      "item": "90th percentile and majority gate",
+      "reason": "Not justified as task-quality or scientific adoption threshold and uses no actual task outcome."
+    }
+  ],
+  "selected_followup": "Prepare a tiny fixed-candidate recorded-input scoring/cost diagnostic with original FP32, equivalence-checked FP32 feature reuse, BF16-predictor, FP16-predictor. No CEM or simulated task success claim. No new method adopted.",
+  "execution_authority": "Preparation only in dino_wm_fixed_candidate_baseline/ROOT_SPEC.json; actual reviewed source and new root manifest required before any data/model/GPU run.",
+  "model_smoke_final": "Accept explicit additional-run synthetic connection success after actualOpus2 result review14734ce3; retain original V1 failed and origin-prefix/training-time-equivalence limitations."
+}
