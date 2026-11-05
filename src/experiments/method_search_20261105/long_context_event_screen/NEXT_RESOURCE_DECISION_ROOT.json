@@ -1,0 +1,38 @@
+{
+  "created_epoch": 1793896846.83229,
+  "inputs": [
+    {
+      "source": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/FULL_PIPELINE_COMPARISON_READINESS_CODEX_KO.txt",
+      "copy": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/FULL_PIPELINE_COMPARISON_READINESS_CODEX_KO_INPUT_FIXED.txt",
+      "sha256": "018256b91042037462141ca61553c5e04113622ae3ae58e2398cdef6c352ed44"
+    },
+    {
+      "source": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/LONG_CONTEXT_UTILITY_DECISION_CODEX_KO.txt",
+      "copy": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/LONG_CONTEXT_UTILITY_DECISION_CODEX_KO_INPUT_FIXED.txt",
+      "sha256": "819bdce05f088aafa2b0d29d1ca5e88b3194a054f7852e4103cc9c38b83a85a6"
+    },
+    {
+      "source": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/FULL_PIPELINE_COMPARISON_READINESS_OPUS_KO.txt",
+      "copy": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/FULL_PIPELINE_COMPARISON_READINESS_OPUS_KO_INPUT_FIXED.txt",
+      "sha256": "066fe72a4a07f36251880acd7b569978abb947cb9f7b5f75d89464ac33fc85aa"
+    },
+    {
+      "source": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/LONG_CONTEXT_UTILITY_DECISION_OPUS_KO.txt",
+      "copy": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/LONG_CONTEXT_UTILITY_DECISION_OPUS_KO_INPUT_FIXED.txt",
+      "sha256": "2638cc6f0b75af623422c0cd92bdd0a50570550384234e17fe5cbc369da6b3c5"
+    }
+  ],
+  "decision": "Hold proposed8video utility comparison. Close15min source/utility review. Spend one30min CPU-only screen of fixed12existing BF16 development videos on identifying a defensible long-context task; no additionalpipelinecoding or GPU yet.",
+  "agreement": "Actualcodec compatibility passed, fullmodel validity and long-context usefulness remain unproven; existingMUSIQ/DINO not validatedforlongmemory.",
+  "root_resolved_disagreements": [
+    "Prefer native W-size rolling post-RoPE BF16 as deploymentbaseline aftervaliditycheck. Samepre-RoPEadapter may be numericalcontrol butisnotautomaticallystrongsystembaseline. Frozenfrontier0 with existingmin(left,frontier) eviction wouldnotfreeBF16; noquantmode cannot be a flag-onlychange.",
+    "Do not addBF16W126asuniquequalitytruth. KVpayloadalone33.74GiB exceeds24GB; same-window BF16is compressionfidelity reference whenfeasible, notsemanticgroundtruth.",
+    "Legitimatecapacity OOM is a feasibilityresult, not automaticallyinvalid. Harness errorsremaininvalid; time cap givesincomplete.",
+    "Bdedupmustbevalidatedinfiniteadapter beforecostcomparison, not discardedsolelybecauseunverified. NofurtherBtestnow becauseutilityquestiontakespriority.",
+    "Independentnewpromptsare requiredfor futureholdoutclaims; oldpilotcoast/rain wouldonlybe developmentdata. Neither8generationproposal is executed.",
+    "Codec consumesglobalRNG and originaldiagnostic memoryprintoffloads/reloads allcaches. Any futurefullpipelinecomparison must isolatecodec RNG and define/remove diagnostictransfer overhead symmetrically."
+  ],
+  "provenance": "Root directly checked kmeans_euclid.py54 and causal_inference.py376. Otherimplementation findingsarepairedsource-reviewevidence. No newmodelrun.",
+  "resource_screen": "REGISTRATION.json in samefolder; fixedstart1793896645.9137225 deadline1793898445.9137225, no newGPUorvideo.",
+  "goal_achieved": false
+}

@@ -1,0 +1,162 @@
+전체 모델 BF16 / QVG 창 비교 연결 준비 검토
+2026-11-05 UTC. Codex 업무1. 소스·저장 JSON·파일 존재만 읽었다.
+새 모델/GPU/PRQ/실험코드 실행0, 체크포인트 tensor 로드0. upstream과 stage1/2 수정0.
+
+판단
+8생성·8VAE·60분 안에서 제한된 배포 기준선 비교를 준비할 수 있다. 다만 지금
+완성된 adapter에 quant_type='none'만 넣어 바로 4개 팔을 실행할 수는 없다.
+강한 BF16 dense rolling 연결, QVG B 단일 decoder 연결, 생성/codec 난수 분리가
+아직 필요하다. 이는 새 방법론 개발이 아니라 기존 기준선의 공정한 실행 준비다.
+아래 준비를 생략하고 stage2 성공을 전체 모델의 성공으로 확장하면 안 된다.
+
+1. 이미 확보한 근거와 미확인 범위
+stage2/RESULT.json은 실제 native PRQ5회(K/V 내부10회), 630개 동일창 raw/RoPE
+대조, FA2 varlen36회(12endpoint×3), SDPA0으로 passed다. SUPERVISOR는45.629242초,
+exit0, 잔존group0이며 AUDIT_FINAL은저장 scalar/hash 6,998조건 passed다.
+GPU allocated peak6,853,188,608B는 한 층 합성 검사와 큰 참조 임시값을 포함한다.
+30층 모델 peak·생성 시간으로 곱하거나 전이할 수 없다. 원 codec/원 cache/원 RoPE/
+native FA2의 제한된 연결을 확인했으며 원전체pipeline/실제모델/B decoder는 미검증이다.
+
+2. 같은 pinned 모델·pipeline을 두 저장 방식에 사용
+원본 /home/acorn0415/sfq_data/qvg-reuse-reference,
+revision0601468f2dbba6a17ac7086faec6d41527cad188을 공통으로 사용한다.
+tools/kv_reuse_stage1.py:build는 이미 이 pinned CausalInferencePipeline,
+WanDiffusionWrapper, generator_ema 체크포인트와 고정 텍스트를 연결한 이력이 있다.
+과거 local src의 결과와 새 upstream 결과를 모델/난수의 일치 확인 없이 섞지 않는다.
+공통은 B1,30층,H12,D128,grid3×30×52,126latent/42청크,각4denoise+1refresh=210forward,
+sink0,initial_latent없음,independent_first_frame=False,context_noise0이다.
+warp 이후 실제 timestep4개와 scheduler 설정을 저장한다. 이전 실행값은
+[1000,937.5,833.3333129882812,625]이며 새 설정이 같은지 실제로 확인해야 한다.
+local_attn_size를 바꿀 때 pipe/model/각block/self_attn 및 max_attention_size=W×1560을
+함께 맞춘다. 가능하면 생성 전 올바른 W로 구성한다. 속성 하나만 바꾸지 않는다.
+각 팔 시작에서 KV와 cross-attention을 fresh로 만들고 is_init을 초기화한다.
+텍스트 조건은 입력별1회 계산해 공유하고 T5를 GPU에서 내려 공통으로 계측한다.
+cross KV는 30층×K/V×512×12×128×BF16=94,371,840B이며 모두 같은 설정이다.
+
+3. BF16은 정당한 W 크기 dense post-RoPE 기준선
+권고 연결은 pinned causal_model.py:220의 기존 attn_kv_cache Tensor rolling 함수를
+attn_kv_cache_prerope 호출 위치에 주입하고, initializer는 W×1560의 K/V Tensor만
+할당하는 것이다. local src/pipeline/causal_inference.py:311의 dense initializer
+계약을 참고할 수 있지만 그 파일 전체를 다른 모델 구현으로 혼용하지 않는다.
+Q와 현재 K는 원 함수로 절대주소 RoPE 후 BF16으로 저장하며 물리적 rolling 후
+과거 K에 다시 RoPE하지 않는다. 원 clone 기반 겹침 방지와 현재5회 덮어쓰기를 유지한다.
+읽기는 현재3frame을 포함한 W21/63, 즉 과거18/60+현재3frame이다.
+BF16을126frame 전체 선할당하거나 dense+별도frame cache를 이중 할당하지 않는다.
+반대로 필요한 W payload를 지워 BF16이 실제보다 메모리를 덜 쓰는 것처럼 만들지도 않는다.
+W 크기 재사용 버퍼의 선할당 자체는 약한 기준선이 아니다. 매 읽기의 Python concat과
+전체 K 재-RoPE를 강요하는 lazy frame 구현만 BF16 기준선으로 삼는 것이 더 약할 수 있다.
+quant_type none 경로는 실제 encoder0회여야 한다. 원 pipeline의 주기 호출은 no-op으로
+처리하고 진단용 _print_memory_usage의 offload/reload는 두 팔 모두 제거한다.
+현재 frozen FiniteWindowAdapter는 packed postcondition을 강제하여 none을 거부한다.
+따라서 BF16을 이 adapter에 우회 통과시키지 말고 별도 명시된 dense 연결로 준비한다.
+
+필요한 KV payload의 산술(가중치·활성·임시값·allocator·driver 제외)
+ W21: 6,038,323,200B =5.623626709GiB
+ W63:18,114,969,600B =16.870880127GiB
+이 값은2×30×W×1560×12×128×2이다. 과거18GiB allocator 상한을 그대로 적용하면
+W63은 모델 가중치를 포함하기 전부터 여유가 거의 없어 기준선을 인위적으로 제한한다.
+공통 실제 장비 기준으로 예를 들어22GiB allocator와23GiB process 상한을 등록하고,
+모델·활성·rolling clone·driver 포함 실측을 보고한다. 정확한 상한은 root가 고정한다.
+QVG가 더 작다는 이유로 BF16에만 작은 상한을 쓰거나 추가 offload를 켜지 않는다.
+같은 상한은 같은 실제 사용량이 아니다. 정당한 native W63 실행이 OOM이면 실행 실패로
+그대로 남기며, 선할당을 제거했으니 모든 메모리 문제가 해결됐다고 말하지 않는다.
+
+4. QVG는 native U보다 B 단일 decoder를 강한 비용 기준으로 준비
+frozen adapter의 install_pipeline(cache_cls=...)에
+make_store_class(ReadController('B',pool=None))를 주입할 수 있다.
+tools/kv_reuse_core.py의 B는 동일 packet의 triton_prq_dequantize_tensor를 한 번만
+호출하고 원래 부분slice/BSHD 변환/concat을 유지한다. 추가 유지 pool R은 사용하지 않는다.
+B decoder는 metadata를 해석하지 않고 block64/INT2/BF16을 고정하므로 매 packet이
+등록한 config·output dtype인지 확인해야 한다. 다른 코덱으로 일반화하지 않는다.
+30층의 callback/encoder·store binding, 실제 decode entry 계수를 별도로 보존한다.
+원본 quantize는5번 group 호출×30층=compress_kv_cache150회, K/V 내부PRQ300회다.
+현재42청크 전체의 최종6frame은 원 일정대로 raw이며 마지막에 임의 추가 압축하지 않는다.
+
+과거 tools/test_kv_reuse_core.py와 unit_gates.json은 실제24frame packet의 full/partial
+read, partial/full eviction, raw append 등을 검사했다. kv_reuse_stage1의36frame 생성은
+U/B의 전체 attention 입력과 최종 latent 일치도 확인했다. 다만60.14GiB 입력 테이프는
+사용자 요청으로 삭제되어 지금 원소 전체를 다시 감사할 수 없다는 기록이 있다.
+이번 actual stage2는 B가 아닌 native U의 이중 decoder 경로다. 이 둘을 합쳐서
+'B+finite adapter+30층 모델이 이미 검증됐다'고 쓰면 안 된다.
+최소 준비 검사는 stage2 보존 packet을 이용한 B/U 같은 full/partial window·퇴거·raw
+append 비교다. encoder나 새 영상 생성 없이 기존 packet으로 검사하고 같은60분에 포함한다.
+첫 QVG 모델 생성의 초기24latent(첫 압축 직전)는 대응 BF16의 같은 창·같은 난수 결과와
+bit 일치하는지 확인한다. 불일치는 품질 저하 판정 전에 연결 유효성 실패로 처리한다.
+
+QVG pending은 P=성공 압축 frontier 이후3…24frame을 BF16으로 유지한다.
+partial packed24frame span은 전부 보존한다. forward 퇴거 후 논리 support 최대42/84,
+쓰기 직후 퇴거 전에는45/87frame에 해당할 수 있으며 이 수치는 바이트 메모리가 아니다.
+W21에서는 압축 직전 pending BF1624frame만으로 BF16 기준선21frame보다 클 수 있다.
+따라서 QVG의 평균/packed bytes가 작아도 총 peak가 더 작다고 미리 주장하지 않는다.
+payload·pending·압축workspace·복원/layout/concat·RoPE를 포함한 peak를 직접 분리 보고한다.
+
+5. 가장 중요한 공정 비교 조건: sampler RNG와 codec RNG 분리
+quant_videogen/kmeans/kmeans_euclid.py:54는 torch.randint로 centroid 초기값을 고른다.
+원 causal_inference.py:376은 이후 torch.randn_like로 denoising 재노이즈를 만든다.
+따라서 초기noise와 seed만 같게 해도 QVG는 첫24frame 압축 뒤 전역RNG를 더 소비하며,
+BF16과 이후 sampler noise가 달라질 수 있다. 이는 현재 단층 합성 검사의 대상이 아니었다.
+원 quantizer를 호출하는 wrapper에서 torch.random.fork_rng(devices=[사용GPU]) 등으로
+CPU/CUDA 상태를 보존·복원하고, 사전에 고정한 입력/압축group별 codec seed를 사용한다.
+그 seed는 결과나 미래 query를 보지 않는다. 같은 모델 sampler의 난수흐름은 보존한다.
+이 제어는 원 kmeans 연산식 변경이 아니라 비교용 난수정책 명시이며 새로운 실행정의다.
+동일 초기noise [1,126,16,60,104]와42×3=126개의 scheduler 추가 noise의 dtype/shape/bytes
+또는 기록된 해시를 대응 팔끼리 확인한다. 해시만 남기면 전체 원소 재검사를 했다고 쓰지 않는다.
+품질은 다른 궤적에서 비교하되 난수 소비 차이를 양자화 효과로 섞지 않는 것이 목적이다.
+
+6. 실행·품질·자원 기록과8회 배치
+제안 고정 격자: 기존 두 입력×{BF16_W21,QVG_B_W21,BF16_W63,QVG_B_W63}=최대8생성.
+기존 full_obq_rollout_pilot/PROMPTS.json의 coast_cycle seed409/rain_market seed503을
+사용하면 입력은 명확하지만 이미 개발에 사용한 자료다. 새 독립 holdout이라고 부르지 않는다.
+첫 BF16_W21 입력A의 전체42청크 실행을 model smoke 겸 첫 본실험으로 센다.
+별도 smoke 생성·warmup 생성·실패 대체 생성은 추가하지 않는다. 첫 QVG_W21에서
+B 연결 및 첫24frame 무개입 gate를 확인하고 통과한 경우 나머지 격자로 진행한다.
+입력B에서는 순서를 교차해 순서 영향을 완화하되, 설정별1회 시간으로 유의한 가속을
+입증하지 않는다. 최초 cold/검증 부하가 포함된 실행은 해당 사실을 표시한다.
+실패/OOM/중단도 시작한 생성 횟수에 포함한다. W63 BF16이 유효하게 실행되지 않으면
+같은 창 BF16 대비 latent/DINO 비교는 미완료다. W21을 W63의 동일조건 참조로 대체하지 않는다.
+
+생성 시간은 동기화 후 cache초기화/packing/metadata/복원/RoPE/FA2/최종latent까지 포함한다.
+모델·텍스트 준비, 검증 검사, VAE·metric·파일I/O의 시간도 별도 기록하며 전체60분에는 포함한다.
+새 팔마다 peak 통계를 reset하고 그때 살아 있는 공통 모델/cond/cache를 명시한다.
+allocated/reserved/프로세스 NVML 표본 peak와 층별 실제 payload/pending을 구분한다.
+각완료latent는정확히1번VAE decode하여 최대8회. 원inference에실제VAE를넣고
+나중에quality에서다시decode하면16회가되므로, 생성에는기존NoVAE boundary wrapper를
+공통 적용해latent만보존하고 별도품질단계에서1회복원한다. VAE와generator/cache를
+동시에GPU에남겨인위적OOM을만들지않는다. 결과는원upstream전체호출에공통측정wrapper를
+붙인것이지VAE를포함한원형end-to-end타이밍이라고부르지않는다.
+126latent는501pixel frame. 기존 quality.py의 raw RGB8 before MP4 경로로 MUSIQ와
+DINO를 평가하고 full/early/mid/late를 사전에 고정한다. DINO/latent NSE의 참조는
+같은 입력·같은 W의 BF16이다. MUSIQ는 별도의 무참조 품질지표다. 창 확대 효과와 압축
+효과를2×2표로 나눠 보고하며 BF16 궤적 충실도를 정답 품질이나 action 추종으로 바꾸지 않는다.
+
+60분 가능성은 조건부다. 기존 full_obq_rollout_pilot/RUN.json은8생성·8VAE·평가를
+1182.421초에 완료했다. 이는W21 실측이며 W63/QVG의 시간 보장이 아니다.
+기존reuseB36latent시간24.6초도126latent/63창으로 단순외삽하지 않는다.
+최소 추가 준비는 dense 연결/codec-RNG wrapper/B finite-read 점검과 공통계측이다.
+모델smoke를8회안에넣고모델/텍스트를재사용하면60분판별은현실적인후보이나,
+기한초과·불완전격자는그대로보고하며상한연장/새seed구제는하지않는다.
+
+7. 모델 자료 존재·기존 지문
+아래4개 경로는 이번 읽기 검사에서 존재·실제해결경로·size만 확인했다.
+파일 전체 SHA를 새로 계산하거나 tensor를 로드하지 않았다. 실행 전에 지문을 다시 검증한다.
+src/checkpoints/self_forcing_dmd.pt -> /home/acorn0415/sfq_data/ckpt/checkpoints/self_forcing_dmd.pt
+  5,676,252,553B; 저장SHA a0413986d9734e02c09504e1520f5697ba6df731bb2f0f35577485e9cc8f56a3
+src/wan_models/Wan2.1-T2V-1.3B/diffusion_pytorch_model.safetensors
+  5,676,070,424B; 저장SHA 96b6b242ca1c2f24e9d02cd6596066fab6d310e2d7538f33ae267cb18d957e8f
+같은폴더/models_t5_umt5-xxl-enc-bf16.pth
+ 11,361,920,418B; 저장SHA 7cace0da2b446bbbbc57d031ab6cf163a3d59b366da94e5afe36745b746fd81d
+같은폴더/Wan2.1_VAE.pth
+    507,609,880B; 저장SHA 38071ab59bd94681c686fa51d75a1968f64e470262043be31f7a094e442fd981
+세Wan파일은 /home/acorn0415/sfq_data/ckpt/wan_models/Wan2.1-T2V-1.3B 아래로해결된다.
+config.json,google/umt5-xxl/tokenizer.json,spiece.model도존재한다.
+지문출처: kv_reuse_stage1/manifest.json(첫3개),
+method_search_20261105/full_obq_rollout_pilot/LOCK.json(4개·tokenizer등).
+품질weight경로와지문은 kv_channel_budget_rollout/quality.json의weights에있다.
+실제upstream wrapper는 cwd기준 ckpts/Self-Forcing/Wan2.1-T2V-1.3B를사용하므로
+기존tools/kv_reuse_stage1.py:setup_paths의별도work/symlink를명시해같은파일을읽도록한다.
+
+남는 판단
+진행한다면 '이미 최적화된 BF16/QVG에서 창 확대를 실제로 감당할 수 있는가'를 보는
+배포 기준선 검사다. 새 양자화 방법·일반적 world model 성능·논문 신규성을 입증하는
+실험으로 포장하지 않는다. 이전 실패 후보를 구제하는 추가 팔도 아니다.
+실제 Opus 역할별 검토는 별도로 결합한다. 본 문서는 Codex의 독립 준비 검토다.

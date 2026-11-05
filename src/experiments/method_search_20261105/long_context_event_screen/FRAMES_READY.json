@@ -1,0 +1,4872 @@
+{
+  "status": "prepared",
+  "finished_epoch": 1793896724.6789048,
+  "registration_sha256": "4bda946904c3ee8d674227ff857f1db23c7e2f6183fa422af5895d029ccc97c7",
+  "script_sha256": "5e5e22e2b8332f9556bf0a2eb42c05de053710b374aa02debf8530619d8b38e5",
+  "CPU_decoder_threads": 1,
+  "peak_RSS_bytes": 389320704,
+  "new_GPU_model_video_VAE_calls": 0,
+  "items": [
+    {
+      "id": 0,
+      "prompt": "A golden retriever carries a blue rubber ball across a grassy field, drops it beside a bench, and looks toward its owner. A continuous low tracking shot in soft daylight.",
+      "source": "/home/acorn0415/sfq_data/mechanism/fr/p00_s303_BF16/video.mp4",
+      "source_sha256": "56c7521a75b026dd952a28f317585919fb2b4768969e5e5e13459286f1f2bbe4",
+      "decoded_frames": 501,
+      "viewable_sampled_frames": [
+        {
+          "frame": 0,
+          "pts_seconds": 0.0,
+          "sheet": 0,
+          "slot": 0
+        },
+        {
+          "frame": 8,
+          "pts_seconds": 0.5,
+          "sheet": 0,
+          "slot": 1
+        },
+        {
+          "frame": 16,
+          "pts_seconds": 1.0,
+          "sheet": 0,
+          "slot": 2
+        },
+        {
+          "frame": 24,
+          "pts_seconds": 1.5,
+          "sheet": 0,
+          "slot": 3
+        },
+        {
+          "frame": 32,
+          "pts_seconds": 2.0,
+          "sheet": 0,
+          "slot": 4
+        },
+        {
+          "frame": 40,
+          "pts_seconds": 2.5,
+          "sheet": 0,
+          "slot": 5
+        },
+        {
+          "frame": 48,
+          "pts_seconds": 3.0,
+          "sheet": 0,
+          "slot": 6
+        },
+        {
+          "frame": 56,
+          "pts_seconds": 3.5,
+          "sheet": 0,
+          "slot": 7
+        },
+        {
+          "frame": 64,
+          "pts_seconds": 4.0,
+          "sheet": 0,
+          "slot": 8
+        },
+        {
+          "frame": 72,
+          "pts_seconds": 4.5,
+          "sheet": 0,
+          "slot": 9
+        },
+        {
+          "frame": 80,
+          "pts_seconds": 5.0,
+          "sheet": 0,
+          "slot": 10
+        },
+        {
+          "frame": 88,
+          "pts_seconds": 5.5,
+          "sheet": 0,
+          "slot": 11
+        },
+        {
+          "frame": 96,
+          "pts_seconds": 6.0,
+          "sheet": 0,
+          "slot": 12
+        },
+        {
+          "frame": 104,
+          "pts_seconds": 6.5,
+          "sheet": 0,
+          "slot": 13
+        },
+        {
+          "frame": 112,
+          "pts_seconds": 7.0,
+          "sheet": 0,
+          "slot": 14
+        },
+        {
+          "frame": 120,
+          "pts_seconds": 7.5,
+          "sheet": 0,
+          "slot": 15
+        },
+        {
+          "frame": 128,
+          "pts_seconds": 8.0,
+          "sheet": 0,
+          "slot": 16
+        },
+        {
+          "frame": 136,
+          "pts_seconds": 8.5,
+          "sheet": 0,
+          "slot": 17
+        },
+        {
+          "frame": 144,
+          "pts_seconds": 9.0,
+          "sheet": 0,
+          "slot": 18
+        },
+        {
+          "frame": 152,
+          "pts_seconds": 9.5,
+          "sheet": 0,
+          "slot": 19
+        },
+        {
+          "frame": 160,
+          "pts_seconds": 10.0,
+          "sheet": 0,
+          "slot": 20
+        },
+        {
+          "frame": 168,
+          "pts_seconds": 10.5,
+          "sheet": 0,
+          "slot": 21
+        },
+        {
+          "frame": 176,
+          "pts_seconds": 11.0,
+          "sheet": 0,
+          "slot": 22
+        },
+        {
+          "frame": 184,
+          "pts_seconds": 11.5,
+          "sheet": 0,
+          "slot": 23
+        },
+        {
+          "frame": 192,
+          "pts_seconds": 12.0,
+          "sheet": 0,
+          "slot": 24
+        },
+        {
+          "frame": 200,
+          "pts_seconds": 12.5,
+          "sheet": 0,
+          "slot": 25
+        },
+        {
+          "frame": 208,
+          "pts_seconds": 13.0,
+          "sheet": 0,
+          "slot": 26
+        },
+        {
+          "frame": 216,
+          "pts_seconds": 13.5,
+          "sheet": 0,
+          "slot": 27
+        },
+        {
+          "frame": 224,
+          "pts_seconds": 14.0,
+          "sheet": 0,
+          "slot": 28
+        },
+        {
+          "frame": 232,
+          "pts_seconds": 14.5,
+          "sheet": 0,
+          "slot": 29
+        },
+        {
+          "frame": 240,
+          "pts_seconds": 15.0,
+          "sheet": 0,
+          "slot": 30
+        },
+        {
+          "frame": 248,
+          "pts_seconds": 15.5,
+          "sheet": 0,
+          "slot": 31
+        },
+        {
+          "frame": 256,
+          "pts_seconds": 16.0,
+          "sheet": 1,
+          "slot": 0
+        },
+        {
+          "frame": 264,
+          "pts_seconds": 16.5,
+          "sheet": 1,
+          "slot": 1
+        },
+        {
+          "frame": 272,
+          "pts_seconds": 17.0,
+          "sheet": 1,
+          "slot": 2
+        },
+        {
+          "frame": 280,
+          "pts_seconds": 17.5,
+          "sheet": 1,
+          "slot": 3
+        },
+        {
+          "frame": 288,
+          "pts_seconds": 18.0,
+          "sheet": 1,
+          "slot": 4
+        },
+        {
+          "frame": 296,
+          "pts_seconds": 18.5,
+          "sheet": 1,
+          "slot": 5
+        },
+        {
+          "frame": 304,
+          "pts_seconds": 19.0,
+          "sheet": 1,
+          "slot": 6
+        },
+        {
+          "frame": 312,
+          "pts_seconds": 19.5,
+          "sheet": 1,
+          "slot": 7
+        },
+        {
+          "frame": 320,
+          "pts_seconds": 20.0,
+          "sheet": 1,
+          "slot": 8
+        },
+        {
+          "frame": 328,
+          "pts_seconds": 20.5,
+          "sheet": 1,
+          "slot": 9
+        },
+        {
+          "frame": 336,
+          "pts_seconds": 21.0,
+          "sheet": 1,
+          "slot": 10
+        },
+        {
+          "frame": 344,
+          "pts_seconds": 21.5,
+          "sheet": 1,
+          "slot": 11
+        },
+        {
+          "frame": 352,
+          "pts_seconds": 22.0,
+          "sheet": 1,
+          "slot": 12
+        },
+        {
+          "frame": 360,
+          "pts_seconds": 22.5,
+          "sheet": 1,
+          "slot": 13
+        },
+        {
+          "frame": 368,
+          "pts_seconds": 23.0,
+          "sheet": 1,
+          "slot": 14
+        },
+        {
+          "frame": 376,
+          "pts_seconds": 23.5,
+          "sheet": 1,
+          "slot": 15
+        },
+        {
+          "frame": 384,
+          "pts_seconds": 24.0,
+          "sheet": 1,
+          "slot": 16
+        },
+        {
+          "frame": 392,
+          "pts_seconds": 24.5,
+          "sheet": 1,
+          "slot": 17
+        },
+        {
+          "frame": 400,
+          "pts_seconds": 25.0,
+          "sheet": 1,
+          "slot": 18
+        },
+        {
+          "frame": 408,
+          "pts_seconds": 25.5,
+          "sheet": 1,
+          "slot": 19
+        },
+        {
+          "frame": 416,
+          "pts_seconds": 26.0,
+          "sheet": 1,
+          "slot": 20
+        },
+        {
+          "frame": 424,
+          "pts_seconds": 26.5,
+          "sheet": 1,
+          "slot": 21
+        },
+        {
+          "frame": 432,
+          "pts_seconds": 27.0,
+          "sheet": 1,
+          "slot": 22
+        },
+        {
+          "frame": 440,
+          "pts_seconds": 27.5,
+          "sheet": 1,
+          "slot": 23
+        },
+        {
+          "frame": 448,
+          "pts_seconds": 28.0,
+          "sheet": 1,
+          "slot": 24
+        },
+        {
+          "frame": 456,
+          "pts_seconds": 28.5,
+          "sheet": 1,
+          "slot": 25
+        },
+        {
+          "frame": 464,
+          "pts_seconds": 29.0,
+          "sheet": 1,
+          "slot": 26
+        },
+        {
+          "frame": 472,
+          "pts_seconds": 29.5,
+          "sheet": 1,
+          "slot": 27
+        },
+        {
+          "frame": 480,
+          "pts_seconds": 30.0,
+          "sheet": 1,
+          "slot": 28
+        },
+        {
+          "frame": 488,
+          "pts_seconds": 30.5,
+          "sheet": 1,
+          "slot": 29
+        },
+        {
+          "frame": 496,
+          "pts_seconds": 31.0,
+          "sheet": 1,
+          "slot": 30
+        },
+        {
+          "frame": 500,
+          "pts_seconds": 31.25,
+          "sheet": 1,
+          "slot": 31
+        }
+      ],
+      "sheets": [
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p00_sheet0.jpg",
+          "sha256": "c881f8f2edd95bd67f3822d2ae4a8dd7b8ed634c87ff3d42041d0fd0d6d1f3fc",
+          "bytes": 865991
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p00_sheet1.jpg",
+          "sha256": "eadecdb39c91b34d3981df023392aeb41cf4489f33778b2c63c169481ce0aa55",
+          "bytes": 893959
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "A worker drives a snowplow along a quiet street, pushing fresh snow into a growing bank beside parked cars. A continuous wide street-level view under pale winter light.",
+      "source": "/home/acorn0415/sfq_data/mechanism/fr/p01_s303_BF16/video.mp4",
+      "source_sha256": "9e3e14f3f7b5c75703afce5a9a4ee86c372105a61305ba8222c197d2f01665ce",
+      "decoded_frames": 501,
+      "viewable_sampled_frames": [
+        {
+          "frame": 0,
+          "pts_seconds": 0.0,
+          "sheet": 0,
+          "slot": 0
+        },
+        {
+          "frame": 8,
+          "pts_seconds": 0.5,
+          "sheet": 0,
+          "slot": 1
+        },
+        {
+          "frame": 16,
+          "pts_seconds": 1.0,
+          "sheet": 0,
+          "slot": 2
+        },
+        {
+          "frame": 24,
+          "pts_seconds": 1.5,
+          "sheet": 0,
+          "slot": 3
+        },
+        {
+          "frame": 32,
+          "pts_seconds": 2.0,
+          "sheet": 0,
+          "slot": 4
+        },
+        {
+          "frame": 40,
+          "pts_seconds": 2.5,
+          "sheet": 0,
+          "slot": 5
+        },
+        {
+          "frame": 48,
+          "pts_seconds": 3.0,
+          "sheet": 0,
+          "slot": 6
+        },
+        {
+          "frame": 56,
+          "pts_seconds": 3.5,
+          "sheet": 0,
+          "slot": 7
+        },
+        {
+          "frame": 64,
+          "pts_seconds": 4.0,
+          "sheet": 0,
+          "slot": 8
+        },
+        {
+          "frame": 72,
+          "pts_seconds": 4.5,
+          "sheet": 0,
+          "slot": 9
+        },
+        {
+          "frame": 80,
+          "pts_seconds": 5.0,
+          "sheet": 0,
+          "slot": 10
+        },
+        {
+          "frame": 88,
+          "pts_seconds": 5.5,
+          "sheet": 0,
+          "slot": 11
+        },
+        {
+          "frame": 96,
+          "pts_seconds": 6.0,
+          "sheet": 0,
+          "slot": 12
+        },
+        {
+          "frame": 104,
+          "pts_seconds": 6.5,
+          "sheet": 0,
+          "slot": 13
+        },
+        {
+          "frame": 112,
+          "pts_seconds": 7.0,
+          "sheet": 0,
+          "slot": 14
+        },
+        {
+          "frame": 120,
+          "pts_seconds": 7.5,
+          "sheet": 0,
+          "slot": 15
+        },
+        {
+          "frame": 128,
+          "pts_seconds": 8.0,
+          "sheet": 0,
+          "slot": 16
+        },
+        {
+          "frame": 136,
+          "pts_seconds": 8.5,
+          "sheet": 0,
+          "slot": 17
+        },
+        {
+          "frame": 144,
+          "pts_seconds": 9.0,
+          "sheet": 0,
+          "slot": 18
+        },
+        {
+          "frame": 152,
+          "pts_seconds": 9.5,
+          "sheet": 0,
+          "slot": 19
+        },
+        {
+          "frame": 160,
+          "pts_seconds": 10.0,
+          "sheet": 0,
+          "slot": 20
+        },
+        {
+          "frame": 168,
+          "pts_seconds": 10.5,
+          "sheet": 0,
+          "slot": 21
+        },
+        {
+          "frame": 176,
+          "pts_seconds": 11.0,
+          "sheet": 0,
+          "slot": 22
+        },
+        {
+          "frame": 184,
+          "pts_seconds": 11.5,
+          "sheet": 0,
+          "slot": 23
+        },
+        {
+          "frame": 192,
+          "pts_seconds": 12.0,
+          "sheet": 0,
+          "slot": 24
+        },
+        {
+          "frame": 200,
+          "pts_seconds": 12.5,
+          "sheet": 0,
+          "slot": 25
+        },
+        {
+          "frame": 208,
+          "pts_seconds": 13.0,
+          "sheet": 0,
+          "slot": 26
+        },
+        {
+          "frame": 216,
+          "pts_seconds": 13.5,
+          "sheet": 0,
+          "slot": 27
+        },
+        {
+          "frame": 224,
+          "pts_seconds": 14.0,
+          "sheet": 0,
+          "slot": 28
+        },
+        {
+          "frame": 232,
+          "pts_seconds": 14.5,
+          "sheet": 0,
+          "slot": 29
+        },
+        {
+          "frame": 240,
+          "pts_seconds": 15.0,
+          "sheet": 0,
+          "slot": 30
+        },
+        {
+          "frame": 248,
+          "pts_seconds": 15.5,
+          "sheet": 0,
+          "slot": 31
+        },
+        {
+          "frame": 256,
+          "pts_seconds": 16.0,
+          "sheet": 1,
+          "slot": 0
+        },
+        {
+          "frame": 264,
+          "pts_seconds": 16.5,
+          "sheet": 1,
+          "slot": 1
+        },
+        {
+          "frame": 272,
+          "pts_seconds": 17.0,
+          "sheet": 1,
+          "slot": 2
+        },
+        {
+          "frame": 280,
+          "pts_seconds": 17.5,
+          "sheet": 1,
+          "slot": 3
+        },
+        {
+          "frame": 288,
+          "pts_seconds": 18.0,
+          "sheet": 1,
+          "slot": 4
+        },
+        {
+          "frame": 296,
+          "pts_seconds": 18.5,
+          "sheet": 1,
+          "slot": 5
+        },
+        {
+          "frame": 304,
+          "pts_seconds": 19.0,
+          "sheet": 1,
+          "slot": 6
+        },
+        {
+          "frame": 312,
+          "pts_seconds": 19.5,
+          "sheet": 1,
+          "slot": 7
+        },
+        {
+          "frame": 320,
+          "pts_seconds": 20.0,
+          "sheet": 1,
+          "slot": 8
+        },
+        {
+          "frame": 328,
+          "pts_seconds": 20.5,
+          "sheet": 1,
+          "slot": 9
+        },
+        {
+          "frame": 336,
+          "pts_seconds": 21.0,
+          "sheet": 1,
+          "slot": 10
+        },
+        {
+          "frame": 344,
+          "pts_seconds": 21.5,
+          "sheet": 1,
+          "slot": 11
+        },
+        {
+          "frame": 352,
+          "pts_seconds": 22.0,
+          "sheet": 1,
+          "slot": 12
+        },
+        {
+          "frame": 360,
+          "pts_seconds": 22.5,
+          "sheet": 1,
+          "slot": 13
+        },
+        {
+          "frame": 368,
+          "pts_seconds": 23.0,
+          "sheet": 1,
+          "slot": 14
+        },
+        {
+          "frame": 376,
+          "pts_seconds": 23.5,
+          "sheet": 1,
+          "slot": 15
+        },
+        {
+          "frame": 384,
+          "pts_seconds": 24.0,
+          "sheet": 1,
+          "slot": 16
+        },
+        {
+          "frame": 392,
+          "pts_seconds": 24.5,
+          "sheet": 1,
+          "slot": 17
+        },
+        {
+          "frame": 400,
+          "pts_seconds": 25.0,
+          "sheet": 1,
+          "slot": 18
+        },
+        {
+          "frame": 408,
+          "pts_seconds": 25.5,
+          "sheet": 1,
+          "slot": 19
+        },
+        {
+          "frame": 416,
+          "pts_seconds": 26.0,
+          "sheet": 1,
+          "slot": 20
+        },
+        {
+          "frame": 424,
+          "pts_seconds": 26.5,
+          "sheet": 1,
+          "slot": 21
+        },
+        {
+          "frame": 432,
+          "pts_seconds": 27.0,
+          "sheet": 1,
+          "slot": 22
+        },
+        {
+          "frame": 440,
+          "pts_seconds": 27.5,
+          "sheet": 1,
+          "slot": 23
+        },
+        {
+          "frame": 448,
+          "pts_seconds": 28.0,
+          "sheet": 1,
+          "slot": 24
+        },
+        {
+          "frame": 456,
+          "pts_seconds": 28.5,
+          "sheet": 1,
+          "slot": 25
+        },
+        {
+          "frame": 464,
+          "pts_seconds": 29.0,
+          "sheet": 1,
+          "slot": 26
+        },
+        {
+          "frame": 472,
+          "pts_seconds": 29.5,
+          "sheet": 1,
+          "slot": 27
+        },
+        {
+          "frame": 480,
+          "pts_seconds": 30.0,
+          "sheet": 1,
+          "slot": 28
+        },
+        {
+          "frame": 488,
+          "pts_seconds": 30.5,
+          "sheet": 1,
+          "slot": 29
+        },
+        {
+          "frame": 496,
+          "pts_seconds": 31.0,
+          "sheet": 1,
+          "slot": 30
+        },
+        {
+          "frame": 500,
+          "pts_seconds": 31.25,
+          "sheet": 1,
+          "slot": 31
+        }
+      ],
+      "sheets": [
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p01_sheet0.jpg",
+          "sha256": "635b5198f5931ba08082bda75aa49fdc2d305abbdf3638cfafd45f2d90ae28bc",
+          "bytes": 924258
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p01_sheet1.jpg",
+          "sha256": "5eaf8d3e8d649b751b01799ed0abcaf0a0515889740f544a6a110fca011ff369",
+          "bytes": 1027715
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "A pianist plays an upright piano with both hands, shifting between the keys while the sleeves of a gray sweater move gently. A continuous close side view of the hands and keyboard.",
+      "source": "/home/acorn0415/sfq_data/mechanism/fr/p02_s303_BF16/video.mp4",
+      "source_sha256": "f85d4c071db68db4f5451fdc7074d4ec0df5523ebe59dea8ffcea0fc32013c76",
+      "decoded_frames": 501,
+      "viewable_sampled_frames": [
+        {
+          "frame": 0,
+          "pts_seconds": 0.0,
+          "sheet": 0,
+          "slot": 0
+        },
+        {
+          "frame": 8,
+          "pts_seconds": 0.5,
+          "sheet": 0,
+          "slot": 1
+        },
+        {
+          "frame": 16,
+          "pts_seconds": 1.0,
+          "sheet": 0,
+          "slot": 2
+        },
+        {
+          "frame": 24,
+          "pts_seconds": 1.5,
+          "sheet": 0,
+          "slot": 3
+        },
+        {
+          "frame": 32,
+          "pts_seconds": 2.0,
+          "sheet": 0,
+          "slot": 4
+        },
+        {
+          "frame": 40,
+          "pts_seconds": 2.5,
+          "sheet": 0,
+          "slot": 5
+        },
+        {
+          "frame": 48,
+          "pts_seconds": 3.0,
+          "sheet": 0,
+          "slot": 6
+        },
+        {
+          "frame": 56,
+          "pts_seconds": 3.5,
+          "sheet": 0,
+          "slot": 7
+        },
+        {
+          "frame": 64,
+          "pts_seconds": 4.0,
+          "sheet": 0,
+          "slot": 8
+        },
+        {
+          "frame": 72,
+          "pts_seconds": 4.5,
+          "sheet": 0,
+          "slot": 9
+        },
+        {
+          "frame": 80,
+          "pts_seconds": 5.0,
+          "sheet": 0,
+          "slot": 10
+        },
+        {
+          "frame": 88,
+          "pts_seconds": 5.5,
+          "sheet": 0,
+          "slot": 11
+        },
+        {
+          "frame": 96,
+          "pts_seconds": 6.0,
+          "sheet": 0,
+          "slot": 12
+        },
+        {
+          "frame": 104,
+          "pts_seconds": 6.5,
+          "sheet": 0,
+          "slot": 13
+        },
+        {
+          "frame": 112,
+          "pts_seconds": 7.0,
+          "sheet": 0,
+          "slot": 14
+        },
+        {
+          "frame": 120,
+          "pts_seconds": 7.5,
+          "sheet": 0,
+          "slot": 15
+        },
+        {
+          "frame": 128,
+          "pts_seconds": 8.0,
+          "sheet": 0,
+          "slot": 16
+        },
+        {
+          "frame": 136,
+          "pts_seconds": 8.5,
+          "sheet": 0,
+          "slot": 17
+        },
+        {
+          "frame": 144,
+          "pts_seconds": 9.0,
+          "sheet": 0,
+          "slot": 18
+        },
+        {
+          "frame": 152,
+          "pts_seconds": 9.5,
+          "sheet": 0,
+          "slot": 19
+        },
+        {
+          "frame": 160,
+          "pts_seconds": 10.0,
+          "sheet": 0,
+          "slot": 20
+        },
+        {
+          "frame": 168,
+          "pts_seconds": 10.5,
+          "sheet": 0,
+          "slot": 21
+        },
+        {
+          "frame": 176,
+          "pts_seconds": 11.0,
+          "sheet": 0,
+          "slot": 22
+        },
+        {
+          "frame": 184,
+          "pts_seconds": 11.5,
+          "sheet": 0,
+          "slot": 23
+        },
+        {
+          "frame": 192,
+          "pts_seconds": 12.0,
+          "sheet": 0,
+          "slot": 24
+        },
+        {
+          "frame": 200,
+          "pts_seconds": 12.5,
+          "sheet": 0,
+          "slot": 25
+        },
+        {
+          "frame": 208,
+          "pts_seconds": 13.0,
+          "sheet": 0,
+          "slot": 26
+        },
+        {
+          "frame": 216,
+          "pts_seconds": 13.5,
+          "sheet": 0,
+          "slot": 27
+        },
+        {
+          "frame": 224,
+          "pts_seconds": 14.0,
+          "sheet": 0,
+          "slot": 28
+        },
+        {
+          "frame": 232,
+          "pts_seconds": 14.5,
+          "sheet": 0,
+          "slot": 29
+        },
+        {
+          "frame": 240,
+          "pts_seconds": 15.0,
+          "sheet": 0,
+          "slot": 30
+        },
+        {
+          "frame": 248,
+          "pts_seconds": 15.5,
+          "sheet": 0,
+          "slot": 31
+        },
+        {
+          "frame": 256,
+          "pts_seconds": 16.0,
+          "sheet": 1,
+          "slot": 0
+        },
+        {
+          "frame": 264,
+          "pts_seconds": 16.5,
+          "sheet": 1,
+          "slot": 1
+        },
+        {
+          "frame": 272,
+          "pts_seconds": 17.0,
+          "sheet": 1,
+          "slot": 2
+        },
+        {
+          "frame": 280,
+          "pts_seconds": 17.5,
+          "sheet": 1,
+          "slot": 3
+        },
+        {
+          "frame": 288,
+          "pts_seconds": 18.0,
+          "sheet": 1,
+          "slot": 4
+        },
+        {
+          "frame": 296,
+          "pts_seconds": 18.5,
+          "sheet": 1,
+          "slot": 5
+        },
+        {
+          "frame": 304,
+          "pts_seconds": 19.0,
+          "sheet": 1,
+          "slot": 6
+        },
+        {
+          "frame": 312,
+          "pts_seconds": 19.5,
+          "sheet": 1,
+          "slot": 7
+        },
+        {
+          "frame": 320,
+          "pts_seconds": 20.0,
+          "sheet": 1,
+          "slot": 8
+        },
+        {
+          "frame": 328,
+          "pts_seconds": 20.5,
+          "sheet": 1,
+          "slot": 9
+        },
+        {
+          "frame": 336,
+          "pts_seconds": 21.0,
+          "sheet": 1,
+          "slot": 10
+        },
+        {
+          "frame": 344,
+          "pts_seconds": 21.5,
+          "sheet": 1,
+          "slot": 11
+        },
+        {
+          "frame": 352,
+          "pts_seconds": 22.0,
+          "sheet": 1,
+          "slot": 12
+        },
+        {
+          "frame": 360,
+          "pts_seconds": 22.5,
+          "sheet": 1,
+          "slot": 13
+        },
+        {
+          "frame": 368,
+          "pts_seconds": 23.0,
+          "sheet": 1,
+          "slot": 14
+        },
+        {
+          "frame": 376,
+          "pts_seconds": 23.5,
+          "sheet": 1,
+          "slot": 15
+        },
+        {
+          "frame": 384,
+          "pts_seconds": 24.0,
+          "sheet": 1,
+          "slot": 16
+        },
+        {
+          "frame": 392,
+          "pts_seconds": 24.5,
+          "sheet": 1,
+          "slot": 17
+        },
+        {
+          "frame": 400,
+          "pts_seconds": 25.0,
+          "sheet": 1,
+          "slot": 18
+        },
+        {
+          "frame": 408,
+          "pts_seconds": 25.5,
+          "sheet": 1,
+          "slot": 19
+        },
+        {
+          "frame": 416,
+          "pts_seconds": 26.0,
+          "sheet": 1,
+          "slot": 20
+        },
+        {
+          "frame": 424,
+          "pts_seconds": 26.5,
+          "sheet": 1,
+          "slot": 21
+        },
+        {
+          "frame": 432,
+          "pts_seconds": 27.0,
+          "sheet": 1,
+          "slot": 22
+        },
+        {
+          "frame": 440,
+          "pts_seconds": 27.5,
+          "sheet": 1,
+          "slot": 23
+        },
+        {
+          "frame": 448,
+          "pts_seconds": 28.0,
+          "sheet": 1,
+          "slot": 24
+        },
+        {
+          "frame": 456,
+          "pts_seconds": 28.5,
+          "sheet": 1,
+          "slot": 25
+        },
+        {
+          "frame": 464,
+          "pts_seconds": 29.0,
+          "sheet": 1,
+          "slot": 26
+        },
+        {
+          "frame": 472,
+          "pts_seconds": 29.5,
+          "sheet": 1,
+          "slot": 27
+        },
+        {
+          "frame": 480,
+          "pts_seconds": 30.0,
+          "sheet": 1,
+          "slot": 28
+        },
+        {
+          "frame": 488,
+          "pts_seconds": 30.5,
+          "sheet": 1,
+          "slot": 29
+        },
+        {
+          "frame": 496,
+          "pts_seconds": 31.0,
+          "sheet": 1,
+          "slot": 30
+        },
+        {
+          "frame": 500,
+          "pts_seconds": 31.25,
+          "sheet": 1,
+          "slot": 31
+        }
+      ],
+      "sheets": [
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p02_sheet0.jpg",
+          "sha256": "c3fc3025a143f633729800ddbab5071a715b7c09a4971dd0eece93f2f6d43679",
+          "bytes": 840711
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p02_sheet1.jpg",
+          "sha256": "56cfbccf789e05565fb82f4579254853615a55f8a38c88660516e480bbd307bd",
+          "bytes": 1186030
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "A chestnut horse walks across a meadow, lowers its head to graze, then takes several more steps. A continuous medium shot with distant hills and a light breeze.",
+      "source": "/home/acorn0415/sfq_data/mechanism/fr/p03_s303_BF16/video.mp4",
+      "source_sha256": "6233b83d9821861e4629ab1f4cfebce8caca980aec703be9feb86b2be46ce5e1",
+      "decoded_frames": 501,
+      "viewable_sampled_frames": [
+        {
+          "frame": 0,
+          "pts_seconds": 0.0,
+          "sheet": 0,
+          "slot": 0
+        },
+        {
+          "frame": 8,
+          "pts_seconds": 0.5,
+          "sheet": 0,
+          "slot": 1
+        },
+        {
+          "frame": 16,
+          "pts_seconds": 1.0,
+          "sheet": 0,
+          "slot": 2
+        },
+        {
+          "frame": 24,
+          "pts_seconds": 1.5,
+          "sheet": 0,
+          "slot": 3
+        },
+        {
+          "frame": 32,
+          "pts_seconds": 2.0,
+          "sheet": 0,
+          "slot": 4
+        },
+        {
+          "frame": 40,
+          "pts_seconds": 2.5,
+          "sheet": 0,
+          "slot": 5
+        },
+        {
+          "frame": 48,
+          "pts_seconds": 3.0,
+          "sheet": 0,
+          "slot": 6
+        },
+        {
+          "frame": 56,
+          "pts_seconds": 3.5,
+          "sheet": 0,
+          "slot": 7
+        },
+        {
+          "frame": 64,
+          "pts_seconds": 4.0,
+          "sheet": 0,
+          "slot": 8
+        },
+        {
+          "frame": 72,
+          "pts_seconds": 4.5,
+          "sheet": 0,
+          "slot": 9
+        },
+        {
+          "frame": 80,
+          "pts_seconds": 5.0,
+          "sheet": 0,
+          "slot": 10
+        },
+        {
+          "frame": 88,
+          "pts_seconds": 5.5,
+          "sheet": 0,
+          "slot": 11
+        },
+        {
+          "frame": 96,
+          "pts_seconds": 6.0,
+          "sheet": 0,
+          "slot": 12
+        },
+        {
+          "frame": 104,
+          "pts_seconds": 6.5,
+          "sheet": 0,
+          "slot": 13
+        },
+        {
+          "frame": 112,
+          "pts_seconds": 7.0,
+          "sheet": 0,
+          "slot": 14
+        },
+        {
+          "frame": 120,
+          "pts_seconds": 7.5,
+          "sheet": 0,
+          "slot": 15
+        },
+        {
+          "frame": 128,
+          "pts_seconds": 8.0,
+          "sheet": 0,
+          "slot": 16
+        },
+        {
+          "frame": 136,
+          "pts_seconds": 8.5,
+          "sheet": 0,
+          "slot": 17
+        },
+        {
+          "frame": 144,
+          "pts_seconds": 9.0,
+          "sheet": 0,
+          "slot": 18
+        },
+        {
+          "frame": 152,
+          "pts_seconds": 9.5,
+          "sheet": 0,
+          "slot": 19
+        },
+        {
+          "frame": 160,
+          "pts_seconds": 10.0,
+          "sheet": 0,
+          "slot": 20
+        },
+        {
+          "frame": 168,
+          "pts_seconds": 10.5,
+          "sheet": 0,
+          "slot": 21
+        },
+        {
+          "frame": 176,
+          "pts_seconds": 11.0,
+          "sheet": 0,
+          "slot": 22
+        },
+        {
+          "frame": 184,
+          "pts_seconds": 11.5,
+          "sheet": 0,
+          "slot": 23
+        },
+        {
+          "frame": 192,
+          "pts_seconds": 12.0,
+          "sheet": 0,
+          "slot": 24
+        },
+        {
+          "frame": 200,
+          "pts_seconds": 12.5,
+          "sheet": 0,
+          "slot": 25
+        },
+        {
+          "frame": 208,
+          "pts_seconds": 13.0,
+          "sheet": 0,
+          "slot": 26
+        },
+        {
+          "frame": 216,
+          "pts_seconds": 13.5,
+          "sheet": 0,
+          "slot": 27
+        },
+        {
+          "frame": 224,
+          "pts_seconds": 14.0,
+          "sheet": 0,
+          "slot": 28
+        },
+        {
+          "frame": 232,
+          "pts_seconds": 14.5,
+          "sheet": 0,
+          "slot": 29
+        },
+        {
+          "frame": 240,
+          "pts_seconds": 15.0,
+          "sheet": 0,
+          "slot": 30
+        },
+        {
+          "frame": 248,
+          "pts_seconds": 15.5,
+          "sheet": 0,
+          "slot": 31
+        },
+        {
+          "frame": 256,
+          "pts_seconds": 16.0,
+          "sheet": 1,
+          "slot": 0
+        },
+        {
+          "frame": 264,
+          "pts_seconds": 16.5,
+          "sheet": 1,
+          "slot": 1
+        },
+        {
+          "frame": 272,
+          "pts_seconds": 17.0,
+          "sheet": 1,
+          "slot": 2
+        },
+        {
+          "frame": 280,
+          "pts_seconds": 17.5,
+          "sheet": 1,
+          "slot": 3
+        },
+        {
+          "frame": 288,
+          "pts_seconds": 18.0,
+          "sheet": 1,
+          "slot": 4
+        },
+        {
+          "frame": 296,
+          "pts_seconds": 18.5,
+          "sheet": 1,
+          "slot": 5
+        },
+        {
+          "frame": 304,
+          "pts_seconds": 19.0,
+          "sheet": 1,
+          "slot": 6
+        },
+        {
+          "frame": 312,
+          "pts_seconds": 19.5,
+          "sheet": 1,
+          "slot": 7
+        },
+        {
+          "frame": 320,
+          "pts_seconds": 20.0,
+          "sheet": 1,
+          "slot": 8
+        },
+        {
+          "frame": 328,
+          "pts_seconds": 20.5,
+          "sheet": 1,
+          "slot": 9
+        },
+        {
+          "frame": 336,
+          "pts_seconds": 21.0,
+          "sheet": 1,
+          "slot": 10
+        },
+        {
+          "frame": 344,
+          "pts_seconds": 21.5,
+          "sheet": 1,
+          "slot": 11
+        },
+        {
+          "frame": 352,
+          "pts_seconds": 22.0,
+          "sheet": 1,
+          "slot": 12
+        },
+        {
+          "frame": 360,
+          "pts_seconds": 22.5,
+          "sheet": 1,
+          "slot": 13
+        },
+        {
+          "frame": 368,
+          "pts_seconds": 23.0,
+          "sheet": 1,
+          "slot": 14
+        },
+        {
+          "frame": 376,
+          "pts_seconds": 23.5,
+          "sheet": 1,
+          "slot": 15
+        },
+        {
+          "frame": 384,
+          "pts_seconds": 24.0,
+          "sheet": 1,
+          "slot": 16
+        },
+        {
+          "frame": 392,
+          "pts_seconds": 24.5,
+          "sheet": 1,
+          "slot": 17
+        },
+        {
+          "frame": 400,
+          "pts_seconds": 25.0,
+          "sheet": 1,
+          "slot": 18
+        },
+        {
+          "frame": 408,
+          "pts_seconds": 25.5,
+          "sheet": 1,
+          "slot": 19
+        },
+        {
+          "frame": 416,
+          "pts_seconds": 26.0,
+          "sheet": 1,
+          "slot": 20
+        },
+        {
+          "frame": 424,
+          "pts_seconds": 26.5,
+          "sheet": 1,
+          "slot": 21
+        },
+        {
+          "frame": 432,
+          "pts_seconds": 27.0,
+          "sheet": 1,
+          "slot": 22
+        },
+        {
+          "frame": 440,
+          "pts_seconds": 27.5,
+          "sheet": 1,
+          "slot": 23
+        },
+        {
+          "frame": 448,
+          "pts_seconds": 28.0,
+          "sheet": 1,
+          "slot": 24
+        },
+        {
+          "frame": 456,
+          "pts_seconds": 28.5,
+          "sheet": 1,
+          "slot": 25
+        },
+        {
+          "frame": 464,
+          "pts_seconds": 29.0,
+          "sheet": 1,
+          "slot": 26
+        },
+        {
+          "frame": 472,
+          "pts_seconds": 29.5,
+          "sheet": 1,
+          "slot": 27
+        },
+        {
+          "frame": 480,
+          "pts_seconds": 30.0,
+          "sheet": 1,
+          "slot": 28
+        },
+        {
+          "frame": 488,
+          "pts_seconds": 30.5,
+          "sheet": 1,
+          "slot": 29
+        },
+        {
+          "frame": 496,
+          "pts_seconds": 31.0,
+          "sheet": 1,
+          "slot": 30
+        },
+        {
+          "frame": 500,
+          "pts_seconds": 31.25,
+          "sheet": 1,
+          "slot": 31
+        }
+      ],
+      "sheets": [
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p03_sheet0.jpg",
+          "sha256": "69b6ac9f48a06dda24b4af46a7636babc97bf63bd5605eec269efdf480ae6e03",
+          "bytes": 825536
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p03_sheet1.jpg",
+          "sha256": "89c73ee4be969d7b84d6f8718af75a18f1ecfd53d2e2b4ac1edbb4bbc42f6b66",
+          "bytes": 918004
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "A pair of robotic grippers stacks colored wooden blocks into a small tower on a workbench. A fixed continuous view keeps the grippers and every block visible.",
+      "source": "/home/acorn0415/sfq_data/mechanism/fr/p04_s303_BF16/video.mp4",
+      "source_sha256": "22171f16678e5ec80fb0b651e2cb465155794fb9e8a72e4a2e7725ea9f16590d",
+      "decoded_frames": 501,
+      "viewable_sampled_frames": [
+        {
+          "frame": 0,
+          "pts_seconds": 0.0,
+          "sheet": 0,
+          "slot": 0
+        },
+        {
+          "frame": 8,
+          "pts_seconds": 0.5,
+          "sheet": 0,
+          "slot": 1
+        },
+        {
+          "frame": 16,
+          "pts_seconds": 1.0,
+          "sheet": 0,
+          "slot": 2
+        },
+        {
+          "frame": 24,
+          "pts_seconds": 1.5,
+          "sheet": 0,
+          "slot": 3
+        },
+        {
+          "frame": 32,
+          "pts_seconds": 2.0,
+          "sheet": 0,
+          "slot": 4
+        },
+        {
+          "frame": 40,
+          "pts_seconds": 2.5,
+          "sheet": 0,
+          "slot": 5
+        },
+        {
+          "frame": 48,
+          "pts_seconds": 3.0,
+          "sheet": 0,
+          "slot": 6
+        },
+        {
+          "frame": 56,
+          "pts_seconds": 3.5,
+          "sheet": 0,
+          "slot": 7
+        },
+        {
+          "frame": 64,
+          "pts_seconds": 4.0,
+          "sheet": 0,
+          "slot": 8
+        },
+        {
+          "frame": 72,
+          "pts_seconds": 4.5,
+          "sheet": 0,
+          "slot": 9
+        },
+        {
+          "frame": 80,
+          "pts_seconds": 5.0,
+          "sheet": 0,
+          "slot": 10
+        },
+        {
+          "frame": 88,
+          "pts_seconds": 5.5,
+          "sheet": 0,
+          "slot": 11
+        },
+        {
+          "frame": 96,
+          "pts_seconds": 6.0,
+          "sheet": 0,
+          "slot": 12
+        },
+        {
+          "frame": 104,
+          "pts_seconds": 6.5,
+          "sheet": 0,
+          "slot": 13
+        },
+        {
+          "frame": 112,
+          "pts_seconds": 7.0,
+          "sheet": 0,
+          "slot": 14
+        },
+        {
+          "frame": 120,
+          "pts_seconds": 7.5,
+          "sheet": 0,
+          "slot": 15
+        },
+        {
+          "frame": 128,
+          "pts_seconds": 8.0,
+          "sheet": 0,
+          "slot": 16
+        },
+        {
+          "frame": 136,
+          "pts_seconds": 8.5,
+          "sheet": 0,
+          "slot": 17
+        },
+        {
+          "frame": 144,
+          "pts_seconds": 9.0,
+          "sheet": 0,
+          "slot": 18
+        },
+        {
+          "frame": 152,
+          "pts_seconds": 9.5,
+          "sheet": 0,
+          "slot": 19
+        },
+        {
+          "frame": 160,
+          "pts_seconds": 10.0,
+          "sheet": 0,
+          "slot": 20
+        },
+        {
+          "frame": 168,
+          "pts_seconds": 10.5,
+          "sheet": 0,
+          "slot": 21
+        },
+        {
+          "frame": 176,
+          "pts_seconds": 11.0,
+          "sheet": 0,
+          "slot": 22
+        },
+        {
+          "frame": 184,
+          "pts_seconds": 11.5,
+          "sheet": 0,
+          "slot": 23
+        },
+        {
+          "frame": 192,
+          "pts_seconds": 12.0,
+          "sheet": 0,
+          "slot": 24
+        },
+        {
+          "frame": 200,
+          "pts_seconds": 12.5,
+          "sheet": 0,
+          "slot": 25
+        },
+        {
+          "frame": 208,
+          "pts_seconds": 13.0,
+          "sheet": 0,
+          "slot": 26
+        },
+        {
+          "frame": 216,
+          "pts_seconds": 13.5,
+          "sheet": 0,
+          "slot": 27
+        },
+        {
+          "frame": 224,
+          "pts_seconds": 14.0,
+          "sheet": 0,
+          "slot": 28
+        },
+        {
+          "frame": 232,
+          "pts_seconds": 14.5,
+          "sheet": 0,
+          "slot": 29
+        },
+        {
+          "frame": 240,
+          "pts_seconds": 15.0,
+          "sheet": 0,
+          "slot": 30
+        },
+        {
+          "frame": 248,
+          "pts_seconds": 15.5,
+          "sheet": 0,
+          "slot": 31
+        },
+        {
+          "frame": 256,
+          "pts_seconds": 16.0,
+          "sheet": 1,
+          "slot": 0
+        },
+        {
+          "frame": 264,
+          "pts_seconds": 16.5,
+          "sheet": 1,
+          "slot": 1
+        },
+        {
+          "frame": 272,
+          "pts_seconds": 17.0,
+          "sheet": 1,
+          "slot": 2
+        },
+        {
+          "frame": 280,
+          "pts_seconds": 17.5,
+          "sheet": 1,
+          "slot": 3
+        },
+        {
+          "frame": 288,
+          "pts_seconds": 18.0,
+          "sheet": 1,
+          "slot": 4
+        },
+        {
+          "frame": 296,
+          "pts_seconds": 18.5,
+          "sheet": 1,
+          "slot": 5
+        },
+        {
+          "frame": 304,
+          "pts_seconds": 19.0,
+          "sheet": 1,
+          "slot": 6
+        },
+        {
+          "frame": 312,
+          "pts_seconds": 19.5,
+          "sheet": 1,
+          "slot": 7
+        },
+        {
+          "frame": 320,
+          "pts_seconds": 20.0,
+          "sheet": 1,
+          "slot": 8
+        },
+        {
+          "frame": 328,
+          "pts_seconds": 20.5,
+          "sheet": 1,
+          "slot": 9
+        },
+        {
+          "frame": 336,
+          "pts_seconds": 21.0,
+          "sheet": 1,
+          "slot": 10
+        },
+        {
+          "frame": 344,
+          "pts_seconds": 21.5,
+          "sheet": 1,
+          "slot": 11
+        },
+        {
+          "frame": 352,
+          "pts_seconds": 22.0,
+          "sheet": 1,
+          "slot": 12
+        },
+        {
+          "frame": 360,
+          "pts_seconds": 22.5,
+          "sheet": 1,
+          "slot": 13
+        },
+        {
+          "frame": 368,
+          "pts_seconds": 23.0,
+          "sheet": 1,
+          "slot": 14
+        },
+        {
+          "frame": 376,
+          "pts_seconds": 23.5,
+          "sheet": 1,
+          "slot": 15
+        },
+        {
+          "frame": 384,
+          "pts_seconds": 24.0,
+          "sheet": 1,
+          "slot": 16
+        },
+        {
+          "frame": 392,
+          "pts_seconds": 24.5,
+          "sheet": 1,
+          "slot": 17
+        },
+        {
+          "frame": 400,
+          "pts_seconds": 25.0,
+          "sheet": 1,
+          "slot": 18
+        },
+        {
+          "frame": 408,
+          "pts_seconds": 25.5,
+          "sheet": 1,
+          "slot": 19
+        },
+        {
+          "frame": 416,
+          "pts_seconds": 26.0,
+          "sheet": 1,
+          "slot": 20
+        },
+        {
+          "frame": 424,
+          "pts_seconds": 26.5,
+          "sheet": 1,
+          "slot": 21
+        },
+        {
+          "frame": 432,
+          "pts_seconds": 27.0,
+          "sheet": 1,
+          "slot": 22
+        },
+        {
+          "frame": 440,
+          "pts_seconds": 27.5,
+          "sheet": 1,
+          "slot": 23
+        },
+        {
+          "frame": 448,
+          "pts_seconds": 28.0,
+          "sheet": 1,
+          "slot": 24
+        },
+        {
+          "frame": 456,
+          "pts_seconds": 28.5,
+          "sheet": 1,
+          "slot": 25
+        },
+        {
+          "frame": 464,
+          "pts_seconds": 29.0,
+          "sheet": 1,
+          "slot": 26
+        },
+        {
+          "frame": 472,
+          "pts_seconds": 29.5,
+          "sheet": 1,
+          "slot": 27
+        },
+        {
+          "frame": 480,
+          "pts_seconds": 30.0,
+          "sheet": 1,
+          "slot": 28
+        },
+        {
+          "frame": 488,
+          "pts_seconds": 30.5,
+          "sheet": 1,
+          "slot": 29
+        },
+        {
+          "frame": 496,
+          "pts_seconds": 31.0,
+          "sheet": 1,
+          "slot": 30
+        },
+        {
+          "frame": 500,
+          "pts_seconds": 31.25,
+          "sheet": 1,
+          "slot": 31
+        }
+      ],
+      "sheets": [
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p04_sheet0.jpg",
+          "sha256": "da83e7db5af2cd866d83c9dd209e30f1e9a71f8b632443e652315a16bb95c929",
+          "bytes": 917528
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p04_sheet1.jpg",
+          "sha256": "f558995a97ddf6cf53076ce032a2856d9d0c2ec1aeb9e634f6fcdf1386de19d9",
+          "bytes": 1246043
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "A lighthouse beam sweeps across a rocky shoreline as small waves break against the stones at dusk. A fixed wide shot includes the tower, water, and darkening sky.",
+      "source": "/home/acorn0415/sfq_data/mechanism/fr/p05_s303_BF16/video.mp4",
+      "source_sha256": "94316f82f6b7bf2f6166723fd1d97910b75a733732eb147d7a4fa6ed02b364ab",
+      "decoded_frames": 501,
+      "viewable_sampled_frames": [
+        {
+          "frame": 0,
+          "pts_seconds": 0.0,
+          "sheet": 0,
+          "slot": 0
+        },
+        {
+          "frame": 8,
+          "pts_seconds": 0.5,
+          "sheet": 0,
+          "slot": 1
+        },
+        {
+          "frame": 16,
+          "pts_seconds": 1.0,
+          "sheet": 0,
+          "slot": 2
+        },
+        {
+          "frame": 24,
+          "pts_seconds": 1.5,
+          "sheet": 0,
+          "slot": 3
+        },
+        {
+          "frame": 32,
+          "pts_seconds": 2.0,
+          "sheet": 0,
+          "slot": 4
+        },
+        {
+          "frame": 40,
+          "pts_seconds": 2.5,
+          "sheet": 0,
+          "slot": 5
+        },
+        {
+          "frame": 48,
+          "pts_seconds": 3.0,
+          "sheet": 0,
+          "slot": 6
+        },
+        {
+          "frame": 56,
+          "pts_seconds": 3.5,
+          "sheet": 0,
+          "slot": 7
+        },
+        {
+          "frame": 64,
+          "pts_seconds": 4.0,
+          "sheet": 0,
+          "slot": 8
+        },
+        {
+          "frame": 72,
+          "pts_seconds": 4.5,
+          "sheet": 0,
+          "slot": 9
+        },
+        {
+          "frame": 80,
+          "pts_seconds": 5.0,
+          "sheet": 0,
+          "slot": 10
+        },
+        {
+          "frame": 88,
+          "pts_seconds": 5.5,
+          "sheet": 0,
+          "slot": 11
+        },
+        {
+          "frame": 96,
+          "pts_seconds": 6.0,
+          "sheet": 0,
+          "slot": 12
+        },
+        {
+          "frame": 104,
+          "pts_seconds": 6.5,
+          "sheet": 0,
+          "slot": 13
+        },
+        {
+          "frame": 112,
+          "pts_seconds": 7.0,
+          "sheet": 0,
+          "slot": 14
+        },
+        {
+          "frame": 120,
+          "pts_seconds": 7.5,
+          "sheet": 0,
+          "slot": 15
+        },
+        {
+          "frame": 128,
+          "pts_seconds": 8.0,
+          "sheet": 0,
+          "slot": 16
+        },
+        {
+          "frame": 136,
+          "pts_seconds": 8.5,
+          "sheet": 0,
+          "slot": 17
+        },
+        {
+          "frame": 144,
+          "pts_seconds": 9.0,
+          "sheet": 0,
+          "slot": 18
+        },
+        {
+          "frame": 152,
+          "pts_seconds": 9.5,
+          "sheet": 0,
+          "slot": 19
+        },
+        {
+          "frame": 160,
+          "pts_seconds": 10.0,
+          "sheet": 0,
+          "slot": 20
+        },
+        {
+          "frame": 168,
+          "pts_seconds": 10.5,
+          "sheet": 0,
+          "slot": 21
+        },
+        {
+          "frame": 176,
+          "pts_seconds": 11.0,
+          "sheet": 0,
+          "slot": 22
+        },
+        {
+          "frame": 184,
+          "pts_seconds": 11.5,
+          "sheet": 0,
+          "slot": 23
+        },
+        {
+          "frame": 192,
+          "pts_seconds": 12.0,
+          "sheet": 0,
+          "slot": 24
+        },
+        {
+          "frame": 200,
+          "pts_seconds": 12.5,
+          "sheet": 0,
+          "slot": 25
+        },
+        {
+          "frame": 208,
+          "pts_seconds": 13.0,
+          "sheet": 0,
+          "slot": 26
+        },
+        {
+          "frame": 216,
+          "pts_seconds": 13.5,
+          "sheet": 0,
+          "slot": 27
+        },
+        {
+          "frame": 224,
+          "pts_seconds": 14.0,
+          "sheet": 0,
+          "slot": 28
+        },
+        {
+          "frame": 232,
+          "pts_seconds": 14.5,
+          "sheet": 0,
+          "slot": 29
+        },
+        {
+          "frame": 240,
+          "pts_seconds": 15.0,
+          "sheet": 0,
+          "slot": 30
+        },
+        {
+          "frame": 248,
+          "pts_seconds": 15.5,
+          "sheet": 0,
+          "slot": 31
+        },
+        {
+          "frame": 256,
+          "pts_seconds": 16.0,
+          "sheet": 1,
+          "slot": 0
+        },
+        {
+          "frame": 264,
+          "pts_seconds": 16.5,
+          "sheet": 1,
+          "slot": 1
+        },
+        {
+          "frame": 272,
+          "pts_seconds": 17.0,
+          "sheet": 1,
+          "slot": 2
+        },
+        {
+          "frame": 280,
+          "pts_seconds": 17.5,
+          "sheet": 1,
+          "slot": 3
+        },
+        {
+          "frame": 288,
+          "pts_seconds": 18.0,
+          "sheet": 1,
+          "slot": 4
+        },
+        {
+          "frame": 296,
+          "pts_seconds": 18.5,
+          "sheet": 1,
+          "slot": 5
+        },
+        {
+          "frame": 304,
+          "pts_seconds": 19.0,
+          "sheet": 1,
+          "slot": 6
+        },
+        {
+          "frame": 312,
+          "pts_seconds": 19.5,
+          "sheet": 1,
+          "slot": 7
+        },
+        {
+          "frame": 320,
+          "pts_seconds": 20.0,
+          "sheet": 1,
+          "slot": 8
+        },
+        {
+          "frame": 328,
+          "pts_seconds": 20.5,
+          "sheet": 1,
+          "slot": 9
+        },
+        {
+          "frame": 336,
+          "pts_seconds": 21.0,
+          "sheet": 1,
+          "slot": 10
+        },
+        {
+          "frame": 344,
+          "pts_seconds": 21.5,
+          "sheet": 1,
+          "slot": 11
+        },
+        {
+          "frame": 352,
+          "pts_seconds": 22.0,
+          "sheet": 1,
+          "slot": 12
+        },
+        {
+          "frame": 360,
+          "pts_seconds": 22.5,
+          "sheet": 1,
+          "slot": 13
+        },
+        {
+          "frame": 368,
+          "pts_seconds": 23.0,
+          "sheet": 1,
+          "slot": 14
+        },
+        {
+          "frame": 376,
+          "pts_seconds": 23.5,
+          "sheet": 1,
+          "slot": 15
+        },
+        {
+          "frame": 384,
+          "pts_seconds": 24.0,
+          "sheet": 1,
+          "slot": 16
+        },
+        {
+          "frame": 392,
+          "pts_seconds": 24.5,
+          "sheet": 1,
+          "slot": 17
+        },
+        {
+          "frame": 400,
+          "pts_seconds": 25.0,
+          "sheet": 1,
+          "slot": 18
+        },
+        {
+          "frame": 408,
+          "pts_seconds": 25.5,
+          "sheet": 1,
+          "slot": 19
+        },
+        {
+          "frame": 416,
+          "pts_seconds": 26.0,
+          "sheet": 1,
+          "slot": 20
+        },
+        {
+          "frame": 424,
+          "pts_seconds": 26.5,
+          "sheet": 1,
+          "slot": 21
+        },
+        {
+          "frame": 432,
+          "pts_seconds": 27.0,
+          "sheet": 1,
+          "slot": 22
+        },
+        {
+          "frame": 440,
+          "pts_seconds": 27.5,
+          "sheet": 1,
+          "slot": 23
+        },
+        {
+          "frame": 448,
+          "pts_seconds": 28.0,
+          "sheet": 1,
+          "slot": 24
+        },
+        {
+          "frame": 456,
+          "pts_seconds": 28.5,
+          "sheet": 1,
+          "slot": 25
+        },
+        {
+          "frame": 464,
+          "pts_seconds": 29.0,
+          "sheet": 1,
+          "slot": 26
+        },
+        {
+          "frame": 472,
+          "pts_seconds": 29.5,
+          "sheet": 1,
+          "slot": 27
+        },
+        {
+          "frame": 480,
+          "pts_seconds": 30.0,
+          "sheet": 1,
+          "slot": 28
+        },
+        {
+          "frame": 488,
+          "pts_seconds": 30.5,
+          "sheet": 1,
+          "slot": 29
+        },
+        {
+          "frame": 496,
+          "pts_seconds": 31.0,
+          "sheet": 1,
+          "slot": 30
+        },
+        {
+          "frame": 500,
+          "pts_seconds": 31.25,
+          "sheet": 1,
+          "slot": 31
+        }
+      ],
+      "sheets": [
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p05_sheet0.jpg",
+          "sha256": "8c299def84887828b312bd8e2c3e0a07209f1aa8c49f1b75370c8b3cabb8cfcc",
+          "bytes": 676821
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p05_sheet1.jpg",
+          "sha256": "79a5e6fa5278ab501372a7d03a7298d968f85d89563740eb570a1fa1f4ba198b",
+          "bytes": 623988
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "A person folds a square sheet of blue paper into a crane, turning the paper carefully between both hands. A continuous overhead view on a plain wooden desk.",
+      "source": "/home/acorn0415/sfq_data/mechanism/fr/p06_s303_BF16/video.mp4",
+      "source_sha256": "be82d6b57bca87a393af521b30ea18bc2576d7f08dcf29c087f58063380b5160",
+      "decoded_frames": 501,
+      "viewable_sampled_frames": [
+        {
+          "frame": 0,
+          "pts_seconds": 0.0,
+          "sheet": 0,
+          "slot": 0
+        },
+        {
+          "frame": 8,
+          "pts_seconds": 0.5,
+          "sheet": 0,
+          "slot": 1
+        },
+        {
+          "frame": 16,
+          "pts_seconds": 1.0,
+          "sheet": 0,
+          "slot": 2
+        },
+        {
+          "frame": 24,
+          "pts_seconds": 1.5,
+          "sheet": 0,
+          "slot": 3
+        },
+        {
+          "frame": 32,
+          "pts_seconds": 2.0,
+          "sheet": 0,
+          "slot": 4
+        },
+        {
+          "frame": 40,
+          "pts_seconds": 2.5,
+          "sheet": 0,
+          "slot": 5
+        },
+        {
+          "frame": 48,
+          "pts_seconds": 3.0,
+          "sheet": 0,
+          "slot": 6
+        },
+        {
+          "frame": 56,
+          "pts_seconds": 3.5,
+          "sheet": 0,
+          "slot": 7
+        },
+        {
+          "frame": 64,
+          "pts_seconds": 4.0,
+          "sheet": 0,
+          "slot": 8
+        },
+        {
+          "frame": 72,
+          "pts_seconds": 4.5,
+          "sheet": 0,
+          "slot": 9
+        },
+        {
+          "frame": 80,
+          "pts_seconds": 5.0,
+          "sheet": 0,
+          "slot": 10
+        },
+        {
+          "frame": 88,
+          "pts_seconds": 5.5,
+          "sheet": 0,
+          "slot": 11
+        },
+        {
+          "frame": 96,
+          "pts_seconds": 6.0,
+          "sheet": 0,
+          "slot": 12
+        },
+        {
+          "frame": 104,
+          "pts_seconds": 6.5,
+          "sheet": 0,
+          "slot": 13
+        },
+        {
+          "frame": 112,
+          "pts_seconds": 7.0,
+          "sheet": 0,
+          "slot": 14
+        },
+        {
+          "frame": 120,
+          "pts_seconds": 7.5,
+          "sheet": 0,
+          "slot": 15
+        },
+        {
+          "frame": 128,
+          "pts_seconds": 8.0,
+          "sheet": 0,
+          "slot": 16
+        },
+        {
+          "frame": 136,
+          "pts_seconds": 8.5,
+          "sheet": 0,
+          "slot": 17
+        },
+        {
+          "frame": 144,
+          "pts_seconds": 9.0,
+          "sheet": 0,
+          "slot": 18
+        },
+        {
+          "frame": 152,
+          "pts_seconds": 9.5,
+          "sheet": 0,
+          "slot": 19
+        },
+        {
+          "frame": 160,
+          "pts_seconds": 10.0,
+          "sheet": 0,
+          "slot": 20
+        },
+        {
+          "frame": 168,
+          "pts_seconds": 10.5,
+          "sheet": 0,
+          "slot": 21
+        },
+        {
+          "frame": 176,
+          "pts_seconds": 11.0,
+          "sheet": 0,
+          "slot": 22
+        },
+        {
+          "frame": 184,
+          "pts_seconds": 11.5,
+          "sheet": 0,
+          "slot": 23
+        },
+        {
+          "frame": 192,
+          "pts_seconds": 12.0,
+          "sheet": 0,
+          "slot": 24
+        },
+        {
+          "frame": 200,
+          "pts_seconds": 12.5,
+          "sheet": 0,
+          "slot": 25
+        },
+        {
+          "frame": 208,
+          "pts_seconds": 13.0,
+          "sheet": 0,
+          "slot": 26
+        },
+        {
+          "frame": 216,
+          "pts_seconds": 13.5,
+          "sheet": 0,
+          "slot": 27
+        },
+        {
+          "frame": 224,
+          "pts_seconds": 14.0,
+          "sheet": 0,
+          "slot": 28
+        },
+        {
+          "frame": 232,
+          "pts_seconds": 14.5,
+          "sheet": 0,
+          "slot": 29
+        },
+        {
+          "frame": 240,
+          "pts_seconds": 15.0,
+          "sheet": 0,
+          "slot": 30
+        },
+        {
+          "frame": 248,
+          "pts_seconds": 15.5,
+          "sheet": 0,
+          "slot": 31
+        },
+        {
+          "frame": 256,
+          "pts_seconds": 16.0,
+          "sheet": 1,
+          "slot": 0
+        },
+        {
+          "frame": 264,
+          "pts_seconds": 16.5,
+          "sheet": 1,
+          "slot": 1
+        },
+        {
+          "frame": 272,
+          "pts_seconds": 17.0,
+          "sheet": 1,
+          "slot": 2
+        },
+        {
+          "frame": 280,
+          "pts_seconds": 17.5,
+          "sheet": 1,
+          "slot": 3
+        },
+        {
+          "frame": 288,
+          "pts_seconds": 18.0,
+          "sheet": 1,
+          "slot": 4
+        },
+        {
+          "frame": 296,
+          "pts_seconds": 18.5,
+          "sheet": 1,
+          "slot": 5
+        },
+        {
+          "frame": 304,
+          "pts_seconds": 19.0,
+          "sheet": 1,
+          "slot": 6
+        },
+        {
+          "frame": 312,
+          "pts_seconds": 19.5,
+          "sheet": 1,
+          "slot": 7
+        },
+        {
+          "frame": 320,
+          "pts_seconds": 20.0,
+          "sheet": 1,
+          "slot": 8
+        },
+        {
+          "frame": 328,
+          "pts_seconds": 20.5,
+          "sheet": 1,
+          "slot": 9
+        },
+        {
+          "frame": 336,
+          "pts_seconds": 21.0,
+          "sheet": 1,
+          "slot": 10
+        },
+        {
+          "frame": 344,
+          "pts_seconds": 21.5,
+          "sheet": 1,
+          "slot": 11
+        },
+        {
+          "frame": 352,
+          "pts_seconds": 22.0,
+          "sheet": 1,
+          "slot": 12
+        },
+        {
+          "frame": 360,
+          "pts_seconds": 22.5,
+          "sheet": 1,
+          "slot": 13
+        },
+        {
+          "frame": 368,
+          "pts_seconds": 23.0,
+          "sheet": 1,
+          "slot": 14
+        },
+        {
+          "frame": 376,
+          "pts_seconds": 23.5,
+          "sheet": 1,
+          "slot": 15
+        },
+        {
+          "frame": 384,
+          "pts_seconds": 24.0,
+          "sheet": 1,
+          "slot": 16
+        },
+        {
+          "frame": 392,
+          "pts_seconds": 24.5,
+          "sheet": 1,
+          "slot": 17
+        },
+        {
+          "frame": 400,
+          "pts_seconds": 25.0,
+          "sheet": 1,
+          "slot": 18
+        },
+        {
+          "frame": 408,
+          "pts_seconds": 25.5,
+          "sheet": 1,
+          "slot": 19
+        },
+        {
+          "frame": 416,
+          "pts_seconds": 26.0,
+          "sheet": 1,
+          "slot": 20
+        },
+        {
+          "frame": 424,
+          "pts_seconds": 26.5,
+          "sheet": 1,
+          "slot": 21
+        },
+        {
+          "frame": 432,
+          "pts_seconds": 27.0,
+          "sheet": 1,
+          "slot": 22
+        },
+        {
+          "frame": 440,
+          "pts_seconds": 27.5,
+          "sheet": 1,
+          "slot": 23
+        },
+        {
+          "frame": 448,
+          "pts_seconds": 28.0,
+          "sheet": 1,
+          "slot": 24
+        },
+        {
+          "frame": 456,
+          "pts_seconds": 28.5,
+          "sheet": 1,
+          "slot": 25
+        },
+        {
+          "frame": 464,
+          "pts_seconds": 29.0,
+          "sheet": 1,
+          "slot": 26
+        },
+        {
+          "frame": 472,
+          "pts_seconds": 29.5,
+          "sheet": 1,
+          "slot": 27
+        },
+        {
+          "frame": 480,
+          "pts_seconds": 30.0,
+          "sheet": 1,
+          "slot": 28
+        },
+        {
+          "frame": 488,
+          "pts_seconds": 30.5,
+          "sheet": 1,
+          "slot": 29
+        },
+        {
+          "frame": 496,
+          "pts_seconds": 31.0,
+          "sheet": 1,
+          "slot": 30
+        },
+        {
+          "frame": 500,
+          "pts_seconds": 31.25,
+          "sheet": 1,
+          "slot": 31
+        }
+      ],
+      "sheets": [
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p06_sheet0.jpg",
+          "sha256": "f34d1efe7877b05656b4b15f084c01cad33d59af67abdde94da8f55d619e874d",
+          "bytes": 691009
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p06_sheet1.jpg",
+          "sha256": "d1fe3a2ac4a7db1c832a619c04ed0c5e56398f688a81712183745def3363edf7",
+          "bytes": 643930
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "A drummer strikes a snare and cymbal in a steady rhythm, with the drumsticks and cymbal edge visibly moving. A continuous medium shot inside a softly lit practice room.",
+      "source": "/home/acorn0415/sfq_data/mechanism/fr/p07_s303_BF16/video.mp4",
+      "source_sha256": "b66db2e3d47a6ebdc0a34be3c7eef2aaa1de4ca3dda3f9630b32124d8d14ebb3",
+      "decoded_frames": 501,
+      "viewable_sampled_frames": [
+        {
+          "frame": 0,
+          "pts_seconds": 0.0,
+          "sheet": 0,
+          "slot": 0
+        },
+        {
+          "frame": 8,
+          "pts_seconds": 0.5,
+          "sheet": 0,
+          "slot": 1
+        },
+        {
+          "frame": 16,
+          "pts_seconds": 1.0,
+          "sheet": 0,
+          "slot": 2
+        },
+        {
+          "frame": 24,
+          "pts_seconds": 1.5,
+          "sheet": 0,
+          "slot": 3
+        },
+        {
+          "frame": 32,
+          "pts_seconds": 2.0,
+          "sheet": 0,
+          "slot": 4
+        },
+        {
+          "frame": 40,
+          "pts_seconds": 2.5,
+          "sheet": 0,
+          "slot": 5
+        },
+        {
+          "frame": 48,
+          "pts_seconds": 3.0,
+          "sheet": 0,
+          "slot": 6
+        },
+        {
+          "frame": 56,
+          "pts_seconds": 3.5,
+          "sheet": 0,
+          "slot": 7
+        },
+        {
+          "frame": 64,
+          "pts_seconds": 4.0,
+          "sheet": 0,
+          "slot": 8
+        },
+        {
+          "frame": 72,
+          "pts_seconds": 4.5,
+          "sheet": 0,
+          "slot": 9
+        },
+        {
+          "frame": 80,
+          "pts_seconds": 5.0,
+          "sheet": 0,
+          "slot": 10
+        },
+        {
+          "frame": 88,
+          "pts_seconds": 5.5,
+          "sheet": 0,
+          "slot": 11
+        },
+        {
+          "frame": 96,
+          "pts_seconds": 6.0,
+          "sheet": 0,
+          "slot": 12
+        },
+        {
+          "frame": 104,
+          "pts_seconds": 6.5,
+          "sheet": 0,
+          "slot": 13
+        },
+        {
+          "frame": 112,
+          "pts_seconds": 7.0,
+          "sheet": 0,
+          "slot": 14
+        },
+        {
+          "frame": 120,
+          "pts_seconds": 7.5,
+          "sheet": 0,
+          "slot": 15
+        },
+        {
+          "frame": 128,
+          "pts_seconds": 8.0,
+          "sheet": 0,
+          "slot": 16
+        },
+        {
+          "frame": 136,
+          "pts_seconds": 8.5,
+          "sheet": 0,
+          "slot": 17
+        },
+        {
+          "frame": 144,
+          "pts_seconds": 9.0,
+          "sheet": 0,
+          "slot": 18
+        },
+        {
+          "frame": 152,
+          "pts_seconds": 9.5,
+          "sheet": 0,
+          "slot": 19
+        },
+        {
+          "frame": 160,
+          "pts_seconds": 10.0,
+          "sheet": 0,
+          "slot": 20
+        },
+        {
+          "frame": 168,
+          "pts_seconds": 10.5,
+          "sheet": 0,
+          "slot": 21
+        },
+        {
+          "frame": 176,
+          "pts_seconds": 11.0,
+          "sheet": 0,
+          "slot": 22
+        },
+        {
+          "frame": 184,
+          "pts_seconds": 11.5,
+          "sheet": 0,
+          "slot": 23
+        },
+        {
+          "frame": 192,
+          "pts_seconds": 12.0,
+          "sheet": 0,
+          "slot": 24
+        },
+        {
+          "frame": 200,
+          "pts_seconds": 12.5,
+          "sheet": 0,
+          "slot": 25
+        },
+        {
+          "frame": 208,
+          "pts_seconds": 13.0,
+          "sheet": 0,
+          "slot": 26
+        },
+        {
+          "frame": 216,
+          "pts_seconds": 13.5,
+          "sheet": 0,
+          "slot": 27
+        },
+        {
+          "frame": 224,
+          "pts_seconds": 14.0,
+          "sheet": 0,
+          "slot": 28
+        },
+        {
+          "frame": 232,
+          "pts_seconds": 14.5,
+          "sheet": 0,
+          "slot": 29
+        },
+        {
+          "frame": 240,
+          "pts_seconds": 15.0,
+          "sheet": 0,
+          "slot": 30
+        },
+        {
+          "frame": 248,
+          "pts_seconds": 15.5,
+          "sheet": 0,
+          "slot": 31
+        },
+        {
+          "frame": 256,
+          "pts_seconds": 16.0,
+          "sheet": 1,
+          "slot": 0
+        },
+        {
+          "frame": 264,
+          "pts_seconds": 16.5,
+          "sheet": 1,
+          "slot": 1
+        },
+        {
+          "frame": 272,
+          "pts_seconds": 17.0,
+          "sheet": 1,
+          "slot": 2
+        },
+        {
+          "frame": 280,
+          "pts_seconds": 17.5,
+          "sheet": 1,
+          "slot": 3
+        },
+        {
+          "frame": 288,
+          "pts_seconds": 18.0,
+          "sheet": 1,
+          "slot": 4
+        },
+        {
+          "frame": 296,
+          "pts_seconds": 18.5,
+          "sheet": 1,
+          "slot": 5
+        },
+        {
+          "frame": 304,
+          "pts_seconds": 19.0,
+          "sheet": 1,
+          "slot": 6
+        },
+        {
+          "frame": 312,
+          "pts_seconds": 19.5,
+          "sheet": 1,
+          "slot": 7
+        },
+        {
+          "frame": 320,
+          "pts_seconds": 20.0,
+          "sheet": 1,
+          "slot": 8
+        },
+        {
+          "frame": 328,
+          "pts_seconds": 20.5,
+          "sheet": 1,
+          "slot": 9
+        },
+        {
+          "frame": 336,
+          "pts_seconds": 21.0,
+          "sheet": 1,
+          "slot": 10
+        },
+        {
+          "frame": 344,
+          "pts_seconds": 21.5,
+          "sheet": 1,
+          "slot": 11
+        },
+        {
+          "frame": 352,
+          "pts_seconds": 22.0,
+          "sheet": 1,
+          "slot": 12
+        },
+        {
+          "frame": 360,
+          "pts_seconds": 22.5,
+          "sheet": 1,
+          "slot": 13
+        },
+        {
+          "frame": 368,
+          "pts_seconds": 23.0,
+          "sheet": 1,
+          "slot": 14
+        },
+        {
+          "frame": 376,
+          "pts_seconds": 23.5,
+          "sheet": 1,
+          "slot": 15
+        },
+        {
+          "frame": 384,
+          "pts_seconds": 24.0,
+          "sheet": 1,
+          "slot": 16
+        },
+        {
+          "frame": 392,
+          "pts_seconds": 24.5,
+          "sheet": 1,
+          "slot": 17
+        },
+        {
+          "frame": 400,
+          "pts_seconds": 25.0,
+          "sheet": 1,
+          "slot": 18
+        },
+        {
+          "frame": 408,
+          "pts_seconds": 25.5,
+          "sheet": 1,
+          "slot": 19
+        },
+        {
+          "frame": 416,
+          "pts_seconds": 26.0,
+          "sheet": 1,
+          "slot": 20
+        },
+        {
+          "frame": 424,
+          "pts_seconds": 26.5,
+          "sheet": 1,
+          "slot": 21
+        },
+        {
+          "frame": 432,
+          "pts_seconds": 27.0,
+          "sheet": 1,
+          "slot": 22
+        },
+        {
+          "frame": 440,
+          "pts_seconds": 27.5,
+          "sheet": 1,
+          "slot": 23
+        },
+        {
+          "frame": 448,
+          "pts_seconds": 28.0,
+          "sheet": 1,
+          "slot": 24
+        },
+        {
+          "frame": 456,
+          "pts_seconds": 28.5,
+          "sheet": 1,
+          "slot": 25
+        },
+        {
+          "frame": 464,
+          "pts_seconds": 29.0,
+          "sheet": 1,
+          "slot": 26
+        },
+        {
+          "frame": 472,
+          "pts_seconds": 29.5,
+          "sheet": 1,
+          "slot": 27
+        },
+        {
+          "frame": 480,
+          "pts_seconds": 30.0,
+          "sheet": 1,
+          "slot": 28
+        },
+        {
+          "frame": 488,
+          "pts_seconds": 30.5,
+          "sheet": 1,
+          "slot": 29
+        },
+        {
+          "frame": 496,
+          "pts_seconds": 31.0,
+          "sheet": 1,
+          "slot": 30
+        },
+        {
+          "frame": 500,
+          "pts_seconds": 31.25,
+          "sheet": 1,
+          "slot": 31
+        }
+      ],
+      "sheets": [
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p07_sheet0.jpg",
+          "sha256": "c53fe10108d0754c543e0196d278b4750f569387018e9101c47ad57092ca1ec9",
+          "bytes": 873513
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p07_sheet1.jpg",
+          "sha256": "a95d16a65337dd1fe9c3c748ebec481b7554be3d6b49bd24c02f51ad3c9593ea",
+          "bytes": 944110
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "White bedsheets hang from a clothesline and billow in gusts of wind above a sunlit courtyard. A continuous fixed view shows cloth folds, shadows, and the line.",
+      "source": "/home/acorn0415/sfq_data/mechanism/fr/p08_s303_BF16/video.mp4",
+      "source_sha256": "9b59aa83ee0295c33038bf1d75371c4b7a745c6a72d887dfef1442f1e8f5f2f1",
+      "decoded_frames": 501,
+      "viewable_sampled_frames": [
+        {
+          "frame": 0,
+          "pts_seconds": 0.0,
+          "sheet": 0,
+          "slot": 0
+        },
+        {
+          "frame": 8,
+          "pts_seconds": 0.5,
+          "sheet": 0,
+          "slot": 1
+        },
+        {
+          "frame": 16,
+          "pts_seconds": 1.0,
+          "sheet": 0,
+          "slot": 2
+        },
+        {
+          "frame": 24,
+          "pts_seconds": 1.5,
+          "sheet": 0,
+          "slot": 3
+        },
+        {
+          "frame": 32,
+          "pts_seconds": 2.0,
+          "sheet": 0,
+          "slot": 4
+        },
+        {
+          "frame": 40,
+          "pts_seconds": 2.5,
+          "sheet": 0,
+          "slot": 5
+        },
+        {
+          "frame": 48,
+          "pts_seconds": 3.0,
+          "sheet": 0,
+          "slot": 6
+        },
+        {
+          "frame": 56,
+          "pts_seconds": 3.5,
+          "sheet": 0,
+          "slot": 7
+        },
+        {
+          "frame": 64,
+          "pts_seconds": 4.0,
+          "sheet": 0,
+          "slot": 8
+        },
+        {
+          "frame": 72,
+          "pts_seconds": 4.5,
+          "sheet": 0,
+          "slot": 9
+        },
+        {
+          "frame": 80,
+          "pts_seconds": 5.0,
+          "sheet": 0,
+          "slot": 10
+        },
+        {
+          "frame": 88,
+          "pts_seconds": 5.5,
+          "sheet": 0,
+          "slot": 11
+        },
+        {
+          "frame": 96,
+          "pts_seconds": 6.0,
+          "sheet": 0,
+          "slot": 12
+        },
+        {
+          "frame": 104,
+          "pts_seconds": 6.5,
+          "sheet": 0,
+          "slot": 13
+        },
+        {
+          "frame": 112,
+          "pts_seconds": 7.0,
+          "sheet": 0,
+          "slot": 14
+        },
+        {
+          "frame": 120,
+          "pts_seconds": 7.5,
+          "sheet": 0,
+          "slot": 15
+        },
+        {
+          "frame": 128,
+          "pts_seconds": 8.0,
+          "sheet": 0,
+          "slot": 16
+        },
+        {
+          "frame": 136,
+          "pts_seconds": 8.5,
+          "sheet": 0,
+          "slot": 17
+        },
+        {
+          "frame": 144,
+          "pts_seconds": 9.0,
+          "sheet": 0,
+          "slot": 18
+        },
+        {
+          "frame": 152,
+          "pts_seconds": 9.5,
+          "sheet": 0,
+          "slot": 19
+        },
+        {
+          "frame": 160,
+          "pts_seconds": 10.0,
+          "sheet": 0,
+          "slot": 20
+        },
+        {
+          "frame": 168,
+          "pts_seconds": 10.5,
+          "sheet": 0,
+          "slot": 21
+        },
+        {
+          "frame": 176,
+          "pts_seconds": 11.0,
+          "sheet": 0,
+          "slot": 22
+        },
+        {
+          "frame": 184,
+          "pts_seconds": 11.5,
+          "sheet": 0,
+          "slot": 23
+        },
+        {
+          "frame": 192,
+          "pts_seconds": 12.0,
+          "sheet": 0,
+          "slot": 24
+        },
+        {
+          "frame": 200,
+          "pts_seconds": 12.5,
+          "sheet": 0,
+          "slot": 25
+        },
+        {
+          "frame": 208,
+          "pts_seconds": 13.0,
+          "sheet": 0,
+          "slot": 26
+        },
+        {
+          "frame": 216,
+          "pts_seconds": 13.5,
+          "sheet": 0,
+          "slot": 27
+        },
+        {
+          "frame": 224,
+          "pts_seconds": 14.0,
+          "sheet": 0,
+          "slot": 28
+        },
+        {
+          "frame": 232,
+          "pts_seconds": 14.5,
+          "sheet": 0,
+          "slot": 29
+        },
+        {
+          "frame": 240,
+          "pts_seconds": 15.0,
+          "sheet": 0,
+          "slot": 30
+        },
+        {
+          "frame": 248,
+          "pts_seconds": 15.5,
+          "sheet": 0,
+          "slot": 31
+        },
+        {
+          "frame": 256,
+          "pts_seconds": 16.0,
+          "sheet": 1,
+          "slot": 0
+        },
+        {
+          "frame": 264,
+          "pts_seconds": 16.5,
+          "sheet": 1,
+          "slot": 1
+        },
+        {
+          "frame": 272,
+          "pts_seconds": 17.0,
+          "sheet": 1,
+          "slot": 2
+        },
+        {
+          "frame": 280,
+          "pts_seconds": 17.5,
+          "sheet": 1,
+          "slot": 3
+        },
+        {
+          "frame": 288,
+          "pts_seconds": 18.0,
+          "sheet": 1,
+          "slot": 4
+        },
+        {
+          "frame": 296,
+          "pts_seconds": 18.5,
+          "sheet": 1,
+          "slot": 5
+        },
+        {
+          "frame": 304,
+          "pts_seconds": 19.0,
+          "sheet": 1,
+          "slot": 6
+        },
+        {
+          "frame": 312,
+          "pts_seconds": 19.5,
+          "sheet": 1,
+          "slot": 7
+        },
+        {
+          "frame": 320,
+          "pts_seconds": 20.0,
+          "sheet": 1,
+          "slot": 8
+        },
+        {
+          "frame": 328,
+          "pts_seconds": 20.5,
+          "sheet": 1,
+          "slot": 9
+        },
+        {
+          "frame": 336,
+          "pts_seconds": 21.0,
+          "sheet": 1,
+          "slot": 10
+        },
+        {
+          "frame": 344,
+          "pts_seconds": 21.5,
+          "sheet": 1,
+          "slot": 11
+        },
+        {
+          "frame": 352,
+          "pts_seconds": 22.0,
+          "sheet": 1,
+          "slot": 12
+        },
+        {
+          "frame": 360,
+          "pts_seconds": 22.5,
+          "sheet": 1,
+          "slot": 13
+        },
+        {
+          "frame": 368,
+          "pts_seconds": 23.0,
+          "sheet": 1,
+          "slot": 14
+        },
+        {
+          "frame": 376,
+          "pts_seconds": 23.5,
+          "sheet": 1,
+          "slot": 15
+        },
+        {
+          "frame": 384,
+          "pts_seconds": 24.0,
+          "sheet": 1,
+          "slot": 16
+        },
+        {
+          "frame": 392,
+          "pts_seconds": 24.5,
+          "sheet": 1,
+          "slot": 17
+        },
+        {
+          "frame": 400,
+          "pts_seconds": 25.0,
+          "sheet": 1,
+          "slot": 18
+        },
+        {
+          "frame": 408,
+          "pts_seconds": 25.5,
+          "sheet": 1,
+          "slot": 19
+        },
+        {
+          "frame": 416,
+          "pts_seconds": 26.0,
+          "sheet": 1,
+          "slot": 20
+        },
+        {
+          "frame": 424,
+          "pts_seconds": 26.5,
+          "sheet": 1,
+          "slot": 21
+        },
+        {
+          "frame": 432,
+          "pts_seconds": 27.0,
+          "sheet": 1,
+          "slot": 22
+        },
+        {
+          "frame": 440,
+          "pts_seconds": 27.5,
+          "sheet": 1,
+          "slot": 23
+        },
+        {
+          "frame": 448,
+          "pts_seconds": 28.0,
+          "sheet": 1,
+          "slot": 24
+        },
+        {
+          "frame": 456,
+          "pts_seconds": 28.5,
+          "sheet": 1,
+          "slot": 25
+        },
+        {
+          "frame": 464,
+          "pts_seconds": 29.0,
+          "sheet": 1,
+          "slot": 26
+        },
+        {
+          "frame": 472,
+          "pts_seconds": 29.5,
+          "sheet": 1,
+          "slot": 27
+        },
+        {
+          "frame": 480,
+          "pts_seconds": 30.0,
+          "sheet": 1,
+          "slot": 28
+        },
+        {
+          "frame": 488,
+          "pts_seconds": 30.5,
+          "sheet": 1,
+          "slot": 29
+        },
+        {
+          "frame": 496,
+          "pts_seconds": 31.0,
+          "sheet": 1,
+          "slot": 30
+        },
+        {
+          "frame": 500,
+          "pts_seconds": 31.25,
+          "sheet": 1,
+          "slot": 31
+        }
+      ],
+      "sheets": [
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p08_sheet0.jpg",
+          "sha256": "2b7b3d68229f14cc9dc84e6da9b74532a519fad2d3fab28f06e6390be1776dbf",
+          "bytes": 782897
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p08_sheet1.jpg",
+          "sha256": "2aec31c31d70deeb5cef0fbace67ef7259f6066f33134f79e8dee558f9eb827e",
+          "bytes": 991690
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "A skateboarder rolls through an open concrete plaza, makes a small jump, lands, and continues forward. A smooth continuous side tracking shot in afternoon light.",
+      "source": "/home/acorn0415/sfq_data/mechanism/fr/p09_s303_BF16/video.mp4",
+      "source_sha256": "806e4b5bde21494f66a8d020d136c9d245b56d30378ed9c304e949d575c70a93",
+      "decoded_frames": 501,
+      "viewable_sampled_frames": [
+        {
+          "frame": 0,
+          "pts_seconds": 0.0,
+          "sheet": 0,
+          "slot": 0
+        },
+        {
+          "frame": 8,
+          "pts_seconds": 0.5,
+          "sheet": 0,
+          "slot": 1
+        },
+        {
+          "frame": 16,
+          "pts_seconds": 1.0,
+          "sheet": 0,
+          "slot": 2
+        },
+        {
+          "frame": 24,
+          "pts_seconds": 1.5,
+          "sheet": 0,
+          "slot": 3
+        },
+        {
+          "frame": 32,
+          "pts_seconds": 2.0,
+          "sheet": 0,
+          "slot": 4
+        },
+        {
+          "frame": 40,
+          "pts_seconds": 2.5,
+          "sheet": 0,
+          "slot": 5
+        },
+        {
+          "frame": 48,
+          "pts_seconds": 3.0,
+          "sheet": 0,
+          "slot": 6
+        },
+        {
+          "frame": 56,
+          "pts_seconds": 3.5,
+          "sheet": 0,
+          "slot": 7
+        },
+        {
+          "frame": 64,
+          "pts_seconds": 4.0,
+          "sheet": 0,
+          "slot": 8
+        },
+        {
+          "frame": 72,
+          "pts_seconds": 4.5,
+          "sheet": 0,
+          "slot": 9
+        },
+        {
+          "frame": 80,
+          "pts_seconds": 5.0,
+          "sheet": 0,
+          "slot": 10
+        },
+        {
+          "frame": 88,
+          "pts_seconds": 5.5,
+          "sheet": 0,
+          "slot": 11
+        },
+        {
+          "frame": 96,
+          "pts_seconds": 6.0,
+          "sheet": 0,
+          "slot": 12
+        },
+        {
+          "frame": 104,
+          "pts_seconds": 6.5,
+          "sheet": 0,
+          "slot": 13
+        },
+        {
+          "frame": 112,
+          "pts_seconds": 7.0,
+          "sheet": 0,
+          "slot": 14
+        },
+        {
+          "frame": 120,
+          "pts_seconds": 7.5,
+          "sheet": 0,
+          "slot": 15
+        },
+        {
+          "frame": 128,
+          "pts_seconds": 8.0,
+          "sheet": 0,
+          "slot": 16
+        },
+        {
+          "frame": 136,
+          "pts_seconds": 8.5,
+          "sheet": 0,
+          "slot": 17
+        },
+        {
+          "frame": 144,
+          "pts_seconds": 9.0,
+          "sheet": 0,
+          "slot": 18
+        },
+        {
+          "frame": 152,
+          "pts_seconds": 9.5,
+          "sheet": 0,
+          "slot": 19
+        },
+        {
+          "frame": 160,
+          "pts_seconds": 10.0,
+          "sheet": 0,
+          "slot": 20
+        },
+        {
+          "frame": 168,
+          "pts_seconds": 10.5,
+          "sheet": 0,
+          "slot": 21
+        },
+        {
+          "frame": 176,
+          "pts_seconds": 11.0,
+          "sheet": 0,
+          "slot": 22
+        },
+        {
+          "frame": 184,
+          "pts_seconds": 11.5,
+          "sheet": 0,
+          "slot": 23
+        },
+        {
+          "frame": 192,
+          "pts_seconds": 12.0,
+          "sheet": 0,
+          "slot": 24
+        },
+        {
+          "frame": 200,
+          "pts_seconds": 12.5,
+          "sheet": 0,
+          "slot": 25
+        },
+        {
+          "frame": 208,
+          "pts_seconds": 13.0,
+          "sheet": 0,
+          "slot": 26
+        },
+        {
+          "frame": 216,
+          "pts_seconds": 13.5,
+          "sheet": 0,
+          "slot": 27
+        },
+        {
+          "frame": 224,
+          "pts_seconds": 14.0,
+          "sheet": 0,
+          "slot": 28
+        },
+        {
+          "frame": 232,
+          "pts_seconds": 14.5,
+          "sheet": 0,
+          "slot": 29
+        },
+        {
+          "frame": 240,
+          "pts_seconds": 15.0,
+          "sheet": 0,
+          "slot": 30
+        },
+        {
+          "frame": 248,
+          "pts_seconds": 15.5,
+          "sheet": 0,
+          "slot": 31
+        },
+        {
+          "frame": 256,
+          "pts_seconds": 16.0,
+          "sheet": 1,
+          "slot": 0
+        },
+        {
+          "frame": 264,
+          "pts_seconds": 16.5,
+          "sheet": 1,
+          "slot": 1
+        },
+        {
+          "frame": 272,
+          "pts_seconds": 17.0,
+          "sheet": 1,
+          "slot": 2
+        },
+        {
+          "frame": 280,
+          "pts_seconds": 17.5,
+          "sheet": 1,
+          "slot": 3
+        },
+        {
+          "frame": 288,
+          "pts_seconds": 18.0,
+          "sheet": 1,
+          "slot": 4
+        },
+        {
+          "frame": 296,
+          "pts_seconds": 18.5,
+          "sheet": 1,
+          "slot": 5
+        },
+        {
+          "frame": 304,
+          "pts_seconds": 19.0,
+          "sheet": 1,
+          "slot": 6
+        },
+        {
+          "frame": 312,
+          "pts_seconds": 19.5,
+          "sheet": 1,
+          "slot": 7
+        },
+        {
+          "frame": 320,
+          "pts_seconds": 20.0,
+          "sheet": 1,
+          "slot": 8
+        },
+        {
+          "frame": 328,
+          "pts_seconds": 20.5,
+          "sheet": 1,
+          "slot": 9
+        },
+        {
+          "frame": 336,
+          "pts_seconds": 21.0,
+          "sheet": 1,
+          "slot": 10
+        },
+        {
+          "frame": 344,
+          "pts_seconds": 21.5,
+          "sheet": 1,
+          "slot": 11
+        },
+        {
+          "frame": 352,
+          "pts_seconds": 22.0,
+          "sheet": 1,
+          "slot": 12
+        },
+        {
+          "frame": 360,
+          "pts_seconds": 22.5,
+          "sheet": 1,
+          "slot": 13
+        },
+        {
+          "frame": 368,
+          "pts_seconds": 23.0,
+          "sheet": 1,
+          "slot": 14
+        },
+        {
+          "frame": 376,
+          "pts_seconds": 23.5,
+          "sheet": 1,
+          "slot": 15
+        },
+        {
+          "frame": 384,
+          "pts_seconds": 24.0,
+          "sheet": 1,
+          "slot": 16
+        },
+        {
+          "frame": 392,
+          "pts_seconds": 24.5,
+          "sheet": 1,
+          "slot": 17
+        },
+        {
+          "frame": 400,
+          "pts_seconds": 25.0,
+          "sheet": 1,
+          "slot": 18
+        },
+        {
+          "frame": 408,
+          "pts_seconds": 25.5,
+          "sheet": 1,
+          "slot": 19
+        },
+        {
+          "frame": 416,
+          "pts_seconds": 26.0,
+          "sheet": 1,
+          "slot": 20
+        },
+        {
+          "frame": 424,
+          "pts_seconds": 26.5,
+          "sheet": 1,
+          "slot": 21
+        },
+        {
+          "frame": 432,
+          "pts_seconds": 27.0,
+          "sheet": 1,
+          "slot": 22
+        },
+        {
+          "frame": 440,
+          "pts_seconds": 27.5,
+          "sheet": 1,
+          "slot": 23
+        },
+        {
+          "frame": 448,
+          "pts_seconds": 28.0,
+          "sheet": 1,
+          "slot": 24
+        },
+        {
+          "frame": 456,
+          "pts_seconds": 28.5,
+          "sheet": 1,
+          "slot": 25
+        },
+        {
+          "frame": 464,
+          "pts_seconds": 29.0,
+          "sheet": 1,
+          "slot": 26
+        },
+        {
+          "frame": 472,
+          "pts_seconds": 29.5,
+          "sheet": 1,
+          "slot": 27
+        },
+        {
+          "frame": 480,
+          "pts_seconds": 30.0,
+          "sheet": 1,
+          "slot": 28
+        },
+        {
+          "frame": 488,
+          "pts_seconds": 30.5,
+          "sheet": 1,
+          "slot": 29
+        },
+        {
+          "frame": 496,
+          "pts_seconds": 31.0,
+          "sheet": 1,
+          "slot": 30
+        },
+        {
+          "frame": 500,
+          "pts_seconds": 31.25,
+          "sheet": 1,
+          "slot": 31
+        }
+      ],
+      "sheets": [
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p09_sheet0.jpg",
+          "sha256": "47d70c35190ce16eaf09fbff1ddb7d8ee41b78bd704755d522b4d645427f79bc",
+          "bytes": 694624
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p09_sheet1.jpg",
+          "sha256": "265f4309b6dbce2c621f35b46b39169a9e5e691169af8272b2640ca5bc713104",
+          "bytes": 696040
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "A brass mechanical orrery rotates its small planets around a central sphere while interlocking gears turn below. A continuous close view with warm light on the metal surfaces.",
+      "source": "/home/acorn0415/sfq_data/mechanism/fr/p10_s303_BF16/video.mp4",
+      "source_sha256": "f404618ec468091639216f92e57bff2acca968459922829249f442de274754e1",
+      "decoded_frames": 501,
+      "viewable_sampled_frames": [
+        {
+          "frame": 0,
+          "pts_seconds": 0.0,
+          "sheet": 0,
+          "slot": 0
+        },
+        {
+          "frame": 8,
+          "pts_seconds": 0.5,
+          "sheet": 0,
+          "slot": 1
+        },
+        {
+          "frame": 16,
+          "pts_seconds": 1.0,
+          "sheet": 0,
+          "slot": 2
+        },
+        {
+          "frame": 24,
+          "pts_seconds": 1.5,
+          "sheet": 0,
+          "slot": 3
+        },
+        {
+          "frame": 32,
+          "pts_seconds": 2.0,
+          "sheet": 0,
+          "slot": 4
+        },
+        {
+          "frame": 40,
+          "pts_seconds": 2.5,
+          "sheet": 0,
+          "slot": 5
+        },
+        {
+          "frame": 48,
+          "pts_seconds": 3.0,
+          "sheet": 0,
+          "slot": 6
+        },
+        {
+          "frame": 56,
+          "pts_seconds": 3.5,
+          "sheet": 0,
+          "slot": 7
+        },
+        {
+          "frame": 64,
+          "pts_seconds": 4.0,
+          "sheet": 0,
+          "slot": 8
+        },
+        {
+          "frame": 72,
+          "pts_seconds": 4.5,
+          "sheet": 0,
+          "slot": 9
+        },
+        {
+          "frame": 80,
+          "pts_seconds": 5.0,
+          "sheet": 0,
+          "slot": 10
+        },
+        {
+          "frame": 88,
+          "pts_seconds": 5.5,
+          "sheet": 0,
+          "slot": 11
+        },
+        {
+          "frame": 96,
+          "pts_seconds": 6.0,
+          "sheet": 0,
+          "slot": 12
+        },
+        {
+          "frame": 104,
+          "pts_seconds": 6.5,
+          "sheet": 0,
+          "slot": 13
+        },
+        {
+          "frame": 112,
+          "pts_seconds": 7.0,
+          "sheet": 0,
+          "slot": 14
+        },
+        {
+          "frame": 120,
+          "pts_seconds": 7.5,
+          "sheet": 0,
+          "slot": 15
+        },
+        {
+          "frame": 128,
+          "pts_seconds": 8.0,
+          "sheet": 0,
+          "slot": 16
+        },
+        {
+          "frame": 136,
+          "pts_seconds": 8.5,
+          "sheet": 0,
+          "slot": 17
+        },
+        {
+          "frame": 144,
+          "pts_seconds": 9.0,
+          "sheet": 0,
+          "slot": 18
+        },
+        {
+          "frame": 152,
+          "pts_seconds": 9.5,
+          "sheet": 0,
+          "slot": 19
+        },
+        {
+          "frame": 160,
+          "pts_seconds": 10.0,
+          "sheet": 0,
+          "slot": 20
+        },
+        {
+          "frame": 168,
+          "pts_seconds": 10.5,
+          "sheet": 0,
+          "slot": 21
+        },
+        {
+          "frame": 176,
+          "pts_seconds": 11.0,
+          "sheet": 0,
+          "slot": 22
+        },
+        {
+          "frame": 184,
+          "pts_seconds": 11.5,
+          "sheet": 0,
+          "slot": 23
+        },
+        {
+          "frame": 192,
+          "pts_seconds": 12.0,
+          "sheet": 0,
+          "slot": 24
+        },
+        {
+          "frame": 200,
+          "pts_seconds": 12.5,
+          "sheet": 0,
+          "slot": 25
+        },
+        {
+          "frame": 208,
+          "pts_seconds": 13.0,
+          "sheet": 0,
+          "slot": 26
+        },
+        {
+          "frame": 216,
+          "pts_seconds": 13.5,
+          "sheet": 0,
+          "slot": 27
+        },
+        {
+          "frame": 224,
+          "pts_seconds": 14.0,
+          "sheet": 0,
+          "slot": 28
+        },
+        {
+          "frame": 232,
+          "pts_seconds": 14.5,
+          "sheet": 0,
+          "slot": 29
+        },
+        {
+          "frame": 240,
+          "pts_seconds": 15.0,
+          "sheet": 0,
+          "slot": 30
+        },
+        {
+          "frame": 248,
+          "pts_seconds": 15.5,
+          "sheet": 0,
+          "slot": 31
+        },
+        {
+          "frame": 256,
+          "pts_seconds": 16.0,
+          "sheet": 1,
+          "slot": 0
+        },
+        {
+          "frame": 264,
+          "pts_seconds": 16.5,
+          "sheet": 1,
+          "slot": 1
+        },
+        {
+          "frame": 272,
+          "pts_seconds": 17.0,
+          "sheet": 1,
+          "slot": 2
+        },
+        {
+          "frame": 280,
+          "pts_seconds": 17.5,
+          "sheet": 1,
+          "slot": 3
+        },
+        {
+          "frame": 288,
+          "pts_seconds": 18.0,
+          "sheet": 1,
+          "slot": 4
+        },
+        {
+          "frame": 296,
+          "pts_seconds": 18.5,
+          "sheet": 1,
+          "slot": 5
+        },
+        {
+          "frame": 304,
+          "pts_seconds": 19.0,
+          "sheet": 1,
+          "slot": 6
+        },
+        {
+          "frame": 312,
+          "pts_seconds": 19.5,
+          "sheet": 1,
+          "slot": 7
+        },
+        {
+          "frame": 320,
+          "pts_seconds": 20.0,
+          "sheet": 1,
+          "slot": 8
+        },
+        {
+          "frame": 328,
+          "pts_seconds": 20.5,
+          "sheet": 1,
+          "slot": 9
+        },
+        {
+          "frame": 336,
+          "pts_seconds": 21.0,
+          "sheet": 1,
+          "slot": 10
+        },
+        {
+          "frame": 344,
+          "pts_seconds": 21.5,
+          "sheet": 1,
+          "slot": 11
+        },
+        {
+          "frame": 352,
+          "pts_seconds": 22.0,
+          "sheet": 1,
+          "slot": 12
+        },
+        {
+          "frame": 360,
+          "pts_seconds": 22.5,
+          "sheet": 1,
+          "slot": 13
+        },
+        {
+          "frame": 368,
+          "pts_seconds": 23.0,
+          "sheet": 1,
+          "slot": 14
+        },
+        {
+          "frame": 376,
+          "pts_seconds": 23.5,
+          "sheet": 1,
+          "slot": 15
+        },
+        {
+          "frame": 384,
+          "pts_seconds": 24.0,
+          "sheet": 1,
+          "slot": 16
+        },
+        {
+          "frame": 392,
+          "pts_seconds": 24.5,
+          "sheet": 1,
+          "slot": 17
+        },
+        {
+          "frame": 400,
+          "pts_seconds": 25.0,
+          "sheet": 1,
+          "slot": 18
+        },
+        {
+          "frame": 408,
+          "pts_seconds": 25.5,
+          "sheet": 1,
+          "slot": 19
+        },
+        {
+          "frame": 416,
+          "pts_seconds": 26.0,
+          "sheet": 1,
+          "slot": 20
+        },
+        {
+          "frame": 424,
+          "pts_seconds": 26.5,
+          "sheet": 1,
+          "slot": 21
+        },
+        {
+          "frame": 432,
+          "pts_seconds": 27.0,
+          "sheet": 1,
+          "slot": 22
+        },
+        {
+          "frame": 440,
+          "pts_seconds": 27.5,
+          "sheet": 1,
+          "slot": 23
+        },
+        {
+          "frame": 448,
+          "pts_seconds": 28.0,
+          "sheet": 1,
+          "slot": 24
+        },
+        {
+          "frame": 456,
+          "pts_seconds": 28.5,
+          "sheet": 1,
+          "slot": 25
+        },
+        {
+          "frame": 464,
+          "pts_seconds": 29.0,
+          "sheet": 1,
+          "slot": 26
+        },
+        {
+          "frame": 472,
+          "pts_seconds": 29.5,
+          "sheet": 1,
+          "slot": 27
+        },
+        {
+          "frame": 480,
+          "pts_seconds": 30.0,
+          "sheet": 1,
+          "slot": 28
+        },
+        {
+          "frame": 488,
+          "pts_seconds": 30.5,
+          "sheet": 1,
+          "slot": 29
+        },
+        {
+          "frame": 496,
+          "pts_seconds": 31.0,
+          "sheet": 1,
+          "slot": 30
+        },
+        {
+          "frame": 500,
+          "pts_seconds": 31.25,
+          "sheet": 1,
+          "slot": 31
+        }
+      ],
+      "sheets": [
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p10_sheet0.jpg",
+          "sha256": "86843ca5468032e9c3b5988d7b729c0fe346cb11947ae2d70c1a7eff165e42b3",
+          "bytes": 1114720
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p10_sheet1.jpg",
+          "sha256": "3d76c4d2477e1d6b5b087827a5f62237348e7f9f8b2de4a1b18c6c833ddd636b",
+          "bytes": 1296929
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "An astronaut walks slowly across a dusty lunar plain, leaving footprints while the loose straps of a backpack sway. A continuous full-body tracking view with a dark sky and distant ridges.",
+      "source": "/home/acorn0415/sfq_data/mechanism/fr/p11_s303_BF16/video.mp4",
+      "source_sha256": "1d7afbfeb58d99cbe26401153426f6d9f7ec865f4c26c383946aa6e0ffcd0722",
+      "decoded_frames": 501,
+      "viewable_sampled_frames": [
+        {
+          "frame": 0,
+          "pts_seconds": 0.0,
+          "sheet": 0,
+          "slot": 0
+        },
+        {
+          "frame": 8,
+          "pts_seconds": 0.5,
+          "sheet": 0,
+          "slot": 1
+        },
+        {
+          "frame": 16,
+          "pts_seconds": 1.0,
+          "sheet": 0,
+          "slot": 2
+        },
+        {
+          "frame": 24,
+          "pts_seconds": 1.5,
+          "sheet": 0,
+          "slot": 3
+        },
+        {
+          "frame": 32,
+          "pts_seconds": 2.0,
+          "sheet": 0,
+          "slot": 4
+        },
+        {
+          "frame": 40,
+          "pts_seconds": 2.5,
+          "sheet": 0,
+          "slot": 5
+        },
+        {
+          "frame": 48,
+          "pts_seconds": 3.0,
+          "sheet": 0,
+          "slot": 6
+        },
+        {
+          "frame": 56,
+          "pts_seconds": 3.5,
+          "sheet": 0,
+          "slot": 7
+        },
+        {
+          "frame": 64,
+          "pts_seconds": 4.0,
+          "sheet": 0,
+          "slot": 8
+        },
+        {
+          "frame": 72,
+          "pts_seconds": 4.5,
+          "sheet": 0,
+          "slot": 9
+        },
+        {
+          "frame": 80,
+          "pts_seconds": 5.0,
+          "sheet": 0,
+          "slot": 10
+        },
+        {
+          "frame": 88,
+          "pts_seconds": 5.5,
+          "sheet": 0,
+          "slot": 11
+        },
+        {
+          "frame": 96,
+          "pts_seconds": 6.0,
+          "sheet": 0,
+          "slot": 12
+        },
+        {
+          "frame": 104,
+          "pts_seconds": 6.5,
+          "sheet": 0,
+          "slot": 13
+        },
+        {
+          "frame": 112,
+          "pts_seconds": 7.0,
+          "sheet": 0,
+          "slot": 14
+        },
+        {
+          "frame": 120,
+          "pts_seconds": 7.5,
+          "sheet": 0,
+          "slot": 15
+        },
+        {
+          "frame": 128,
+          "pts_seconds": 8.0,
+          "sheet": 0,
+          "slot": 16
+        },
+        {
+          "frame": 136,
+          "pts_seconds": 8.5,
+          "sheet": 0,
+          "slot": 17
+        },
+        {
+          "frame": 144,
+          "pts_seconds": 9.0,
+          "sheet": 0,
+          "slot": 18
+        },
+        {
+          "frame": 152,
+          "pts_seconds": 9.5,
+          "sheet": 0,
+          "slot": 19
+        },
+        {
+          "frame": 160,
+          "pts_seconds": 10.0,
+          "sheet": 0,
+          "slot": 20
+        },
+        {
+          "frame": 168,
+          "pts_seconds": 10.5,
+          "sheet": 0,
+          "slot": 21
+        },
+        {
+          "frame": 176,
+          "pts_seconds": 11.0,
+          "sheet": 0,
+          "slot": 22
+        },
+        {
+          "frame": 184,
+          "pts_seconds": 11.5,
+          "sheet": 0,
+          "slot": 23
+        },
+        {
+          "frame": 192,
+          "pts_seconds": 12.0,
+          "sheet": 0,
+          "slot": 24
+        },
+        {
+          "frame": 200,
+          "pts_seconds": 12.5,
+          "sheet": 0,
+          "slot": 25
+        },
+        {
+          "frame": 208,
+          "pts_seconds": 13.0,
+          "sheet": 0,
+          "slot": 26
+        },
+        {
+          "frame": 216,
+          "pts_seconds": 13.5,
+          "sheet": 0,
+          "slot": 27
+        },
+        {
+          "frame": 224,
+          "pts_seconds": 14.0,
+          "sheet": 0,
+          "slot": 28
+        },
+        {
+          "frame": 232,
+          "pts_seconds": 14.5,
+          "sheet": 0,
+          "slot": 29
+        },
+        {
+          "frame": 240,
+          "pts_seconds": 15.0,
+          "sheet": 0,
+          "slot": 30
+        },
+        {
+          "frame": 248,
+          "pts_seconds": 15.5,
+          "sheet": 0,
+          "slot": 31
+        },
+        {
+          "frame": 256,
+          "pts_seconds": 16.0,
+          "sheet": 1,
+          "slot": 0
+        },
+        {
+          "frame": 264,
+          "pts_seconds": 16.5,
+          "sheet": 1,
+          "slot": 1
+        },
+        {
+          "frame": 272,
+          "pts_seconds": 17.0,
+          "sheet": 1,
+          "slot": 2
+        },
+        {
+          "frame": 280,
+          "pts_seconds": 17.5,
+          "sheet": 1,
+          "slot": 3
+        },
+        {
+          "frame": 288,
+          "pts_seconds": 18.0,
+          "sheet": 1,
+          "slot": 4
+        },
+        {
+          "frame": 296,
+          "pts_seconds": 18.5,
+          "sheet": 1,
+          "slot": 5
+        },
+        {
+          "frame": 304,
+          "pts_seconds": 19.0,
+          "sheet": 1,
+          "slot": 6
+        },
+        {
+          "frame": 312,
+          "pts_seconds": 19.5,
+          "sheet": 1,
+          "slot": 7
+        },
+        {
+          "frame": 320,
+          "pts_seconds": 20.0,
+          "sheet": 1,
+          "slot": 8
+        },
+        {
+          "frame": 328,
+          "pts_seconds": 20.5,
+          "sheet": 1,
+          "slot": 9
+        },
+        {
+          "frame": 336,
+          "pts_seconds": 21.0,
+          "sheet": 1,
+          "slot": 10
+        },
+        {
+          "frame": 344,
+          "pts_seconds": 21.5,
+          "sheet": 1,
+          "slot": 11
+        },
+        {
+          "frame": 352,
+          "pts_seconds": 22.0,
+          "sheet": 1,
+          "slot": 12
+        },
+        {
+          "frame": 360,
+          "pts_seconds": 22.5,
+          "sheet": 1,
+          "slot": 13
+        },
+        {
+          "frame": 368,
+          "pts_seconds": 23.0,
+          "sheet": 1,
+          "slot": 14
+        },
+        {
+          "frame": 376,
+          "pts_seconds": 23.5,
+          "sheet": 1,
+          "slot": 15
+        },
+        {
+          "frame": 384,
+          "pts_seconds": 24.0,
+          "sheet": 1,
+          "slot": 16
+        },
+        {
+          "frame": 392,
+          "pts_seconds": 24.5,
+          "sheet": 1,
+          "slot": 17
+        },
+        {
+          "frame": 400,
+          "pts_seconds": 25.0,
+          "sheet": 1,
+          "slot": 18
+        },
+        {
+          "frame": 408,
+          "pts_seconds": 25.5,
+          "sheet": 1,
+          "slot": 19
+        },
+        {
+          "frame": 416,
+          "pts_seconds": 26.0,
+          "sheet": 1,
+          "slot": 20
+        },
+        {
+          "frame": 424,
+          "pts_seconds": 26.5,
+          "sheet": 1,
+          "slot": 21
+        },
+        {
+          "frame": 432,
+          "pts_seconds": 27.0,
+          "sheet": 1,
+          "slot": 22
+        },
+        {
+          "frame": 440,
+          "pts_seconds": 27.5,
+          "sheet": 1,
+          "slot": 23
+        },
+        {
+          "frame": 448,
+          "pts_seconds": 28.0,
+          "sheet": 1,
+          "slot": 24
+        },
+        {
+          "frame": 456,
+          "pts_seconds": 28.5,
+          "sheet": 1,
+          "slot": 25
+        },
+        {
+          "frame": 464,
+          "pts_seconds": 29.0,
+          "sheet": 1,
+          "slot": 26
+        },
+        {
+          "frame": 472,
+          "pts_seconds": 29.5,
+          "sheet": 1,
+          "slot": 27
+        },
+        {
+          "frame": 480,
+          "pts_seconds": 30.0,
+          "sheet": 1,
+          "slot": 28
+        },
+        {
+          "frame": 488,
+          "pts_seconds": 30.5,
+          "sheet": 1,
+          "slot": 29
+        },
+        {
+          "frame": 496,
+          "pts_seconds": 31.0,
+          "sheet": 1,
+          "slot": 30
+        },
+        {
+          "frame": 500,
+          "pts_seconds": 31.25,
+          "sheet": 1,
+          "slot": 31
+        }
+      ],
+      "sheets": [
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p11_sheet0.jpg",
+          "sha256": "1ce10830c21d0b4bc9d1455e016f4342aa11238b1e2cfb1823a8a0b60ad0cab1",
+          "bytes": 628071
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/long_context_event_screen/p11_sheet1.jpg",
+          "sha256": "ea7c112334bea8d69f2b9c5e2c5a70e68939f098efc0e17e34c6f4436a11e38f",
+          "bytes": 636563
+        }
+      ]
+    }
+  ],
+  "scope": "Decoded501 per existingMP4; visual samples64 pervideo. No complete-video human inspection, new quality scores or method effects."
+}
