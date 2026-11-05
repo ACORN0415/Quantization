@@ -316,3 +316,9 @@ cap정수는 실제bit기준선의추가metadata형식을 정한뒤 실자료접
 45분CPU4/RSS8GiB/새파일2GiB/새GPU0 제안. 실제Opus검토와최종연결검사/LOCK전실자료실행없음.
 한정선행검토는KVLinC/EVA/WitCert와의기존아이디어·fallback차이를기록하고종료했다. 동일선행을못찾은것을신규성으로쓰지않는다.
 이준비는전체pilot의stop_quality나기존후보종료판정을변경하지않는다. 실제효과미측정, 연속연구목표active.
+
+E023 [동일 logits의 CPU attention/LSE 연결 합성 준비]
+attention_adapter.py SHA2008265c0de2130b35d52ae05d291020def9aa09ceb118f2a815400d536d90b8.
+27합성검사통과: qblock32 FP32기존수식과출력bytes/같은logits LSE, 전체past+current범위, 축변환, post-Wo교차항/bias상쇄.
+root는소스/보고서와작은파일8개SHA를검토했다. 별도재실행/실제capture/GPU0이며FA2출력동등성검증을뜻하지않는다.
+실제연결은QIDS/복원/공통참조의실행driver및한headK8패킹을준비한다. 실제Opus검토/최종LOCK전실제점수를계산하지않는다.

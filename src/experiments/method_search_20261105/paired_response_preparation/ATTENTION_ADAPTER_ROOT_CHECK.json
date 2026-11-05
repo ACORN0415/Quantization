@@ -1,0 +1,60 @@
+{
+  "created_utc": "2026-11-05T12:44:14.618151+00:00",
+  "scope": "root source and report review plus current small-file SHA verification; no test rerun",
+  "checks": [
+    {
+      "path": "attention_adapter.py",
+      "expected": "2008265c0de2130b35d52ae05d291020def9aa09ceb118f2a815400d536d90b8",
+      "actual": "2008265c0de2130b35d52ae05d291020def9aa09ceb118f2a815400d536d90b8",
+      "ok": true
+    },
+    {
+      "path": "attention_adapter_selftest.py",
+      "expected": "4d2a9cc9db1a73b5ae6b5697ce7e4b96538ac581da3893c1a3f805c31f18a744",
+      "actual": "4d2a9cc9db1a73b5ae6b5697ce7e4b96538ac581da3893c1a3f805c31f18a744",
+      "ok": true
+    },
+    {
+      "path": "ATTENTION_ADAPTER_SELFTEST_V1.json",
+      "expected": "5cfcac6a23efc87c8e7f5263f80324e9cd4ff412ab07bb178fcf6abc206bb04d",
+      "actual": "5cfcac6a23efc87c8e7f5263f80324e9cd4ff412ab07bb178fcf6abc206bb04d",
+      "ok": true
+    },
+    {
+      "path": "ATTENTION_ADAPTER_PREPARATION_KO.txt",
+      "expected": "adc398a334653fa685726b094aeca30bf87d389141c2e0b1bd75130ff48929b2",
+      "actual": "adc398a334653fa685726b094aeca30bf87d389141c2e0b1bd75130ff48929b2",
+      "ok": true
+    },
+    {
+      "path": "core.py",
+      "expected": "c66e2e3e429652ad60da35c94d56e0a2baab46134252cbfd7005c8152f10eb82",
+      "actual": "c66e2e3e429652ad60da35c94d56e0a2baab46134252cbfd7005c8152f10eb82",
+      "ok": true
+    },
+    {
+      "path": "selftest.py",
+      "expected": "e385982bbd3ada4010b921a1afd66a9cc134c7915ad69b11df15c915818b1b17",
+      "actual": "e385982bbd3ada4010b921a1afd66a9cc134c7915ad69b11df15c915818b1b17",
+      "ok": true
+    },
+    {
+      "path": "PREPARATION_MANIFEST_V2.json",
+      "expected": "1547f85c6d085b03603355f876475d299449fd7e790a334ee53cc67a4c3db514",
+      "actual": "1547f85c6d085b03603355f876475d299449fd7e790a334ee53cc67a4c3db514",
+      "ok": true
+    },
+    {
+      "path": "PREPARATION_MANIFEST.json",
+      "expected": "e869209b2a4c961ee1ec1644f8ad9d4955e2d1cb52d1cf904c0de44c8d053dfa",
+      "actual": "e869209b2a4c961ee1ec1644f8ad9d4955e2d1cb52d1cf904c0de44c8d053dfa",
+      "ok": true
+    }
+  ],
+  "passed": true,
+  "synthetic_checks_reported": 27,
+  "actual_Opus_review_complete": false,
+  "real_capture_access": 0,
+  "effect_scores": 0,
+  "review_conclusion": "CPU FP32 dense visible-window output and same-logits LSE contract ready for integration; actual capture/FA2 identity is untested"
+}

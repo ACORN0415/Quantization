@@ -1,0 +1,31 @@
+{
+  "status": "synthetic_CPU_attention_LSE_adapter_ready_pending_review",
+  "source_editing_stopped": true,
+  "created_kst": "2026-11-05T21:41:37.027385+09:00",
+  "synthetic_checks": 27,
+  "real_capture_reads": 0,
+  "GPU_calls": 0,
+  "model_loads": 0,
+  "new_effect_experiments": 0,
+  "commits": 0,
+  "actual_Opus_review_complete": false,
+  "files": {
+    "attention_adapter.py": "2008265c0de2130b35d52ae05d291020def9aa09ceb118f2a815400d536d90b8",
+    "attention_adapter_selftest.py": "4d2a9cc9db1a73b5ae6b5697ce7e4b96538ac581da3893c1a3f805c31f18a744",
+    "ATTENTION_ADAPTER_SELFTEST_V1.json": "5cfcac6a23efc87c8e7f5263f80324e9cd4ff412ab07bb178fcf6abc206bb04d",
+    "ATTENTION_ADAPTER_PREPARATION_KO.txt": "adc398a334653fa685726b094aeca30bf87d389141c2e0b1bd75130ff48929b2"
+  },
+  "existing_paired_source_manifest_hashes_observed_unchanged_by_this_task": {
+    "core.py": "c66e2e3e429652ad60da35c94d56e0a2baab46134252cbfd7005c8152f10eb82",
+    "selftest.py": "e385982bbd3ada4010b921a1afd66a9cc134c7915ad69b11df15c915818b1b17",
+    "PREPARATION_MANIFEST_V2.json": "1547f85c6d085b03603355f876475d299449fd7e790a334ee53cc67a4c3db514",
+    "PREPARATION_MANIFEST.json": "e869209b2a4c961ee1ec1644f8ad9d4955e2d1cb52d1cf904c0de44c8d053dfa"
+  },
+  "legacy_helper_imported": false,
+  "legacy_guard_called": false,
+  "future_integration_required": [
+    "selected QIDS and same reference/input binding",
+    "actual FP32/native BF16 floor",
+    "FA2 LSE/GPU cost remains unverified"
+  ]
+}

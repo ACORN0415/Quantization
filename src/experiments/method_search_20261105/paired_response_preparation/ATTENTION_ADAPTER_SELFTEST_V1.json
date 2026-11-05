@@ -1,0 +1,129 @@
+{
+  "status": "passed",
+  "synthetic_only": true,
+  "checks_total": 27,
+  "checks": [
+    {
+      "name": "qblock32_old_arithmetic_bytes",
+      "passed": true
+    },
+    {
+      "name": "FP32_same_logit_LSE_bytes",
+      "passed": true
+    },
+    {
+      "name": "paired_axis_roundtrip_bytes",
+      "passed": true
+    },
+    {
+      "name": "past_plus_current_counts",
+      "passed": true
+    },
+    {
+      "name": "attention_inputs_preserved",
+      "passed": true
+    },
+    {
+      "name": "independent_FP64_attention",
+      "passed": true,
+      "max_absolute_error": 2.2328217830214214e-07
+    },
+    {
+      "name": "independent_FP64_LSE",
+      "passed": true,
+      "max_absolute_error": 3.004031645659211e-07
+    },
+    {
+      "name": "all_past_current_value_scope",
+      "passed": true
+    },
+    {
+      "name": "all_past_current_LSE_scope",
+      "passed": true
+    },
+    {
+      "name": "empty_past_current_still_included",
+      "passed": true
+    },
+    {
+      "name": "Wo_head_cross_terms_preserved",
+      "passed": true
+    },
+    {
+      "name": "post_Wo_original_difference_bytes",
+      "passed": true
+    },
+    {
+      "name": "bias_cancels_only_from_difference",
+      "passed": true
+    },
+    {
+      "name": "reference_energy_includes_bias",
+      "passed": true
+    },
+    {
+      "name": "post_Wo_inputs_preserved",
+      "passed": true
+    },
+    {
+      "name": "zero_reference_energy_explicit",
+      "passed": true
+    },
+    {
+      "name": "no_grad_output_contract",
+      "passed": true
+    },
+    {
+      "name": "grad_inputs_and_mode_preserved",
+      "passed": true
+    },
+    {
+      "name": "bad_query_rank",
+      "passed": true
+    },
+    {
+      "name": "BF16_conversion_must_be_explicit",
+      "passed": true
+    },
+    {
+      "name": "key_head_mismatch",
+      "passed": true
+    },
+    {
+      "name": "value_token_mismatch",
+      "passed": true
+    },
+    {
+      "name": "empty_current_rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid_Wo_shape",
+      "passed": true
+    },
+    {
+      "name": "invalid_bias_shape",
+      "passed": true
+    },
+    {
+      "name": "nonfinite_query_rejected",
+      "passed": true
+    },
+    {
+      "name": "CUDA_uninitialized",
+      "passed": true
+    }
+  ],
+  "real_capture_reads": 0,
+  "GPU_calls": 0,
+  "model_loads": 0,
+  "effect_experiments": 0,
+  "threads": 4,
+  "cuda_initialized": false,
+  "wall_seconds": 0.012416826910339296,
+  "max_rss_bytes": 418058240,
+  "source_hashes": {
+    "attention_adapter.py": "2008265c0de2130b35d52ae05d291020def9aa09ceb118f2a815400d536d90b8",
+    "attention_adapter_selftest.py": "4d2a9cc9db1a73b5ae6b5697ce7e4b96538ac581da3893c1a3f805c31f18a744"
+  }
+}

@@ -30,5 +30,24 @@
     "audit_path": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/PAIRED_CORE_AMENDMENT_AUDIT_CODEX.json",
     "audit_sha256": "56a82afdb7086ec468e6a0be1ee1adcdacac782aa66afb580ec09272e89fca48",
     "scope": "original counterexample, 33 regression, independent vector math.fsum; no real data or GPU"
+  },
+  "attention_adapter_preparation": {
+    "status": "synthetic_CPU_attention_LSE_adapter_ready_pending_review",
+    "updated_kst": "2026-11-05T21:41:37.027385+09:00",
+    "scope": "synthetic only",
+    "source_frozen": true,
+    "checks": 27,
+    "real_capture_reads": 0,
+    "GPU_calls": 0,
+    "effect_experiments": 0,
+    "actual_Opus_review_complete": false,
+    "ready_path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_preparation/ATTENTION_ADAPTER_READY.json",
+    "ready_sha256": "04fbe4f2a204706d02bd70edb834a9a3d84404d317279b9abf99e5d3a12c2a71",
+    "files": {
+      "attention_adapter.py": "2008265c0de2130b35d52ae05d291020def9aa09ceb118f2a815400d536d90b8",
+      "attention_adapter_selftest.py": "4d2a9cc9db1a73b5ae6b5697ce7e4b96538ac581da3893c1a3f805c31f18a744",
+      "ATTENTION_ADAPTER_SELFTEST_V1.json": "5cfcac6a23efc87c8e7f5263f80324e9cd4ff412ab07bb178fcf6abc206bb04d",
+      "ATTENTION_ADAPTER_PREPARATION_KO.txt": "adc398a334653fa685726b094aeca30bf87d389141c2e0b1bd75130ff48929b2"
+    }
   }
 }

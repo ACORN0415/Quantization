@@ -1,0 +1,24 @@
+Paired CPU attention/LSE 입력 연결 준비
+작성 2026-11-05T21:41:37.027385+09:00. 소스 편집 종료. 실제 Opus 검토 미완료.
+범위: attention_adapter.py와 별도 합성 검사만 추가. 기존 paired core/manifest를 변경하지 않았다. 오래된 helper/guard를 import하거나 실행하지 않았다. 실자료/모델/GPU/효과/커밋0.
+첫 연결 보고서 확인21:37:09 KST부터 약 268.0초, 8분 상한 이내.
+
+계약
+attention_window는 이미 선택된 Q[Q,H,D], 과거K/V 및 현재K/V를 각각 CPU FP32로 받는다. BF16→FP32 변환과 QIDS 선택은 caller가 명시적으로 수행한다. 모든 과거와 현재를 순서대로 연결하며 현재가 비어 있으면 거부한다. padding/RoPE/양자화 복원은 이 함수에서 수행하지 않는다. 이 연결은 old.attn의 완전히 보이는 dense window를 대상으로 하며 attention mask는 구현하지 않았다. 다른 mask를 사용하는 실행에 그대로 연결하면 안 된다.
+연산은 old.attn의 FP32 q-block32 bmm /sqrt(D), softmax, bmm 순서다. 같은 logits에 FP32 logsumexp를 적용해LSE를 얻는다. output [Q,H,Dv]와 paired용 [H,Q,Dv], LSE[H,Q]를 구분한다. paired_to_original은 paired 결과의 H/Q축을 되돌려 같은 head순서를 보존한다. Dv=D인 본래 경로는 empty_like(query)를 유지하며 일반 Dv에도 같은 bmm 산술을 사용한다.
+과거만 보정하더라도 base의 output/LSE에는 전체 과거+현재를 포함한다. current V를 V4 past 값과 혼동하지 않는다. 이미 저장된 native_av를 양자화 base로 쓰거나 다른 logits의 LSE와 섞는 경로는 구현하지 않았다.
+post_wo_difference는 FP32 delta=(candidate-reference).reshape(Q,-1)@W_o.T를 계산한다. head별 제곱합으로 대체하지 않는다. bias는 delta에서 상쇄되며 reference energy=(reference@W_o.T+bias)의 FP64 제곱합에만 반영한다. SSE도 FP64 reduction이다. reference energy가0이면 NSE=None을 반환하고 epsilon으로 고치지 않는다. K-only/fullBF16 중 어떤 참조를 썼는지는 caller의 명세이며 이 adapter는 참조를 바꾸지 않는다.
+함수는 no_grad이고 finite CPU FP32/shape 계약을 검사한다. FP32 logits/출력이 비유한이면 거부한다. 마스크용-inf를 유한 score인 것처럼 허용하지 않는다. 합성 native 산술 비교를 통과한 것과 GPU BF16/FA2 결과의 bit 일치는 다르다.
+
+합성 결과
+ATTENTION_ADAPTER_SELFTEST_V1.json: 27/27 통과. 계산 구간 0.012417초, CPU4, RSSpeak 418058240B, CUDA initialized=False.
+Q70으로32경계를 넘는 세 블록을 검사해 소스상 old.attn과 동일한 독립 로컬 수식의 출력 bytes 및 같은 logits의 LSE bytes가 일치했다. legacy helper는 import하지 않았다. 별도 FP64 전체행렬 attention/LSE와도 사전에 정한 atol1e-6/rtol2e-6 범위에서 일치했다. FP64를 base 실행으로 바꾼 것이 아니라 합성 검사 참조로만 사용했다.
+과거2+현재3토큰의 Q0 예에서 output은 두 구간을 합친 평균, LSE는log5였고 과거가 비면 현재만의 log3을 반환했다. H/Q축 roundtrip bytes, 서로 다른 Dv, post-Wo head 교차항, bias 변화와 무관한 delta/SSE·bias를 포함한 참조 에너지, 원입력 보존, grad-enabled caller에서 graph 없는 출력, 잘못된 dtype/shape·비유한 입력 거부도 확인했다.
+출력 두 배치 형태는 별도 contiguous tensor이며 cat된 K/V, logits/softmax, LSE, 출력 및 검증은 CPU 작업 메모리·비용을 사용한다. 저장 상태 바이트나 생산용 저비용 GPU 보정으로 주장하지 않는다. 새 실자료 driver/시간 guard/등록/기준선 선택은 없다.
+
+해시
+attention_adapter.py 2008265c0de2130b35d52ae05d291020def9aa09ceb118f2a815400d536d90b8
+attention_adapter_selftest.py 4d2a9cc9db1a73b5ae6b5697ce7e4b96538ac581da3893c1a3f805c31f18a744
+ATTENTION_ADAPTER_SELFTEST_V1.json 5cfcac6a23efc87c8e7f5263f80324e9cd4ff412ab07bb178fcf6abc206bb04d
+읽은 연결 보고서 b4271d4ee129b615f5c7e5d5a1f78f5652b9837b744c37a22e789533f83f2ffe
+산술을 읽은 legacy source(미import) 07324360458a1d5687cff8932db316af97f9945ab75a689c7f3f7a0f0968af0d
