@@ -1,0 +1,32 @@
+{
+  "status": "post_acquisition_independent_byte_audit",
+  "start_epoch": 1793907609.116919,
+  "Codex_deadline_epoch": 1793908209.116919,
+  "actual_Claude_seconds_from_receipt": 600,
+  "absolute_review_outer_epoch": 1793909409.116919,
+  "input_folder": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_asset_acquisition_preparation",
+  "asset_root": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1",
+  "pair": [
+    "fair_comparison_codex independent of acquisition-code writer",
+    "existing actual Opus2 source familiar record reviewer"
+  ],
+  "limits": {
+    "CPU_threads": 2,
+    "RSS_bytes": 1073741824,
+    "output_bytes": 8388608,
+    "network": 0,
+    "GPU": 0,
+    "model_or_tensor_loads": 0,
+    "installation": 0
+  },
+  "checks": [
+    "TerminalROOT/worker statuses/timing/attempt/source and approved manifest match.",
+    "Independently stream SHA of both full local ZIPs against declared LFS; exact31 extracted files SHA/CRC/name/size plus actual destination counts and no unrequested payload files.",
+    "Optionally independently stream selected ZIP members and compare SHA to extracted files; no pickle/torch/weights deserialization.",
+    "Recalculate HTTP totals/disk/extract/resource/byte bookkeeping and distinguish original-worker instrument vs independent filesystem proof.",
+    "SOURCE/ROOT_SPEC/manifest/reviews immutable. Do not rerun acquisition or modify old records."
+  ],
+  "writer_scope": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_asset_audit",
+  "deliverable": "verify_assets.py + AUDIT_CODEX.json + REPORT_CODEX_KO.txt; actualOpus REVIEW_OPUS_KO.txt. Helper1 allowed contract vs hashes shared budget.",
+  "delivery": "Dispatch actual reviewer before manager bookkeeping; actual review clock begins receipt, cap outer1800sec from root. No new chat/restart."
+}

@@ -1,0 +1,36 @@
+{
+  "status": "isolated_runtime_plan_and_readonly_checkpoint_metadata_only",
+  "start_epoch": 1793907609.116919,
+  "Codex_deadline_epoch": 1793908509.116919,
+  "actual_Claude_seconds_from_receipt": 600,
+  "absolute_review_outer_epoch": 1793909409.116919,
+  "asset_root": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1",
+  "pair": [
+    "method_gap_codex",
+    "existing actual Opus1"
+  ],
+  "limits": {
+    "CPU_threads": 2,
+    "RSS_bytes": 2147483648,
+    "output_bytes": 16777216,
+    "primary_metadata_HTTP_bytes": 8388608,
+    "source_files_max": 10,
+    "GPU": 0,
+    "tensor_model_loads": 0,
+    "wheel_or_model_payload_downloads": 0,
+    "installation": 0
+  },
+  "work": [
+    "Read extracted hydra.yaml selected fields and safe PyTorch ZIP data.pkl opcode/global metadata only, never torch.load/pickle.load. Can use pickletools/zipfile or installedtorch safe metadata scan if CUDA disabled and no tensor deserialization. Record unknowns honestly.",
+    "Determine exact pickle module source dependencies / encoder present evidence vs mere class/string occurrence. No claim top-level keys from loose text search.",
+    "Inspect pinned project environment/PushT import sources and official PyPI metadata only to propose a bounded fixed-version missing-package set. Keep existing sfq_data/env unchanged.",
+    "Propose per-task --target overlay + existing interpreter or genuinely isolated environment without Torch/CUDA downloads. Do not assume child venv inherits packages from parent venv. All package changes later require root explicit manifest, not user approval again.",
+    "Plan minimal source bundle pinned to QuantWM commit with Git/sparse or exact raw files; no actual clone/download installation in this phase. Avoid unnecessary full Noah monorepo retrieval.",
+    "Identify minimal smoke preparation steps and any required adapter for unused env imports; do not build new quantization selector or broad framework."
+  ],
+  "code_commit": "be738be37a0535f75f541a6c1201ce19f95499b0",
+  "local_metadata": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_loader_gate/ROOT_LOCAL_PACKAGE_METADATA.json",
+  "writer_scope": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_runtime_preparation",
+  "deliverable": "REPORT_CODEX_KO.txt + proposed fixed package/source acquisition manifest, clearly unapproved. Actual Opus REVIEW_OPUS_KO.txt. One helper for dependency vs metadata allowed shared limits; no counterpart conclusions before return.",
+  "delivery": "Actual review starts receipt with600s budget, hardouter30min fromroot; keep existing visible Opus1."
+}

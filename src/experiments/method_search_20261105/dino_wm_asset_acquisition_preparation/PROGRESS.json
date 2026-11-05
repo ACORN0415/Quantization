@@ -1,0 +1,277 @@
+{
+  "status": "running",
+  "started_utc": 1793907279.4121947,
+  "deadline_utc": 1793909079.4121947,
+  "manifest_sha256": "bc2cb7f13e5450a1a10c9b87ff9b19d95ec8dcf74b52bda8c73a3d59904e1da8",
+  "source_sha256": "bab23d80bf83de3b1136e5226fa94ff40a1e354e4e146348a6071eebd0089227",
+  "destination": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1",
+  "archives": [
+    {
+      "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/archives/outputs.zip",
+      "bytes": 953204628,
+      "sha256": "425b0d8c2a4194d3ec996b553575f69409aa5714176b063d8401789db9179482",
+      "verified_before_extraction": true,
+      "selected_members": [
+        {
+          "member": "outputs/pusht/hydra.yaml",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/outputs/pusht/hydra.yaml",
+          "bytes": 2021,
+          "sha256": "e4d7f21b85c778ab8b83c0bb83bc7625fdfb193a6a0619fef25f4a2afd7f8049",
+          "CRC32": "f526f0f2",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "outputs/pusht/checkpoints/model_latest.pth",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/outputs/pusht/checkpoints/model_latest.pth",
+          "bytes": 377929744,
+          "sha256": "e909f0cec958fc0b49a79f2e85730ae6b5f83dee61a224705f91883eb3bb74c5",
+          "CRC32": "b86f4652",
+          "CRC_verified_by_zipfile": true
+        }
+      ]
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/archives/pusht_noise.zip",
+      "bytes": 2785304515,
+      "sha256": "442f5dee246edf670964ed7bdecd248683cd6d00580fa0e4d458abb53f92da08",
+      "verified_before_extraction": true,
+      "selected_members": [
+        {
+          "member": "pusht_noise/val/states.pth",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/states.pth",
+          "bytes": 104471,
+          "sha256": "7ef3ab74983415802e342642e41bf6429b927d3fff7a54db15da74745dd2fcb0",
+          "CRC32": "d7631b68",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/rel_actions.pth",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/rel_actions.pth",
+          "bytes": 42480,
+          "sha256": "c5e04761f261db6f96b2d16db35e5f1d7e42b8d2c507994713c98343d0f685dc",
+          "CRC32": "26c29f5e",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/velocities.pth",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/velocities.pth",
+          "bytes": 83819,
+          "sha256": "b1e4694152206f34931cc5015dfefb4456608c42d9f6a7f2688d20f2fc90d59b",
+          "CRC32": "369b0f6c",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/seq_lengths.pkl",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/seq_lengths.pkl",
+          "bytes": 500,
+          "sha256": "ed0218e14c639d254f318419e314799cc063499e6984cd4c080555a004fba40f",
+          "CRC32": "8299d889",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/obses/episode_000.mp4",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/obses/episode_000.mp4",
+          "bytes": 108383,
+          "sha256": "1c9d564e9e794a4a9455c525a47f980eef5810919c2ecce643ae8ac3dbffe60c",
+          "CRC32": "149c01ca",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/obses/episode_001.mp4",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/obses/episode_001.mp4",
+          "bytes": 101603,
+          "sha256": "e47af6f241c4973afd335e5b3a9f517bde970d2aed249fe4eef5e9df4f0a6a5d",
+          "CRC32": "f20d88ff",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/obses/episode_002.mp4",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/obses/episode_002.mp4",
+          "bytes": 163169,
+          "sha256": "12d38906cb358f04fd144d19b0e6dc9400469a42ac9a0db7be4fca05eb9c5483",
+          "CRC32": "d433fcc3",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/obses/episode_003.mp4",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/obses/episode_003.mp4",
+          "bytes": 122484,
+          "sha256": "e9255437f329dc28333ef7949bb51f6d4d79c5c1287d78bc2b04477032b4f6ec",
+          "CRC32": "3e8f07e3",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/obses/episode_004.mp4",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/obses/episode_004.mp4",
+          "bytes": 162360,
+          "sha256": "6eee315b7c6a44000893c6e6a0f9f18053994506dad0e2353c51abb01e881ad3",
+          "CRC32": "3bfb43d8",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/obses/episode_005.mp4",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/obses/episode_005.mp4",
+          "bytes": 94612,
+          "sha256": "79c5e917b5650c0e64f417262dbda69d98e5bdbed2ac1dadee8deaec5a4b91ed",
+          "CRC32": "7b2f09cc",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/obses/episode_006.mp4",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/obses/episode_006.mp4",
+          "bytes": 111113,
+          "sha256": "62c7faa56823976ae4d2832cdbbc3a922e5ca315aa57ce17a2daf0a223522700",
+          "CRC32": "ee751302",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/obses/episode_007.mp4",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/obses/episode_007.mp4",
+          "bytes": 151746,
+          "sha256": "42227103fe786da35c076c4063a8d7cdc41ddc4131afb822b04ebf45268af81a",
+          "CRC32": "64cb1b9c",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/obses/episode_008.mp4",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/obses/episode_008.mp4",
+          "bytes": 113402,
+          "sha256": "86da470574b6e6da36ba7a45f77c0e905d488927122307489ae0c6c98aeb921a",
+          "CRC32": "c353205f",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/obses/episode_009.mp4",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/obses/episode_009.mp4",
+          "bytes": 129974,
+          "sha256": "e3f436cb4ed0f33642a1edb4e42adb7ec76f3c9e136079161e5f51ad6e08c077",
+          "CRC32": "f2bcf891",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/obses/episode_010.mp4",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/obses/episode_010.mp4",
+          "bytes": 58539,
+          "sha256": "a8ad66a6901b00ebe77284ba949a29dd5ba587c27ee0061d6175b5f836ec78c7",
+          "CRC32": "d270ddca",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/obses/episode_011.mp4",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/obses/episode_011.mp4",
+          "bytes": 106932,
+          "sha256": "7de086d567a8ce7d8062114f43ca8aba30b46c58d92bcd1786035d4d30889942",
+          "CRC32": "036b2326",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/obses/episode_012.mp4",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/obses/episode_012.mp4",
+          "bytes": 157525,
+          "sha256": "4d8fbfa792741245c49858527600c7dd1ff9e4ab3f426250c454324ed50b560d",
+          "CRC32": "4551ac33",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/obses/episode_013.mp4",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/obses/episode_013.mp4",
+          "bytes": 109655,
+          "sha256": "2fe237d415dfdb211d3cbd507165869d8f78c7b709c460c5616ab0e3841b53a3",
+          "CRC32": "d19d2003",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/obses/episode_014.mp4",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/obses/episode_014.mp4",
+          "bytes": 146760,
+          "sha256": "73e89305ca1155e5e31e1270e29b721606e523090bd7b04eb6ec26fe0fc9065a",
+          "CRC32": "65461e5f",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/obses/episode_015.mp4",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/obses/episode_015.mp4",
+          "bytes": 113424,
+          "sha256": "433658f6efed14ecd9caecfb180bd1b794e06116d5ff2615031148ff555c101c",
+          "CRC32": "7eb471ba",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/obses/episode_016.mp4",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/obses/episode_016.mp4",
+          "bytes": 97453,
+          "sha256": "d914302db748132af8fec063b604941b7f337bddd587dbd8c7dece631d8ebf31",
+          "CRC32": "4ebbc4d5",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/obses/episode_017.mp4",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/obses/episode_017.mp4",
+          "bytes": 56405,
+          "sha256": "1f51a51568252f18dccea4c755bc09f4fe23abccb1b4256fd0b5a999dc6a8948",
+          "CRC32": "147faaa2",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/obses/episode_018.mp4",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/obses/episode_018.mp4",
+          "bytes": 142455,
+          "sha256": "90ac94339a131a48643df68d6ab4ae5b6e95c5b9879ab623b225e6ae82931bec",
+          "CRC32": "a9f74c90",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/obses/episode_019.mp4",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/obses/episode_019.mp4",
+          "bytes": 116797,
+          "sha256": "0a8b3b5ad42b30c8c1fd95a0fecd4880be417545fc5c69132cde6162bb7933c7",
+          "CRC32": "f3f917db",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/val/obses/episode_020.mp4",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/val/obses/episode_020.mp4",
+          "bytes": 114082,
+          "sha256": "3e655f71204f5d638b7b9450a7eeb7e7ee90765d11c1ee20ca8928399d9447c1",
+          "CRC32": "f4b4b45f",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/train/states.pth",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/train/states.pth",
+          "bytes": 183861527,
+          "sha256": "e539d89d18637f5d35cf429c13ba04ce9a578d208e3e8a8d93043ea60213042e",
+          "CRC32": "1ebe467e",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/train/rel_actions.pth",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/train/rel_actions.pth",
+          "bytes": 73545328,
+          "sha256": "99a023838d0a9215848c1640cedf3e53c3ae241cfc5365bc642d508c02dcf53c",
+          "CRC32": "1cf62801",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/train/velocities.pth",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/train/velocities.pth",
+          "bytes": 73545323,
+          "sha256": "b953d994ed736c85ecc64975192d6365be136866656019f76c19d7569f5292b8",
+          "CRC32": "ab618844",
+          "CRC_verified_by_zipfile": true
+        },
+        {
+          "member": "pusht_noise/train/seq_lengths.pkl",
+          "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/pusht_noise/train/seq_lengths.pkl",
+          "bytes": 71861,
+          "sha256": "60b98f3e84b05717f088948b895a8c37debc93a0f46f16887bd749fbb87681a1",
+          "CRC32": "61203e25",
+          "CRC_verified_by_zipfile": true
+        }
+      ]
+    }
+  ],
+  "GPU_calls": 0,
+  "payload_deserializations": 0,
+  "installations": 0
+}
