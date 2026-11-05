@@ -1,0 +1,25 @@
+실제 Opus 첫 검토에 대한 root 판단 — 2026-11-05, 실자료 측정 전
+
+두 검토는 실제 claude-opus-5-5 채팅에서 수행됐다. encoder와 pilot 첫 검토의 핵심 판단을 수용한다. 과거 Fable은 읽은 구버전 범위만 유지하고 이후 수정본을 검토했다고 표시하지 않는다. 전체 full-H pilot의 stop_quality를 유지하며 국소 이득이나 지표 목적에 관한 사후 해석으로 판정을 바꾸지 않는다.
+
+등록 전에 반영할 사항
+1. RP3Q(R_fp32+projected PSAC3+QKSA)를 추가한다. 이미 구현한 구성요소의 단순 결합이며 같은 FULL 결합 대조와 대칭이다. 추가 persistent 상태는 없다.
+2. cap 내 필수 기준선이 무효·누락·사전 dense 상한 위반이면 전체 통과가 불가능하다. 남은 팔의 최소값만으로 성공을 선언하지 않는다. FM3/FM8은 사전 고비용 참고점으로 분리한다.
+3. fallback은 endpoint×seed마다 bool mask[12,128]의 합/1536으로 고정한다. 중복 원인은 한 번 세고, 0.1% 조건은 0~1쌍이다. exact-zero bypass는 별도 기록한다.
+4. Omega는 같은 seed이면 두 층에서 같은 값, 층별 독립 소유·비용으로 고정한다. torch 버전/dtype/device/seed/layer/Omega 및 각 청크 상태 해시를 연결한다.
+5. log denominator ratio의 최소·p1·p50·p99·최대, 비유한 수, log10 초과 비율은 수치 위험 설명용으로 보고한다. 새 성공 문턱으로 사용하지 않는다.
+6. QKSA는 H128 코드 좌표, 실제 scale, frame별 padding 제거, sqrt128로 나눈 logits의 과거 구간에 softmax 전에 적용한다. FULL factor를 회전 행렬로 쓰지 않는다.
+7. 원래 full-BF16 참조 SSE도 모든 팔/seed에서 필수로 보고한다. 주 gate는 K-only 국소 성능으로 유지한다. 전체 생성 성공이나 독립 보류 성능을 뜻하지 않는다. 이번에 새 full-BF16 비열등 gate를 추가하지 않으며 그 결과 열을 숨기지 않는다.
+8. full-M rank8은 4,967,208B, rank3은 3,267,048B다. 이는 R_fp32 기반 FP64 rawM 상주 adaptation의 비용이다. FULL U에서 통계를 유도하는 변형 등 모든 가능한 구현의 최소비용을 주장하지 않는다.
+
+선택한 가장 싼 추가 대조
+Opus1이 제안한 p0 고정 K 평균 제거를 RMU 한 팔로 추가한다. p0 과거 K의 토큰 평균을 FP32[12,128], 6,144B로 고정하고 평가 통계로 갱신하지 않는다. 원래 R_fp32 코덱 앞뒤의 BF16 중심화/복귀 반올림은 방법 비용과 오차에 포함한다. 현재 BF16 K에는 개입하지 않는다. 이것은 기존 옵션의 단순 대조이며 신규 방법으로 부르지 않는다. 단순 옵션이 후보의 이득을 대신하는지를 결과를 보기 전에 확인하기 위한 선택이다.
+FULL 기반 유도-M 필터, 토큰 단위 BF16 보존, BIT8+QKSA는 이번 첫 판별 범위에 추가하지 않는다. 비교는 등록한 집합 내로 한정한다. 고정 Gaussian 후보가 실패해도 미검사한 FULL+paired나 학습형 전체가 불가능하다는 결론을 내리지 않는다.
+
+실행 전 root 소스 검토에서 발견한 필수 오류
+driver V2 SHA8009d8c71d6df9b1ac884337cab9e4d32ecb7459c00f101daf3c285e28cee78a의 evaluate_layer에서 처음 PAIR 객체를 만든 직후 reloaded['paired_manifest']를 읽는다. reloaded는 이후 save_tensor 반환으로 처음 할당된다. 따라서 PAIR 팔은 첫 write 전에 UnboundLocalError가 발생하는 제어경로다. root는 diff와 소스를 읽어 발견했으며 이 문서 작성 시 실제 실행으로 재현했다고 주장하지 않는다.
+51개 합성 검사는 이 driver 분기를 직접 실행한 검사가 아니었다. 원 V2/READY/V7을 보존하고 초기 Omega 검증과 저장·재로드 후 상태 비교를 올바른 위치로 구분하는 최소 V3 수정을 요청했다. 가짜 DataAccess를 사용해 실제 초기 제어경로가 첫 write 경계에 도달하는 회귀를 추가하도록 했다. 실제 캡처나 효과는 아직 0회다. 최종 Opus 소스 검토/LOCK 이전에는 실행하지 않는다.
+
+보존 및 후속
+폐쇄된 GPU encoder의 sf→BF16 roundtrip assert 누락은 시험 결과의 무효 사유로 확인되지 않았다. 동결된 옛 소스를 고치지 않고 향후 재사용 시 보완할 항목으로 보존한다. 역사 BUDGET/FINAL_READY와 현재 활성 파일은 구분한다. manager가 역사 SHA 필드명을 정리한다.
+현 단계의 결론은 비교 준비와 검토 보완이며 방법 효과의 증거는 아니다. 전체 목표는 active다.

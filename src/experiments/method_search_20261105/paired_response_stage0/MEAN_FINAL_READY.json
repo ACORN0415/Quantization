@@ -1,0 +1,29 @@
+{
+  "status": "final_ready_synthetic_only",
+  "created_utc": "2026-11-05T13:12:22.555275+00:00",
+  "source_editing_stopped": true,
+  "actual_opus_source_review": "pending",
+  "source_hashes": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/mean_baseline.py": "faa3c3291c234c55eeaee48a7d3c0fb783d4d37775551811b102360e4e732618",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/mean_baseline_selftest.py": "7dd63f2e093089a7f19cd1a1dfb48c91ea7612278fdebe60eec71eca47ade890",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/MEAN_SELFTEST_V1.json": "2702b9126d1aeb6aa3dd51c9d8bdcaa51e8b8fcda6b96b282ffd4845c4d80259",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/MEAN_SYNTHETIC_STATE.pt": "89f3b41331cdeea4ddf04032b9f1adee2abad8e22c047c9752677b29b3dfdb27",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/common.py": "436f7b2762397ecce840b91feb535094a9008c54066e4e796c3df248f9071c35",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/MEAN_PREPARATION_KO.txt": "d0e1583e1ce7a0a880723c6d7cd15855812e72546d58d266a2dddb324eff4b08"
+  },
+  "checks_total": 34,
+  "all_checks_passed": true,
+  "real_capture_reads": 0,
+  "GPU_calls": 0,
+  "commits": 0,
+  "persistent_extra_bytes": 6144,
+  "api": [
+    "prepare_mean",
+    "make_mean",
+    "encode",
+    "restore",
+    "MeanState.from_bytes",
+    "MeanState.to_bytes"
+  ],
+  "common_source_binding": "436f7b2762397ecce840b91feb535094a9008c54066e4e796c3df248f9071c35"
+}

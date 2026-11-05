@@ -1,0 +1,43 @@
+고정 p0 K평균 제거 기준선 — 합성 준비 완료
+실제 Opus 제안으로 추가하는 단순 대조이며 새 방법이 아니다. 본 구현의 실제 Opus 코드 검토는 미완료다. root가 후속 검토를 연결한다.
+
+수치·정보 계약
+원좌표 post-RoPE p0 과거6청크 K의 token 평균 mu를 고정 FP32[12,128]로 저장한다. 평가 입력의 통계로 갱신하지 않는다. make_mean은 외부 BF16 K 텐서 또는 iterable만 받아 token 수로 가중한 FP64 합산/나눗셈을 수행한 후 FP32 저장값으로 변환한다. raw 자료 접근이나 파일 로드, p0/평가 식별을 함수가 수행하지 않는다. driver가 p0 과거만 전달하고 provenance를 고정해야 한다.
+실제 청크의 K는 (K.float()-mu).BF16로 중심화한 뒤 동결 common.encode_k(...,'R_fp32')를 그대로 사용한다. 복원은 common.restore 뒤 (restored.float()+mu).BF16다. 현재 청크 K에는 개입하지 않으며 이 함수는 완료된 과거 청크만 입력받는다. H128/frame1560+padding8/group16/FP16 scale/FP32 RTN/BF16 dequant 및 역회전 시점은 원래 common 함수를 그대로 따른다.
+mu의 모든 값이 0이면 subtract/add를 건너뛰고 원래 경로를 호출한다. 이는 signed zero까지 원래 packet/restore byte를 보존하기 위한 무개입 대조다. mu가 0이 아니면 subtract/add의 BF16 반올림 자체가 원본을 변경할 수 있다. 양자화를 끈 일반 평균 제거 왕복이 bit identity라고 주장하지 않는다. 합성 예 0.001953125에서 mu=1을 빼고 BF16, 다시 더하고 BF16이면 0이 된다.
+
+scale 및 오류 계약
+기존 common의 FP16 scale 왕복 assert는 ValueError로 전달한다. packet 복원 전 FP16 scale의 유한·양수 및 원래 BF16 scale 표현가능성을 검사한다. zero/tiny/negative/overflow/nonfinite 상태를 새 clamp나 fallback으로 구제하지 않는다. 중심화·복원 결과의 비유한도 거부한다. 이 오류 검사는 새로운 품질 허용오차가 아니다.
+
+API
+prepare_mean(mu_FP32[12,128]) -> MeanState(mean)
+make_mean(keysBF16) -> MeanState(mean)
+encode(K_BF16[1,4680,12,128],state) -> 기존 common K packet dict
+restore(packet,state) -> 원좌표 BF16 동일 shape
+state.to_bytes()/MeanState.from_bytes(data), state.nbytes()/storage_bytes()
+make_mean의 입력은 BF16[N,12,128] 또는 BF16[1,N,12,128], 또는 이 tensor들의 iterable이다. prepare_mean은 입력의 owned contiguous/no_grad 사본을 만든다. 모든 실행 entry는 no_grad이며 입력을 수정하지 않는다.
+mean_baseline.py는 import 시 common.py SHA436f7b2762397ecce840b91feb535094a9008c54066e4e796c3df248f9071c35를 검증한다. 과거 실행의 guard/LOCK/capture/replay는 호출하지 않는다. 외부 프로그램의 CUDA 환경이나 grad mode를 module import에서 바꾸지 않는다. selftest만 CPU4 및 CUDA_VISIBLE_DEVICES 빈 값으로 실행한다.
+
+상태·비용
+공유 mu는 FP32 12*128*4=6,144B다. 고정 형상과 dtype는 코드/driver manifest에 묶으며 raw state 직렬화도 정확히6,144B다. 각 청크의 기존 R_fp32 packet은4,515,841B로 그대로다. 여섯 청크에 mu를 한 번만 공유하므로 추가 operational tensor/packet bytes는6,144B다. 기존 공통 H12865,536B, Python/allocator/파일 포맷·host/device 복사와 FP64 평균 fit workspace는 별도다. 실제 peak 및 GPU 비용은 확인하지 않았다. caller가 원래 mu 사본을 계속 보유하면 그 복제본도 별도 계측해야 한다.
+
+검증: MEAN_SELFTEST_V1.json
+34/34 합성검사 통과. 실제 입력 접근0/GPU0/모델0/효과 검사0이다. 한 production형상 무작위 합성 청크를 썼다.
+- mu=+0와 -0에서 원래 R_fp32 packet/복원 bytes 일치.
+- 비0 mu의 명시적 중심화·기존 encode·restore·mu복귀 식과 일치.
+- 입력/grad flag 보존, persistent graph 미보존, mu owned storage, 외부 mu 변경과 분리.
+- mu와 packet 모두 포함한 디스크 저장/재로드 및 복원 bytes 일치.
+- 길이가 다른 합성 보정 tensor의 token-weighted mean과 직접 concat FP64 계산 일치.
+- zero/tiny/overflow 및 음수/0/비유한 packet scale, 비유한 K/mu, 잘못된 dtype/빈 보정자료/잘린 state 거부.
+- mu0 대조와 일반 subtract/add BF16 왕복의 비항등을 구분.
+검사 함수 wall 0.889854832초, CPU4, RSSpeak 691408896B. 합성 .pt 4524152B. 이 시간은 실제 자료 encoder 비용이나 GPU 시간 추정이 아니다.
+
+소유 및 완료 상태
+mean_baseline.py, mean_baseline_selftest.py, MEAN_*만 새로 작성했다. bit 파일, 기존common, peer driver 및 Git commit은 수정하지 않았다. 실자료 등록과 총45분진단의 scientific gate를 변경하지 않았다. 이 보고 후 소스 편집을 멈추며 실제 Opus/root 검토와 driver LOCK을 기다린다.
+
+SHA256
+/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/mean_baseline.py faa3c3291c234c55eeaee48a7d3c0fb783d4d37775551811b102360e4e732618
+/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/mean_baseline_selftest.py 7dd63f2e093089a7f19cd1a1dfb48c91ea7612278fdebe60eec71eca47ade890
+/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/MEAN_SELFTEST_V1.json 2702b9126d1aeb6aa3dd51c9d8bdcaa51e8b8fcda6b96b282ffd4845c4d80259
+/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/MEAN_SYNTHETIC_STATE.pt 89f3b41331cdeea4ddf04032b9f1adee2abad8e22c047c9752677b29b3dfdb27
+/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/common.py 436f7b2762397ecce840b91feb535094a9008c54066e4e796c3df248f9071c35

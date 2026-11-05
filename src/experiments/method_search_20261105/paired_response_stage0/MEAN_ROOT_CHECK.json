@@ -1,0 +1,32 @@
+{
+  "scope": "root complete source/report read and small-file hash verification, no test rerun",
+  "checks": [
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/mean_baseline.py",
+      "ok": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/mean_baseline_selftest.py",
+      "ok": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/MEAN_SELFTEST_V1.json",
+      "ok": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/MEAN_SYNTHETIC_STATE.pt",
+      "ok": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/common.py",
+      "ok": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/MEAN_PREPARATION_KO.txt",
+      "ok": true
+    }
+  ],
+  "passed": true,
+  "actual_opus_final_source_review_complete": false,
+  "real_data_effects": 0
+}

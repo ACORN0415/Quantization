@@ -338,3 +338,17 @@ root는두채팅의runtime options current.model=claude-opus-5-5/confirmed model
 세션claude_beab681e_3eaf_41b0_9688_b8ef268b288f,claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5.
 정상nativechat+보고서+관리Run최종회신경로로검토중이다.실제검토완료/실자료실행은아직아니며과거Fable결과를재명명하지않는다.
 근거:OPUS_RUNTIME_ROOT_VERIFICATION.json의고정실행/options/history/attachment기록SHA.신규방법효과미측정,목표active.
+
+E025 [실제 Opus 첫 검토 수용 및 단순 대조 보완]
+Opus두검토자는기존pilot stop_quality/core/adapter의한정타당성을수용하고실자료전명세보완을요청했다.
+root가RP3Q대칭결합,필수baseline무효시통과불가,1536pair별fallback,Omega출처/재로드,분모양측꼬리기록을수용했다.
+단순p0K평균제거RMU도추가했다.고정FP32µ6144B,기존R_fp32패킷그대로,현재BF16불변.이는선행옵션의대조이며새방법이아니다.
+mean_baseline.py SHAfaa3c3291c234c55eeaee48a7d3c0fb783d4d37775551811b102360e4e732618.
+34합성검사통과/µ0packet·restore bytes일치/공유µ저장재로드;root소스와작은파일6SHA확인,실자료/GPU/효과0.
+
+E026 [stage0 driver V2 초기 경로 오류 발견, 실행 전 수정]
+driver V2 SHA8009d8c71d6df9b1ac884337cab9e4d32ecb7459c00f101daf3c285e28cee78a는17팔×4조건/51합성검사를준비했다.
+root소스diff검토에서초기PAIR생성직후 reloaded 변수를정의전에참조하는경로를발견했다.51검사는이전체초기분기를실행하지않았다.
+실자료접근전발견된구현유효성문제이며과학적효과실패가아니다.원V2/READY/V7을보존하고가짜DataAccess경계회귀와최소V3수정을요청했다.
+OPUS_FIRST_REVIEW_ROOT_RESPONSE_KO.txt에수용/보류사항과새비트대조상한범위,미검사기준선/일반화한계를명시했다.
+최종Opus소스검토및LOCK전실자료실행없음.원pilot stop_quality유지,연속목표active.

@@ -1,0 +1,165 @@
+{
+  "status": "passed",
+  "synthetic_only": true,
+  "checks_total": 34,
+  "checks": [
+    {
+      "name": "zero_mean_original_packet_bytes",
+      "passed": true
+    },
+    {
+      "name": "zero_mean_original_restore_bytes",
+      "passed": true
+    },
+    {
+      "name": "negative_zero_state_original_bytes",
+      "passed": true
+    },
+    {
+      "name": "nonzero_mean_explicit_packet",
+      "passed": true
+    },
+    {
+      "name": "nonzero_mean_explicit_restore",
+      "passed": true
+    },
+    {
+      "name": "input_key_mean_preserved",
+      "passed": true
+    },
+    {
+      "name": "output_shape_dtype",
+      "passed": true
+    },
+    {
+      "name": "shared_mu_owned",
+      "passed": true
+    },
+    {
+      "name": "external_mu_mutation_does_not_change_state",
+      "passed": true
+    },
+    {
+      "name": "shared_state_bytes_roundtrip",
+      "passed": true
+    },
+    {
+      "name": "reloaded_state_restore_exact",
+      "passed": true
+    },
+    {
+      "name": "disk_state_packet_roundtrip",
+      "passed": true
+    },
+    {
+      "name": "disk_payload_under20MiB",
+      "passed": true,
+      "bytes": 4524152
+    },
+    {
+      "name": "packet_size_unchanged",
+      "passed": true
+    },
+    {
+      "name": "six_chunk_extra_only_shared_mu",
+      "passed": true
+    },
+    {
+      "name": "offline_mean_token_weighted",
+      "passed": true
+    },
+    {
+      "name": "offline_mean_input_formats",
+      "passed": true
+    },
+    {
+      "name": "offline_mean_inputs_preserved",
+      "passed": true
+    },
+    {
+      "name": "no_retained_autograd_graph",
+      "passed": true
+    },
+    {
+      "name": "caller_grad_flags_preserved",
+      "passed": true
+    },
+    {
+      "name": "zero_K_scale_rejected",
+      "passed": true
+    },
+    {
+      "name": "tiny_scale_rejected",
+      "passed": true
+    },
+    {
+      "name": "overflow_scale_rejected",
+      "passed": true
+    },
+    {
+      "name": "nonfinite_key_rejected",
+      "passed": true
+    },
+    {
+      "name": "negative_packet_scale_rejected",
+      "passed": true
+    },
+    {
+      "name": "zero_packet_scale_rejected",
+      "passed": true
+    },
+    {
+      "name": "nonfinite_packet_scale_rejected",
+      "passed": true
+    },
+    {
+      "name": "nonfinite_mu_rejected",
+      "passed": true
+    },
+    {
+      "name": "wrong_mu_dtype_rejected",
+      "passed": true
+    },
+    {
+      "name": "empty_mean_input_rejected",
+      "passed": true
+    },
+    {
+      "name": "truncated_state_rejected",
+      "passed": true
+    },
+    {
+      "name": "nonzero_centering_not_identity_claim",
+      "passed": true,
+      "before": 0.001953125,
+      "after": 0.0
+    },
+    {
+      "name": "CPU_only",
+      "passed": true
+    },
+    {
+      "name": "RSS_under2GiB",
+      "passed": true,
+      "bytes": 691408896
+    }
+  ],
+  "real_capture_reads": 0,
+  "GPU_calls": 0,
+  "model_loads": 0,
+  "threads": 4,
+  "wall_seconds": 0.8898548319702968,
+  "max_rss_bytes": 691408896,
+  "persistent_extra_bytes": 6144,
+  "shared_hadamard_excluded_bytes": 65536,
+  "artifact": {
+    "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/MEAN_SYNTHETIC_STATE.pt",
+    "bytes": 4524152,
+    "sha256": "89f3b41331cdeea4ddf04032b9f1adee2abad8e22c047c9752677b29b3dfdb27"
+  },
+  "source_hashes": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/mean_baseline.py": "faa3c3291c234c55eeaee48a7d3c0fb783d4d37775551811b102360e4e732618",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/mean_baseline_selftest.py": "7dd63f2e093089a7f19cd1a1dfb48c91ea7612278fdebe60eec71eca47ade890",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/common.py": "436f7b2762397ecce840b91feb535094a9008c54066e4e796c3df248f9071c35"
+  }
+}
