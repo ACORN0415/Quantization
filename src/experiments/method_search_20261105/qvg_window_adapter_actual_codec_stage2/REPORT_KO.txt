@@ -1,0 +1,32 @@
+QVG 유한 창 수정 — 실제 코덱 연결 검사
+현재 관측 판정: 등록한 단1회 검사가 통과했다. 실제 Opus 사후 결과해석 검토는 별도 수신 중이다.
+
+실행과 결과
+최종 CPU adapter cce683d4, probe3f90a886, 감사기3c4a99bc, 원본0601468f를고정했다.
+2026-11-05 16:18:23UTC부터 감독포함45.629초, 감독completed/workerexit0/소유group정리True로종료했다.
+W21/63/126 각각42블록×5overwrite, 총630회 원 K/V와 절대RoPE Q/K가 같은 창의 무퇴거참조와 형상·dtype·논리원소바이트 일치했다.
+원 PRQ compress5회/내부K·V10회, 독립CPU INT2 unpack10비교가 통과했다.
+12개시점에서 원native FA2를 adapter/참조/참조반복 각1회, 총36회 호출했다. 반복과대조출력이 일치했고 SDPAfallback은0이었다.
+나머지618callback은 QKV전달을검증하고None을반환했다. 전체630회를nativeattention연산으로표현하지않는다.
+실제decoder5530회/uncompress2765회, 원longRoPE210회/segment·queryRoPE10080회였다. 계수는 실제호출지점에서수집했다.
+packet은같은압축입력을확인해그룹당한번생성후참조+세창에서공유했다. tensor와info/config내용hash가보존됐고원sourcehash도변하지않았다.
+최종저장자료감사6998항목이통과했다. 이는저장metadata/분모/coverage/파일바이트감사이며tensor값을독립재계산한사실은아니다.
+
+자원
+전체검사GPUallocated peak6853188608B(약6.38GiB), reserved7048527872B, workerRSS2314530816B(약2.16GiB), CPU4thread,
+실행시점산출물165378550B로등록상한을지켰다. 이수치는참조·복원·정확성임시버퍼를포함하며팔별실배포메모리나생성속도비교가아니다.
+실행종료후nvidia-smi에남은compute앱이없음을root가확인했다. 추가GPU실행은없다.
+
+검토와실행유효성
+실제Opus2가최종probe3f90와감독계약을, 실제Opus1이감사기3c4를읽고차단결함없음으로판정했다.
+R1 effective_config는실행중동적관측이아닌원functions.py261-271/317-324 기본값에근거한서술임을root가원문대조했다.
+G1/G2 재신호·느린종료의감독잔여한계를사전에보존했고root가실행후종료/유휴를직접확인했다. 범용cleanup보증은하지않는다.
+비통과분류는감사기만믿지않고root가등록규칙과원인기록을직접대조하도록고정했다. 이번에는비통과가발생하지않았다.
+원사전등록1e3e23f와102파일LOCK은실행전존재했다. source/review gitcommit42d109e는실행기동직후다.
+최초gitadd가ignore된4KB CPU합성fixture로실패하여그파일만명시추적한뒤commit했다. 실행전commit이었다고표현하지않는다.
+
+주장범위와다음판단
+수정adapter가원PRQ·cache·RoPE·FA2로실제큰형상에서같은창참조를재현할수있다는제한된근거다.
+한합성seed·한층이며전체원inference/모델·영상·다층피드백은실행하지않았다. 개별창별독립encode재현/영상품질/속도/장기창유용성/신규성은입증하지않는다.
+다음자원은전체모델기준선연결가능성과긴창으로달성할실제요구/검증가능한품질기준을별도독립검토하는데쓴다. GPU생성을자동확대하지않는다.
+실제패킷5개는로컬에보존하고RESULT의파일hash/크기로추적한다. 큰.pt는Git에추가하지않았다.

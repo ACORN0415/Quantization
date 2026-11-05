@@ -1,0 +1,31 @@
+{
+  "status": "observed_pass_postexecution_Opus_review_pending",
+  "created_utc": 1793895759.5752254,
+  "read_comparisons": 630,
+  "independent_unpack_comparisons": 10,
+  "attention_endpoints": 12,
+  "actual_counters": {
+    "compress": 5,
+    "prq_tensor_encode": 10,
+    "decode_total": 5530,
+    "uncompress_total": 2765,
+    "rope_apply_total": 10080,
+    "rope_long_reference": 210,
+    "fa2_kernel": 36,
+    "sdpa_fallback": 0
+  },
+  "whole_probe_wall_seconds": 45.629241704940796,
+  "whole_probe_peak_allocated_GPU_GiB": 6.382529258728027,
+  "whole_worker_peak_RSS_GiB": 2.1555747985839844,
+  "audit_checks": 6998,
+  "remaining_GPU_processes_after_execution": 0,
+  "raw_packet_files_ignored_by_git": "packet_00.pt through packet_04.pt retained locally with hashes/byte sizes in RESULT; approximately165MB output, not committed",
+  "Git_timing": "Registration1e3e23f and filesystemLOCK preceded execution. Source/review commit42d109e followed launch because initial gitadd rejected ignored4KB synthetic CPUfixture; fileLOCK/code remained unchanged. No claim of code commit preceding run.",
+  "methodology_goal_achieved": false,
+  "limits": [
+    "One synthetic seed,one layer,no full model or native inference executed",
+    "Shared encoding packets control randomness; separate independent encodes not compared",
+    "Saved-record audit verifies structural arithmetic/hash and self-reported numeric flags, not independent tensor reconstruction",
+    "Peak includes whole correctness probe/reference/workspace; not per-arm deployment peak or speed comparison"
+  ]
+}

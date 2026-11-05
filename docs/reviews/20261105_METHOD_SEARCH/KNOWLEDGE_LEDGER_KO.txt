@@ -442,3 +442,5 @@ local_attn_size초과시과거청크를퇴거하지않고ValueError를내며,att
 근거QVG_WINDOW_FEASIBILITY_ROOT.json,source-only독립검토/GPU0. 실제Opus의다음방향검토는별도로진행한다.
 
 E034 / 2026-11-06 KST: QVG finite-window adapter CPU preparation PASS. W21/63/126 total630 reads byte equal;11345 checks,actual Opus2 source+Opus1 verifier reviews. Original24frame schedule and absoluteRoPE retained. GPU/PRQ/model0; fake codec/attention only. Not a newmethod or quality/speed result. Actual-codec stage2 preparation follows separately. Evidence: qvg_window_adapter_cpu_stage1/{REPORT_KO.txt,FINAL_STATUS.json,AUDIT_CODEX_V2.json}.
+
+E035 / 2026-11-06 KST: Registered single real QVG codec window probe OBSERVED PASS.630read byte comparisons/10 independent unpack/12FA2 endpoints36calls;compress5,PRQ10,SDPA0.45.629s,wholeprobeGPUalloc6.38GiB;no model/video. Read-only audit6998checks. Actual Opus source reviews complete, postexecution interpretation pending. Compatibility repair evidence, not newmethod/quality/speed. Source/review gitcommit followed launch after ignored tinyCPUfixture gitadd error; prereg and immutable filesystemLOCK preceded launch.
