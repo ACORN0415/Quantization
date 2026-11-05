@@ -1,0 +1,125 @@
+{
+  "status": "failed_or_incomplete",
+  "started_utc": 1793873590.4092517,
+  "models_loaded": 0,
+  "generations": 0,
+  "timings": [],
+  "lock_sha256": "f4f7e0298f03dd98f331f962980824f3f569cb0c2eef1af63a1556162923ebfa",
+  "device": "NVIDIA GeForce RTX 4090",
+  "torch_version": "2.6.0+cu124",
+  "cuda_version": "12.4",
+  "initial_H2D_seconds": 0.11263007204979658,
+  "code_lifetime_validation": [
+    {
+      "layer": 18,
+      "chunk": 1,
+      "stage": "T_code",
+      "lifetime": {
+        "RTN_eager": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        },
+        "RTN_graph": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        },
+        "OBQ_graph": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        },
+        "OBQ_fused": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        }
+      },
+      "setup": {
+        "RTN_eager": {
+          "kind": "owned_eager",
+          "setup_seconds": 1.4629913493990898e-06
+        },
+        "RTN_graph": {
+          "kind": "owned_graph",
+          "setup_seconds": 0.07387295505031943,
+          "input_copy_bytes": 15353856,
+          "owned_output_copy_bytes": 4515841,
+          "factor_copied_each_call": false
+        },
+        "OBQ_graph": {
+          "kind": "owned_graph",
+          "setup_seconds": 0.08237429102882743,
+          "input_copy_bytes": 16140288,
+          "owned_output_copy_bytes": 4515841,
+          "factor_copied_each_call": true
+        },
+        "OBQ_fused": {
+          "kind": "owned_eager",
+          "setup_seconds": 1.05204526335001e-06
+        }
+      },
+      "shared_graph_setup_across_cases": true
+    },
+    {
+      "layer": 24,
+      "chunk": 6,
+      "stage": "T_code",
+      "lifetime": {
+        "RTN_eager": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        },
+        "RTN_graph": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        },
+        "OBQ_graph": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        },
+        "OBQ_fused": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        }
+      },
+      "setup": {
+        "RTN_eager": {
+          "kind": "owned_eager",
+          "setup_seconds": 1.4629913493990898e-06
+        },
+        "RTN_graph": {
+          "kind": "owned_graph",
+          "setup_seconds": 0.07387295505031943,
+          "input_copy_bytes": 15353856,
+          "owned_output_copy_bytes": 4515841,
+          "factor_copied_each_call": false
+        },
+        "OBQ_graph": {
+          "kind": "owned_graph",
+          "setup_seconds": 0.08237429102882743,
+          "input_copy_bytes": 16140288,
+          "owned_output_copy_bytes": 4515841,
+          "factor_copied_each_call": true
+        },
+        "OBQ_fused": {
+          "kind": "owned_eager",
+          "setup_seconds": 1.05204526335001e-06
+        }
+      },
+      "shared_graph_setup_across_cases": true
+    }
+  ],
+  "error": "AssertionError('packet bytes differ from frozen CPU reference: packed/scale/sentinel=[False, False, True]')",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_envfix/experiment.py\", line 235, in worker\n    life=check_lifetime(stage,fs,args,hm)\n  File \"/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_envfix/experiment.py\", line 119, in check_lifetime\n    two=f(second);pcheck(two,ref2);pcheck(one,snapshot)\n  File \"/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_envfix/experiment.py\", line 28, in pcheck\n    def pcheck(a,b):v1.packet_check(a,b)\n  File \"/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_cost_stage1/benchmark.py\", line 75, in packet_check\n    assert all(checks),f'packet bytes differ from frozen CPU reference: packed/scale/sentinel={checks}'\nAssertionError: packet bytes differ from frozen CPU reference: packed/scale/sentinel=[False, False, True]\n",
+  "elapsed_seconds": 27.77360514504835,
+  "finished_utc": 1793873618.1828532,
+  "max_RSS_bytes": 1273884672,
+  "peak_cuda_allocated_bytes": 278308864,
+  "disk_bytes": 1313184
+}

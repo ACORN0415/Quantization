@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "checks": [
+    "full_warp_mapping_matches_reference_codes_and_pack",
+    "identity_warp_mapping_matches_reference_codes_and_pack",
+    "identity_factor_is_RTN",
+    "input_preserved",
+    "K_reader_operations_CPU_reference_exact",
+    "V_reader_operations_CPU_reference_exact",
+    "python_syntax",
+    "no_GPU_initialization"
+  ],
+  "actual_capture_reads": 0,
+  "GPU_initialized": false,
+  "CUDA_compiles": 0,
+  "python_sha256": "8d5aea59e19d5bdc860c076963335af4e852898959c82b2a2aaac100565bb614",
+  "cuda_sha256": "50b86fd47474eeab6f7aa7c8f4331c0fea5a8e53514f79fbd3f7641a2c23c91b",
+  "selftest_sha256": "e226d97cb9e3f16d7a6f4bc22ec192fb937cf556dbae0e4b9c3e8f6b52206375"
+}

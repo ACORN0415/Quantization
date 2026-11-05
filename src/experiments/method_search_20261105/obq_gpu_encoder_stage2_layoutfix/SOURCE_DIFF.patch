@@ -1,0 +1,87 @@
+--- envfix/experiment.py
++++ layoutfix/experiment.py
+@@ -30,23 +30,23 @@
+ def digest_inputs(args):return [c.tsha(x.cpu()) for x in args]
+ 
+ def build_extension():
+-    from torch.utils.cpp_extension import load
+-    build=P/'build';build.mkdir(exist_ok=False)
+-    name='obq_stage2_'+c.sha(P/'obq_pack.cu')[:12]
+-    attempts=[]
+-    for attempt in range(2):
+-        t=time.monotonic()
+-        try:
+-            ext=load(name=name,sources=[str(P/'obq_pack.cu')],build_directory=str(build),
+-                extra_cuda_cflags=['-O3','--fmad=false','--prec-div=true','--prec-sqrt=true','--ftz=false','-lineinfo','--ptxas-options=-v'],
+-                extra_cflags=['-O3'],with_cuda=True,verbose=True)
+-            attempts.append({'attempt':attempt+1,'seconds':time.monotonic()-t,'status':'success'})
+-            c.save(P/'BUILD.json',{'attempts':attempts,'source_sha256':c.sha(P/'obq_pack.cu'),'module':ext.__file__})
+-            return ext
+-        except BaseException as e:
+-            attempts.append({'attempt':attempt+1,'seconds':time.monotonic()-t,'status':'failed','error':repr(e)})
+-            c.save(P/'BUILD.json',{'attempts':attempts,'source_sha256':c.sha(P/'obq_pack.cu')})
+-            if attempt==1:raise
++    # The previously compiled, exact-source binary is reused; no compiler call.
++    binary=P.parent/'obq_gpu_encoder_stage2_envfix/build/obq_stage2_50b86fd47474.so'
++    assert c.sha(binary)=='ae6e1a50caeff3b13327ab15b27a3e20695530938d4068ab5e578291697eff75'
++    assert c.sha(P/'obq_pack.cu')=='50b86fd47474eeab6f7aa7c8f4331c0fea5a8e53514f79fbd3f7641a2c23c91b'
++    t=time.monotonic();spec=importlib.util.spec_from_file_location('obq_stage2_50b86fd47474',binary)
++    ext=importlib.util.module_from_spec(spec);spec.loader.exec_module(ext)
++    c.save(P/'BUILD.json',{'compile_calls':0,'status':'reused_existing_binary','module':str(binary),
++        'binary_sha256':c.sha(binary),'source_sha256':c.sha(P/'obq_pack.cu'),'load_seconds':time.monotonic()-t})
++    return ext
++
++def gpu_frames(k,hm):
++    # Explicit 2D mm removes singleton-stride-dependent matmul dispatch.
++    z=(k.reshape(-1,128).float()@hm).to(k.dtype).reshape(3,1560,12,128)
++    z=torch.cat((z,z.new_zeros(3,8,12,128)),1).reshape(3,98,16,12,128)
++    s=(z.abs().amax(2,keepdim=True)/7).clamp_min(1e-8)
++    return z,s.to(torch.float16)
++
+ 
+ def preflight(z,s,u):
+     assert z.dtype==torch.bfloat16 and s.dtype==torch.float16 and u.dtype==torch.float32
+@@ -58,7 +58,7 @@
+ def raw(stage,impl,args,hm):
+     if stage=='T_code':z,s,u=args
+     else:
+-        k,u=args;z,s=v1.gpu_frames(k,hm)
++        k,u=args;z,s=gpu_frames(k,hm)
+     if impl.startswith('RTN'):return v1.code_packet(z,s,u,'R_fp32')
+     if impl=='OBQ_fused':return EXT.obq_pack(z,s,u),s,torch.full((1,),255,dtype=torch.uint8,device=z.device)
+     return v1.code_packet(z,s,u,'O_offline')
+@@ -66,7 +66,7 @@
+ def cpu_reference(stage,args,hm,alg):
+     if stage=='T_code':z,s,u=args
+     else:
+-        k,u=args;z,s=v1.gpu_frames(k,hm)
++        k,u=args;z,s=gpu_frames(k,hm)
+     z,s,u=[x.cpu() for x in (z,s,u)];preflight(z,s,u)
+     return to_cpu(v1.code_packet(z,s,u,alg))
+ 
+@@ -172,7 +172,7 @@
+             vg={key:value.cuda() if isinstance(value,torch.Tensor) else value for key,value in v_packet.items()}
+             v_recovered=restore_gpu(vg,hm);assert eq(v_recovered,c.restore(v_packet)), 'V GPU elementwise restore differs'
+             vq.append(v_recovered)
+-            k=w['k'].cuda();z,s=v1.gpu_frames(k,hm);preflight(z,s,u)
++            k=w['k'].cuda();z,s=gpu_frames(k,hm);preflight(z,s,u)
+             cpu_z,cpu_s=z.cpu(),s.cpu();state_before=digest_inputs((k,z,s,u))
+             for alg in ('R_bf16','R_fp32','O_gpu'):
+                 ref_alg='O_offline' if alg=='O_gpu' else alg
+@@ -244,7 +244,7 @@
+             for d,gpu in data:
+                 guard(begin);args=(gpu['z'],gpu['s'],gpu['u']) if stage=='T_code' else (gpu['k'],gpu['u'])
+                 old=digest_inputs(args);rows=timed_pairs(stage,fs,args,hm,begin);assert old==digest_inputs(args)
+-                z2,s2=v1.gpu_frames(gpu['k'],hm)
++                z2,s2=gpu_frames(gpu['k'],hm)
+                 r['timings'].append({'layer':d['layer'],'chunk':d['chunk'],'stage':stage,'setup':setup,'pairs':rows,
+                     'input_preserved':True,'shared_graph_setup_across_cases':True,'CPU_original_rotated_equal':eq(z2,d['z']),'CPU_original_scale_equal':eq(s2,d['s']),
+                     'CPU_original_rotated_unequal_elements':int((z2.cpu()!=d['z']).sum()),'CPU_original_scale_unequal_elements':int((s2.cpu()!=d['s']).sum()),
+@@ -264,6 +264,7 @@
+ def source_files():
+     files=[P/'experiment.py',P/'obq_pack.cu',P/'REGISTRATION_DRAFT_KO.txt',P/'SELFTEST.json',P/'selftest.py',S1/'benchmark.py',S1/'LOCK.json',S1/'RESULT.json',C/'common.py',C/'LOCK.json',C/'replay.py',C/'capture/manifest.json',C/'packets/manifest.json',C/'NATIVE_RESULT.json']
+     files.extend(S1/f'prepared_l{l}_c{k}.pt' for l,k in CASES)
++    files.append(P.parent/'obq_gpu_encoder_stage2_envfix/build/obq_stage2_50b86fd47474.so')
+     files.extend(ROOT/x for x in ('src/wan/modules/attention.py','src/wan/modules/causal_model.py','src/kvq/store.py','src/kvq/lockstep.py'))
+     cm=json.loads((C/'capture/manifest.json').read_text());pm=json.loads((C/'packets/manifest.json').read_text())
+     for m in (cm,pm):files.extend(Path(x['path']) for x in m['artifacts'])

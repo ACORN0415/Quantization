@@ -1,0 +1,30 @@
+OBQ GPU encoder Stage2 환경회복 실행 — 부분 유효 결과와 중단
+
+결론: 환경 회복과 동일 입력의 fused code/owned output 이식은 두 사례에서 검증했다. 그러나 GPU 전처리를 포함한 첫 T_encoder 수명 검사에서 exact gate가 실패하여 품질·비용 결과는 얻지 못했다. 실패 기록을 보존하며 허용오차를 완화하지 않았다.
+
+환경 및 컴파일
+원본 실패 폴더의 수학/Python/CUDA/등록/SELFTEST를 바이트 동일 복사했고, 프로세스 환경만 PATH=/usr/bin우선, CUDA_HOME=/usr, CC=gcc-13, CXX=g++-13으로 지정했다. Ninja1.13.2·NVCC12.4.131·GCC13.4를사용했다. build.ninja 실제 선택 검증도true였다.
+첫실행의NVCC0과달리이번에는NVCC1회24.040846초에성공했다. ptxas:40register, stack0B, spill store/load0B. 이결과는register/spill관측이며속도나최적커널을의미하지않는다.
+
+완료된 정확성 범위
+L18 write chunk1 및 L24 write chunk6의 T_code 모두 RTN_eager·RTN_graph·OBQ_graph·OBQ_fused가 동결 CPU packed/scale/sentinel과 정확히 같았다.
+각 구현은 두 번째 z/scale/factor로 변경한 입력도 CPU reference와 일치했고, 첫 owned packet의 바이트 보존·출력주소독립·원본/factor보존을 확인했다. 두 사례는 같은 Graph를 공유했다. Graph는 입력z/scale15353856B와OBQ factor786432B를매호출복사하며출력4515841B를capture밖clone했다.
+따라서 고정 rotated BF16 K+FP16 scale+FP32 U의128채널보상·실제INT4 pack에서순서/rounding을유지한GPU융합이두사례와고정변형입력에가능했다는제한된결론은남는다. 전체encoder/GPUreader/생성품질과구분한다.
+
+실패 범위와 원인 미확정
+그 다음 T_encoder L18 chunk1의 check_lifetime119행에서 packed/scale/sentinel=[False,False,True]로정확일치assert가실패했다.
+해당행은two=f(second);pcheck(two,ref2);pcheck(one,snapshot)를한줄에기록해두어,현재로그만으로어느구현인지·두번째출력이reference와다른지·첫출력이변한것인지구분할수없다. T_code 두행이모두완료된뒤다음stage첫사례에서실패한것은실행순서와저장기록으로확인된다.
+GPU전처리수치차이또는수명문제를추정할수있지만현재기록만으로단정하지않는다. 품질gate실패나fusedcode수학실패라고확대하지않는다.
+원래기준에따라여기서중단했다. native품질0 endpoint, timing0 sample,새모델0·생성0. 허용오차변경·소스수정·추가GPU진단0(이보고시점).
+
+자원과 마감
+worker27.773605초,supervisor29.602526초. 최초실패시작부터660.440929초로원래2700초절대마감내였다. 새45분을부여하지않았다. workerRSS1273884672B,관측GPUpeak278308864B. 컴파일자식peakRSS는별도미계측이다.
+원본실패폴더와이번envfix폴더를둘다보존했다.
+
+감사
+AUDIT_PARTIAL.json 148검사통과:source132개해시,동일원본수학파일,실제toolchain,컴파일artifact,두T_code완료행,실패상태/빈품질/빈timing,절대마감/자원기록확인. 감사GPU재실행0. 저장된GPUassertion을독립재실행한것은아니다.
+RESULT sha256 1ffb7613bf78e39b71dc031ad99e7767257ed0788d46d81fdd51932c7ffb312f.
+CUDA so sha256 ae6e1a50caeff3b13327ab15b27a3e20695530938d4068ab5e578291697eff75.
+
+다음에 필요한 최소 조사
+별도등록/원래남은시간내에서기존.so와동일source를쓰되T_encoder L18만실행하고구현별·두검사별mismatch수를따로기록하면실패의원인을좁힐수있다. 이조사는새품질팔/비용실험/컴파일/허용오차완화가아니라실행유효성확인이다. 그조사가실제수행되기전에는원인을확정하지않는다.

@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "checks_passed": 135,
+  "locked_source_files": 123,
+  "elapsed_seconds": 0.8368757830467075,
+  "artifacts": {
+    "RESULT.json": "a35980f825f185d4f725ba8a4fc667b56720c09f216da0bb0802f8a51d79b040",
+    "BUILD.json": "b6985ce05db876444c8de573dc54ce8b8678a5cf816269b8bce9967711a15a60",
+    "SUPERVISOR.json": "ca12eb129267d65e8ebfaeb4640695603a8692d7b492d6c8d058deda16f2596d",
+    "RUN_LOG.txt": "baa86812e1a6d4f2ad6e16bd29447250084110d663158a6c434f877627038165",
+    "audit_failure.py": "38f28e306cc1d28f06153f965af27cd53e14553d7c6a1ed19f8ff05e9a2ee0a8"
+  },
+  "CUDA_compiler_invocations_observed": 0,
+  "custom_kernel_executions": 0,
+  "quality_endpoints": 0,
+  "timing_samples": 0,
+  "GPU_reexecutions": 0,
+  "scope": "Audit verifies preserved failure records and file hashes. Worker initialized CUDA and copied 64KiB Hadamard; no custom kernel/math/quality result exists.",
+  "unmeasured": "Compiler subprocess peak RSS; actual compiler not reached."
+}

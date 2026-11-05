@@ -1,0 +1,17 @@
+Stage2 환경 회복 등록 — 원본 실패 보존, 과학 조건 불변
+원본 obq_gpu_encoder_stage2의experiment.py/obq_pack.cu/selftest.py/SELFTEST.json/REGISTRATION_DRAFT_KO.txt를바이트그대로복사한다. 알고리즘·형상·rounding·순서·padding·비트·정확성·수명·quality20%gate·timing팔과반복횟수는불변이다. 이번문서는실행환경/절대마감과새출력폴더만추가한다.
+
+원본실패는PATH에서깨진/usr/local/bin/ninja Pythonwrapper가정상/usr/bin/ninja를가린것이었다. originalload2회모두실패했고실제NVCC호출0,customkernel0,품질/timing0이다. 이기록을원본폴더에서보존하며덮어쓰거나삭제하지않는다. 방법의실패결과를지우는재실험이아니다.
+
+프로세스환경만고정
+PATH=/usr/bin:/bin:<기존PATH>, CUDA_HOME=/usr, CC=/usr/bin/gcc-13, CXX=/usr/bin/g++-13.
+절대Python실행경로=/home/acorn0415/sfq_data/env/bin/python 그대로. 설치·시스템PATH/설정/소스변경0. --allow-unsupported-compiler는사용하지않는다.
+/usr/bin/ninja1.13.2, /usr/bin/nvcc12.4.131, /usr/bin/c++는15.2.0이며CUDA12.4 host_config는GNUC>13을거부한다. 설치된gcc/g++13.4를선택한다. Torch2.6 cpp_extension.py의JIT NVCC경로는CC환경을-ccbin으로, CXX를host/linkcompiler로쓴다. 단순CUDAHOSTCXX설정에의존하지않는다.
+preflight에서실제명령경로/버전/선택된CUDA_HOME·Python·Torch/도구해시를읽기전용기록한다. build.ninja가생성되면cxx/gcc-13의-ccbin/nvcc실제지정도검증한다. kernel/fastmath/SM89/flags는원본동일이다. 새worker의load최대2회지만원본의NVCC0과분리해보고한다. 원본실패를성공횟수에더하지않는다.
+
+시간상한
+새45분을부여하지않는다. original SUPERVISOR.json.started_utc+2700을절대마감으로잠근다. original실패·환경진단·회복준비경과도같은창에포함한다. env_supervisor.py는원본run을호출하지않고worker를직접start_new_session으로시작하며현재남은초만할당한다. 정리5초를미리예약하고자기processgroup만SIGTERM→필요시SIGKILL한다. 실제경과·절대deadline·마감초과여부를보존한다. worker의기존2700초guard는상위supervisor의남은시간보다느슨하므로상위deadline이우선한다.
+그외CPU4/RSS8GiB·GPU관측4GiB·새폴더2GiB는그대로. compilerchildpeakRSS는별도계측하지않으므로workerRSS와혼동하지않는다.
+
+검토와종료
+원본Fable검토를snapshot/hash로연결하고환경회복의추가검토와root지시를함께남긴뒤LOCK한다. compile→code/lifetime→nativeGPUquality→통과시timing 순서유지. 원본failed자료와새자료모두보존. 정확성/qualitygate 실패의사후완화나kernel튜닝없음. 남은시간없으면incomplete로기록한다.

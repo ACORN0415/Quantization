@@ -1,0 +1,50 @@
+{
+  "created_utc": 1793874593.990709,
+  "tools": {
+    "/usr/bin/ninja": {
+      "version_output": "1.13.2\n",
+      "sha256": "91e9548850cda2799facfdaa7abe33f9e978832f85e98212255708a7bbe437f2"
+    },
+    "/usr/bin/nvcc": {
+      "version_output": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2024 NVIDIA Corporation\nBuilt on Thu_Mar_28_02:18:24_PDT_2024\nCuda compilation tools, release 12.4, V12.4.131\nBuild cuda_12.4.r12.4/compiler.34097967_0\n",
+      "sha256": "f71b25e712355357f77a1c96090b1d26bbd6e09f7e34eb004d99a22294886b30"
+    },
+    "/usr/bin/c++": {
+      "version_output": "c++ (Ubuntu 15.2.0-16ubuntu1) 15.2.0\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "sha256": "e6718f7e0c7d057c3ff77b550c603da9bc4030e3ede3c053705acce1293dbe4d"
+    },
+    "/usr/bin/gcc-13": {
+      "version_output": "gcc-13 (Ubuntu 13.4.0-10ubuntu1) 13.4.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "sha256": "64f2fc42063e1eaa600a9dfd9f218df3ad67e724a6a16ea262db8f088d536df1"
+    },
+    "/usr/bin/g++-13": {
+      "version_output": "g++-13 (Ubuntu 13.4.0-10ubuntu1) 13.4.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "sha256": "d255fa40289dde1dcea3b820339e992d2a6889548b20e422d8c150cfb0230de7"
+    }
+  },
+  "state": {
+    "python": "/home/acorn0415/sfq_data/env/bin/python",
+    "torch": "2.6.0+cu124",
+    "cuda": "12.4",
+    "CUDA_HOME": "/usr",
+    "CXX": "/usr/bin/g++-13",
+    "gpu_initialized": false
+  },
+  "environment_overrides": {
+    "PATH": "/usr/bin:/bin:/home/acorn0415/.elan/bin:/home/acorn0415/.local/bin:/home/acorn0415/.nvm/versions/node/v26.13.0/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path:/home/acorn0415/.orca/codex-accounts/d6fdfa2f-61d0-4730-92a1-557d6f882bac/home/tmp/arg0-linux/codex-arg0KPZ5bE:/home/acorn0415/.orca/cli/bin:/home/acorn0415/.nvm/versions/node/v26.13.0/bin:/home/acorn0415/.elan/bin:/home/acorn0415/.local/bin:/usr/local/cuda-12.9/bin:/home/acorn0415/anaconda3/bin:/home/acorn0415/anaconda3/condabin:/home/acorn0415/.elan/bin:/home/acorn0415/.local/bin:/usr/local/cuda-12.9/bin:/home/acorn0415/anaconda3/bin:/home/acorn0415/anaconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin",
+    "CUDA_HOME": "/usr",
+    "CC": "/usr/bin/gcc-13",
+    "CXX": "/usr/bin/g++-13"
+  },
+  "layoutfix_source_sha256": {
+    "experiment.py": "970c53eeb123748a8f8de03aa41c1f334f06557aee863e9d75a5a0f5d003a398",
+    "obq_pack.cu": "50b86fd47474eeab6f7aa7c8f4331c0fea5a8e53514f79fbd3f7641a2c23c91b",
+    "selftest.py": "0a79ed723043e70316b984a1977e0e88dd2c91e22fb7c98a91958c74046e5a56",
+    "SELFTEST.json": "39dee119afedf0f37c126a75906afdb077b55db6c66d18c91aef186620a0df1a",
+    "REGISTRATION_DRAFT_KO.txt": "3fabd726dc36f74e390da6049bfa56f37d739bb350b320aa24c51a2028db53ed"
+  },
+  "original_started_utc": 1793872958.1258163,
+  "absolute_deadline_utc": 1793875658.1258163,
+  "original_supervisor_sha256": "ca12eb129267d65e8ebfaeb4640695603a8692d7b492d6c8d058deda16f2596d",
+  "baseline_experiment_sha256": "8d5aea59e19d5bdc860c076963335af4e852898959c82b2a2aaac100565bb614"
+}

@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "checks_passed": 148,
+  "locked_source_files": 132,
+  "elapsed_seconds": 0.8347114151110873,
+  "complete_T_code_cases": 2,
+  "complete_T_encoder_cases": 0,
+  "quality_endpoints": 0,
+  "timing_samples": 0,
+  "additional_GPU_execution": 0,
+  "ptxas": {
+    "registers": 40,
+    "stack_bytes": 0,
+    "spill_store_bytes": 0,
+    "spill_load_bytes": 0
+  },
+  "artifacts": {
+    "RESULT.json": "1ffb7613bf78e39b71dc031ad99e7767257ed0788d46d81fdd51932c7ffb312f",
+    "BUILD.json": "ba64872a54f6d4e9d603ba5455ec795992eae5f93e75757eb346886acb766a20",
+    "SUPERVISOR.json": "2eab132a0bb3d29b1a014bc38e598b9bec75977c59ad568e5fa4a6ce51379934",
+    "RUN_LOG.txt": "c0d32c10ea4af761b11b9ef89c42cd5977468db1077cbb453f92dc534b1a8000",
+    "build/obq_stage2_50b86fd47474.so": "ae6e1a50caeff3b13327ab15b27a3e20695530938d4068ab5e578291697eff75",
+    "audit_partial.py": "51339a8aaca8d4da14961d14a81d7427fb83904959481efd3e1fc9148ee06141"
+  },
+  "limits": [
+    "Recorded GPU assertions were not independently rerun.",
+    "Log does not identify the failed implementation or distinguish second-output reference mismatch from first-output mutation.",
+    "Compiler child peak RSS was not measured."
+  ]
+}

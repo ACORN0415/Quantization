@@ -1,0 +1,5105 @@
+{
+  "status": "completed",
+  "started_utc": 1793875188.3676739,
+  "models_loaded": 0,
+  "generations": 0,
+  "timings": [
+    {
+      "layer": 18,
+      "chunk": 1,
+      "stage": "T_code",
+      "setup": {
+        "RTN_eager": {
+          "kind": "owned_eager",
+          "setup_seconds": 1.3530952855944633e-06
+        },
+        "RTN_graph": {
+          "kind": "owned_graph",
+          "setup_seconds": 0.05650333594530821,
+          "input_copy_bytes": 15353856,
+          "owned_output_copy_bytes": 4515841,
+          "factor_copied_each_call": false
+        },
+        "OBQ_graph": {
+          "kind": "owned_graph",
+          "setup_seconds": 0.06514963693916798,
+          "input_copy_bytes": 16140288,
+          "owned_output_copy_bytes": 4515841,
+          "factor_copied_each_call": true
+        },
+        "OBQ_fused": {
+          "kind": "owned_eager",
+          "setup_seconds": 1.3629905879497528e-06
+        }
+      },
+      "pairs": [
+        {
+          "pair": [
+            "RTN_eager",
+            "OBQ_graph"
+          ],
+          "samples": [
+            {
+              "round": 0,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001443839967250824,
+                  "host_seconds": 0.00016949791461229324
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004901887893676758,
+                  "host_seconds": 0.004915734054520726
+                }
+              }
+            },
+            {
+              "round": 1,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004904960155487061,
+                  "host_seconds": 0.004920021048747003
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001443839967250824,
+                  "host_seconds": 0.0001571049215272069
+                }
+              }
+            },
+            {
+              "round": 2,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001372160017490387,
+                  "host_seconds": 0.000151484040543437
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004899839878082276,
+                  "host_seconds": 0.004912297008559108
+                }
+              }
+            },
+            {
+              "round": 3,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0049090561866760255,
+                  "host_seconds": 0.004924260079860687
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001454080045223236,
+                  "host_seconds": 0.00015699502546340227
+                }
+              }
+            },
+            {
+              "round": 4,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.000130048006772995,
+                  "host_seconds": 0.00014378002379089594
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004898816108703613,
+                  "host_seconds": 0.00491124507971108
+                }
+              }
+            },
+            {
+              "round": 5,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004905983924865722,
+                  "host_seconds": 0.00492011196911335
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001443839967250824,
+                  "host_seconds": 0.00015624298248440027
+                }
+              }
+            },
+            {
+              "round": 6,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.000130048006772995,
+                  "host_seconds": 0.00014367001131176949
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004898816108703613,
+                  "host_seconds": 0.004911486059427261
+                }
+              }
+            },
+            {
+              "round": 7,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0049090561866760255,
+                  "host_seconds": 0.004922766936942935
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001454080045223236,
+                  "host_seconds": 0.00015704496763646603
+                }
+              }
+            },
+            {
+              "round": 8,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001290239989757538,
+                  "host_seconds": 0.00014280795585364103
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004896768093109131,
+                  "host_seconds": 0.00490844005253166
+                }
+              }
+            },
+            {
+              "round": 9,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00491315221786499,
+                  "host_seconds": 0.004928198060952127
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001433600038290024,
+                  "host_seconds": 0.00015550199896097183
+                }
+              }
+            },
+            {
+              "round": 10,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.00012800000607967376,
+                  "host_seconds": 0.0001421469496563077
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004896768093109131,
+                  "host_seconds": 0.004909132025204599
+                }
+              }
+            },
+            {
+              "round": 11,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004907008171081543,
+                  "host_seconds": 0.004921515006572008
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.00014745600521564483,
+                  "host_seconds": 0.0001604009885340929
+                }
+              }
+            },
+            {
+              "round": 12,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.00012800000607967376,
+                  "host_seconds": 0.0001420669723302126
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004897791862487793,
+                  "host_seconds": 0.004910474992357194
+                }
+              }
+            },
+            {
+              "round": 13,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004907008171081543,
+                  "host_seconds": 0.004921523970551789
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001443839967250824,
+                  "host_seconds": 0.0001565340207889676
+                }
+              }
+            },
+            {
+              "round": 14,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.00013823999464511873,
+                  "host_seconds": 0.00015381898265331984
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004894720077514648,
+                  "host_seconds": 0.004907579044811428
+                }
+              }
+            },
+            {
+              "round": 15,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004904960155487061,
+                  "host_seconds": 0.004919119994156063
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001443839967250824,
+                  "host_seconds": 0.0001565240090712905
+                }
+              }
+            },
+            {
+              "round": 16,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.00012800000607967376,
+                  "host_seconds": 0.0001427780371159315
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004894720077514648,
+                  "host_seconds": 0.0049073080299422145
+                }
+              }
+            },
+            {
+              "round": 17,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004905983924865722,
+                  "host_seconds": 0.004921165062114596
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001443839967250824,
+                  "host_seconds": 0.000157675938680768
+                }
+              }
+            },
+            {
+              "round": 18,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001290239989757538,
+                  "host_seconds": 0.00014252797700464725
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004899839878082276,
+                  "host_seconds": 0.004912518081255257
+                }
+              }
+            },
+            {
+              "round": 19,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004895743846893311,
+                  "host_seconds": 0.004910003044642508
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001443839967250824,
+                  "host_seconds": 0.00015672389417886734
+                }
+              }
+            }
+          ],
+          "summary": {
+            "RTN_eager": {
+              "host_seconds": {
+                "median": 0.00015587249072268605,
+                "q1": 0.00014345449744723737,
+                "q3": 0.0001570075110066682,
+                "iqr": 1.3553013559430838e-05
+              },
+              "gpu_seconds": {
+                "median": 0.0001438720002770424,
+                "q1": 0.00012979200482368469,
+                "q3": 0.0001443839967250824,
+                "iqr": 1.4591991901397711e-05
+              }
+            },
+            "OBQ_graph": {
+              "host_seconds": {
+                "median": 0.004914126067887992,
+                "q1": 0.004910357005428523,
+                "q3": 0.004921252548228949,
+                "iqr": 1.0895542800426483e-05
+              },
+              "gpu_seconds": {
+                "median": 0.004900863885879517,
+                "q1": 0.004897535920143128,
+                "q3": 0.0049062399864196774,
+                "iqr": 8.704066276549356e-06
+              }
+            }
+          },
+          "paired_second_minus_first": {
+            "host_seconds": {
+              "median": 0.004764759971294552,
+              "q1": 0.004762225493323058,
+              "q3": 0.00476731505477801,
+              "iqr": 5.089561454951763e-06
+            },
+            "gpu_seconds": {
+              "median": 0.004763136178255081,
+              "q1": 0.004760576158761978,
+              "q3": 0.004768768090754747,
+              "iqr": 8.191931992768825e-06
+            }
+          }
+        },
+        {
+          "pair": [
+            "RTN_graph",
+            "OBQ_graph"
+          ],
+          "samples": [
+            {
+              "round": 0,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.00016179199516773223,
+                  "host_seconds": 0.000176031026057899
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004898816108703613,
+                  "host_seconds": 0.004911134950816631
+                }
+              }
+            },
+            {
+              "round": 1,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004897791862487793,
+                  "host_seconds": 0.004911556025035679
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.000158720001578331,
+                  "host_seconds": 0.0001708699855953455
+                }
+              }
+            },
+            {
+              "round": 2,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.00016383999586105347,
+                  "host_seconds": 0.00017763290088623762
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004903935909271241,
+                  "host_seconds": 0.004915322992019355
+                }
+              }
+            },
+            {
+              "round": 3,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004900864124298096,
+                  "host_seconds": 0.004915073048323393
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.000158720001578331,
+                  "host_seconds": 0.0001702799927443266
+                }
+              }
+            },
+            {
+              "round": 4,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0001658879965543747,
+                  "host_seconds": 0.00017890590243041515
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004900864124298096,
+                  "host_seconds": 0.004912737989798188
+                }
+              }
+            },
+            {
+              "round": 5,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004918272018432617,
+                  "host_seconds": 0.004931603092700243
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.000158720001578331,
+                  "host_seconds": 0.00017120200209319592
+                }
+              }
+            },
+            {
+              "round": 6,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.00016486400365829467,
+                  "host_seconds": 0.00017808505799621344
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004911104202270508,
+                  "host_seconds": 0.004922606982290745
+                }
+              }
+            },
+            {
+              "round": 7,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00491212797164917,
+                  "host_seconds": 0.004926895955577493
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.000159743994474411,
+                  "host_seconds": 0.0001702900044620037
+                }
+              }
+            },
+            {
+              "round": 8,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.00016486400365829467,
+                  "host_seconds": 0.00017889600712805986
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004921343803405762,
+                  "host_seconds": 0.004933746997267008
+                }
+              }
+            },
+            {
+              "round": 9,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004927487850189209,
+                  "host_seconds": 0.004942052997648716
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.000158720001578331,
+                  "host_seconds": 0.00017101096455007792
+                }
+              }
+            },
+            {
+              "round": 10,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.00016383999586105347,
+                  "host_seconds": 0.00017775397282093763
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004918272018432617,
+                  "host_seconds": 0.004930170951411128
+                }
+              }
+            },
+            {
+              "round": 11,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0049203200340270994,
+                  "host_seconds": 0.004934599041007459
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.000158720001578331,
+                  "host_seconds": 0.0001700790598988533
+                }
+              }
+            },
+            {
+              "round": 12,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.00016486400365829467,
+                  "host_seconds": 0.00017851602751761675
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0049162240028381345,
+                  "host_seconds": 0.004927815985865891
+                }
+              }
+            },
+            {
+              "round": 13,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004917247772216797,
+                  "host_seconds": 0.004931394010782242
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.000158720001578331,
+                  "host_seconds": 0.00017019896768033504
+                }
+              }
+            },
+            {
+              "round": 14,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.00016486400365829467,
+                  "host_seconds": 0.00017747306264936924
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004923391819000244,
+                  "host_seconds": 0.004934348980896175
+                }
+              }
+            },
+            {
+              "round": 15,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004915200233459473,
+                  "host_seconds": 0.004928978974930942
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.000158720001578331,
+                  "host_seconds": 0.0001710709184408188
+                }
+              }
+            },
+            {
+              "round": 16,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0001658879965543747,
+                  "host_seconds": 0.00017871602904051542
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0049162240028381345,
+                  "host_seconds": 0.00492752599529922
+                }
+              }
+            },
+            {
+              "round": 17,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004921343803405762,
+                  "host_seconds": 0.004934919998049736
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.0001576959937810898,
+                  "host_seconds": 0.00016895693261176348
+                }
+              }
+            },
+            {
+              "round": 18,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.00016486400365829467,
+                  "host_seconds": 0.000178645015694201
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00491315221786499,
+                  "host_seconds": 0.004924890934489667
+                }
+              }
+            },
+            {
+              "round": 19,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00491212797164917,
+                  "host_seconds": 0.004925563000142574
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.000159743994474411,
+                  "host_seconds": 0.0001714319223538041
+                }
+              }
+            }
+          ],
+          "summary": {
+            "RTN_graph": {
+              "host_seconds": {
+                "median": 0.00017373147420585155,
+                "q1": 0.00017072499031201005,
+                "q3": 0.00017819280037656426,
+                "iqr": 7.4678100645542145e-06
+              },
+              "gpu_seconds": {
+                "median": 0.00016076799482107163,
+                "q1": 0.000158720001578331,
+                "q3": 0.00016486400365829467,
+                "iqr": 6.144002079963671e-06
+              }
+            },
+            "OBQ_graph": {
+              "host_seconds": {
+                "median": 0.0049276709905825555,
+                "q1": 0.004920785984722897,
+                "q3": 0.004932139068841934,
+                "iqr": 1.1353084119036794e-05
+              },
+              "gpu_seconds": {
+                "median": 0.004915712118148804,
+                "q1": 0.004909312129020691,
+                "q3": 0.004918784022331237,
+                "iqr": 9.471893310546674e-06
+              }
+            }
+          },
+          "paired_second_minus_first": {
+            "host_seconds": {
+              "median": 0.00475327402818948,
+              "q1": 0.0047447252727579325,
+              "q3": 0.004758531315019354,
+              "iqr": 1.380604226142168e-05
+            },
+            "gpu_seconds": {
+              "median": 0.004752383977174758,
+              "q1": 0.004745216179639101,
+              "q3": 0.0047585277818143375,
+              "iqr": 1.3311602175236116e-05
+            }
+          }
+        },
+        {
+          "pair": [
+            "OBQ_fused",
+            "OBQ_graph"
+          ],
+          "samples": [
+            {
+              "round": 0,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005488640069961548,
+                  "host_seconds": 0.0005649910308420658
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004898816108703613,
+                  "host_seconds": 0.004910834948532283
+                }
+              }
+            },
+            {
+              "round": 1,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004914175987243652,
+                  "host_seconds": 0.004929288988932967
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.00054476797580719,
+                  "host_seconds": 0.0005567560438066721
+                }
+              }
+            },
+            {
+              "round": 2,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.00052019202709198,
+                  "host_seconds": 0.0005337420152500272
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004901887893676758,
+                  "host_seconds": 0.004913579905405641
+                }
+              }
+            },
+            {
+              "round": 3,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00491315221786499,
+                  "host_seconds": 0.004927437053993344
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005468159914016723,
+                  "host_seconds": 0.0005583490710705519
+                }
+              }
+            },
+            {
+              "round": 4,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.00052019202709198,
+                  "host_seconds": 0.0005343030206859112
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0048895998001098635,
+                  "host_seconds": 0.004901006002910435
+                }
+              }
+            },
+            {
+              "round": 5,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004915200233459473,
+                  "host_seconds": 0.004928937996737659
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.000549888014793396,
+                  "host_seconds": 0.0005616650450974703
+                }
+              }
+            },
+            {
+              "round": 6,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005222399830818176,
+                  "host_seconds": 0.0005346339894458652
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004899839878082276,
+                  "host_seconds": 0.004911375930532813
+                }
+              }
+            },
+            {
+              "round": 7,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004914175987243652,
+                  "host_seconds": 0.004928779089823365
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005488640069961548,
+                  "host_seconds": 0.0005595909897238016
+                }
+              }
+            },
+            {
+              "round": 8,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005191680192947387,
+                  "host_seconds": 0.0005335219902917743
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004897791862487793,
+                  "host_seconds": 0.00490883004385978
+                }
+              }
+            },
+            {
+              "round": 9,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0049162240028381345,
+                  "host_seconds": 0.0049301410326734185
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005509120225906372,
+                  "host_seconds": 0.0005622960161417723
+                }
+              }
+            },
+            {
+              "round": 10,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005212159752845764,
+                  "host_seconds": 0.000535115017555654
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004891647815704346,
+                  "host_seconds": 0.004902809974737465
+                }
+              }
+            },
+            {
+              "round": 11,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004914175987243652,
+                  "host_seconds": 0.004929049056954682
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005457919836044312,
+                  "host_seconds": 0.0005568759515881538
+                }
+              }
+            },
+            {
+              "round": 12,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005181440114974975,
+                  "host_seconds": 0.0005328210536390543
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004901887893676758,
+                  "host_seconds": 0.004913970013149083
+                }
+              }
+            },
+            {
+              "round": 13,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0049192957878112795,
+                  "host_seconds": 0.004933807998895645
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005478399991989135,
+                  "host_seconds": 0.0005616249982267618
+                }
+              }
+            },
+            {
+              "round": 14,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005263360142707824,
+                  "host_seconds": 0.0005416979547590017
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004904960155487061,
+                  "host_seconds": 0.0049164959928020835
+                }
+              }
+            },
+            {
+              "round": 15,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004921343803405762,
+                  "host_seconds": 0.00493519997689873
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005488640069961548,
+                  "host_seconds": 0.0005613240646198392
+                }
+              }
+            },
+            {
+              "round": 16,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005212159752845764,
+                  "host_seconds": 0.0005348949925974011
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004894720077514648,
+                  "host_seconds": 0.004905705107375979
+                }
+              }
+            },
+            {
+              "round": 17,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0049192957878112795,
+                  "host_seconds": 0.0049327859887853265
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005478399991989135,
+                  "host_seconds": 0.0005596519913524389
+                }
+              }
+            },
+            {
+              "round": 18,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005191680192947387,
+                  "host_seconds": 0.0005334420129656792
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004898816108703613,
+                  "host_seconds": 0.0049108139937743545
+                }
+              }
+            },
+            {
+              "round": 19,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004910079956054687,
+                  "host_seconds": 0.004923839005641639
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.000549888014793396,
+                  "host_seconds": 0.0005607330240309238
+                }
+              }
+            }
+          ],
+          "summary": {
+            "OBQ_fused": {
+              "host_seconds": {
+                "median": 0.000556815997697413,
+                "q1": 0.0005345512472558767,
+                "q3": 0.0005608807841781527,
+                "iqr": 2.632953692227602e-05
+              },
+              "gpu_seconds": {
+                "median": 0.0005452799797058106,
+                "q1": 0.0005209599882364272,
+                "q3": 0.0005488640069961548,
+                "iqr": 2.7904018759727532e-05
+              }
+            },
+            "OBQ_graph": {
+              "host_seconds": {
+                "median": 0.004920167499221861,
+                "q1": 0.004910829709842801,
+                "q3": 0.004929109039949253,
+                "iqr": 1.8279330106452107e-05
+              },
+              "gpu_seconds": {
+                "median": 0.004907520055770874,
+                "q1": 0.004898816108703613,
+                "q3": 0.004914432048797607,
+                "iqr": 1.5615940093994043e-05
+              }
+            }
+          },
+          "paired_second_minus_first": {
+            "host_seconds": {
+              "median": 0.004372178053017706,
+              "q1": 0.0043678075016941875,
+              "q3": 0.004374925541924313,
+              "iqr": 7.118040230125189e-06
+            },
+            "gpu_seconds": {
+              "median": 0.004370943814516068,
+              "q1": 0.004366080224514008,
+              "q3": 0.004377855882048608,
+              "iqr": 1.1775657534600012e-05
+            }
+          }
+        }
+      ],
+      "input_preserved": true,
+      "shared_graph_setup_across_cases": true,
+      "CPU_original_rotated_equal": true,
+      "CPU_original_scale_equal": true,
+      "CPU_original_rotated_unequal_elements": 0,
+      "CPU_original_scale_unequal_elements": 0,
+      "fixed_CPU_packet_gate": true,
+      "GPU_preprocessed_CPU_code_reference_gate": true,
+      "peak_allocated_bytes": 767628800,
+      "peak_reserved_bytes": 1302331392,
+      "BF16_reference_chunk_seconds": 1.0923879819456488
+    },
+    {
+      "layer": 24,
+      "chunk": 6,
+      "stage": "T_code",
+      "setup": {
+        "RTN_eager": {
+          "kind": "owned_eager",
+          "setup_seconds": 1.3530952855944633e-06
+        },
+        "RTN_graph": {
+          "kind": "owned_graph",
+          "setup_seconds": 0.05650333594530821,
+          "input_copy_bytes": 15353856,
+          "owned_output_copy_bytes": 4515841,
+          "factor_copied_each_call": false
+        },
+        "OBQ_graph": {
+          "kind": "owned_graph",
+          "setup_seconds": 0.06514963693916798,
+          "input_copy_bytes": 16140288,
+          "owned_output_copy_bytes": 4515841,
+          "factor_copied_each_call": true
+        },
+        "OBQ_fused": {
+          "kind": "owned_eager",
+          "setup_seconds": 1.3629905879497528e-06
+        }
+      },
+      "pairs": [
+        {
+          "pair": [
+            "RTN_eager",
+            "OBQ_graph"
+          ],
+          "samples": [
+            {
+              "round": 0,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001433600038290024,
+                  "host_seconds": 0.00017458805814385414
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004903935909271241,
+                  "host_seconds": 0.004917156998999417
+                }
+              }
+            },
+            {
+              "round": 1,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004904960155487061,
+                  "host_seconds": 0.004920532926917076
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001433600038290024,
+                  "host_seconds": 0.0001565749989822507
+                }
+              }
+            },
+            {
+              "round": 2,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.00014643199741840363,
+                  "host_seconds": 0.00016050098929554224
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004905983924865722,
+                  "host_seconds": 0.004917528014630079
+                }
+              }
+            },
+            {
+              "round": 3,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004902912139892578,
+                  "host_seconds": 0.004917748039588332
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001433600038290024,
+                  "host_seconds": 0.00015578290913254023
+                }
+              }
+            },
+            {
+              "round": 4,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001443839967250824,
+                  "host_seconds": 0.00015929900109767914
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004907008171081543,
+                  "host_seconds": 0.0049196709878742695
+                }
+              }
+            },
+            {
+              "round": 5,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004908031940460205,
+                  "host_seconds": 0.004921304993331432
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001433600038290024,
+                  "host_seconds": 0.0001563041005283594
+                }
+              }
+            },
+            {
+              "round": 6,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001443839967250824,
+                  "host_seconds": 0.00015860807616263628
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004901887893676758,
+                  "host_seconds": 0.004914452088996768
+                }
+              }
+            },
+            {
+              "round": 7,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004902912139892578,
+                  "host_seconds": 0.004918007995001972
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.00014233599603176116,
+                  "host_seconds": 0.0001547100255265832
+                }
+              }
+            },
+            {
+              "round": 8,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001433600038290024,
+                  "host_seconds": 0.00015742494724690914
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004901887893676758,
+                  "host_seconds": 0.004913470009341836
+                }
+              }
+            },
+            {
+              "round": 9,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0049090561866760255,
+                  "host_seconds": 0.004923598957248032
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001443839967250824,
+                  "host_seconds": 0.000156253925524652
+                }
+              }
+            },
+            {
+              "round": 10,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.00014233599603176116,
+                  "host_seconds": 0.00015648396220058203
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004907008171081543,
+                  "host_seconds": 0.004920131992548704
+                }
+              }
+            },
+            {
+              "round": 11,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004899839878082276,
+                  "host_seconds": 0.004913831013254821
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001454080045223236,
+                  "host_seconds": 0.00015840795822441578
+                }
+              }
+            },
+            {
+              "round": 12,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001443839967250824,
+                  "host_seconds": 0.0001589379971846938
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004901887893676758,
+                  "host_seconds": 0.004914251039735973
+                }
+              }
+            },
+            {
+              "round": 13,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004903935909271241,
+                  "host_seconds": 0.004918138962239027
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001433600038290024,
+                  "host_seconds": 0.0001552710309624672
+                }
+              }
+            },
+            {
+              "round": 14,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001433600038290024,
+                  "host_seconds": 0.0001581370597705245
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004900864124298096,
+                  "host_seconds": 0.004913700046017766
+                }
+              }
+            },
+            {
+              "round": 15,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004899839878082276,
+                  "host_seconds": 0.004914119956083596
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001433600038290024,
+                  "host_seconds": 0.0001556829083710909
+                }
+              }
+            },
+            {
+              "round": 16,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001443839967250824,
+                  "host_seconds": 0.00015944894403219223
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004897791862487793,
+                  "host_seconds": 0.004909291979856789
+                }
+              }
+            },
+            {
+              "round": 17,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004903935909271241,
+                  "host_seconds": 0.004917776910588145
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001433600038290024,
+                  "host_seconds": 0.00015563296619802713
+                }
+              }
+            },
+            {
+              "round": 18,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001443839967250824,
+                  "host_seconds": 0.00015842798165977
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004897791862487793,
+                  "host_seconds": 0.004909522016532719
+                }
+              }
+            },
+            {
+              "round": 19,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004899839878082276,
+                  "host_seconds": 0.004914051038213074
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0001433600038290024,
+                  "host_seconds": 0.00015476089902222157
+                }
+              }
+            }
+          ],
+          "summary": {
+            "RTN_eager": {
+              "host_seconds": {
+                "median": 0.00015699997311457992,
+                "q1": 0.0001557579089421779,
+                "q3": 0.00015869055641815066,
+                "iqr": 2.9326474759727716e-06
+              },
+              "gpu_seconds": {
+                "median": 0.0001433600038290024,
+                "q1": 0.0001433600038290024,
+                "q3": 0.0001443839967250824,
+                "iqr": 1.0239928960800043e-06
+              }
+            },
+            "OBQ_graph": {
+              "host_seconds": {
+                "median": 0.004917342506814748,
+                "q1": 0.004913996031973511,
+                "q3": 0.004918521968647838,
+                "iqr": 4.525936674326658e-06
+              },
+              "gpu_seconds": {
+                "median": 0.004902912139892578,
+                "q1": 0.0049006080627441405,
+                "q3": 0.004905216097831726,
+                "iqr": 4.6080350875853104e-06
+              }
+            }
+          },
+          "paired_second_minus_first": {
+            "host_seconds": {
+              "median": 0.004758863593451679,
+              "q1": 0.0047555280034430325,
+              "q3": 0.004762975440826267,
+              "iqr": 7.447437383234501e-06
+            },
+            "gpu_seconds": {
+              "median": 0.0047595520317554475,
+              "q1": 0.004757247891277076,
+              "q3": 0.004760832145810127,
+              "iqr": 3.584254533051806e-06
+            }
+          }
+        },
+        {
+          "pair": [
+            "RTN_graph",
+            "OBQ_graph"
+          ],
+          "samples": [
+            {
+              "round": 0,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0001576959937810898,
+                  "host_seconds": 0.00017272401601076126
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004899839878082276,
+                  "host_seconds": 0.004912547068670392
+                }
+              }
+            },
+            {
+              "round": 1,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004910079956054687,
+                  "host_seconds": 0.00492443994153291
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.00015667200088500976,
+                  "host_seconds": 0.0001692379591986537
+                }
+              }
+            },
+            {
+              "round": 2,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0001669120043516159,
+                  "host_seconds": 0.00018089008517563343
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004905983924865722,
+                  "host_seconds": 0.0049184790113940835
+                }
+              }
+            },
+            {
+              "round": 3,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004897791862487793,
+                  "host_seconds": 0.004911886993795633
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.00015667200088500976,
+                  "host_seconds": 0.00016818603035062551
+                }
+              }
+            },
+            {
+              "round": 4,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0001658879965543747,
+                  "host_seconds": 0.0001785460626706481
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004901887893676758,
+                  "host_seconds": 0.0049138800241053104
+                }
+              }
+            },
+            {
+              "round": 5,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00491212797164917,
+                  "host_seconds": 0.004925482091493905
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.000159743994474411,
+                  "host_seconds": 0.00017244392074644566
+                }
+              }
+            },
+            {
+              "round": 6,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0001669120043516159,
+                  "host_seconds": 0.00018120103050023317
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004922368049621582,
+                  "host_seconds": 0.004933876916766167
+                }
+              }
+            },
+            {
+              "round": 7,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004917247772216797,
+                  "host_seconds": 0.004931444069370627
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.0001576959937810898,
+                  "host_seconds": 0.0001700099091976881
+                }
+              }
+            },
+            {
+              "round": 8,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.00016383999586105347,
+                  "host_seconds": 0.00017799390479922295
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00491315221786499,
+                  "host_seconds": 0.004924962064251304
+                }
+              }
+            },
+            {
+              "round": 9,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00491212797164917,
+                  "host_seconds": 0.004925902932882309
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.000158720001578331,
+                  "host_seconds": 0.00017002003733068705
+                }
+              }
+            },
+            {
+              "round": 10,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0001658879965543747,
+                  "host_seconds": 0.00017937703523784876
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0049162240028381345,
+                  "host_seconds": 0.0049281580140814185
+                }
+              }
+            },
+            {
+              "round": 11,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004922368049621582,
+                  "host_seconds": 0.004935760982334614
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.0001576959937810898,
+                  "host_seconds": 0.00016936799511313438
+                }
+              }
+            },
+            {
+              "round": 12,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0001658879965543747,
+                  "host_seconds": 0.00017840508371591568
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004914175987243652,
+                  "host_seconds": 0.0049254619516432285
+                }
+              }
+            },
+            {
+              "round": 13,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004914175987243652,
+                  "host_seconds": 0.004928487935103476
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.000158720001578331,
+                  "host_seconds": 0.00016976904589682817
+                }
+              }
+            },
+            {
+              "round": 14,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0001669120043516159,
+                  "host_seconds": 0.0001799779711291194
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004914175987243652,
+                  "host_seconds": 0.004926002933643758
+                }
+              }
+            },
+            {
+              "round": 15,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0049203200340270994,
+                  "host_seconds": 0.004934689961373806
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.00015667200088500976,
+                  "host_seconds": 0.00016828591469675303
+                }
+              }
+            },
+            {
+              "round": 16,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.00016998399794101716,
+                  "host_seconds": 0.0001858599716797471
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00491315221786499,
+                  "host_seconds": 0.004928948939777911
+                }
+              }
+            },
+            {
+              "round": 17,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004923391819000244,
+                  "host_seconds": 0.0049391069915145636
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.000158720001578331,
+                  "host_seconds": 0.00017152202781289816
+                }
+              }
+            },
+            {
+              "round": 18,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0001669120043516159,
+                  "host_seconds": 0.0001807688968256116
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004914175987243652,
+                  "host_seconds": 0.004925963003188372
+                }
+              }
+            },
+            {
+              "round": 19,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004915200233459473,
+                  "host_seconds": 0.004930491908453405
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.00015667200088500976,
+                  "host_seconds": 0.00016885704826563597
+                }
+              }
+            }
+          ],
+          "summary": {
+            "RTN_graph": {
+              "host_seconds": {
+                "median": 0.00017258396837860346,
+                "q1": 0.00016966878320090473,
+                "q3": 0.00017952726921066642,
+                "iqr": 9.858486009761691e-06
+              },
+              "gpu_seconds": {
+                "median": 0.00015923199802637099,
+                "q1": 0.0001576959937810898,
+                "q3": 0.000166143998503685,
+                "iqr": 8.44800472259521e-06
+              }
+            },
+            "OBQ_graph": {
+              "host_seconds": {
+                "median": 0.004925982968416065,
+                "q1": 0.004924831533571705,
+                "q3": 0.0049307299486827105,
+                "iqr": 5.898415111005306e-06
+              },
+              "gpu_seconds": {
+                "median": 0.004914175987243652,
+                "q1": 0.004911615967750549,
+                "q3": 0.0049164799451828,
+                "iqr": 4.863977432250505e-06
+              }
+            }
+          },
+          "paired_second_minus_first": {
+            "host_seconds": {
+              "median": 0.004750728432554752,
+              "q1": 0.004744820820633322,
+              "q3": 0.004759397706948221,
+              "iqr": 1.457688631489873e-05
+            },
+            "gpu_seconds": {
+              "median": 0.00475135999172926,
+              "q1": 0.00474624004215002,
+              "q3": 0.004756224092096089,
+              "iqr": 9.98404994606919e-06
+            }
+          }
+        },
+        {
+          "pair": [
+            "OBQ_fused",
+            "OBQ_graph"
+          ],
+          "samples": [
+            {
+              "round": 0,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.000549888014793396,
+                  "host_seconds": 0.0005648510996252298
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004894720077514648,
+                  "host_seconds": 0.004906727001070976
+                }
+              }
+            },
+            {
+              "round": 1,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0049162240028381345,
+                  "host_seconds": 0.004930000985041261
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005457919836044312,
+                  "host_seconds": 0.0005584590835496783
+                }
+              }
+            },
+            {
+              "round": 2,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005232639908790589,
+                  "host_seconds": 0.0005375399487093091
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004899839878082276,
+                  "host_seconds": 0.004911215975880623
+                }
+              }
+            },
+            {
+              "round": 3,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004915200233459473,
+                  "host_seconds": 0.004928787937387824
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005468159914016723,
+                  "host_seconds": 0.0005585190374404192
+                }
+              }
+            },
+            {
+              "round": 4,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005222399830818176,
+                  "host_seconds": 0.0005367989651858807
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004898816108703613,
+                  "host_seconds": 0.004909762064926326
+                }
+              }
+            },
+            {
+              "round": 5,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004914175987243652,
+                  "host_seconds": 0.004928078036755323
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005488640069961548,
+                  "host_seconds": 0.0005606929771602154
+                }
+              }
+            },
+            {
+              "round": 6,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005232639908790589,
+                  "host_seconds": 0.0005367880221456289
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004896768093109131,
+                  "host_seconds": 0.004907728987745941
+                }
+              }
+            },
+            {
+              "round": 7,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0049192957878112795,
+                  "host_seconds": 0.004933546995744109
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005478399991989135,
+                  "host_seconds": 0.0005599419819191098
+                }
+              }
+            },
+            {
+              "round": 8,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005191680192947387,
+                  "host_seconds": 0.00053432397544384
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004901887893676758,
+                  "host_seconds": 0.00491266802418977
+                }
+              }
+            },
+            {
+              "round": 9,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004918272018432617,
+                  "host_seconds": 0.004932215088047087
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005488640069961548,
+                  "host_seconds": 0.0005596610717475414
+                }
+              }
+            },
+            {
+              "round": 10,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.00052019202709198,
+                  "host_seconds": 0.0005334119778126478
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004899839878082276,
+                  "host_seconds": 0.004912136937491596
+                }
+              }
+            },
+            {
+              "round": 11,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004918272018432617,
+                  "host_seconds": 0.004932145006023347
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005509120225906372,
+                  "host_seconds": 0.0005635489942505956
+                }
+              }
+            },
+            {
+              "round": 12,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.00052019202709198,
+                  "host_seconds": 0.0005348739214241505
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004897791862487793,
+                  "host_seconds": 0.0049093220150098205
+                }
+              }
+            },
+            {
+              "round": 13,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004914175987243652,
+                  "host_seconds": 0.004928278038278222
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005488640069961548,
+                  "host_seconds": 0.0005597519921138883
+                }
+              }
+            },
+            {
+              "round": 14,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005191680192947387,
+                  "host_seconds": 0.000532379955984652
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004903935909271241,
+                  "host_seconds": 0.004914933000691235
+                }
+              }
+            },
+            {
+              "round": 15,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004914175987243652,
+                  "host_seconds": 0.004928907961584628
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005488640069961548,
+                  "host_seconds": 0.0005607139319181442
+                }
+              }
+            },
+            {
+              "round": 16,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005191680192947387,
+                  "host_seconds": 0.0005325609818100929
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004893695831298828,
+                  "host_seconds": 0.0049056250136345625
+                }
+              }
+            },
+            {
+              "round": 17,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00491315221786499,
+                  "host_seconds": 0.004926573950797319
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005468159914016723,
+                  "host_seconds": 0.000557938008569181
+                }
+              }
+            },
+            {
+              "round": 18,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005191680192947387,
+                  "host_seconds": 0.0005328509723767638
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004892672061920166,
+                  "host_seconds": 0.0049045729683712125
+                }
+              }
+            },
+            {
+              "round": 19,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.004917247772216797,
+                  "host_seconds": 0.004931773990392685
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0005457919836044312,
+                  "host_seconds": 0.0005575369577854872
+                }
+              }
+            }
+          ],
+          "summary": {
+            "OBQ_fused": {
+              "host_seconds": {
+                "median": 0.0005577374831773341,
+                "q1": 0.0005347364349290729,
+                "q3": 0.0005597994895651937,
+                "iqr": 2.5063054636120796e-05
+              },
+              "gpu_seconds": {
+                "median": 0.0005457919836044312,
+                "q1": 0.00052019202709198,
+                "q3": 0.0005488640069961548,
+                "iqr": 2.8671979904174808e-05
+              }
+            },
+            "OBQ_graph": {
+              "host_seconds": {
+                "median": 0.004920753475744277,
+                "q1": 0.0049096520524472,
+                "q3": 0.004929181217448786,
+                "iqr": 1.952916500158608e-05
+              },
+              "gpu_seconds": {
+                "median": 0.004908544063568115,
+                "q1": 0.004898560047149659,
+                "q3": 0.004915456175804139,
+                "iqr": 1.689612865448005e-05
+              }
+            }
+          },
+          "paired_second_minus_first": {
+            "host_seconds": {
+              "median": 0.004372138006146997,
+              "q1": 0.004368625959614292,
+              "q3": 0.004373816278530285,
+              "iqr": 5.190318915992975e-06
+            },
+            "gpu_seconds": {
+              "median": 0.004371455788612366,
+              "q1": 0.004367104053497314,
+              "q3": 0.004376575946807862,
+              "iqr": 9.471893310547541e-06
+            }
+          }
+        }
+      ],
+      "input_preserved": true,
+      "shared_graph_setup_across_cases": true,
+      "CPU_original_rotated_equal": true,
+      "CPU_original_scale_equal": true,
+      "CPU_original_rotated_unequal_elements": 0,
+      "CPU_original_scale_unequal_elements": 0,
+      "fixed_CPU_packet_gate": true,
+      "GPU_preprocessed_CPU_code_reference_gate": true,
+      "peak_allocated_bytes": 767628800,
+      "peak_reserved_bytes": 1302331392,
+      "BF16_reference_chunk_seconds": 1.6891693100333214
+    },
+    {
+      "layer": 18,
+      "chunk": 1,
+      "stage": "T_encoder",
+      "setup": {
+        "RTN_eager": {
+          "kind": "owned_eager",
+          "setup_seconds": 1.2919772416353226e-06
+        },
+        "RTN_graph": {
+          "kind": "owned_graph",
+          "setup_seconds": 0.06396236689761281,
+          "input_copy_bytes": 14376960,
+          "owned_output_copy_bytes": 4515841,
+          "factor_copied_each_call": false
+        },
+        "OBQ_graph": {
+          "kind": "owned_graph",
+          "setup_seconds": 0.05267575604375452,
+          "input_copy_bytes": 15163392,
+          "owned_output_copy_bytes": 4515841,
+          "factor_copied_each_call": true
+        },
+        "OBQ_fused": {
+          "kind": "owned_eager",
+          "setup_seconds": 1.3420358300209045e-06
+        }
+      },
+      "pairs": [
+        {
+          "pair": [
+            "RTN_eager",
+            "OBQ_graph"
+          ],
+          "samples": [
+            {
+              "round": 0,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.00030208000540733336,
+                  "host_seconds": 0.00032572203781455755
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005100543975830078,
+                  "host_seconds": 0.005113626015372574
+                }
+              }
+            },
+            {
+              "round": 1,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005105663776397705,
+                  "host_seconds": 0.005121209076605737
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0002979840040206909,
+                  "host_seconds": 0.00031050306279212236
+                }
+              }
+            },
+            {
+              "round": 2,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.00030208000540733336,
+                  "host_seconds": 0.0003162740031257272
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005104640007019043,
+                  "host_seconds": 0.00511711195576936
+                }
+              }
+            },
+            {
+              "round": 3,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005104640007019043,
+                  "host_seconds": 0.005119387060403824
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0002990080118179321,
+                  "host_seconds": 0.00031099398620426655
+                }
+              }
+            },
+            {
+              "round": 4,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.00030208000540733336,
+                  "host_seconds": 0.00031654397025704384
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005105663776397705,
+                  "host_seconds": 0.005119146080687642
+                }
+              }
+            },
+            {
+              "round": 5,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005101568222045898,
+                  "host_seconds": 0.0051165210315957665
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0002990080118179321,
+                  "host_seconds": 0.0003109539393335581
+                }
+              }
+            },
+            {
+              "round": 6,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.00030003198981285096,
+                  "host_seconds": 0.00031492195557802916
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005101568222045898,
+                  "host_seconds": 0.005113905994221568
+                }
+              }
+            },
+            {
+              "round": 7,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005099520206451416,
+                  "host_seconds": 0.00511409598402679
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0002979840040206909,
+                  "host_seconds": 0.00031083403155207634
+                }
+              }
+            },
+            {
+              "round": 8,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.00030208000540733336,
+                  "host_seconds": 0.0003161539789289236
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005099520206451416,
+                  "host_seconds": 0.005111411097459495
+                }
+              }
+            },
+            {
+              "round": 9,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005098495960235596,
+                  "host_seconds": 0.005112504004500806
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.00030003198981285096,
+                  "host_seconds": 0.0003117859596386552
+                }
+              }
+            },
+            {
+              "round": 10,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.0003061760067939758,
+                  "host_seconds": 0.0003206420224159956
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005107711791992187,
+                  "host_seconds": 0.005119948065839708
+                }
+              }
+            },
+            {
+              "round": 11,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0051066880226135255,
+                  "host_seconds": 0.0051213199039921165
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0002979840040206909,
+                  "host_seconds": 0.00031099398620426655
+                }
+              }
+            },
+            {
+              "round": 12,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.0003041279911994934,
+                  "host_seconds": 0.00031891895923763514
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005104640007019043,
+                  "host_seconds": 0.00511762301903218
+                }
+              }
+            },
+            {
+              "round": 13,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005107711791992187,
+                  "host_seconds": 0.005122351925820112
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0002979840040206909,
+                  "host_seconds": 0.00031113403383642435
+                }
+              }
+            },
+            {
+              "round": 14,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.0003010559976100922,
+                  "host_seconds": 0.00031491206027567387
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005100543975830078,
+                  "host_seconds": 0.005112774088047445
+                }
+              }
+            },
+            {
+              "round": 15,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0051036162376403805,
+                  "host_seconds": 0.005118754925206304
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.00030208000540733336,
+                  "host_seconds": 0.00031485198996961117
+                }
+              }
+            },
+            {
+              "round": 16,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.0003010559976100922,
+                  "host_seconds": 0.0003157429164275527
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005107711791992187,
+                  "host_seconds": 0.005119608016684651
+                }
+              }
+            },
+            {
+              "round": 17,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005101568222045898,
+                  "host_seconds": 0.005115639069117606
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0002979840040206909,
+                  "host_seconds": 0.0003101020120084286
+                }
+              }
+            },
+            {
+              "round": 18,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.0003010559976100922,
+                  "host_seconds": 0.0003149419790133834
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005099520206451416,
+                  "host_seconds": 0.005112604005262256
+                }
+              }
+            },
+            {
+              "round": 19,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0051066880226135255,
+                  "host_seconds": 0.005121260066516697
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0002979840040206909,
+                  "host_seconds": 0.00031035300344228745
+                }
+              }
+            }
+          ],
+          "summary": {
+            "RTN_eager": {
+              "host_seconds": {
+                "median": 0.0003148820251226425,
+                "q1": 0.00031098397448658943,
+                "q3": 0.0003161839849781245,
+                "iqr": 5.2000104915350676e-06
+              },
+              "gpu_seconds": {
+                "median": 0.0003005439937114716,
+                "q1": 0.0002979840040206909,
+                "q3": 0.00030208000540733336,
+                "iqr": 4.096001386642465e-06
+              }
+            },
+            "OBQ_graph": {
+              "host_seconds": {
+                "median": 0.00511736748740077,
+                "q1": 0.00511383599950932,
+                "q3": 0.0051196930289734155,
+                "iqr": 5.857029464095831e-06
+              },
+              "gpu_seconds": {
+                "median": 0.005104128122329712,
+                "q1": 0.005100543975830078,
+                "q3": 0.00510591983795166,
+                "iqr": 5.375862121581761e-06
+              }
+            }
+          },
+          "paired_second_minus_first": {
+            "host_seconds": {
+              "median": 0.004802932031452656,
+              "q1": 0.0047989140439312905,
+              "q3": 0.004806273587746546,
+              "iqr": 7.359543815255165e-06
+            },
+            "gpu_seconds": {
+              "median": 0.004802048116922379,
+              "q1": 0.004800256006419658,
+              "q3": 0.004805887944996357,
+              "iqr": 5.631938576698865e-06
+            }
+          }
+        },
+        {
+          "pair": [
+            "RTN_graph",
+            "OBQ_graph"
+          ],
+          "samples": [
+            {
+              "round": 0,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.00029286399483680726,
+                  "host_seconds": 0.0003077479777857661
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005104640007019043,
+                  "host_seconds": 0.0051161699229851365
+                }
+              }
+            },
+            {
+              "round": 1,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00510975980758667,
+                  "host_seconds": 0.005123664042912424
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002938880026340485,
+                  "host_seconds": 0.0003053430700674653
+                }
+              }
+            },
+            {
+              "round": 2,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002938880026340485,
+                  "host_seconds": 0.000307106995023787
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005114880084991455,
+                  "host_seconds": 0.005126620992086828
+                }
+              }
+            },
+            {
+              "round": 3,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005122047901153564,
+                  "host_seconds": 0.005136038060300052
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002938880026340485,
+                  "host_seconds": 0.0003057649591937661
+                }
+              }
+            },
+            {
+              "round": 4,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002959359884262085,
+                  "host_seconds": 0.00031014299020171165
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0051138558387756345,
+                  "host_seconds": 0.0051256680162623525
+                }
+              }
+            },
+            {
+              "round": 5,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0051138558387756345,
+                  "host_seconds": 0.005128132994286716
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002959359884262085,
+                  "host_seconds": 0.0003066560020670295
+                }
+              }
+            },
+            {
+              "round": 6,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002938880026340485,
+                  "host_seconds": 0.0003072969848290086
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005124095916748047,
+                  "host_seconds": 0.005135586950927973
+                }
+              }
+            },
+            {
+              "round": 7,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005116928100585938,
+                  "host_seconds": 0.005131088895723224
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.00029491201043128966,
+                  "host_seconds": 0.00030560395680367947
+                }
+              }
+            },
+            {
+              "round": 8,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002959359884262085,
+                  "host_seconds": 0.00031457096338272095
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005125120162963868,
+                  "host_seconds": 0.0051371699664741755
+                }
+              }
+            },
+            {
+              "round": 9,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00510975980758667,
+                  "host_seconds": 0.00512413599062711
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002938880026340485,
+                  "host_seconds": 0.0003053529653698206
+                }
+              }
+            },
+            {
+              "round": 10,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002938880026340485,
+                  "host_seconds": 0.0003062450559809804
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005116928100585938,
+                  "host_seconds": 0.005128012970089912
+                }
+              }
+            },
+            {
+              "round": 11,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005105663776397705,
+                  "host_seconds": 0.005120247951708734
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.00029491201043128966,
+                  "host_seconds": 0.00030558404978364706
+                }
+              }
+            },
+            {
+              "round": 12,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002959359884262085,
+                  "host_seconds": 0.0003094109706580639
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005114880084991455,
+                  "host_seconds": 0.005126470001414418
+                }
+              }
+            },
+            {
+              "round": 13,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005115903854370117,
+                  "host_seconds": 0.005129907047376037
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.00030720001459121706,
+                  "host_seconds": 0.00031850789673626423
+                }
+              }
+            },
+            {
+              "round": 14,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002938880026340485,
+                  "host_seconds": 0.00030699698254466057
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005111807823181152,
+                  "host_seconds": 0.005123534006997943
+                }
+              }
+            },
+            {
+              "round": 15,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005112832069396973,
+                  "host_seconds": 0.005126710049808025
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002938880026340485,
+                  "host_seconds": 0.00030458299443125725
+                }
+              }
+            },
+            {
+              "round": 16,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.00029491201043128966,
+                  "host_seconds": 0.00030796893406659365
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00511897611618042,
+                  "host_seconds": 0.005130948033183813
+                }
+              }
+            },
+            {
+              "round": 17,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00511078405380249,
+                  "host_seconds": 0.005123995011672378
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.00029491201043128966,
+                  "host_seconds": 0.0003053440013900399
+                }
+              }
+            },
+            {
+              "round": 18,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002938880026340485,
+                  "host_seconds": 0.0003072569379583001
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0051138558387756345,
+                  "host_seconds": 0.005126039031893015
+                }
+              }
+            },
+            {
+              "round": 19,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005114880084991455,
+                  "host_seconds": 0.0051288839895278215
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002990080118179321,
+                  "host_seconds": 0.00030958198476582766
+                }
+              }
+            }
+          ],
+          "summary": {
+            "RTN_graph": {
+              "host_seconds": {
+                "median": 0.0003070519887842238,
+                "q1": 0.00030559898004867136,
+                "q3": 0.0003083294432144612,
+                "iqr": 2.7304631657898426e-06
+              },
+              "gpu_seconds": {
+                "median": 0.00029440000653266905,
+                "q1": 0.0002938880026340485,
+                "q3": 0.0002959359884262085,
+                "iqr": 2.0479857921600086e-06
+              }
+            },
+            "OBQ_graph": {
+              "host_seconds": {
+                "median": 0.0051266655209474266,
+                "q1": 0.005124100745888427,
+                "q3": 0.005130167293827981,
+                "iqr": 6.066547939553857e-06
+              },
+              "gpu_seconds": {
+                "median": 0.005114367961883545,
+                "q1": 0.005111551880836487,
+                "q3": 0.005116928100585938,
+                "iqr": 5.3762197494509195e-06
+              }
+            }
+          },
+          "paired_second_minus_first": {
+            "host_seconds": {
+              "median": 0.004819042515009642,
+              "q1": 0.004816928529180586,
+              "q3": 0.00482224504230544,
+              "iqr": 5.3165131248533726e-06
+            },
+            "gpu_seconds": {
+              "median": 0.004818431958556175,
+              "q1": 0.004815871983766555,
+              "q3": 0.004822272092103958,
+              "iqr": 6.400108337402573e-06
+            }
+          }
+        },
+        {
+          "pair": [
+            "OBQ_fused",
+            "OBQ_graph"
+          ],
+          "samples": [
+            {
+              "round": 0,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007219200134277344,
+                  "host_seconds": 0.000737335067242384
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005121024131774903,
+                  "host_seconds": 0.005133422906510532
+                }
+              }
+            },
+            {
+              "round": 1,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005111807823181152,
+                  "host_seconds": 0.005127661977894604
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007157760262489318,
+                  "host_seconds": 0.0007285480387508869
+                }
+              }
+            },
+            {
+              "round": 2,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.000711679995059967,
+                  "host_seconds": 0.0007269859779626131
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005119999885559082,
+                  "host_seconds": 0.005132051068358123
+                }
+              }
+            },
+            {
+              "round": 3,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00511078405380249,
+                  "host_seconds": 0.005125438096001744
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007157760262489318,
+                  "host_seconds": 0.0007279569981619716
+                }
+              }
+            },
+            {
+              "round": 4,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007137280106544495,
+                  "host_seconds": 0.0007284280145540833
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00510975980758667,
+                  "host_seconds": 0.005122711998410523
+                }
+              }
+            },
+            {
+              "round": 5,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005114880084991455,
+                  "host_seconds": 0.005128302960656583
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007229440212249755,
+                  "host_seconds": 0.0007344098994508386
+                }
+              }
+            },
+            {
+              "round": 6,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007157760262489318,
+                  "host_seconds": 0.0007293910020962358
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005114880084991455,
+                  "host_seconds": 0.005127571988850832
+                }
+              }
+            },
+            {
+              "round": 7,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00511897611618042,
+                  "host_seconds": 0.005132672027684748
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007229440212249755,
+                  "host_seconds": 0.0007346699712797999
+                }
+              }
+            },
+            {
+              "round": 8,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.000711679995059967,
+                  "host_seconds": 0.000725383055396378
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005116928100585938,
+                  "host_seconds": 0.005129995988681912
+                }
+              }
+            },
+            {
+              "round": 9,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005115903854370117,
+                  "host_seconds": 0.005129515076987445
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007188479900360107,
+                  "host_seconds": 0.0007312240777537227
+                }
+              }
+            },
+            {
+              "round": 10,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007147520184516907,
+                  "host_seconds": 0.0007282079895958304
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005111807823181152,
+                  "host_seconds": 0.005124496063217521
+                }
+              }
+            },
+            {
+              "round": 11,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005112832069396973,
+                  "host_seconds": 0.005127861979417503
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.000719871997833252,
+                  "host_seconds": 0.0007323159370571375
+                }
+              }
+            },
+            {
+              "round": 12,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007137280106544495,
+                  "host_seconds": 0.0007272360380738974
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005114880084991455,
+                  "host_seconds": 0.005127451964654028
+                }
+              }
+            },
+            {
+              "round": 13,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005116928100585938,
+                  "host_seconds": 0.005130297038704157
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007188479900360107,
+                  "host_seconds": 0.0007307729683816433
+                }
+              }
+            },
+            {
+              "round": 14,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007127040028572083,
+                  "host_seconds": 0.0007270049536600709
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00511897611618042,
+                  "host_seconds": 0.005131297977641225
+                }
+              }
+            },
+            {
+              "round": 15,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005119999885559082,
+                  "host_seconds": 0.005134965991601348
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007167999744415283,
+                  "host_seconds": 0.0007284589810296893
+                }
+              }
+            },
+            {
+              "round": 16,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007086079716682434,
+                  "host_seconds": 0.0007229780312627554
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00511078405380249,
+                  "host_seconds": 0.005123445065692067
+                }
+              }
+            },
+            {
+              "round": 17,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005125120162963868,
+                  "host_seconds": 0.005138281965628266
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.000719871997833252,
+                  "host_seconds": 0.0007316350238397717
+                }
+              }
+            },
+            {
+              "round": 18,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007147520184516907,
+                  "host_seconds": 0.0007288489723578095
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005112832069396973,
+                  "host_seconds": 0.00512567802798003
+                }
+              }
+            },
+            {
+              "round": 19,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005111807823181152,
+                  "host_seconds": 0.005127522046677768
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007178239822387695,
+                  "host_seconds": 0.0007299809949472547
+                }
+              }
+            }
+          ],
+          "summary": {
+            "OBQ_fused": {
+              "host_seconds": {
+                "median": 0.0007286985055543482,
+                "q1": 0.000727776758139953,
+                "q3": 0.0007313268142752349,
+                "iqr": 3.5500561352819204e-06
+              },
+              "gpu_seconds": {
+                "median": 0.0007157760262489318,
+                "q1": 0.0007137280106544495,
+                "q3": 0.0007191039919853212,
+                "iqr": 5.375981330871661e-06
+              }
+            },
+            "OBQ_graph": {
+              "host_seconds": {
+                "median": 0.005128082470037043,
+                "q1": 0.005127008480485529,
+                "q3": 0.0051314862503204495,
+                "iqr": 4.477769834920764e-06
+              },
+              "gpu_seconds": {
+                "median": 0.005114880084991455,
+                "q1": 0.005111807823181152,
+                "q3": 0.00511897611618042,
+                "iqr": 7.168292999268182e-06
+              }
+            }
+          },
+          "paired_second_minus_first": {
+            "host_seconds": {
+              "median": 0.0043982359929941595,
+              "q1": 0.004396693810122088,
+              "q3": 0.004401423531817272,
+              "iqr": 4.729721695184708e-06
+            },
+            "gpu_seconds": {
+              "median": 0.004398080080747605,
+              "q1": 0.00439603179693222,
+              "q3": 0.004402432039380073,
+              "iqr": 6.400242447853616e-06
+            }
+          }
+        }
+      ],
+      "input_preserved": true,
+      "shared_graph_setup_across_cases": true,
+      "CPU_original_rotated_equal": true,
+      "CPU_original_scale_equal": true,
+      "CPU_original_rotated_unequal_elements": 0,
+      "CPU_original_scale_unequal_elements": 0,
+      "fixed_CPU_packet_gate": false,
+      "GPU_preprocessed_CPU_code_reference_gate": true,
+      "peak_allocated_bytes": 767628800,
+      "peak_reserved_bytes": 1302331392,
+      "BF16_reference_chunk_seconds": 1.0923879819456488
+    },
+    {
+      "layer": 24,
+      "chunk": 6,
+      "stage": "T_encoder",
+      "setup": {
+        "RTN_eager": {
+          "kind": "owned_eager",
+          "setup_seconds": 1.2919772416353226e-06
+        },
+        "RTN_graph": {
+          "kind": "owned_graph",
+          "setup_seconds": 0.06396236689761281,
+          "input_copy_bytes": 14376960,
+          "owned_output_copy_bytes": 4515841,
+          "factor_copied_each_call": false
+        },
+        "OBQ_graph": {
+          "kind": "owned_graph",
+          "setup_seconds": 0.05267575604375452,
+          "input_copy_bytes": 15163392,
+          "owned_output_copy_bytes": 4515841,
+          "factor_copied_each_call": true
+        },
+        "OBQ_fused": {
+          "kind": "owned_eager",
+          "setup_seconds": 1.3420358300209045e-06
+        }
+      },
+      "pairs": [
+        {
+          "pair": [
+            "RTN_eager",
+            "OBQ_graph"
+          ],
+          "samples": [
+            {
+              "round": 0,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.0002990080118179321,
+                  "host_seconds": 0.00032291701063513756
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005098495960235596,
+                  "host_seconds": 0.005111651960760355
+                }
+              }
+            },
+            {
+              "round": 1,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005104640007019043,
+                  "host_seconds": 0.005119466921314597
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.00029491201043128966,
+                  "host_seconds": 0.00030711700674146414
+                }
+              }
+            },
+            {
+              "round": 2,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.0002908160090446472,
+                  "host_seconds": 0.0003051839303225279
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005101568222045898,
+                  "host_seconds": 0.0051136360270902514
+                }
+              }
+            },
+            {
+              "round": 3,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005094399929046631,
+                  "host_seconds": 0.005108867073431611
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0003041279911994934,
+                  "host_seconds": 0.00031623500399291515
+                }
+              }
+            },
+            {
+              "round": 4,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.000289792001247406,
+                  "host_seconds": 0.0003100130707025528
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0051066880226135255,
+                  "host_seconds": 0.0051194269908592105
+                }
+              }
+            },
+            {
+              "round": 5,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005107711791992187,
+                  "host_seconds": 0.005122042028233409
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0002959359884262085,
+                  "host_seconds": 0.00030801899265497923
+                }
+              }
+            },
+            {
+              "round": 6,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.00029286399483680726,
+                  "host_seconds": 0.00030712701845914125
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005099520206451416,
+                  "host_seconds": 0.005111581995151937
+                }
+              }
+            },
+            {
+              "round": 7,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005105663776397705,
+                  "host_seconds": 0.005120609072037041
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0002979840040206909,
+                  "host_seconds": 0.00031066290102899075
+                }
+              }
+            },
+            {
+              "round": 8,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.0002887679934501648,
+                  "host_seconds": 0.0003088699886575341
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005105663776397705,
+                  "host_seconds": 0.0051184449112042785
+                }
+              }
+            },
+            {
+              "round": 9,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005102591991424561,
+                  "host_seconds": 0.005116009968332946
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0002969599962234497,
+                  "host_seconds": 0.00030959199648350477
+                }
+              }
+            },
+            {
+              "round": 10,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.000289792001247406,
+                  "host_seconds": 0.00030418194364756346
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005097472190856934,
+                  "host_seconds": 0.005109388031996787
+                }
+              }
+            },
+            {
+              "round": 11,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005108736038208008,
+                  "host_seconds": 0.005123874056152999
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0002959359884262085,
+                  "host_seconds": 0.00030825904104858637
+                }
+              }
+            },
+            {
+              "round": 12,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.000289792001247406,
+                  "host_seconds": 0.00030376994982361794
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005108736038208008,
+                  "host_seconds": 0.005121852038428187
+                }
+              }
+            },
+            {
+              "round": 13,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0051036162376403805,
+                  "host_seconds": 0.005117884022183716
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0002969599962234497,
+                  "host_seconds": 0.00030880002304911613
+                }
+              }
+            },
+            {
+              "round": 14,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.000289792001247406,
+                  "host_seconds": 0.0003044219920411706
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005104640007019043,
+                  "host_seconds": 0.005116911022923887
+                }
+              }
+            },
+            {
+              "round": 15,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005100543975830078,
+                  "host_seconds": 0.0051153190433979034
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0003051519989967346,
+                  "host_seconds": 0.0003175559686496854
+                }
+              }
+            },
+            {
+              "round": 16,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.0002908160090446472,
+                  "host_seconds": 0.0003052039537578821
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005098495960235596,
+                  "host_seconds": 0.005111481994390488
+                }
+              }
+            },
+            {
+              "round": 17,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005098495960235596,
+                  "host_seconds": 0.0051128140185028315
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0002959359884262085,
+                  "host_seconds": 0.0003082789480686188
+                }
+              }
+            },
+            {
+              "round": 18,
+              "order": [
+                "RTN_eager",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_eager": {
+                  "gpu_seconds": 0.000289792001247406,
+                  "host_seconds": 0.0003038609866052866
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005100543975830078,
+                  "host_seconds": 0.005113054998219013
+                }
+              }
+            },
+            {
+              "round": 19,
+              "order": [
+                "OBQ_graph",
+                "RTN_eager"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005098495960235596,
+                  "host_seconds": 0.0051136360270902514
+                },
+                "RTN_eager": {
+                  "gpu_seconds": 0.0002959359884262085,
+                  "host_seconds": 0.0003081290051341057
+                }
+              }
+            }
+          ],
+          "summary": {
+            "RTN_eager": {
+              "host_seconds": {
+                "median": 0.000308194023091346,
+                "q1": 0.00030519894789904356,
+                "q3": 0.0003096972650382668,
+                "iqr": 4.498317139223218e-06
+              },
+              "gpu_seconds": {
+                "median": 0.0002954239994287491,
+                "q1": 0.000289792001247406,
+                "q3": 0.0002969599962234497,
+                "iqr": 7.167994976043702e-06
+              }
+            },
+            "OBQ_graph": {
+              "host_seconds": {
+                "median": 0.005115664505865425,
+                "q1": 0.005112523504067212,
+                "q3": 0.005119436973473057,
+                "iqr": 6.913469405844808e-06
+              },
+              "gpu_seconds": {
+                "median": 0.005102080106735229,
+                "q1": 0.005098495960235596,
+                "q3": 0.005105663776397705,
+                "iqr": 7.167816162109014e-06
+              }
+            }
+          },
+          "paired_second_minus_first": {
+            "host_seconds": {
+              "median": 0.004808768047951162,
+              "q1": 0.0048050383338704705,
+              "q3": 0.004810547106899321,
+              "iqr": 5.508773028850555e-06
+            },
+            "gpu_seconds": {
+              "median": 0.004807680070400238,
+              "q1": 0.0048048639893531805,
+              "q3": 0.004812031865119934,
+              "iqr": 7.167875766753151e-06
+            }
+          }
+        },
+        {
+          "pair": [
+            "RTN_graph",
+            "OBQ_graph"
+          ],
+          "samples": [
+            {
+              "round": 0,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002959359884262085,
+                  "host_seconds": 0.000310312956571579
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005107711791992187,
+                  "host_seconds": 0.005119345965795219
+                }
+              }
+            },
+            {
+              "round": 1,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0051036162376403805,
+                  "host_seconds": 0.005117784021422267
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002979840040206909,
+                  "host_seconds": 0.00030996196437627077
+                }
+              }
+            },
+            {
+              "round": 2,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002938880026340485,
+                  "host_seconds": 0.0003072170075029135
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005099520206451416,
+                  "host_seconds": 0.00511074997484684
+                }
+              }
+            },
+            {
+              "round": 3,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005097472190856934,
+                  "host_seconds": 0.005111751961521804
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.00029183998703956603,
+                  "host_seconds": 0.00030327995773404837
+                }
+              }
+            },
+            {
+              "round": 4,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002959359884262085,
+                  "host_seconds": 0.00030957197304815054
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005105663776397705,
+                  "host_seconds": 0.005117052001878619
+                }
+              }
+            },
+            {
+              "round": 5,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005099520206451416,
+                  "host_seconds": 0.00511414697393775
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002979840040206909,
+                  "host_seconds": 0.0003092109691351652
+                }
+              }
+            },
+            {
+              "round": 6,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.00029286399483680726,
+                  "host_seconds": 0.00030616496223956347
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005100543975830078,
+                  "host_seconds": 0.005111161037348211
+                }
+              }
+            },
+            {
+              "round": 7,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005107711791992187,
+                  "host_seconds": 0.0051209700759500265
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.00029286399483680726,
+                  "host_seconds": 0.0003039309522137046
+                }
+              }
+            },
+            {
+              "round": 8,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002938880026340485,
+                  "host_seconds": 0.00030727696139365435
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005111807823181152,
+                  "host_seconds": 0.005122522008605301
+                }
+              }
+            },
+            {
+              "round": 9,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005121024131774903,
+                  "host_seconds": 0.0051348559791222215
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002959359884262085,
+                  "host_seconds": 0.0003067170036956668
+                }
+              }
+            },
+            {
+              "round": 10,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002938880026340485,
+                  "host_seconds": 0.0003071470418944955
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005119999885559082,
+                  "host_seconds": 0.005131558980792761
+                }
+              }
+            },
+            {
+              "round": 11,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00511897611618042,
+                  "host_seconds": 0.005132491001859307
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.0003051519989967346,
+                  "host_seconds": 0.0003166348906233907
+                }
+              }
+            },
+            {
+              "round": 12,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.00029491201043128966,
+                  "host_seconds": 0.00030749698635190725
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005119999885559082,
+                  "host_seconds": 0.005131139070726931
+                }
+              }
+            },
+            {
+              "round": 13,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005116928100585938,
+                  "host_seconds": 0.005130928009748459
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002938880026340485,
+                  "host_seconds": 0.0003050530795007944
+                }
+              }
+            },
+            {
+              "round": 14,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.00029491201043128966,
+                  "host_seconds": 0.0003082489129155874
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005119999885559082,
+                  "host_seconds": 0.0051318599143996835
+                }
+              }
+            },
+            {
+              "round": 15,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005112832069396973,
+                  "host_seconds": 0.0051305670058354735
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002969599962234497,
+                  "host_seconds": 0.0003090099198743701
+                }
+              }
+            },
+            {
+              "round": 16,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002959359884262085,
+                  "host_seconds": 0.0003095319261774421
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00510975980758667,
+                  "host_seconds": 0.005120778921991587
+                }
+              }
+            },
+            {
+              "round": 17,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0051138558387756345,
+                  "host_seconds": 0.005127572105266154
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002959359884262085,
+                  "host_seconds": 0.0003070770762860775
+                }
+              }
+            },
+            {
+              "round": 18,
+              "order": [
+                "RTN_graph",
+                "OBQ_graph"
+              ],
+              "times": {
+                "RTN_graph": {
+                  "gpu_seconds": 0.00029491201043128966,
+                  "host_seconds": 0.00030875997617840767
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0051138558387756345,
+                  "host_seconds": 0.005126168951392174
+                }
+              }
+            },
+            {
+              "round": 19,
+              "order": [
+                "OBQ_graph",
+                "RTN_graph"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005117951869964599,
+                  "host_seconds": 0.005131358979269862
+                },
+                "RTN_graph": {
+                  "gpu_seconds": 0.0002938880026340485,
+                  "host_seconds": 0.0003047219943255186
+                }
+              }
+            }
+          ],
+          "summary": {
+            "RTN_graph": {
+              "host_seconds": {
+                "median": 0.0003073869738727808,
+                "q1": 0.00030657899333164096,
+                "q3": 0.00030929120839573443,
+                "iqr": 2.7122150640934706e-06
+              },
+              "gpu_seconds": {
+                "median": 0.00029491201043128966,
+                "q1": 0.0002938880026340485,
+                "q3": 0.0002959359884262085,
+                "iqr": 2.0479857921600086e-06
+              }
+            },
+            "OBQ_graph": {
+              "host_seconds": {
+                "median": 0.005124345479998738,
+                "q1": 0.005117601016536355,
+                "q3": 0.005131194047862664,
+                "iqr": 1.3593031326308846e-05
+              },
+              "gpu_seconds": {
+                "median": 0.0051123199462890625,
+                "q1": 0.005105151891708373,
+                "q3": 0.005118207931518555,
+                "iqr": 1.3056039810181198e-05
+              }
+            }
+          },
+          "paired_second_minus_first": {
+            "host_seconds": {
+              "median": 0.004816447617486119,
+              "q1": 0.004808309517102316,
+              "q3": 0.004823618772206828,
+              "iqr": 1.5309255104511976e-05
+            },
+            "gpu_seconds": {
+              "median": 0.004815359935164451,
+              "q1": 0.00480921583622694,
+              "q3": 0.004823296040296555,
+              "iqr": 1.4080204069615021e-05
+            }
+          }
+        },
+        {
+          "pair": [
+            "OBQ_fused",
+            "OBQ_graph"
+          ],
+          "samples": [
+            {
+              "round": 0,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007167999744415283,
+                  "host_seconds": 0.0007325859041884542
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00511078405380249,
+                  "host_seconds": 0.005123564973473549
+                }
+              }
+            },
+            {
+              "round": 1,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00510975980758667,
+                  "host_seconds": 0.00512377405539155
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007219200134277344,
+                  "host_seconds": 0.0007336379494518042
+                }
+              }
+            },
+            {
+              "round": 2,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007157760262489318,
+                  "host_seconds": 0.0007308429339900613
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005112832069396973,
+                  "host_seconds": 0.005127210984937847
+                }
+              }
+            },
+            {
+              "round": 3,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005116928100585938,
+                  "host_seconds": 0.005131480051204562
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007167999744415283,
+                  "host_seconds": 0.0007288090419024229
+                }
+              }
+            },
+            {
+              "round": 4,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007147520184516907,
+                  "host_seconds": 0.0007292400114238262
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005116928100585938,
+                  "host_seconds": 0.005128443008288741
+                }
+              }
+            },
+            {
+              "round": 5,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005116928100585938,
+                  "host_seconds": 0.005131349083967507
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007188479900360107,
+                  "host_seconds": 0.0007312940433621407
+                }
+              }
+            },
+            {
+              "round": 6,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007137280106544495,
+                  "host_seconds": 0.0007282380247488618
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005112832069396973,
+                  "host_seconds": 0.005125628085806966
+                }
+              }
+            },
+            {
+              "round": 7,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0051138558387756345,
+                  "host_seconds": 0.005126980948261917
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007157760262489318,
+                  "host_seconds": 0.000727697042748332
+                }
+              }
+            },
+            {
+              "round": 8,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007157760262489318,
+                  "host_seconds": 0.0007304520113393664
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005116928100585938,
+                  "host_seconds": 0.005128594930283725
+                }
+              }
+            },
+            {
+              "round": 9,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005114880084991455,
+                  "host_seconds": 0.005129344994202256
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.000719871997833252,
+                  "host_seconds": 0.0007319049909710884
+                }
+              }
+            },
+            {
+              "round": 10,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007137280106544495,
+                  "host_seconds": 0.0007280079880729318
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00511897611618042,
+                  "host_seconds": 0.0051314589800313115
+                }
+              }
+            },
+            {
+              "round": 11,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005115903854370117,
+                  "host_seconds": 0.005129906930960715
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007229440212249755,
+                  "host_seconds": 0.000735652050934732
+                }
+              }
+            },
+            {
+              "round": 12,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007137280106544495,
+                  "host_seconds": 0.0007283679442480206
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00511078405380249,
+                  "host_seconds": 0.005123293958604336
+                }
+              }
+            },
+            {
+              "round": 13,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005119999885559082,
+                  "host_seconds": 0.005133463069796562
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007147520184516907,
+                  "host_seconds": 0.0007274769013747573
+                }
+              }
+            },
+            {
+              "round": 14,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007157760262489318,
+                  "host_seconds": 0.0007304620230570436
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.0051138558387756345,
+                  "host_seconds": 0.00512616999913007
+                }
+              }
+            },
+            {
+              "round": 15,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005111807823181152,
+                  "host_seconds": 0.005126098054461181
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007188479900360107,
+                  "host_seconds": 0.0007303720340132713
+                }
+              }
+            },
+            {
+              "round": 16,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007147520184516907,
+                  "host_seconds": 0.0007292900700122118
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.00511078405380249,
+                  "host_seconds": 0.005124044953845441
+                }
+              }
+            },
+            {
+              "round": 17,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005117951869964599,
+                  "host_seconds": 0.0051311691058799624
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007167999744415283,
+                  "host_seconds": 0.0007292290683835745
+                }
+              }
+            },
+            {
+              "round": 18,
+              "order": [
+                "OBQ_fused",
+                "OBQ_graph"
+              ],
+              "times": {
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007137280106544495,
+                  "host_seconds": 0.0007276770193129778
+                },
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005111807823181152,
+                  "host_seconds": 0.0051251070108264685
+                }
+              }
+            },
+            {
+              "round": 19,
+              "order": [
+                "OBQ_graph",
+                "OBQ_fused"
+              ],
+              "times": {
+                "OBQ_graph": {
+                  "gpu_seconds": 0.005105663776397705,
+                  "host_seconds": 0.00512003805488348
+                },
+                "OBQ_fused": {
+                  "gpu_seconds": 0.0007239680290222168,
+                  "host_seconds": 0.000736132962629199
+                }
+              }
+            }
+          ],
+          "summary": {
+            "OBQ_fused": {
+              "host_seconds": {
+                "median": 0.0007298310520127416,
+                "q1": 0.0007283354643732309,
+                "q3": 0.0007314467802643776,
+                "iqr": 3.11131589114666e-06
+              },
+              "gpu_seconds": {
+                "median": 0.0007157760262489318,
+                "q1": 0.0007147520184516907,
+                "q3": 0.0007188479900360107,
+                "iqr": 4.095971584320017e-06
+              }
+            },
+            "OBQ_graph": {
+              "host_seconds": {
+                "median": 0.005127095966599882,
+                "q1": 0.005124841496581212,
+                "q3": 0.005130222474690527,
+                "iqr": 5.380978109315038e-06
+              },
+              "gpu_seconds": {
+                "median": 0.0051138558387756345,
+                "q1": 0.005111551880836487,
+                "q3": 0.005116928100585938,
+                "iqr": 5.3762197494509195e-06
+              }
+            }
+          },
+          "paired_second_minus_first": {
+            "host_seconds": {
+              "median": 0.004397410026285797,
+              "q1": 0.004394883231725544,
+              "q3": 0.00439947668928653,
+              "iqr": 4.5934575609862804e-06
+            },
+            "gpu_seconds": {
+              "median": 0.004398079812526703,
+              "q1": 0.004394752085208893,
+              "q3": 0.004400384068489075,
+              "iqr": 5.631983280181968e-06
+            }
+          }
+        }
+      ],
+      "input_preserved": true,
+      "shared_graph_setup_across_cases": true,
+      "CPU_original_rotated_equal": true,
+      "CPU_original_scale_equal": true,
+      "CPU_original_rotated_unequal_elements": 0,
+      "CPU_original_scale_unequal_elements": 0,
+      "fixed_CPU_packet_gate": false,
+      "GPU_preprocessed_CPU_code_reference_gate": true,
+      "peak_allocated_bytes": 767628800,
+      "peak_reserved_bytes": 1302331392,
+      "BF16_reference_chunk_seconds": 1.6891693100333214
+    }
+  ],
+  "lock_sha256": "c86fd84bc80a02eb16e00bd5dab4ba58981124166956fc201691eadaede7b197",
+  "device": "NVIDIA GeForce RTX 4090",
+  "torch_version": "2.6.0+cu124",
+  "cuda_version": "12.4",
+  "initial_H2D_seconds": 0.09637381904758513,
+  "code_lifetime_validation": [
+    {
+      "layer": 18,
+      "chunk": 1,
+      "stage": "T_code",
+      "lifetime": {
+        "RTN_eager": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        },
+        "RTN_graph": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        },
+        "OBQ_graph": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        },
+        "OBQ_fused": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        }
+      },
+      "setup": {
+        "RTN_eager": {
+          "kind": "owned_eager",
+          "setup_seconds": 1.3530952855944633e-06
+        },
+        "RTN_graph": {
+          "kind": "owned_graph",
+          "setup_seconds": 0.05650333594530821,
+          "input_copy_bytes": 15353856,
+          "owned_output_copy_bytes": 4515841,
+          "factor_copied_each_call": false
+        },
+        "OBQ_graph": {
+          "kind": "owned_graph",
+          "setup_seconds": 0.06514963693916798,
+          "input_copy_bytes": 16140288,
+          "owned_output_copy_bytes": 4515841,
+          "factor_copied_each_call": true
+        },
+        "OBQ_fused": {
+          "kind": "owned_eager",
+          "setup_seconds": 1.3629905879497528e-06
+        }
+      },
+      "shared_graph_setup_across_cases": true
+    },
+    {
+      "layer": 24,
+      "chunk": 6,
+      "stage": "T_code",
+      "lifetime": {
+        "RTN_eager": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        },
+        "RTN_graph": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        },
+        "OBQ_graph": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        },
+        "OBQ_fused": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        }
+      },
+      "setup": {
+        "RTN_eager": {
+          "kind": "owned_eager",
+          "setup_seconds": 1.3530952855944633e-06
+        },
+        "RTN_graph": {
+          "kind": "owned_graph",
+          "setup_seconds": 0.05650333594530821,
+          "input_copy_bytes": 15353856,
+          "owned_output_copy_bytes": 4515841,
+          "factor_copied_each_call": false
+        },
+        "OBQ_graph": {
+          "kind": "owned_graph",
+          "setup_seconds": 0.06514963693916798,
+          "input_copy_bytes": 16140288,
+          "owned_output_copy_bytes": 4515841,
+          "factor_copied_each_call": true
+        },
+        "OBQ_fused": {
+          "kind": "owned_eager",
+          "setup_seconds": 1.3629905879497528e-06
+        }
+      },
+      "shared_graph_setup_across_cases": true
+    },
+    {
+      "layer": 18,
+      "chunk": 1,
+      "stage": "T_encoder",
+      "lifetime": {
+        "RTN_eager": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        },
+        "RTN_graph": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        },
+        "OBQ_graph": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        },
+        "OBQ_fused": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        }
+      },
+      "setup": {
+        "RTN_eager": {
+          "kind": "owned_eager",
+          "setup_seconds": 1.2919772416353226e-06
+        },
+        "RTN_graph": {
+          "kind": "owned_graph",
+          "setup_seconds": 0.06396236689761281,
+          "input_copy_bytes": 14376960,
+          "owned_output_copy_bytes": 4515841,
+          "factor_copied_each_call": false
+        },
+        "OBQ_graph": {
+          "kind": "owned_graph",
+          "setup_seconds": 0.05267575604375452,
+          "input_copy_bytes": 15163392,
+          "owned_output_copy_bytes": 4515841,
+          "factor_copied_each_call": true
+        },
+        "OBQ_fused": {
+          "kind": "owned_eager",
+          "setup_seconds": 1.3420358300209045e-06
+        }
+      },
+      "shared_graph_setup_across_cases": true
+    },
+    {
+      "layer": 24,
+      "chunk": 6,
+      "stage": "T_encoder",
+      "lifetime": {
+        "RTN_eager": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        },
+        "RTN_graph": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        },
+        "OBQ_graph": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        },
+        "OBQ_fused": {
+          "two_inputs_reference_equal": true,
+          "first_packet_preserved": true,
+          "distinct_output_storage": true
+        }
+      },
+      "setup": {
+        "RTN_eager": {
+          "kind": "owned_eager",
+          "setup_seconds": 1.2919772416353226e-06
+        },
+        "RTN_graph": {
+          "kind": "owned_graph",
+          "setup_seconds": 0.06396236689761281,
+          "input_copy_bytes": 14376960,
+          "owned_output_copy_bytes": 4515841,
+          "factor_copied_each_call": false
+        },
+        "OBQ_graph": {
+          "kind": "owned_graph",
+          "setup_seconds": 0.05267575604375452,
+          "input_copy_bytes": 15163392,
+          "owned_output_copy_bytes": 4515841,
+          "factor_copied_each_call": true
+        },
+        "OBQ_fused": {
+          "kind": "owned_eager",
+          "setup_seconds": 1.3420358300209045e-06
+        }
+      },
+      "shared_graph_setup_across_cases": true
+    }
+  ],
+  "quality": {
+    "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/QUALITY.json",
+    "sha256": "3e26401cb52117427b48a18c9d108f6adb6f8b481ec2f56ce8346849aec789eb",
+    "bytes": 16984
+  },
+  "elapsed_seconds": 18.84742287301924,
+  "finished_utc": 1793875207.2150931,
+  "max_RSS_bytes": 1951158272,
+  "peak_cuda_allocated_bytes": 767628800,
+  "disk_bytes": 169235226
+}

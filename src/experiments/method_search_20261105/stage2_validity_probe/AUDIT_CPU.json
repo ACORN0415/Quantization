@@ -1,0 +1,50 @@
+{
+  "passed": true,
+  "checks_passed": 49,
+  "elapsed_seconds": 0.32557200093287975,
+  "result_sha256": "27d34181cd48f990af0603f1a1354f2f8fb1cffc528847d4a37995aefdc88061",
+  "tensor_sha256": "469a4c0a635d6880a1a4446b95dd4c1f1dd8f6185869dd59fab31fc1379563dc",
+  "CPU_dispatch": {
+    "first": {
+      "BF16_stride": [
+        50319360,
+        1536,
+        128,
+        1
+      ],
+      "FP32_stride": [
+        50319360,
+        1536,
+        128,
+        1
+      ],
+      "CPU_ATen_ops": [
+        "aten::matmul",
+        "aten::bmm"
+      ],
+      "contiguous": true
+    },
+    "second": {
+      "BF16_stride": [
+        7188480,
+        1536,
+        128,
+        1
+      ],
+      "FP32_stride": [
+        7188480,
+        1536,
+        128,
+        1
+      ],
+      "CPU_ATen_ops": [
+        "aten::matmul",
+        "aten::mm"
+      ],
+      "contiguous": true
+    }
+  },
+  "GPU_reruns": 0,
+  "scope": "Packet/z/scale mismatch statistics recomputed from saved CPU tensors. Dispatch profile is CPU-only, not a CUDA kernel trace.",
+  "ATen_source": "https://github.com/pytorch/pytorch/blob/v2.6.0/aten/src/ATen/native/LinearAlgebra.cpp#L1824"
+}

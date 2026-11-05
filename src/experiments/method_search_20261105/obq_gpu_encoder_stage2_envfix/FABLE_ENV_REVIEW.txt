@@ -1,0 +1,30 @@
+Stage2 환경 회복 driver 검토(실행 전, 읽기 전용) — Claude Fable 5.1 — 2026-11-05 KST
+Task/Dispatch ID: 없음. 컴파일·GPU 0. 읽은 것: env_supervisor.py 전체(66행, sha 654f5cc70dfb6ec1…), ENV_RECOVERY_REGISTRATION_KO.txt, PREFLIGHT.json,
+ 원본 대비 바이트 비교(experiment.py 8d5aea59…, obq_pack.cu 50b86fd4…, selftest.py, SELFTEST.json, REGISTRATION_DRAFT_KO.txt 모두 동일), torch 2.6 cpp_extension의 CC/CXX 처리(grep).
+
+== 판단: 환경 회복 driver는 유효. 과학 조건 불변. 잠금 전 확인 1건 ==
+[확인 1 — 잠금 차단 가능] env_supervisor.lock()의 파일 목록(35행)에 P/'ENV_REVIEW_AT_LOCK_KO.txt'가 있다. 이 파일이 잠금 시점에 없으면 sha()에서 FileNotFoundError로 lock 실패.
+ 본 검토 파일명은 요청대로 FABLE_ENV_REVIEW.txt이므로, root가 이를 ENV_REVIEW_AT_LOCK_KO.txt로 스냅샷(바이트 복사)한 뒤 lock해야 한다. 목록의 OLD/SUPERVISOR·RESULT·BUILD·LOCK은 존재 확인됨(원본 실패 자료).
+
+[통제 — 적절]
+- 과학 코드 불변: 5개 파일 바이트 동일(제가 sha256으로 재확인). preflight(25-26행)도 같은 검사를 한다.
+- 프로세스 한정 환경(9-11행): PATH='/usr/bin:/bin:'+기존, CUDA_HOME=/usr, CC=/usr/bin/gcc-13, CXX=/usr/bin/g++-13. 전역 변경 없음. preflight가 which(ninja)=/usr/bin/ninja, which(nvcc)=/usr/bin/nvcc,
+  torch의 CUDA_HOME=/usr·get_cxx_compiler()=/usr/bin/g++-13·GPU 미초기화를 assert(20-24행) ✓. torch 2.6 cpp_extension은 CC 환경을 nvcc `-ccbin`으로, CXX를 host 컴파일러로 쓴다 → gcc-13(CUDA 12.4 host_config 허용)·g++-13 선택이 맞다.
+  finally의 build.ninja 문자열 검증('cxx = /usr/bin/g++-13', 'nvcc = /usr/bin/nvcc', '-ccbin /usr/bin/gcc-13', 58-61행)은 torch가 쓰는 build.ninja 형식과 일치 ✓.
+- 절대 마감: 원본 SUPERVISOR.started_utc(1793872958)+2700 = 1793875658을 PREFLIGHT→LOCK→run으로 전달, remaining>5 assert, worker timeout=deadline−now−5, SIGTERM→deadline→SIGKILL, deadline_exceeded 기록(40-63행) ✓.
+  새 45분을 주지 않고 원본 실패·진단·준비 시간을 같은 창에 포함 — 등록문과 일치. worker 자체 2700 s guard보다 상위 마감이 우선 ✓.
+- 새 폴더 실행: 복사된 experiment.py의 P가 envfix 폴더이므로 build/·RESULT.json·QUALITY.json·RUN_LOG 'x'가 새로 생성되고 원본 실패 자료는 보존·미변경 ✓.
+  experiment.py worker의 LOCK 검증(216·240·256행)은 envfix LOCK의 모든 항목(source_files()의 envfix 경로 + 원본 실패 자료 + PREFLIGHT 등)을 실행 중 불변으로 요구 — 실행이 이 파일들을 쓰지 않으므로 통과 ✓.
+- lock()에서 experiment.py를 exec_module로 로드(34행): 상위 import가 torch·benchmark.py를 읽지만 GPU 초기화 없음(benchmark.py의 CUDA 숨김은 argv[1]=='selftest'일 때만이며 여기선 무관) ✓.
+- 자원: CPU4/RSS 8 GiB/GPU 관측 4 GiB/새 폴더 2 GiB 원본 그대로. 컴파일러 자식 RSS는 미계측이라고 명시 ✓.
+- 원본 실패의 성격(NVCC 0·커널 0·품질 0·타이밍 0)과 "유효 결과 선택 재실행 아님" 서술 적절. 정확성·품질 gate·타이밍 팔 불변 ✓.
+
+[사소]
+- 현재 남은 시간은 약 35분 안팎(검토 시점). 컴파일 1~2분 + 해시 + 품질 + 타이밍은 10분 내 추정이라 여유 있으나, 마감 초과 시 incomplete로 기록하고 연장하지 않는다는 규칙 유지.
+- 복사본 experiment.py의 source_files()에 포함된 S1·C 경로는 P.parent 기준이라 envfix에서도 같은 원본을 가리킨다(확인).
+
+== 미확인 ==
+실행 없음. nvcc 12.4 + gcc 13.4 조합의 실제 host_config 통과 여부는 컴파일에서만 판명(13.x 허용 범위이므로 통과 예상). 이 검토는 승인이 아니라 권고다.
+
+[추가 확인] torch 2.6 cpp_extension.py 원문: JIT 경로 _write_ninja_file_to_build_library(2326-2328행)가 `cc_env=os.getenv("CC")`를 `['-ccbin', cc_env]`로 cuda_flags 앞에 붙이고,
+ _write_ninja_file(2423-2424행)이 `nvcc = CUDA_HOME/bin/nvcc`(=/usr/bin/nvcc)를 기록한다. 등록문의 "JIT NVCC 경로가 CC를 -ccbin으로 사용" 서술과 supervisor의 build.ninja 검증 문자열이 원문과 일치함을 확인.

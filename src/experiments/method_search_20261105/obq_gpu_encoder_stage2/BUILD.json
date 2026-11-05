@@ -1,0 +1,17 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "seconds": 0.02099315798841417,
+      "status": "failed",
+      "error": "RuntimeError('Ninja is required to load C++ extensions')"
+    },
+    {
+      "attempt": 2,
+      "seconds": 0.00012341304682195187,
+      "status": "failed",
+      "error": "ImportError('/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2/build/obq_stage2_50b86fd47474.so: cannot open shared object file: No such file or directory')"
+    }
+  ],
+  "source_sha256": "50b86fd47474eeab6f7aa7c8f4331c0fea5a8e53514f79fbd3f7641a2c23c91b"
+}

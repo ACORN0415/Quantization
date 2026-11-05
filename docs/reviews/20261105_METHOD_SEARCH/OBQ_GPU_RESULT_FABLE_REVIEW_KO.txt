@@ -35,3 +35,19 @@ GPU 값 재실행 없음. 메모리 바운드 해석은 왕복량 추정에 기�
    정확한 서술: "메모리 병목 가설(미프로파일). 단계별 전역 슬랩 왕복을 없애는 쪽(레지스터 상주 fused)이 가장 큰 폭, compile 융합은 중간 폭 후보".
 3. "fused가 owned graph 대비 2배 미만이면 중단"은 제 제안이며 등록되지 않았다. 판정은 전체 encoder 개선·비용으로 한다는 root 입장에 따른다.
 4. stage 2 설계 동의: RTN은 eager/graph 둘 다 허용, OBQ graph는 U도 매 호출 static 복사(786 KB, timed 포함)해 30층이 한 graph를 공유 가능하게 하고 출력 clone 포함. 새 커널의 배포 기여는 자동 확정하지 않음.
+
+== stage 2 커널 초안 사전 검토(obq_gpu_encoder_stage2/obq_pack.cu 81행, 초안·해시 미고정, 컴파일/GPU 0) ==
+산술 동등성(참조 batch_codes와 연산 단위 대조) — 일치:
+ - w=bf16→float 정확, s=fp16→float 정확. c = nearbyintf(__fdiv_rn(w,s)) → torch.round(w/s)와 동일(half-to-even, IEEE 나눗셈). clamp = fminf(7,fmaxf(-8,·)) ✓, (int) 변환 ✓.
+ - residual = __fsub_rn(w, __fmul_rn(c,s)) = 참조의 mul→sub 분리 연산과 동일, error = __fdiv_rn(residual, u[j,j]) ✓, 갱신 w_k = __fsub_rn(w_k, __fmul_rn(error, u[j,k])) (k>j) ✓.
+   intrinsic이므로 FMA 축약 불가. 열 j의 w는 이전 단계 갱신분을 포함(참조와 같은 순서) ✓. j=127에서 error 0·갱신 없음 ✓.
+ - 인덱스: row=(frame,group,token,head) 평탄화, head=row%12, scale_row=(row/12/16)*12+head → scale [frames,groups,1,12,128] 레이아웃과 일치 ✓. u[j*128+k]는 factor[head][j][k] ✓.
+ - 패킹: 짝수 lane이 (k, k+1) 쌍을 (c_k&15)|((c_{k+1}&15)<<4)로 packed[row*64+k/2]에 기록 → common.pack(메모리 순서 인접 쌍, int8→uint8 &15)과 동일 ✓. 음수 두 보수 하위 니블 ✓.
+ - warp 분기: row≥rows 조기 return은 warp 단위 균일(한 warp=한 row) → __shfl_sync 전 lane 활성 ✓. 단계마다 소유 lane 1개만 나눗셈, 나머지 대기(내재적).
+수정 권고(정확성 아님, 성능·안전):
+ 1. root 지적과 같음: `slot=j>>5`의 동적 배열 인덱스(35-41행)는 w/s/codes를 local memory로 밀어낸다. 권고 형태: 바깥 `#pragma unroll for slot 0..3`, 안쪽 `#pragma unroll 1 for jj 0..31`, j=slot*32+jj로
+    재구성하면 slot이 컴파일 시 상수가 되어 j 순서를 그대로 유지하면서 레지스터 상주. 갱신 루프의 k>j 비교는 런타임 그대로.
+ 2. extra_cuda_cflags에 `-fmad=false` 추가(intrinsic만 쓰므로 필수는 아니나 안전), `--use_fast_math` 부재 확인, `-O3`. nearbyintf는 기본 RNE 모드 의존 — 명세에 기록.
+ 3. 래퍼: 커널 출력 packed는 매 호출 새 할당(owned) ✓. scale·sentinel은 래퍼가 owned 정책(clone)을 eager/graph와 동일하게 적용하고 timed 범위에 포함.
+ 4. 검증 순서: (a) 합성 난수 z/s/U로 GPU eager batch_codes와 packed 비트 일치, (b) 실제 캡처 z/s/U(L18c1, L24c6)로 동결 CPU 패킷과 비트 일치, (c) 두 입력 연속 호출 후 첫 출력 불변(owned).
+ 5. 성능 기대(추정): U 행 j 읽기는 warp당 512 B·L2 상주(786 KB), z/packed 읽기·쓰기 1회 → 층당 수십 µs 자릿수. 실측 전 수치 주장 금지.

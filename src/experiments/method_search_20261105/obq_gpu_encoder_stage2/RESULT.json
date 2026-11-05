@@ -1,0 +1,15 @@
+{
+  "status": "failed_or_incomplete",
+  "started_utc": 1793872958.7442217,
+  "models_loaded": 0,
+  "generations": 0,
+  "timings": [],
+  "lock_sha256": "1e502888df25d6a74528885db8732634ce18c921ad2c096ffce8e05879984b92",
+  "error": "ImportError('/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2/build/obq_stage2_50b86fd47474.so: cannot open shared object file: No such file or directory')",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2/experiment.py\", line 219, in worker\n    torch.cuda.reset_peak_memory_stats();hm=c.hadamard().cuda();EXT=build_extension();guard(begin)\n  File \"/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2/experiment.py\", line 40, in build_extension\n    ext=load(name=name,sources=[str(P/'obq_pack.cu')],build_directory=str(build),\n  File \"/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torch/utils/cpp_extension.py\", line 1380, in load\n    return _jit_compile(\n  File \"/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torch/utils/cpp_extension.py\", line 1823, in _jit_compile\n    return _import_module_from_library(name, build_directory, is_python_module)\n  File \"/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torch/utils/cpp_extension.py\", line 2245, in _import_module_from_library\n    module = importlib.util.module_from_spec(spec)\n  File \"<frozen importlib._bootstrap>\", line 571, in module_from_spec\n  File \"<frozen importlib._bootstrap_external>\", line 1176, in create_module\n  File \"<frozen importlib._bootstrap>\", line 241, in _call_with_frames_removed\nImportError: /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2/build/obq_stage2_50b86fd47474.so: cannot open shared object file: No such file or directory\n",
+  "elapsed_seconds": 0.9352830019779503,
+  "finished_utc": 1793872959.6795006,
+  "max_RSS_bytes": 647868416,
+  "peak_cuda_allocated_bytes": 65536,
+  "disk_bytes": 89815
+}

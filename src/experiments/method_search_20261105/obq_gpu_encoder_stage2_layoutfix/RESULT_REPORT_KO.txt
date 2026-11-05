@@ -1,0 +1,64 @@
+OBQ GPU encoder 2단계 결과: 명시적2D회전·owned출력·융합코드
+2026-11-05. 기술실행완료,최종독립검토대기.
+
+핵심 판단
+동일INT4저장형식을유지하면서시험한4개native블록지점에서OBQ가양RTN대비24.25~37.77%post-W_O SSE를줄였다. 같은OBQ계산의전체GPU K encoder는owned-output공유Graph기준약5.13ms에서융합경로약0.73ms로줄었다. 이둘은각각품질과계산비용의관측이다. 전체영상품질·전체모델가속·신규성확보를뜻하지않는다.
+
+검증 범위
+기존fresh causal자료의L18/L24에서과거6청크를압축하고,소비자chunk7 call0/3의nativeattention출력을비교했다. Q·현재K/V·V양자화·W_O·비트·그룹·padding·scale정책·바이트가같다. 입력과선택규칙을결과후바꾸지않았다. 이자료는앞선진단에도사용한개발자료이며독립보류입력이아니다.
+비용사례는L18 writechunk1,L24 writechunk6이다. sourceCUDA소스와이전컴파일.so를그대로재사용했고이번컴파일0,모델로드0,생성0이다.
+
+품질: 저장된native출력으로재계산한post-W_O SSE
+층/call       RTN_BF16 SSE       RTN_FP32 SSE        OBQ SSE         감소율 BF16 / FP32
+L18 call0     824.678716       831.805522       517.637538       37.232% / 37.769%
+L18 call3     799.293030       792.978684       524.006142       34.441% / 33.919%
+L24 call0     397.390616       391.840926       280.763320       29.348% / 28.348%
+L24 call3     397.160771       411.195024       300.859759       24.247% / 26.833%
+4지점×양RTN의등록20%감소gate를모두통과했다. originaldenseBF16 replay도캡처와비트일치했다. 매팔nativeattention2warmup+3회반복의샘플출력이같았다. 실제전체생성의피드백누적은검사하지않았다.
+
+비용: synchronize한host중앙값(ms)
+사례/stage         RTN eager     RTN Graph     OBQ Graph     OBQ fused    Graph/fused
+L18 c1 T_code     0.155872      0.173731      4.920167      0.556816      8.836x
+L24 c6 T_code     0.157000      0.172584      4.920753      0.557737      8.823x
+L18 c1 T_encoder  0.314882      0.307052      5.128082      0.728699      7.037x
+L24 c6 T_encoder  0.308194      0.307387      5.127096      0.729831      7.025x
+각stage·사례에서(RTN eager,OBQ Graph),(RTN Graph,OBQ Graph),(fused,OBQ Graph)의세쌍을각5warmup·20AB/BA round로측정했다. 표의OBQ Graph는fused와직접대응한세번째쌍값이다. 모든쌍의원자료·GPU event·host시간을보존했고총240paired round/480알고리즘시간관측이다.
+T_code는resident z/scale/U에서보상·패킹·owned출력까지이고,T_encoder는원본K에서회전·scale까지포함한다. decoder는T_encoder에포함하지않았다. Fused 전체encoder는가장빠른유효RTN보다층당약0.422ms추가되므로RTN보다빠르다는뜻이아니다.
+
+대응차이와변동폭: 전체encoder host ms [Q1,Q3]
+L18: fused 0.728699 [0.727777,0.731327], Graph 5.128082 [5.127008,5.131486], paired(Graph−fused) 4.398236 [4.396694,4.401424].
+L24: fused 0.729831 [0.728335,0.731447], Graph 5.127096 [5.124841,5.130222], paired(Graph−fused) 4.397410 [4.394883,4.399477].
+GPU event중앙값의전체encoder는fused두사례0.715776ms,Graph약5.114ms로같은방향이었다. 타이밍반복은같은두입력에서의계측이며입력다양성표본으로세지않는다.
+
+정확성과출력보존
+T_code의4구현은두실제사례의동결CPU packet과전원소바이트일치했다. T_code/T_encoder각각두사례·네구현에서새입력/새factor후의참조일치·첫packet보존·출력주소독립·입력/factor보존을확인했다. Graph static입력은사례간공유하며OBQ의U도매호출갱신한다.
+원본실패원인은singletonstride에따른bmm/mm분기였으므로회전을k.reshape(-1,128).float() @ H로명시했다. 이는새GPU전처리정의이며old실패를허용오차로통과시킨것이아니다. 여기서두비용사례의canonicalGPU z/scale는CPU원본과우연히모두정확히일치했으나모든입력의동등성을증명하지않는다.
+K reader는GPU unpack→BF16 dequant→고정형상inverseHadamard→BF16을사용했다. 이번36개K packet의GPU/CPU복원차이는0원소였고V GPU복원도CPU와비트일치했다. 이관측도시험한자료에한정한다.
+
+바이트·준비·메모리
+K packet당4,515,841B: packed3,612,672B+FP16scale903,168B+sentinel1B. 모든팔이실제패딩code를저장한다. 새캐시metadata나higher-bit잔차를추가하지않았다. U786,432B/층은고정encoder상태로별도이고cachepayload에포함시켜숨기지않았다.
+Graph입력복사는T_code RTN15,353,856B/OBQ16,140,288B,T_encoder RTN14,376,960B/OBQ15,163,392B이며OBQ의차이는U복사다. 모든Graph는capture밖에서4,515,841B출력을clone한다. eager/fused는packed/sentinel을새로만들며T_code scale만clone하므로불필요한packed재복사를강요하지않는다.이모든필요복사가timed안이다.
+Graphsetup은T_code RTN56.50ms/OBQ65.15ms,T_encoder RTN63.96ms/OBQ52.68ms였다. 각stage의동일Graph를두사례가공유하므로사례별setup으로중복합산하지않는다. 최초H2D+초기화구간96.37ms는순수PCIe대역폭측정이아니다. fixed offline H/factor는Stage1준비기록(층당약34~43ms)을재사용하는조건이며매청크준비를포함한online-H방법은검사하지않았다.
+worker관측peak allocated 767,628,800B(732.068MiB),peak reserved 1,302,331,392B,CPU RSS 1.817GiB,실행종료시새디스크169,235,226B다. 이는두사례·공유Graph·native품질캐시를함께보유한누적worker최대이며모드별독립peak나30층rolloutpeak가아니다. 원본컴파일자식peakRSS는계측하지않았다.
+
+시간해석
+30층이두사례와같은형상/비용이라는가정으로전체encoder의RTN대비증분을30배하면약12.65~12.67ms/청크다. 같은cleanBF16 reference chunk시간1.092/1.689초대비0.75~1.16%라는맥락용추정이다. 실제30층모델에서의겹침·allocator·캐시·생성피드백을포함한전체경과시간은측정하지않았으므로이값을생성지연실측이나상한으로부르지않는다.
+
+실패보존과실행마감
+최초stage2는Ninja wrapper환경실패(NVCC0)로끝났다. envfix는같은.so를컴파일한뒤T_code를통과했지만Graph전처리의두번째입력일치에실패했다. 최소조사에서수명정상/전처리dispatch차이를분리했고,layoutfix를별도등록했다. 세이전폴더와원자료는모두보존했다. 이번에는컴파일을추가하지않았다.
+layoutfix supervisor 20.812768초,worker 18.847423초. 최초시도시작부터2249.688535초로원래2700초절대마감내완료했고마감을재시작하거나연장하지않았다.
+
+감사와검토상태
+AUDIT_RESULT.json:646검사통과. 잠긴137source해시,36실제packet의필드/바이트,4native출력의post-W_O SSE/NSE/20%gate를CPU로독립재계산했고240쌍의순서·중앙값·사분위·대응차이를다시계산했다. 감사GPU재실행0. GPU exact/lifetime는저장된검사기록을확인한것이며독립GPU재실행감사는아니다.
+실제Fable은원래stage2코드·환경회복·layoutfix원칙을검토했다. layoutfix최종diff는5시간사용한도로미검토였다. root의전체diff검토를근거로실행전행정적검토일정수정만등록했고LOCK에최종Fable검토PENDING을명시했다. 검토완료로가장하지않았다.
+실행후사용자최신지시는21:50 KST이후Claude Opus5.5를사용하라는것이다. 따라서후속독립소스/결과검토는Opus5.5로대기하며21:50이전Claude호출을하지않는다. 과거Fable검토라벨과잠긴당시기록은역사기록으로유지한다. 기술실행완료와연구완료를구분한다.
+
+다음판단
+현재근거는같은저장형식에서localnative오차를줄이는OBQ를실행가능한GPU비용으로옮길수있다는것이다. 방법신규성은GPTQ/OBQ및query-aware KV선행연구와별도비교해야한다. 전체모델feedback을포함한작은생성검사와독립입력검증이남아있다. 이결과만으로새방법의전체품질효과가입증됐다고하거나연구를완료하지않는다.
+
+주요hash
+experiment.py 970c53eeb123748a8f8de03aa41c1f334f06557aee863e9d75a5a0f5d003a398
+CUDA so ae6e1a50caeff3b13327ab15b27a3e20695530938d4068ab5e578291697eff75
+RESULT.json 903804509a08ec3eb54e8627a0e39ad4e52d7a2751351e5af73c15003fe061b7
+QUALITY.json 3e26401cb52117427b48a18c9d108f6adb6f8b481ec2f56ce8346849aec789eb
+AUDIT_RESULT.json 640acebac7bc6342a294e83d1d3a902725d54874dd76fc90b4d7a94dfeacba15

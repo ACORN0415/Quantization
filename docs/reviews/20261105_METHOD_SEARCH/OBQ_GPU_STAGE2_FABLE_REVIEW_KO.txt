@@ -1,0 +1,46 @@
+OBQ GPU encoder 2단계 코드·명세 검토(실행 전) — obq_gpu_encoder_stage2 — Claude Fable 5.1 — 2026-11-05 KST
+Task/Dispatch ID: 없음. 읽기 전용, 컴파일·GPU 0, LOCK 0. 읽은 것: REGISTRATION_DRAFT_KO.txt 전체, obq_pack.cu 전체(86행), experiment.py 전체(296행), SELFTEST.json,
+ causal_obq/replay.py·capture.py의 attention 호출·저장 키(grep), capture l18_read0/write1/wo 텐서 형상, NATIVE_RESULT.json endpoint 수치.
+해시: experiment.py 8d5aea59e19d5bdc…, obq_pack.cu 50b86fd47474eeab…(메시지·SELFTEST 일치), REGISTRATION_DRAFT 7437cef82f76d2bb….
+
+== 판단: 실행을 무효로 만드는 필수 문제 없음. 잠금 가능 ==
+
+[커널] 사전 검토 때와 산술 동일. 변경점은 상수 첨자 ternary(36-43행)뿐이며 j 순서·소유 lane·갱신 조건 k>j·intrinsic 연산 모두 유지. 컴파일 플래그(experiment 41행) --fmad=false·--prec-div=true·--prec-sqrt=true·--ftz=false·
+ -O3·--ptxas-options=-v, 아치 8.9 고정, MAX_JOBS=2, 컴파일 ≤2회 동일 소스(37-49행) ✓. 출력 packed는 호출마다 새 할당 ✓.
+
+[owned 패킷·Graph 공유] build_functions(73-104행): graph 구현은 static clone, OBQ_graph만 U 포함 전부 복사·RTN_graph는 U 제외(86-87행), side-stream 예열 3회 후 capture,
+ replay()가 capture 밖에서 3필드 clone(98행) ✓. eager/fused는 T_code에서 scale만 clone, T_encoder는 scale이 매 호출 새 계산(79-81행) → "출력이 입력·다음 출력과 alias하지 않음" 계약 충족 ✓.
+ 두 사례가 같은 Graph 객체를 공유(형상 동일) ✓, setup 시간은 두 사례에 링크 ✓.
+[수명 검사] check_lifetime(106-125행): 두 번째 입력 = −0.75·z(또는 K), scale×1.25(T_code), U 열별 0.7..1.3 배(상삼각·양의 대각 보존) → 네 구현 모두 ref1/ref2 일치, 첫 패킷 스냅샷 불변,
+ 출력 주소가 입력·서로와 독립, 원본·factor 해시 불변 ✓. U를 바꾼 두 번째 입력이 OBQ_graph의 U 복사 경로를 실제로 검증한다 ✓. 두 패킷이 실제로 다른지 assert(116행) ✓.
+[정확성 gate] T_code: 네 구현을 stage 1 동결 CPU 패킷과 전 원소 비교(234행) ✓. T_encoder: GPU 전처리 z/s를 CPU로 내려 같은 코드 참조와 비교(66-71, 117행) → 등록문의 "GPU-native 변형" 정의와 일치,
+ CPU 원본 대비 불일치 수는 timing 행에 별도 기록(249-250행) ✓. fused 불일치는 즉시 assert 실패 ✓.
+[품질] quality(161-209행): 12개 write K를 GPU 전처리 → R_bf16/R_fp32/O_gpu 3팔, 각 팔 CPU 참조와 비트 일치 후 저장 ✓. V는 동결 패킷을 GPU unpack/dequant하고 CPU restore와 전 원소 일치 assert(173행) ✓.
+ restore_gpu(151-159행)는 common.restore와 같은 순서(unpack→int8→bf16 곱→unpad→FP32 역회전→bf16) ✓, GPU 역회전 불일치 수는 기록만 ✓. 참조 dense 재생은 native_av(QIDS 128개, [1,128,12,128])와 비트 일치 assert(193행),
+ replay.py 93-94행과 같은 attention(q,k,v) 호출 ✓. 각 팔 2 warmup + 3회 출력 일치 ✓. gate = 4 endpoint × 양 RTN 20%(208행) ✓. 실패 시 completed_quality_gate_failed·timing 생략(239-241행) ✓.
+ 참고: NATIVE_RESULT(CPU encoder)의 O_offline 이득은 l18 37%/34%, l24 28%/24%로 여유가 있으나 GPU 전처리 결과는 측정 전 단정하지 않는다.
+[타이밍] timed_pairs(131-147행): 고정 3쌍, 쌍마다 5 warmup·20 round AB/BA, event+host, guard 매 round, 종료 후 CPU 참조 재검(146행) ✓. OBQ_graph가 세 쌍 모두에서 반복 측정 ✓.
+[자원·종료] worker 2700 s·RSS 8 GiB·관측 allocated 4 GiB·디스크 2 GiB(20-24행), supervisor 2695+5 s·process group SIGTERM→SIGKILL(277-292행), LOCK 해시 실행 전후 검증(216, 240, 256행),
+ source에 attention.py·causal_model.py·store.py·lockstep.py·캡처/패킷 artifacts 포함(264-270행) ✓. 품질 gate 실패 시에도 LOCK 재검증 ✓.
+
+[실패 시 무효(거짓 아님)로 떨어질 지점 — 알고만 둘 것]
+ 1. preflight의 (s>0) assert(54행): bf16 clamp_min 1e-8이 FP16 저장에서 0이 되는 전부 0인 채널 그룹이 12개 chunk 중 하나라도 있으면 실패. 두 사례는 stage 1에서 통과했고 나머지 10개는 미확인. 발생 확률 낮음.
+ 2. build/ 디렉터리 exist_ok=False(34행): 실패한 이전 시도의 잔여 build/가 있으면 재실행이 막힌다(의도된 1회성으로 보임). RUN_LOG.txt 'x' 모드·SUPERVISOR.json 존재 assert도 같은 성격.
+ 3. 컴파일 1~2분·source 해시 30여 파일·CPU 코드 참조 12 chunk는 45분 안에 충분(추정 10분 이내).
+
+[사소]
+ - 품질 단계의 K 참조 attention에서 kp(원본 BF16 K)·kq(3팔 복원)·vq를 GPU에 동시 보유(약 0.5 GB) — 4 GiB 안.
+ - 등록문에 "nearbyintf는 기본 RNE 모드 의존"을 한 줄 적어 두면 좋다(현재 "round-to-nearest-even"로 서술돼 있어 충분).
+ - 구조화 H(평균) 후보 종료(회수 43~72% < 80%)와 fullH만 계속한다는 결정은 사전 기준에 따른 것으로 보이며 이견 없음(자료 미열람).
+
+== 미확인 ==
+컴파일·실행 없음. selftest.py 본문 미열람(SELFTEST 통과 항목만 확인). 품질 gate 통과 여부는 측정 전 미정. 이 검토는 승인이 아니라 권고다.
+
+== 추가: 빌드 환경 실패 후 회복 실행에 대한 의견(2026-11-05) ==
+- 실패 성격: /usr/local/bin/ninja Python wrapper 모듈 부재로 NVCC 0·커널 0·품질 0·타이밍 0. GPU 측정이 전혀 없었으므로 회복 실행은 "유효 결과 선택을 위한 재실행"이 아니다. 동의.
+- 회복이 유효하려면: (1) experiment.py·obq_pack.cu·LOCK.json·SELFTEST.json을 새 폴더에 바이트 동일 복사(해시 동일), LOCK의 절대 경로 해시 맵은 원본 파일을 가리키므로 worker의 LOCK 검증이 그대로 통과한다.
+  (2) 새 폴더이므로 build/·RESULT.json·RUN_LOG.txt·SUPERVISOR.json 1회성 assert가 막히지 않는다(원본 폴더에서 재실행하면 `assert not target.exists()`·build mkdir에서 실패).
+  (3) PATH는 프로세스 한정으로 /usr/bin 우선(torch cpp_extension이 PATH로 `ninja --version`을 찾음). 전역 환경 변경 0.
+  (4) 원본 started_utc + 2700 s 절대 마감 공유 — 남은 시간이 부족하면 failed_or_incomplete로 끝내고 상한을 늘리지 않는다.
+  (5) 실패한 원본 RESULT/BUILD/SUPERVISOR 보존, 회복 폴더에서 원본 경로와 실패 원인(ninja wrapper, 2차 시도의 stale .so import)을 기록.
+- 위 조건이면 수치·품질 gate·정확성 기준은 변하지 않으므로 사후 변경에 해당하지 않는다. 회복 driver 코드가 나오면 바이트 동일성과 PATH 한정만 확인하면 된다.

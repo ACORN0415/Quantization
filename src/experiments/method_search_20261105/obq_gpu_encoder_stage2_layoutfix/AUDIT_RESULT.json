@@ -1,0 +1,133 @@
+{
+  "passed": true,
+  "checks_passed": 646,
+  "locked_source_files": 137,
+  "elapsed_seconds": 0.9280578880570829,
+  "GPU_reruns": 0,
+  "paired_rounds": 240,
+  "algorithm_timing_samples": 480,
+  "result_sha256": "903804509a08ec3eb54e8627a0e39ad4e52d7a2751351e5af73c15003fe061b7",
+  "quality_sha256": "3e26401cb52117427b48a18c9d108f6adb6f8b481ec2f56ce8346849aec789eb",
+  "endpoints": [
+    {
+      "layer": 18,
+      "call": 0,
+      "sse": {
+        "R_bf16": 824.6787162686862,
+        "R_fp32": 831.8055223070182,
+        "O_gpu": 517.637537908105
+      },
+      "reference_energy": 146400.0824123404,
+      "gains": {
+        "R_bf16": 0.37231611814817966,
+        "R_fp32": 0.37769403541294877
+      }
+    },
+    {
+      "layer": 18,
+      "call": 3,
+      "sse": {
+        "R_bf16": 799.293030445207,
+        "R_fp32": 792.9786840761922,
+        "O_gpu": 524.0061423673585
+      },
+      "reference_energy": 156775.79066798568,
+      "gains": {
+        "R_bf16": 0.3444129719541198,
+        "R_fp32": 0.33919265058452674
+      }
+    },
+    {
+      "layer": 24,
+      "call": 0,
+      "sse": {
+        "R_bf16": 397.3906164341458,
+        "R_fp32": 391.8409255438946,
+        "O_gpu": 280.7633198207643
+      },
+      "reference_energy": 90149.75355275426,
+      "gains": {
+        "R_bf16": 0.293482764288443,
+        "R_fp32": 0.28347627438085776
+      }
+    },
+    {
+      "layer": 24,
+      "call": 3,
+      "sse": {
+        "R_bf16": 397.160770857379,
+        "R_fp32": 411.195024434121,
+        "O_gpu": 300.85975878373307
+      },
+      "reference_energy": 96077.3841857741,
+      "gains": {
+        "R_bf16": 0.24247362564473363,
+        "R_fp32": 0.2683283091818275
+      }
+    }
+  ],
+  "timing_summary": [
+    {
+      "layer": 18,
+      "chunk": 1,
+      "stage": "T_code",
+      "RTN_eager_ms": 0.15587249072268605,
+      "RTN_graph_ms": 0.17373147420585155,
+      "OBQ_graph_ms": 4.920167499221861,
+      "OBQ_fused_ms": 0.556815997697413,
+      "Graph_over_fused_ratio": 8.836253842504714,
+      "fused_increment_over_fastest_RTN_ms": 0.4009435069747269,
+      "conditional30_increment_over_BF16_chunk_percent": 1.101101935213369,
+      "CPU_original_rotated_unequal_elements": 0,
+      "CPU_original_scale_unequal_elements": 0
+    },
+    {
+      "layer": 24,
+      "chunk": 6,
+      "stage": "T_code",
+      "RTN_eager_ms": 0.15699997311457992,
+      "RTN_graph_ms": 0.17258396837860346,
+      "OBQ_graph_ms": 4.920753475744277,
+      "OBQ_fused_ms": 0.5577374831773341,
+      "Graph_over_fused_ratio": 8.822705348243039,
+      "fused_increment_over_fastest_RTN_ms": 0.40073751006275415,
+      "conditional30_increment_over_BF16_chunk_percent": 0.71171819369874,
+      "CPU_original_rotated_unequal_elements": 0,
+      "CPU_original_scale_unequal_elements": 0
+    },
+    {
+      "layer": 18,
+      "chunk": 1,
+      "stage": "T_encoder",
+      "RTN_eager_ms": 0.3148820251226425,
+      "RTN_graph_ms": 0.3070519887842238,
+      "OBQ_graph_ms": 5.128082470037043,
+      "OBQ_fused_ms": 0.7286985055543482,
+      "Graph_over_fused_ratio": 7.03731712216964,
+      "fused_increment_over_fastest_RTN_ms": 0.42164651677012444,
+      "conditional30_increment_over_BF16_chunk_percent": 1.1579581350367785,
+      "CPU_original_rotated_unequal_elements": 0,
+      "CPU_original_scale_unequal_elements": 0
+    },
+    {
+      "layer": 24,
+      "chunk": 6,
+      "stage": "T_encoder",
+      "RTN_eager_ms": 0.308194023091346,
+      "RTN_graph_ms": 0.3073869738727808,
+      "OBQ_graph_ms": 5.127095966599882,
+      "OBQ_fused_ms": 0.7298310520127416,
+      "Graph_over_fused_ratio": 7.025044977820937,
+      "fused_increment_over_fastest_RTN_ms": 0.42244407813996077,
+      "conditional30_increment_over_BF16_chunk_percent": 0.7502695122935203,
+      "CPU_original_rotated_unequal_elements": 0,
+      "CPU_original_scale_unequal_elements": 0
+    }
+  ],
+  "limitations": [
+    "GPU exact/lifetime assertions verified from records without GPU reexecution.",
+    "Native post-W_O SSE/NSE independently recalculated from saved CPU outputs.",
+    "30-layer estimate is not full-model generation timing.",
+    "Compiler binary reused; original compiler child RSS was not measured."
+  ]
+}

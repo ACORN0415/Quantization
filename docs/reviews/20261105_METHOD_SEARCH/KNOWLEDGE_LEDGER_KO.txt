@@ -211,4 +211,14 @@ NSE>=0.8을상관상실/판단불가로간주하는규칙도근거없어채택�
 Fable대체/검토완료허위표시없음. layoutfix는실제원칙검토+root소스검토에따라실행전행정변경(최종Fable소스/결과검토시점유예)을기록.
 품질/정확성/자원/실험대상기준변경없고원45분마감유지. 실험기술적완료와Fable최종검토/연구완료를별도표시한다.
 
-상태: 국소효과와새입력native경로신호는있으나,전체생성품질/전체GPUencoder비용/신규성의종합검증은아직미완료. 연속연구목표active.
+E017 [수정 GPU encoder 기술적 검사 통과, 최종 Claude 검토 대기]
+layoutfix RESULT SHA903804509a08ec3eb54e8627a0e39ad4e52d7a2751351e5af73c15003fe061b7, QUALITY SHA3e26401cb52117427b48a18c9d108f6adb6f8b481ec2f56ce8346849aec789eb.
+두사례×T_code/T_encoder×네구현에서정확코드/두입력소유권/입력보존통과. 네nativeendpoint에서양RTN대비SSE24.25~37.77%감소.
+전체encoder host중앙값OBQGraph약5.13ms→fused0.729~0.730ms. 빠른유효RTNGraph0.307ms이므로보정추가비용은약0.422ms/층이다.
+7.03~7.04배는기존OBQGraph대비이며RTN/전체생성대비가속이아니다. T_code융합0.557ms와전체encoder시간을구별한다.
+supervisor20.813초,원45분시작후2249.689초완료;compile0(기존동일.so재사용),새생성0. CPU원자료감사646검사통과,추가GPU0.
+root는실제RESULT/QUALITY/SUPERVISOR와소스diff를검토했다. 최종Claude소스/결과검토는미완료.
+사용자최신지시로21:50KST부터Opus5.5로검토재개하며그시각전Claude호출없음. 과거Fable원칙검토를최종Opus검토로표시하지않는다.
+같은저장량에서실행가능한보정효과검사의근거는있으므로고정된전체영상파일럿준비를계속한다. 전체생성품질/강한혼합정밀도대조/알고리즘신규성은별도미검증.
+
+상태: 국소효과와새입력native경로신호는있으나,전체생성품질/신규성의종합검증과최종Claude검토는미완료. 연속연구목표active.

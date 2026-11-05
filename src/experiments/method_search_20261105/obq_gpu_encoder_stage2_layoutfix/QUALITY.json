@@ -1,0 +1,400 @@
+{
+  "status": "completed",
+  "endpoints": [
+    {
+      "layer": 18,
+      "call": 0,
+      "native_replay_byte_equal": true,
+      "K_payload_bytes_per_chunk": 4515841,
+      "arms": {
+        "R_bf16": {
+          "sse": 824.6787162686862,
+          "nse": 0.005633048169644829,
+          "reference_energy": 146400.0824123404,
+          "repeat_bytes_equal": true
+        },
+        "R_fp32": {
+          "sse": 831.8055223070182,
+          "nse": 0.005681728511355698,
+          "reference_energy": 146400.0824123404,
+          "repeat_bytes_equal": true
+        },
+        "O_gpu": {
+          "sse": 517.637537908105,
+          "nse": 0.003535773541780958,
+          "reference_energy": 146400.0824123404,
+          "repeat_bytes_equal": true
+        }
+      },
+      "output_artifact": {
+        "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l18_read0.pt",
+        "sha256": "8d89d3adb6734991cf538cec27f9d1ab278f4c40ea1d64bb2a22848749064d69",
+        "bytes": 1574944
+      },
+      "gains": {
+        "R_bf16": 0.37231611814817966,
+        "R_fp32": 0.37769403541294877
+      }
+    },
+    {
+      "layer": 18,
+      "call": 3,
+      "native_replay_byte_equal": true,
+      "K_payload_bytes_per_chunk": 4515841,
+      "arms": {
+        "R_bf16": {
+          "sse": 799.293030445207,
+          "nse": 0.005098319243293896,
+          "reference_energy": 156775.79066798568,
+          "repeat_bytes_equal": true
+        },
+        "R_fp32": {
+          "sse": 792.9786840761922,
+          "nse": 0.00505804295865766,
+          "reference_energy": 156775.79066798568,
+          "repeat_bytes_equal": true
+        },
+        "O_gpu": {
+          "sse": 524.0061423673585,
+          "nse": 0.0033423919607401664,
+          "reference_energy": 156775.79066798568,
+          "repeat_bytes_equal": true
+        }
+      },
+      "output_artifact": {
+        "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l18_read3.pt",
+        "sha256": "05c89ce231129bb7dca708f42508f1a55c8d5a05c78cf8dc66ed243233db2b42",
+        "bytes": 1574944
+      },
+      "gains": {
+        "R_bf16": 0.3444129719541198,
+        "R_fp32": 0.33919265058452674
+      }
+    },
+    {
+      "layer": 24,
+      "call": 0,
+      "native_replay_byte_equal": true,
+      "K_payload_bytes_per_chunk": 4515841,
+      "arms": {
+        "R_bf16": {
+          "sse": 397.3906164341458,
+          "nse": 0.004408116503630804,
+          "reference_energy": 90149.75355275426,
+          "repeat_bytes_equal": true
+        },
+        "R_fp32": {
+          "sse": 391.8409255438946,
+          "nse": 0.0043465557042770536,
+          "reference_energy": 90149.75355275426,
+          "repeat_bytes_equal": true
+        },
+        "O_gpu": {
+          "sse": 280.7633198207643,
+          "nse": 0.0031144102868397292,
+          "reference_energy": 90149.75355275426,
+          "repeat_bytes_equal": true
+        }
+      },
+      "output_artifact": {
+        "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l24_read0.pt",
+        "sha256": "31475eebded31439767fb3c956b973d63d40e666f523baf72c1214f4985f04c4",
+        "bytes": 1574944
+      },
+      "gains": {
+        "R_bf16": 0.293482764288443,
+        "R_fp32": 0.28347627438085776
+      }
+    },
+    {
+      "layer": 24,
+      "call": 3,
+      "native_replay_byte_equal": true,
+      "K_payload_bytes_per_chunk": 4515841,
+      "arms": {
+        "R_bf16": {
+          "sse": 397.160770857379,
+          "nse": 0.004133759200702567,
+          "reference_energy": 96077.3841857741,
+          "repeat_bytes_equal": true
+        },
+        "R_fp32": {
+          "sse": 411.195024434121,
+          "nse": 0.004279831595321529,
+          "reference_energy": 96077.3841857741,
+          "repeat_bytes_equal": true
+        },
+        "O_gpu": {
+          "sse": 300.85975878373307,
+          "nse": 0.0031314316197659396,
+          "reference_energy": 96077.3841857741,
+          "repeat_bytes_equal": true
+        }
+      },
+      "output_artifact": {
+        "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l24_read3.pt",
+        "sha256": "b502e6a3fb2c4028ecec2cead20941d75db09ae7c88aa6d7e465e6322c147ecf",
+        "bytes": 1574944
+      },
+      "gains": {
+        "R_bf16": 0.24247362564473363,
+        "R_fp32": 0.2683283091818275
+      }
+    }
+  ],
+  "packets": [
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l18_c1_R_bf16.pt",
+      "sha256": "c081acc66044fc988b0b1c73b7449789aebe806cfbf6f8de1ac10650ad7cfe0b",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l18_c1_R_fp32.pt",
+      "sha256": "5a91f325c687e1d7f98e615a5653afc59cefcf816c4b214aa8ecbe1e7e9633d4",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l18_c1_O_gpu.pt",
+      "sha256": "81fd01178f2498ec72067f35f66aa1c2d92f9d69a9ffec165a751fb91ef4ae36",
+      "bytes": 4517743,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l18_c2_R_bf16.pt",
+      "sha256": "be64401b8faec4a7c0d8361c117171cc61831e413465d0016564294a33093f38",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l18_c2_R_fp32.pt",
+      "sha256": "eefb68438b1f79789d94ddcab44a7f373169d4edb45eb36b023054bc1e6d5810",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l18_c2_O_gpu.pt",
+      "sha256": "9685c3ecd751b11af4bf791631df6db92ed1e0ee5336c1c0229b03ef98edd156",
+      "bytes": 4517743,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l18_c3_R_bf16.pt",
+      "sha256": "fc8e23315a4c6c6e8a1992c3a300add726d97fdb3b85a3f287e2132df533531a",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l18_c3_R_fp32.pt",
+      "sha256": "c1e949d59cb07a61bb0481139cc0f7dab27e1c7103a6c58ac8aa15e00b35ba77",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l18_c3_O_gpu.pt",
+      "sha256": "19b4bddbb00f81d8e46da4c2cdbe5cf9f3037ee9655d8e8fced0f134f7c73722",
+      "bytes": 4517743,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l18_c4_R_bf16.pt",
+      "sha256": "4df60f9251835ca3f5a1af64a322f716acef03eeeb72112ff8a3ab7cb33f27b8",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l18_c4_R_fp32.pt",
+      "sha256": "1fcdc432066441d4f6cffef231e9ea2664663d579c159347d6916af40ba475c5",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l18_c4_O_gpu.pt",
+      "sha256": "e1483d5a9746f1bd6087f85ea69ee9d2e577bed16ce9a60d24323a712a26fbff",
+      "bytes": 4517743,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l18_c5_R_bf16.pt",
+      "sha256": "51fc0b8751378ef08ac377335137e489217d647f7adce591e7a0fe3b8b8a0080",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l18_c5_R_fp32.pt",
+      "sha256": "92989ca6815dba83c84a289590ec97b8cb53fc1ada8735d10c65a0e346d88bf1",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l18_c5_O_gpu.pt",
+      "sha256": "48c79a1076b416f7a162943b70ddc759d1f8794e98b72e9ac174d00641a51aa4",
+      "bytes": 4517743,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l18_c6_R_bf16.pt",
+      "sha256": "72af86eca9989545cbb39728c00baaefd380027d318fbc9fb48b18e81ccdc5af",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l18_c6_R_fp32.pt",
+      "sha256": "92a3efe2b81bda57706d3e0abc77314d83907db731b8f2df1ea33de78fbcde8f",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l18_c6_O_gpu.pt",
+      "sha256": "3531499a1c842d01673b0ad55159b016f157e99337c91abaa95c92470769e4ab",
+      "bytes": 4517743,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l24_c1_R_bf16.pt",
+      "sha256": "83da934e7a078ad05f2e79c7cb82934e360f8bf9f9149bdd4bcc4d45ee7163e5",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l24_c1_R_fp32.pt",
+      "sha256": "1b74aa2cee8b620fb06c4ec579f3bf0c68d2f3d0ea50b8f36b0949b4167a7206",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l24_c1_O_gpu.pt",
+      "sha256": "cfb7a23e90a1a3c72cd80fa279ab912e56aac6fef6f6de7467332f2809d7c005",
+      "bytes": 4517743,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l24_c2_R_bf16.pt",
+      "sha256": "3647edf954468fc2dc04a558b7646742beba10d50c3918bb61569c5ac3820553",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l24_c2_R_fp32.pt",
+      "sha256": "99d6f5202ac11574217b6cec49d48ae441f475e02e2c48459addf67f57e5e34e",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l24_c2_O_gpu.pt",
+      "sha256": "85329caa5b6b89456cb60d08147fb475b1eb64225b57d49965059aaa658c7146",
+      "bytes": 4517743,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l24_c3_R_bf16.pt",
+      "sha256": "9278a436052d13fc228a552a19c3e103a1af9f28fcf2d47fc3a756223a8385b4",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l24_c3_R_fp32.pt",
+      "sha256": "b846f26c78707c43ac218cd839d4a009ace65e1121bdd501d05eb93fb2a5084f",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l24_c3_O_gpu.pt",
+      "sha256": "315285968bf71e27c8f1f1392c5b4ff0fe21d30b6fd1eec747bf80819a09795c",
+      "bytes": 4517743,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l24_c4_R_bf16.pt",
+      "sha256": "5cd89740ebbe63de2e48b3874731346486a69072508331b854d5c3f0c48ce864",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l24_c4_R_fp32.pt",
+      "sha256": "043f2b9541e65d8298b30a0c354a016db1852f61a41d2fd57b9ffc930fa00fa1",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l24_c4_O_gpu.pt",
+      "sha256": "bbaf47e20e9e248dd574183b99d88de95ec7124527e52be7bf86aedc24e6f694",
+      "bytes": 4517743,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l24_c5_R_bf16.pt",
+      "sha256": "e828cd0a0153f5947f5e01d18f7683065b4de71afb5583ca36d140627192a1ce",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l24_c5_R_fp32.pt",
+      "sha256": "02a665f740704563dc52d3e35f5663baf150bfd98f1b88312ea916414c608338",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l24_c5_O_gpu.pt",
+      "sha256": "3e0e98173c692b4cc123282aa4aea27f0ea3be55e81d680ce0123c17b647393d",
+      "bytes": 4517743,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l24_c6_R_bf16.pt",
+      "sha256": "d83962908b711b7dfad9dc1fc88a485526a456cf4e10383b40e952edb61b11d0",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l24_c6_R_fp32.pt",
+      "sha256": "2d191efb87c85f058941fdb914f3b9ec7d9db2121c670cc3f9800b017ecdf26b",
+      "bytes": 4517750,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/quality_l24_c6_O_gpu.pt",
+      "sha256": "340af593d1b7312ca6d2ce6cc7af302976c07c3836ac222d778d90c77220a00d",
+      "bytes": 4517743,
+      "GPU_reader_vs_CPU_unequal_elements": 0,
+      "V_GPU_restore_exact": true
+    }
+  ],
+  "quality_gate": true
+}

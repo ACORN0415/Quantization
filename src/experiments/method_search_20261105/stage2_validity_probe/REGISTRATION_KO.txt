@@ -1,0 +1,5 @@
+Stage2 수명 gate 실패의 최소 유효성 조사. root가2026-11-05실행승인.
+원본 및envfix실패기록불변. envfix의동일experiment.py(8d5aea59...)·동일이미빌드된.so(ae6e1a50...)를사용한다. compile0,quality0,timing0,수치설정변경0.
+L18 T_encoder만네기존구현을순서대로비교한다. 원본case와고정변형(-K×.75,Ucolumn×.7..1.3)입력이다. ref1,ref2,첫출력보존을각각packed/scale/sentinel별전원소byte/원소불일치수로저장한다. 입력stride/contiguity를기록한다.
+GPU전처리helper도같은함수를eager반복2회와별도Graph에서원본/변형각1회비교해z/scale의불일치를분리한다. 이는품질/방법팔이아니라실패원인계측이다. tensor원자료보존. 같은원래code가미리실행한T_code전경로를재현하지않으므로메모리상태까지원본실패와동일한재실행은아니다.
+실행cap최대120초와원래절대deadline1793875658.1258163중빠른것,자기processgroup정리5초포함. 새로운전체모델로드/생성/마감연장없음. 결과차이는성공으로완화하지않고원인범위만정한다.

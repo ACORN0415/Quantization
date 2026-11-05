@@ -1,0 +1,29 @@
+Stage2 T_encoder 정확성 실패의 최소 유효성 조사 — 2026-11-05
+
+결론: 이번 조사에서는 owned 출력의 수명은 네 구현 모두 정상이다. 불일치는 두 번째 입력의 Graph 전처리 결과가 eager reference와 달라지는 데서 관측됐다. fused OBQ 자체의 두 입력 결과는 reference와 정확히 같았다. 기존 envfix의 실패 판정은 유지하며 이 조사로 통과로 바꾸지 않는다.
+
+관측
+구현        첫입력reference    두번째packed불일치    두번째scale불일치    첫출력보존
+RTN_eager   정확일치           0                    0                    정확일치
+RTN_graph   정확일치           9                    6                    정확일치
+OBQ_graph   정확일치           396                  6                    정확일치
+OBQ_fused   정확일치           0                    0                    정확일치
+모든출력주소는별개였고원본/factor도보존됐다. sentinel은모든검사에서정확일치했다. OBQ의packed불일치수가더큰것은순차보상에따른전파와양립하지만이를품질손상으로해석할자료는없다.
+동일gpu_frames의별도전처리검사:첫입력은Graph/eager의z·scale가정확히같았다. 두번째입력은z1080원소(최대절대0.015625),scale6원소(최대절대0.00390625)가달랐다. 각입력의eager반복2회는z·scale모두같았다.
+
+layout과dispatch 근거
+원본GPU K와Graph static K의stride=[50319360,1536,128,1],두번째입력=[7188480,1536,128,1]. shape는모두[1,4680,12,128]이고contiguous=true였다. 크기1의선행차원stride만다르다.
+공식PyTorch2.6 ATen should_fold는인접선행stride의곱관계를검사해mm/bmm경로를선택한다. 이C++조건은singleton차원도검사한다. 소스:
+https://github.com/pytorch/pytorch/blob/v2.6.0/aten/src/ATen/native/LinearAlgebra.cpp#L1824
+추가CPU-only profiler에서동일원본·변형입력의FP32cast는각stride를보존했고원본은aten::bmm,변형은aten::mm를호출했다. 이는위조건과일치한다. 로컬Pythondecomposition은singleton을건너뛰어조건이달라eager근거로사용하지않았다.
+따라서원본layout으로capture한Graph가고정된행렬곱경로를사용하고,새layout의eager reference는다른경로를선택한다는설명에구체적근거가있다. 다만이조사에CUDA kernel trace는없으므로cuBLAS의저수준알고리즘/누산명령까지직접확인했다고주장하지않는다.
+
+범위와기록
+L18 T_encoder한사례의네기존구현만조사했다. 기존동일experiment.py·동일.so를로드했으며컴파일0·품질평가0·타이밍0·새모델/생성0이었다. 실제GPU조사1.964899초,원래절대마감내,120초상한이내였다. 전처리관찰을위해동일helper를별도Graph에도capture했으며새방법팔이아니다.
+원본T_code전경로의메모리상태까지재현한것은아니지만같은불일치형태가나왔고이번에는구현별원인을구분했다. 원본실패·envfix실패자료는변경하지않았다.
+TENSORS.pt에actual/reference packet과Graph/eager z·scale를보존했다. SHA469a4c0a635d6880a1a4446b95dd4c1f1dd8f6185869dd59fab31fc1379563dc,151751114B.
+AUDIT_CPU.json에서49검사통과:원본source/binary해시·저장된비교원자료의모든불일치수/byte판정/최대차이재계산. GPU재실행0. CPU profiler는CUDA_VISIBLE_DEVICES를비운상태에서CPU활동만사용했으며device count문의경고가났지만GPU계산은없었다.
+RESULT sha27d34181cd48f990af0603f1a1354f2f8fb1cffc528847d4a37995aefdc88061.
+
+가능한다음수정의정의(이번에는실행하지않음)
+`.contiguous()`는두입력이이미contiguous라singletonstride를고치지않을수있다. 회전을2D mm로명시(k.reshape(-1,128).float() @ H)하고원형상으로복원하면dispatch정의를같게할수있다. 이것은과거bmm와의반올림경로차이를수반하므로별도GPU전처리정의로등록하고exact code/lifetime및기존native4endpoint20%gate를그대로다시검증해야한다. 이번실패를허용오차로통과시키는방법은권하지않는다.

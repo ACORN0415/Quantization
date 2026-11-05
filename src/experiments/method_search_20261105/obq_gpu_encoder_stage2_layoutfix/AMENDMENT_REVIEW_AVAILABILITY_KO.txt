@@ -1,0 +1,5 @@
+실행 전 행정 수정: 검토 일정만 변경
+실제 Fable의 원칙 검토는 완료됐으나 최종 source diff 검토는5시간사용한도로중단됐다. rate_limit근거는FABLE_AVAILABILITY_EVIDENCE.json에필요최소한으로남겼다. 21:50 KST해제예정이며최종소스/결과검토는PENDING이다.
+LAYOUT_REVIEW_AT_LOCK_KO.txt는실제원칙검토의원문snapshot이며최종source승인을뜻하지않는다. root는SOURCE_DIFF/명세/driver전체를검토했고,남은원래절대deadline안의실행을명시승인했다.
+수학코드970c53ee.../CUDA바이너리/후보/정확일치/owned출력/4endpoint각양RTN20%/타이밍팔/자원상한/절대마감은변경없다. 소스수정또는과학gate완화가아니며추가사용자허가를요구하지않는다.
+기술실행완료상태와연구검토완료를구분한다. 성공해도최종Fable검토완료라고표시하지않고,독립최종검토를받기전연구완료로확정하지않는다.

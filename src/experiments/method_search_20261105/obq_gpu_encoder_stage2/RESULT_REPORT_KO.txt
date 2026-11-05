@@ -1,0 +1,15 @@
+OBQ GPU encoder 2단계 최초 실행 결과 — 환경 실패 보존
+
+결론: 수학·품질·속도 결과를 얻기 전에 빌드 환경 실패로 종료했다. 방법의 가설 실패 또는 CUDA kernel 정확성 실패가 아니다.
+첫 load 시도는 PATH가 /usr/local/bin/ninja를 선택했으며, 이 파일의 /usr/bin/python3가 Python ninja 모듈을 찾지 못했다. RuntimeError: Ninja is required to load C++ extensions로 종료됐다.
+등록된 같은소스두번째load는Torch JIT가No modifications로build를생략하고없는.so를읽으려해ImportError가났다. load시도2회, 실제 NVCC compiler 호출0회, custom kernel/정확성/수명/품질/timing 실행0회다. 두 번째가실제로컴파일을수행한것처럼쓰지않는다.
+CUDA 초기화와65536B Hadamard행렬전송은수행했다. 따라서GPU사용전체가0회는아니다. 새모델로드0·생성0. supervisor1.866779초,worker0.935283초,RSS647868416B,peakGPUallocated65536B. NVCC/ninja자식의peakRSS는별도계측하지않았다.
+
+읽기전용진단
+/usr/local/bin/ninja는#!/usr/bin/python3의Pythonwrapper다. /usr/bin/ninja는정상ELF이며버전1.13.2다. /usr/bin/nvcc는CUDA12.4.131, Torch CUDA_HOME=/usr였다. 따라서설치나전역환경변경없이특정후속프로세스PATH의/usr/bin을우선시키는복구를검토할수있다.
+현재experiment.py/CUDA소스/LOCK/RESULT/BUILD/RUN_LOG는변경하지않았다. 같은폴더에서추가시도하지않았다.
+
+감사
+AUDIT_FAILURE.json:135검사통과. source123개·리뷰스냅샷·등록·합성검사·결과·로그해시검증. timings빈목록/QUALITY없음/.so없음/실패상태명시를확인했다. GPU재실행0.
+RESULT sha256 a35980f825f185d4f725ba8a4fc667b56720c09f216da0bb0802f8a51d79b040.
+실패를성공으로처리하거나정확성기준을완화하지않는다. 실제방법검증은환경을고친별도등록에서수행해야한다. root는원본실패보존·동일수학소스·같은최초45분절대마감의별도envfix회복을지시했다. 이는이번폴더의결과를덮어쓰는재실행이아니다.

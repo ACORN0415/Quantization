@@ -1,0 +1,49 @@
+OBQ GPU encoder 2단계 사전 등록 초안 — 2026-11-05
+현재 상태: 코드/CPU 합성 검사만. root와 실제 Fable 검토 및 별도 실행 지시 후 LOCK한다. 컴파일·GPU 실행 전이다.
+
+질문과 범위
+기존 GPTQ/OBQ의128채널 순차 보상을 같은 INT4 reader 형식으로 실행하는 비용을 줄일 수 있는지 본다. 새 양자화 알고리즘의 신규성을 주장하지 않는다.
+Stage1에서 exact CPU packet과 일치하는 code 생성이 가능했으나 eager OBQ 약7.9ms, Graph borrowed output 약4.93ms였다. RTN은 약0.15ms였다. Graph의 출력 수명 결함과 전체 GPU preprocessing CPU 불일치를 이번 별도 등록에서 각각 처리한다. Stage1 코드/LOCK/결과는 수정하지 않는다.
+이번 검사는 code 수학/소유권, native GPU 품질, 비용을 분리한다. 실행 순서는 compile → 두 사례·두 stage의 code/lifetime 정확성 → GPU reader를 포함한4개 native endpoint 품질 → 품질gate통과시만3개 paired 비용검사다. code일치로품질을대신하지않으며품질미달시timing확대는생략한다.
+
+사례와 통제
+비용 사례: 기존 fresh causal 캡처 L18 write chunk1, L24 write chunk6. Stage1의 prepared 파일2개를 해시로 잠가 재사용한다. 입력/정밀도/순서/비트/패딩을 변경하지 않는다.
+원본 K [1,4680,12,128] BF16, frame1560×3, frame마다8토큰 padding, group16, K rotated [3,98,16,12,128] BF16, scale [3,98,1,12,128] FP16, 고정 offline p0 factor U [12,128,128] FP32.
+K payload4515841B = packed3612672B+scale903168B+sentinel1B. 새로운 per-chunk index나 factor를 cache payload에 숨겨 넣지 않는다. 고정 U786432B/층은 별도 encoder 상주 상태이고 현재 두 층을 GPU에 상주시킨다. U 준비 CPU 비용은 Stage1 기록을 연결하며 신규 H/통계 탐색은 하지 않는다.
+12개의 실제 write K(두 층×chunk1..6)와 native reader Q/Kcurrent/V/W_O는 기존 캡처다. 보정 자료와 p0 H는 고정이며 이번 품질 결과를 보고 factor·damping·층·스케일을 고르지 않는다. 이미 사용한 개발 자료이므로 독립 보류 입력이나 새로운 효과 재현 횟수로 세지 않는다.
+
+한 개 고정 CUDA kernel
+- warp1개가 token/head 행1개, block4warp=128thread, block은 연속4행(보통 서로 다른head)을 맡는다. grid는 전체56448행/4=14112block. 동일head4token 배치는 이번에 시도하지 않는다.
+- 각lane은 channel lane, lane+32, lane+64, lane+96의 FP32 값4개·scale4개·code4개를 유지한다. owner 선택과 저장은 상수 index로 적어 local array spill을 피하도록 한다. ptxas register/spill 보고를 보존하고 실제 spill0을 실행 전 보장하지 않는다.
+- channel j=0..127 순서를 유지한다. ownerlane이 RN divide→round-to-nearest-even→[-8,7] clipping을 하고 __fsub_rn/__fmul_rn/__fdiv_rn으로 residual을 계산한다. warp shuffle 뒤 나머지 channel에 같은 순서로 보상한다. pack은 adjacent channel 두 개를1byte로 저장한다.
+- FP32 factor를 그대로 사용한다. --fmad=false, --prec-div=true, --prec-sqrt=true, --ftz=false, SM89 고정. fast-math/저정밀 factor/순서 변경/approximate division 없음. scale가양수이고 모든입력/scale/factor가유한하며 U가상삼각이고양의대각인지 사전에 검사한다.
+- Torch extension의 현재 CUDA stream을 사용한다. 한 고정 kernel만 작성하고 block/warp 배치나 compilation flags를 결과에 따라 탐색하지 않는다. 컴파일은 최대2회이며 동일 소스·동일 flags의 재시도만 허용한다. source 변경이 필요하면 이번 실행을 실패로 종료하고 별도 검토한다.
+
+정확성 및 소유권
+T_code는 Stage1의 immutable CPU rotated z/scale/U를 GPU로 보낸다. RTN_FP32 eager/Graph, OBQ Graph/fused 모두 동결 CPU packet과 packed/scale/sentinel 전 원소 바이트 일치해야 한다. fused mismatch는 tolerance로 완화하지 않고 즉시 실패한다.
+두 실제 사례는 동일한 공유 Graph 객체를 순차 사용한다. Graph는 호출마다 z+scale(또는 원본K)를 static buffer에 복사하고, OBQ는 U도 매번 복사한다. RTN은 쓰지 않는 U를 복사하지 않는다. 입력/factor 복사 비용은 timed 범위다.
+Graph replay 뒤 capture 밖에서 packet3필드를 clone하여 다음 호출이 이전 출력을 덮어쓰지 못하게 한다. eager/fused는 packed/sentinel이 원래 새 할당이므로 불필요한 추가 packed복사를 강요하지 않는다. T_code scale만 clone한다; T_encoder scale은 매호출새계산이다. 공통 계약은 모든 출력필드가 입력이나 다음 출력과 alias하지 않는 owned packet이다.
+각 구현·사례·stage마다 두 다른 입력을 연속 호출해 첫 packet의모든바이트가보존되는지 검사한다. 두 번째는 z 또는K의부호/크기변경, T_code scale×1.25, U의column별0.7..1.3배로 구성한다. 기존 실제 효과검사가 아니라 입력 갱신/그래프 stale state를 잡기 위한 고정 수명 검사다. 두 packet의packed결과가실제로달라야한다. 두 호출의 CPU code reference 일치·첫 packet불변·출력주소독립·원본/factor보존을 확인한다.
+
+전체 GPU encoder variant
+원본 resident BF16 K→Torch FP32 Hadamard matmul(TF32 off)→BF16→framepad→BF16 absmax/7 scale→FP16→해당 code+pack. GPU matmul은 CPU와 일부반올림이달랐으므로 이번 경로를 native GPU variant로 명시한다. Stage1의 exact CPU preprocessing gate를 통과했다고 표현하지 않는다.
+GPU가만든z/scale를 CPU로 복사한 뒤 동일code-reference를 계산하여 fused/Graph/eager와전원소일치를확인한다. 즉 전처리뒤동일입력에서코드수학/소유권을검증한다. originalCPU z/scale 대비 불일치 수와boolean도그대로보고한다. 이 자기일관성검사만으로 품질을보장하지않는다.
+
+비용 측정
+T_code와 T_encoder별로 Graph2개(RTN,OBQ)를 만들고 두 사례가 공유한다. prepared2개·factor2개·Graph 상주메모리를포함한다. stage별Graph준비시간은 두 사례에동일하게링크되며 두 번 지출했다고합산하지않는다.
+각 stage·사례에3개 paired 비교를 고정한다: (RTN eager,OBQ Graph), (RTN Graph,OBQ Graph), (OBQ fused,OBQ Graph). 각 pair5warmup+20round AB/BA교차, GPU event와synchronized host walltime병기. 새eagerOBQ팔은추가하지않으며 Stage1수치로여기새owned정의의우열을대신하지않는다.
+고정세쌍의시간·IQR·paired차이·원자료를 모두보고한다. 비용 기준 RTN은같은stage에서빠른유효구현을사용할수있지만두RTN구현의모든시간을공개하며, 이는품질팔선택이아니다. Graph anchor가세쌍에서반복측정된다는점을유지한다.
+회전/scale/분할/코드/pack/할당/입력과U D2D/owned출력복사까지각정의대로포함한다. GPU decoder는품질검증경로이며T_encoder에몰래포함하지않는다;별도decoder속도최적화나decode단독타이밍은이번범위가아니다. 컴파일/초회전송/Graph준비/예열은steadystate에서제외하고전체45분및별도준비항목에포함한다. 5warmup은pair전체실행시간에포함되나개별타이밍항목은없다.
+공유 Graph의Ucopy와ownedcopy 시간은현재total에포함되며별도커널비율을추정하지않는다. 전체worker의누적max allocated/reserved를기록한다;이수치로각모드의독립peak를비교하지않는다. 원본cache가전량상주하는rollout의전체peak측정도아니다.
+아직 요구된서비스ms상한이없으므로임의1ms·5%기준은두지않는다. fused가정확하면서동일stage의강한Graph보다실제로빠른지·메모리·준비비용을보고다음자원배분을판단한다. 명확한효과가없으면kernel튜닝으로연장하지않는다.
+
+native 품질(code/lifetime 통과 후, 본 타이밍 전)
+두 층각각과거6개write chunk를모두새GPU전처리로encode한다. 비교는동일새GPU z/scale의R_bf16, R_fp32, O_gpu(fused)3팔이다. V는기존동결INT4 packet이며, currentK/V·Q·routing·W_O를고정한다. cache payload는모든팔동일하다.
+새로고정한restore_gpu가GPU에서INT4 unpack→BF16 dequant→frame unpad→FP32 inverseHadamard(TF32 off)→BF16을수행한뒤원래nativeattention을호출한다. 따라서K encoder와reader가모두GPU수치경로다. CPU common.restore와다른원소수를해석용으로기록하되CPUdecoder를새품질팔로추가하지않는다. V도GPU unpack/dequant하며기존CPUrestore와전원소비트일치를확인한다. 원래denseBF16 replay가캡처의128개query 출력과정확일치해야한다. 품질 endpoint는L18/L24×소비자chunk7 call0/3의4개다. reference/sourcequery선택/연산형상을변경하지않는다.
+팔별attention2warmup+3회반복출력일치확인. post-W_O SSE/NSE와referenceenergy, 출력텐서/packet을보존한다. 다음rollout검토gate는4 endpoint전부에서O_gpu가양RTN대비각각20%이상SSE감소한다는기존조건을유지한다. 하나라도미달이면registered completed_quality_gate_failed로끝내고타이밍확대및rollout을진행하지않는다. 좋은endpoint선택·층제외·factor탐색으로구제하지않는다. code융합이유효하다는결론과품질gate통과를분리한다.
+기존CPUencoder의native결과는배경자료이며새GPUbaseline과다른수치경로를섞어우열을만들지않는다. 이를새독립자료나전체모델품질로해석하지않는다.
+
+자원 및 종료
+준비코드작성/CPU합성테스트는실행45분에포함하지않는다. supervisor run시작부터2700초: source검증·compile최대2회·전송·Graph·정확성/수명·warmup/timing·품질/저장모두포함. GPU유휴확인후실행, 새모델로드0, 영상생성0.
+CPU4threads/RSS8GiB, GPU관측peakallocated4GiB, 새폴더2GiB. sourcehash를LOCK하고원본자료/코드를수정하지않는다. attention.py·causal_model.py·store.py·lockstep.py도sourcehash에포함한다. supervisor가worker를독립processgroup으로시작하고실행2695초+정리여유5초를전체45분에포함한다. timeout이면자신의worker processgroup만SIGTERM→필요시SIGKILL하여NVCC/ninja자손도정리한다. 실제정리완료경과시간을남기며OS scheduling을통제하는엄밀한hard real-time 보장은아니다. GPU/RSS/disk는단계/round후관측기반상한으로선제allocation금지가아니다.
+필수hash·입력·exactcode·lifetime·nativeBF16 gate 실패시failed_or_incomplete, 이전기록보존, 이후품질/rollout으로넘어가지않는다. 정확성기준/대상/목적함수변경및튜닝재실행없음. 비용과품질해석은root/Fable독립검토뒤확정한다.

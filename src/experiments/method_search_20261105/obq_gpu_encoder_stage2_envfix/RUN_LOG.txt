@@ -1,0 +1,24 @@
+Detected CUDA files, patching ldflags
+Emitting ninja build file /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_envfix/build/build.ninja...
+Building extension module obq_stage2_50b86fd47474...
+Using envvar MAX_JOBS (2) as the number of workers...
+[1/2] /usr/bin/nvcc --generate-dependencies-with-compile --dependency-output obq_pack.cuda.o.d -ccbin /usr/bin/gcc-13 -DTORCH_EXTENSION_NAME=obq_stage2_50b86fd47474 -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1011\" -isystem /home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torch/include -isystem /home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -isystem /home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torch/include/TH -isystem /home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torch/include/THC -isystem /home/acorn0415/sfq_data/env/include/python3.10 -D_GLIBCXX_USE_CXX11_ABI=0 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_89,code=sm_89 --compiler-options '-fPIC' -O3 --fmad=false --prec-div=true --prec-sqrt=true --ftz=false -lineinfo --ptxas-options=-v -std=c++17 -c /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_envfix/obq_pack.cu -o obq_pack.cuda.o 
+ptxas info    : 10 bytes gmem, 80 bytes cmem[4]
+ptxas info    : Compiling entry function '_Z15obq_pack_kernelPK13__nv_bfloat16PK6__halfPKfPhl' for 'sm_89'
+ptxas info    : Function properties for _Z15obq_pack_kernelPK13__nv_bfloat16PK6__halfPKfPhl
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 40 registers, 392 bytes cmem[0]
+[2/2] /usr/bin/g++-13 obq_pack.cuda.o -shared -L/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torch/lib -lc10 -lc10_cuda -ltorch_cpu -ltorch_cuda -ltorch -ltorch_python -L/usr/lib64 -lcudart -o obq_stage2_50b86fd47474.so
+Loading extension module obq_stage2_50b86fd47474...
+Traceback (most recent call last):
+  File "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_envfix/experiment.py", line 296, in <module>
+    {'lock':lock,'run':run,'worker':worker}[a.action]()
+  File "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_envfix/experiment.py", line 235, in worker
+    life=check_lifetime(stage,fs,args,hm)
+  File "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_envfix/experiment.py", line 119, in check_lifetime
+    two=f(second);pcheck(two,ref2);pcheck(one,snapshot)
+  File "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_envfix/experiment.py", line 28, in pcheck
+    def pcheck(a,b):v1.packet_check(a,b)
+  File "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_cost_stage1/benchmark.py", line 75, in packet_check
+    assert all(checks),f'packet bytes differ from frozen CPU reference: packed/scale/sentinel={checks}'
+AssertionError: packet bytes differ from frozen CPU reference: packed/scale/sentinel=[False, False, True]

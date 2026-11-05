@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "/usr/local/bin/ninja", line 5, in <module>
+    from ninja import ninja
+ModuleNotFoundError: No module named 'ninja'
+No modifications detected for re-loaded extension module obq_stage2_50b86fd47474, skipping build step...
+Loading extension module obq_stage2_50b86fd47474...
+Traceback (most recent call last):
+  File "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2/experiment.py", line 296, in <module>
+    {'lock':lock,'run':run,'worker':worker}[a.action]()
+  File "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2/experiment.py", line 219, in worker
+    torch.cuda.reset_peak_memory_stats();hm=c.hadamard().cuda();EXT=build_extension();guard(begin)
+  File "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2/experiment.py", line 40, in build_extension
+    ext=load(name=name,sources=[str(P/'obq_pack.cu')],build_directory=str(build),
+  File "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torch/utils/cpp_extension.py", line 1380, in load
+    return _jit_compile(
+  File "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torch/utils/cpp_extension.py", line 1823, in _jit_compile
+    return _import_module_from_library(name, build_directory, is_python_module)
+  File "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torch/utils/cpp_extension.py", line 2245, in _import_module_from_library
+    module = importlib.util.module_from_spec(spec)
+  File "<frozen importlib._bootstrap>", line 571, in module_from_spec
+  File "<frozen importlib._bootstrap_external>", line 1176, in create_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+ImportError: /home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2/build/obq_stage2_50b86fd47474.so: cannot open shared object file: No such file or directory
