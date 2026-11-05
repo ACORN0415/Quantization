@@ -1,0 +1,99 @@
+{
+  "status": "cause_confirmed_read_only",
+  "layer": 18,
+  "chunk": 1,
+  "arm": "R_bf16",
+  "actual_packet_files_loaded": 1,
+  "allowed_packet_path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c1_R_bf16.pt",
+  "file_sha256": "fb372d36638f90d2fac388d6e6856388503631d64d5e70b78bd4c77f09371835",
+  "file_matches_registered_artifact": true,
+  "file_hash_preserved": true,
+  "packed": {
+    "dtype": "torch.uint8",
+    "shape": [
+      3612672
+    ],
+    "numel": 3612672,
+    "bytes": 3612672,
+    "sha256": "6c3a46094eaf1174da703ee4ad9cb03352f35c3f98ca71c6e14582095e07ff21"
+  },
+  "unpacked": {
+    "dtype": "torch.int8",
+    "shape": [
+      3,
+      98,
+      16,
+      12,
+      128
+    ],
+    "numel": 7225344,
+    "bytes": 7225344,
+    "sha256": "46b803af4c262c0fc77c5bd894fda62ed518d396d3f3e66e1885ff392b72bc9b"
+  },
+  "scale": {
+    "dtype": "torch.float16",
+    "shape": [
+      3,
+      98,
+      1,
+      12,
+      128
+    ],
+    "bytes": 903168,
+    "sha256": "3414b0e062d8e4d3a93ced67cd9256f95864fe888afb1389e7d39c3c41c04a73"
+  },
+  "manifest_code_sha256": "6c3a46094eaf1174da703ee4ad9cb03352f35c3f98ca71c6e14582095e07ff21",
+  "manifest_scale_sha256": "3414b0e062d8e4d3a93ced67cd9256f95864fe888afb1389e7d39c3c41c04a73",
+  "scale_matches": true,
+  "packed_matches_code_anchor": true,
+  "unpacked_does_not_match_code_anchor": true,
+  "signed_code_pack_roundtrip_exact": true,
+  "old_and_V4_hash_helper_same_on_all_three": true,
+  "toy": {
+    "signed_codes": [
+      -8,
+      -1,
+      0,
+      1,
+      7,
+      -3
+    ],
+    "packed_bytes": [
+      248,
+      16,
+      215
+    ],
+    "packed_sha256": "6fd1856b57f6282fb21cb8715ebdc69182ed2feec727d19069caf71e8e8ac3de",
+    "unpacked_sha256": "efbec5b79fd9dfac5ecd68d2364c159bffaa87a0eabc8b51d371990e4c972357",
+    "same_numeric_codes_but_different_serializations": true
+  },
+  "cause": "manifest code_sha256 means packed uint8 payload; driver compares unpacked signed int8 logical-code payload",
+  "producer_source_sha256": "89483a35303b5d4ddc099854c9e1a06f9522cf84430b2728739270ccf88fb05c",
+  "producer_manifest_sha256": "44079f0ea622e9789ce62c5d9da0a53303127b85995fa11ee92fa2a80438a10a",
+  "binding_sha256": "7b65bd1c71c5f80a8391af5e21cebb06a9a904844a6fe28ef342f43bee8c526b",
+  "driver_sha256": "f3e250ad6a0afa9b5147063fc90563ba23ce4d64d0b857489551c2eb7d3eab15",
+  "synthetic_builder_sha256": "bd8597c1401ab4069249bc1c0152923d09e3df4b7c889d3a0cc64e2f4c6d1258",
+  "synthetic_fixture_limitation": "builder used unpacked hash, mirroring the driver schema mistake; full synthetic completion did not test original producer hash semantics",
+  "minimum_proposed_change": "Compare tsha(kp[packed]) to manifest code_sha256; keep scale check, whole-file SHA and byte/shape checks. Any unpacked-code hash must be separately named/recorded. No quantization/restore/scoring arithmetic change.",
+  "source_only_reason": "base restoration occurs before hash predicate; predicate only compares digests and branches. Read-only digest check cannot change packet or decoded tensors.",
+  "protected_source_and_result_sha256_preserved": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/RUN.json": "6d667837f032b0b3cea211084ab73af66e49ffe29d27f01f1cdde91315892c40",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/LOCK.json": "6554e38a9051bffabe638e7cba47cc5ecae7d0f13211faecb982c813dbcf9c9b",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/FAILURE_arm_18_R_bf16.json": "fcfe78503fd712b624ba97966f6971ef4e31bb98d39a80d33d73f50f52886128",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/arm_18_R_bf16.log": "87fb40da2eb2c54ff3b259f11a9a40a9e4919c6b15bc67613b3526378658859a",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/diagnose.py": "f3e250ad6a0afa9b5147063fc90563ba23ce4d64d0b857489551c2eb7d3eab15"
+  },
+  "actual_effect_scores_computed": 0,
+  "other_packets_loaded": 0,
+  "GPU_calls": 0,
+  "code_or_original_result_changes": 0,
+  "reruns": 0,
+  "elapsed_seconds": 0.0677700670203194,
+  "peak_RSS_bytes": 479567872,
+  "nearby_same_field_different_schema": {
+    "producer": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/diagnose.py",
+    "sha256": "bc99a8312ccb8695f4db8f8d24959654fcda2899002930292ec71661cc2fc4a2",
+    "definition": "encode() info code_sha256 = c.tsha(codes): unpacked int8 codes",
+    "implication": "same field name is producer-specific; causal packet manifest must retain its packed-byte meaning"
+  }
+}

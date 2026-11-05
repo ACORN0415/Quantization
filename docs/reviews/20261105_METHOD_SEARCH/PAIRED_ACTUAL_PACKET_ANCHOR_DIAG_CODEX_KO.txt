@@ -1,0 +1,43 @@
+실자료 첫 K 패킷 anchor 실패 원인 — 읽기 전용 확인
+2026-11-05. 원 RUN/LOCK/FAILURE/log/driver는 변경하지 않았다. 허용된 l18_c1_R_bf16.pt 한 개만
+CPU로 열었고 효과점수/다른 팔/재생성/재실행/GPU는 0회다. 파일 전체 hash는 등록값과 일치하며
+읽기 전후 동일했다. 보존 대상 소스/결과 5개도 전후 hash가 같다.
+
+원인
+causal_obq/replay.py 50행은 hashes[arm].append(tsha(packet['packed']))를 실행하고,
+57행의 code_sha256에 그 값을 저장한다. 즉 이름은 code_sha256이지만 의미는 packed uint8
+payload의 바이트 hash다. 현재 driver 265행은 unpack 후 signed int8 논리 코드 배열의
+바이트 hash와 비교한다. 서로 다른 직렬화이므로 값의 표현이 같아도 hash는 달라야 한다.
+scale anchor는 정확히 일치한다. 이번 실패는 scale 문제도 V4 tsha 수정 문제도 아니다.
+
+직접 확인
+- packed: 3,612,672개 uint8 / 3,612,672B, hash 6c3a46094eaf1174da703ee4ad9cb03352f35c3f98ca71c6e14582095e07ff21
+- unpacked: 7,225,344개 int8 / 7,225,344B, hash 46b803af4c262c0fc77c5bd894fda62ed518d396d3f3e66e1885ff392b72bc9b
+- manifest code_sha256은 packed hash와 일치한다.
+- scale FP16 hash 3414b0e062d8e4d3a93ced67cd9256f95864fe888afb1389e7d39c3c41c04a73는 manifest와 일치한다.
+- 독립 nibble 추출→부호 복원→재패킹은 packed 원소 전체와 정확히 같다.
+- 기존 tsha와 V4 tsha는 이 세 표현 각각에서 같은 digest를 낸다.
+소형 반례 [-8,-1,0,1,7,-3]은 packed [248, 16, 215]와 같은 코드를 뜻하지만
+바이트 수와 hash는 다르다. JSON에 양쪽 표현과 hash를 기록했다.
+
+최소 수정 제안
+비교 대상을 tsha(kp['packed'])로 바꾸고 기존 scale/whole-file SHA/shape/bytes 검사는 유지한다.
+unpacked-code hash가 필요하면 별도 이름으로 기록하며 원 manifest 값을 새 의미로 바꾸지 않는다.
+이 변경은 source anchor의 표현 일치를 고치는 것이다. base 복원은 이미 해당 분기 전에
+실행되며 digest 비교는 읽기 전용이라 quantization/restore/scoring 수식이나 값을 바꾸지 않는다.
+이 사실을 확인했다고 이후 전체 실행 유효성까지 보장하지는 않는다. 실제 재실행은 하지 않았다.
+
+합성 검사의 공백
+synthetic_full/build_inputs.py 42행 역시 unpacked 배열 hash를 code_sha256으로 만들었다.
+즉 합성 builder와 소비자가 같은 schema 해석 오류를 공유했다. 68행 전체 합성 완주는
+제어흐름과 자체 schema의 검증이었으며 원 producer의 hash 계약을 검증하지 못했다.
+다음 회귀는 원 producer의 packed-hash 정의를 독립적으로 사용하고, 다른 표현을
+의도적으로 넘기면 거부되는지를 포함해야 한다. 현재 source/manifest는 수정하지 않았다.
+
+범위
+조사 0.068초, CPU4, peakRSS 479567872B.
+최초 실자료 RUN은 invalid이며 효과점수0이다. 이를 방법의 실패나 성공으로 바꾸지 않는다.
+
+추가 소스 대조: fixed_rotation_control/diagnose.py의 encode() info는 같은 code_sha256 이름에
+unpacked codes hash를 저장한다. 가까운 코드의 같은 필드 이름이 producer마다 다른
+표현을 뜻한다. 이번 binding은 causal manifest이므로 causal의 packed 정의를 따라야 한다.

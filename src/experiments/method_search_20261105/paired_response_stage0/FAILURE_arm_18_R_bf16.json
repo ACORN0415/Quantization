@@ -1,0 +1,5 @@
+{
+  "status": "invalid",
+  "error": "ValueError('packet tensor anchor')",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/diagnose.py\", line 392, in child\n    result=prepare_layer(binding,access) if kind=='prepare' else evaluate_layer(binding,arm,access,json.loads((HERE/f'PREPARE_{layer}.json').read_text()))\n  File \"/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/diagnose.py\", line 265, in evaluate_layer\n    if tsha(kp['scale'])!=row['K'][base_name]['scale_sha256'] or tsha(c.unpack(kp['packed'],kp['shape']))!=row['K'][base_name]['code_sha256']:raise ValueError('packet tensor anchor')\nValueError: packet tensor anchor\n"
+}

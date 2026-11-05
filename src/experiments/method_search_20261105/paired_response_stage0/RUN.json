@@ -1,0 +1,19 @@
+{
+  "status": "invalid",
+  "started_monotonic": 547129.186472929,
+  "started_utc": 1793886840.4246237,
+  "lock_sha256": "6554e38a9051bffabe638e7cba47cc5ecae7d0f13211faecb982c813dbcf9c9b",
+  "supervisor_pid": 561589,
+  "stages": [
+    {
+      "label": "prepare_18_state",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_18_R_bf16",
+      "exit_code": 1
+    }
+  ],
+  "error": "RuntimeError('Stage failed: arm_18_R_bf16')",
+  "elapsed_seconds": 4.032799198990688
+}
