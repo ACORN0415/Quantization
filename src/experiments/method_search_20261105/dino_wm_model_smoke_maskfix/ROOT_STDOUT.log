@@ -1,0 +1,25 @@
+/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/swiglu_ffn.py:45: UserWarning: xFormers is disabled (SwiGLU)
+  warnings.warn("xFormers is disabled (SwiGLU)")
+/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/swiglu_ffn.py:51: UserWarning: xFormers is not available (SwiGLU)
+  warnings.warn("xFormers is not available (SwiGLU)")
+/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/attention.py:29: UserWarning: xFormers is disabled (Attention)
+  warnings.warn("xFormers is disabled (Attention)")
+/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/attention.py:33: UserWarning: xFormers is not available (Attention)
+  warnings.warn("xFormers is not available (Attention)")
+/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/block.py:35: UserWarning: xFormers is disabled (Block)
+  warnings.warn("xFormers is disabled (Block)")
+/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/block.py:40: UserWarning: xFormers is not available (Block)
+  warnings.warn("xFormers is not available (Block)")
+num_action_repeat: 1
+num_proprio_repeat: 1
+proprio encoder: ProprioceptiveEmbedding(
+  (patch_embed): Conv1d(4, 10, kernel_size=(1,), stride=(1,))
+)
+action encoder: ProprioceptiveEmbedding(
+  (patch_embed): Conv1d(10, 10, kernel_size=(1,), stride=(1,))
+)
+proprio_dim: 10, after repeat: 10
+action_dim: 10, after repeat: 10
+emb_dim: 404
+Model emb_dim:  404
+{"status": "completed_synthetic_model_connection_not_planning", "failed_phase": null, "wall_seconds": 3.294463872909546}

@@ -1,0 +1,6 @@
+DINO-WM 연결 검사 추가1회 결과
+
+최초 V1은 mask의 저장 위치 차이 검사에서 실패했고 그대로 보존했다. Opus delta 검토와 신규 manifest를 실행 전 커밋0f3c924로 고정한 뒤 명시적 추가1회만 실행했다.
+추가 실행은 root 기준3.9169초/600초, exit0, 소유 프로세스 잔류0, 종료 GPU idle로 완료됐다. CPU predictor 출력은 torch.equal=True, max_abs_difference=0이며 mask6개도 정확히 일치했다. DINO strict load와 FP32 GPU encode/predict/rollout의 형상 및 predictor3/encoder2/decoder0 호출을 확인했다. GPU allocated peak300,977,152B, worker RSS1,365,635,072B이다.
+자체 계측을 포함한 초소형 합성 연결 검사이므로 실제 영상/제어 품질, 양자화 효과, 실행 가속, 일반화나 신규 방법론의 근거로 쓰지 않는다. CPU torch.equal은 원소 수치 일치이며 원소 바이트 비교를 별도 수행한 것은 아니다. 원본 학습 환경과 현재 라이브러리 전체의 동등성도 증명하지 않는다.
+ROOT_POSTRUN_AUDIT는 저장 수치와 해시 계약 재확인이며 모델/텐서 출력을 독립 재생산하지 않았다. 실제 Opus 결과 검토는 별도 후속으로 요청한다.

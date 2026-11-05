@@ -1,0 +1,449 @@
+{
+  "status": "completed_synthetic_model_connection_not_planning",
+  "started_epoch": 1793914272.409306,
+  "stages": {
+    "imports": {
+      "completed": true,
+      "packages": {
+        "torch": {
+          "file": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torch/__init__.py",
+          "version": "2.6.0+cu124"
+        },
+        "torchvision": {
+          "file": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torchvision/__init__.py",
+          "version": "0.21.0+cu124"
+        },
+        "numpy": {
+          "file": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/numpy/__init__.py",
+          "version": "1.24.4"
+        },
+        "einops": {
+          "file": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/einops/__init__.py",
+          "version": "0.8.2"
+        },
+        "accelerate": {
+          "file": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/accelerate/__init__.py",
+          "version": "1.15.0"
+        },
+        "yaml": {
+          "file": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/yaml/__init__.py",
+          "version": "6.0.3"
+        }
+      },
+      "module_paths": {
+        "models.vit": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/models/vit.py",
+        "distributed_fn.distributed": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/distributed_fn/distributed.py",
+        "distributed_fn.launch": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/distributed_fn/launch.py",
+        "distributed_fn": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/distributed_fn/__init__.py",
+        "models.vqvae": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/models/vqvae.py",
+        "models.proprio": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/models/proprio.py",
+        "models.visual_world_model": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/models/visual_world_model.py",
+        "dinov2": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/__init__.py",
+        "dinov2.layers.dino_head": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/dino_head.py",
+        "dinov2.layers.layer_scale": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/layer_scale.py",
+        "dinov2.layers.mlp": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/mlp.py",
+        "dinov2.layers.patch_embed": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/patch_embed.py",
+        "dinov2.layers.swiglu_ffn": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/swiglu_ffn.py",
+        "dinov2.layers.attention": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/attention.py",
+        "dinov2.layers.drop_path": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/drop_path.py",
+        "dinov2.layers.block": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/block.py",
+        "dinov2.layers": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/__init__.py",
+        "dinov2.models.vision_transformer": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/models/vision_transformer.py",
+        "dinov2.models": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/models/__init__.py"
+      },
+      "models_init_bypassed": true,
+      "sys_path_added_by_source": [
+        "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/setuptools/_vendor",
+        "/tmp/tmpgjzdom0v",
+        ".."
+      ]
+    },
+    "cpu_checkpoint_restore": {
+      "completed": true,
+      "seconds": 0.17201564100105315,
+      "keys": [
+        "action_encoder",
+        "decoder",
+        "decoder_optimizer",
+        "epoch",
+        "predictor",
+        "predictor_optimizer",
+        "proprio_encoder"
+      ],
+      "epoch": 2,
+      "map_location": "cpu",
+      "weights_only": false,
+      "trust_policy": "verified_official_acquisition_explicit_weights_only_false_cpu",
+      "module_paths_after_load": {
+        "models.vit": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/models/vit.py",
+        "distributed_fn.distributed": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/distributed_fn/distributed.py",
+        "distributed_fn.launch": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/distributed_fn/launch.py",
+        "distributed_fn": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/distributed_fn/__init__.py",
+        "models.vqvae": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/models/vqvae.py",
+        "models.proprio": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/models/proprio.py",
+        "models.visual_world_model": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/models/visual_world_model.py",
+        "dinov2": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/__init__.py",
+        "dinov2.layers.dino_head": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/dino_head.py",
+        "dinov2.layers.layer_scale": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/layer_scale.py",
+        "dinov2.layers.mlp": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/mlp.py",
+        "dinov2.layers.patch_embed": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/patch_embed.py",
+        "dinov2.layers.swiglu_ffn": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/swiglu_ffn.py",
+        "dinov2.layers.attention": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/attention.py",
+        "dinov2.layers.drop_path": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/drop_path.py",
+        "dinov2.layers.block": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/block.py",
+        "dinov2.layers": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/__init__.py",
+        "dinov2.models.vision_transformer": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/models/vision_transformer.py",
+        "dinov2.models": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/models/__init__.py"
+      }
+    },
+    "cpu_predictor_equivalence": {
+      "completed": true,
+      "seconds": 0.3360124620376155,
+      "shape": [
+        1,
+        588,
+        404
+      ],
+      "atol": 1e-06,
+      "rtol": 1e-06,
+      "max_abs_difference": 0.0,
+      "torch_equal": true,
+      "strict_state_dict": true,
+      "forward_mask_tensor_comparisons": [
+        {
+          "module": "transformer.layers.0.0",
+          "shape": [
+            1,
+            1,
+            588,
+            588
+          ],
+          "dtype": "torch.float32",
+          "torch_equal": true,
+          "old_layout": "plain_tensor_attribute",
+          "new_layout": "nonpersistent_registered_buffer"
+        },
+        {
+          "module": "transformer.layers.1.0",
+          "shape": [
+            1,
+            1,
+            588,
+            588
+          ],
+          "dtype": "torch.float32",
+          "torch_equal": true,
+          "old_layout": "plain_tensor_attribute",
+          "new_layout": "nonpersistent_registered_buffer"
+        },
+        {
+          "module": "transformer.layers.2.0",
+          "shape": [
+            1,
+            1,
+            588,
+            588
+          ],
+          "dtype": "torch.float32",
+          "torch_equal": true,
+          "old_layout": "plain_tensor_attribute",
+          "new_layout": "nonpersistent_registered_buffer"
+        },
+        {
+          "module": "transformer.layers.3.0",
+          "shape": [
+            1,
+            1,
+            588,
+            588
+          ],
+          "dtype": "torch.float32",
+          "torch_equal": true,
+          "old_layout": "plain_tensor_attribute",
+          "new_layout": "nonpersistent_registered_buffer"
+        },
+        {
+          "module": "transformer.layers.4.0",
+          "shape": [
+            1,
+            1,
+            588,
+            588
+          ],
+          "dtype": "torch.float32",
+          "torch_equal": true,
+          "old_layout": "plain_tensor_attribute",
+          "new_layout": "nonpersistent_registered_buffer"
+        },
+        {
+          "module": "transformer.layers.5.0",
+          "shape": [
+            1,
+            1,
+            588,
+            588
+          ],
+          "dtype": "torch.float32",
+          "torch_equal": true,
+          "old_layout": "plain_tensor_attribute",
+          "new_layout": "nonpersistent_registered_buffer"
+        }
+      ],
+      "all_forward_masks_exact_equal": true,
+      "actual_device": "cpu",
+      "dtype": "torch.float32"
+    },
+    "cpu_dino_local_restore": {
+      "completed": true,
+      "seconds": 0.21601280802860856,
+      "constructor": {
+        "img_size": 518,
+        "patch_size": 14,
+        "init_values": 1.0,
+        "ffn_layer": "mlp",
+        "block_chunks": 0,
+        "num_register_tokens": 0,
+        "interpolate_antialias": false,
+        "interpolate_offset": 0.1,
+        "in_chans": 3,
+        "channel_adaptive": false
+      },
+      "strict_state_dict": true,
+      "weights_only": true,
+      "official_weight_local_sha256": "b938bf1bc15cd2ec0feacfe3a1bb553fe8ea9ca46a7e1d8d00217f29aef60cd9",
+      "offline_wrapper_adaptation": true
+    },
+    "gpu_connection": {
+      "completed": true,
+      "seconds_including_checks": 0.2131492190528661,
+      "outputs": {
+        "encoded": {
+          "shape": [
+            1,
+            3,
+            196,
+            404
+          ],
+          "dtype": "torch.float32",
+          "device": "cuda:0",
+          "finite": true,
+          "abs_max": 25.056442260742188
+        },
+        "predicted": {
+          "shape": [
+            1,
+            3,
+            196,
+            404
+          ],
+          "dtype": "torch.float32",
+          "device": "cuda:0",
+          "finite": true,
+          "abs_max": 18.274675369262695
+        },
+        "rolled": {
+          "shape": [
+            1,
+            5,
+            196,
+            404
+          ],
+          "dtype": "torch.float32",
+          "device": "cuda:0",
+          "finite": true,
+          "abs_max": 25.056442260742188
+        },
+        "rollout_visual": {
+          "shape": [
+            1,
+            5,
+            196,
+            384
+          ],
+          "dtype": "torch.float32",
+          "device": "cuda:0",
+          "finite": true,
+          "abs_max": 25.056442260742188
+        },
+        "rollout_proprio": {
+          "shape": [
+            1,
+            5,
+            10
+          ],
+          "dtype": "torch.float32",
+          "device": "cuda:0",
+          "finite": true,
+          "abs_max": 1.7796943187713623
+        }
+      },
+      "actual_calls": {
+        "patch_embed_inputs": [
+          [
+            3,
+            3,
+            196,
+            196
+          ],
+          [
+            3,
+            3,
+            196,
+            196
+          ]
+        ],
+        "patch_embed_outputs": [
+          [
+            3,
+            196,
+            384
+          ],
+          [
+            3,
+            196,
+            384
+          ]
+        ],
+        "predictor_calls": 3,
+        "decoder_calls": 0
+      },
+      "TF32_matmul": false,
+      "TF32_cudnn": false,
+      "float32_matmul_precision": "highest",
+      "autocast_enabled": false,
+      "XFORMERS_DISABLED": "1",
+      "DINO_attention_path": "official Tensor-input Torch SDPA fallback; low-level CUDA kernel not profiled",
+      "gpu_name": "NVIDIA GeForce RTX 4090",
+      "GPU_peak_allocated_bytes": 300977152,
+      "GPU_peak_reserved_bytes": 318767104
+    }
+  },
+  "network_calls": 0,
+  "dataset_loads": 0,
+  "environment_steps": 0,
+  "planner_calls": 0,
+  "quantization_calls": 0,
+  "tensor_pickle_loads": 2,
+  "decoder_forward_calls": 0,
+  "nonclaims": "Synthetic model connection only; no task quality, CEM/MPC, timing benchmark or novel method.",
+  "manifest_sha256": "7657a6bbf2e102a2f3d54a42967b73670c6ad60187ae31633c63d90c95cfad25",
+  "code_sha256": "828d294dbe62b4a42c845f70f4dacabbac91a239e30b472a7a152c99a507bbc4",
+  "bound_files": {
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/__init__.py": "0d2b87b7e71c7f7279ccc4b4f8b541d26071425284a0ea01a5a435fac4511cfe",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/hub/backbones.py": "871fca671b12a9ff02e810654baf509e97ccf461bf8196ce5ddeefff2fd87d3e",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/hub/utils.py": "579613e3d7b82c2a387eddc215ad9f076b8740f9618229628395fe5755dbd131",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/models/__init__.py": "b93329ce676f3eb0c9a7790d1b3b2b114a0855ea8dc76e32e262d1a7dc6c55ae",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/models/vision_transformer.py": "7799a260f2d7d0fe197331d08502fb8c542f9b7424723650f6a39b64fa2639ea",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/__init__.py": "1b55deed39d5ab0b589bef421bbfe06f24a10cd590a0f8403234c9ee4e34109d",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/attention.py": "79c7be7a452b3aad96698ec38d5d5150b9f4d8ac084fa93324510dc9f624775d",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/block.py": "60c0ac7dfa4474be313fabfa5a23d82faf6f0cecd4e720a88be35de9788cb636",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/dino_head.py": "9fdb1fa61c0609dc0876f711f9d0d828c33bf9fd972aab3d9c968d44e16b98d1",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/drop_path.py": "b9f8236e86054b9d9a71275efcad2a9ecaa1f86b529d4b8d6109ddb5e806f67a",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/layer_scale.py": "dadd5aafe178f1bf72a205a02a6645c7e635cacbad585d4a7369c200c6e89135",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/mlp.py": "255825c73b60a916dd00eb1e38aacbcdbf316e40d6a005efb46e245b7edb43aa",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/patch_embed.py": "40da6add3d811198ea3e17cb99cdd4e5cda59e369efbbe3d18d89308618cf142",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/swiglu_ffn.py": "e46d2948fb97e497cf991ff82ce30cb59b59fdf2e12a19568417113716b4f119",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/models/__init__.py": "9ae80cddb2fc9ea28de4c6f97f9b558e88efb3dcef6853f980e36983d8254009",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/models/visual_world_model.py": "931d44c0d541d95be8236f65247de9b40ac3843fe047c1a44d4a2482d1bf636f",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/utils.py": "dd9ab7aeac2a70beac4733dccc8dfc3fad4a96803cf7cf1844f79252b1b984d4",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/distributed_fn/__init__.py": "2f4541598b2a2fb41681db38bd8230f8a7fbcc9ea16e7abb97fe7c9bacad30d1",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/distributed_fn/distributed.py": "bc3263fb5ce314ce484d13e8fb2094da6f640f11d79617c8dd9d73a7ed8341be",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/distributed_fn/launch.py": "79bb9d45c50f1b5d57bde66b6f8ad9744fb4cf5eaee62ee4a972716c5ffc7a6d",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/models/dino.py": "3e77b3990cdb16fd6620f03fda51e12e236a36804ac2e859b530fc6d501ac746",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/models/vit.py": "ae79e86c1be2fc9ac9c2642882c2ddccf2cea65e85cf29b094672aec5d030387",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/models/vqvae.py": "377005da5c79355da6c7db88eded7a04e432c29ddf4279ea89e5364730ff1461",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/models/proprio.py": "b0f7c761c45a6a889dc51f6d9cf4539480d1a0bd2bd200ad44c4b9373a573c72",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/LICENSE": "600cc67cc4cb2f5ea317dcfc687ad1c74dc4bec8782bbe9db0afd83513b935b7",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_runtime_setup_preparation/ROOT_SETUP_FINAL.json": "dea5d06576ec18f94d420faa32715c10e192baa96662881dd4c91bf04d5c202b",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_runtime_setup_preparation/ROOT_ASSET_POSTHASH_AUDIT.json": "a0c8b9fcaf6bc9347f0db642a0fa3cb91903ec7ee373287b8fc7d74182d9515d",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_asset_audit/AUDIT_CODEX.json": "0bea658db28434029983d88c9c5a52b025b48a66ce31df6837bc6a6ac2e8a7e6",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_runtime_source_closure/ROOT_FINAL_DECISION.json": "d6a3be50f9a20ba6bd1a44ebc637de47624af037c371adcacc06cfd1398977f8",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_model_smoke_preparation/ROOT_OPUS_REVIEW_RECONNECTION.json": "375423c2ed296982458da41b973397ff2bf28c858b96cab9f78270d208792714",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_model_smoke_preparation/REVIEW_OPUS_FOLLOWUP_KO.txt": "001d7ca4b56aa9a9783424481a7cbe5060f662cbb75a2ce6bff4e33009ef7ecd",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_model_smoke_preparation/REVIEW_OPUS_RECOVERY_KO.txt": "d4a7dcbefd0cb15aa9065b3a3f5f59b67e6d5824547ea44ded160f0e6a206340",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_model_smoke_preparation/ROOT_REVIEW_FOLLOWUP.json": "b1e1c2a4469306cf683197c8f9d37586702bdf60f23d58aefdacaa3b9f6305c5",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_model_smoke_preparation/ROOT_REVIEW_RECONCILIATION.json": "797c9308abeb2cc8c1b07683a78114674af295c5c0baa3680c75830efca7261b",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_model_smoke_preparation/READY_CODEX.json": "663727b38507e9cf660156f7f2546a9b997f09e6ef50d79193cdacbbe35575cd",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_model_smoke_maskfix/REVIEW_OPUS_KO.txt": "f854d10985d6133ea3920249977b33d99bf8cb0f2aaaf43cfdb58b122af506cf",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_model_smoke_maskfix/READY_CODEX.json": "c579bd48a0826474f0f15d6df0f08d5342695a955fab9d462c240c6bb1b07fd7",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_model_smoke_maskfix/SOURCE_DIFF.patch": "c12dbb938917615fbd29a03533b974de32bff741cf4315fdcb21b7255ff0372c",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_model_smoke_maskfix/SELFTEST_PREPARATION.json": "e073edca691d17c5fac2e83b31ef927c1cb54604709f143eb0e3898996640890",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_model_smoke_preparation/RESULT.json": "8aeea6c96171ac4459591e076de128b9995c01d3bc5952886a11b9ac1aea393c",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_model_smoke_preparation/ROOT_EXECUTION_FINAL.json": "f919d3be2cd30bae240c0f036065b2c1076522466e96d70a0e585bc3d06bb885",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_buffer_metadata_diagnosis/RESULT.json": "0d96d56e96ca9fdca1a67ed67a447a723ff9b8229d59b4a955bc282552a89d72",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_buffer_metadata_diagnosis/MASK_BYTE_COMPARISON.json": "a2c88bd88a1fa77d132b02bb35c1527d6067a4245cc27a176fef2011b2c951a1",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_buffer_metadata_diagnosis/MASK_STORAGE_READ_SPEC.json": "6f4cdfa84cf8f6996f3f28becf978b85532eca7153ccdcf0c98c843622b8bfff",
+    "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/outputs/pusht/checkpoints/model_latest.pth": "e909f0cec958fc0b49a79f2e85730ae6b5f83dee61a224705f91883eb3bb74c5",
+    "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/outputs/pusht/hydra.yaml": "e4d7f21b85c778ab8b83c0bb83bc7625fdfb193a6a0619fef25f4a2afd7f8049",
+    "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/weights/dinov2_vits14_pretrain.pth": "b938bf1bc15cd2ec0feacfe3a1bb553fe8ea9ca46a7e1d8d00217f29aef60cd9"
+  },
+  "contract": {
+    "predictor_kwargs": {
+      "depth": 6,
+      "heads": 16,
+      "mlp_dim": 2048,
+      "dropout": 0.1,
+      "emb_dropout": 0,
+      "pool": "mean",
+      "num_patches": 196,
+      "num_frames": 3,
+      "dim": 404
+    },
+    "wm_kwargs": {
+      "image_size": 224,
+      "num_hist": 3,
+      "num_pred": 1,
+      "train_encoder": false,
+      "train_predictor": true,
+      "train_decoder": true
+    },
+    "image_size": 224,
+    "encoder_image_size": 196,
+    "num_hist": 3,
+    "num_patches": 196,
+    "emb_dim": 404,
+    "proprio_input_dim": 4,
+    "action_input_dim": 10,
+    "predictor_input": [
+      1,
+      588,
+      404
+    ],
+    "encoded": [
+      1,
+      3,
+      196,
+      404
+    ],
+    "rollout": [
+      1,
+      5,
+      196,
+      404
+    ]
+  },
+  "final_project_modules": {
+    "models.vit": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/models/vit.py",
+    "distributed_fn.distributed": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/distributed_fn/distributed.py",
+    "distributed_fn.launch": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/distributed_fn/launch.py",
+    "distributed_fn": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/distributed_fn/__init__.py",
+    "models.vqvae": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/models/vqvae.py",
+    "models.proprio": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/models/proprio.py",
+    "models.visual_world_model": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/QuantWM/models/visual_world_model.py",
+    "dinov2": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/__init__.py",
+    "dinov2.layers.dino_head": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/dino_head.py",
+    "dinov2.layers.layer_scale": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/layer_scale.py",
+    "dinov2.layers.mlp": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/mlp.py",
+    "dinov2.layers.patch_embed": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/patch_embed.py",
+    "dinov2.layers.swiglu_ffn": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/swiglu_ffn.py",
+    "dinov2.layers.attention": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/attention.py",
+    "dinov2.layers.drop_path": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/drop_path.py",
+    "dinov2.layers.block": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/block.py",
+    "dinov2.layers": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/__init__.py",
+    "dinov2.models.vision_transformer": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/models/vision_transformer.py",
+    "dinov2.models": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/models/__init__.py"
+  },
+  "finished_epoch": 1793914275.7037697,
+  "wall_seconds": 3.294463872909546,
+  "peak_RSS_bytes": 1365635072
+}

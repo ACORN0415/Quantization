@@ -1,0 +1,38 @@
+{
+  "status": "independent_root_next_observation_proposal_not_execution_authority",
+  "created_epoch": 1793914403.407923,
+  "writer": "Root Codex; native quota failure respected, no alternate-account/model retry. Opus1 next-observation conclusion not read.",
+  "decision": "First determine whether ordinary fixed floating point and exact observation-feature reuse make a new low-bit selector practically unnecessary. Do not proceed directly to a new selector or full MPC grid.",
+  "observations": [
+    "Synthetic original/fresh CPU predictor outputs numerically equal and connected FP32 DINO-WM ran on one4090.",
+    "No real recorded observation/candidate ranking, ordinary FP16/BF16 benefit, simulator success, or concrete latency/memory requirement measured.",
+    "Publicly reported lower precision/control effects and generic decision-aware quantization already exist; current setup does not supply novelty."
+  ],
+  "smallest_next_check": "Bounded real-input scoring/cost diagnostic, prepared before any new GPU launch. Pin one predetermined development episode/time/goal and fixed action candidates. Compare original FP32 rollout to an independently checked FP32 observation-feature-reuse path; then ordinary BF16 and FP16 predictor with the same FP32 encoder/features. No proposed quantizer yet.",
+  "why_not_quantizer_first": "A useful need for low-bit execution has not been shown after the existing ordinary floating-point baseline. Fake quantization can perturb scores while giving no packed-memory or integer-GEMM benefit.",
+  "input_contract_before_run": [
+    "Read the original dataset normalization, frameskip5, velocity/proprio4, image transform, goal and action grouping; exact source pins.",
+    "Use only previously retained val assets for the first development input; do not call it independent scientific holdout or train calibration.",
+    "No use of real terminal outcome in a deployable choice; FP32 objective is reference score, not task oracle.",
+    "Predeclare candidate actions and returned-mean interpretation. If not running actual CEM, name it a fixed-candidate diagnostic and do not claim MPC reproduction."
+  ],
+  "strong_baselines": [
+    "Unmodified original FP32 rollout",
+    "FP32 observation-feature reuse with numerical output equivalence first",
+    "Same FP32 encoder plus ordinary fixed BF16/FP16 predictor; original FP32 action/proprio/fusion behavior explicitly controlled"
+  ],
+  "report": [
+    "Original versus reused output maxabs/allclose and call counts",
+    "Candidate score/selected-action disagreement and FP32 reference-score regret, numerical ties explicitly handled",
+    "Whole scoring-call wall/CUDA times with warmup, crossed order and repeated measurements; feature extraction/setup/amortization separately accounted",
+    "Actual dtypes, GPU/RSS peaks, weights bytes; no assumed quantization bandwidth gain"
+  ],
+  "stop_scope": [
+    "If reuse equivalence fails, stop the optimized path without changing numerical tolerance after seeing results.",
+    "If ordinary lower precision has favorable cost/reference-score behavior, use it as a baseline; this alone does not prove task quality or close all quantization research.",
+    "If no real resource constraint exists, report measured cost curves and stop claiming a resource violation or need for a complex selector.",
+    "Only after actual remaining decision error and practical cost gap are observed should low-bit-method design resume."
+  ],
+  "scope_limits": "A proposed preparation and measurement direction only. Do not invoke new model/data loads or GPU from this document. Actual runtime grid/count/tolerance/noise/resource limits require a frozen follow-up spec and independent review.",
+  "known_prior_scope": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_runtime_preparation/ROOT_PRIOR_SCOPE_UPDATE.json"
+}
