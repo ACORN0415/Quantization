@@ -1,0 +1,20 @@
+{
+  "prepared_epoch": 1793906572.4266276,
+  "latest_dispatch_epoch": 1793906872.4266276,
+  "review_seconds_from_actual_delivery": 600,
+  "absolute_latest_finish_epoch": 1793907472.4266276,
+  "GPU": 0,
+  "model_tensor_loads": 0,
+  "asset_payload_downloads": 0,
+  "installation": 0,
+  "source_modifications": 0,
+  "transmission_rule": "Forward existing actual chat first, preserve delivery receipt, then bookkeeping. No new chat/worker/model/review-substitute. If dispatch cannot meet outer bound, mark pending without pretending source review completed.",
+  "status": "separate_final_source_review_after_code_frozen_within_original_preparation_window",
+  "source_sha256": "bab23d80bf83de3b1136e5226fa94ff40a1e354e4e146348a6071eebd0089227",
+  "READY_sha256": "6b1e1dd33dee3cb6bca15342bf40930ed22af70bf8b9071e6d90ec030a3a9073",
+  "original_preparation_deadline_epoch": 1793906782.3160875,
+  "reason": "Code and17local tests frozen before original preparationdeadline; actual final source review gets explicit readonly window, separate from future acquisition1800s. No code/manifest/download/execution authorized here.",
+  "target": "dino_wm_asset_acquisition_preparation/acquire_assets.py+READY+PREPARATION_KO.txt+ROOT_SPEC",
+  "instruction": "Read whole frozen source and exact manifest contract. Check strict SHA/size, no retry/auto execution, safe exact-name extraction, byte/disk/time/RSS/error behavior. No new HTTP or code execution. Report blocking vs limitation, same visible actual Opus2.",
+  "output": "dino_wm_asset_acquisition_preparation/REVIEW_OPUS_KO.txt"
+}

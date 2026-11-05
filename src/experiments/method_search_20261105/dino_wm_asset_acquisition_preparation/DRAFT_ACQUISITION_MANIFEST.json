@@ -1,0 +1,75 @@
+{
+  "status": "draft_not_authorized",
+  "root_execution_authorized": false,
+  "actual_claude_source_review_completed": false,
+  "created_epoch": 1793906797.5918615,
+  "source_sha256": "bab23d80bf83de3b1136e5226fa94ff40a1e354e4e146348a6071eebd0089227",
+  "root_spec_sha256": "91570d22fc644d970c9b01a2214b88534d6c562bb47f2fd144ed9857aca5b4a3",
+  "metadata_result_sha256": "7393572818a6922cf197413908104abcc2781bfeb11308bd1d6e8fa4acd58bf4",
+  "review_evidence_sha256": {},
+  "limits": {
+    "wall_seconds": 1800,
+    "HTTP_body_bytes": 4294967296,
+    "extracted_member_bytes": 8589934592,
+    "disk_bytes": 12884901888,
+    "RSS_bytes": 2147483648,
+    "CPU_threads": 2,
+    "GPU": 0,
+    "archives": 2,
+    "tensor_model_loads": 0,
+    "installation": 0
+  },
+  "revision": "d5c69e8fe60c3ed6b01d2f6e88fbfd66be078e57",
+  "destination": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1",
+  "archives": [
+    {
+      "path": "checkpoints/outputs.zip",
+      "url": "https://huggingface.co/datasets/gaoyuezhou/dino_wm/resolve/d5c69e8fe60c3ed6b01d2f6e88fbfd66be078e57/checkpoints/outputs.zip",
+      "size": 953204628,
+      "sha256": "425b0d8c2a4194d3ec996b553575f69409aa5714176b063d8401789db9179482",
+      "members": [
+        "outputs/pusht/hydra.yaml",
+        "outputs/pusht/checkpoints/model_latest.pth"
+      ]
+    },
+    {
+      "path": "datasets/pusht_noise.zip",
+      "url": "https://huggingface.co/datasets/gaoyuezhou/dino_wm/resolve/d5c69e8fe60c3ed6b01d2f6e88fbfd66be078e57/datasets/pusht_noise.zip",
+      "size": 2785304515,
+      "sha256": "442f5dee246edf670964ed7bdecd248683cd6d00580fa0e4d458abb53f92da08",
+      "members": [
+        "pusht_noise/val/states.pth",
+        "pusht_noise/val/rel_actions.pth",
+        "pusht_noise/val/velocities.pth",
+        "pusht_noise/val/seq_lengths.pkl",
+        "pusht_noise/val/obses/episode_000.mp4",
+        "pusht_noise/val/obses/episode_001.mp4",
+        "pusht_noise/val/obses/episode_002.mp4",
+        "pusht_noise/val/obses/episode_003.mp4",
+        "pusht_noise/val/obses/episode_004.mp4",
+        "pusht_noise/val/obses/episode_005.mp4",
+        "pusht_noise/val/obses/episode_006.mp4",
+        "pusht_noise/val/obses/episode_007.mp4",
+        "pusht_noise/val/obses/episode_008.mp4",
+        "pusht_noise/val/obses/episode_009.mp4",
+        "pusht_noise/val/obses/episode_010.mp4",
+        "pusht_noise/val/obses/episode_011.mp4",
+        "pusht_noise/val/obses/episode_012.mp4",
+        "pusht_noise/val/obses/episode_013.mp4",
+        "pusht_noise/val/obses/episode_014.mp4",
+        "pusht_noise/val/obses/episode_015.mp4",
+        "pusht_noise/val/obses/episode_016.mp4",
+        "pusht_noise/val/obses/episode_017.mp4",
+        "pusht_noise/val/obses/episode_018.mp4",
+        "pusht_noise/val/obses/episode_019.mp4",
+        "pusht_noise/val/obses/episode_020.mp4",
+        "pusht_noise/train/states.pth",
+        "pusht_noise/train/rel_actions.pth",
+        "pusht_noise/train/velocities.pth",
+        "pusht_noise/train/seq_lengths.pkl"
+      ]
+    }
+  ],
+  "root_choice_pending_review": "Prefer original dataset factory with four train metadata files to avoid a val-only loader/RNG adaptation. Exclude tokens/train videos/abs_actions and other checkpoints. Await independent loader review; fail if exact members absent. Full archive SHA verified instead of unverified selective remote members.",
+  "nonclaims": "Not execution authorization. Source code explicitly rejects these false approval flags. No GPU/model acquisition started."
+}

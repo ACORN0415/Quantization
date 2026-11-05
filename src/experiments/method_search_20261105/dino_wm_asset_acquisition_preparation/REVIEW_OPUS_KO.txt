@@ -1,0 +1,103 @@
+DINO-WM asset acquisition 코드 준비 — 실제 source 검토 (Opus2, root msg_a31eb81db7d7)
+실제 시작 UTC: 2026-11-05T19:22:46Z. 계약 확인은 19:19:05Z에 따로 했다. 원 절대마감은 19:26:22.316Z다.
+모델: claude-opus-5-5, 기존 채팅 session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5. Task/Dispatch: 미연결(자동연결 실패).
+helper는 쓰지 않았다(남은 시간 약 3분, 부모 직접).
+읽기 전용으로만 봤다. 코드 수정, selftest 재실행, HTTP, 설치, 모델·tensor 로드, GPU는 모두 0이다.
+
+hash (직접 sha256, 지정값 및 READY.files와 일치)
+- acquire_assets.py bab23d80…, READY 6b1e1dd3…, ROOT_SPEC 91570d22…, LOCAL_SELFTEST a5b1bdeb…, PREPARATION_KO 4cff7b61…
+- READY 상태: prepared_and_frozen_NOT_authorized_to_acquire, network 0, approved_manifest false, RUN false.
+- LOCAL_SELFTEST 17건은 저장 기록만 확인했다(재실행하지 않음). local tiny ZIP과 가짜 응답 기반이므로 network·GPU 검증이 아니다.
+읽은 범위: acquire_assets.py 289행 전체, READY.json. PREPARATION_KO 본문과 LOCAL_SELFTEST 세부는 읽지 않았다.
+
+계약 대조 (행 근거는 함수명)
+- 승인 없이 실행 금지: validate_manifest가 다음을 모두 요구한다. 그 전에는 RUN.json도 만들지 않고 download도 하지 않는다.
+  - root_execution_authorized, actual_claude_source_review_completed, status 일치
+  - source·metadata·spec sha 결합
+  - limits가 ROOT_SPEC과 정확히 같을 것
+  - review evidence sha
+  - 두 archive의 URL, size, LFS sha를 metadata RESULT에 고정
+  - member 목록 명시
+  - destination이 새 절대경로이고 HERE와 겹치지 않으며 symlink가 아닐 것
+  필수 필드가 없으면 KeyError로 실패한다(fail-closed). RUN.json은 'x'로 만들어 실행을 1회로 제한한다.
+- 다운로드(download_one/open_archive)
+  - 수동 redirect(최대 9 hop, HTTPS만, retry 아님). 200이 아니면 body를 읽지 않고 Reject한다.
+  - Content-Length가 정확히 size여야 하고 identity만 허용한다.
+  - .part를 'xb'로 1MiB씩 스트림한다. 청크마다 HTTP·disk 누적 cap, 마감, RSS를 검사한다. IncompleteRead도 계수한다.
+  - fsync 후 size와 SHA가 일치할 때만 rename한다. 기존 target이나 .part가 있으면 거부한다(resume·overwrite 없음).
+  - 실패한 .part는 보존된다(selftest 기록과 소스 일치).
+  - 미래의 full ZIP GET 200은 정확한 size, SHA, 총 body cap 검사 아래에서 쓰는 승인 예정 경로다. 이전 metadata의 'Range 200 거부' 계약과는 별개다.
+- 추출(extract_selected/selected_infos/inspect_info)
+  - archive 전체 infolist를 먼저 검사한다: 안전한 이름, 암호화, symlink·특수파일, 중복 이름.
+  - 명시 selector만 추출하고 extract·extractall은 쓰지 않는다. junk(__MACOSX, .DS_Store) selector와 디렉터리 selector는 거부한다.
+  - 선언 크기 합으로 사전 cap을 검사하고, 실제로 쓴 바이트도 member별 선언 크기 이하로 강제한다. 압축 bomb는 선언값과 cap으로 이중 차단된다.
+  - EOF까지 읽으므로 ZipExtFile이 CRC를 검증한다. count가 선언 크기와 같아야 하고 member sha를 기록한다.
+  - 기존 dest는 거부하고 'xb'로 쓴다. 부모 디렉터리 symlink를 검사하며, selector가 두 archive 사이에서 중복되면 거부한다.
+- 자원
+  - Budget의 disk는 HERE 크기 + 32MiB reserve에 archive와 추출 바이트를 누적한다. .part는 rename되므로 이중 계수가 없다.
+  - 산술 상한: 두 archive 3,738,509,143B + 추출 cap 8GiB = 12,328,443,735B로 disk cap 12GiB(12,884,901,888B) 안이다.
+  - PushT 후보 전체(dataset 해제 7.37e9 + ckpt 약 3.8e8)도 추출 8GiB 안이다.
+  - 마감은 start + 1800초다. SIGINT/SIGTERM은 실패 RESULT로 남는다. 종료 시 manifest, source, spec, metadata를 재검사하고 실제 tree 바이트를 재확인한다.
+- payload를 역직렬화, import, 실행하지 않는다(소스에 torch, pickle 없음).
+
+판정: 차단 결함 없음(소스 수준). source 검토 수용은 root의 실행 승인이 아니다. 현재 payload 획득 권한은 0이다.
+
+권고와 잔여 (비차단)
+- CPU 스레드 2를 코드가 명시적으로 강제하지 않는다. 계산은 SHA뿐이라 영향은 작다.
+- 비선택 member 하나라도 이상하면 archive 전체를 거부한다. 보수적이며 의도에 맞다.
+- 서버가 Content-Length 없이 200을 주면 거부한다(fail-closed).
+- RSS는 ru_maxrss 표본이다. 외부 1800초 감독은 root 몫이다.
+- loader 필수 member manifest가 아직 없다. selector 추정으로 획득하지 않는 것이 계약이며, 코드는 명시 목록만 허용한다.
+
+미확인: PREPARATION_KO 본문, LOCAL_SELFTEST 각 항목 세부, 실제 CDN 응답 헤더(Content-Length 제공 여부).
+실행 0.
+종료 UTC: 2026-11-05T19:23:39Z
+
+======================================================================
+최종 결합 절 — root 명시 후속 msg_1c22c30f32bf (FINAL_SOURCE_REVIEW_ROOT.json)
+======================================================================
+실제 수신·시작: 2026-11-05T19:29:01Z(epoch 1793906941). 끝 UTC는 절 말미에 적는다.
+- latest_dispatch_epoch 1793906872보다 약 69초 늦게 수신했다.
+- 규칙(수신부터 600초, hard outer 1793907472 = 19:37:52Z)에 따라 이 시점부터 계산한다. 원 준비 마감 19:26:22Z와는 구분한다.
+모델: claude-opus-5-5, 기존 채팅 session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5. Task/Dispatch: 미연결(자동연결 실패). helper 없음.
+위 원문 판정(파일 sha 4e4dc158…)은 그대로 보존했다. 이 절을 추가하기 직전 파일 sha는 4e4dc1581ec56f9966549841a7fad70c65493522c25c9a41f4e2cc4facf52660였다.
+원문 검토의 실제 읽은 범위
+- acquire_assets.py 289행 전체와 READY.json을 19:22:46~19:23:39Z에 읽었다.
+- PREPARATION_KO와 selftest 세부는 당시 미확인이었다. 이번에 보완한다.
+
+현재 hash (직접 sha256)
+- acquire_assets.py bab23d80bf83de3b1136e5226fa94ff40a1e354e4e146348a6071eebd0089227 = 동결값이며, 원문 검토 때와 같다. 따라서 소스를 다시 전체 검토하지 않았다.
+- READY 6b1e1dd33dee3cb6bca15342bf40930ed22af70bf8b9071e6d90ec030a3a9073 = 동결값
+- PREPARATION_KO 4cff7b61…, ROOT_SPEC 91570d22…, LOCAL_SELFTEST a5b1bdeb…: READY.files와 일치
+- FINAL_SOURCE_REVIEW_ROOT db35b2f4…
+
+이번 보완
+- PREPARATION_KO 전문을 읽었다. 기술 내용이 소스와 일치한다.
+  - manifest 필드
+  - redirect: 'HTTPS 최대 8회 추적'이다. 소스는 9회 응답 중 redirect를 최대 8회 따른다. 일치한다.
+  - 200, Content-Length, identity
+  - .part 후 size·SHA를 확인하고 rename하며, 실패 시 .part를 보존한다. 재시도·resume·Range 우회는 없다.
+  - extract·extractall 미사용, 'xb', 0700 권한과 umask 0077
+  - CRC와 count 검증, member SHA 기록
+  - 부분 추출은 failed_incomplete_assets_do_not_use 상태로 남는다.
+  - 1800초, 4GiB, 8GiB, 12GiB, RSS 2GiB, 단일 main thread
+  - OS 수준 hard limit를 단독으로 보장한다고 주장하지 않는다(root 외부 guard 필요).
+- LOCAL_SELFTEST: 17 checks 이름, network 0, GPU 0, 로드 0, source_sha256 bab23d80을 확인했다.
+  - 각 항목은 소스 selftest() 블록의 단언과 1:1로 대응한다(원문 검토 때 그 소스를 읽음).
+  - 내가 재실행하지 않았다. local tiny ZIP과 메모리 reader 기반이므로 실제 HF full download, 수 GB CRC, 네트워크 실패를 검증한 것이 아니다.
+- 참고(새 파일 관찰, 대상 외): DRAFT_ACQUISITION_MANIFEST.json(04:26:37 KST 생성)
+  - status draft_not_authorized, root_execution_authorized false, actual_claude_source_review_completed false, review_evidence 비어 있음
+  - validate_manifest 규칙상 이 초안은 실행이 거부된다(소스 판독). 승인 manifest가 아니며, member 선택의 타당성은 이번 범위 밖(loader 검토)이다.
+
+최종 판정
+- 차단 결함 없음(소스 수준). 동결 source와 READY가 원문 검토 버전과 같다.
+- 제한사항(원문과 같음)
+  - CPU 스레드 미강제(영향 작음)
+  - Content-Length 없는 200은 거부(fail-closed)
+  - RSS·마감은 프로세스 내부 표본 검사이며 외부 1800초 감독이 필요하다.
+  - 비선택 member 하나라도 이상하면 archive 전체를 거부한다(보수적).
+  - 승인 manifest와 loader 필수 member가 아직 없다.
+- 이것은 source 준비의 수용일 뿐이다. 실행·다운로드 승인이 아니다.
+  - 현재 network, 모델, payload, GPU, 설치, 재실행, 소스 수정은 모두 0이다.
+  - 향후 1800초 실행은 root의 승인 manifest와 LOCK 뒤에만 가능하다.
+최종 결합 절 종료 UTC: 2026-11-05T19:29:34Z

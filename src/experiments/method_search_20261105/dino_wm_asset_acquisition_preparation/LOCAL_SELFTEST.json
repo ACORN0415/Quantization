@@ -1,0 +1,27 @@
+{
+  "status": "local_tiny_ZIP_checks_passed",
+  "checks": [
+    "only selected member extracted",
+    "exact bytes SHA CRC and count",
+    "unsafe path rejected",
+    "unsafe path rejected",
+    "unsafe path rejected",
+    "unsafe path rejected",
+    "unsafe path rejected",
+    "unsafe path rejected",
+    "symlink rejected",
+    "encryption rejected",
+    "missing or duplicate selector rejected",
+    "missing or duplicate selector rejected",
+    "declared extraction cap rejected before write",
+    "existing destination never overwritten",
+    "full size and SHA checked before atomic final rename",
+    "SHA mismatch retains part and rejects final archive",
+    "unapproved manifest rejected before acquisition"
+  ],
+  "count": 17,
+  "network_requests": 0,
+  "GPU": 0,
+  "model_tensor_loads": 0,
+  "source_sha256": "bab23d80bf83de3b1136e5226fa94ff40a1e354e4e146348a6071eebd0089227"
+}

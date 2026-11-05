@@ -1,0 +1,35 @@
+지정 두 ZIP 취득·선택 추출 도구 준비
+실행 권한 없음. 준비에서는 원격 네트워크/실제 asset 취득/원 tensor·model load/GPU/설치/커밋을 하지 않았다. loader가 필요한 파일을 결정하지 않았으므로 writer가 필수 member 목록을 추정하지 않았다.
+
+구현은 acquire_assets.py 한 파일이며 Python 표준 라이브러리 urllib/zipfile로만 동작한다. 일반 다운로드 프레임워크·재시도·resume·대체 mirror·부가 알고리즘은 없다.
+
+미래 root manifest 계약
+- status: approved_for_one_dino_wm_asset_acquisition
+- root_execution_authorized: true
+- actual_claude_source_review_completed: true
+- source_sha256: 최종 acquire_assets.py SHA256
+- root_spec_sha256: ROOT_SPEC.json SHA256
+- metadata_result_sha256: 등록된 이전 metadata RESULT.json SHA256
+- review_evidence_sha256: 실제 최종 소스 검토 파일 절대경로→SHA256, 비어 있으면 거부
+- limits: ROOT_SPEC의 planned_future_execution_limits_not_authorized와 정확히 같음
+- revision: d5c69e8fe60c3ed6b01d2f6e88fbfd66be078e57
+- destination: /home/acorn0415 아래의 새 절대경로. 부모는 이미 존재하며 symlink 없는 canonical 경로여야 함. 기존 destination은 빈 폴더라도 재사용하지 않음. source/record 폴더와 서로 포함 관계가 없는 별도 task directory를 사용해 disk를 중복 집계하지 않음.
+- archives: 정확히 checkpoints/outputs.zip 및 datasets/pusht_noise.zip 두 항목. 각 path/url/size/sha256은 이전 pinned HF metadata와 일치해야 함. members는 root가 승인한 정확한 ZIP member 이름 문자열 목록으로, 빈 목록·중복·wildcard에 의존한 prefix 선택을 사용하지 않음.
+예시 manifest 또는 실행 승인을 이 준비 폴더에서 생성하지 않았다.
+
+원격 전송·전체 무결성
+전체 archive는 destination/archives/<basename>.part로 순차 수신한다. HTTP200/정확한 Content-Length/identity encoding을 요구한다. redirect는 HTTPS만 최대8회 추적하며 redirect body를 읽지 않는다. source filename은 지정 두 ZIP의 basename으로 고정된다.
+body를 작은 청크로 읽어 실제 읽은 바이트를 기록한다. 정확한 전체 size 및 SHA256이 맞을 때에만 final .zip으로 atomic rename하고 읽기 전용으로 둔다. mismatch/truncation/timeout이면 .part를 보존하고 실패 상태로 끝낸다. 자동 재시도/부분 재개/Range 우회 없음. 다운로드 완료 직후 SHA를 검증하기 전 ZIP member에 접근하지 않는다.
+
+선택 추출
+whole ZIP은 데이터 역직렬화 없이 중앙 디렉터리만 inspect한다. 모든 member 이름의 절대경로·..·역슬래시·NUL, 중복, 암호화, symlink/특수 파일을 거부한다. __MACOSX/.DS_Store는 승인 selectors에서 거부한다.
+ZipFile.extract/extractall을 호출하지 않는다. root-approved members만 새 destination/extracted 아래에 원 member 상대경로로 만들고 open('xb')로 기존 파일/링크 덮어쓰기를 거부한다. 새 private destination은0700, 파일은 umask0077이다. member를 청크 단위로 풀며 실제 출력 바이트와 선언값을 비교하고 ZipExtFile의 EOF CRC 검증을 통과해야 완료다. 각 member 이름·경로·바이트 수·SHA256·CRC를 기록한다. .pth/.pkl 파일도 일반 byte stream일 뿐 torch.load/pickle.load/import/실행하지 않는다.
+CRC 오류나 cap 초과에서 생긴 부분 추출 파일은 지우거나 사용하지 않고 전체 status를 failed_incomplete_assets_do_not_use로 남긴다.
+
+자원·행정
+실제 run entry부터 manifest 검증/해시/다운로드/선택 추출/최종 기록까지1800초. HTTP4GiB, 추출8GiB, 합계 disk12GiB, RSS2GiB, 단일 Python main thread(CPU2 한도 이내). payload 공간 계산에서 추가 기록용32MiB를 보수적으로 예약한다. 시간/RSS/바이트는 stream 처리 중과 완료 전 검사하며 root는 별도1800초 외부 guard를 사용해야 한다. OS 수준 hard limit를 이 스크립트가 단독으로 제공한다고 주장하지 않는다.
+RUN.json exclusive-create로 단1회 실행을 주장하며 기존 RUN/part/destination은 자동 재사용하지 않는다. source·ROOT_SPEC·metadata·manifest hash는 전후 확인한다. 준비 README/READY는 future run authorization이 아니다.
+
+작은 로컬 검사
+임시 local ZIP의 지정 파일만 추출, 값/SHA/CRC/count, 경로 이탈 거부, symlink/암호화 거부, 없는/중복 selector, 선언 용량 상한, 기존 파일 덮어쓰기 거부를 검사했다. 실제 네트워크 대신 메모리 byte reader 하나로 전체 SHA 통과 전 atomic rename과 SHA 불일치 시 part 보존도 확인했다. 미승인 manifest는 취득 전에 거부한다. 전체17개 작은 검사를 수행하며 fixture는 생성한 임시 폴더 안에서만 정리했다.
+이는 실제 HF full download, 수GB archive CRC/선택추출, 네트워크 실패 조건 전체, GPU/RAM 모델 실행을 검증한 것이 아니다. 필요한 asset 집합과 full acquisition 실행 여부는 병렬 loader gate 및 실제 Opus2 소스 검토 뒤 root가 결정한다.

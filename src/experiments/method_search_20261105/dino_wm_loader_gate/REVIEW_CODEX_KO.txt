@@ -1,0 +1,67 @@
+DINO-WM FP32 최소 실행 자산·로더 계약 독립 검토 — Codex
+작성: 2026-11-05 19:20 UTC. 운영 gate이며 새로운 방법이나 효과 판정이 아니다.
+명세: ROOT_SPEC.json, 공개 코드 be738be37a0535f75f541a6c1201ce19f95499b0.
+
+결론
+현재 checkpoint + hydra.yaml + val만으로 수정 없는 plan.py를 실행할 수 있다고 확정할 수 없다. 기본 factory는 train과 val을 모두 생성하여 train 메타데이터도 읽는다. 그러나 이는 train에서 정규화 통계를 추정하기 때문이 아니다. 통계는 코드 상수이며 tokens.pth는 확인한 PushT 경로에서 읽지 않는다. 따라서 전체 7.37GB 추출을 먼저 할 이유는 없다.
+
+운영 판단은 '즉시 FP32 실행 NO-GO, 제한된 자산 확보·연결 준비 GO'이다. 아래 27개 파일 묶음과 원래 PushTDataset의 val 직접 생성 어댑터가 가장 작은 출발점이다. 어댑터 구현·실행은 이번에 하지 않았다. 실제 저장 hydra.yaml, checkpoint의 encoder/decoder 보유 여부와 클래스 의존성, 필수 패키지를 확인해야 실행 가능으로 바꿀 수 있다. 양자화 보정에는 train 비디오가 다시 필요할 수 있으므로 이 제외 범위는 FP32 planning smoke에 한정한다.
+
+1. 소스에서 확인한 실제 로딩 순서
+plan.py:495–507은 저장 hydra.yaml을 읽고 seed를 설정한 뒤 model_cfg.env.dataset을 호출한다. conf/env/pusht.yaml은 datasets.pusht_dset.load_pusht_slice_train_val을 지정한다. 이 factory(pusht_dset.py:137–173)는 train과 val PushTDataset을 모두 만들고 두 TrajSlicerDataset을 생성한다. plan.py:538–547에서야 dset['valid']를 PlanWorkspace에 전달한다.
+
+PushTDataset은 states.pth(36행), relative=True이면 rel_actions.pth(39행), seq_lengths.pkl(45행)을 읽는다. with_velocity=True이면 velocities.pth도 읽어 state/proprio에 붙인다(69–73행). 기본 factory는 relative 인수를 변경하지 않아 class 기본값 True가 적용된다. shapes.pkl은 존재할 때만 읽고 없으면 모든 shape를 'T'로 둔다. abs_actions.pth는 relative=False일 때만 필요하다. tokens.pth는 이 class/factory/preprocessor 경로에 없다.
+
+정규화는 pusht_dset.py:14–19의 ACTION/STATE/PROPRIO_MEAN/STD 상수와 normalize_action 분기(80–96행)로 수행한다. preprocessor.py:22–44는 받은 평균·표준편차를 그대로 적용한다. train 표본을 읽어 평균·분산을 새로 적합하는 코드가 아니다. 영상은 img_transforms.py의 resize→center crop→mean/std=.5 정규화이다. 실제 저장 hydra.yaml을 아직 payload로 읽지 않았으므로 img_size/normalize_action/with_velocity의 최종 값까지 확인됐다고 하지 않는다.
+
+TrajSlicerDataset 생성은 seq_lengths로 slice 목록과 np.random.permutation을 만들 뿐 비디오를 읽지 않는다(traj_dset.py:53–75). 따라서 수정 없는 FP32 factory를 유지하더라도 train의 MP4나 tokens 전체가 필요한 것은 아니다. 반면 PlanWorkspace.sample_traj(plan.py:263–297)는 모든 val trajectory의 길이를 self.dset[i]로 확인한다. 해당 __getitem__은 MP4의 전체 프레임을 읽는다(pusht_dset.py:108–126). 이 때문에 metadata에 21개 episode가 있으면 비디오 한 개만 가져오는 것은 기본 경로에서 충분하지 않다. 리스트 조건과 본문 양쪽에서 self.dset[i]를 호출하는 중복도 있으나 이번에는 수정하지 않았다.
+
+2. 최소 파일 selector와 실제 저장량의 의미
+기존 asset metadata RESULT.json의 central-directory 기록으로 확인한 val-only 묶음은 다음 27개다.
+- outputs/pusht/hydra.yaml
+- outputs/pusht/checkpoints/model_latest.pth
+- pusht_noise/val/{states.pth,rel_actions.pth,velocities.pth,seq_lengths.pkl}
+- pusht_noise/val/obses/episode_000.mp4 … episode_020.mp4 (21개 전부)
+
+압축 member payload 합계 323,582,580B, 선언된 추출 합계 380,641,908B이다. 다운로드 local header·range overhead, DINO 추가 가중치·코드·패키지 공간은 포함하지 않는다. 이는 중앙 디렉터리 값이며 실제 압축 해제/CRC/checkpoint 로드 성공 증거가 아니다. abs_actions.pth, tokens.pth, __MACOSX, 다른 환경의 checkpoint는 이 상대 action FP32 경로에서 제외 가능하다.
+
+수정 없는 factory를 유지하는 대안은 train/{states.pth,rel_actions.pth,velocities.pth,seq_lengths.pkl}을 추가하고 shapes.pkl이 존재하면 함께 보존하는 것이다. 기존 요약의 selected_metadata가 일부 member까지만 보존되어 train의 모든 개별 파일 크기를 여기서 확정하지는 못했다. 전체 중앙 디렉터리의 train 비디오 제외 합계에서 tokens를 뺀 보수적 상한은 압축 167,640,561B/추출 404,569,367B이다. 여기에는 실제 미필요한 abs_actions 등도 포함될 수 있다. 정확한 네 member selector의 존재·크기는 획득 단계에서 다시 확인해야 한다.
+
+참고로 전체 PushT 선언 추출량 7,370,447,305B, ZIP 2,785,304,515B이고 train tokens만 추출 4,791,037,218B이다. 이 큰 tokens 파일을 읽는다는 근거는 없다. 전체 추출을 해도 빠진 런타임 의존성이나 DINO 가중치 문제는 해결되지 않는다.
+
+3. val-only 어댑터가 지켜야 할 동등성/메모리 조건
+원래 PushTDataset을 val data_path, 원 normalize_action/with_velocity/transform으로 직접 생성하면 불필요한 train constructor를 피할 수 있다. 이는 공식 CLI 그대로의 실행이 아니라 명시적인 로더 adaptation이다. 원 factory의 TrajSlicerDataset들이 NumPy RNG를 소비하므로 생략 뒤 단순 같은 seed만으로 원 CLI의 목표/초기 상태 선택이 동일하다고 주장하면 안 된다. 실제 선택할 episode·offset·초기/목표 상태를 고정·기록하고 필요하면 해당 선택 직전 재시드하는 계약이 필요하다.
+
+n_rollout은 states/actions를 전체 torch.load(...).float()한 뒤 잘린다(pusht_dset.py:57–65). n_rollout=1만으로 파일 eager load와 일시 복사 메모리가 없어지지 않는다. view가 원 storage를 유지할 가능성과 모든 slice 목록의 Python 메모리도 있다. 압축/추출 byte 수를 RAM peak로 환산하지 않는다. 64GB 장비에서 숫자 metadata 크기 자체는 큰 장벽처럼 보이지 않지만 실제 peak를 측정하지 않았다. val 21개 MP4의 선언 총 추출량은 2,478,873B이므로 이 파일들을 모두 보존하는 편이 임의 episode 축소보다 단순하다.
+
+4. checkpoint 외에 필요한 조건
+plan.py:354–364는 torch.load로 pickle 객체를 읽고 모델 key를 .to(device)한다. torch 2.6 환경에서 이러한 module-object checkpoint의 weights_only 기본 동작과 클래스 import가 호환되는지 미확인이다. 실패를 이미 관측한 것은 아니다.
+
+plan.py:376 이후 encoder key가 없으면 train_cfg.encoder를 instantiate한다. models/dino.py:12–14는 dinov2_vits14를 요구하며 torch.hub.load('facebookresearch/dinov2', name)를 호출한다. 따라서 checkpoint가 encoder를 담지 않았으면 별도 DINOv2 소스/가중치가 필요하고, 이 호출의 repository revision도 고정되지 않는다. checkpoint가 encoder를 담고 있어도 pickle 클래스 의존성이 충족되어야 한다. payload key를 보지 않았으므로 어느 경우인지 단정할 수 없다.
+
+has_decoder=True인데 decoder가 checkpoint에 없으면 plan.py:426–440이 env.decoder_path를 요구한다. 확인한 conf/env/pusht.yaml은 decoder_path:null이다. 실제 stored hydra와 checkpoint 조합 확인이 필요하다. 반대로 decoder를 쓰지 않는 설정을 임의로 바꾸어 원 실행과 같다고 할 수 없다.
+
+로컬 표준 Torch Hub tree에는 DINOv2 repository/가중치가 발견되지 않았다. dino_vitbase16_pretrain.pth 343,242,485B는 DINOv1 B16이므로 요구된 DINOv2 S14를 대신할 수 있다는 증거가 아니다. 모든 사용자 정의 캐시를 전수 검색한 것은 아니다.
+
+5. 필수 import와 현재 환경의 장애
+계측은 /home/acorn0415/sfq_data/env/bin/python(Python3.10.22)의 distribution metadata와 top-level find_spec이며 실제 모듈을 import하지 않았다. torch2.6.0+cu124, torchvision0.21.0+cu124, omegaconf2.4.0, einops0.8.2, numpy1.24.4, scipy1.15.3, timm1.0.30, OpenCV·imageio는 발견됐다. 실제 import/ABI 정상 여부는 미검증이다.
+
+helper의 metadata + top-level spec 확인에서는 hydra, wandb, gym/gymnasium, submitit, decord, pymunk, pygame, shapely가 발견되지 않았다. root의 별도 metadata 기록도 hydra-core/gym/decord/wandb 등의 distribution 부재를 뒷받침하지만 distribution 부재만으로 module 부재를 일반화하지 않는다. plan.py의 hydra/gym/wandb/submitit은 최상단 import이며 logger 비활성만으로 피할 수 없다. pusht_dset.py는 import 시 decord.bridge.set_bridge('torch')를 호출한다. 이 환경 그대로 CLI smoke를 시작할 상태가 아니다. 기존 연구 환경을 변경하지 않는 overlay/별도 환경 준비가 다음 운영 작업이다.
+
+env/__init__.py:2는 PushT만 사용할 때도 .pointmaze의 U_MAZE를 즉시 import한다. 이 전이 의존성은 8파일 상한 안에서 추가 추적하지 않았다. 따라서 MuJoCo 등 전체 pointmaze stack이 반드시 필요하다고 단정하지 않는다. PushT 전용 registration을 사용한다면 이 import 우회를 별도 adaptation으로 검토해야 한다. PushT 실제 wrapper 및 모든 transitive source를 이번에 읽었다는 주장도 하지 않는다.
+
+6. 다음 자원 판단
+전체 PushT 다운로드·전체 추출 또는 즉시 GPU 실행은 권고하지 않는다. 먼저 위 27개 selector의 제한 획득과 stored hydra/checkpoint 멤버·클래스 계약, DINOv2 필요 여부를 확인한다. val-only 원 class 연결을 택하면 train normalization/tokens 때문에 전체 데이터를 받을 필요가 없다. 수정 없는 CLI를 택하면 train의 네 metadata를 추가한다. 두 경로 모두 필수 import와 실제 환경 step 의존성을 해결한 뒤 FP32 smoke를 등록해야 한다. 이는 연구 후보 채택이나 저비트 planning 실패 원인의 결론이 아니다.
+
+출처·범위
+아래 8개 공개 파일만 확인했다. URL 공통 prefix:
+https://github.com/huawei-noah/noah-research/blob/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/
+plan.py SHA256 f368dd634d7781a411a0dc1d8869d312ff105d2d5c8608cc2854d8f5a6a965a4
+preprocessor.py c5ad3949628bec91ecdc6f8e011d4cc9f0c8cc9231f2291a77e5daf7e4fd27f3
+conf/env/pusht.yaml 506a2039d0164ff9928855928faa4ee1a33b2030888420b588bdf78f3a4859de
+datasets/pusht_dset.py 7e630c07f34f83ed06d6ccd558d189679ab7869a4cd817ad0199d151ffe939e7
+datasets/traj_dset.py cf9f538ad3d7a08768b75102df4c4be29149c6732a29845cb4f076a136cc028c
+models/dino.py 3e77b3990cdb16fd6620f03fda51e12e236a36804ac2e859b530fc6d501ac746
+env/__init__.py c2e3a0245f19b7b8910c6f7cefb9e8a0e1057e7615049af24a6b74b070bef534
+datasets/img_transforms.py 973ab63f5ff29ef371bb4ec0a6bff81f903c8a8bea7eaac14d62c9dace477c57
+실제 실행 기록: GPU·모델/데이터 tensor load·payload download·설치·실험·commit은 각각 0회다. 공개 source 본문, 기존 JSON, 로컬 package metadata만 확인했다. 현재 독립 Opus1의 결론은 읽지 않았다.

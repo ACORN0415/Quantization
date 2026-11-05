@@ -1,0 +1,22 @@
+{
+  "status": "source_accepted_pending_final_loader_manifest_and_root_execution_lock",
+  "created_epoch": 1793907016.0476782,
+  "actual_Claude": "claude-opus-5-5 existing Opus2,19:22:46–19:23:39UTC",
+  "timing": "Completed before original19:26:22codepreparation deadline. Separate future final-review window was not needed for this result; do not count it as another review.",
+  "source_sha256": "bab23d80bf83de3b1136e5226fa94ff40a1e354e4e146348a6071eebd0089227",
+  "root_review": "Entire289line source incl local selftest read. No source changes after frozen bab23; actual reviewer read whole source/READY, did not rerun tests or inspect all selftest record details.",
+  "limitations": [
+    "No real CDN fullGET Content-Length behavior tested",
+    "Guards are streaming sampled not OS hard limits; root external1800s needed",
+    "Source review does not establish exact required loader member set or GPU/model readiness",
+    "DRAFT manifest false authorization flags; no RUN/model/payload acquisition yet"
+  ],
+  "evidence": {
+    "acquire_assets.py": "bab23d80bf83de3b1136e5226fa94ff40a1e354e4e146348a6071eebd0089227",
+    "READY.json": "6b1e1dd33dee3cb6bca15342bf40930ed22af70bf8b9071e6d90ec030a3a9073",
+    "LOCAL_SELFTEST.json": "a5b1bdeb6c74b55d6b1fd4561a217cc00bb218d7aac2dd277bdf105ebe81a8c2",
+    "PREPARATION_KO.txt": "4cff7b619367b21a35b4346fe3474139c0953741c8c1a816c2ffe099d1db0bbe",
+    "ROOT_SPEC.json": "91570d22fc644d970c9b01a2214b88534d6c562bb47f2fd144ed9857aca5b4a3",
+    "REVIEW_OPUS_KO.txt": "031f3fd77e9e4bd340f01d4e949dbe2f6135f136d48627090b587f1dfb98ecdf"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "prepared_epoch": 1793906572.4266276,
+  "latest_dispatch_epoch": 1793906872.4266276,
+  "review_seconds_from_actual_delivery": 600,
+  "absolute_latest_finish_epoch": 1793907472.4266276,
+  "GPU": 0,
+  "model_tensor_loads": 0,
+  "asset_payload_downloads": 0,
+  "installation": 0,
+  "source_modifications": 0,
+  "transmission_rule": "Forward existing actual chat first, preserve delivery receipt, then bookkeeping. No new chat/worker/model/review-substitute. If dispatch cannot meet outer bound, mark pending without pretending source review completed.",
+  "status": "one_explicit_readonly_followup_after_original_source_review_incomplete",
+  "original_deadline_epoch": 1793906482.3160875,
+  "reason": "Existing Opus1 assignment delivered19:19:09 after8min transit; returned source0/8 incomplete. Operational wait is not technical no-go. Original spec/report unchanged; no experimental data/effect was viewed.",
+  "target": "DINO-WM loader gate original question, independent from Codex report",
+  "source_files": [
+    "plan.py",
+    "datasets/pusht_dset.py",
+    "conf/env/pusht.yaml",
+    "preprocessor.py",
+    "models/dino.py",
+    "datasets/traj_dset.py",
+    "datasets/img_transforms.py",
+    "env/__init__.py"
+  ],
+  "code_prefix": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/",
+  "source_files_max": 8,
+  "instruction": "Read loader and dataset first; determine exact required asset file names, train/val/tokens/normalization and extra dependencies. Do not read counterpart report/conclusions. Local package metadata+original ZIPmetadata allowed. Own helper1 permitted shared budget, no full paper search.",
+  "output": "dino_wm_loader_gate/REVIEW_OPUS_FOLLOWUP_KO.txt"
+}

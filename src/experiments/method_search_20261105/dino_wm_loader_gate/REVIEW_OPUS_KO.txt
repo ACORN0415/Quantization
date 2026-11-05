@@ -1,0 +1,17 @@
+DINO-WM PushT FP32 planning smoke loader gate — 독립 검토 (실제 Opus1, root msg_a31eb81db7d7)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음(역사적 terminal_handle_stale).
+실제 시작 2026-11-05T19:19:09Z(배정 수신이 늦어 원 마감 19:21:22Z까지 약 2분), 상대 fair 자료 미열람. helper 0(시간 부족).
+읽은 것: ROOT_SPEC.json, ROOT_LOCAL_PACKAGE_METADATA.json, dino_wm_asset_metadata_preparation/RESULT.json 앞부분(로컬). 공개 source 파일 0개 열람(0/8, 시도 0).
+실행 0(import/torch/pickle/다운로드/설치/GPU 없음).
+
+판정: 미완료 — loader source를 읽지 못해 필수 selector·normalization·token·eager RAM·DINO pretrained 필요 여부를 판정할 수 없다. "checkpoint+hydra+val로 충분"을 추정하지 않는다.
+현재 근거로 말할 수 있는 것(로컬 metadata만)
+ - checkpoints/outputs.zip(953,204,628B, LFS sha 425b0d8c…) 안 outputs/pusht/checkpoints 그룹 2 member, 압축 321,091,695B / 비압축 377,929,744B, outputs/pusht 그룹 2 member(yaml 등
+   약 2KB). 이것이 PushT 모델·hydra 후보이며 정확한 member 이름은 이번에 확인하지 않았다(RESULT의 selected 목록 미열람).
+ - 로컬 env 배포판 metadata: hydra-core, gym/gymnasium, pymunk, decord, h5py, wandb 메타 없음; omegaconf 2.4.0, torch 2.6.0, torchvision 0.21.0, timm, einops, av, opencv 있음.
+   메타 부재가 모듈 부재 증명은 아니나(ROOT 주의), PushT env가 pymunk·gym 계열을 쓰는지와 hydra 의존은 source 미확인이다. 이 상태로는 FP32 smoke의 import 준비가 확인되지 않는다.
+ - 디스크 여유 103,014,715,392B.
+go/no-go: no-go(현재) — 근거 부족. 다음 근거로 필요한 것: upstream 0a9492fa의 PushT dataset loader(normalization 통계가 train 전체에서 계산되는지), env 생성 코드(import 목록),
+ encoder의 DINOv2 pretrained 획득 경로(torch.hub 등 추가 다운로드 여부), plan 진입 스크립트의 hydra 의존 — 이 4가지를 source로 확인한 뒤 root가 manifest와 LOCK을 만든다.
+이 판정은 작업 범위·시간 제약 때문이며 새 사용자 승인 요구가 아니다. asset 획득·실험 승인 아님.
+실제 끝: 2026-11-05T19:19:31Z
