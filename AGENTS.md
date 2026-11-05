@@ -26,11 +26,13 @@ Claude가 검토자·지도교수 역할과 연구안 공동 제안 역할을 �
 ## 실제 Claude 사용
 
 - `orchestration` 스킬과 현재 Orca 실행 파일의 지침을 읽고 `--agent claude`로
-  작업자를 실행한다. 사용자가 2026-11-04에 모델을 지정했으므로
-  `--model fable`을 사용한다. 다른 모델로 조용히 대체하지 않는다.
+  작업자를 실행한다. 사용자의 2026-11-05 최신 지시는 오늘 21:50(Asia/Seoul)부터
+  Opus 5.5로 전환하는 것이다. 그 시각 전에는 Claude를 호출하지 않는다.
+  해당 버전의 실제 provider 모델 식별자를 확인해 사용하며 다른 모델로 조용히 대체하지 않는다.
+  과거 Fable 검토는 Opus 검토로 다시 표시하지 않는다.
   채팅 세션을 먼저 실행한 뒤 스킬의 세션 연결 절차로 검토 Task를 연결한다.
 - 사용자의 최신 지시: Claude의 시작 작업공간은 `/home/acorn0415`, 화면은
-  Orca 채팅이다. `agent launch --agent claude --model fable --surface chat
+  Orca 채팅이다. `agent launch --agent claude --model <확인한 Opus 5.5 식별자> --surface chat
   --worktree path:/home/acorn0415`를 사용하고 반환값에서 실제 채팅 실행을 확인한다.
   CLI 터미널로 조용히 대체하지 않는다. 셸의 현재 경로만으로 작업공간을 추정하지 않는다.
 - Quantization 검토 요청에는 대상 프로젝트 `/home/acorn0415/Quantization`과

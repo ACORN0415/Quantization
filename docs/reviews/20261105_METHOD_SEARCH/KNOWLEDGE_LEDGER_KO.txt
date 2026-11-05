@@ -191,4 +191,24 @@ obq_gpu_encoder_stage2: /usr/local/bin/ninja의Python모듈누락으로첫load�
 정상/usr/bin/ninja와CUDA12.4호환hostcompiler를프로세스환경에고정하는별도envfix검토.
 수학/커널/품질기준불변,처음supervisor시작+2700초절대마감공유,전역설치/환경수정없이유효실행회복을진행.
 
+E016 [환경 복구와 전처리 유효성 조사]
+envfix는동일CUDA소스로실제컴파일1회24.04초완료,ptxas40register/stack0/spill0. 기존커널.so SHAae6e1a50caeff3b13327ab15b27a3e20695530938d4068ab5e578291697eff75.
+두실제T_code사례의네구현은CPU packet정확일치및다른입력/U를사용한출력수명검사를통과했다.
+T_encoder는Graph두번째입력불일치로실패. 품질/타이밍0이며방법효과의음성결과로집계하지않는다.
+stage2_validity_probe(1.965초,compile/quality/timing0)에서네구현모두첫출력보존true,RTN_eager/OBQ_fused두입력참조일치.
+Graph두번째입력의전처리z1080개/scale6개가eager와달랐다. 두입력모두contiguous지만singleton batch stride가50319360/7188480으로다름.
+공식ATen should_fold소스및CPU profiler는각각bmm/mm분기를지지한다. 실제CUDA하위커널trace를확인한것은아니다.
+CPU감사49검사통과. 원본실패자료보존,허용오차변경없음.
+
+D008 [최소 전처리 수정과 전체생성 준비를 별개 업무로 유지]
+업무1(Codex fair/Fable fair): GPU회전을명시적2Dmm로고정하는layoutfix. 원CUDA kernel/기준/4endpoint20%그대로,기존.so재사용compile0,
+original절대마감1793875658.1258163을공유. 유효성/품질/비용검토전전체생성시작않음.
+업무2(Codex gap/Fable gap): 새두입력×BF16/두RTN/FULL의8generation파일럿코드준비,stage2통과전GPU금지.
+Fable제안의RTN간차이를기기잡음으로간주하는규칙은채택하지않음. 서로다른양자화개입의차이와반복측정잡음은구별한다.
+NSE>=0.8을상관상실/판단불가로간주하는규칙도근거없어채택않음. 창별NSE와RTN간차이는설명자료로보고하되기존판정기준유지.
+
+운영기록: 실제Fable두채팅이19:30경5-hour rate_limit으로실패,복구안내21:50KST. REVIEW_AVAILABILITY.json에원본오류근거보존.
+Fable대체/검토완료허위표시없음. layoutfix는실제원칙검토+root소스검토에따라실행전행정변경(최종Fable소스/결과검토시점유예)을기록.
+품질/정확성/자원/실험대상기준변경없고원45분마감유지. 실험기술적완료와Fable최종검토/연구완료를별도표시한다.
+
 상태: 국소효과와새입력native경로신호는있으나,전체생성품질/전체GPUencoder비용/신규성의종합검증은아직미완료. 연속연구목표active.

@@ -40,8 +40,9 @@ Claude가 반환할 내용:
 
 ## 실행과 기록
 
-- 사용자가 2026-11-04에 Fable, `/home/acorn0415`에서 시작, Orca 채팅 표시를 지정했다.
-  `agent launch --agent claude --model fable --surface chat
+- 사용자가 2026-11-05에 오늘 21:50(Asia/Seoul)부터 Opus 5.5로 전환하도록 지정했다.
+  그 시각 전에는 Claude를 호출하지 않는다. `/home/acorn0415` 시작과 Orca 채팅 표시는 유지한다.
+  실제 provider 모델 식별자를 확인하고, `agent launch --agent claude --model <Opus 5.5 식별자> --surface chat
   --worktree path:/home/acorn0415 --json`으로 실제 Claude 채팅을 만든다.
   실행 응답의 화면 종류와 작업공간을 확인한다. 터미널로 대체됐으면 채팅 완료로 보고하지 않는다.
 - 스킬의 low-level topology 절차에 따라 반환된 채팅 handle에
@@ -53,7 +54,7 @@ Claude가 반환할 내용:
   성공적으로 연결한 검토 채팅은 유지한다.
 - Task에 `/home/acorn0415/Quantization`과 읽을 규칙·자료의 절대 경로를 명시한다.
   시작 작업공간과 검토 대상 프로젝트를 구분한다. 기존 터미널 작업을 자동 이관했다고
-  표시하지 않고, 기본 모델의 과거 검토와 Fable 검토도 구분한다.
+  표시하지 않고, 과거 기본 모델·Fable 검토와 이후 Opus 5.5 검토도 구분한다.
 - 읽기 전용 검토를 기본으로 하며 실험 실행과 파일 수정 권한은 별도로 명시한다.
 - 스킬이 안내한 비동기 반환 절차를 따른다. 접수와 완료를 구분해 보고한다.
 - 검토 기록에는 날짜, 대상 파일 또는 commit, 실제 Task/Dispatch 식별자,

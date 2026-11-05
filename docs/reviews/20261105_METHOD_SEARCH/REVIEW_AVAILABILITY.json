@@ -1,0 +1,34 @@
+{
+  "observed_utc": "2026-11-05T10:39:26.018034+00:00",
+  "reviews": [
+    {
+      "session": "claude_7167c0b2_86fb_4a17_b991_393ed0d47c37",
+      "source_transcript": "/home/acorn0415/.claude/projects/-home-acorn0415/e228fcb6-e42d-4ea9-8053-bfc58803e531.jsonl",
+      "error": "rate_limit",
+      "timestamp": "2026-11-05T10:30:07.312Z",
+      "message": [
+        "You've hit your 5-hour limit · resets 9:50pm (Asia/Seoul)"
+      ]
+    },
+    {
+      "session": "claude_131e855b_fd2a_4531_a3a5_9b092b5af23d",
+      "source_transcript": "/home/acorn0415/.claude/projects/-home-acorn0415/9a88f72a-7cb5-4ef5-9622-73c413080be6.jsonl",
+      "error": "rate_limit",
+      "timestamp": "2026-11-05T10:30:31.521Z",
+      "message": [
+        "You've hit your 5-hour limit · resets 9:50pm (Asia/Seoul)"
+      ]
+    }
+  ],
+  "substitution": false,
+  "final_source_and_result_review": "pending",
+  "next_retry_not_before": "2026-11-05T21:50:00+09:00",
+  "user_override": {
+    "model": "Opus 5.5",
+    "effective_at": "2026-11-05T21:50:00+09:00",
+    "invoke_claude_before_effective_at": false,
+    "provider_model_id": "pending_runtime_confirmation",
+    "surface": "chat",
+    "cwd": "/home/acorn0415"
+  }
+}

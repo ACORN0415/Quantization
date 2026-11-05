@@ -62,5 +62,35 @@
       ]
     },
     "gpu_constraint": "R8d and causal diagnostic completed; check idle before cost test. Work2 CPU only."
+  },
+  "phase_4": {
+    "work_1": {
+      "scope": "Full-H fused GPU encoder validity, owned packets, native output and paired cost; one original 45-minute cap",
+      "codex": "/root/fair_comparison_codex",
+      "claude_session": "claude_7167c0b2_86fb_4a17_b991_393ed0d47c37",
+      "messages": [
+        "msg_5d4f9b1cea15",
+        "msg_5fe99e9b41ba"
+      ]
+    },
+    "work_2": {
+      "scope": "Two fresh-input full rollout pilot registration, adapter, generation and quality audit; execution conditional on stage2 validity and cost review",
+      "codex": "/root/method_gap_codex",
+      "claude_session": "claude_131e855b_fd2a_4531_a3a5_9b092b5af23d",
+      "messages": [
+        "msg_52d77fa29cc6",
+        "msg_be0388807933"
+      ]
+    },
+    "gpu_constraint": "Work2 GPU remains prohibited until work1 has valid exact packets/lifetime/native-quality results and root/Fable cost review."
+  },
+  "review_availability": {
+    "record": "REVIEW_AVAILABILITY.json",
+    "both_claude": "rate_limit_until_21_50_KST",
+    "assigned_reviewers_preserved": true,
+    "substitution": false,
+    "next_model": "Opus 5.5",
+    "effective_at": "2026-11-05T21:50:00+09:00",
+    "call_before_effective_at": false
   }
 }
