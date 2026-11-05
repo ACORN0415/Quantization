@@ -1,0 +1,58 @@
+DINOv2 source closure — 최종 자료 좁은 검토 (Opus2, root msg_cd9ebbcbb577 / msg_7e9b15bd6d3e / msg_f1ca7553d5b4)
+배정 수신: 2026-11-05T19:54:26Z(관리자 accepted 19:54:22.620Z). 최종 자료 수신과 검토 시작: 20:01:12Z.
+보수적 상한은 20:04:22.620Z이고 hard outer는 20:25:26Z다. 최종 자료를 받았다고 600초를 다시 세지 않았다.
+모델: claude-opus-5-5, 기존 채팅 session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5. Task/Dispatch: 미연결(자동연결 실패). helper는 쓰지 않았다(시간 부족, 부모 직접).
+수행: 로컬 파일 읽기와 sha만. 추가 HTTP·원문 조사, GPU, weight·wheel payload, torch.load·pickle.load, tensor, 모델 import·실행, 설치, 원본 수정은 모두 0이다.
+
+hash (직접 sha256, 지정값과 일치)
+- REPORT_CODEX_KO 1b2bdf72…, SOURCE_MANIFEST_PROPOSED 45e95223…, ROOT_SPEC c5e72e7c…
+읽은 범위
+- REPORT 전문: 1-3절, 4절 grep 행(52-67), 5-6절, 자원 기록
+- SOURCE_MANIFEST의 최상위 필드, official_weight, quantwm_core
+- 계약 확인 때 runtime_preparation 입력 3개의 요약
+- 미확인: DINO·QuantWM source 원문 20개(직접 대조하지 않음), DINO_TREE·READBACK JSON 세부, vit_q 원문
+
+판정: 타당(한정). source·metadata 준비로서 차단 결함은 없다. manifest는 미승인 proposal로 남아 있다(status ..._NOT_EXECUTABLE, root_execution_authorized false).
+
+root 요구 확인 (Codex 기록 기준. 'source 원문 직접 대조'는 내가 하지 않았다)
+- 공식 commit 7764ea0f912e53c92e82eb78a2a1631e92725fc8로 고정했다.
+  - 학습 당시 hub revision이 아니라는 점과 bit 동일성을 주장하지 않는다는 점을 명시했다. 타당하다.
+- constructor: vit_small, patch_size 14, img_size 518, init_values 1.0, ffn mlp, block_chunks 0, register 0, interpolate_antialias False, interpolate_offset 0.1.
+  - 기본값(patch 16, block_chunks 1)과의 차이도 지적했다.
+  - pretrained 원격 취득은 끈다. 로컬 고정 weight를 strict=True로 로드하는 것은 후속 등록 조건이다.
+- 공식 weight: dl.fbaipublicfiles.com/dinov2/dinov2_vits14/dinov2_vits14_pretrain.pth, HEAD 200, Content-Length 88,283,115B, body 0B.
+  - trusted_SHA256은 null이다. ETag를 SHA로 해석하지 않았다.
+  - '어디에도 없다'를 증명하지 않았다고 명시했다. 없는 SHA를 지어내지 않았다.
+- 후속 계약(한계 포함)
+  - 공식 HTTPS 고정 URL, source에서 나온 이름, 광고 크기, root의 명시 승인, 1회 한정 취득 후 독립 SHA.
+  - 이 SHA는 이후 로컬 무결성의 기준일 뿐 공식 사전 SHA와의 일치 검증이 아니다(REPORT가 명시). 출처 위조나 CDN 변경 위험을 사전에 배제하지 못하는 한계가 남는다.
+  - 영구 불가로 판정하거나 HF·DINOv1로 대체하자는 주장은 없다.
+- FP32-only namespace adapter (root 선택)
+  - 원 models/__init__.py(vit_q 즉시 import)는 수정하지 않는다. synthetic package의 __path__/__spec__을 고정 디렉터리에 연결해 models.vit, vqvae, proprio의 qualified name과 원문을 보존한다(REPORT 4절, manifest two_root_choices).
+  - pickle의 global(models.vit ViTPredictor 등)과 module 경로가 같으므로 클래스 정체성은 원리상 보존된다.
+  - 미확인
+    (a) 원 __init__ 실행을 건너뛰는 것이 export 외의 부작용을 놓치는지
+    (b) vit, vqvae, proprio가 다시 vit_q나 quant 모듈을 import하는지. REPORT는 vqvae가 distributed_fn을 필요로 한다는 것만 확인했다.
+    (c) sys.path·sys.modules에 이미 다른 'models'가 있을 때의 shadowing
+    (d) 현재 Accelerate와 HF Hub 버전에서 checkpoint의 optimizer·Accelerate 객체 복원 호환성(REPORT도 미검증으로 명시)
+  - 원 CLI나 full planner의 재현이 아니라는 표기가 지켜졌다.
+- core와 full 분리
+  - VWorldModel 본체는 torch, torchvision, einops만 import하고 planning, env, Hydra, WandB는 쓰지 않는다(REPORT 기록).
+  - model-only smoke와 PushT CEM/MPC·env·dataset loader를 분리했다. 타당하다.
+- Resize 224→196, token 196(14×14): REPORT 6절에 VWorldModel.__init__:55-61의 (image_size//16)·patch_size 식으로 기록돼 있다.
+  - root가 제공한 사실과 Codex의 source 인용이 일치한다. 내가 원 소스를 직접 대조하지는 않았다.
+  - 224/256 standalone 결과를 WM 검사로 세지 않는다는 원칙이 기록됐다.
+- 추가로 타당한 지적
+  - SAFE_PICKLE_METADATA에 encoder 키가 없다. 따라서 DINO weight는 공식 pretrained에서 와야 한다.
+  - xFormers off(SDPA fallback)는 과거 수치와 다를 수 있다.
+  - VWorldModel.eval()은 None을 반환한다.
+  - 원 dino.py가 hub 검증 함수를 바꿔 끼우는 동작을 하지 않는 offline wrapper는 명시적 adaptation이다.
+
+남은 차단은 실행 전 조건이며 이번 범위의 결함은 아니다
+- adapter 구현과 그 검토
+- 로컬 weight 취득·SHA·strict 로드 정책
+- vit_q와 다른 모듈의 재import 여부, shadowing 검사
+- Accelerate 객체 복원 정책(weights_only=False fallback 금지)
+- 실제 import와 forward
+모두 미수행·미검증이다. 실행·설치·취득 승인이 아니다.
+종료 UTC: 2026-11-05T20:01:59Z

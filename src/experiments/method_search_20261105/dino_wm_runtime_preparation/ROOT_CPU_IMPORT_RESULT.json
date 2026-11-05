@@ -1,0 +1,71 @@
+{
+  "start_epoch": 1793909114.6421883,
+  "modules": {
+    "torch": {
+      "status": "imported",
+      "file": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torch/__init__.py",
+      "version": "2.6.0+cu124"
+    },
+    "torchvision": {
+      "status": "imported",
+      "file": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torchvision/__init__.py",
+      "version": "0.21.0+cu124"
+    },
+    "numpy": {
+      "status": "imported",
+      "file": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/numpy/__init__.py",
+      "version": "1.24.4"
+    },
+    "einops": {
+      "status": "imported",
+      "file": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/einops/__init__.py",
+      "version": "0.8.2"
+    },
+    "yaml": {
+      "status": "imported",
+      "file": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/yaml/__init__.py",
+      "version": "6.0.3"
+    },
+    "accelerate": {
+      "status": "imported",
+      "file": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/accelerate/__init__.py",
+      "version": "1.15.0"
+    },
+    "accelerate.optimizer": {
+      "status": "imported",
+      "file": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/accelerate/optimizer.py",
+      "version": null
+    },
+    "accelerate.state": {
+      "status": "imported",
+      "file": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/accelerate/state.py",
+      "version": null
+    },
+    "accelerate.utils.dataclasses": {
+      "status": "imported",
+      "file": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/accelerate/utils/dataclasses.py",
+      "version": null
+    }
+  },
+  "checkpoint_symbols": {
+    "accelerate.optimizer": {
+      "AcceleratedOptimizer": true
+    },
+    "accelerate.state": {
+      "AcceleratorState": true,
+      "GradientState": true
+    },
+    "accelerate.utils.dataclasses": {
+      "DistributedType": true,
+      "DynamoBackend": true,
+      "TorchDynamoPlugin": true
+    }
+  },
+  "tensor_or_pickle_loads": 0,
+  "installs": 0,
+  "network_requested": 0,
+  "cuda_initialized": false,
+  "peak_rss_bytes": 558432256,
+  "finish_epoch": 1793909115.7762923,
+  "scope": "installed import/class existence only; no checkpoint restoration or constructor/model forward; compatibility still unproven"
+}

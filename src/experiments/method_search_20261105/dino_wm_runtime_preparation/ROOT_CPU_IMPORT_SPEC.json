@@ -1,0 +1,23 @@
+{
+  "status": "root_authorized_readonly_existing_package_import_probe",
+  "approved_epoch": 1793909114.583418,
+  "source_sha256": "9fef6174f8d7d910f2dd1d440da0f1adcf9c54cbdd2bab72d2b61db26014a573",
+  "interpreter": "/home/acorn0415/sfq_data/env/bin/python",
+  "scope": "Check existing imports and named checkpoint classes before assuming old overlay packages necessary. Not model/tensor/pickle loading.",
+  "limits": {
+    "wall_seconds": 60,
+    "CPU": 2,
+    "RSS_GiB": 2,
+    "network": 0,
+    "GPU": 0,
+    "installation": 0
+  },
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "",
+    "PYTHONNOUSERSITE": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "HF_HUB_OFFLINE": "1",
+    "TRANSFORMERS_OFFLINE": "1"
+  },
+  "meaningful_review_context": "Basic read-only preparation probe; include source/result in current setup Opus review. No method/effect/execution completion claim."
+}

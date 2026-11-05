@@ -1,0 +1,24 @@
+{
+  "status": "root_selected_existing_environment_first_no_package_install",
+  "decided_epoch": 1793909225.8411129,
+  "reason": "Existing installed core packages and6namedcheckpointclasses import successfully. No observed reason yet to downgrade Accelerate/HFHub or add Hydra to a model-only smoke.",
+  "probe_exit_code": 0,
+  "probe_wall_seconds": 1.1341040134429932,
+  "peak_RSS_bytes": 558432256,
+  "CUDA_initialized": false,
+  "evidence_sha256": {
+    "ROOT_CPU_IMPORT_SPEC.json": "bf3fd38bfb323c5dbcf64e66b66b081ebcc141a913e4e90eb5081ad80e0d8706",
+    "root_cpu_import_probe.py": "9fef6174f8d7d910f2dd1d440da0f1adcf9c54cbdd2bab72d2b61db26014a573",
+    "ROOT_CPU_IMPORT_RESULT.json": "5c0355a831252a29ba747b57df33cddae4f9ca16539cba983d02525072b3848a"
+  },
+  "constraints": [
+    "Same existing interpreter, PYTHONDONTWRITEBYTECODE=1, no env changes.",
+    "Setup initial approved package list empty; only pinned source and official encoder asset needed first.",
+    "Old checkpoint actual pickle restoration remains untested; named-class presence is insufficient.",
+    "No package/version fallback or retries silently. If actual restoration fails, preserve failure and diagnose before deciding a bounded environment change."
+  ],
+  "model_loads": 0,
+  "GPU": 0,
+  "installations": 0,
+  "old_package_proposal_retained_unapproved": true
+}

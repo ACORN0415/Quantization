@@ -1,0 +1,2109 @@
+{
+  "obtained_epoch": 1793908277.3691068,
+  "commit": "7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+  "commit_date": "2026-06-03T15:28:49Z",
+  "commit_response_bytes": 15483,
+  "tree_response_bytes": 66329,
+  "commit_metadata_url": "https://api.github.com/repos/facebookresearch/dinov2/commits/main",
+  "tree_metadata_url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/7764ea0f912e53c92e82eb78a2a1631e92725fc8?recursive=1",
+  "tree": {
+    "sha": "7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+    "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+    "tree": [
+      {
+        "path": ".github",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "e13d88a88b74545ab773034f9f2f5e77e6ef662b",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/e13d88a88b74545ab773034f9f2f5e77e6ef662b"
+      },
+      {
+        "path": ".github/workflows",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "17da68d672fb19a716c411ba0394a32b34434568",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/17da68d672fb19a716c411ba0394a32b34434568"
+      },
+      {
+        "path": ".github/workflows/lint.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "61904e6688e586972a53b4082338b677ff4ebe43",
+        "size": 796,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/61904e6688e586972a53b4082338b677ff4ebe43"
+      },
+      {
+        "path": ".gitignore",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f6893ca30f324f6ed3e18ae9c726af8377c57c69",
+        "size": 106,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/f6893ca30f324f6ed3e18ae9c726af8377c57c69"
+      },
+      {
+        "path": "CODE_OF_CONDUCT.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3232ed665566ec047ce55a929db1581dbda266a1",
+        "size": 3537,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/3232ed665566ec047ce55a929db1581dbda266a1"
+      },
+      {
+        "path": "CONTRIBUTING.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "afc89823fc90b920f0758f50e4d808df6a884a34",
+        "size": 1239,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/afc89823fc90b920f0758f50e4d808df6a884a34"
+      },
+      {
+        "path": "LICENSE",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5471dc10377b76db85a2feca7a99a7eef4980ba8",
+        "size": 11359,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/5471dc10377b76db85a2feca7a99a7eef4980ba8"
+      },
+      {
+        "path": "LICENSE_CELL_DINO_CODE",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "102013379aa9a5215236b66d418771a239e57470",
+        "size": 18655,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/102013379aa9a5215236b66d418771a239e57470"
+      },
+      {
+        "path": "LICENSE_CELL_DINO_MODELS",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "284ebaf6583e817b65a47e824bb15ef5ff7070aa",
+        "size": 11487,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/284ebaf6583e817b65a47e824bb15ef5ff7070aa"
+      },
+      {
+        "path": "LICENSE_XRAY_DINO_MODEL",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0561abf417f16f579987c7d4a0340005b2fee0fe",
+        "size": 9878,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/0561abf417f16f579987c7d4a0340005b2fee0fe"
+      },
+      {
+        "path": "MODEL_CARD.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "21b9bf295c8cab14e782e1a7a1d051be9e501088",
+        "size": 9152,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/21b9bf295c8cab14e782e1a7a1d051be9e501088"
+      },
+      {
+        "path": "README.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "906cd08c55b33306da438df3da837c0f9bf94ff0",
+        "size": 32799,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/906cd08c55b33306da438df3da837c0f9bf94ff0"
+      },
+      {
+        "path": "conda-extras.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "71574c4d32e31c1e134ffb2102daa86a14867bb8",
+        "size": 495,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/71574c4d32e31c1e134ffb2102daa86a14867bb8"
+      },
+      {
+        "path": "conda.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "35dfc30adc275da51b58ff2340dd1d53d2cb9250",
+        "size": 436,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/35dfc30adc275da51b58ff2340dd1d53d2cb9250"
+      },
+      {
+        "path": "dinov2",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "5459891f2cee5a229d6e84a0eb9bc9bdd25bf5bd",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/5459891f2cee5a229d6e84a0eb9bc9bdd25bf5bd"
+      },
+      {
+        "path": "dinov2/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ae847e46898077fe3d8701b8a181d7b4e3d41cd9",
+        "size": 218,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/ae847e46898077fe3d8701b8a181d7b4e3d41cd9"
+      },
+      {
+        "path": "dinov2/configs",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "fb0d1ec3fb62a9266d94e55b368d395bb641eb1b",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/fb0d1ec3fb62a9266d94e55b368d395bb641eb1b"
+      },
+      {
+        "path": "dinov2/configs/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "68e0830c62ea19649b6cd2361995f6df309d7640",
+        "size": 681,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/68e0830c62ea19649b6cd2361995f6df309d7640"
+      },
+      {
+        "path": "dinov2/configs/eval",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "e23c896db0ea5934aaf67ef65b42ebb7e0c0fd8d",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/e23c896db0ea5934aaf67ef65b42ebb7e0c0fd8d"
+      },
+      {
+        "path": "dinov2/configs/eval/cell_dino",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "272d8711b7d2751b49620b352b376473baff8e82",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/272d8711b7d2751b49620b352b376473baff8e82"
+      },
+      {
+        "path": "dinov2/configs/eval/cell_dino/vitl16_channel_adaptive_pretrain.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e32eb1772ccb5d59c8566987a06498cadf126b63",
+        "size": 664,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/e32eb1772ccb5d59c8566987a06498cadf126b63"
+      },
+      {
+        "path": "dinov2/configs/eval/cell_dino/vitl16_pretrain.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0c31ee81c4c69a83a8753fdd06583843e0485fa3",
+        "size": 260,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/0c31ee81c4c69a83a8753fdd06583843e0485fa3"
+      },
+      {
+        "path": "dinov2/configs/eval/vitb14_pretrain.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "117d0f027ca26cd8ce6c010bb78d5a8fac42c70e",
+        "size": 151,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/117d0f027ca26cd8ce6c010bb78d5a8fac42c70e"
+      },
+      {
+        "path": "dinov2/configs/eval/vitb14_reg4_pretrain.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d53edc04a0761b4b35c147d63e04d55c90092c8f",
+        "size": 232,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/d53edc04a0761b4b35c147d63e04d55c90092c8f"
+      },
+      {
+        "path": "dinov2/configs/eval/vitg14_pretrain.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a96dd5b117b4d59ee210b65037821f1b3e3f16e3",
+        "size": 178,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/a96dd5b117b4d59ee210b65037821f1b3e3f16e3"
+      },
+      {
+        "path": "dinov2/configs/eval/vitg14_reg4_pretrain.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "15948f8589ea0a6e04717453eb88c18388e7f1b2",
+        "size": 259,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/15948f8589ea0a6e04717453eb88c18388e7f1b2"
+      },
+      {
+        "path": "dinov2/configs/eval/vitl14_pretrain.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "7a984548bd034f762d455419d7193917fa462dd8",
+        "size": 152,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/7a984548bd034f762d455419d7193917fa462dd8"
+      },
+      {
+        "path": "dinov2/configs/eval/vitl14_reg4_pretrain.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0e2bc4e7b24b1a64d0369a24927996d0f184e283",
+        "size": 233,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/0e2bc4e7b24b1a64d0369a24927996d0f184e283"
+      },
+      {
+        "path": "dinov2/configs/eval/vits14_pretrain.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "afbdb4ba14f1c97130a25b579360f4d817cda495",
+        "size": 152,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/afbdb4ba14f1c97130a25b579360f4d817cda495"
+      },
+      {
+        "path": "dinov2/configs/eval/vits14_reg4_pretrain.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d25fd638389bfba9220792302dc9dbf5d9a2406a",
+        "size": 233,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/d25fd638389bfba9220792302dc9dbf5d9a2406a"
+      },
+      {
+        "path": "dinov2/configs/ssl_default_config.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "cdbea43d8e497baec8ab5172b1f83d037f29a4d9",
+        "size": 2757,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/cdbea43d8e497baec8ab5172b1f83d037f29a4d9"
+      },
+      {
+        "path": "dinov2/configs/train",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "cd8ad3aa55d04029f19ce31bc0782f0d76af4327",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/cd8ad3aa55d04029f19ce31bc0782f0d76af4327"
+      },
+      {
+        "path": "dinov2/configs/train/cell_dino",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "8379072c18c47ce1c3c06cd837e69a0bf14e81eb",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/8379072c18c47ce1c3c06cd837e69a0bf14e81eb"
+      },
+      {
+        "path": "dinov2/configs/train/cell_dino/vitl16_boc_hpafov.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "4520df31547be6078237811b3e2b3a29c40db899",
+        "size": 538,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/4520df31547be6078237811b3e2b3a29c40db899"
+      },
+      {
+        "path": "dinov2/configs/train/cell_dino/vitl16_hpafov.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "59496f93dfdf1cb022976e99f0a1d9a52df54a0a",
+        "size": 546,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/59496f93dfdf1cb022976e99f0a1d9a52df54a0a"
+      },
+      {
+        "path": "dinov2/configs/train/cell_dino/vitl16_hpaone.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c6f76b1c2c9d0f02b1e377b03aba7043d03e5cee",
+        "size": 540,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/c6f76b1c2c9d0f02b1e377b03aba7043d03e5cee"
+      },
+      {
+        "path": "dinov2/configs/train/vitg14.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d05cf0d59e07ac6e4a2b0f9bdcb6131d7c508962",
+        "size": 528,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/d05cf0d59e07ac6e4a2b0f9bdcb6131d7c508962"
+      },
+      {
+        "path": "dinov2/configs/train/vitl14.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d9b491dcc6a522c71328fc2933dd0501123c8f6b",
+        "size": 527,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/d9b491dcc6a522c71328fc2933dd0501123c8f6b"
+      },
+      {
+        "path": "dinov2/configs/train/vitl16_short.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3e7e72864c92175a1354142ac1d64da8070d1e5e",
+        "size": 137,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/3e7e72864c92175a1354142ac1d64da8070d1e5e"
+      },
+      {
+        "path": "dinov2/data",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "86b148eb884a611e1c5030496d974f4703c151d9",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/86b148eb884a611e1c5030496d974f4703c151d9"
+      },
+      {
+        "path": "dinov2/data/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ac440218caed7e1d398ae518361246090b91614b",
+        "size": 561,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/ac440218caed7e1d398ae518361246090b91614b"
+      },
+      {
+        "path": "dinov2/data/accumulators.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a63bcf0a44605587423fa34a6ab51153040bbb40",
+        "size": 5173,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/a63bcf0a44605587423fa34a6ab51153040bbb40"
+      },
+      {
+        "path": "dinov2/data/adapters.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a5efe965f11c8c536ee31f90dc9b1f96be7c556f",
+        "size": 2066,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/a5efe965f11c8c536ee31f90dc9b1f96be7c556f"
+      },
+      {
+        "path": "dinov2/data/augmentations.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "05b1eaa942c14f75b88d9e14732e141e8909b0a1",
+        "size": 3977,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/05b1eaa942c14f75b88d9e14732e141e8909b0a1"
+      },
+      {
+        "path": "dinov2/data/cell_dino",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "c616ff0a0f703fe2009e28ab0f6589e8b91a71ed",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/c616ff0a0f703fe2009e28ab0f6589e8b91a71ed"
+      },
+      {
+        "path": "dinov2/data/cell_dino/augmentations.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2d324e7f2b342fa5f1529f90596281011d86803a",
+        "size": 3140,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/2d324e7f2b342fa5f1529f90596281011d86803a"
+      },
+      {
+        "path": "dinov2/data/cell_dino/transforms.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0f4752ce59606818b8fd1776d6207738499a98f5",
+        "size": 4786,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/0f4752ce59606818b8fd1776d6207738499a98f5"
+      },
+      {
+        "path": "dinov2/data/collate.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b3e32f357a76e6f32162cee14cb6ae1665a4827a",
+        "size": 1998,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/b3e32f357a76e6f32162cee14cb6ae1665a4827a"
+      },
+      {
+        "path": "dinov2/data/datasets",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "ddb022ed7b5a98829caf4fdcabca970e2bc10b4a",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/ddb022ed7b5a98829caf4fdcabca970e2bc10b4a"
+      },
+      {
+        "path": "dinov2/data/datasets/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e7cc56930fe15024b9c6c64749a76c4fdb529241",
+        "size": 474,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/e7cc56930fe15024b9c6c64749a76c4fdb529241"
+      },
+      {
+        "path": "dinov2/data/datasets/cell_dino",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "a42dee063e57273623142a73db74018990363691",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/a42dee063e57273623142a73db74018990363691"
+      },
+      {
+        "path": "dinov2/data/datasets/cell_dino/chammi_cp.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "911d6b4ccf579ada69a111c3d5c5057652b3f05c",
+        "size": 3099,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/911d6b4ccf579ada69a111c3d5c5057652b3f05c"
+      },
+      {
+        "path": "dinov2/data/datasets/cell_dino/chammi_hpa.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e7b31ef9a075c07d23c99e6981f4f3dc240639a3",
+        "size": 3075,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/e7b31ef9a075c07d23c99e6981f4f3dc240639a3"
+      },
+      {
+        "path": "dinov2/data/datasets/cell_dino/chammi_wtc.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5a4005210cbaff60eccef7a5d1cba869dac067c0",
+        "size": 2900,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/5a4005210cbaff60eccef7a5d1cba869dac067c0"
+      },
+      {
+        "path": "dinov2/data/datasets/cell_dino/hpafov.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "263d2f332f651e7d7bf8746bb53a9956957a686e",
+        "size": 8719,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/263d2f332f651e7d7bf8746bb53a9956957a686e"
+      },
+      {
+        "path": "dinov2/data/datasets/cell_dino/hpaone.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0058455f1ab8af6d13610591dbfb7c7c919f10a5",
+        "size": 6388,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/0058455f1ab8af6d13610591dbfb7c7c919f10a5"
+      },
+      {
+        "path": "dinov2/data/datasets/decoders.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "feb746885b5285b6009bfe07d32c44b2593f32af",
+        "size": 2939,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/feb746885b5285b6009bfe07d32c44b2593f32af"
+      },
+      {
+        "path": "dinov2/data/datasets/extended.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "32555b57cab97eddf47e20ba98212a5c628f331d",
+        "size": 1561,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/32555b57cab97eddf47e20ba98212a5c628f331d"
+      },
+      {
+        "path": "dinov2/data/datasets/image_net.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8d08446147986c58360163e468896e994197c657",
+        "size": 10831,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/8d08446147986c58360163e468896e994197c657"
+      },
+      {
+        "path": "dinov2/data/datasets/image_net_22k.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "52b36a2c664a7b72e30173b03b4e2aef1cd2fcd9",
+        "size": 10241,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/52b36a2c664a7b72e30173b03b4e2aef1cd2fcd9"
+      },
+      {
+        "path": "dinov2/data/loaders.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "fdf6709b87c439b10a0b4c34197755d0a1a4bc18",
+        "size": 7059,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/fdf6709b87c439b10a0b4c34197755d0a1a4bc18"
+      },
+      {
+        "path": "dinov2/data/masking.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ab12aa7bf138b916b16a9a2ed1a628a2759dbec6",
+        "size": 2945,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/ab12aa7bf138b916b16a9a2ed1a628a2759dbec6"
+      },
+      {
+        "path": "dinov2/data/samplers.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6562197d94652bb9a75a5fc722fcb2c65ca161be",
+        "size": 7645,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/6562197d94652bb9a75a5fc722fcb2c65ca161be"
+      },
+      {
+        "path": "dinov2/data/transforms.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "eb5f252b50c54d58f160528c9f2b00fad47103c7",
+        "size": 3056,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/eb5f252b50c54d58f160528c9f2b00fad47103c7"
+      },
+      {
+        "path": "dinov2/distributed",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "7ac7dbf5b37e4055b7c9a9168c4d12e1ed6d9727",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/7ac7dbf5b37e4055b7c9a9168c4d12e1ed6d9727"
+      },
+      {
+        "path": "dinov2/distributed/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "23226f4536bf5acf4ffac242e9903d92863b246d",
+        "size": 8576,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/23226f4536bf5acf4ffac242e9903d92863b246d"
+      },
+      {
+        "path": "dinov2/eval",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "94bb624fca3eb4a9e5a205ddcd942fb81b3254b3",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/94bb624fca3eb4a9e5a205ddcd942fb81b3254b3"
+      },
+      {
+        "path": "dinov2/eval/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b88da6bf80be92af00b72dfdb0a806fa64a7a2d9",
+        "size": 195,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/b88da6bf80be92af00b72dfdb0a806fa64a7a2d9"
+      },
+      {
+        "path": "dinov2/eval/cell_dino",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "be53273ad86876dab57f32072cb61b2798fde9e9",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/be53273ad86876dab57f32072cb61b2798fde9e9"
+      },
+      {
+        "path": "dinov2/eval/cell_dino/knn.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d20d85700b7fc454f7e10e8d88fa660e954d5124",
+        "size": 16788,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/d20d85700b7fc454f7e10e8d88fa660e954d5124"
+      },
+      {
+        "path": "dinov2/eval/cell_dino/linear.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "efbf838a87af6af2cc6a749219f53c2e0a65d080",
+        "size": 37587,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/efbf838a87af6af2cc6a749219f53c2e0a65d080"
+      },
+      {
+        "path": "dinov2/eval/cell_dino/utils.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f7ec81351814738164ad2bba5d26329545e863e1",
+        "size": 23142,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/f7ec81351814738164ad2bba5d26329545e863e1"
+      },
+      {
+        "path": "dinov2/eval/depth",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "a7f850ab076d99ae3a45485c925126184099ef05",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/a7f850ab076d99ae3a45485c925126184099ef05"
+      },
+      {
+        "path": "dinov2/eval/depth/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b88da6bf80be92af00b72dfdb0a806fa64a7a2d9",
+        "size": 195,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/b88da6bf80be92af00b72dfdb0a806fa64a7a2d9"
+      },
+      {
+        "path": "dinov2/eval/depth/models",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "f747082520642e82e5ecd8c72ea6a69d45455fa7",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/f747082520642e82e5ecd8c72ea6a69d45455fa7"
+      },
+      {
+        "path": "dinov2/eval/depth/models/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9a5825181dc2189424b5c58d245b36919cbc5b2e",
+        "size": 460,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/9a5825181dc2189424b5c58d245b36919cbc5b2e"
+      },
+      {
+        "path": "dinov2/eval/depth/models/backbones",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "b2b716b40f9b8c3630a1e63814999a4c2f39414b",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/b2b716b40f9b8c3630a1e63814999a4c2f39414b"
+      },
+      {
+        "path": "dinov2/eval/depth/models/backbones/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "520d75bc6e064b9d64487293604ac1bda6e2b6f7",
+        "size": 250,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/520d75bc6e064b9d64487293604ac1bda6e2b6f7"
+      },
+      {
+        "path": "dinov2/eval/depth/models/backbones/vision_transformer.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "69bda46fd69eb7dabb8f5b60e6fa459fdc21aeab",
+        "size": 435,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/69bda46fd69eb7dabb8f5b60e6fa459fdc21aeab"
+      },
+      {
+        "path": "dinov2/eval/depth/models/builder.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c152643435308afcff60b07cd68ea979fe1d90cb",
+        "size": 1420,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/c152643435308afcff60b07cd68ea979fe1d90cb"
+      },
+      {
+        "path": "dinov2/eval/depth/models/decode_heads",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "eb7367a8ea4b0dbc86b33c7e65e89d2ed4aca1b5",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/eb7367a8ea4b0dbc86b33c7e65e89d2ed4aca1b5"
+      },
+      {
+        "path": "dinov2/eval/depth/models/decode_heads/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "bd0f0754a5b01d7622c1f26bf3f60daea19da4e8",
+        "size": 258,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/bd0f0754a5b01d7622c1f26bf3f60daea19da4e8"
+      },
+      {
+        "path": "dinov2/eval/depth/models/decode_heads/decode_head.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f8c867a3ec687090b280d90bb86aee435320acda",
+        "size": 8653,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/f8c867a3ec687090b280d90bb86aee435320acda"
+      },
+      {
+        "path": "dinov2/eval/depth/models/decode_heads/dpt_head.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c6c6d9470d78e1d944cc505f97865f026a9458d3",
+        "size": 10434,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/c6c6d9470d78e1d944cc505f97865f026a9458d3"
+      },
+      {
+        "path": "dinov2/eval/depth/models/decode_heads/linear_head.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3da1436f6a3f0bcc389d74ed86d44d455d2f7a87",
+        "size": 3233,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/3da1436f6a3f0bcc389d74ed86d44d455d2f7a87"
+      },
+      {
+        "path": "dinov2/eval/depth/models/depther",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "542f3d4189498f8a823a14fe6e4e125ae58ed55d",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/542f3d4189498f8a823a14fe6e4e125ae58ed55d"
+      },
+      {
+        "path": "dinov2/eval/depth/models/depther/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "be99743bf6c773d05f2b74524116e368c0cfcba0",
+        "size": 275,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/be99743bf6c773d05f2b74524116e368c0cfcba0"
+      },
+      {
+        "path": "dinov2/eval/depth/models/depther/base.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e133a825a888167f90d95d67803609d6cac7ff55",
+        "size": 7697,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/e133a825a888167f90d95d67803609d6cac7ff55"
+      },
+      {
+        "path": "dinov2/eval/depth/models/depther/encoder_decoder.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6b0ec2dd314fdf8ccf4414d81afb95326b7dc0c9",
+        "size": 8925,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/6b0ec2dd314fdf8ccf4414d81afb95326b7dc0c9"
+      },
+      {
+        "path": "dinov2/eval/depth/models/losses",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "33b8a82762cd759d6ebc307517e76e3d92a46b1c",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/33b8a82762cd759d6ebc307517e76e3d92a46b1c"
+      },
+      {
+        "path": "dinov2/eval/depth/models/losses/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2f86242e342776da2e0acc61150d15a8d58ff1e0",
+        "size": 264,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/2f86242e342776da2e0acc61150d15a8d58ff1e0"
+      },
+      {
+        "path": "dinov2/eval/depth/models/losses/gradientloss.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1599878a6b70cdff4f8467e1e875f0d13ea89eca",
+        "size": 2540,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/1599878a6b70cdff4f8467e1e875f0d13ea89eca"
+      },
+      {
+        "path": "dinov2/eval/depth/models/losses/sigloss.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e12fad3e6151e4b975dd055193fdaec0206d4a14",
+        "size": 2286,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/e12fad3e6151e4b975dd055193fdaec0206d4a14"
+      },
+      {
+        "path": "dinov2/eval/depth/ops",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "fef415f3b942d4954e0e36327fd426b6153f03b2",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/fef415f3b942d4954e0e36327fd426b6153f03b2"
+      },
+      {
+        "path": "dinov2/eval/depth/ops/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "78181c29581a281b5f42cf12078636aaeb43b5a5",
+        "size": 225,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/78181c29581a281b5f42cf12078636aaeb43b5a5"
+      },
+      {
+        "path": "dinov2/eval/depth/ops/wrappers.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "15880ee0cb7652d4b41c489b927bf6a156b40e5e",
+        "size": 1229,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/15880ee0cb7652d4b41c489b927bf6a156b40e5e"
+      },
+      {
+        "path": "dinov2/eval/knn.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f3a4845da1313a6db6b8345bb9a98230fcd24acf",
+        "size": 14455,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/f3a4845da1313a6db6b8345bb9a98230fcd24acf"
+      },
+      {
+        "path": "dinov2/eval/linear.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1bd4c5de5a041be8a188f007257d1e91b6d6921e",
+        "size": 21426,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/1bd4c5de5a041be8a188f007257d1e91b6d6921e"
+      },
+      {
+        "path": "dinov2/eval/log_regression.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5f36ec134e0ce25697428a0b3f21cdc2f0145645",
+        "size": 15138,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/5f36ec134e0ce25697428a0b3f21cdc2f0145645"
+      },
+      {
+        "path": "dinov2/eval/metrics.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c26db7b46a2e8162fb8d54813a78e272cfb8fded",
+        "size": 4422,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/c26db7b46a2e8162fb8d54813a78e272cfb8fded"
+      },
+      {
+        "path": "dinov2/eval/segmentation",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "4ee83b642dd1a1f544b7c0a9f776171667e3b92d",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/4ee83b642dd1a1f544b7c0a9f776171667e3b92d"
+      },
+      {
+        "path": "dinov2/eval/segmentation/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b88da6bf80be92af00b72dfdb0a806fa64a7a2d9",
+        "size": 195,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/b88da6bf80be92af00b72dfdb0a806fa64a7a2d9"
+      },
+      {
+        "path": "dinov2/eval/segmentation/hooks",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "115607ac7c8a84d6a1348ebf396065b4782018c4",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/115607ac7c8a84d6a1348ebf396065b4782018c4"
+      },
+      {
+        "path": "dinov2/eval/segmentation/hooks/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "738cc2d2069521ea0353acd0cb0a03e3ddf1fa51",
+        "size": 237,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/738cc2d2069521ea0353acd0cb0a03e3ddf1fa51"
+      },
+      {
+        "path": "dinov2/eval/segmentation/hooks/optimizer.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f593f26a84475bbf7ebda9607a4d10914b13a443",
+        "size": 1415,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/f593f26a84475bbf7ebda9607a4d10914b13a443"
+      },
+      {
+        "path": "dinov2/eval/segmentation/models",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "cf88addae45720baebcceedf07d7be14a8d090b1",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/cf88addae45720baebcceedf07d7be14a8d090b1"
+      },
+      {
+        "path": "dinov2/eval/segmentation/models/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "88e4563d4c162d67e7900955a06bd9248d4c9a48",
+        "size": 277,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/88e4563d4c162d67e7900955a06bd9248d4c9a48"
+      },
+      {
+        "path": "dinov2/eval/segmentation/models/backbones",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "47c873b90fa1729e9a54b69407d0f21ef4aedcd4",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/47c873b90fa1729e9a54b69407d0f21ef4aedcd4"
+      },
+      {
+        "path": "dinov2/eval/segmentation/models/backbones/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "520d75bc6e064b9d64487293604ac1bda6e2b6f7",
+        "size": 250,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/520d75bc6e064b9d64487293604ac1bda6e2b6f7"
+      },
+      {
+        "path": "dinov2/eval/segmentation/models/backbones/vision_transformer.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c3e9753ae92a36be52f100e3004cbeeff777d14a",
+        "size": 476,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/c3e9753ae92a36be52f100e3004cbeeff777d14a"
+      },
+      {
+        "path": "dinov2/eval/segmentation/models/decode_heads",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "b4160fd9e4a49add69b233ee31b8f86cd1d8ecd9",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/b4160fd9e4a49add69b233ee31b8f86cd1d8ecd9"
+      },
+      {
+        "path": "dinov2/eval/segmentation/models/decode_heads/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c55317875262dadf8970c2b3882f016b8d4731ac",
+        "size": 228,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/c55317875262dadf8970c2b3882f016b8d4731ac"
+      },
+      {
+        "path": "dinov2/eval/segmentation/models/decode_heads/linear_head.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d1f39c68fb136f84d1aa5284da5b69581bb177cc",
+        "size": 3292,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/d1f39c68fb136f84d1aa5284da5b69581bb177cc"
+      },
+      {
+        "path": "dinov2/eval/segmentation/utils",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "b0d01582507f52350110d4a2042ce6624f50d5e6",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/b0d01582507f52350110d4a2042ce6624f50d5e6"
+      },
+      {
+        "path": "dinov2/eval/segmentation/utils/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b88da6bf80be92af00b72dfdb0a806fa64a7a2d9",
+        "size": 195,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/b88da6bf80be92af00b72dfdb0a806fa64a7a2d9"
+      },
+      {
+        "path": "dinov2/eval/segmentation/utils/colormaps.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e6ef604b2c75792e95e438abfd51ab03d40de340",
+        "size": 7685,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/e6ef604b2c75792e95e438abfd51ab03d40de340"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "6fdf8f49ffde2dc264f5d9d6105519fae3fe1442",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/6fdf8f49ffde2dc264f5d9d6105519fae3fe1442"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6c678fdf8f1dee14d7cf9be70af14e6f9a1441c3",
+        "size": 299,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/6c678fdf8f1dee14d7cf9be70af14e6f9a1441c3"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/core",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "3359223405b190e5f1d06299dd1d3524024e6c6e",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/3359223405b190e5f1d06299dd1d3524024e6c6e"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/core/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "92599806fbd221c1418d179892a0f46dc0b7d4db",
+        "size": 394,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/92599806fbd221c1418d179892a0f46dc0b7d4db"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/core/anchor",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "595e5482bea7087b1b0512b35a46a3b4fdca6396",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/595e5482bea7087b1b0512b35a46a3b4fdca6396"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/core/anchor/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e71ac4d6e01462221ae01aa16d0e1231cda7e2e7",
+        "size": 258,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/e71ac4d6e01462221ae01aa16d0e1231cda7e2e7"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/core/anchor/builder.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6dba90e22de76d2f23a86d3c057f196d55a99690",
+        "size": 714,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/6dba90e22de76d2f23a86d3c057f196d55a99690"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/core/anchor/point_generator.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "574d71939080e22284fe99087fb2e7336657bd97",
+        "size": 8814,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/574d71939080e22284fe99087fb2e7336657bd97"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/core/box",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "bad8dce0ab0af4b9da5185f87a2061b79ab972c9",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/bad8dce0ab0af4b9da5185f87a2061b79ab972c9"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/core/box/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "bf35a613f81acd77ecab2dfb75a722fa8e5c0787",
+        "size": 287,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/bf35a613f81acd77ecab2dfb75a722fa8e5c0787"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/core/box/builder.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9538c0de3db682c2b111b085a8a1ce321c76a9ff",
+        "size": 594,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/9538c0de3db682c2b111b085a8a1ce321c76a9ff"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/core/box/samplers",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "ed19b367bd0a7289e7a4b8ed4903986164e5b0c8",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/ed19b367bd0a7289e7a4b8ed4903986164e5b0c8"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/core/box/samplers/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "19c363e3fabc365d92aeaf1e78189d710db279e9",
+        "size": 261,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/19c363e3fabc365d92aeaf1e78189d710db279e9"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/core/box/samplers/base_sampler.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c45cec3ed7af5b49bb54b92d6e6bcf59b06b4c99",
+        "size": 3819,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/c45cec3ed7af5b49bb54b92d6e6bcf59b06b4c99"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/core/box/samplers/mask_pseudo_sampler.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3e67ea61ed0fd65cca0addde1893a3c1e176bf15",
+        "size": 1647,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/3e67ea61ed0fd65cca0addde1893a3c1e176bf15"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/core/box/samplers/mask_sampling_result.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "270ffd35a5f120dd0560a7fea7fe83ef0bab66bb",
+        "size": 2163,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/270ffd35a5f120dd0560a7fea7fe83ef0bab66bb"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/core/box/samplers/sampling_result.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "aaee3fe55aeb8c6da7edefbbd382d94b67b6a6b4",
+        "size": 5415,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/aaee3fe55aeb8c6da7edefbbd382d94b67b6a6b4"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/core/utils",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "967df9233f6a001af5b3229ada4016f7fed82ab6",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/967df9233f6a001af5b3229ada4016f7fed82ab6"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/core/utils/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6cdc9e19352f50bc2d5433c412ff71186c5df019",
+        "size": 274,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/6cdc9e19352f50bc2d5433c412ff71186c5df019"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/core/utils/dist_utils.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "7dfed42da821cd94e31b663d86b20b8f09799b30",
+        "size": 519,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/7dfed42da821cd94e31b663d86b20b8f09799b30"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/core/utils/misc.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e07579e7b182b62153e81fe637ffd0f3081ef2a3",
+        "size": 1324,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/e07579e7b182b62153e81fe637ffd0f3081ef2a3"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "6577c266a525c42bd243ff83342aba52ada9a80e",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/6577c266a525c42bd243ff83342aba52ada9a80e"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ed89bb0064d82b4360af020798eab3d2f5a47937",
+        "size": 485,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/ed89bb0064d82b4360af020798eab3d2f5a47937"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/backbones",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "c880e4a7f7851fb964da6ad7de4b140f6f00c96d",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/c880e4a7f7851fb964da6ad7de4b140f6f00c96d"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/backbones/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c4bf73bcbcee710676f81cb6517ae787f4d61cc6",
+        "size": 232,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/c4bf73bcbcee710676f81cb6517ae787f4d61cc6"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/backbones/adapter_modules.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "26bfdf8f6ae6c107d22d61985cce34d4b5ce275f",
+        "size": 14983,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/26bfdf8f6ae6c107d22d61985cce34d4b5ce275f"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/backbones/drop_path.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "864eb8738c44652d12b979fc811503f21cbb00dd",
+        "size": 1145,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/864eb8738c44652d12b979fc811503f21cbb00dd"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/backbones/vit.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8a147570451bd2fbd016ddfafbbfa33035cbd4f8",
+        "size": 20135,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/8a147570451bd2fbd016ddfafbbfa33035cbd4f8"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/backbones/vit_adapter.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ebc4f0f65e04ed764464d141607b3b2073220f6b",
+        "size": 7938,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/ebc4f0f65e04ed764464d141607b3b2073220f6b"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/builder.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d7cf7b919f6b0e8e00bde45bc244d9c29a36fed6",
+        "size": 619,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/d7cf7b919f6b0e8e00bde45bc244d9c29a36fed6"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/decode_heads",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "7480f35d9ae81c33ddf70897619ae5cbc98b13e6",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/7480f35d9ae81c33ddf70897619ae5cbc98b13e6"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/decode_heads/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "01f08b88950750337781fc671adfea2a935ea8fe",
+        "size": 242,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/01f08b88950750337781fc671adfea2a935ea8fe"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/decode_heads/mask2former_head.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d1705fc444fa8d1583d88fca36d7fe1e060db9e7",
+        "size": 25331,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/d1705fc444fa8d1583d88fca36d7fe1e060db9e7"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/losses",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "9546daccbcc077c168af877ad0c9e177e31645db",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/9546daccbcc077c168af877ad0c9e177e31645db"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/losses/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "229a887817372f4991b32354180592cfb236d728",
+        "size": 410,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/229a887817372f4991b32354180592cfb236d728"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/losses/cross_entropy_loss.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0a1f9dd4aa52ebe94cc527db36b1c7fa2f53813e",
+        "size": 11292,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/0a1f9dd4aa52ebe94cc527db36b1c7fa2f53813e"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/losses/dice_loss.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1bc5ba893c502861032ed531283f225e183eb693",
+        "size": 6339,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/1bc5ba893c502861032ed531283f225e183eb693"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/losses/match_costs.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "4917d2a939c01398dd49c0d90b06f4c37d283ce0",
+        "size": 5348,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/4917d2a939c01398dd49c0d90b06f4c37d283ce0"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/plugins",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "636bb2f4c0bcb77f315c8499e334fa0992977321",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/636bb2f4c0bcb77f315c8499e334fa0992977321"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/plugins/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "81a60db4de31238cb38e078683e5ca265839fe60",
+        "size": 261,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/81a60db4de31238cb38e078683e5ca265839fe60"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/plugins/msdeformattn_pixel_decoder.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "db1947175917f73f3f24184cb09c78e092d46ef8",
+        "size": 10706,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/db1947175917f73f3f24184cb09c78e092d46ef8"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/segmentors",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "206dc60c166e722425e7f1d12a03169e41d5f6ba",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/206dc60c166e722425e7f1d12a03169e41d5f6ba"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/segmentors/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "adf0062691e4889612e118f28ced853cd0bc33db",
+        "size": 263,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/adf0062691e4889612e118f28ced853cd0bc33db"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/segmentors/encoder_decoder_mask2former.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "cfe572c9d317303bff8d51b85217d144906ebfe7",
+        "size": 10632,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/cfe572c9d317303bff8d51b85217d144906ebfe7"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/utils",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "5fe8b57eef53d358652d16402b2dea7cbb4ce5ca",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/5fe8b57eef53d358652d16402b2dea7cbb4ce5ca"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/utils/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e7fdc1668b1015c8feea8fa1a4691bc0ebdbd936",
+        "size": 495,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/e7fdc1668b1015c8feea8fa1a4691bc0ebdbd936"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/utils/assigner.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3cb08fc1bb2e36336989b45a1d3850f260c05963",
+        "size": 6368,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/3cb08fc1bb2e36336989b45a1d3850f260c05963"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/utils/point_sample.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9f1134082bafb51432618a9632592db070f87284",
+        "size": 3889,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/9f1134082bafb51432618a9632592db070f87284"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/utils/positional_encoding.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "bf5d6fabe946d06fe97cc799da47bae93758b34e",
+        "size": 6424,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/bf5d6fabe946d06fe97cc799da47bae93758b34e"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/models/utils/transformer.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8befe6011a34d5ccecb82c8b17b61e19f732f96b",
+        "size": 41364,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/8befe6011a34d5ccecb82c8b17b61e19f732f96b"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/ops",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "2acd9f2eca2fdad2924b76cdcb3fa871e2f2dda0",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/2acd9f2eca2fdad2924b76cdcb3fa871e2f2dda0"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/ops/modules",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "a024280fbe65f62cd1012afc493e58f1e8d9540d",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/a024280fbe65f62cd1012afc493e58f1e8d9540d"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/ops/modules/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "49aa8fe612fd4c088e294707c5ee16bd1cb5b5e7",
+        "size": 425,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/49aa8fe612fd4c088e294707c5ee16bd1cb5b5e7"
+      },
+      {
+        "path": "dinov2/eval/segmentation_m2f/ops/modules/ms_deform_attn.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d8b4fa23712e87d1a2682b57e71ee37fe8524cff",
+        "size": 8296,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/d8b4fa23712e87d1a2682b57e71ee37fe8524cff"
+      },
+      {
+        "path": "dinov2/eval/setup.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "959128c0673cc51036dbf17dcc4ee68a037988fb",
+        "size": 2069,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/959128c0673cc51036dbf17dcc4ee68a037988fb"
+      },
+      {
+        "path": "dinov2/eval/utils.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c50576b1940587ee64b7a422e2e96b475d60fd39",
+        "size": 5205,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/c50576b1940587ee64b7a422e2e96b475d60fd39"
+      },
+      {
+        "path": "dinov2/fsdp",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "fb1558c6dc15fe3786cb9751dacbd526743f7701",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/fb1558c6dc15fe3786cb9751dacbd526743f7701"
+      },
+      {
+        "path": "dinov2/fsdp/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ed454480e0b76e761d657cc40fd097bd339d15a2",
+        "size": 5115,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/ed454480e0b76e761d657cc40fd097bd339d15a2"
+      },
+      {
+        "path": "dinov2/hub",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "1cbc369a26b780e162de6145293428c7f3d7e357",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/1cbc369a26b780e162de6145293428c7f3d7e357"
+      },
+      {
+        "path": "dinov2/hub/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b88da6bf80be92af00b72dfdb0a806fa64a7a2d9",
+        "size": 195,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/b88da6bf80be92af00b72dfdb0a806fa64a7a2d9"
+      },
+      {
+        "path": "dinov2/hub/backbones.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "af5fd95d38eb33f73a85b92a94a715773a4e70bc",
+        "size": 5586,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/af5fd95d38eb33f73a85b92a94a715773a4e70bc"
+      },
+      {
+        "path": "dinov2/hub/cell_dino",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "9952106589f2ba9d2a69510da3ba03dfa872f584",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/9952106589f2ba9d2a69510da3ba03dfa872f584"
+      },
+      {
+        "path": "dinov2/hub/cell_dino/backbones.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ce476f822c34caac13fa2e0451a881d946678399",
+        "size": 5082,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/ce476f822c34caac13fa2e0451a881d946678399"
+      },
+      {
+        "path": "dinov2/hub/classifiers.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1ac6b1c0e6b64248e71d9944a498039c7887c3a8",
+        "size": 8223,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/1ac6b1c0e6b64248e71d9944a498039c7887c3a8"
+      },
+      {
+        "path": "dinov2/hub/depth",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "ac11565c53665310ff8a09873b6edb185618e704",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/ac11565c53665310ff8a09873b6edb185618e704"
+      },
+      {
+        "path": "dinov2/hub/depth/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "91716e58ab6158d814df8c653644d9af4c7be65c",
+        "size": 287,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/91716e58ab6158d814df8c653644d9af4c7be65c"
+      },
+      {
+        "path": "dinov2/hub/depth/decode_heads.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f455accad38fec6ecdd53460233a564c34f434da",
+        "size": 29268,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/f455accad38fec6ecdd53460233a564c34f434da"
+      },
+      {
+        "path": "dinov2/hub/depth/encoder_decoder.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "eb29ced67957a336e763b0e7c90c0eeaea36fea8",
+        "size": 13909,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/eb29ced67957a336e763b0e7c90c0eeaea36fea8"
+      },
+      {
+        "path": "dinov2/hub/depth/ops.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "15880ee0cb7652d4b41c489b927bf6a156b40e5e",
+        "size": 1229,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/15880ee0cb7652d4b41c489b927bf6a156b40e5e"
+      },
+      {
+        "path": "dinov2/hub/depthers.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3109ec844a88771a7ae3c16e34868bb73ca0ea35",
+        "size": 8159,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/3109ec844a88771a7ae3c16e34868bb73ca0ea35"
+      },
+      {
+        "path": "dinov2/hub/dinotxt.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5678539f05ab98fe2ef29c1c78aa36d753ea15f9",
+        "size": 2997,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/5678539f05ab98fe2ef29c1c78aa36d753ea15f9"
+      },
+      {
+        "path": "dinov2/hub/text",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "39a6db7f1c96ca66a17a2fe12cae257d91a67674",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/39a6db7f1c96ca66a17a2fe12cae257d91a67674"
+      },
+      {
+        "path": "dinov2/hub/text/dinotxt_model.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e561e1915485d30aee3cd04fb65da0e3db55dd36",
+        "size": 5657,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/e561e1915485d30aee3cd04fb65da0e3db55dd36"
+      },
+      {
+        "path": "dinov2/hub/text/dinov2_wrapper.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2689dc2fdd73c5be0b32d7f60abb6c11b760e3c2",
+        "size": 2600,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/2689dc2fdd73c5be0b32d7f60abb6c11b760e3c2"
+      },
+      {
+        "path": "dinov2/hub/text/text_tower.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a74c15f0eb64092728e245bbce08958e75ddc82c",
+        "size": 3513,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/a74c15f0eb64092728e245bbce08958e75ddc82c"
+      },
+      {
+        "path": "dinov2/hub/text/text_transformer.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "7f836481b1a9fe98271d894423c4fd79644dd487",
+        "size": 2424,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/7f836481b1a9fe98271d894423c4fd79644dd487"
+      },
+      {
+        "path": "dinov2/hub/text/tokenizer.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "97a6b32eae76e5a1fcf63964d6ff9bf482dfeb0e",
+        "size": 1662,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/97a6b32eae76e5a1fcf63964d6ff9bf482dfeb0e"
+      },
+      {
+        "path": "dinov2/hub/text/vision_tower.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8777aa9d27546da5c31cf2c995c6c1ed6a24ac37",
+        "size": 6844,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/8777aa9d27546da5c31cf2c995c6c1ed6a24ac37"
+      },
+      {
+        "path": "dinov2/hub/utils.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c6fa705f31736069cd68c5f642253cb5ad7fbe10",
+        "size": 1598,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/c6fa705f31736069cd68c5f642253cb5ad7fbe10"
+      },
+      {
+        "path": "dinov2/hub/xray_dino",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "c77415809892e01081dc87fa8c08e0267eff3ff6",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/c77415809892e01081dc87fa8c08e0267eff3ff6"
+      },
+      {
+        "path": "dinov2/hub/xray_dino/backbones.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f49b54be1c3aa5a0fbe17427b86f9277598aa925",
+        "size": 838,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/f49b54be1c3aa5a0fbe17427b86f9277598aa925"
+      },
+      {
+        "path": "dinov2/layers",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "54d5bb537ea0bbf93ed4c218f07bc01b02609542",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/54d5bb537ea0bbf93ed4c218f07bc01b02609542"
+      },
+      {
+        "path": "dinov2/layers/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d640d145fbfb8993d6e7ceec4eb22b5b0a3e62fa",
+        "size": 498,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/d640d145fbfb8993d6e7ceec4eb22b5b0a3e62fa"
+      },
+      {
+        "path": "dinov2/layers/attention.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f1d3dabf14ffbd5eb68c3c16edc56d0da19b1265",
+        "size": 3298,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/f1d3dabf14ffbd5eb68c3c16edc56d0da19b1265"
+      },
+      {
+        "path": "dinov2/layers/block.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "7e83b71ccb428ca099d2d1d49933dc837faeecfa",
+        "size": 11609,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/7e83b71ccb428ca099d2d1d49933dc837faeecfa"
+      },
+      {
+        "path": "dinov2/layers/dino_head.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0ace8ffd6297a1dd480b19db407b662a6ea0f565",
+        "size": 2007,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/0ace8ffd6297a1dd480b19db407b662a6ea0f565"
+      },
+      {
+        "path": "dinov2/layers/drop_path.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1d640e0b969b8dcba96260243473700b4e5b24b5",
+        "size": 1157,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/1d640e0b969b8dcba96260243473700b4e5b24b5"
+      },
+      {
+        "path": "dinov2/layers/layer_scale.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0b38971302b3c8fb3d4c05a5f0912fafe0e80816",
+        "size": 1097,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/0b38971302b3c8fb3d4c05a5f0912fafe0e80816"
+      },
+      {
+        "path": "dinov2/layers/mlp.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "bbf9432aae9258612caeae910a7bde17999e328e",
+        "size": 1269,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/bbf9432aae9258612caeae910a7bde17999e328e"
+      },
+      {
+        "path": "dinov2/layers/patch_embed.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8b7c0804784a42cf80c0297d110dcc68cc85b339",
+        "size": 2829,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/8b7c0804784a42cf80c0297d110dcc68cc85b339"
+      },
+      {
+        "path": "dinov2/layers/swiglu_ffn.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "340cee356cb4ad7cb3c8bbefa121f39f7c4e5c6f",
+        "size": 3200,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/340cee356cb4ad7cb3c8bbefa121f39f7c4e5c6f"
+      },
+      {
+        "path": "dinov2/logging",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "1af821beea201c1b1cccf824d7ccb54608c31d68",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/1af821beea201c1b1cccf824d7ccb54608c31d68"
+      },
+      {
+        "path": "dinov2/logging/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "04a7f02204316d4d1ef38bf6080dae3d66241c25",
+        "size": 3284,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/04a7f02204316d4d1ef38bf6080dae3d66241c25"
+      },
+      {
+        "path": "dinov2/logging/helpers.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c6e70bb15505cbbc4c4732b069ee919bf921a74f",
+        "size": 6220,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/c6e70bb15505cbbc4c4732b069ee919bf921a74f"
+      },
+      {
+        "path": "dinov2/loss",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "2a21cda6733b525c51580326f02299bffe3c42d7",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/2a21cda6733b525c51580326f02299bffe3c42d7"
+      },
+      {
+        "path": "dinov2/loss/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d6b0115b74edbd74b324c9056a57fade363c58fd",
+        "size": 314,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/d6b0115b74edbd74b324c9056a57fade363c58fd"
+      },
+      {
+        "path": "dinov2/loss/dino_clstoken_loss.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c31808e36e6c38ee6dae13ba0443bf1946242117",
+        "size": 3647,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/c31808e36e6c38ee6dae13ba0443bf1946242117"
+      },
+      {
+        "path": "dinov2/loss/ibot_patch_loss.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6732cda0c311c69f193669ebc950fc8665871442",
+        "size": 5718,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/6732cda0c311c69f193669ebc950fc8665871442"
+      },
+      {
+        "path": "dinov2/loss/koleo_loss.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b5cbcd91e0fc0b857f477b0910f957f02a6c4335",
+        "size": 1608,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/b5cbcd91e0fc0b857f477b0910f957f02a6c4335"
+      },
+      {
+        "path": "dinov2/models",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "2dc8c92c4828101a19211f9292e7c96ac8bfbd6e",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/2dc8c92c4828101a19211f9292e7c96ac8bfbd6e"
+      },
+      {
+        "path": "dinov2/models/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "817a63aeb07802ca02f75c9cef674b97355deb3f",
+        "size": 1574,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/817a63aeb07802ca02f75c9cef674b97355deb3f"
+      },
+      {
+        "path": "dinov2/models/vision_transformer.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "34694244ae4e6467a4aa315180a89b323336bf0b",
+        "size": 16438,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/34694244ae4e6467a4aa315180a89b323336bf0b"
+      },
+      {
+        "path": "dinov2/run",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "f05f745fec7ef3e276abd16da64d816ccd347df0",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/f05f745fec7ef3e276abd16da64d816ccd347df0"
+      },
+      {
+        "path": "dinov2/run/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b88da6bf80be92af00b72dfdb0a806fa64a7a2d9",
+        "size": 195,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/b88da6bf80be92af00b72dfdb0a806fa64a7a2d9"
+      },
+      {
+        "path": "dinov2/run/eval",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "a458b921b660e7f7d1b5712716efba3dc10f84a0",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/a458b921b660e7f7d1b5712716efba3dc10f84a0"
+      },
+      {
+        "path": "dinov2/run/eval/cell_dino",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "40b1133220a6082a24f1de7ce07dd30b6d7a8f30",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/40b1133220a6082a24f1de7ce07dd30b6d7a8f30"
+      },
+      {
+        "path": "dinov2/run/eval/cell_dino/knn.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "aa560bbe1aa9de4e3bbd51fd6aba8a741d57ef89",
+        "size": 1724,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/aa560bbe1aa9de4e3bbd51fd6aba8a741d57ef89"
+      },
+      {
+        "path": "dinov2/run/eval/cell_dino/linear.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "89319bc4c412adc6587855715d7e7237f4aeaaa7",
+        "size": 1760,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/89319bc4c412adc6587855715d7e7237f4aeaaa7"
+      },
+      {
+        "path": "dinov2/run/eval/knn.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d11918445cdfe415fe58ac8b3ad0bf29702e3457",
+        "size": 1660,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/d11918445cdfe415fe58ac8b3ad0bf29702e3457"
+      },
+      {
+        "path": "dinov2/run/eval/linear.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e1dc3293e88512a5cf885ab775dc08e01aed6724",
+        "size": 1689,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/e1dc3293e88512a5cf885ab775dc08e01aed6724"
+      },
+      {
+        "path": "dinov2/run/eval/log_regression.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "cdf02181122de72cfa463ef38494967219df9cf3",
+        "size": 1755,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/cdf02181122de72cfa463ef38494967219df9cf3"
+      },
+      {
+        "path": "dinov2/run/submit.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "4d1f718e704cf9a48913422404c25a7fcc50e738",
+        "size": 3304,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/4d1f718e704cf9a48913422404c25a7fcc50e738"
+      },
+      {
+        "path": "dinov2/run/train",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "7e72e7e46f26cee79f3aa4e82bbd72df4c69ca1f",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/7e72e7e46f26cee79f3aa4e82bbd72df4c69ca1f"
+      },
+      {
+        "path": "dinov2/run/train/train.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c2366e9bf79765e6abcd70dda6b43f31cb7093eb",
+        "size": 1665,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/c2366e9bf79765e6abcd70dda6b43f31cb7093eb"
+      },
+      {
+        "path": "dinov2/thirdparty",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "0760185be6dea6534baae00e2ae7d102222d3248",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/0760185be6dea6534baae00e2ae7d102222d3248"
+      },
+      {
+        "path": "dinov2/thirdparty/CLIP",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "ed591aa6d343c4957bd396609462b316c748a3db",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/ed591aa6d343c4957bd396609462b316c748a3db"
+      },
+      {
+        "path": "dinov2/thirdparty/CLIP/LICENSE",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c123b69334717d178daa674c2d08e3383fe36134",
+        "size": 1063,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/c123b69334717d178daa674c2d08e3383fe36134"
+      },
+      {
+        "path": "dinov2/thirdparty/CLIP/clip",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "800397aea1970c9a24ba1a9f73cd2770ca842f86",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/800397aea1970c9a24ba1a9f73cd2770ca842f86"
+      },
+      {
+        "path": "dinov2/thirdparty/CLIP/clip/simple_tokenizer.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "22b171880f6f1ece11dc84642b19bf6421cef92b",
+        "size": 4900,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/22b171880f6f1ece11dc84642b19bf6421cef92b"
+      },
+      {
+        "path": "dinov2/train",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "9577b7cf555a291678f3f1536b27b52a5c95a6b1",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/9577b7cf555a291678f3f1536b27b52a5c95a6b1"
+      },
+      {
+        "path": "dinov2/train/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5f1752922d04fff0112eb7796be28ff6b68c6073",
+        "size": 276,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/5f1752922d04fff0112eb7796be28ff6b68c6073"
+      },
+      {
+        "path": "dinov2/train/ssl_meta_arch.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3ccf15e904ebeb6134dfb4f5c99da4fc8d41b8e4",
+        "size": 18616,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/3ccf15e904ebeb6134dfb4f5c99da4fc8d41b8e4"
+      },
+      {
+        "path": "dinov2/train/train.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "4e86b8daaff01e32acd1f30edcfd65aed03df4db",
+        "size": 11075,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/4e86b8daaff01e32acd1f30edcfd65aed03df4db"
+      },
+      {
+        "path": "dinov2/utils",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "498b6f1160098d207980487aa08b1ea75f79fcd1",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/498b6f1160098d207980487aa08b1ea75f79fcd1"
+      },
+      {
+        "path": "dinov2/utils/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b88da6bf80be92af00b72dfdb0a806fa64a7a2d9",
+        "size": 195,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/b88da6bf80be92af00b72dfdb0a806fa64a7a2d9"
+      },
+      {
+        "path": "dinov2/utils/checkpoint.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "91fbcbaf051a1181a30e2e7258b2df1e66ccff7c",
+        "size": 2597,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/91fbcbaf051a1181a30e2e7258b2df1e66ccff7c"
+      },
+      {
+        "path": "dinov2/utils/cluster.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "855a5268b226422b49ae6edfed80dca1ee7d9cb1",
+        "size": 3014,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/855a5268b226422b49ae6edfed80dca1ee7d9cb1"
+      },
+      {
+        "path": "dinov2/utils/config.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c9de578787bbcb376f8bd5a782206d0eb7ec1f52",
+        "size": 2211,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/c9de578787bbcb376f8bd5a782206d0eb7ec1f52"
+      },
+      {
+        "path": "dinov2/utils/dtype.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "80f4cd74d99faa2731dbe9f8d3a13d71b3f8e3a8",
+        "size": 1104,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/80f4cd74d99faa2731dbe9f8d3a13d71b3f8e3a8"
+      },
+      {
+        "path": "dinov2/utils/param_groups.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9a5d2ff627cddadc222e5f836864ee39c865208f",
+        "size": 3761,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/9a5d2ff627cddadc222e5f836864ee39c865208f"
+      },
+      {
+        "path": "dinov2/utils/utils.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ac1b6ca31ff8d3acada6df4d934f6c8fd101302b",
+        "size": 3437,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/ac1b6ca31ff8d3acada6df4d934f6c8fd101302b"
+      },
+      {
+        "path": "docs",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "6f289dfc921643e565cca5b00e1843f95bd1420a",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/6f289dfc921643e565cca5b00e1843f95bd1420a"
+      },
+      {
+        "path": "docs/Cell-DINO.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "82cec520a9a41b0d82052c114af48b791d29846c",
+        "size": 1101690,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/82cec520a9a41b0d82052c114af48b791d29846c"
+      },
+      {
+        "path": "docs/ChannelAdaptiveDINO.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2b0f7971b90e673594042a507823b5b7e84499ee",
+        "size": 665674,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/2b0f7971b90e673594042a507823b5b7e84499ee"
+      },
+      {
+        "path": "docs/README_CELL_DINO.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f9620e57f00c94f6bcd36d4e490215932e49774c",
+        "size": 6745,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/f9620e57f00c94f6bcd36d4e490215932e49774c"
+      },
+      {
+        "path": "docs/README_CHANNEL_ADAPTIVE_DINO.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "4978a0ca1e9ea23f0787c34b511eaa26b511df6c",
+        "size": 6648,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/4978a0ca1e9ea23f0787c34b511eaa26b511df6c"
+      },
+      {
+        "path": "hubconf.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "da2acfebb30032977903944fbb3fbdfcaad36d5c",
+        "size": 1126,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/da2acfebb30032977903944fbb3fbdfcaad36d5c"
+      },
+      {
+        "path": "notebooks",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "0c748489bd2ff5671b6b8de40da5af3a0d8e4a26",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/0c748489bd2ff5671b6b8de40da5af3a0d8e4a26"
+      },
+      {
+        "path": "notebooks/cell_dino",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "5ead12a01a444f8a75222d7285c6293146443cf3",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/5ead12a01a444f8a75222d7285c6293146443cf3"
+      },
+      {
+        "path": "notebooks/cell_dino/inference.ipynb",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5d1a44f7e054b7e3387114d468a6332aa7fb282e",
+        "size": 6163,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/5d1a44f7e054b7e3387114d468a6332aa7fb282e"
+      },
+      {
+        "path": "notebooks/depth_estimation.ipynb",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "717739a3c93d3077426c14e6af86c1aa45365053",
+        "size": 671818,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/717739a3c93d3077426c14e6af86c1aa45365053"
+      },
+      {
+        "path": "notebooks/dinotxt.ipynb",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c27269a5c32c0eb2032a55d7db4654812a5e9ebf",
+        "size": 30329,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/c27269a5c32c0eb2032a55d7db4654812a5e9ebf"
+      },
+      {
+        "path": "notebooks/semantic_segmentation.ipynb",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "60dd3ef5505be2ad9bc3a9d98f8b3dbe1db99c5a",
+        "size": 598694,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/60dd3ef5505be2ad9bc3a9d98f8b3dbe1db99c5a"
+      },
+      {
+        "path": "pyproject.toml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "da67abd8ceabe6d427a96e5d9d4f04b25aebcd32",
+        "size": 417,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/da67abd8ceabe6d427a96e5d9d4f04b25aebcd32"
+      },
+      {
+        "path": "requirements-dev.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5cad34c34cde3a182b616d68b168588827eb9b7c",
+        "size": 43,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/5cad34c34cde3a182b616d68b168588827eb9b7c"
+      },
+      {
+        "path": "requirements-extras.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ac75fb3eace10f58fa6b5bc373f24358394141e5",
+        "size": 40,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/ac75fb3eace10f58fa6b5bc373f24358394141e5"
+      },
+      {
+        "path": "requirements.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "04c159c443b89330ff3c84257c41b011f9791257",
+        "size": 213,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/04c159c443b89330ff3c84257c41b011f9791257"
+      },
+      {
+        "path": "scripts",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "cb08986947176923f2573f550c81ad69faff059c",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/cb08986947176923f2573f550c81ad69faff059c"
+      },
+      {
+        "path": "scripts/cell_dino",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "bd3a53c7ef36dfddfc012f74f8f3636c7670059e",
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/trees/bd3a53c7ef36dfddfc012f74f8f3636c7670059e"
+      },
+      {
+        "path": "scripts/cell_dino/launcher_knn_eval_on_chammi.sh",
+        "mode": "100755",
+        "type": "blob",
+        "sha": "4076981cdc2f8692cd27fbfafcc7cb66f802a361",
+        "size": 1328,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/4076981cdc2f8692cd27fbfafcc7cb66f802a361"
+      },
+      {
+        "path": "scripts/cell_dino/launcher_linear_eval_on_chammi.sh",
+        "mode": "100755",
+        "type": "blob",
+        "sha": "fb0e3655bef6e4d7778c154dd323d2b646ab5d4c",
+        "size": 1430,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/fb0e3655bef6e4d7778c154dd323d2b646ab5d4c"
+      },
+      {
+        "path": "scripts/lint.sh",
+        "mode": "100755",
+        "type": "blob",
+        "sha": "b91acaf762c4be3a0c9d2a162210bfebfaacba08",
+        "size": 303,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/b91acaf762c4be3a0c9d2a162210bfebfaacba08"
+      },
+      {
+        "path": "setup.cfg",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a2b19d6b2045143e056628b09fb9a5db357a6e07",
+        "size": 130,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/a2b19d6b2045143e056628b09fb9a5db357a6e07"
+      },
+      {
+        "path": "setup.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "daa9d6322fc3a451d2a07038ffdb9eea709e96bf",
+        "size": 2751,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/daa9d6322fc3a451d2a07038ffdb9eea709e96bf"
+      }
+    ],
+    "truncated": false
+  }
+}

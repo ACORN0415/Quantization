@@ -1,0 +1,27 @@
+{
+  "status": "accepted_source_metadata_and_explicit_adapter_contract_only",
+  "decided_epoch": 1793909225.840856,
+  "native_source_read_scope": "20 new primary files plus4 previously pinned class source files reused; not an import/forward execution",
+  "actual_Claude": {
+    "model": "claude-opus-5-5",
+    "session": "claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5",
+    "completed_UTC": "2026-11-05T20:01:59Z",
+    "scope": "limited report/manifest/saved-record review; did not directly reread20rawsources"
+  },
+  "root_selection": [
+    "Keep original models init unmodified; explicitly use FP32-only namespace adapter for first model-smoke.",
+    "DINO constructor kwargs and WM resize196/patch196 must be preserved, no mutable Hub fallback.",
+    "Official HTTPS fixed weight URL+88283115B can be acquired once with explicit source provenance; no prior trusted SHA is available in observed metadata. Compute and independently verify acquired SHA before model load."
+  ],
+  "unresolved": [
+    "Actual source imports and checkpoint restoration compatibility",
+    "Actual strict DINO weight load and model forward",
+    "Dataset/PushT/CEM and quantitative method effects"
+  ],
+  "evidence_sha256": {
+    "REPORT_CODEX_KO.txt": "1b2bdf7260ee1120949a7f84e4d8f468b1dc3fc014df8b0e3b9f0d1727a7f6cc",
+    "SOURCE_MANIFEST_PROPOSED.json": "45e952235a340ae3a8fffc3af899d5cb32a411199d79a86f69ff5f8ac76d1efa",
+    "REVIEW_OPUS_KO.txt": "d9d2529c4eaa4fc479a878036b35ddb287649e4986bbfc084dbeaf2747b1bfd3"
+  },
+  "root_execution_authorized": false
+}

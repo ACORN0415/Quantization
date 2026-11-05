@@ -1,0 +1,93 @@
+DINOv2 고정 소스·공식 가중치와 FP32 최소 forward 연결 계약 — Codex 독립 검토
+2026-11-05 19:59 UTC / 원 마감 20:05:26 UTC
+
+결론
+DINOv2의 공식 소스 revision과 ViT-S/14 가중치 URL·광고 크기를 고정했다. 원격 torch.hub 자동 취득 없이 공식 constructor와 로컬 weight를 연결할 수 있는 프로젝트 소스 목록을 정했다. 그러나 수정 없는 QuantWM package import는 아직 닫히지 않았다. models/__init__.py가 양자화 predictor까지 즉시 import하기 때문이다.
+
+이 공백을 root에게 보고했고, root는 다음 준비 방향으로 '원본은 보존하고 FP32-only synthetic models namespace를 명시적으로 구성하는 import adapter'를 채택했다. 이 보고서와 SOURCE_MANIFEST_PROPOSED.json은 그 계약을 기록한다. adapter 구현·설치·모델 로드·GPU 실행을 승인하거나 이미 수행한 결과는 아니다. 현재 제3자 패키지의 실제 import 및 pickle 객체 복원 호환성도 남아 있다.
+
+1. DINOv2 공식 source와 정확한 모델 정의
+공식 repository https://github.com/facebookresearch/dinov2 의 main을 한 번 조회해 다음 commit으로 고정했다.
+7764ea0f912e53c92e82eb78a2a1631e92725fc8 (commit date 2026-06-03T15:28:49Z)
+이는 현재 확인한 공식 revision이며 QuantWM 학습 때 실제 원격 hub가 사용한 과거 revision을 밝혀낸 것은 아니다. 기존 QuantWM wrapper는 revision을 지정하지 않았으므로 과거 실행의 bit 동일성을 주장할 수 없다.
+
+새 DINO source 14개를 고정 Git tree blob과 대조하고 각 SHA256을 저장했다. 직접 constructor의 프로젝트 import closure는 다음 12개다.
+- dinov2/__init__.py
+- dinov2/models/{__init__.py,vision_transformer.py}
+- dinov2/layers/{__init__.py,attention.py,block.py,dino_head.py,drop_path.py,layer_scale.py,mlp.py,patch_embed.py,swiglu_ffn.py}
+추가로 읽은 hub/backbones.py와 hub/utils.py는 모델 생성 인수와 공식 URL의 출처다. 제안된 직접 constructor 경로에서는 이 hub 두 파일이나 hubconf.py를 import하지 않는다. LICENSE의 tree blob·크기는 manifest에 보존했으나 이번 source 20개 상한 밖에서 본문을 더 읽지는 않았다. 후속 source 취득 때 해당 라이선스 파일도 함께 보존해야 한다.
+
+정확한 생성기는 dinov2.models.vision_transformer.vit_small이며, 공식 dinov2_vits14 factory와 같은 다음 인수를 명시한다.
+img_size=518, patch_size=14, init_values=1.0, ffn_layer='mlp', block_chunks=0,
+num_register_tokens=0, interpolate_antialias=False, interpolate_offset=0.1,
+in_chans=3, channel_adaptive=False.
+vit_small 본문은 embed_dim=384, depth=12, num_heads=6, mlp_ratio=4를 정한다. vit_small() 기본값의 patch_size=16 또는 DinoVisionTransformer의 block_chunks=1을 그대로 쓰면 공식 vits14 생성 계약과 달라진다. register 모델의 4개 register token이나 다른 보간 설정을 섞지 않는다.
+
+근거:
+https://github.com/facebookresearch/dinov2/blob/7764ea0f912e53c92e82eb78a2a1631e92725fc8/dinov2/hub/backbones.py#L30
+https://github.com/facebookresearch/dinov2/blob/7764ea0f912e53c92e82eb78a2a1631e92725fc8/dinov2/models/vision_transformer.py#L364
+
+2. 공식 weight metadata와 SHA의 한계
+factory의 LVD142M, non-register dinov2_vits14 URL:
+https://dl.fbaipublicfiles.com/dinov2/dinov2_vits14/dinov2_vits14_pretrain.pth
+이 URL에 HEAD만 요청했다. HTTP200, Content-Length=88,283,115B,
+Last-Modified=Thu, 13 Apr 2023 22:01:20 GMT,
+ETag="0bd1417efc23bdb1d69200156f5a22bc-11",
+x-amz-version-id=myNNMDsZijFq4d0vreWtK77.L.oits7x를 기록했다.
+weight body는 0B 읽었고, 실제 tensor 또는 state_dict 형식은 열지 않았다.
+
+확인한 HEAD에는 SHA256/Digest/Content-Digest/checksum 헤더가 없었다. ETag는 SHA256이 아니며 이를 SHA로 변환하거나 해석하지 않는다. 확인한 공식 factory는 check_hash=False가 기본이고 파일명에도 content hash가 없다. '공식 SHA가 어디에도 없다'고 증명한 것은 아니지만 이번 확인 범위에서 신뢰 가능한 공개 SHA는 확보하지 못했다. manifest의 trusted_SHA256은 null이다.
+
+root가 후속 취득을 정할 경우 가능한 계약은 공식 HTTPS의 고정 URL·위 source-derived 이름·광고 크기·응답 identity를 기록하고 한 번 제한 취득한 뒤 실제 전체 SHA를 산출하여 독립 감사하는 것이다. 그 SHA는 이후 로컬 무결성의 기준이며 공식 사전 배포 SHA와 비교 검증했다는 뜻이 아니다. S3 version id는 관측 metadata로 보존했을 뿐, versionId query URL이 불변 객체를 돌려준다고 별도 검증하지 않았다.
+
+3. 자동 다운로드를 없애는 최소 경로
+- 로컬 검증 source 경로를 명시하고 import된 dinov2 module.__file__이 그 경로·SHA와 일치하는지 확인한다.
+- 위 공식 vit_small constructor를 직접 호출한다. torch.hub.load, load_state_dict_from_url 및 원격 repository fallback은 사용하지 않는다.
+- 별도 취득·검증된 로컬 weight만 명시적으로 읽고 strict=True로 load_state_dict한다. 실제 로드 정책과 실패 처리는 후속 등록 대상이며 이번에 실행하지 않았다.
+- 원 QuantWM encoder wrapper와 같은 name='dinov2_vits14', feature_key='x_norm_patchtokens', emb_dim=base_model.num_features, patch_size, latent_ndim=2를 제공한다. forward는 base_model.forward_features(x)['x_norm_patchtokens']다. bare DINO를 VWorldModel.encoder에 바로 넣는 것은 wrapper 계약과 다르다.
+- 기존 models/dino.py는 import 시 torch.hub._validate_not_a_forked_repo를 전역 교체하고 constructor에서 remote hub load를 수행한다. 새 offline wrapper는 이 두 동작을 실행하지 않는 명시적 adaptation이며 원 constructor를 실행했다고 표현하지 않는다. 그 외 feature 선택 의미를 유지한다.
+
+선택한 DINO source의 필수 외부 core import는 torch와 NumPy다. xFormers는 선택 분기이므로 최소 smoke는 첫 dinov2 import 전에 XFORMERS_DISABLED=1을 고정하고 Tensor 입력을 사용한다. 공식 MemEffAttention은 이때 torch SDPA로 넘어간다. list/nested tensor 입력은 xFormers를 요구하므로 최소 경로에서 사용하지 않는다. 이는 공식 fallback 선택이며 과거 xFormers 경로와 부동소수점 결과가 같다는 보장은 아니다. Torch/NumPy 및 그 하위 패키지 전체가 실제 import되는지까지 이번에 실행해 확인한 것은 아니다.
+
+4. QuantWM FP32 import adapter가 필요한 구체적 이유와 제한
+고정 be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM의 models/__init__.py는 두 줄이다.
+from .vit import ViTPredictor
+from .vit_q import QViTPredictor
+따라서 일반적인 import models.vit도 먼저 vit_q와 그 전이 의존성을 요구한다. 이번 새 source 20개 상한 안에서 vit_q는 추가로 읽지 않았으며 표준 package closure가 완료됐다고 표시하지 않는다.
+
+root가 채택한 준비 계약:
+1) 원 models/__init__.py는 보존하고 편집하지 않는다. models namespace의 __path__/__spec__을 검증한 로컬 source 디렉터리에 명시적으로 연결한다. 원 __init__의 export 실행은 건너뛴 사실을 기록한다.
+2) models.vit, models.vqvae, models.proprio, models.visual_world_model의 원 클래스 본문과 qualified name을 보존한다. 이미 다른 models/distributed_fn/dinov2가 로드됐거나 실제 __file__이 allowlist와 다르면 조용히 덮어쓰지 않고 실패시킨다.
+3) 최소 source subset에서 검토하지 않은 quantization/planning module로 자동 확장하지 않는다. 후속 quantization 또는 실제 planner는 별도의 import closure 확인이 필요하다.
+4) models.vqvae의 sys.path.append('..') 부작용과 cwd 의존성을 기록·통제한다. 이 때문에 pinned distributed_fn 대신 주변 파일을 가져오지 않도록 실제 module path를 확인한다.
+
+새로 읽은 distributed_fn/{__init__.py,distributed.py,launch.py}는 torch와 표준 라이브러리만 요구하며 import 자체로 launch/NCCL 초기화를 호출하지 않는다. models.vqvae를 읽는 데 이 세 파일은 필요하다. VWorldModel 본체는 torch, torchvision.transforms, einops만 직접 import하고 planning/env/Hydra/WandB를 import하지 않는다. utils.py는 OmegaConf·Pillow·psutil 등도 요구하지만 VWorldModel 본체의 필수 import는 아니다.
+
+근거:
+https://github.com/huawei-noah/noah-research/blob/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/models/__init__.py
+https://github.com/huawei-noah/noah-research/blob/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/models/visual_world_model.py
+
+5. 저장 checkpoint와 최소 forward에서 빼면 안 되는 부분
+기존 SAFE_PICKLE_METADATA.json의 비실행 opcode/abstract-stack 결과를 재사용했다. top-level encoder는 없고 predictor, decoder, action_encoder, proprio_encoder 및 optimizer 객체가 있다. DINOv2 추가 weight는 원 loader fallback을 충족하기 위해 필요하다. 다만 이번에 실제 pickle을 읽거나 저장 tensor를 재검증한 것은 아니다.
+
+latent rollout이 decoder를 호출하지 않아도 전체 원 checkpoint를 로드하면 models.vqvae 및 Accelerate optimizer/state 클래스가 필요하다. SAFE metadata에 AcceleratedOptimizer, AcceleratorState, GradientState, TorchDynamoPlugin, DynamoBackend 등이 있다. 원 환경 Accelerate0.26.1/HF Hub0.23.2/Torch2.3/Python3.9와 현재 metadata의 Accelerate1.15.0/HF Hub2.3.0/Torch2.6/Python3.10은 다르다. 같은 클래스 이름이 있다는 사실만으로 객체 복원 호환성을 확보했다고 하지 않는다. 기존 manifest의 옛 Accelerate overlay도 새 HF Hub와의 실제 import·복원 검증은 남아 있다.
+
+최소 forward와 실제 PushT 계획 실행을 구분한다. 이미 준비된 입력 또는 합성 형상으로 원 VWorldModel의 encode/predict/rollout 연결을 확인하는 smoke 자체에는 gym/pymunk/pygame/shapely/decord나 실제 env step이 필요하지 않다. 원 데이터셋에서 MP4를 읽거나 원 plan.py CLI를 사용할 때는 해당 loader·Hydra·logging·environment 의존성이 다시 필요하다. 이것을 제거한 model-only smoke를 전체 CEM/MPC 또는 실제 PushT 실행 성공이라고 부르면 안 된다.
+
+6. 수치·형상 연결에서 중요한 두 가지
+VWorldModel.__init__:55–61은 입력 image_size를 그대로 DINO에 보내지 않고 (image_size//16)*encoder.patch_size로 Resize한다. image_size=224인 경우 196×196 DINO 입력과 14×14=196 patch token이다. 일반 DINO224 입력의 256 patch 검사만 통과해도 world-model 연결이 검증된 것은 아니다. 실제 저장 hydra의 image_size/num_hist/num_pred/concat_dim/embedding repeat 값을 그대로 사용해야 한다. 학습 입력의 mean/std 및 Resize 흐름을 DINO 예제의 ImageNet preprocessing으로 바꾸지 않는다.
+
+공식 pretrained constructor의 img_size=518은 위치 임베딩의 원 격자를 만들기 위한 값이며 runtime encoder_image_size=196과 구분한다. 원 보간 경로가 이 두 크기를 연결한다. 또한 VWorldModel.eval()과 train() override에는 return self가 없으므로 wm=wm.eval() 또는 wm.eval().to(...)로 연결하면 안 된다. wm.eval() 상태 호출과 객체 사용을 분리해야 한다.
+
+현재 판단과 다음 작업의 범위
+공식 DINO source/URL/크기를 고정하는 일은 완료했고, root가 고른 FP32 import adaptation의 정확한 계약도 기록했다. 다음 실행 준비는 그 좁은 adapter, 로컬 weight 정책, source/패키지 path 검사, 명시적 checkpoint 로드 정책을 구현·검토하는 일이다. 이번 보고서만으로 현재 환경이 모델을 실행할 준비가 끝났다고 하거나 새로운 quantization 방법의 유용성을 주장하지 않는다.
+
+자원·근거 기록
+새 source는 DINO14개 + QuantWM6개 = 정확히20개다. 기존 READBACK의 models/dino.py·vit.py·vqvae.py·proprio.py 4개는 재사용했다. 새 raw source body 74,078B, GitHub commit/tree metadata body81,812B, 합계155,890B로8MiB 상한 이하다. 공식 weight HEAD1회이며 body0B다. HTTP header·transport byte는 이 body 합계에 포함하지 않는다. helper는 지정한 QuantWM6개만 분담했고 DINO source를 중복 읽지 않았다.
+
+설치·패키지/weight payload 다운로드·모델/텐서/pickle 역직렬화·GPU·기존환경/원소스수정·Git 변경은 모두0회다. 실제 모듈 import나 forward도 하지 않았다. 현재 실제 Opus2 독립 결론은 읽지 않았으며 그 검토 완료를 대신하지 않는다.
+
+산출물:
+SOURCE_MANIFEST_PROPOSED.json — 각 source URL/Git blob/SHA256, constructor 인수, 공식 weight metadata, 미해결 조건과 root의 선택.
+DINO_SOURCE_READBACK.json / DINO_TREE_METADATA.json / WEIGHT_OFFICIAL_HEADERS.json
+QUANTWM_CORE_SOURCE_READBACK.json — helper 독립 확인6개와 원문.

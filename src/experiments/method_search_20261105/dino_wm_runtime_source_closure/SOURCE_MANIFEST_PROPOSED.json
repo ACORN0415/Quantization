@@ -1,0 +1,562 @@
+{
+  "status": "PROPOSED_PINNED_CORE_WITH_ROOT_SELECTED_FP32_NAMESPACE_ADAPTATION_NOT_EXECUTABLE",
+  "root_execution_authorized": false,
+  "actual_Opus_review_completed": false,
+  "created_epoch": 1793908583.6877553,
+  "spec_sha256": "c5e72e7c1fac6163dbb36d6d4fda009ded70964d50a5c7894998f024921133c3",
+  "source_entries": [
+    {
+      "path": "dinov2/__init__.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/dinov2/7764ea0f912e53c92e82eb78a2a1631e92725fc8/dinov2/__init__.py",
+      "bytes": 218,
+      "sha256": "0d2b87b7e71c7f7279ccc4b4f8b541d26071425284a0ea01a5a435fac4511cfe",
+      "git_blob_sha1": "ae847e46898077fe3d8701b8a181d7b4e3d41cd9",
+      "repository": "facebookresearch/dinov2",
+      "revision": "7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+      "new_source_this_phase": true,
+      "role": "required_by_DINO_direct_constructor",
+      "imports": []
+    },
+    {
+      "path": "dinov2/hub/backbones.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/dinov2/7764ea0f912e53c92e82eb78a2a1631e92725fc8/dinov2/hub/backbones.py",
+      "bytes": 5586,
+      "sha256": "871fca671b12a9ff02e810654baf509e97ccf461bf8196ce5ddeefff2fd87d3e",
+      "git_blob_sha1": "af5fd95d38eb33f73a85b92a94a715773a4e70bc",
+      "repository": "facebookresearch/dinov2",
+      "revision": "7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+      "new_source_this_phase": true,
+      "role": "provenance_factory_only_not_imported_by_proposed_direct_constructor",
+      "imports": [
+        "..models",
+        ".utils",
+        "enum",
+        "pathlib",
+        "typing",
+        "urllib.parse"
+      ]
+    },
+    {
+      "path": "dinov2/hub/utils.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/dinov2/7764ea0f912e53c92e82eb78a2a1631e92725fc8/dinov2/hub/utils.py",
+      "bytes": 1598,
+      "sha256": "579613e3d7b82c2a387eddc215ad9f076b8740f9618229628395fe5755dbd131",
+      "git_blob_sha1": "c6fa705f31736069cd68c5f642253cb5ad7fbe10",
+      "repository": "facebookresearch/dinov2",
+      "revision": "7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+      "new_source_this_phase": true,
+      "role": "provenance_factory_only_not_imported_by_proposed_direct_constructor",
+      "imports": [
+        "itertools",
+        "math",
+        "torch",
+        "torch.nn",
+        "torch.nn.functional"
+      ]
+    },
+    {
+      "path": "dinov2/models/__init__.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/dinov2/7764ea0f912e53c92e82eb78a2a1631e92725fc8/dinov2/models/__init__.py",
+      "bytes": 1574,
+      "sha256": "b93329ce676f3eb0c9a7790d1b3b2b114a0855ea8dc76e32e262d1a7dc6c55ae",
+      "git_blob_sha1": "817a63aeb07802ca02f75c9cef674b97355deb3f",
+      "repository": "facebookresearch/dinov2",
+      "revision": "7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+      "new_source_this_phase": true,
+      "role": "required_by_DINO_direct_constructor",
+      "imports": [
+        ".",
+        "logging"
+      ]
+    },
+    {
+      "path": "dinov2/models/vision_transformer.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/dinov2/7764ea0f912e53c92e82eb78a2a1631e92725fc8/dinov2/models/vision_transformer.py",
+      "bytes": 16438,
+      "sha256": "7799a260f2d7d0fe197331d08502fb8c542f9b7424723650f6a39b64fa2639ea",
+      "git_blob_sha1": "34694244ae4e6467a4aa315180a89b323336bf0b",
+      "repository": "facebookresearch/dinov2",
+      "revision": "7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+      "new_source_this_phase": true,
+      "role": "required_by_DINO_direct_constructor",
+      "imports": [
+        "dinov2.layers",
+        "functools",
+        "logging",
+        "math",
+        "numpy",
+        "torch",
+        "torch.nn",
+        "torch.nn.init",
+        "torch.utils.checkpoint",
+        "typing"
+      ]
+    },
+    {
+      "path": "dinov2/layers/__init__.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/dinov2/7764ea0f912e53c92e82eb78a2a1631e92725fc8/dinov2/layers/__init__.py",
+      "bytes": 498,
+      "sha256": "1b55deed39d5ab0b589bef421bbfe06f24a10cd590a0f8403234c9ee4e34109d",
+      "git_blob_sha1": "d640d145fbfb8993d6e7ceec4eb22b5b0a3e62fa",
+      "repository": "facebookresearch/dinov2",
+      "revision": "7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+      "new_source_this_phase": true,
+      "role": "required_by_DINO_direct_constructor",
+      "imports": [
+        ".attention",
+        ".block",
+        ".dino_head",
+        ".layer_scale",
+        ".mlp",
+        ".patch_embed",
+        ".swiglu_ffn"
+      ]
+    },
+    {
+      "path": "dinov2/layers/attention.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/dinov2/7764ea0f912e53c92e82eb78a2a1631e92725fc8/dinov2/layers/attention.py",
+      "bytes": 3298,
+      "sha256": "79c7be7a452b3aad96698ec38d5d5150b9f4d8ac084fa93324510dc9f624775d",
+      "git_blob_sha1": "f1d3dabf14ffbd5eb68c3c16edc56d0da19b1265",
+      "repository": "facebookresearch/dinov2",
+      "revision": "7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+      "new_source_this_phase": true,
+      "role": "required_by_DINO_direct_constructor",
+      "imports": [
+        "logging",
+        "os",
+        "torch",
+        "warnings",
+        "xformers.ops"
+      ]
+    },
+    {
+      "path": "dinov2/layers/block.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/dinov2/7764ea0f912e53c92e82eb78a2a1631e92725fc8/dinov2/layers/block.py",
+      "bytes": 11609,
+      "sha256": "60c0ac7dfa4474be313fabfa5a23d82faf6f0cecd4e720a88be35de9788cb636",
+      "git_blob_sha1": "7e83b71ccb428ca099d2d1d49933dc837faeecfa",
+      "repository": "facebookresearch/dinov2",
+      "revision": "7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+      "new_source_this_phase": true,
+      "role": "required_by_DINO_direct_constructor",
+      "imports": [
+        ".attention",
+        ".drop_path",
+        ".layer_scale",
+        ".mlp",
+        "logging",
+        "os",
+        "torch",
+        "typing",
+        "warnings",
+        "xformers.ops"
+      ]
+    },
+    {
+      "path": "dinov2/layers/dino_head.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/dinov2/7764ea0f912e53c92e82eb78a2a1631e92725fc8/dinov2/layers/dino_head.py",
+      "bytes": 2007,
+      "sha256": "9fdb1fa61c0609dc0876f711f9d0d828c33bf9fd972aab3d9c968d44e16b98d1",
+      "git_blob_sha1": "0ace8ffd6297a1dd480b19db407b662a6ea0f565",
+      "repository": "facebookresearch/dinov2",
+      "revision": "7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+      "new_source_this_phase": true,
+      "role": "required_by_DINO_direct_constructor",
+      "imports": [
+        "torch",
+        "torch.nn",
+        "torch.nn.init",
+        "torch.nn.utils"
+      ]
+    },
+    {
+      "path": "dinov2/layers/drop_path.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/dinov2/7764ea0f912e53c92e82eb78a2a1631e92725fc8/dinov2/layers/drop_path.py",
+      "bytes": 1157,
+      "sha256": "b9f8236e86054b9d9a71275efcad2a9ecaa1f86b529d4b8d6109ddb5e806f67a",
+      "git_blob_sha1": "1d640e0b969b8dcba96260243473700b4e5b24b5",
+      "repository": "facebookresearch/dinov2",
+      "revision": "7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+      "new_source_this_phase": true,
+      "role": "required_by_DINO_direct_constructor",
+      "imports": [
+        "torch"
+      ]
+    },
+    {
+      "path": "dinov2/layers/layer_scale.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/dinov2/7764ea0f912e53c92e82eb78a2a1631e92725fc8/dinov2/layers/layer_scale.py",
+      "bytes": 1097,
+      "sha256": "dadd5aafe178f1bf72a205a02a6645c7e635cacbad585d4a7369c200c6e89135",
+      "git_blob_sha1": "0b38971302b3c8fb3d4c05a5f0912fafe0e80816",
+      "repository": "facebookresearch/dinov2",
+      "revision": "7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+      "new_source_this_phase": true,
+      "role": "required_by_DINO_direct_constructor",
+      "imports": [
+        "torch",
+        "typing"
+      ]
+    },
+    {
+      "path": "dinov2/layers/mlp.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/dinov2/7764ea0f912e53c92e82eb78a2a1631e92725fc8/dinov2/layers/mlp.py",
+      "bytes": 1269,
+      "sha256": "255825c73b60a916dd00eb1e38aacbcdbf316e40d6a005efb46e245b7edb43aa",
+      "git_blob_sha1": "bbf9432aae9258612caeae910a7bde17999e328e",
+      "repository": "facebookresearch/dinov2",
+      "revision": "7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+      "new_source_this_phase": true,
+      "role": "required_by_DINO_direct_constructor",
+      "imports": [
+        "torch",
+        "typing"
+      ]
+    },
+    {
+      "path": "dinov2/layers/patch_embed.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/dinov2/7764ea0f912e53c92e82eb78a2a1631e92725fc8/dinov2/layers/patch_embed.py",
+      "bytes": 2829,
+      "sha256": "40da6add3d811198ea3e17cb99cdd4e5cda59e369efbbe3d18d89308618cf142",
+      "git_blob_sha1": "8b7c0804784a42cf80c0297d110dcc68cc85b339",
+      "repository": "facebookresearch/dinov2",
+      "revision": "7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+      "new_source_this_phase": true,
+      "role": "required_by_DINO_direct_constructor",
+      "imports": [
+        "torch",
+        "torch.nn",
+        "typing"
+      ]
+    },
+    {
+      "path": "dinov2/layers/swiglu_ffn.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/dinov2/7764ea0f912e53c92e82eb78a2a1631e92725fc8/dinov2/layers/swiglu_ffn.py",
+      "bytes": 3200,
+      "sha256": "e46d2948fb97e497cf991ff82ce30cb59b59fdf2e12a19568417113716b4f119",
+      "git_blob_sha1": "340cee356cb4ad7cb3c8bbefa121f39f7c4e5c6f",
+      "repository": "facebookresearch/dinov2",
+      "revision": "7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+      "new_source_this_phase": true,
+      "role": "required_by_DINO_direct_constructor",
+      "imports": [
+        "os",
+        "torch",
+        "torch.nn.functional",
+        "typing",
+        "warnings",
+        "xformers.ops"
+      ]
+    },
+    {
+      "path": "models/__init__.py",
+      "url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/models/__init__.py",
+      "bytes": 63,
+      "sha256": "9ae80cddb2fc9ea28de4c6f97f9b558e88efb3dcef6853f980e36983d8254009",
+      "git_blob_sha1": "ac9012aedda104618fd2bfd2e7fc3d2547746118",
+      "matches_existing_pinned_tree": true,
+      "repository": "huawei-noah/noah-research/QuantWM",
+      "revision": "be738be37a0535f75f541a6c1201ce19f95499b0",
+      "new_source_this_phase": true,
+      "role": "closure_blocker_package_init",
+      "imports": [
+        ".vit",
+        ".vit_q"
+      ]
+    },
+    {
+      "path": "models/visual_world_model.py",
+      "url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/models/visual_world_model.py",
+      "bytes": 13050,
+      "sha256": "931d44c0d541d95be8236f65247de9b40ac3843fe047c1a44d4a2482d1bf636f",
+      "git_blob_sha1": "40bc298c8424a38d38670711968178fafe3966d0",
+      "matches_existing_pinned_tree": true,
+      "repository": "huawei-noah/noah-research/QuantWM",
+      "revision": "be738be37a0535f75f541a6c1201ce19f95499b0",
+      "new_source_this_phase": true,
+      "role": "required_for_full_checkpoint_or_world_model",
+      "imports": [
+        "einops",
+        "torch",
+        "torch.nn",
+        "torchvision"
+      ]
+    },
+    {
+      "path": "utils.py",
+      "url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/utils.py",
+      "bytes": 2818,
+      "sha256": "dd9ab7aeac2a70beac4733dccc8dfc3fad4a96803cf7cf1844f79252b1b984d4",
+      "git_blob_sha1": "d51672b5ba0a7236b342023ec944f380a6bf05ea",
+      "matches_existing_pinned_tree": true,
+      "repository": "huawei-noah/noah-research/QuantWM",
+      "revision": "be738be37a0535f75f541a6c1201ce19f95499b0",
+      "new_source_this_phase": true,
+      "role": "optional_configuration_helper_not_core_import",
+      "imports": [
+        "PIL",
+        "argparse",
+        "numpy",
+        "omegaconf",
+        "os",
+        "psutil",
+        "random",
+        "torch",
+        "typing"
+      ]
+    },
+    {
+      "path": "distributed_fn/__init__.py",
+      "url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/distributed_fn/__init__.py",
+      "bytes": 235,
+      "sha256": "2f4541598b2a2fb41681db38bd8230f8a7fbcc9ea16e7abb97fe7c9bacad30d1",
+      "git_blob_sha1": "b944d9842bb22621e15dcf48c2d8c5d43695335b",
+      "matches_existing_pinned_tree": true,
+      "repository": "huawei-noah/noah-research/QuantWM",
+      "revision": "be738be37a0535f75f541a6c1201ce19f95499b0",
+      "new_source_this_phase": true,
+      "role": "required_for_full_checkpoint_or_world_model",
+      "imports": [
+        ".distributed",
+        ".launch"
+      ]
+    },
+    {
+      "path": "distributed_fn/distributed.py",
+      "url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/distributed_fn/distributed.py",
+      "bytes": 3025,
+      "sha256": "bc3263fb5ce314ce484d13e8fb2094da6f640f11d79617c8dd9d73a7ed8341be",
+      "git_blob_sha1": "b2509f119e9025cab696d6a9ddce81ff226b5edc",
+      "matches_existing_pinned_tree": true,
+      "repository": "huawei-noah/noah-research/QuantWM",
+      "revision": "be738be37a0535f75f541a6c1201ce19f95499b0",
+      "new_source_this_phase": true,
+      "role": "required_for_full_checkpoint_or_world_model",
+      "imports": [
+        "math",
+        "pickle",
+        "torch",
+        "torch.utils"
+      ]
+    },
+    {
+      "path": "distributed_fn/launch.py",
+      "url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/distributed_fn/launch.py",
+      "bytes": 2509,
+      "sha256": "79bb9d45c50f1b5d57bde66b6f8ad9744fb4cf5eaee62ee4a972716c5ffc7a6d",
+      "git_blob_sha1": "531317b5bcef49c55fbee82e229b0ef5c66d9cdd",
+      "matches_existing_pinned_tree": true,
+      "repository": "huawei-noah/noah-research/QuantWM",
+      "revision": "be738be37a0535f75f541a6c1201ce19f95499b0",
+      "new_source_this_phase": true,
+      "role": "required_for_full_checkpoint_or_world_model",
+      "imports": [
+        "distributed_fn",
+        "os",
+        "socket",
+        "torch"
+      ]
+    },
+    {
+      "path": "models/dino.py",
+      "url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/models/dino.py",
+      "bytes": 1266,
+      "sha256": "3e77b3990cdb16fd6620f03fda51e12e236a36804ac2e859b530fc6d501ac746",
+      "git_blob_sha1": "69380fd4c57cdd6bf1434ca834f228c14744d93c",
+      "repository": "huawei-noah/noah-research/QuantWM",
+      "revision": "be738be37a0535f75f541a6c1201ce19f95499b0",
+      "new_source_this_phase": false,
+      "role": "existing_pinned_class_source_reused",
+      "imports": [
+        "torch",
+        "torch.nn"
+      ]
+    },
+    {
+      "path": "models/vit.py",
+      "url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/models/vit.py",
+      "bytes": 3992,
+      "sha256": "ae79e86c1be2fc9ac9c2642882c2ddccf2cea65e85cf29b094672aec5d030387",
+      "git_blob_sha1": "eb52e802d3bf149bfcbd333f294f011fbf15f327",
+      "repository": "huawei-noah/noah-research/QuantWM",
+      "revision": "be738be37a0535f75f541a6c1201ce19f95499b0",
+      "new_source_this_phase": false,
+      "role": "existing_pinned_class_source_reused",
+      "imports": [
+        "einops",
+        "torch"
+      ]
+    },
+    {
+      "path": "models/vqvae.py",
+      "url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/models/vqvae.py",
+      "bytes": 7425,
+      "sha256": "377005da5c79355da6c7db88eded7a04e432c29ddf4279ea89e5364730ff1461",
+      "git_blob_sha1": "0a0d84083cc59429f8eecdb04f25c250236c18ed",
+      "repository": "huawei-noah/noah-research/QuantWM",
+      "revision": "be738be37a0535f75f541a6c1201ce19f95499b0",
+      "new_source_this_phase": false,
+      "role": "existing_pinned_class_source_reused",
+      "imports": [
+        "distributed_fn",
+        "einops",
+        "sys",
+        "torch",
+        "torch.nn"
+      ]
+    },
+    {
+      "path": "models/proprio.py",
+      "url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/models/proprio.py",
+      "bytes": 2131,
+      "sha256": "b0f7c761c45a6a889dc51f6d9cf4539480d1a0bd2bd200ad44c4b9373a573c72",
+      "git_blob_sha1": "8fb70990ef31e018aafc64ffcb9477f4b2e0ec18",
+      "repository": "huawei-noah/noah-research/QuantWM",
+      "revision": "be738be37a0535f75f541a6c1201ce19f95499b0",
+      "new_source_this_phase": false,
+      "role": "existing_pinned_class_source_reused",
+      "imports": [
+        "numpy",
+        "torch.nn"
+      ]
+    }
+  ],
+  "new_source_files_read": 20,
+  "network": {
+    "new_raw_source_body_bytes": 74078,
+    "GitHub_metadata_body_bytes": 81812,
+    "total_counted_source_metadata_body_bytes": 155890,
+    "official_weight_HEAD_requests": 1,
+    "official_weight_payload_bytes": 0,
+    "HTTP_header_and_transport_bytes_not_in_body_count": true,
+    "source_metadata_cap_bytes": 8388608
+  },
+  "dinov2": {
+    "repository": "https://github.com/facebookresearch/dinov2",
+    "revision": "7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+    "commit_date": "2026-06-03T15:28:49Z",
+    "historical_QuantWM_training_encoder_commit_known": false,
+    "source_pin_method": "GitHub official main resolved once to commit; each raw source verified against tree git blob and SHA256 recorded",
+    "license_metadata_not_read": [
+      {
+        "path": "LICENSE",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5471dc10377b76db85a2feca7a99a7eef4980ba8",
+        "size": 11359,
+        "url": "https://api.github.com/repos/facebookresearch/dinov2/git/blobs/5471dc10377b76db85a2feca7a99a7eef4980ba8"
+      }
+    ],
+    "constructor": "dinov2.models.vision_transformer.vit_small",
+    "constructor_kwargs": {
+      "img_size": 518,
+      "patch_size": 14,
+      "init_values": 1.0,
+      "ffn_layer": "mlp",
+      "block_chunks": 0,
+      "num_register_tokens": 0,
+      "interpolate_antialias": false,
+      "interpolate_offset": 0.1,
+      "in_chans": 3,
+      "channel_adaptive": false
+    },
+    "architecture_from_source": {
+      "embed_dim": 384,
+      "depth": 12,
+      "num_heads": 6,
+      "mlp_ratio": 4
+    },
+    "wrapper_contract": {
+      "name": "dinov2_vits14",
+      "feature_key": "x_norm_patchtokens",
+      "emb_dim": "base_model.num_features",
+      "patch_size": "base_model.patch_size",
+      "latent_ndim": 2,
+      "forward": "base_model.forward_features(x)[feature_key]"
+    },
+    "optional_xformers_policy": "Set XFORMERS_DISABLED=1 before first dinov2 import; use Tensor input, not list/nested tensors; this selects official torch SDPA fallback and is not a claim of bit identity to original xFormers execution.",
+    "no_remote_load": "No torch.hub.load or load_state_dict_from_url execution. Use official direct vit_small constructor with explicit factory kwargs, verified local source, explicitly loaded local state_dict and strict=True; separately reviewed offline wrapper preserves original feature-selection API.",
+    "source_closure": "12 DINO project runtime source files closed for direct constructor; 2 hub files read for exact constructor/URL provenance only; third-party Torch/NumPy runtime not imported or tested"
+  },
+  "official_weight": {
+    "model": "dinov2_vits14",
+    "weights": "LVD142M non-register",
+    "url": "https://dl.fbaipublicfiles.com/dinov2/dinov2_vits14/dinov2_vits14_pretrain.pth",
+    "advertised_bytes": 88283115,
+    "status": 200,
+    "last_modified": "Thu, 13 Apr 2023 22:01:20 GMT",
+    "etag": "\"0bd1417efc23bdb1d69200156f5a22bc-11\"",
+    "s3_version_id": "myNNMDsZijFq4d0vreWtK77.L.oits7x",
+    "trusted_SHA256": null,
+    "trusted_digest_status": "No SHA256/Digest/Content-Digest/checksum header in observed official HEAD; reviewed factory defaults check_hash=False and URL has no content hash. No proof that no checksum exists anywhere.",
+    "etag_is_not_sha256": true,
+    "payload_requested": false,
+    "proposed_future_policy": "Root may separately authorize one bounded official-HTTPS acquisition of exactly advertised bytes; record response identity, compute local SHA256 and independently verify it after acquisition. This establishes local integrity/provenance, not comparison with a published trusted SHA."
+  },
+  "quantwm_core": {
+    "standard_import_closure_complete": false,
+    "blocking_edges": [
+      "models/__init__.py -> models.vit_q -> unread transitive quantization imports"
+    ],
+    "two_root_choices": [
+      "Follow unmodified package initialization and separately inspect/pin vit_q transitive closure.",
+      "Explicitly register FP32-only package namespace/import adapter preserving original models.vit/models.vqvae/models.proprio qualified names and source bodies; do not claim original __init__ execution equivalence."
+    ],
+    "checkpoint_globals": "SAFE_PICKLE_METADATA has no encoder key; decoder and Accelerate optimizer/state globals are present even if smoke calls only latent rollout.",
+    "full_checkpoint_policy": "Trusted existing checkpoint explicit loading policy required; no generic weights_only=False fallback silently. Current/new Accelerate object restoration compatibility untested.",
+    "world_model_no_env_import": true,
+    "world_model_preprocess": "encoder_image_size=(image_size//16)*14; image_size224 implies196x196 input and196 patch tokens, not256. Keep original Resize semantics and original input normalization.",
+    "eval_return": "VWorldModel.eval/train override return None; call wm.eval() without assigning or chaining.",
+    "dependencies_static": [
+      "torch",
+      "torchvision",
+      "numpy",
+      "einops",
+      "accelerate classes for whole checkpoint"
+    ],
+    "optional_config_dependencies": [
+      "OmegaConf",
+      "PyYAML/Pillow/psutil if original utils/config helpers used"
+    ],
+    "not_core_forward_dependencies": [
+      "gym",
+      "pymunk",
+      "pygame",
+      "shapely",
+      "decord unless reading original MP4 dataset",
+      "hydra unless invoking original config-instantiation path",
+      "wandb",
+      "submitit",
+      "pointmaze"
+    ],
+    "runtime_tests_done": false,
+    "root_selected_preparation_path": "Explicit FP32-only synthetic models package namespace; __path__ restricted to verified source directory; original __init__.py preserved but not executed; planning/quantization closure deferred. Parent decision received before final report, implementation and execution not authorized.",
+    "namespace_contract": [
+      "Preserve original models.vit/models.vqvae/models.proprio/models.visual_world_model qualified names and class source bodies.",
+      "Fail on existing conflicting models/distributed_fn/dinov2 modules or unexpected resolved __file__; no blind module shadowing.",
+      "Use explicit package __path__/__spec__; record that original models.__init__ exports were skipped.",
+      "Only the reviewed project files are on the source allowlist; restore/record sys.path side effect from vqvae sys.path.append(\"..\").",
+      "Use explicit offline encoder wrapper matching original name/emb_dim/patch_size/latent_ndim/forward API; original DinoV2Encoder remote acquisition and global hub validation monkeypatch are not executed.",
+      "Keep complete original checkpoint dependencies including decoder and Accelerate globals even when rollout omits decoder execution."
+    ],
+    "known_dino_wrapper_import_side_effect": "Existing models/dino.py globally overrides torch.hub._validate_not_a_forked_repo at import; offline wrapper avoids this side effect and the remote acquisition constructor rather than pretending unmodified constructor execution."
+  },
+  "nonclaims": [
+    "No weight or wheel payload acquisition",
+    "No installation or model/GPU/tensor/pickle execution",
+    "No full planning/environment import closure",
+    "No published-result bit identity or DINOv1/HF alternative equivalence",
+    "No new quantization method or execution authorization"
+  ],
+  "evidence_files_sha256": {
+    "src/experiments/method_search_20261105/dino_wm_runtime_source_closure/DINO_SOURCE_READBACK.json": "a9fcad479d2270f32579a54afbc80a92642c46d9ad22251f5ca93b4051f06f8a",
+    "src/experiments/method_search_20261105/dino_wm_runtime_source_closure/DINO_TREE_METADATA.json": "980a4e3f472da51fe14d3aa95997e43ee9028ea0619949e450cd34aaddd8d754",
+    "src/experiments/method_search_20261105/dino_wm_runtime_source_closure/WEIGHT_OFFICIAL_HEADERS.json": "97c9a21c455b7ca15717abe4ddaf1bf2ae2d0f7abb52b31a89c30ebba8229c88",
+    "src/experiments/method_search_20261105/dino_wm_runtime_source_closure/QUANTWM_CORE_SOURCE_READBACK.json": "ad6bbd79f3a886b4e904f83f58acb8f3312756a08ef8a3b78dfaa58d88413599",
+    "src/experiments/method_search_20261105/dino_wm_runtime_preparation/SAFE_PICKLE_METADATA.json": "69b9ac757f5cad50432e373e5000e7588646077037d0c448ac0ab5915a1f6293",
+    "src/experiments/method_search_20261105/dino_wm_runtime_preparation/PINNED_SOURCE_READBACK_CODEX.json": "1e0e33be9581716687423212febec807a592a01931f019eb081050bc77f9e085",
+    "src/experiments/method_search_20261105/dino_wm_runtime_preparation/LOCAL_VERSIONS_CODEX.json": "206a8a79b01820ad91491111a644eb2a94ef55b748bbb2a641b6740aead4bf6c"
+  },
+  "root_selection_recorded_epoch": 1793908625.019466
+}
