@@ -1,0 +1,73 @@
+{
+  "status": "all_five_selected_files_verified_before_any_deletion",
+  "started_epoch": 1793913423.5420353,
+  "verified_epoch": 1793913433.5328832,
+  "files": [
+    {
+      "path": "/home/acorn0415/sfq_data/moe_allocation_stage1/model/model-00001-of-00003.safetensors",
+      "bytes": 4997744872,
+      "allocated_bytes": 4997750784,
+      "device": 66308,
+      "inode": 26738872,
+      "mtime_ns": 1793449338761025079,
+      "expected_sha256_from_HF_cache": "5e3cff7e367794685c241169072c940d200918617d5e2813f1c387dff52d845e",
+      "public_repo": "allenai/OLMoE-1B-7B-0924",
+      "revision": "6d84c48581ece794365f2b8e9cfb043c68ade9c5",
+      "reason": "public weights for completed MoE candidate, not current DINO-WM; preserve all small configs/tokenizer and experimental tensors",
+      "verified_sha256": "5e3cff7e367794685c241169072c940d200918617d5e2813f1c387dff52d845e"
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/moe_allocation_stage1/model/model-00002-of-00003.safetensors",
+      "bytes": 4997235176,
+      "allocated_bytes": 4997246976,
+      "device": 66308,
+      "inode": 26738876,
+      "mtime_ns": 1793449280200752335,
+      "expected_sha256_from_HF_cache": "15ef5c730ee3cfed7199498788cd2faf337203fc74b529625e7502cdd759f4a7",
+      "public_repo": "allenai/OLMoE-1B-7B-0924",
+      "revision": "6d84c48581ece794365f2b8e9cfb043c68ade9c5",
+      "reason": "public weights for completed MoE candidate, not current DINO-WM; preserve all small configs/tokenizer and experimental tensors",
+      "verified_sha256": "15ef5c730ee3cfed7199498788cd2faf337203fc74b529625e7502cdd759f4a7"
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/moe_allocation_stage1/model/model-00003-of-00003.safetensors",
+      "bytes": 3843741912,
+      "allocated_bytes": 3843747840,
+      "device": 66308,
+      "inode": 26738879,
+      "mtime_ns": 1793449335684010892,
+      "expected_sha256_from_HF_cache": "a9abac4ac1b55c9adabac721a02fa39971f103eea9a65c310972b1246de76e04",
+      "public_repo": "allenai/OLMoE-1B-7B-0924",
+      "revision": "6d84c48581ece794365f2b8e9cfb043c68ade9c5",
+      "reason": "public weights for completed MoE candidate, not current DINO-WM; preserve all small configs/tokenizer and experimental tensors",
+      "verified_sha256": "a9abac4ac1b55c9adabac721a02fa39971f103eea9a65c310972b1246de76e04"
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/archives/outputs.zip",
+      "bytes": 953204628,
+      "allocated_bytes": 953208832,
+      "device": 66308,
+      "inode": 26746996,
+      "mtime_ns": 1793907299716250883,
+      "expected_sha256": "425b0d8c2a4194d3ec996b553575f69409aa5714176b063d8401789db9179482",
+      "public_repo": "gaoyuezhou/dino_wm",
+      "revision": "d5c69e8fe60c3ed6b01d2f6e88fbfd66be078e57",
+      "reason": "selected31files extracted and independently audited; full original archive re-downloadable; retain extracted current dependencies and proof records",
+      "verified_sha256": "425b0d8c2a4194d3ec996b553575f69409aa5714176b063d8401789db9179482"
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/archives/pusht_noise.zip",
+      "bytes": 2785304515,
+      "allocated_bytes": 2785308672,
+      "device": 66308,
+      "inode": 26747002,
+      "mtime_ns": 1793907351327445670,
+      "expected_sha256": "442f5dee246edf670964ed7bdecd248683cd6d00580fa0e4d458abb53f92da08",
+      "public_repo": "gaoyuezhou/dino_wm",
+      "revision": "d5c69e8fe60c3ed6b01d2f6e88fbfd66be078e57",
+      "reason": "selected31files extracted and independently audited; full original archive re-downloadable; retain extracted current dependencies and proof records",
+      "verified_sha256": "442f5dee246edf670964ed7bdecd248683cd6d00580fa0e4d458abb53f92da08"
+    }
+  ],
+  "recovery": "Exact public repo/revision and file hashes retained; model configs/tokenizer/selectedDINOextraction preserved."
+}

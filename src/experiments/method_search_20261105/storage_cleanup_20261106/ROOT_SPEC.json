@@ -1,0 +1,25 @@
+{
+  "status": "root_authorized_user_requested_selective_cleanup",
+  "created_epoch": 1793913423.4803636,
+  "authorization": "User asked to select and delete unnecessary sfq_data data, including reproducible retired data. No extra permission requested.",
+  "base": "/home/acorn0415/sfq_data",
+  "delete_plan_sha256": "bc9b043383e5b6b7d0584dccc5bd91a30300a61775b4a54e1269d1aa6a95396e",
+  "dedup_groups_sha256": "6c0bd5323b1461eb97e32b174e0937fad4d5c57379e2a728fd0273ed93be531d",
+  "exact_delete_files": 5,
+  "delete_logical_bytes": 17577231103,
+  "hardlink_potential_bytes": 4214395725,
+  "preservation": [
+    "All unique experimental input/output files and metric/review records",
+    "Current DINO extracted31files, encoderweight/source and code",
+    "Current environment and Wan/SelfForcing checkpoints",
+    "MoE configs/tokenizer/download manifest/calibration data"
+  ],
+  "dedup_policy": "Only exact SHA+size matching frozen experimental files; preserve every path/content SHA, make shared files read-only; do not dedup env/ckpt/upstream/DINO tree. Before editing a shared file, replace that entry with an independent copy.",
+  "limits": {
+    "CPU": 2,
+    "GPU": 0,
+    "model_tensor_load": 0,
+    "network": 0
+  },
+  "review": "Actual retained Opus1 requested through middle manager, local record/selection scope only. No repeated agent creation."
+}

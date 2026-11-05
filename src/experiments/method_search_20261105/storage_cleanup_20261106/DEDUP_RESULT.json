@@ -1,0 +1,14 @@
+{
+  "status": "completed_exact_content_hardlink_dedup",
+  "started_epoch": 1793913468.125127,
+  "finished_epoch": 1793913469.3632696,
+  "content_groups": 62,
+  "replaced_duplicate_paths": 128,
+  "already_same_inode_skipped": 0,
+  "logical_duplicate_bytes_replaced": 4214395725,
+  "all_original_paths_preserved": true,
+  "all_file_content_SHA_preserved_by_same_inode_to_rehashed_keeper": true,
+  "shared_files_readonly": true,
+  "metadata_note": "Shared keeper timestamp replaces duplicate timestamp; original timestamps/modes retained in events. Create independent copy before editing shared files.",
+  "GPU_model_network": 0
+}

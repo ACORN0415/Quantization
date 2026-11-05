@@ -1,0 +1,13 @@
+/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/swiglu_ffn.py:45: UserWarning: xFormers is disabled (SwiGLU)
+  warnings.warn("xFormers is disabled (SwiGLU)")
+/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/swiglu_ffn.py:51: UserWarning: xFormers is not available (SwiGLU)
+  warnings.warn("xFormers is not available (SwiGLU)")
+/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/attention.py:29: UserWarning: xFormers is disabled (Attention)
+  warnings.warn("xFormers is disabled (Attention)")
+/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/attention.py:33: UserWarning: xFormers is not available (Attention)
+  warnings.warn("xFormers is not available (Attention)")
+/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/block.py:35: UserWarning: xFormers is disabled (Block)
+  warnings.warn("xFormers is disabled (Block)")
+/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/layers/block.py:40: UserWarning: xFormers is not available (Block)
+  warnings.warn("xFormers is not available (Block)")
+{"status": "failed", "failed_phase": "cpu_checkpoint_restore", "wall_seconds": 1.5616090297698975}

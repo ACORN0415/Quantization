@@ -1,0 +1,2536 @@
+{
+  "status": "exact_SHA_duplicate_groups_not_yet_mutated",
+  "started_epoch": 1793913279.992839,
+  "finished_epoch": 1793913302.0958314,
+  "elapsed_seconds": 22.102992296218872,
+  "files_hashed": 942,
+  "bytes_read": 51518296612,
+  "groups": [
+    {
+      "sha256": "00a3f210d1eaffb235004aaf65da6904e56dabc573a338113b02ab4b885cab8d",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_rotation_rollout/p04_K4V4/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 26746086,
+        "mtime_ns": 1793835146902478168,
+        "mode": 436,
+        "links": 1,
+        "sha256": "00a3f210d1eaffb235004aaf65da6904e56dabc573a338113b02ab4b885cab8d"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/quantizer_policy_cross/development/p04_s101_rtn_C_repeat/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26221064,
+          "mtime_ns": 1793272352764149146,
+          "mode": 436,
+          "links": 1,
+          "sha256": "00a3f210d1eaffb235004aaf65da6904e56dabc573a338113b02ab4b885cab8d"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "5c063c882e587179eb64cea2e3a465f4ccf89d862e7133170a241cc8013b8211",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_rotation_rollout/p00_K4V4/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 26746078,
+        "mtime_ns": 1793834926746164274,
+        "mode": 436,
+        "links": 1,
+        "sha256": "5c063c882e587179eb64cea2e3a465f4ccf89d862e7133170a241cc8013b8211"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance/C_once_g16_r0/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278772,
+          "mtime_ns": 1793252939671219356,
+          "mode": 436,
+          "links": 1,
+          "sha256": "5c063c882e587179eb64cea2e3a465f4ccf89d862e7133170a241cc8013b8211"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance/C_once_g16_r1/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278790,
+          "mtime_ns": 1793253489995465613,
+          "mode": 436,
+          "links": 1,
+          "sha256": "5c063c882e587179eb64cea2e3a465f4ccf89d862e7133170a241cc8013b8211"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance/C_once_g16_r2/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278831,
+          "mtime_ns": 1793254702517729357,
+          "mode": 436,
+          "links": 1,
+          "sha256": "5c063c882e587179eb64cea2e3a465f4ccf89d862e7133170a241cc8013b8211"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance/C_once_g16_rprofile/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278847,
+          "mtime_ns": 1793255300235133946,
+          "mode": 436,
+          "links": 1,
+          "sha256": "5c063c882e587179eb64cea2e3a465f4ccf89d862e7133170a241cc8013b8211"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance/C_repeat_g16_r0/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278766,
+          "mtime_ns": 1793252749504688565,
+          "mode": 436,
+          "links": 1,
+          "sha256": "5c063c882e587179eb64cea2e3a465f4ccf89d862e7133170a241cc8013b8211"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance/C_repeat_g16_r1/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278784,
+          "mtime_ns": 1793253348693361603,
+          "mode": 436,
+          "links": 1,
+          "sha256": "5c063c882e587179eb64cea2e3a465f4ccf89d862e7133170a241cc8013b8211"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance/C_repeat_g16_r2/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278827,
+          "mtime_ns": 1793254561211408240,
+          "mode": 436,
+          "links": 1,
+          "sha256": "5c063c882e587179eb64cea2e3a465f4ccf89d862e7133170a241cc8013b8211"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance/C_repeat_g16_ridentity_off/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278752,
+          "mtime_ns": 1793252019396655595,
+          "mode": 436,
+          "links": 1,
+          "sha256": "5c063c882e587179eb64cea2e3a465f4ccf89d862e7133170a241cc8013b8211"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance/C_repeat_g16_ridentity_on/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278739,
+          "mtime_ns": 1793252199374155607,
+          "mode": 436,
+          "links": 1,
+          "sha256": "5c063c882e587179eb64cea2e3a465f4ccf89d862e7133170a241cc8013b8211"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance/C_repeat_g16_rprofile/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278843,
+          "mtime_ns": 1793255157796794686,
+          "mode": 436,
+          "links": 1,
+          "sha256": "5c063c882e587179eb64cea2e3a465f4ccf89d862e7133170a241cc8013b8211"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance_pre_dino_import_fix/C_repeat_g16_ridentity_off/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278716,
+          "mtime_ns": 1793249383638906375,
+          "mode": 436,
+          "links": 1,
+          "sha256": "5c063c882e587179eb64cea2e3a465f4ccf89d862e7133170a241cc8013b8211"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance_pre_dino_import_fix/C_repeat_g16_ridentity_on/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278731,
+          "mtime_ns": 1793249562491318327,
+          "mode": 436,
+          "links": 1,
+          "sha256": "5c063c882e587179eb64cea2e3a465f4ccf89d862e7133170a241cc8013b8211"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance_pre_metadata_fix/C_repeat_g16_ridentity_off/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278702,
+          "mtime_ns": 1793247897501994067,
+          "mode": 436,
+          "links": 1,
+          "sha256": "5c063c882e587179eb64cea2e3a465f4ccf89d862e7133170a241cc8013b8211"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance_pre_metadata_fix/C_repeat_g16_ridentity_on/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278708,
+          "mtime_ns": 1793248076760784927,
+          "mode": 436,
+          "links": 1,
+          "sha256": "5c063c882e587179eb64cea2e3a465f4ccf89d862e7133170a241cc8013b8211"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/quantizer_policy_cross/development/p00_s101_rtn_C_repeat/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26221050,
+          "mtime_ns": 1793271960304514550,
+          "mode": 436,
+          "links": 1,
+          "sha256": "5c063c882e587179eb64cea2e3a465f4ccf89d862e7133170a241cc8013b8211"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 377412825
+    },
+    {
+      "sha256": "7034f20412f59a06d55e740a20dcb94ad714af5933fe13f5b986e8ef4778e587",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/performance/L_g16_r0/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27278760,
+        "mtime_ns": 1793252548343127464,
+        "mode": 436,
+        "links": 1,
+        "sha256": "7034f20412f59a06d55e740a20dcb94ad714af5933fe13f5b986e8ef4778e587"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance/L_g16_r1/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278808,
+          "mtime_ns": 1793253949732135852,
+          "mode": 436,
+          "links": 1,
+          "sha256": "7034f20412f59a06d55e740a20dcb94ad714af5933fe13f5b986e8ef4778e587"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance/L_g16_r2/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278823,
+          "mtime_ns": 1793254409111070639,
+          "mode": 436,
+          "links": 1,
+          "sha256": "7034f20412f59a06d55e740a20dcb94ad714af5933fe13f5b986e8ef4778e587"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance/L_g16_rprofile/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278839,
+          "mtime_ns": 1793255003303429282,
+          "mode": 436,
+          "links": 1,
+          "sha256": "7034f20412f59a06d55e740a20dcb94ad714af5933fe13f5b986e8ef4778e587"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/quantizer_policy_cross/development/p00_s101_rtn_L/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26221043,
+          "mtime_ns": 1793271556905172867,
+          "mode": 436,
+          "links": 1,
+          "sha256": "7034f20412f59a06d55e740a20dcb94ad714af5933fe13f5b986e8ef4778e587"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 100643420
+    },
+    {
+      "sha256": "c67924809d48a1384c97c19d2ac44bca27d1ec996540d5bdf7eb1be8f4627fd1",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_channel_budget_global_baseline/p00_Identity/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 26745964,
+        "mtime_ns": 1793811709809918499,
+        "mode": 436,
+        "links": 1,
+        "sha256": "c67924809d48a1384c97c19d2ac44bca27d1ec996540d5bdf7eb1be8f4627fd1"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/kv_channel_budget_rollout/p00_BF16/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26745799,
+          "mtime_ns": 1793808765461886732,
+          "mode": 436,
+          "links": 1,
+          "sha256": "c67924809d48a1384c97c19d2ac44bca27d1ec996540d5bdf7eb1be8f4627fd1"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance/BF16_g16_r0/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278756,
+          "mtime_ns": 1793252336401536922,
+          "mode": 436,
+          "links": 1,
+          "sha256": "c67924809d48a1384c97c19d2ac44bca27d1ec996540d5bdf7eb1be8f4627fd1"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance/BF16_g16_r1/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278798,
+          "mtime_ns": 1793253786258854095,
+          "mode": 436,
+          "links": 1,
+          "sha256": "c67924809d48a1384c97c19d2ac44bca27d1ec996540d5bdf7eb1be8f4627fd1"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance/BF16_g16_r2/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278812,
+          "mtime_ns": 1793254245999721081,
+          "mode": 436,
+          "links": 1,
+          "sha256": "c67924809d48a1384c97c19d2ac44bca27d1ec996540d5bdf7eb1be8f4627fd1"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance/BF16_g16_rprofile/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278835,
+          "mtime_ns": 1793254839455045719,
+          "mode": 436,
+          "links": 1,
+          "sha256": "c67924809d48a1384c97c19d2ac44bca27d1ec996540d5bdf7eb1be8f4627fd1"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance_pre_dino_import_fix/BF16_g16_r0/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278735,
+          "mtime_ns": 1793249699493090925,
+          "mode": 436,
+          "links": 1,
+          "sha256": "c67924809d48a1384c97c19d2ac44bca27d1ec996540d5bdf7eb1be8f4627fd1"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance_pre_metadata_fix/BF16_g16_r0/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278712,
+          "mtime_ns": 1793248214278375426,
+          "mode": 436,
+          "links": 1,
+          "sha256": "c67924809d48a1384c97c19d2ac44bca27d1ec996540d5bdf7eb1be8f4627fd1"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 176125985
+    },
+    {
+      "sha256": "69df7b62ee923b082d632f1205685c4e04a64951778cc7765538f7eb976dbfe0",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_channel_budget_global_baseline/p04_Identity/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 26746008,
+        "mtime_ns": 1793811928515421287,
+        "mode": 436,
+        "links": 1,
+        "sha256": "69df7b62ee923b082d632f1205685c4e04a64951778cc7765538f7eb976dbfe0"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/kv_channel_budget_rollout/p04_BF16/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26745869,
+          "mtime_ns": 1793809710334128518,
+          "mode": 436,
+          "links": 1,
+          "sha256": "69df7b62ee923b082d632f1205685c4e04a64951778cc7765538f7eb976dbfe0"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "c10aa914c684ee8cd1f176b6c882684d26a61dffcf7811d7d4e305eab0bac2dd",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p10_s404_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27279427,
+        "mtime_ns": 1793268013486914152,
+        "mode": 436,
+        "links": 1,
+        "sha256": "c10aa914c684ee8cd1f176b6c882684d26a61dffcf7811d7d4e305eab0bac2dd"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p10_s404/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611319,
+          "mtime_ns": 1793379359572047423,
+          "mode": 436,
+          "links": 1,
+          "sha256": "c10aa914c684ee8cd1f176b6c882684d26a61dffcf7811d7d4e305eab0bac2dd"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "39f4bfe0ad9f952a37e2c0febb55b8d206a8ec2a8057af1f9898678f27a933f8",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p07_s303_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27279301,
+        "mtime_ns": 1793264024584108555,
+        "mode": 436,
+        "links": 1,
+        "sha256": "39f4bfe0ad9f952a37e2c0febb55b8d206a8ec2a8057af1f9898678f27a933f8"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p07_s303/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611277,
+          "mtime_ns": 1793378439293781866,
+          "mode": 436,
+          "links": 1,
+          "sha256": "39f4bfe0ad9f952a37e2c0febb55b8d206a8ec2a8057af1f9898678f27a933f8"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "7cb8dbc0eff16541cd66071e9e66ea47f35e5a09b430aa778bb449557fd0921b",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p00_s404_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27278916,
+        "mtime_ns": 1793256609892747421,
+        "mode": 436,
+        "links": 1,
+        "sha256": "7cb8dbc0eff16541cd66071e9e66ea47f35e5a09b430aa778bb449557fd0921b"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p00_s404/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611198,
+          "mtime_ns": 1793376736612005454,
+          "mode": 436,
+          "links": 1,
+          "sha256": "7cb8dbc0eff16541cd66071e9e66ea47f35e5a09b430aa778bb449557fd0921b"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "68b9e84994b0c627f2ca4727fa1bc9d5e456f95454ef0dabe3cd6d7e1631c592",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p02_s303_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27279121,
+        "mtime_ns": 1793258319589020897,
+        "mode": 436,
+        "links": 1,
+        "sha256": "68b9e84994b0c627f2ca4727fa1bc9d5e456f95454ef0dabe3cd6d7e1631c592"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p02_s303/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611216,
+          "mtime_ns": 1793377128988529964,
+          "mode": 436,
+          "links": 1,
+          "sha256": "68b9e84994b0c627f2ca4727fa1bc9d5e456f95454ef0dabe3cd6d7e1631c592"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "67abd21f9fc8c70c04da1f630c5bdcaf691d75691405f543248ddbddc7427dba",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p08_s303_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27279337,
+        "mtime_ns": 1793265164840033350,
+        "mode": 436,
+        "links": 1,
+        "sha256": "67abd21f9fc8c70c04da1f630c5bdcaf691d75691405f543248ddbddc7427dba"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p08_s303/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611289,
+          "mtime_ns": 1793378703843191597,
+          "mode": 436,
+          "links": 1,
+          "sha256": "67abd21f9fc8c70c04da1f630c5bdcaf691d75691405f543248ddbddc7427dba"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "8cb0b238ca2bfdb21a12bf5722d05f04fb1e51ec6b0c955b78c68d8999ed9635",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p00_s303_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27278895,
+        "mtime_ns": 1793256036518679686,
+        "mode": 436,
+        "links": 1,
+        "sha256": "8cb0b238ca2bfdb21a12bf5722d05f04fb1e51ec6b0c955b78c68d8999ed9635"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p00_s303/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611192,
+          "mtime_ns": 1793376605812066149,
+          "mode": 436,
+          "links": 1,
+          "sha256": "8cb0b238ca2bfdb21a12bf5722d05f04fb1e51ec6b0c955b78c68d8999ed9635"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/repeat_p00_s303/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611180,
+          "mtime_ns": 1793376333338660718,
+          "mode": 436,
+          "links": 1,
+          "sha256": "8cb0b238ca2bfdb21a12bf5722d05f04fb1e51ec6b0c955b78c68d8999ed9635"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 50321710
+    },
+    {
+      "sha256": "c50284785be23f5113f7dfb59e97f3ec14d5e5446d23698874aaf84eccd8a2a9",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p11_s404_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27279463,
+        "mtime_ns": 1793269154654918021,
+        "mode": 436,
+        "links": 1,
+        "sha256": "c50284785be23f5113f7dfb59e97f3ec14d5e5446d23698874aaf84eccd8a2a9"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p11_s404/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611331,
+          "mtime_ns": 1793379621598969105,
+          "mode": 436,
+          "links": 1,
+          "sha256": "c50284785be23f5113f7dfb59e97f3ec14d5e5446d23698874aaf84eccd8a2a9"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/repeat_p11_s404/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611186,
+          "mtime_ns": 1793376474889378839,
+          "mode": 436,
+          "links": 1,
+          "sha256": "c50284785be23f5113f7dfb59e97f3ec14d5e5446d23698874aaf84eccd8a2a9"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 50321710
+    },
+    {
+      "sha256": "63eb546ed50bc569842a092b75add4d57e7dd65a1e59e3748698fc9aeb3eb5fc",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p05_s303_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27279229,
+        "mtime_ns": 1793261740729462169,
+        "mode": 436,
+        "links": 1,
+        "sha256": "63eb546ed50bc569842a092b75add4d57e7dd65a1e59e3748698fc9aeb3eb5fc"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p05_s303/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611252,
+          "mtime_ns": 1793377915250974580,
+          "mode": 436,
+          "links": 1,
+          "sha256": "63eb546ed50bc569842a092b75add4d57e7dd65a1e59e3748698fc9aeb3eb5fc"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "a67371e1ebc705d4283362a717cb36f3c246a1ccb984f05e178c8d870a882793",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p07_s404_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27279319,
+        "mtime_ns": 1793264595089080370,
+        "mode": 436,
+        "links": 1,
+        "sha256": "a67371e1ebc705d4283362a717cb36f3c246a1ccb984f05e178c8d870a882793"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p07_s404/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611283,
+          "mtime_ns": 1793378570368477180,
+          "mode": 436,
+          "links": 1,
+          "sha256": "a67371e1ebc705d4283362a717cb36f3c246a1ccb984f05e178c8d870a882793"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "2f352ae43eace2927935272d1ca12a69950744bfe8340c4598a3d0ee215d576b",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p05_s404_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27279247,
+        "mtime_ns": 1793262315008368462,
+        "mode": 436,
+        "links": 1,
+        "sha256": "2f352ae43eace2927935272d1ca12a69950744bfe8340c4598a3d0ee215d576b"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p05_s404/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611258,
+          "mtime_ns": 1793378046182681659,
+          "mode": 436,
+          "links": 1,
+          "sha256": "2f352ae43eace2927935272d1ca12a69950744bfe8340c4598a3d0ee215d576b"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "507fef591f57667e3309976ce28d4db196deb5fc5a37dab3a3d72b1bb8ec4705",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p04_s303_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27279193,
+        "mtime_ns": 1793260602097482074,
+        "mode": 436,
+        "links": 1,
+        "sha256": "507fef591f57667e3309976ce28d4db196deb5fc5a37dab3a3d72b1bb8ec4705"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p04_s303/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611240,
+          "mtime_ns": 1793377653048539790,
+          "mode": 436,
+          "links": 1,
+          "sha256": "507fef591f57667e3309976ce28d4db196deb5fc5a37dab3a3d72b1bb8ec4705"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "c1a07942c85e4f89b10126c774fb8f503be5ef318ee790a9c5e13cd4deeb9941",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p06_s303_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27279265,
+        "mtime_ns": 1793262885479945946,
+        "mode": 436,
+        "links": 1,
+        "sha256": "c1a07942c85e4f89b10126c774fb8f503be5ef318ee790a9c5e13cd4deeb9941"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p06_s303/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611264,
+          "mtime_ns": 1793378177147384503,
+          "mode": 436,
+          "links": 1,
+          "sha256": "c1a07942c85e4f89b10126c774fb8f503be5ef318ee790a9c5e13cd4deeb9941"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "c3217f6a9766a1a78ab6538a6b027d86f7fdd760ad1299ed5051a3943309fc74",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p10_s303_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27279409,
+        "mtime_ns": 1793267444546094261,
+        "mode": 436,
+        "links": 1,
+        "sha256": "c3217f6a9766a1a78ab6538a6b027d86f7fdd760ad1299ed5051a3943309fc74"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p10_s303/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611313,
+          "mtime_ns": 1793379228661254892,
+          "mode": 436,
+          "links": 1,
+          "sha256": "c3217f6a9766a1a78ab6538a6b027d86f7fdd760ad1299ed5051a3943309fc74"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "23e87bd1de5aeb8a2be468bd384b48c4f45d4b033074ad1c1cd0f4d28b5b01ad",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p03_s303_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27279157,
+        "mtime_ns": 1793259460393472041,
+        "mode": 436,
+        "links": 1,
+        "sha256": "23e87bd1de5aeb8a2be468bd384b48c4f45d4b033074ad1c1cd0f4d28b5b01ad"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p03_s303/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611228,
+          "mtime_ns": 1793377390934066718,
+          "mode": 436,
+          "links": 1,
+          "sha256": "23e87bd1de5aeb8a2be468bd384b48c4f45d4b033074ad1c1cd0f4d28b5b01ad"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "03fb2c9fed123ebb0beb9f49ee20fa0e8b1561bd93cab7f37e30aea1da9644af",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p09_s404_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27279391,
+        "mtime_ns": 1793266874960640261,
+        "mode": 436,
+        "links": 1,
+        "sha256": "03fb2c9fed123ebb0beb9f49ee20fa0e8b1561bd93cab7f37e30aea1da9644af"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p09_s404/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611307,
+          "mtime_ns": 1793379097685619284,
+          "mode": 436,
+          "links": 1,
+          "sha256": "03fb2c9fed123ebb0beb9f49ee20fa0e8b1561bd93cab7f37e30aea1da9644af"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "15ccba666f7b33b77a84e90c4d9ad33b1e8fe9639ad14ac629ef629db09f15e0",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p02_s404_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27279139,
+        "mtime_ns": 1793258889981466440,
+        "mode": 436,
+        "links": 1,
+        "sha256": "15ccba666f7b33b77a84e90c4d9ad33b1e8fe9639ad14ac629ef629db09f15e0"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p02_s404/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611222,
+          "mtime_ns": 1793377260192309959,
+          "mode": 436,
+          "links": 1,
+          "sha256": "15ccba666f7b33b77a84e90c4d9ad33b1e8fe9639ad14ac629ef629db09f15e0"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "9da16947bb47322e2b882a768ef0440e1b88b980ff1e2d338c3602b6e9f1286d",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p01_s404_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27279101,
+        "mtime_ns": 1793257749049231695,
+        "mode": 436,
+        "links": 1,
+        "sha256": "9da16947bb47322e2b882a768ef0440e1b88b980ff1e2d338c3602b6e9f1286d"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p01_s404/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611210,
+          "mtime_ns": 1793376998299726579,
+          "mode": 436,
+          "links": 1,
+          "sha256": "9da16947bb47322e2b882a768ef0440e1b88b980ff1e2d338c3602b6e9f1286d"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "81fb6c11af86b65ba380dfd29a2e1b4458269c7a8f75bd68594d90329785cce8",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p03_s404_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27279175,
+        "mtime_ns": 1793260031327850088,
+        "mode": 436,
+        "links": 1,
+        "sha256": "81fb6c11af86b65ba380dfd29a2e1b4458269c7a8f75bd68594d90329785cce8"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p03_s404/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611234,
+          "mtime_ns": 1793377521977809336,
+          "mode": 436,
+          "links": 1,
+          "sha256": "81fb6c11af86b65ba380dfd29a2e1b4458269c7a8f75bd68594d90329785cce8"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "b0b6dadaf54c898efbdf7d91e5177a95a0f8362e5a724b41121f74a0e046fa14",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p04_s404_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27279211,
+        "mtime_ns": 1793261171300597990,
+        "mode": 436,
+        "links": 1,
+        "sha256": "b0b6dadaf54c898efbdf7d91e5177a95a0f8362e5a724b41121f74a0e046fa14"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p04_s404/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611246,
+          "mtime_ns": 1793377784016260146,
+          "mode": 436,
+          "links": 1,
+          "sha256": "b0b6dadaf54c898efbdf7d91e5177a95a0f8362e5a724b41121f74a0e046fa14"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "b1b01561f28ad69cd968fad71d1b9116eb8d95aaaf187b2f56ac155decfbd92b",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p09_s303_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27279373,
+        "mtime_ns": 1793266304309024788,
+        "mode": 436,
+        "links": 1,
+        "sha256": "b1b01561f28ad69cd968fad71d1b9116eb8d95aaaf187b2f56ac155decfbd92b"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p09_s303/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611301,
+          "mtime_ns": 1793378966810185781,
+          "mode": 436,
+          "links": 1,
+          "sha256": "b1b01561f28ad69cd968fad71d1b9116eb8d95aaaf187b2f56ac155decfbd92b"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "e84d28e342632bdfc04f53478ea877e4717e812e843ec60e15a601ae8d35045d",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p08_s404_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27279355,
+        "mtime_ns": 1793265734125007849,
+        "mode": 436,
+        "links": 1,
+        "sha256": "e84d28e342632bdfc04f53478ea877e4717e812e843ec60e15a601ae8d35045d"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p08_s404/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611295,
+          "mtime_ns": 1793378835163019385,
+          "mode": 436,
+          "links": 1,
+          "sha256": "e84d28e342632bdfc04f53478ea877e4717e812e843ec60e15a601ae8d35045d"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "f4b98f4ad19f40a1f9a9d53ba0ec870ddc0a22b72bd3e2fbccea29403c7c39c4",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p01_s303_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27279083,
+        "mtime_ns": 1793257179880541584,
+        "mode": 436,
+        "links": 1,
+        "sha256": "f4b98f4ad19f40a1f9a9d53ba0ec870ddc0a22b72bd3e2fbccea29403c7c39c4"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p01_s303/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611204,
+          "mtime_ns": 1793376867720889824,
+          "mode": 436,
+          "links": 1,
+          "sha256": "f4b98f4ad19f40a1f9a9d53ba0ec870ddc0a22b72bd3e2fbccea29403c7c39c4"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "93a885e3121da81ae7a41109843f2b8ae784de19cfe4342ff06c6abd0f3ab029",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p06_s404_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27279283,
+        "mtime_ns": 1793263455194097200,
+        "mode": 436,
+        "links": 1,
+        "sha256": "93a885e3121da81ae7a41109843f2b8ae784de19cfe4342ff06c6abd0f3ab029"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p06_s404/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611270,
+          "mtime_ns": 1793378308029083488,
+          "mode": 436,
+          "links": 1,
+          "sha256": "93a885e3121da81ae7a41109843f2b8ae784de19cfe4342ff06c6abd0f3ab029"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "3372f27cbc1067c32c178bbd0219b9d0b0a151f56fe8c8fad0d1b3ffca210f7b",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/fr/p11_s303_C_repeat/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27279445,
+        "mtime_ns": 1793268583359415331,
+        "mode": 436,
+        "links": 1,
+        "sha256": "3372f27cbc1067c32c178bbd0219b9d0b0a151f56fe8c8fad0d1b3ffca210f7b"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/repeat_once_final/once_p11_s303/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 26611325,
+          "mtime_ns": 1793379490337961306,
+          "mode": 436,
+          "links": 1,
+          "sha256": "3372f27cbc1067c32c178bbd0219b9d0b0a151f56fe8c8fad0d1b3ffca210f7b"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25160855
+    },
+    {
+      "sha256": "1a2a7677c9190e6fd13d99aafbeb1271f53c4ea6ccf758f838b31654b8a4d8ce",
+      "bytes": 25160855,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/mechanism/performance/L_g24_r0/latent.pt",
+        "bytes": 25160855,
+        "allocated_bytes": 25161728,
+        "device": 66308,
+        "inode": 27278778,
+        "mtime_ns": 1793253147854800711,
+        "mode": 436,
+        "links": 1,
+        "sha256": "1a2a7677c9190e6fd13d99aafbeb1271f53c4ea6ccf758f838b31654b8a4d8ce"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance/L_g24_r1/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278794,
+          "mtime_ns": 1793253649510651240,
+          "mode": 436,
+          "links": 1,
+          "sha256": "1a2a7677c9190e6fd13d99aafbeb1271f53c4ea6ccf758f838b31654b8a4d8ce"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance/L_g24_r2/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278806,
+          "mtime_ns": 1793254109200441271,
+          "mode": 436,
+          "links": 1,
+          "sha256": "1a2a7677c9190e6fd13d99aafbeb1271f53c4ea6ccf758f838b31654b8a4d8ce"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/mechanism/performance/L_g24_rprofile/latent.pt",
+          "bytes": 25160855,
+          "allocated_bytes": 25161728,
+          "device": 66308,
+          "inode": 27278851,
+          "mtime_ns": 1793255460010784281,
+          "mode": 436,
+          "links": 1,
+          "sha256": "1a2a7677c9190e6fd13d99aafbeb1271f53c4ea6ccf758f838b31654b8a4d8ce"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 75482565
+    },
+    {
+      "sha256": "65dd97a9633a37027ce602a6cbd429e6f509a478175426e76658566d4f8e7cce",
+      "bytes": 50320520,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p05_K4V4/ref.pt",
+        "bytes": 50320520,
+        "allocated_bytes": 50323456,
+        "device": 66308,
+        "inode": 26746857,
+        "mtime_ns": 1793852689038476085,
+        "mode": 436,
+        "links": 1,
+        "sha256": "65dd97a9633a37027ce602a6cbd429e6f509a478175426e76658566d4f8e7cce"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p05_K4V4_rotK/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26746862,
+          "mtime_ns": 1793852922721486526,
+          "mode": 436,
+          "links": 1,
+          "sha256": "65dd97a9633a37027ce602a6cbd429e6f509a478175426e76658566d4f8e7cce"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p05_K4h8_V4/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26746872,
+          "mtime_ns": 1793853380277849774,
+          "mode": 436,
+          "links": 1,
+          "sha256": "65dd97a9633a37027ce602a6cbd429e6f509a478175426e76658566d4f8e7cce"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p05_NOISE/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26746867,
+          "mtime_ns": 1793853143952929329,
+          "mode": 436,
+          "links": 1,
+          "sha256": "65dd97a9633a37027ce602a6cbd429e6f509a478175426e76658566d4f8e7cce"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 150961560
+    },
+    {
+      "sha256": "9627dd6155c3ea41f56775b61f2be67f47e2600a67cf22684ced0a3604e4da75",
+      "bytes": 50320520,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p07_K4V4/ref.pt",
+        "bytes": 50320520,
+        "allocated_bytes": 50323456,
+        "device": 66308,
+        "inode": 26746897,
+        "mtime_ns": 1793854613847444987,
+        "mode": 436,
+        "links": 1,
+        "sha256": "9627dd6155c3ea41f56775b61f2be67f47e2600a67cf22684ced0a3604e4da75"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p07_K4V4_rotK/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26746902,
+          "mtime_ns": 1793854847515765954,
+          "mode": 436,
+          "links": 1,
+          "sha256": "9627dd6155c3ea41f56775b61f2be67f47e2600a67cf22684ced0a3604e4da75"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p07_K4h8_V4/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26746912,
+          "mtime_ns": 1793855305059075039,
+          "mode": 436,
+          "links": 1,
+          "sha256": "9627dd6155c3ea41f56775b61f2be67f47e2600a67cf22684ced0a3604e4da75"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p07_NOISE/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26746907,
+          "mtime_ns": 1793855068670956432,
+          "mode": 436,
+          "links": 1,
+          "sha256": "9627dd6155c3ea41f56775b61f2be67f47e2600a67cf22684ced0a3604e4da75"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 150961560
+    },
+    {
+      "sha256": "1854621d6df20807fa27386e4457b33e44b8529c5152533fddcf7628a849ee57",
+      "bytes": 50320520,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p01_K4V4/ref.pt",
+        "bytes": 50320520,
+        "allocated_bytes": 50327552,
+        "device": 66308,
+        "inode": 26746797,
+        "mtime_ns": 1793849802859245661,
+        "mode": 436,
+        "links": 1,
+        "sha256": "1854621d6df20807fa27386e4457b33e44b8529c5152533fddcf7628a849ee57"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p01_K4V4_rotK/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26746802,
+          "mtime_ns": 1793850036191657283,
+          "mode": 436,
+          "links": 1,
+          "sha256": "1854621d6df20807fa27386e4457b33e44b8529c5152533fddcf7628a849ee57"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p01_K4h8_V4/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26746812,
+          "mtime_ns": 1793850493868169476,
+          "mode": 436,
+          "links": 1,
+          "sha256": "1854621d6df20807fa27386e4457b33e44b8529c5152533fddcf7628a849ee57"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p01_NOISE/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26746807,
+          "mtime_ns": 1793850257465025785,
+          "mode": 436,
+          "links": 1,
+          "sha256": "1854621d6df20807fa27386e4457b33e44b8529c5152533fddcf7628a849ee57"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 150961560
+    },
+    {
+      "sha256": "8acae624a15ef2f43e36c4beff8d9aea4b3107d3c8bf1197a807beb9e98bf9f7",
+      "bytes": 50320520,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p03_K4V4/ref.pt",
+        "bytes": 50320520,
+        "allocated_bytes": 50327552,
+        "device": 66308,
+        "inode": 26746837,
+        "mtime_ns": 1793851726949458086,
+        "mode": 436,
+        "links": 1,
+        "sha256": "8acae624a15ef2f43e36c4beff8d9aea4b3107d3c8bf1197a807beb9e98bf9f7"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p03_K4V4_rotK/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26746842,
+          "mtime_ns": 1793851960652331249,
+          "mode": 436,
+          "links": 1,
+          "sha256": "8acae624a15ef2f43e36c4beff8d9aea4b3107d3c8bf1197a807beb9e98bf9f7"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p03_K4h8_V4/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26746852,
+          "mtime_ns": 1793852417854295667,
+          "mode": 436,
+          "links": 1,
+          "sha256": "8acae624a15ef2f43e36c4beff8d9aea4b3107d3c8bf1197a807beb9e98bf9f7"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p03_NOISE/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26746847,
+          "mtime_ns": 1793852181465611884,
+          "mode": 436,
+          "links": 1,
+          "sha256": "8acae624a15ef2f43e36c4beff8d9aea4b3107d3c8bf1197a807beb9e98bf9f7"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 150961560
+    },
+    {
+      "sha256": "0ad3a629e45205b245a0874e846ce086818c8c53ff3f62ed83eedd85558c7237",
+      "bytes": 50320520,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p02_K4V4/ref.pt",
+        "bytes": 50320520,
+        "allocated_bytes": 50327552,
+        "device": 66308,
+        "inode": 26746817,
+        "mtime_ns": 1793850764908504824,
+        "mode": 436,
+        "links": 1,
+        "sha256": "0ad3a629e45205b245a0874e846ce086818c8c53ff3f62ed83eedd85558c7237"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p02_K4V4_rotK/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26746822,
+          "mtime_ns": 1793850998542094971,
+          "mode": 436,
+          "links": 1,
+          "sha256": "0ad3a629e45205b245a0874e846ce086818c8c53ff3f62ed83eedd85558c7237"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p02_K4h8_V4/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26746832,
+          "mtime_ns": 1793851456098445373,
+          "mode": 436,
+          "links": 1,
+          "sha256": "0ad3a629e45205b245a0874e846ce086818c8c53ff3f62ed83eedd85558c7237"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p02_NOISE/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26746827,
+          "mtime_ns": 1793851219765854710,
+          "mode": 436,
+          "links": 1,
+          "sha256": "0ad3a629e45205b245a0874e846ce086818c8c53ff3f62ed83eedd85558c7237"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 150961560
+    },
+    {
+      "sha256": "63efde82784b4b9e589b02727713cad61b6c11f6f32c0fb51591d5cdeba37cc4",
+      "bytes": 50320520,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p09_K4V4/ref.pt",
+        "bytes": 50320520,
+        "allocated_bytes": 50327552,
+        "device": 66308,
+        "inode": 26746937,
+        "mtime_ns": 1793856538582390826,
+        "mode": 436,
+        "links": 1,
+        "sha256": "63efde82784b4b9e589b02727713cad61b6c11f6f32c0fb51591d5cdeba37cc4"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p09_K4V4_rotK/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26746942,
+          "mtime_ns": 1793857044015861984,
+          "mode": 436,
+          "links": 1,
+          "sha256": "63efde82784b4b9e589b02727713cad61b6c11f6f32c0fb51591d5cdeba37cc4"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p09_K4h8_V4/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26746952,
+          "mtime_ns": 1793857501867476444,
+          "mode": 436,
+          "links": 1,
+          "sha256": "63efde82784b4b9e589b02727713cad61b6c11f6f32c0fb51591d5cdeba37cc4"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p09_NOISE/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26746947,
+          "mtime_ns": 1793857265383169490,
+          "mode": 436,
+          "links": 1,
+          "sha256": "63efde82784b4b9e589b02727713cad61b6c11f6f32c0fb51591d5cdeba37cc4"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 150961560
+    },
+    {
+      "sha256": "fe2f2f8d05d9845bc3574e1986bdb6a67c415b2e5db57550e3b84e00e3611783",
+      "bytes": 50320520,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p08_K4V4/ref.pt",
+        "bytes": 50320520,
+        "allocated_bytes": 50327552,
+        "device": 66308,
+        "inode": 26746917,
+        "mtime_ns": 1793855575889192122,
+        "mode": 436,
+        "links": 1,
+        "sha256": "fe2f2f8d05d9845bc3574e1986bdb6a67c415b2e5db57550e3b84e00e3611783"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p08_K4V4_rotK/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26746922,
+          "mtime_ns": 1793855809554033403,
+          "mode": 436,
+          "links": 1,
+          "sha256": "fe2f2f8d05d9845bc3574e1986bdb6a67c415b2e5db57550e3b84e00e3611783"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p08_K4h8_V4/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26746932,
+          "mtime_ns": 1793856267368402684,
+          "mode": 436,
+          "links": 1,
+          "sha256": "fe2f2f8d05d9845bc3574e1986bdb6a67c415b2e5db57550e3b84e00e3611783"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p08_NOISE/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26746927,
+          "mtime_ns": 1793856030910327927,
+          "mode": 436,
+          "links": 1,
+          "sha256": "fe2f2f8d05d9845bc3574e1986bdb6a67c415b2e5db57550e3b84e00e3611783"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 150961560
+    },
+    {
+      "sha256": "6975225b0d292b67c7db1b0447573bd0cdcb8400b8ff8e137becc758cfb5e196",
+      "bytes": 50320520,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p06_K4V4/ref.pt",
+        "bytes": 50320520,
+        "allocated_bytes": 50323456,
+        "device": 66308,
+        "inode": 26746877,
+        "mtime_ns": 1793853651242063348,
+        "mode": 436,
+        "links": 1,
+        "sha256": "6975225b0d292b67c7db1b0447573bd0cdcb8400b8ff8e137becc758cfb5e196"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p06_K4V4_rotK/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26746882,
+          "mtime_ns": 1793853884976950236,
+          "mode": 436,
+          "links": 1,
+          "sha256": "6975225b0d292b67c7db1b0447573bd0cdcb8400b8ff8e137becc758cfb5e196"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p06_K4h8_V4/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26746892,
+          "mtime_ns": 1793854342573693809,
+          "mode": 436,
+          "links": 1,
+          "sha256": "6975225b0d292b67c7db1b0447573bd0cdcb8400b8ff8e137becc758cfb5e196"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8b/p06_NOISE/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26746887,
+          "mtime_ns": 1793854106196435984,
+          "mode": 436,
+          "links": 1,
+          "sha256": "6975225b0d292b67c7db1b0447573bd0cdcb8400b8ff8e137becc758cfb5e196"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 150961560
+    },
+    {
+      "sha256": "2824041f333dfca6a680b29c97e2a5a8d9f8338c9040816b92856b5ea95a5849",
+      "bytes": 50320520,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_alignment_compounding/p04_K4V4/ref.pt",
+        "bytes": 50320520,
+        "allocated_bytes": 50323456,
+        "device": 66308,
+        "inode": 26746781,
+        "mtime_ns": 1793848557010912669,
+        "mode": 436,
+        "links": 1,
+        "sha256": "2824041f333dfca6a680b29c97e2a5a8d9f8338c9040816b92856b5ea95a5849"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding/p04_K4V4_rotK/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26746786,
+          "mtime_ns": 1793848790702103519,
+          "mode": 436,
+          "links": 1,
+          "sha256": "2824041f333dfca6a680b29c97e2a5a8d9f8338c9040816b92856b5ea95a5849"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding/p04_NOISE/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26746791,
+          "mtime_ns": 1793849012007908279,
+          "mode": 436,
+          "links": 1,
+          "sha256": "2824041f333dfca6a680b29c97e2a5a8d9f8338c9040816b92856b5ea95a5849"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 100641040
+    },
+    {
+      "sha256": "6da6cc19718c7bbc671044497247328e0ada513f9d13bd7894e8398783f9d5a2",
+      "bytes": 50320520,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_alignment_compounding/p00_K4V4/ref.pt",
+        "bytes": 50320520,
+        "allocated_bytes": 50323456,
+        "device": 66308,
+        "inode": 26746762,
+        "mtime_ns": 1793847830981861183,
+        "mode": 436,
+        "links": 1,
+        "sha256": "6da6cc19718c7bbc671044497247328e0ada513f9d13bd7894e8398783f9d5a2"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding/p00_K4V4_rotK/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26746767,
+          "mtime_ns": 1793848064643316187,
+          "mode": 436,
+          "links": 1,
+          "sha256": "6da6cc19718c7bbc671044497247328e0ada513f9d13bd7894e8398783f9d5a2"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding/p00_NOISE/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26746772,
+          "mtime_ns": 1793848285874628369,
+          "mode": 436,
+          "links": 1,
+          "sha256": "6da6cc19718c7bbc671044497247328e0ada513f9d13bd7894e8398783f9d5a2"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 100641040
+    },
+    {
+      "sha256": "0332db5ed05bd325024682a73e7a1d232ad476fb5b5a8ac0c724b60f8ff534c7",
+      "bytes": 50320520,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p05_K4V4/ref.pt",
+        "bytes": 50320520,
+        "allocated_bytes": 50327552,
+        "device": 66308,
+        "inode": 26875590,
+        "mtime_ns": 1793864033776811511,
+        "mode": 436,
+        "links": 1,
+        "sha256": "0332db5ed05bd325024682a73e7a1d232ad476fb5b5a8ac0c724b60f8ff534c7"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p05_K4V4_rotK/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26875621,
+          "mtime_ns": 1793864267439767546,
+          "mode": 436,
+          "links": 1,
+          "sha256": "0332db5ed05bd325024682a73e7a1d232ad476fb5b5a8ac0c724b60f8ff534c7"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p05_NOISE/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26875645,
+          "mtime_ns": 1793864488657857467,
+          "mode": 436,
+          "links": 1,
+          "sha256": "0332db5ed05bd325024682a73e7a1d232ad476fb5b5a8ac0c724b60f8ff534c7"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 100641040
+    },
+    {
+      "sha256": "ddc5e328c34730ca1203690ec7b6894a915191fc25ae1a5694024ad94c42aed8",
+      "bytes": 50320520,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p07_K4V4/ref.pt",
+        "bytes": 50320520,
+        "allocated_bytes": 50323456,
+        "device": 66308,
+        "inode": 26875744,
+        "mtime_ns": 1793865485839492920,
+        "mode": 436,
+        "links": 1,
+        "sha256": "ddc5e328c34730ca1203690ec7b6894a915191fc25ae1a5694024ad94c42aed8"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p07_K4V4_rotK/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26875759,
+          "mtime_ns": 1793865720796909428,
+          "mode": 436,
+          "links": 1,
+          "sha256": "ddc5e328c34730ca1203690ec7b6894a915191fc25ae1a5694024ad94c42aed8"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p07_NOISE/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26875775,
+          "mtime_ns": 1793865942151677961,
+          "mode": 436,
+          "links": 1,
+          "sha256": "ddc5e328c34730ca1203690ec7b6894a915191fc25ae1a5694024ad94c42aed8"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 100641040
+    },
+    {
+      "sha256": "a543a20c3c78546af7c2555ad358083023bce716a4066d4722395802fac4ed1a",
+      "bytes": 50320520,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p04_K4V4/ref.pt",
+        "bytes": 50320520,
+        "allocated_bytes": 50327552,
+        "device": 66308,
+        "inode": 26746973,
+        "mtime_ns": 1793860642573107796,
+        "mode": 436,
+        "links": 1,
+        "sha256": "a543a20c3c78546af7c2555ad358083023bce716a4066d4722395802fac4ed1a"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p04_K4V4_rotK/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26746978,
+          "mtime_ns": 1793860876152598232,
+          "mode": 436,
+          "links": 1,
+          "sha256": "a543a20c3c78546af7c2555ad358083023bce716a4066d4722395802fac4ed1a"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p04_NOISE/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26746983,
+          "mtime_ns": 1793861097329684449,
+          "mode": 436,
+          "links": 1,
+          "sha256": "a543a20c3c78546af7c2555ad358083023bce716a4066d4722395802fac4ed1a"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 100641040
+    },
+    {
+      "sha256": "9e9234234c6c8efb63a99b1bb37680d76b7d9820639df11b17abc3bbfd4c2ee9",
+      "bytes": 50320520,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p01_K4V4/ref.pt",
+        "bytes": 50320520,
+        "allocated_bytes": 50327552,
+        "device": 66308,
+        "inode": 26746988,
+        "mtime_ns": 1793861856312226462,
+        "mode": 436,
+        "links": 1,
+        "sha256": "9e9234234c6c8efb63a99b1bb37680d76b7d9820639df11b17abc3bbfd4c2ee9"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p01_K4V4_rotK/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26871235,
+          "mtime_ns": 1793862089948483372,
+          "mode": 436,
+          "links": 1,
+          "sha256": "9e9234234c6c8efb63a99b1bb37680d76b7d9820639df11b17abc3bbfd4c2ee9"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p01_NOISE/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26871240,
+          "mtime_ns": 1793862311128286229,
+          "mode": 436,
+          "links": 1,
+          "sha256": "9e9234234c6c8efb63a99b1bb37680d76b7d9820639df11b17abc3bbfd4c2ee9"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 100641040
+    },
+    {
+      "sha256": "e87620d386f1f4c767bc06bd867bf9b0b408eeb610ed9f8401fcdfcb02182484",
+      "bytes": 50320520,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p03_K4V4/ref.pt",
+        "bytes": 50320520,
+        "allocated_bytes": 50327552,
+        "device": 66308,
+        "inode": 26871260,
+        "mtime_ns": 1793863307731795234,
+        "mode": 436,
+        "links": 1,
+        "sha256": "e87620d386f1f4c767bc06bd867bf9b0b408eeb610ed9f8401fcdfcb02182484"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p03_K4V4_rotK/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26871265,
+          "mtime_ns": 1793863541413049223,
+          "mode": 436,
+          "links": 1,
+          "sha256": "e87620d386f1f4c767bc06bd867bf9b0b408eeb610ed9f8401fcdfcb02182484"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p03_NOISE/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26874791,
+          "mtime_ns": 1793863762638107172,
+          "mode": 436,
+          "links": 1,
+          "sha256": "e87620d386f1f4c767bc06bd867bf9b0b408eeb610ed9f8401fcdfcb02182484"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 100641040
+    },
+    {
+      "sha256": "56e1537f85a8f7917f2941b18f9d9aee30b88e02a76084b368b7d52646a184e5",
+      "bytes": 50320520,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p00_K4V4/ref.pt",
+        "bytes": 50320520,
+        "allocated_bytes": 50327552,
+        "device": 66308,
+        "inode": 26746958,
+        "mtime_ns": 1793859917024771271,
+        "mode": 436,
+        "links": 1,
+        "sha256": "56e1537f85a8f7917f2941b18f9d9aee30b88e02a76084b368b7d52646a184e5"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p00_K4V4_rotK/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26746963,
+          "mtime_ns": 1793860150704277219,
+          "mode": 436,
+          "links": 1,
+          "sha256": "56e1537f85a8f7917f2941b18f9d9aee30b88e02a76084b368b7d52646a184e5"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p00_NOISE/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26746968,
+          "mtime_ns": 1793860371926585146,
+          "mode": 436,
+          "links": 1,
+          "sha256": "56e1537f85a8f7917f2941b18f9d9aee30b88e02a76084b368b7d52646a184e5"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 100641040
+    },
+    {
+      "sha256": "064ba00a797a5c7004e80911f6530e8cacbbd6504053c91a803e97ae1743bd79",
+      "bytes": 50320520,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p02_K4V4/ref.pt",
+        "bytes": 50320520,
+        "allocated_bytes": 50327552,
+        "device": 66308,
+        "inode": 26871245,
+        "mtime_ns": 1793862581823731736,
+        "mode": 436,
+        "links": 1,
+        "sha256": "064ba00a797a5c7004e80911f6530e8cacbbd6504053c91a803e97ae1743bd79"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p02_K4V4_rotK/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26871250,
+          "mtime_ns": 1793862815455234936,
+          "mode": 436,
+          "links": 1,
+          "sha256": "064ba00a797a5c7004e80911f6530e8cacbbd6504053c91a803e97ae1743bd79"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p02_NOISE/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26871255,
+          "mtime_ns": 1793863036581793123,
+          "mode": 436,
+          "links": 1,
+          "sha256": "064ba00a797a5c7004e80911f6530e8cacbbd6504053c91a803e97ae1743bd79"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 100641040
+    },
+    {
+      "sha256": "6634d443098a59b56733c3c63e7f9817226865c37474f31d70d6be5019b3e700",
+      "bytes": 50320520,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p09_K4V4/ref.pt",
+        "bytes": 50320520,
+        "allocated_bytes": 50323456,
+        "device": 66308,
+        "inode": 26875865,
+        "mtime_ns": 1793866948055028861,
+        "mode": 436,
+        "links": 1,
+        "sha256": "6634d443098a59b56733c3c63e7f9817226865c37474f31d70d6be5019b3e700"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p09_K4V4_rotK/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26875880,
+          "mtime_ns": 1793867181693219031,
+          "mode": 436,
+          "links": 1,
+          "sha256": "6634d443098a59b56733c3c63e7f9817226865c37474f31d70d6be5019b3e700"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p09_NOISE/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26875896,
+          "mtime_ns": 1793867402977792052,
+          "mode": 436,
+          "links": 1,
+          "sha256": "6634d443098a59b56733c3c63e7f9817226865c37474f31d70d6be5019b3e700"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 100641040
+    },
+    {
+      "sha256": "7935a117d94971b5c29bd20032727d5456575fb20ef226be66530b5e44efbbbe",
+      "bytes": 50320520,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p08_K4V4/ref.pt",
+        "bytes": 50320520,
+        "allocated_bytes": 50327552,
+        "device": 66308,
+        "inode": 26875803,
+        "mtime_ns": 1793866218324271210,
+        "mode": 436,
+        "links": 1,
+        "sha256": "7935a117d94971b5c29bd20032727d5456575fb20ef226be66530b5e44efbbbe"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p08_K4V4_rotK/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26875830,
+          "mtime_ns": 1793866453356956123,
+          "mode": 436,
+          "links": 1,
+          "sha256": "7935a117d94971b5c29bd20032727d5456575fb20ef226be66530b5e44efbbbe"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p08_NOISE/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26875852,
+          "mtime_ns": 1793866674696502165,
+          "mode": 436,
+          "links": 1,
+          "sha256": "7935a117d94971b5c29bd20032727d5456575fb20ef226be66530b5e44efbbbe"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 100641040
+    },
+    {
+      "sha256": "8dfcbd2c4bc35e408279fab0a6fe36f6f27a388eadd78e6156c554c8e6d4291a",
+      "bytes": 50320520,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p06_K4V4/ref.pt",
+        "bytes": 50320520,
+        "allocated_bytes": 50323456,
+        "device": 66308,
+        "inode": 26875676,
+        "mtime_ns": 1793864759883347010,
+        "mode": 436,
+        "links": 1,
+        "sha256": "8dfcbd2c4bc35e408279fab0a6fe36f6f27a388eadd78e6156c554c8e6d4291a"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p06_K4V4_rotK/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 26875698,
+          "mtime_ns": 1793864993519714530,
+          "mode": 436,
+          "links": 1,
+          "sha256": "8dfcbd2c4bc35e408279fab0a6fe36f6f27a388eadd78e6156c554c8e6d4291a"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/kv_alignment_compounding_r8c/p06_NOISE/ref.pt",
+          "bytes": 50320520,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 26875722,
+          "mtime_ns": 1793865214659053570,
+          "mode": 436,
+          "links": 1,
+          "sha256": "8dfcbd2c4bc35e408279fab0a6fe36f6f27a388eadd78e6156c554c8e6d4291a"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 100641040
+    },
+    {
+      "sha256": "0680a61be0df7f20b9c9816146076e7b5986554421eb45e6484136e84ff9d256",
+      "bytes": 50320525,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/p3_pilot/p1_s0_int2/bf16.pt",
+        "bytes": 50320525,
+        "allocated_bytes": 50327552,
+        "device": 66308,
+        "inode": 27167068,
+        "mtime_ns": 1793110983023684514,
+        "mode": 436,
+        "links": 1,
+        "sha256": "0680a61be0df7f20b9c9816146076e7b5986554421eb45e6484136e84ff9d256"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/p3_pilot/p1_s0_int4/bf16.pt",
+          "bytes": 50320525,
+          "allocated_bytes": 50323456,
+          "device": 66308,
+          "inode": 27167047,
+          "mtime_ns": 1793110540841242481,
+          "mode": 436,
+          "links": 1,
+          "sha256": "0680a61be0df7f20b9c9816146076e7b5986554421eb45e6484136e84ff9d256"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 50320525
+    },
+    {
+      "sha256": "cb66e5fbed60fe2b0d37a2b52e262acb295bef7617ba68b57c63f1b83151ae39",
+      "bytes": 50320525,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/p3_pilot/p0_s0_int2/bf16.pt",
+        "bytes": 50320525,
+        "allocated_bytes": 50327552,
+        "device": 66308,
+        "inode": 27167061,
+        "mtime_ns": 1793110762062928082,
+        "mode": 436,
+        "links": 1,
+        "sha256": "cb66e5fbed60fe2b0d37a2b52e262acb295bef7617ba68b57c63f1b83151ae39"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/p3_pilot/p0_s0_int4/bf16.pt",
+          "bytes": 50320525,
+          "allocated_bytes": 50327552,
+          "device": 66308,
+          "inode": 27167004,
+          "mtime_ns": 1793110319671667578,
+          "mode": 436,
+          "links": 1,
+          "sha256": "cb66e5fbed60fe2b0d37a2b52e262acb295bef7617ba68b57c63f1b83151ae39"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 50320525
+    },
+    {
+      "sha256": "65f1a10a7890d4ad45627a6dfdb45868384cb479bd71a56dee9d248ca0020e00",
+      "bytes": 12581005,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/feasibility/chunk_identity_p0/bf16.pt",
+        "bytes": 12581005,
+        "allocated_bytes": 12582912,
+        "device": 66308,
+        "inode": 27166400,
+        "mtime_ns": 1793113798372169239,
+        "mode": 436,
+        "links": 1,
+        "sha256": "65f1a10a7890d4ad45627a6dfdb45868384cb479bd71a56dee9d248ca0020e00"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/feasibility/chunk_rtn4_p0/bf16.pt",
+          "bytes": 12581005,
+          "allocated_bytes": 12582912,
+          "device": 66308,
+          "inode": 27166424,
+          "mtime_ns": 1793114406639575186,
+          "mode": 436,
+          "links": 1,
+          "sha256": "65f1a10a7890d4ad45627a6dfdb45868384cb479bd71a56dee9d248ca0020e00"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/feasibility/chunk_rtn4_p0_diagnostic/bf16.pt",
+          "bytes": 12581005,
+          "allocated_bytes": 12582912,
+          "device": 66308,
+          "inode": 27166429,
+          "mtime_ns": 1793114524474024176,
+          "mode": 436,
+          "links": 1,
+          "sha256": "65f1a10a7890d4ad45627a6dfdb45868384cb479bd71a56dee9d248ca0020e00"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/feasibility/rolling_identity_p0/bf16.pt",
+          "bytes": 12581005,
+          "allocated_bytes": 12582912,
+          "device": 66308,
+          "inode": 27166392,
+          "mtime_ns": 1793113659326536332,
+          "mode": 436,
+          "links": 1,
+          "sha256": "65f1a10a7890d4ad45627a6dfdb45868384cb479bd71a56dee9d248ca0020e00"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/feasibility/rolling_rtn4_p0/bf16.pt",
+          "bytes": 12581005,
+          "allocated_bytes": 12582912,
+          "device": 66308,
+          "inode": 27166408,
+          "mtime_ns": 1793114002066089709,
+          "mode": 436,
+          "links": 1,
+          "sha256": "65f1a10a7890d4ad45627a6dfdb45868384cb479bd71a56dee9d248ca0020e00"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/feasibility/rolling_rtn4_p0_diagnostic/bf16.pt",
+          "bytes": 12581005,
+          "allocated_bytes": 12582912,
+          "device": 66308,
+          "inode": 27166413,
+          "mtime_ns": 1793114143310631845,
+          "mode": 436,
+          "links": 1,
+          "sha256": "65f1a10a7890d4ad45627a6dfdb45868384cb479bd71a56dee9d248ca0020e00"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/policy_study/gates/reference_f63/bf16.pt",
+          "bytes": 12581005,
+          "allocated_bytes": 12582912,
+          "device": 66308,
+          "inode": 26608571,
+          "mtime_ns": 1793118369123288581,
+          "mode": 436,
+          "links": 1,
+          "sha256": "65f1a10a7890d4ad45627a6dfdb45868384cb479bd71a56dee9d248ca0020e00"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 75486030
+    },
+    {
+      "sha256": "893eb01d647f41b1281a7f79ea913dcc82a0f84e584b5cef758c397667b27f21",
+      "bytes": 12581005,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/feasibility/chunk_identity_p1/bf16.pt",
+        "bytes": 12581005,
+        "allocated_bytes": 12582912,
+        "device": 66308,
+        "inode": 27166404,
+        "mtime_ns": 1793113869123489741,
+        "mode": 436,
+        "links": 1,
+        "sha256": "893eb01d647f41b1281a7f79ea913dcc82a0f84e584b5cef758c397667b27f21"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/feasibility/rolling_identity_p1/bf16.pt",
+          "bytes": 12581005,
+          "allocated_bytes": 12582912,
+          "device": 66308,
+          "inode": 27166396,
+          "mtime_ns": 1793113727749848330,
+          "mode": 436,
+          "links": 1,
+          "sha256": "893eb01d647f41b1281a7f79ea913dcc82a0f84e584b5cef758c397667b27f21"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 12581005
+    },
+    {
+      "sha256": "69fc848481021d821016b1811bc6b1ce9679fe77912ded2463f3e6f405512fbd",
+      "bytes": 12580995,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/feasibility/chunk_rtn4_p0/fr.pt",
+        "bytes": 12580995,
+        "allocated_bytes": 12582912,
+        "device": 66308,
+        "inode": 27166426,
+        "mtime_ns": 1793114406650575228,
+        "mode": 436,
+        "links": 1,
+        "sha256": "69fc848481021d821016b1811bc6b1ce9679fe77912ded2463f3e6f405512fbd"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/feasibility/chunk_rtn4_p0_diagnostic/fr.pt",
+          "bytes": 12580995,
+          "allocated_bytes": 12582912,
+          "device": 66308,
+          "inode": 27166431,
+          "mtime_ns": 1793114524501024280,
+          "mode": 436,
+          "links": 1,
+          "sha256": "69fc848481021d821016b1811bc6b1ce9679fe77912ded2463f3e6f405512fbd"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/policy_study/gates/chunk_int4_f63/fr.pt",
+          "bytes": 12580995,
+          "allocated_bytes": 12582912,
+          "device": 66308,
+          "inode": 26608623,
+          "mtime_ns": 1793119857399463640,
+          "mode": 436,
+          "links": 1,
+          "sha256": "69fc848481021d821016b1811bc6b1ce9679fe77912ded2463f3e6f405512fbd"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25161990
+    },
+    {
+      "sha256": "453424b166085a49cc4c8016859fb2647852d43b66859f4f7eed2ab3822d9b73",
+      "bytes": 12580995,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/feasibility/chunk_rtn4_p0/tf.pt",
+        "bytes": 12580995,
+        "allocated_bytes": 12582912,
+        "device": 66308,
+        "inode": 27166425,
+        "mtime_ns": 1793114406644575205,
+        "mode": 436,
+        "links": 1,
+        "sha256": "453424b166085a49cc4c8016859fb2647852d43b66859f4f7eed2ab3822d9b73"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/feasibility/chunk_rtn4_p0_diagnostic/tf.pt",
+          "bytes": 12580995,
+          "allocated_bytes": 12582912,
+          "device": 66308,
+          "inode": 27166430,
+          "mtime_ns": 1793114524487024226,
+          "mode": 436,
+          "links": 1,
+          "sha256": "453424b166085a49cc4c8016859fb2647852d43b66859f4f7eed2ab3822d9b73"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/policy_study/gates/chunk_int4_f63/tf.pt",
+          "bytes": 12580995,
+          "allocated_bytes": 12582912,
+          "device": 66308,
+          "inode": 26608622,
+          "mtime_ns": 1793119820917319975,
+          "mode": 436,
+          "links": 1,
+          "sha256": "453424b166085a49cc4c8016859fb2647852d43b66859f4f7eed2ab3822d9b73"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25161990
+    },
+    {
+      "sha256": "99d0f75440066f5dd2bef7fb9376451b0c05219acef12210f5f43598d5d00788",
+      "bytes": 12580995,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/feasibility/chunk_identity_p1/tf.pt",
+        "bytes": 12580995,
+        "allocated_bytes": 12582912,
+        "device": 66308,
+        "inode": 27166405,
+        "mtime_ns": 1793113869128489764,
+        "mode": 436,
+        "links": 1,
+        "sha256": "99d0f75440066f5dd2bef7fb9376451b0c05219acef12210f5f43598d5d00788"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/feasibility/rolling_identity_p1/tf.pt",
+          "bytes": 12580995,
+          "allocated_bytes": 12582912,
+          "device": 66308,
+          "inode": 27166397,
+          "mtime_ns": 1793113727754848353,
+          "mode": 436,
+          "links": 1,
+          "sha256": "99d0f75440066f5dd2bef7fb9376451b0c05219acef12210f5f43598d5d00788"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 12580995
+    },
+    {
+      "sha256": "70d411f16b6350b53f788401ac41557a178ce5d9982e5fed69188adb3f9175a3",
+      "bytes": 12580995,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/feasibility/rolling_rtn4_p0/fr.pt",
+        "bytes": 12580995,
+        "allocated_bytes": 12582912,
+        "device": 66308,
+        "inode": 27166410,
+        "mtime_ns": 1793114002079089767,
+        "mode": 436,
+        "links": 1,
+        "sha256": "70d411f16b6350b53f788401ac41557a178ce5d9982e5fed69188adb3f9175a3"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/feasibility/rolling_rtn4_p0_diagnostic/fr.pt",
+          "bytes": 12580995,
+          "allocated_bytes": 12582912,
+          "device": 66308,
+          "inode": 27166415,
+          "mtime_ns": 1793114143334631925,
+          "mode": 436,
+          "links": 1,
+          "sha256": "70d411f16b6350b53f788401ac41557a178ce5d9982e5fed69188adb3f9175a3"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/policy_study/gates/rolling_int4_f63/fr.pt",
+          "bytes": 12580995,
+          "allocated_bytes": 12582912,
+          "device": 66308,
+          "inode": 26608587,
+          "mtime_ns": 1793118714284988805,
+          "mode": 436,
+          "links": 1,
+          "sha256": "70d411f16b6350b53f788401ac41557a178ce5d9982e5fed69188adb3f9175a3"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25161990
+    },
+    {
+      "sha256": "54355bb15c9967a390e2ba15c00e2e924d3efaa508b149f9395fdff1a4169334",
+      "bytes": 12580995,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/feasibility/rolling_rtn4_p0/tf.pt",
+        "bytes": 12580995,
+        "allocated_bytes": 12582912,
+        "device": 66308,
+        "inode": 27166409,
+        "mtime_ns": 1793114002073089741,
+        "mode": 436,
+        "links": 1,
+        "sha256": "54355bb15c9967a390e2ba15c00e2e924d3efaa508b149f9395fdff1a4169334"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/feasibility/rolling_rtn4_p0_diagnostic/tf.pt",
+          "bytes": 12580995,
+          "allocated_bytes": 12582912,
+          "device": 66308,
+          "inode": 27166414,
+          "mtime_ns": 1793114143322631885,
+          "mode": 436,
+          "links": 1,
+          "sha256": "54355bb15c9967a390e2ba15c00e2e924d3efaa508b149f9395fdff1a4169334"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/policy_study/gates/rolling_int4_f63/tf.pt",
+          "bytes": 12580995,
+          "allocated_bytes": 12582912,
+          "device": 66308,
+          "inode": 26608582,
+          "mtime_ns": 1793118626935392443,
+          "mode": 436,
+          "links": 1,
+          "sha256": "54355bb15c9967a390e2ba15c00e2e924d3efaa508b149f9395fdff1a4169334"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 25161990
+    },
+    {
+      "sha256": "e633fa2471c08a531e062c3d1b0e57d4d0f46875c88b3f8f7cd0fbf32e526404",
+      "bytes": 12580995,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/feasibility/chunk_identity_p0/tf.pt",
+        "bytes": 12580995,
+        "allocated_bytes": 12582912,
+        "device": 66308,
+        "inode": 27166401,
+        "mtime_ns": 1793113798377169262,
+        "mode": 436,
+        "links": 1,
+        "sha256": "e633fa2471c08a531e062c3d1b0e57d4d0f46875c88b3f8f7cd0fbf32e526404"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/feasibility/rolling_identity_p0/tf.pt",
+          "bytes": 12580995,
+          "allocated_bytes": 12582912,
+          "device": 66308,
+          "inode": 27166393,
+          "mtime_ns": 1793113659333536364,
+          "mode": 436,
+          "links": 1,
+          "sha256": "e633fa2471c08a531e062c3d1b0e57d4d0f46875c88b3f8f7cd0fbf32e526404"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/policy_study/gates/chunk_int0_f63/tf.pt",
+          "bytes": 12580995,
+          "allocated_bytes": 12582912,
+          "device": 66308,
+          "inode": 26608613,
+          "mtime_ns": 1793119670978719522,
+          "mode": 436,
+          "links": 1,
+          "sha256": "e633fa2471c08a531e062c3d1b0e57d4d0f46875c88b3f8f7cd0fbf32e526404"
+        },
+        {
+          "path": "/home/acorn0415/sfq_data/policy_study/gates/rolling_int0_f63/tf.pt",
+          "bytes": 12580995,
+          "allocated_bytes": 12582912,
+          "device": 66308,
+          "inode": 26608573,
+          "mtime_ns": 1793118369139288731,
+          "mode": 436,
+          "links": 1,
+          "sha256": "e633fa2471c08a531e062c3d1b0e57d4d0f46875c88b3f8f7cd0fbf32e526404"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 37742985
+    },
+    {
+      "sha256": "4f65fa9d6606ec59b89bbda44f242b7ccc1f244f04835e3216ebac0c4992b0dd",
+      "bytes": 12580995,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/policy_study/gates/chunk_int0_f63/fr.pt",
+        "bytes": 12580995,
+        "allocated_bytes": 12582912,
+        "device": 66308,
+        "inode": 26608614,
+        "mtime_ns": 1793119705951861164,
+        "mode": 436,
+        "links": 1,
+        "sha256": "4f65fa9d6606ec59b89bbda44f242b7ccc1f244f04835e3216ebac0c4992b0dd"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/policy_study/gates/rolling_int0_f63/fr.pt",
+          "bytes": 12580995,
+          "allocated_bytes": 12582912,
+          "device": 66308,
+          "inode": 26608567,
+          "mtime_ns": 1793118440772934542,
+          "mode": 436,
+          "links": 1,
+          "sha256": "4f65fa9d6606ec59b89bbda44f242b7ccc1f244f04835e3216ebac0c4992b0dd"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 12580995
+    },
+    {
+      "sha256": "48f49f64b3f53761fcf79910a9800633ed730dc727fcf74959e89f67ebf245ce",
+      "bytes": 12581010,
+      "keeper": {
+        "path": "/home/acorn0415/sfq_data/policy_study/gates/chunk_int0_f63/noise.pt",
+        "bytes": 12581010,
+        "allocated_bytes": 12582912,
+        "device": 66308,
+        "inode": 26608616,
+        "mtime_ns": 1793119741367003562,
+        "mode": 436,
+        "links": 1,
+        "sha256": "48f49f64b3f53761fcf79910a9800633ed730dc727fcf74959e89f67ebf245ce"
+      },
+      "duplicates": [
+        {
+          "path": "/home/acorn0415/sfq_data/policy_study/gates/rolling_int0_f63/noise.pt",
+          "bytes": 12581010,
+          "allocated_bytes": 12582912,
+          "device": 66308,
+          "inode": 26608575,
+          "mtime_ns": 1793118529586665743,
+          "mode": 436,
+          "links": 1,
+          "sha256": "48f49f64b3f53761fcf79910a9800633ed730dc727fcf74959e89f67ebf245ce"
+        }
+      ],
+      "saving_if_same_device_distinct_inodes_bytes": 12581010
+    }
+  ],
+  "potential_logical_saving_bytes": 4214395725,
+  "preservation": "Proposed hardlink dedup only for closed experiment outputs; active env/model/source/DINO tree excluded; original paths and file content remain, immutable permissions to avoid alias writes."
+}

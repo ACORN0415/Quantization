@@ -1,0 +1,21 @@
+{
+  "status": "failed",
+  "started_epoch": 1793913008.8540406,
+  "deadline_epoch": 1793913608.8540406,
+  "prelaunch_commit": "92549f9",
+  "manifest_sha256": "717c14584bbdb314c4cbf869cbed698dd8b36eb6c639f06a3dcd291478cf7ee1",
+  "model_source_sha256": "3558180bd58aad11bea0bdb72df57ab1a6db3dd3f03c64c58519b31347ef3e2f",
+  "GPU_initial_compute_apps": "",
+  "GPU_lease": "/home/acorn0415/sfq_data/dino_wm_planning/ROOT_GPU_LEASE.lock",
+  "GPU_processes_authorized": 1,
+  "scope": "one synthetic FP32 model-connection smoke; no planner or quantization",
+  "owned_pid": 686824,
+  "exit_code": 1,
+  "stop_reason": null,
+  "finished_epoch": 1793913010.7591379,
+  "wall_seconds": 1.905097246170044,
+  "observed_peak_process_tree_RSS_bytes": 940294144,
+  "RSS_sampling_seconds": 0.1,
+  "site_packages_guards_unchanged": true,
+  "GPU_final_compute_apps": ""
+}

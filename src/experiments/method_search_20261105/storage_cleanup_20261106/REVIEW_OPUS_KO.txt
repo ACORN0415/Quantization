@@ -1,0 +1,23 @@
+sfq_data 정리 계획 — 독립 정적 검토 (실제 Opus1, root msg_e425e170b98f)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음.
+실제 수신·시작 2026-11-05T21:16:06Z(최대 300s). 읽은 것: DELETE_PLAN.json 전체, DUPLICATE_CONTENT_GROUPS.json 요약(62그룹 전수 집계·경로 패턴),
+DUPLICATE_SIZE_CANDIDATES.json 앞부분. 원 데이터 재해시·디스크 scan·삭제·하드링크·네트워크 0, helper 0. 작은 ls 2회(디렉터리 목록만).
+
+판정: A·B 삭제는 제한 조건 아래 타당, C 하드링크는 타당하되 아래 한계를 계획에 명시해야 한다.
+A) OLMoE safetensor 3개 13,838,721,960B: HF repo allenai/OLMoE-1B-7B-0924 revision 6d84c485…와 파일별 sha256이 기록돼 재취득·검증 가능. config·tokenizer·captures/tokens/block 등
+   실험 텐서 보존 명시. 타당. 확인할 점: (1) 같은 blob이 ~/.cache/huggingface에도 있는지 — 있으면 sfq_data 사본 삭제 후에도 캐시가 공간을 쓰고, 없으면 이것이 로컬 유일본이므로
+   삭제 후 재현은 네트워크 재취득에 의존(이번 검토는 캐시를 확인하지 않음). (2) MoE 결과를 다시 계산하려면 같은 revision 재취득이 전제 — 보고서에 그 절차 기록 필요.
+B) outputs.zip 953,204,628B·pusht_noise.zip 2,785,304,515B: repo gaoyuezhou/dino_wm revision d5c69e8f…와 LFS sha256(425b0d8c…, 442f5dee…) 기록 → 원 ZIP 재취득·검증 가능.
+   한계: 선택 추출 31개 외 member(다른 환경 checkpoint, PushT train 영상 등)는 로컬에서 사라지며, 그 member들의 CRC는 이번 감사 범위 밖이었다. 특히 QuantWM의 양자화
+   calibration은 train split 궤적을 쓰므로(이전 runtime 검토) 향후 양자화 실험에는 train 영상 재취득이 필요할 수 있다 — FP32 smoke에는 영향 없음. 삭제 전에 "현재 필수 31개만 보존,
+   나머지는 revision+LFS sha로 재취득"을 기록하라.
+C) 62그룹 동일 SHA, 같은 device, 기존 링크 0, 절감 4,214,395,725B, 대상은 .pt 190개(mechanism·kv_alignment·repeat_once 등 종료 실험). 크기만 같은 후보를 내용 동일로 가정하지 않고
+   SHA로 확인한 점 타당. 현재 활성 경로(p00_s303_BF16 latent, causal_obq, kv_alllayer_capture, dino_wm)는 그룹에 없음을 확인.
+ 하드링크 한계(계획에 명시 필요):
+ - 한 경로의 in-place 쓰기가 모든 경로에 반영된다. 읽기 전용 권한은 이를 막지만 권한도 inode 단위라 모든 경로가 함께 읽기 전용이 되고, 'r+'·덮어쓰기 저장을 쓰는 스크립트는 실패한다.
+ - inode·mtime·mode·소유자가 공유되므로 경로별 stat(mtime/inode)을 기록·대조하는 기존 감사·LOCK은 불일치로 보일 수 있다(내용 sha 대조는 유지됨).
+ - 원자적 교체(새 파일 rename)는 링크를 끊어 독립 사본이 되므로 안전하지만, 그 뒤 절감이 사라진다. 향후 독립 사본이 필요하면 cp로 분리해야 한다.
+ - 실행 시 각 duplicate를 keeper로 교체하기 직전 SHA를 재확인(TOCTOU)하고, 교체는 임시 링크 후 rename으로 원자적으로 하라.
+복구 metadata: A·B는 repo·revision·sha 기록이 있어 충분. C는 원 inode·mtime·mode를 그룹 파일에 보존하고 있어 되돌리기(cp로 분리) 근거가 된다.
+미확인: HF 캐시 존재, DELETE_PLAN의 C 실행 목록(현재 plan entries는 A·B 5개뿐), 31개 추출 파일 목록 자체, 하드링크 실행 코드.
+실제 끝: 2026-11-05T21:16:59Z

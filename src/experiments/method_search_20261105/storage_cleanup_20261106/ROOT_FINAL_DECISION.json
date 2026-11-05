@@ -1,0 +1,51 @@
+{
+  "status": "completed_selective_cleanup_with_bounded_independent_plan_review",
+  "completed_epoch": 1793913688.2564821,
+  "actual_Claude_review": {
+    "model": "claude-opus-5-5",
+    "session": "claude_beab681e_3eaf_41b0_9688_b8ef268b288f",
+    "scope": "read-only selection/metadata and hardlink-plan review; no independent byte rehash/deletion or executor-source audit",
+    "completed_UTC": "2026-11-05T21:16:59Z",
+    "sha256": "6c6ff422bf809e98e771ba9a7d9666b7d5fe8a21809c6b8cb4ad5b6b38d275ac"
+  },
+  "root_verified_after": {
+    "status": "post_cleanup_path_inode_and_current_dependency_checks_passed",
+    "checked_epoch": 1793913502.7505794,
+    "sfq_allocated_before_bytes": 113539497984,
+    "sfq_allocated_after_bytes": 91747504128,
+    "sfq_allocated_recovered_bytes": 21791993856,
+    "before_GiB": 105.74189758300781,
+    "after_GiB": 85.4465217590332,
+    "recovered_GiB": 20.29537582397461,
+    "duplicate_paths_preserved": 128,
+    "current_DINO_encoder_SHA_preserved": true,
+    "current_environment_guard_files_preserved": true,
+    "current_DINO_extracted_regular_files": 31,
+    "original_ZIP_post_cleanup_state": "removed_intentionally; old archive-byte audit is historical; exact re-audit of ZIPs now requires re-download from pinned public revision",
+    "df_after": "Filesystem        1B-blocks         Used    Available Use% Mounted on\n/dev/nvme0n1p4 836393885696 673599811584 120232374272  85% /\n",
+    "current_DINO_all31_SHA_verified_against_original_independent_audit": true,
+    "post_all31_checked_epoch": 1793913600.1094522
+  },
+  "review_residuals": [
+    "Deleted public model/archive data require pinned-revision re-download for future reuse; no local alternative cache guarantee.",
+    "Current DINO extracted31members are preserved; unselected ZIP members including possible later train-video calibration data must be reacquired if needed.",
+    "Hardlinks share inode/mode/mtime; all shared files made read-only. Byte-path evidence is preserved, historical stat metadata is not unchanged.",
+    "Duplicate hashes were checked by full initial scan and inode/size/mtime stability immediately before replacement; keepers were fully rehashed again. No claim of fresh full duplicate hash immediately before each replacement."
+  ],
+  "artifacts_sha256": {
+    "POST_CLEANUP_CHECK.json": "ff28ceb37dc9d9520a19c49b0ce2ec6c4c850dabda665ac4e573fab987aaf62e",
+    "REPORT_KO.txt": "190cfa0498481e91fde9557c83f39a3c37a3208e10c0f506e01130ac5788418c",
+    "ROOT_SPEC.json": "263ba0c172bf953d7f5fb681e906b78b556f3c7ec12152cb6b48eb31711c8635",
+    "DELETE_RESULT.json": "8a239dc0dde4340915ad1e02c6da3a928cb9d633660d77e6005bcfdc1054c7ed",
+    "REVIEW_OPUS_KO.txt": "6c6ff422bf809e98e771ba9a7d9666b7d5fe8a21809c6b8cb4ad5b6b38d275ac",
+    "DUPLICATE_SIZE_CANDIDATES.json": "e02fff64c419e7d8a6a64002706c18e7863219bf3c4baead3daca33b49c61769",
+    "PREDELETE_VERIFIED.json": "b2abf39468b3dc45a007018fe601d3771bf1caa0ecd491a73a1fbf65c380a6d1",
+    "DELETE_EVENTS.jsonl": "527e174b23f0a261d6b814f5bb00c0534d211ce718b93afbf08f932a75bbfb71",
+    "DELETE_PLAN.json": "bc9b043383e5b6b7d0584dccc5bd91a30300a61775b4a54e1269d1aa6a95396e",
+    "DUPLICATE_CONTENT_GROUPS.json": "6c0bd5323b1461eb97e32b174e0937fad4d5c57379e2a728fd0273ed93be531d",
+    "DEDUP_EVENTS.jsonl": "c3f247d4c575599bce9525fc8842a1bd476710e7e5317b709439f237cd2c8aab",
+    "DEDUP_RESULT.json": "f3fafc9f924853401fd87a2891ded61fc86437763dbb7f0c3f98407f8b029f41"
+  },
+  "GPU_model_network_during_cleanup": 0,
+  "research_goal_completed": false
+}

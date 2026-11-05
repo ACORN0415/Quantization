@@ -1,0 +1,7 @@
+2026-11-06 사용자 요청에 따른 sfq_data 선택 정리 기록
+
+실제 디스크 점유: 105.742GiB -> 85.447GiB, 약20.295GiB 회수.
+종료한 MoE 실험의 OLMoE 가중치3개와 추출/감사를 마친 DINO 원 ZIP2개를 삭제했다. DELETE_PLAN/PREDELETE_VERIFIED에 원 경로·공개 저장소·고정revision·크기·SHA를 보존했다. 필요하면 그 고정 공개 출처에서 다시 받아야 하며, 원 ZIP의 전체 바이트 감사를 현재 그대로 재실행할 수는 없다.
+DINO 현재 추출31개와 인코더 가중치, Wan/SelfForcing 체크포인트와 기존환경, 고유 실험입력·결과는 보존했다. 추출31개 SHA를 원 독립감사와 다시 대조했다.
+동일 SHA·크기의 이전 실험 파일128경로는 hardlink로 통합했다. 경로와 내용은 유지했으며 공유파일은 읽기전용이다. 파일별 원 mtime/mode와 keeper 연결은 DEDUP_EVENTS에 있다. 공유파일을 수정하려면 해당 경로를 독립 사본으로 교체한 다음 쓰기권한을 부여해야 한다. 파일합산 도구에 따라 hardlink를 중복 계산할 수 있으므로 실제 점유는 du/df로 확인한다.
+현재 Quantization 모델연결검사는 GPU 사용 전 predictor nonpersistent buffer 이름 대조에서 중단됐고, 이 정리는 그 실행 결과나 판단 기준을 바꾸지 않는다.
