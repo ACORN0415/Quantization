@@ -1,0 +1,53 @@
+{
+  "status": "source_preparation_complete_not_runtime_setup",
+  "completed_epoch": 1793909341.9521348,
+  "deadline_epoch": 1793909576.4583187,
+  "code_frozen": true,
+  "root_execution_authorized": false,
+  "actual_claude_source_review_completed": false,
+  "package_count_in_example": 0,
+  "source_count_in_example": 24,
+  "weight_count_in_example": 1,
+  "synthetic_checks": 32,
+  "network_requests": 0,
+  "package_source_model_payload_downloads": 0,
+  "installs_or_builds": 0,
+  "GPU": 0,
+  "actual_model_tensor_import_load": 0,
+  "actual_CPU_import_stage_runs": 0,
+  "files": {
+    "setup_runtime.py": {
+      "sha256": "86360bd95ea5af8c61bdb9d07c228a55a03a5d2448da1dfa0af4e5afcf9109ec",
+      "bytes": 19580
+    },
+    "selftest_local.py": {
+      "sha256": "114558085527ce7780e9051935e53467d9bdc42fc93c6fe5c6600dcfbff349e2",
+      "bytes": 6467
+    },
+    "SELFTEST_LOCAL.json": {
+      "sha256": "4c5ebf41e71506b8c5ec552a49bf347fe6e7ecf07c1831573a4c1f00ed631093",
+      "bytes": 2999
+    },
+    "SELFTEST_FIRST_FAILURE.json": {
+      "sha256": "eb569e42676f569042064bc7a774b6705d57142184a1d0ab216c74d384aa81b3",
+      "bytes": 254
+    },
+    "SANDBOX_PREFLIGHT.json": {
+      "sha256": "0882569a61f10919bd8004f96033c9b12a49165edf95a2cf889f20c1200ed6c8",
+      "bytes": 558
+    },
+    "MANIFEST_EXAMPLE_UNAPPROVED.json": {
+      "sha256": "595c1b180659e471a9d80a70b78e6b17d9f15c36f7bdbf2f9a426d874a82fb09",
+      "bytes": 18532
+    },
+    "UNAPPROVED_REJECTION.json": {
+      "sha256": "924cedbf51c3c10455eca7b672d2cb5cb2f6e3e9af4bf11a6415a821b58da0b4",
+      "bytes": 1219
+    },
+    "REPORT_CODEX_KO.txt": {
+      "sha256": "58881e98b7765f7ee52e507c0daed45bab80005ceb11244a9bac34ea3af54d64",
+      "bytes": 7040
+    }
+  },
+  "folder_bytes": 101295
+}

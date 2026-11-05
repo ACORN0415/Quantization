@@ -1,0 +1,144 @@
+{
+  "status": "passed",
+  "checks": [
+    {
+      "check": "fully_bound_synthetic_contract_valid_no_execution",
+      "passed": true
+    },
+    {
+      "check": "reject_root_execution_authorized",
+      "passed": true
+    },
+    {
+      "check": "reject_actual_claude_source_review_completed",
+      "passed": true
+    },
+    {
+      "check": "reject_complete",
+      "passed": true
+    },
+    {
+      "check": "reject_source_closure_reviewed",
+      "passed": true
+    },
+    {
+      "check": "reject_runner_sha256",
+      "passed": true
+    },
+    {
+      "check": "reject_destination",
+      "passed": true
+    },
+    {
+      "check": "reject_path_../escape",
+      "passed": true
+    },
+    {
+      "check": "reject_path_/absolute",
+      "passed": true
+    },
+    {
+      "check": "reject_path_a//b",
+      "passed": true
+    },
+    {
+      "check": "reject_path_a/./b",
+      "passed": true
+    },
+    {
+      "check": "reject_path_a/../../b",
+      "passed": true
+    },
+    {
+      "check": "reject_path_a\\b",
+      "passed": true
+    },
+    {
+      "check": "duplicate_artifact",
+      "passed": true
+    },
+    {
+      "check": "source_shadow_torch",
+      "passed": true
+    },
+    {
+      "check": "source_unknown_sha",
+      "passed": true
+    },
+    {
+      "check": "local_size_sha_git_blob",
+      "passed": true
+    },
+    {
+      "check": "bad_bytes",
+      "passed": true
+    },
+    {
+      "check": "bad_sha256",
+      "passed": true
+    },
+    {
+      "check": "bad_git_blob_sha1",
+      "passed": true
+    },
+    {
+      "check": "exclusive_record_no_overwrite",
+      "passed": true
+    },
+    {
+      "check": "tiny_wheel_metadata",
+      "passed": true
+    },
+    {
+      "check": "wheel_traversal",
+      "passed": true
+    },
+    {
+      "check": "wheel_torch",
+      "passed": true
+    },
+    {
+      "check": "wheel_cuda",
+      "passed": true
+    },
+    {
+      "check": "wheel_pth",
+      "passed": true
+    },
+    {
+      "check": "wheel_symlink",
+      "passed": true
+    },
+    {
+      "check": "wheel_distribution_mismatch",
+      "passed": true
+    },
+    {
+      "check": "wheel_version_mismatch",
+      "passed": true
+    },
+    {
+      "check": "zero_package_empty_overlay_no_pip_no_build",
+      "passed": true
+    },
+    {
+      "check": "sandbox_readonly_host_writable_destination",
+      "passed": true
+    },
+    {
+      "check": "dummy_deadline_child_cleanup",
+      "passed": true
+    }
+  ],
+  "count": 32,
+  "runner_sha256": "86360bd95ea5af8c61bdb9d07c228a55a03a5d2448da1dfa0af4e5afcf9109ec",
+  "selftest_sha256": "114558085527ce7780e9051935e53467d9bdc42fc93c6fe5c6600dcfbff349e2",
+  "network_requests": 0,
+  "actual_acquisition_stages": 0,
+  "package_payloads": 0,
+  "pip_installs_builds": 0,
+  "Torch_or_model_imports": 0,
+  "GPU": 0,
+  "synthetic_approved_contract_persisted": false,
+  "note": "Validation dictionary only; no approved runtime manifest or setup destination created. Two stdlib-only sandbox child processes; not a real setup test."
+}

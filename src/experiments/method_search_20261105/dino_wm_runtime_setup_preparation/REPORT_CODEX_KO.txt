@@ -1,0 +1,25 @@
+DINO-WM isolated setup runner 준비 보고서
+범위: ROOT_SPEC의 20분 코드/로컬 합성 준비. 실제 취득·설치·빌드·모델 smoke의 완료 보고가 아니다.
+
+결론
+setup_runtime.py와 미승인 예시를 작성했다. 최종 root 선택을 반영해 예시는 package=[]이고 wheel/sdist artifact도0이다. 고정 소스24개와 공식 DINOv2 weight1개만 열거한다. 최초 CPU import 후보는 기존 Torch/NumPy/Einops/Accelerate와 DINOv2 소스다. 원 QuantWM models 초기화 우회와 전체 pickle 복원은 fair의 별도 model-smoke 작업이며, 여기서 구현하거나 import하지 않았다.
+
+실행 계약
+1. --stage validate/acquire/install/imports의 명시적 단계만 있다. 자동 연쇄 실행/재시도/버전 fallback은 없다. 실제 실행은 root-approved status, complete/source_closure_reviewed, 실제 Claude source review 완료, runner/spec/interpreter/bwrap/environment guard 해시, 정확한 artifact와 단계별 시간·disk·RSS·HTTP 예산을 모두 요구한다. 현재 예시는 false/null을 유지하여 validate부터 거부된다.
+2. 목적지는 /home/acorn0415/sfq_data/dino_wm_planning의 새 직접 하위 task directory뿐이다. acquire는 exclusive mkdir/파일 생성이며 기존 목적지나 파일을 덮어쓰지 않는다. 단계마다 ATTEMPT를 exclusive 생성하여 같은 단계 자동 재시도를 막는다. 실패 시 .part/log/RESULT를 남긴다.
+3. HTTPS exact URL/허용 redirect host/정확 bytes/SHA256을 검사하고 source에는 Git blob SHA1도 검사한다. Body는 지정 artifact bytes까지만 읽고 closes한다. Content-Length가 제공되면 exact 크기와 맞아야 한다. body 전체를 읽은 것인지 알 수 없는 무길이 응답을 추가로 probe하여 예산을 넘기지 않는다. 공식 weight만 root가 명시적으로 허용한 경우 사전SHA null을 받는다. first-acquired SHA·URL·응답 ETag/Last-Modified/version을 기록하며 trusted prior digest와 일치했다고 표현하지 않는다. 모델 로드 전 독립 SHA 감사는 별도 단계다. 이 runner에는 모델 로드 기능이 없다.
+4. --target overlay와 기존 /home/acorn0415/sfq_data/env/bin/python만 사용한다. child venv Torch 상속 가정을 하지 않는다. wheel은 로컬 --no-deps --no-index --no-compile 설치만 가능하다. sdist는 명시 root-approved build와 실제 설치된 build-tool 버전 일치가 있어야 --no-build-isolation/--no-deps/--no-index로 offline wheel을 만들 수 있다. 현재 예시에서는 sdist와 모든 package가0이며 설치 준비 함수는 empty_overlay_no_package_install/명령0을 반환한다. 미래 package가 필요하더라도 이 기능이 설치 승인을 대신하지 않는다.
+5. 기존 환경 불변을 말뿐인 --target 선택으로 맡기지 않았다. 이미 설치된 /usr/bin/bwrap을 해시 바인딩하고, 호스트 /를 read-only로 bind한 뒤 새 task 목적지만 writable로 열며, network/PID/user namespace·빈 /dev를 사용한다. 기존 환경을 수정할 수 있는 unsandboxed fallback은 없다. namespace가 지원되지 않으면 실패한다. 현재 host에서 /usr/bin/true를 이용한 no-network namespace 확인은 성공했다. pip/build/모델 import는 그 검사에서 실행하지 않았다.
+6. offline child는 inherited PYTHON/PIP/LD preload/path 변수를 지우고 user-site·pyc 쓰기·Hub 온라인·optional xformers를 끈다. CPU affinity2, 0.1초 간격 child-tree RSS와 disk/시간 검사를 적용한다. RSS는 이산 관측이며 순간 피크를 완전 계측했다고 표현하지 않는다. root의 외부 wall-time 감독도 필요하다. SIGINT/SIGTERM이 Popen 등록 중 도착하면 임시 보류한 뒤 소유 child가 등록된 상태에서 중단한다. finally가 자기 child를 kill/wait하고 bwrap PID namespace가 남은 descendants를 정리한다.
+7. CPU import 단계는 read-only host/network namespace 안에서 Torch 출처/버전/CUDA initialized=False와 요청 모듈 __file__/scope/distribution version을 기록한다. torch.load/serialization.load/pickle.load/loads/Hub download/CUDA lazy init/nn.Module.__init__을 거부한다. 따라서 모델 구성·Tensor checkpoint 복원·GPU smoke를 대신하지 않는다. 첫 예시는 QuantWM models package를 import하지 않고 DINOv2 소스와 이미 설치된 package만 확인한다.
+
+새 source-closure 제안과의 연결
+SOURCE_MANIFEST_PROPOSED.json의 repository/path를 분리해 sources/dinov2_repo/dinov2/...와 sources/QuantWM/models/...로 매핑했다. 고정 DINO source revision7764ea0f912e53c92e82eb78a2a1631e92725fc8과 QuantWM revisionbe738be37a0535f75f541a6c1201ce19f95499b0의 정확한 source byte/hash를 옮겼다. 공식 weight는88,283,115B와 null 사전SHA를 유지한다. 이 source 제안의 실제 Opus 검토는 아직 root 취합 대상이다.
+새 root CPU import 결과에 따라 이전 Accelerate0.26.1/Hydra overlay 권고를 이번 즉시 설치 목록에서 제외했다. 기존 Accelerate1.15의 원 checkpoint 명명 클래스 존재는 legacy object restoration 성공을 보장하지 않으므로 실제 오류가 있을 때만 별도 후속을 결정한다. 원 보고서/manifest는 수정하지 않았다.
+
+로컬 검증 및 한계
+SELFTEST_LOCAL.json: 32개 합성 계약 통과. 누락 승인·소스 해시·목적지·중복·path traversal·잘못된 size/SHA/Git blob·Torch/CUDA shadow wheel/source·symlink·실행 .pth·wheel metadata 불일치·exclusive 기록·package0 경로를 검사했다. stdlib dummy만으로 read-only host/writable task 디렉터리와 deadline child cleanup도 확인했다. 이 중 root-approved 형태의 dict는 단위검사 메모리 안에만 만들었으며 실행 가능한 승인 manifest로 저장하지 않았다.
+처음 합성검사에서는 a//b가 PurePosixPath 정규화로 허용됨을 발견하여 lexical empty component를 거부하도록 고쳤고 SELFTEST_FIRST_FAILURE.json에 보존했다. 그다음 sandbox 검사에서 read-only filesystem의 EROFS를 test harness가 PermissionError만으로 잡지 못했던 부분을 고쳤다. 이 수정은 허용 범위나 실제 설치 판정 완화가 아니다. 마지막 32개 결과는 최종 source hash에 대응한다.
+실제 source/package/weight 네트워크0, 설치·빌드0, torch/model/pickle/tensor 로드0, GPU0, 원환경·원보고서·git 변경0. urllib 취득/실제 pip/실제 model-source import의 end-to-end 동작은 아직 실행하지 않았다. 실제 old checkpoint 모델 로딩과 full planner/환경 호환성도 미검증이다. 실제 Claude source review 완료라고 표시하지 않는다. 단일 helper 재개는 agent thread limit으로 거절되어 반복 요청하지 않고 부모가 직접 준비했다.
+
+다음 조치는 root와 실제 Opus의 코드 검토다. 현재 예시를 승인 manifest로 간주하거나 빈 예산을 추정하여 실행하지 않는다. 코드와 검증 산출물은 READY 작성 이후 동결한다.

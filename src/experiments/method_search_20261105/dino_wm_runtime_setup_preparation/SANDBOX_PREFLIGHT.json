@@ -1,0 +1,25 @@
+{
+  "scope": "no-network namespace availability only; /usr/bin/true, no pip/package/model import",
+  "command": [
+    "/usr/bin/bwrap",
+    "--die-with-parent",
+    "--unshare-user",
+    "--unshare-pid",
+    "--unshare-net",
+    "--ro-bind",
+    "/",
+    "/",
+    "--proc",
+    "/proc",
+    "--dev",
+    "/dev",
+    "--",
+    "/usr/bin/true"
+  ],
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "",
+  "bwrap_sha256": "523da3e7399044be5163aee6f57a77a6bef7454376e28f0a0627920bae1b76b6",
+  "observed_epoch": 1793908911.4018734,
+  "runtime_setup_executed": false
+}

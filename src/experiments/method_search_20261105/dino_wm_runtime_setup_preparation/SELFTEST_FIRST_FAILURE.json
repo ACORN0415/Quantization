@@ -1,0 +1,6 @@
+{
+  "failure": "rel(a//b) accepted because PurePosixPath normalizes empty path component",
+  "scope": "tiny synthetic validation, not runtime setup",
+  "time": 1793909008.712904,
+  "fix": "explicitly reject empty lexical component before normalization"
+}
