@@ -1,0 +1,37 @@
+VAE 정밀도 진단의 독립 사후 CPU 감사
+
+판정: 저장된 실험 완료 기록과 등록 판정은 유효하며, 독립 감사2728개 조건이 통과했다. 이 입력에서는 등록 규칙에 따라 stop_precision_expansion을 유지한다. 이는 색·질감 변화의 원인을 확인하거나 FP32가 정답·고품질임을 판단한 결과가 아니다.
+
+실행 완료와 기준
+- ROOT_EXECUTION_FINAL status=completed, exit_code=0, ROOT_attempts=1. 외부 root 경과123.0502593517초로600초 이내다. ROOT_ATTEMPT_CLAIM, RUN, worker RESULT의 시작·종료·마감 시간을 대조했으며 worker 완료가 root 실행 시간 안에 들어간다.
+- worker status=completed_two_arm_sensitivity_diagnostic, VAE2회/generator0회, fresh checkpoint 원FP32 parameter194개 각각 로드, 각 팔의 latent dtype BF16/FP32, use_cache=False를 코드·기록으로 확인했다. 이는 기존 코드와 기록의 확인이며 독립 GPU trace나 모델 재실행이 아니다.
+- TF32 matmul/cuDNN off, autocast off, cuDNN benchmark off/deterministic true의 두 팔 공통 기록이 맞다. checkpoint는 입력 파일 해시만 읽었고 역직렬화하지 않았다.
+- 실험 RSS 최고10,467,708,928B(12GiB 이하), GPU allocator 최고10,241,936,896B(22GiB 이하), 저장된 disk peak84,738,328B(256MiB 이하). 새 RESULT를 포함한 현재 폴더 용량도 확인했다. GPU reserved의 누적 최고23,613,931,520B는 allocated와 별도이며 지정 GPU allocator 상한23,622,320,128B보다 작다.
+- worker watchdog 정상 종료 기록이 있고 FAILURE/WATCHDOG_FAILURE 파일은 없다. root final은 exit0을 기록한다. 이 감사가 당시 OS 프로세스 전체의 잔류 없음·순간 CPU 사용량을 새로 관측한 것은 아니다. CPU4는 worker의 intra/inter-op·수학 라이브러리 thread 설정 계약이지 모든 시스템 thread 수의 상한을 계측한 결과가 아니다.
+
+저장 통계 재계산
+501개 행이 frame0..500을 중복 없이 덮으며 모든 MSE/MAE/q99/meanRGB 값이 유한·유효 범위다. 모든 프레임 크기가 같으므로249..500의252개 MSE 평균 제곱근은 해당 구간 pooled RGB RMSE와 같다. 원 gate에 허용오차를 더하거나 기준을 바꾸지 않았다.
+- 독립 math.fsum 집계 late RGB RMSE: 0.00158162159836441603. 기록 값: 0.00158162159836441646. RGB[0,1], 대략 0.403314/255 수준. 등록 임계0.02 미만.
+- 등록 판정 재계산: stop_precision_expansion.
+- 설명용 early0..125/late375..500 meanRGB 변화 L2: BF16 0.303972267015686, FP32 0.3047798405455124; 감소율 -0.002656734240116476. 이 수치는 품질/인과 gate로 사용하지 않았다.
+
+직접 CPU 텐서 검증
+새로 로드한 것은 BF16_selected_RGB.pt와 FP32_selected_RGB.pt 두 개뿐이다. map_location=cpu,weights_only=True로 로드했다. 각 RGB는FP32[8,3,480,832], 고정 선택 frame[0,80,160,240,320,400,480,500], 유한[0,1]이다. CUDA_VISIBLE_DEVICES를 비우고 감사 전후 CUDA context 미초기화를 확인했다.
+각 프레임1,198,080 RGB 원소에서 FP64 차이·제곱합/절대합을 별도로 계산했다. q99는 worker의 np.quantile을 호출하지 않고, 전체 원소의99% 위치에 대한 np.partition 및 두 이웃 선형보간으로 계산했다. meanRGB도 채널별 합/공간 원소수로 대조했다. 저장RGB를 ×255한 uint8 결과와16개 PNG의 해석된 rgb24 바이트가 모두 정확히 같다. PNG 파일 해시·size도 저장 기록과 같다.
+수치 비교는 selected RGB를 열기 전에 코드에 고정한 atol2e-14/rtol2e-12이며, FP64 합산 순서 차이 확인용이다. 임상적·지각적·품질 허용오차가 아니며0.02 gate에는 적용하지 않았다.
+8프레임 기록 대비 최대 절대 차이: MSE 0, MAE 0, q99 0.
+
+해시와 독립 범위
+LOCK의 모든 source/review/input 해시, native wrapper 클래스 AST 해시, RUN/root완료/RESULT 및 저장RGB·PNG를 경로별 중복 제거 후 검사·고정했다. 실제 원latent·VAE checkpoint는 SHA256만 읽었고 torch.load하지 않았다. ROOT_EXECUTION_FINAL 원문은 RESULT/LOCK 해시를 자체 포함하지 않으므로 이번 감사가 현재 완료 원문들을 별도 해시로 결합했다.
+서로 다른 경로 해시 수: 38. CPU 감사 실행 1.191386초, peak RSS 562339840B(<2GiB). 실험 종료 후 별도 사후 감사 시간이며600초 GPU 실험을 연장한 실행이 아니다.
+
+전체501프레임 raw RGB는 저장되지 않았다. 따라서501개 통계와 pooled 값의 독립 재집계는 저장 스칼라의 내부 일관성 확인이고, raw tensor부터 직접 검증한 범위는 선정8프레임이다. 나머지493프레임을 독립 재계산했다고 표현하면 안 된다. fresh-load·호출수·원본latent 불변은 고정 소스 및 worker 기록에 대한 확인으로 범위를 제한한다.
+기존 p00 MP4와 현재 BF16 재복원의 전원소 일치도 이번 검사 범위가 아니다. 이번 두 팔에는 동일한 새 정밀도/TF32/정규화 계약이 적용됐다. 단일 개발 latent의 수치 민감도 결과로 모든 VAE 원인을 배제하거나 generator 오류·정상 여부·장기 드리프트의 인과 원인을 확정하지 않는다. 새 양자화 방법의 효과나 신규성 근거도 아니다. 실제 Opus 검토의 과거 범위를 소급 확대하는 감사가 아니다.
+
+산출물 SHA256:
+verify_result.py 975cdaec0d268e3047ff27c9639723f2a15efaa7066771c03a04c13320a59660
+AUDIT_CODEX.json f7d63c5dc2a20615a325cbea7af874cb4fdbc7c0b624cf09491d058953075325
+RESULT.json 875e1b48fc044fc0f10bb6465ca1f4c84e0dfaa1f234001152ebb901952563d0
+ROOT_EXECUTION_FINAL.json 04ef953dcb02d769242afe7b0519740aaeed5c262dbd706c64afcd099b16f583
+LOCK.json 635d0794a9988beccf062818fc32abfe3c8e321241f3cbc3192da72bd09968fa
+완료 UTC 2026-11-05T17:34:29.366210+00:00

@@ -1,0 +1,160 @@
+{
+  "status": "running",
+  "started_utc": 1793899685.1973348,
+  "deadline_utc": 1793900285.1973348,
+  "vae_decodes": 2,
+  "generator_calls": 0,
+  "arms": [
+    {
+      "name": "BF16",
+      "fresh_checkpoint_loaded": true,
+      "loaded_parameter_dtype_histogram": {
+        "torch.float32": 194
+      },
+      "checkpoint_sha256": "38071ab59bd94681c686fa51d75a1968f64e470262043be31f7a094e442fd981",
+      "latent_dtype": "torch.bfloat16",
+      "mean_std_rule": "native wrapper CPU FP32 attributes -> latent dtype; reciprocal in latent dtype",
+      "use_cache": false,
+      "setup_seconds": 0.6385815129615366,
+      "decode_seconds": 28.836966127040796,
+      "raw_RGB_sha256": null,
+      "GPU_peak_allocated_bytes_cumulative": 5727909376,
+      "GPU_peak_reserved_bytes_cumulative": 14482931712,
+      "selected_artifacts": [
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/BF16_selected_RGB.pt",
+          "sha256": "184bb194cf6b712571b1346585cd24bab65bb40bd4106c646fe49c202b7c1580",
+          "bytes": 38339854
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/BF16_frame000.png",
+          "sha256": "f73da26d0526632170199fe0435ffdf30b6f0cd8ed62516423c0681af2917313",
+          "bytes": 559125
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/BF16_frame080.png",
+          "sha256": "5148dad14bcfa8fe92f49537e23c7a926999f4cb61fda2c456b7e7809acd4caf",
+          "bytes": 481898
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/BF16_frame160.png",
+          "sha256": "a6cedabd2dbd75e1b4487af6a560c9340169067432338426c05a143d52d3c752",
+          "bytes": 488509
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/BF16_frame240.png",
+          "sha256": "74edd82a07a082b324f908b066a5866507a74564eb2c9eda9d8e73b88e954a71",
+          "bytes": 487644
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/BF16_frame320.png",
+          "sha256": "f05978995d20e2e5f01d9e06f1398c4ea2870a4e381aa4afcf62ff29a971ec97",
+          "bytes": 485866
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/BF16_frame400.png",
+          "sha256": "93ce42764bb66a5e840d6806c3305434592c514dc19793d6014a17522bbb3bc9",
+          "bytes": 481148
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/BF16_frame480.png",
+          "sha256": "f7867d012c7ee0a569d559005f3a0af2e2b219b7f0937736acf7f7afa4c3b177",
+          "bytes": 496366
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/BF16_frame500.png",
+          "sha256": "680299dd6389a7f1a8f996cfe8024ddfc7dbf1272301deb515490ae5edb2e475",
+          "bytes": 503485
+        }
+      ]
+    },
+    {
+      "name": "FP32",
+      "fresh_checkpoint_loaded": true,
+      "loaded_parameter_dtype_histogram": {
+        "torch.float32": 194
+      },
+      "checkpoint_sha256": "38071ab59bd94681c686fa51d75a1968f64e470262043be31f7a094e442fd981",
+      "latent_dtype": "torch.float32",
+      "mean_std_rule": "native wrapper CPU FP32 attributes -> latent dtype; reciprocal in latent dtype",
+      "use_cache": false,
+      "setup_seconds": 0.5963563120458275,
+      "decode_seconds": 79.5747041759314,
+      "raw_RGB_sha256": null,
+      "GPU_peak_allocated_bytes_cumulative": 10241936896,
+      "GPU_peak_reserved_bytes_cumulative": 23613931520,
+      "selected_artifacts": [
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/FP32_selected_RGB.pt",
+          "sha256": "452ceaac013bcfbe7c564e14c11145a64d4e406d72aea700ff3c6a3d26299160",
+          "bytes": 38339854
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/FP32_frame000.png",
+          "sha256": "ffb14fa0c09a097bc4eec1a6460854c306533da40e02e02f3ab8bcfeaf9f433c",
+          "bytes": 557728
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/FP32_frame080.png",
+          "sha256": "d3fb94b77901ad61a858d7c362079d1a2c6c3b28e13a60bc304313f3a6efd0fd",
+          "bytes": 480594
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/FP32_frame160.png",
+          "sha256": "866a1f0f0c9a3cfa5fa19de4e26fa9536626458efdad137a754f527c6b710097",
+          "bytes": 487704
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/FP32_frame240.png",
+          "sha256": "fc1c155dd97aec0f8635641e80b8ed65b4674409750f9804733f1e7bcebf380c",
+          "bytes": 486885
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/FP32_frame320.png",
+          "sha256": "e66cee492ee2f007caafab658daefefcb7bef7c0f9e6aa872efc6f70ed77d39c",
+          "bytes": 484110
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/FP32_frame400.png",
+          "sha256": "6f54d309ccd0f9ba887864200ae1af9dd67f06117fb5ec0f3649801d7962dce2",
+          "bytes": 479513
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/FP32_frame480.png",
+          "sha256": "9deeb79440e43ad9ce0bc59129e422a15f6c95160ae7ce5c5d91c36813f0e3da",
+          "bytes": 494284
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/FP32_frame500.png",
+          "sha256": "1211d1b36fde5e118356bf2f14b0a5599d9436006965341d4fbb3da9fb854a91",
+          "bytes": 500723
+        }
+      ]
+    }
+  ],
+  "limits": {
+    "wall_seconds": 600,
+    "CPU_threads": 4,
+    "RSS_bytes": 12884901888,
+    "GPU_allocator_bytes": 23622320128,
+    "output_bytes": 268435456,
+    "VAE_decodes": 2,
+    "generator_calls": 0
+  },
+  "monitor_peak_RSS_bytes": 10113925120,
+  "monitor_peak_GPU_allocator_bytes": 10241936896,
+  "monitor_peak_output_bytes": 84496665,
+  "runtime": {
+    "torch": "2.6.0+cu124",
+    "cuda": "12.4",
+    "cudnn": 90100,
+    "GPU": "NVIDIA GeForce RTX 4090",
+    "TF32_matmul": false,
+    "TF32_cudnn": false,
+    "autocast": false,
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true
+  },
+  "wrapper_AST_sha256": "a6fdf05e871915e31406a26f91adfb34dc60fd0804c77e2be4cf0e157c6b8c3d",
+  "latent_tensor_sha256": "45f1684c63d7f0d559753b4c631d36f508f7bce1f84a9ab825df10db7a1d102b"
+}

@@ -1,0 +1,38 @@
+{
+  "status": "bounded_literature_and_code_feasibility_review_not_experiment",
+  "start_epoch": 1793900208.083692,
+  "absolute_deadline_epoch": 1793902008.083692,
+  "wall_cap_seconds": 1800,
+  "scope": "Decidewhether causalVAE temporalfeature-state storage presents a usefulandnovel quantization problem afterstrongsimpleexistingexecution baselines.",
+  "direct_observations": "Oneexistinglatent BF16decode28.837s,FP32decode79.575s; sameinput lateRGBRMSE.00158162 below.02flag, notINT8robustness evidence. Nativevae caches twohistoricalfeatures, repeatsnativeconcatoutput. Cachememory/timefraction NOT measured.",
+  "primary_sources": [
+    {
+      "title": "LightVAE",
+      "url": "https://arxiv.org/abs/2610.14726"
+    },
+    {
+      "title": "LatentQuant",
+      "url": "https://arxiv.org/abs/2610.03959"
+    },
+    {
+      "title": "Cache-Aware Conv3D Lowering",
+      "url": "https://arxiv.org/abs/2609.31938"
+    }
+  ],
+  "bounds": "Atmost4primarypapers includingthese3 plusoneclosestgeneralrecurrent-statequantization ifneeded, onepublicrepo; no broadsurvey/modeldownload/GPU/VAE/metric/tensorloads/sourceedits. Up tooneMiB text-onlyevidencecache.",
+  "strong_baselines": [
+    "nativeBF16withstreamedRGBoutput avoidinggrowingconcat/stack duplicate",
+    "existingstreaming/spatialtiling",
+    "exactConv3Dlowering",
+    "existingplainINT8stateRTNifmemoryissueexists"
+  ],
+  "mandatory_distinctions": [
+    "Operatorweights/activations vs storedrecurrentfeaturestate",
+    "Exactexecutionreorganization vs novelmethod",
+    "StatepayloadvsactualGPUpeak/workspace/outputbuffers",
+    "Fixedlatentfidelity vssemanticvideoqualityandpolicy-facingencodercontract",
+    "BF16/FP32closenessvsINT8safety"
+  ],
+  "output": "OneindependentCodexandactualOpus report: actualobservedproblem/unknown,closestmethod objectiveandcode scope,onesimplebaseline,onepreciseremainingdecision(ifany),practicalvalue andverifyfeasibility,one smallgo/no-gocheckonlyifwarranted. Canrecommendnocandidate. NoGPUexperimentauthorized.",
+  "selection_policy": "Do notclaimnoveltybyapplyingknownstatequantizationtoWan. Ifsourcebounds showstateispayloadminor orstreaming/existingmethods suffice, donotbuildcomplexquantizer. No rescuesoftheclosedKV/fullH/paired/SVDcandidates."
+}

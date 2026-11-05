@@ -1,0 +1,289 @@
+{
+  "status": "passed",
+  "audit_started_epoch": 1793899986.6154466,
+  "audit_scope": "Post-experiment CPU; scalar records for 501 frames, direct RGB for 8 selected frames only",
+  "new_GPU_model_generator_VAE_calls": 0,
+  "tensor_loads_allowed": [
+    "BF16_selected_RGB.pt",
+    "FP32_selected_RGB.pt"
+  ],
+  "FP64_comparison": {
+    "absolute_tolerance": 2e-14,
+    "relative_tolerance": 2e-12
+  },
+  "checks": 2728,
+  "hashes": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/worker.py": "bc3050540c89beedfc66943ba753f640293ca7347f04c2969aaf9fc8d327e970",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/selftest.py": "f89c3109742e7964ad1e815933ef1faeaeb85c94104a5697e09d375039d0765f",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/SELFTEST_V2.json": "708fe200d0bac0e6893375c4ff3d0f2f906eb8f5f1e8cc7d6a89fff2185366ed",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/PROPOSAL_KO.txt": "c5b77de76bb261248a030426471c0844563fb64a4dca327c87ed9ff2f7297ba2",
+    "/home/acorn0415/Quantization/src/utils/wan_wrapper.py": "da919629bac4472cd9072223f1ab03200de276e202ab0d9b91e6789d500ff8fa",
+    "/home/acorn0415/Quantization/src/wan/modules/vae.py": "a4c1d9362f25a1bef463ac51caed4097317c007d4d87887b02a3a733fdbc48d5",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/READY_V2.json": "11921f6b298343011e9e0a4f47d1ef1b7d89f0181cb1864ece33dc3fcc48044e",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/ROOT_CRITERIA_DECISION.json": "70e6f95aedc406e92ce082b16058d21fa7aced1be17c81c6b873cb056cb9f022",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/PREEXECUTION_REVIEW_TIMING_EXCEPTION_ROOT.json": "ebec6da56331ce8c7a22949bddf4baa492ae2fa7b1201983fb185d4d337ef482",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/OPUS_DESIGN_FIXED_KO.txt": "4038f16eb399eb65a7ce4926f6ec78d915142d53a40191708906684807e8e447",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/OPUS_SOURCE_FIXED_KO.txt": "67d32f678d8356c6f2e6b20694a1eb57624a639a79575e96a3f3fbaa5c51f2a0",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/PREEXECUTION_ROOT_DECISION.json": "82ed698037df1ac4857daef630f34f167075c6f16e8a628a850e80a5475d2a51",
+    "/home/acorn0415/sfq_data/mechanism/fr/p00_s303_BF16/latent.pt": "b7a553d50254e290707fb32a31c05233667d57d85ccc140eca7273e1762367cf",
+    "/home/acorn0415/sfq_data/ckpt/wan_models/Wan2.1-T2V-1.3B/Wan2.1_VAE.pth": "38071ab59bd94681c686fa51d75a1968f64e470262043be31f7a094e442fd981",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/RESULT.json": "875e1b48fc044fc0f10bb6465ca1f4c84e0dfaa1f234001152ebb901952563d0",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/ROOT_EXECUTION_FINAL.json": "04ef953dcb02d769242afe7b0519740aaeed5c262dbd706c64afcd099b16f583",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/RUN.json": "ad3087ceed345e31354d44f2b507f27b233905f5760fa8f88038113231f3c3a7",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/ROOT_ATTEMPT_CLAIM.json": "e7649e4653caa9f2ca7cf601bb26cba70e341225302428b90586940fd7b129f0",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/LOCK.json": "635d0794a9988beccf062818fc32abfe3c8e321241f3cbc3192da72bd09968fa",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/verify_result.py": "975cdaec0d268e3047ff27c9639723f2a15efaa7066771c03a04c13320a59660",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/BF16_selected_RGB.pt": "184bb194cf6b712571b1346585cd24bab65bb40bd4106c646fe49c202b7c1580",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/BF16_frame000.png": "f73da26d0526632170199fe0435ffdf30b6f0cd8ed62516423c0681af2917313",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/BF16_frame080.png": "5148dad14bcfa8fe92f49537e23c7a926999f4cb61fda2c456b7e7809acd4caf",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/BF16_frame160.png": "a6cedabd2dbd75e1b4487af6a560c9340169067432338426c05a143d52d3c752",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/BF16_frame240.png": "74edd82a07a082b324f908b066a5866507a74564eb2c9eda9d8e73b88e954a71",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/BF16_frame320.png": "f05978995d20e2e5f01d9e06f1398c4ea2870a4e381aa4afcf62ff29a971ec97",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/BF16_frame400.png": "93ce42764bb66a5e840d6806c3305434592c514dc19793d6014a17522bbb3bc9",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/BF16_frame480.png": "f7867d012c7ee0a569d559005f3a0af2e2b219b7f0937736acf7f7afa4c3b177",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/BF16_frame500.png": "680299dd6389a7f1a8f996cfe8024ddfc7dbf1272301deb515490ae5edb2e475",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/FP32_selected_RGB.pt": "452ceaac013bcfbe7c564e14c11145a64d4e406d72aea700ff3c6a3d26299160",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/FP32_frame000.png": "ffb14fa0c09a097bc4eec1a6460854c306533da40e02e02f3ab8bcfeaf9f433c",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/FP32_frame080.png": "d3fb94b77901ad61a858d7c362079d1a2c6c3b28e13a60bc304313f3a6efd0fd",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/FP32_frame160.png": "866a1f0f0c9a3cfa5fa19de4e26fa9536626458efdad137a754f527c6b710097",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/FP32_frame240.png": "fc1c155dd97aec0f8635641e80b8ed65b4674409750f9804733f1e7bcebf380c",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/FP32_frame320.png": "e66cee492ee2f007caafab658daefefcb7bef7c0f9e6aa872efc6f70ed77d39c",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/FP32_frame400.png": "6f54d309ccd0f9ba887864200ae1af9dd67f06117fb5ec0f3649801d7962dce2",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/FP32_frame480.png": "9deeb79440e43ad9ce0bc59129e422a15f6c95160ae7ce5c5d91c36813f0e3da",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/vae_precision_probe_preparation/FP32_frame500.png": "1211d1b36fde5e118356bf2f14b0a5599d9436006965341d4fbb3da9fb854a91"
+  },
+  "selected_recalculation": [
+    {
+      "frame": 0,
+      "elements": 1198080,
+      "MSE": 2.4082718219544897e-06,
+      "MAE": 0.0011160279658491699,
+      "q99_abs": 0.0049835598468780384,
+      "mean_RGB": {
+        "bf16": [
+          0.4370055589156273,
+          0.4178002406389285,
+          0.2492814731903565
+        ],
+        "fp32": [
+          0.4372433641738891,
+          0.41827126013209076,
+          0.25059330460178153
+        ]
+      },
+      "absolute_difference_from_record": {
+        "MSE": 0.0,
+        "MAE": 0.0,
+        "q99_abs": 0.0
+      }
+    },
+    {
+      "frame": 80,
+      "elements": 1198080,
+      "MSE": 2.369807817470587e-06,
+      "MAE": 0.0011386842736785308,
+      "q99_abs": 0.0046804937720298645,
+      "mean_RGB": {
+        "bf16": [
+          0.4687988045123907,
+          0.444355626977407,
+          0.3054589976484959
+        ],
+        "fp32": [
+          0.46893987090450723,
+          0.4448844271824689,
+          0.3067762887053854
+        ]
+      },
+      "absolute_difference_from_record": {
+        "MSE": 0.0,
+        "MAE": 0.0,
+        "q99_abs": 0.0
+      }
+    },
+    {
+      "frame": 160,
+      "elements": 1198080,
+      "MSE": 2.471786796149908e-06,
+      "MAE": 0.001067801357846922,
+      "q99_abs": 0.00518373906612396,
+      "mean_RGB": {
+        "bf16": [
+          0.37138464657159953,
+          0.3858084288163063,
+          0.2737227166310335
+        ],
+        "fp32": [
+          0.3714259228653436,
+          0.38603226144019015,
+          0.2747463171241972
+        ]
+      },
+      "absolute_difference_from_record": {
+        "MSE": 0.0,
+        "MAE": 0.0,
+        "q99_abs": 0.0
+      }
+    },
+    {
+      "frame": 240,
+      "elements": 1198080,
+      "MSE": 2.446909549028592e-06,
+      "MAE": 0.0010183440030325586,
+      "q99_abs": 0.005554290115833277,
+      "mean_RGB": {
+        "bf16": [
+          0.2854401238453694,
+          0.3458826732941163,
+          0.2542027792487389
+        ],
+        "fp32": [
+          0.28545454636854956,
+          0.34589117114463497,
+          0.25502894889833466
+        ]
+      },
+      "absolute_difference_from_record": {
+        "MSE": 0.0,
+        "MAE": 0.0,
+        "q99_abs": 0.0
+      }
+    },
+    {
+      "frame": 320,
+      "elements": 1198080,
+      "MSE": 2.3047301421181276e-06,
+      "MAE": 0.001008035663020813,
+      "q99_abs": 0.005058956444263435,
+      "mean_RGB": {
+        "bf16": [
+          0.23726258193835234,
+          0.30869559714427364,
+          0.217340954603293
+        ],
+        "fp32": [
+          0.23716661653485901,
+          0.30852097115928656,
+          0.2180651294869723
+        ]
+      },
+      "absolute_difference_from_record": {
+        "MSE": 0.0,
+        "MAE": 0.0,
+        "q99_abs": 0.0
+      }
+    },
+    {
+      "frame": 400,
+      "elements": 1198080,
+      "MSE": 2.4242829737164063e-06,
+      "MAE": 0.0010234227410465893,
+      "q99_abs": 0.005337115824222555,
+      "mean_RGB": {
+        "bf16": [
+          0.21395793434901114,
+          0.28373413727833674,
+          0.19955160113481374
+        ],
+        "fp32": [
+          0.21379344805288547,
+          0.28348863818339454,
+          0.20021532767128425
+        ]
+      },
+      "absolute_difference_from_record": {
+        "MSE": 0.0,
+        "MAE": 0.0,
+        "q99_abs": 0.0
+      }
+    },
+    {
+      "frame": 480,
+      "elements": 1198080,
+      "MSE": 3.4247377124506054e-06,
+      "MAE": 0.0011235092259380313,
+      "q99_abs": 0.006565749645233154,
+      "mean_RGB": {
+        "bf16": [
+          0.19607353982252954,
+          0.2846525695843574,
+          0.19489955191428845
+        ],
+        "fp32": [
+          0.1959671061871818,
+          0.2843984273990664,
+          0.1955996954312118
+        ]
+      },
+      "absolute_difference_from_record": {
+        "MSE": 0.0,
+        "MAE": 0.0,
+        "q99_abs": 0.0
+      }
+    },
+    {
+      "frame": 500,
+      "elements": 1198080,
+      "MSE": 3.0741072808019594e-06,
+      "MAE": 0.001114817196254531,
+      "q99_abs": 0.00634940624237057,
+      "mean_RGB": {
+        "bf16": [
+          0.1909852364888558,
+          0.2829851965109507,
+          0.19115263712711825
+        ],
+        "fp32": [
+          0.19089344742384035,
+          0.28270153587584035,
+          0.19180812386464544
+        ]
+      },
+      "absolute_difference_from_record": {
+        "MSE": 0.0,
+        "MAE": 0.0,
+        "q99_abs": 0.0
+      }
+    }
+  ],
+  "scalar_reaggregation": {
+    "late_RGB_RMSE": 0.001581621598364416,
+    "decision": "stop_precision_expansion",
+    "threshold": 0.02,
+    "frames": 252,
+    "drift": {
+      "bf16": {
+        "vector": [
+          -0.24753237225306343,
+          -0.15093316096428888,
+          -0.09135668953478118
+        ],
+        "L2": 0.30397226701568597
+      },
+      "fp32": {
+        "vector": [
+          -0.24784143138225107,
+          -0.15166945462877174,
+          -0.09198778519975265
+        ],
+        "L2": 0.3047798405455124
+      }
+    },
+    "reduction_descriptive": -0.002656734240116476
+  },
+  "worker_wall_seconds": 122.53256034851074,
+  "root_wall_seconds": 123.05025935173035,
+  "experiment_peaks": {
+    "process_lifetime_peak_RSS_bytes": 10467708928,
+    "monitor_peak_GPU_allocator_bytes": 10241936896,
+    "monitor_peak_output_bytes": 84738328
+  },
+  "audit_RSS_bytes": 562339840,
+  "folder_bytes_before_audit_output": 84951230,
+  "whole_501_RGB_independently_recomputed": false,
+  "direct_RGB_frames": 8,
+  "fresh_load_and_execution_counts": "source/record verification; not a new trace or model replay",
+  "audit_finished_epoch": 1793899987.8068323,
+  "audit_wall_seconds": 1.1913859844207764,
+  "auditor_sha256": "975cdaec0d268e3047ff27c9639723f2a15efaa7066771c03a04c13320a59660"
+}
