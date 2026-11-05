@@ -1,0 +1,17 @@
+{
+  "created_utc": "2026-11-05T13:42:51.010881+00:00",
+  "old_source_sha256": "d3e2ca259bb2895d44218095ed95f6b810350ac2ceedba55de59063375f57018",
+  "new_source_sha256": "f3e250ad6a0afa9b5147063fc90563ba23ce4d64d0b857489551c2eb7d3eab15",
+  "normalized_AST_identical": true,
+  "allowed_differences": [
+    "tsha logical-byte canonicalization only",
+    "verify_lock SOURCES_V3 to SOURCES_V4 filename"
+  ],
+  "root_review": "read full source diff; canonical 1D unit-stride hash buffer preserves logical values, shape/dtype remain separate",
+  "whole_pipeline_completed_by_this_audit": false,
+  "actual_Opus_V4_review_completed_by_this_audit": false,
+  "real_input_reads": 0,
+  "GPU_calls": 0,
+  "real_LOCK_absent": true,
+  "real_RUN_absent": true
+}

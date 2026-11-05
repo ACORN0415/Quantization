@@ -1,0 +1,44 @@
+Stage0 V4 — tensor byte hash의 singleton stride 방어
+2026-11-05. 실제 자료/효과/GPU는0이며, root가 승인한 격리 생산형상 합성검사의 결함 수정이다.
+
+발견
+복사된 V3의 전체 합성 pipeline은 prepare_layer의 rank1 BF16 basis 저장/재로드 해시에서
+RuntimeError: self.stride(-1) must be 1 to view BFloat16 as Byte, but got 128을 냈다.
+[12,128,1], stride(128,1,128)는 contiguous=True여도 마지막 singleton stride가128이다.
+따라서 contiguous()가 복사하지 않고, element size가 다른 view(uint8)가 실패했다.
+이 오류는 초기 Omega 제어경로 6사례와 helper 51건 검사에서 실행되지 않은 경로다.
+전체 runtime 검사 필요성을 확인했으며 이를 방법의 음성 결과로 처리하지 않는다.
+
+최소 수정
+flat=x.detach().contiguous().reshape(-1)
+if flat.stride(0)!=1:
+    flat=torch.empty(flat.numel(), dtype=flat.dtype, device=flat.device).copy_(flat)
+return sha256(flat.view(uint8).numpy().tobytes())
+shape/dtype는 tensor_digest의 기존 별도 필드에 남는다. 원본 tensor는 변경하지 않는다.
+root/독립 Codex는 all-singleton[1,1],stride(128,128)에서 flatten만으로도 실패함을 확인했다.
+따라서 stride1이 아닌 경우 소유한 1차원 저장소로 복사하는 방어까지 반영했다.
+기존 해시를 계산할 수 있던 입력은 동일한 byte digest를 유지한다. 수식/scale/팔/선택/
+cap/과학적 gate/입력은 변경하지 않았다. 행정 source manifest는 SOURCES_V4.json이다.
+
+합성 회귀
+HASH_STRIDE_REGRESSION_V4.json: BF16/FP16/FP32/FP64 각각 singleton 마지막 축,
+all-singleton stride128, ordinary, transpose, scalar, empty로 총24사례.
+기존 helper12실패, flatten만의 제안4실패; 최종 수정24/24가 독립적인 같은-element-size
+정수 view와 NumPy C-order 바이트 해시와 일치하고 입력을 보존했다.
+기존 성공 입력의 해시는 그대로다. 최초20사례 probe도 삭제하지 않았다.
+V3 원본/READY/manifest와 원 합성 실패 RUN/LOCK/log/prepared를 snapshot/failure_v3로 보존했다.
+
+격리 전체 pipeline 검사의 범위
+paired_response_stage0_synthetic_full은 V4 driver/bit/mean을 동일 bytes로 복사했다.
+생산 형상 BF16 합성 Q/K/V, p0, Wo, packet, 독립 직접 attention anchor를 사용한다.
+sitecustomize audit hook은 해당 sibling 밖의 .pt 접근을 거부한다. 원 실자료는 읽지 않는다.
+합성 LOCK의 권한/검토 boolean은 변경하지 않은 guard를 통과시키는 test fixture이며,
+synthetic_only/test_authority/NOT_REAL_REVIEW_OR_REAL_EXPERIMENT_AUTHORIZATION로 표시했다.
+실제 Opus 최종 승인 또는 실자료 실험 승인이 아니다. 원 stage0 LOCK/RUN은 생성하지 않는다.
+원20분 마감(2026-11-05 13:46:20UTC), CPU4/프로세스RSS8GiB/합성 생성파일2GiB는 유지한다.
+합성 입력 재생성·복제 없이 기존 입력을 사용한 V4 pipeline 재검사는 root가 승인한
+사전 코드 유효성 수정이며 실제 실험의 재시도가 아니다. 모든 synthetic 점수는 절차적
+수치일 뿐 방법 효과/신규성/전체 영상 품질의 증거가 아니다.
+전체 pipeline 완료 여부·마지막 오류·실제 시간/메모리/파일 수는 별도 합성 최종 보고서와
+DRIVER_READY_V4.json을 확인한다. 이 amendment 문장만으로 완주를 선언하지 않는다.
+기존 full-H pilot stop_quality는 유지한다.

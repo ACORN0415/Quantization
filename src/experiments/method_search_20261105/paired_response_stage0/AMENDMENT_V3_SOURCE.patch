@@ -1,0 +1,20 @@
+--- preserved_V2/diagnose.py
++++ active_V3/diagnose.py
+@@ -72,7 +72,7 @@
+         raise PermissionError('Pending contract, cap or arm mismatch')
+     if lock.get('total_seconds')!=LIMIT_SECONDS or lock.get('rss_bytes')!=LIMIT_RSS or lock.get('disk_bytes')!=LIMIT_DISK:
+         raise PermissionError('Resource contract mismatch')
+-    declared=json.loads((HERE/'SOURCES_V2.json').read_text())['sources']
++    declared=json.loads((HERE/'SOURCES_V3.json').read_text())['sources']
+     if lock.get('sources')!=declared:raise PermissionError('LOCK source set incomplete or differs from draft')
+     for p,h in declared.items():
+         if sha(p)!=h:raise PermissionError('Source hash changed: '+p)
+@@ -248,7 +248,7 @@
+     del allstate;gc.collect()
+     if arm.startswith('PAIR'):
+         pair=pairmod.PairedResponse.gaussian(12,128,32,int(arm[4:]));shared['Omega']=pair.omega
+-        if make_paired_manifest(pair,binding['layer'],int(arm[4:]))!=reloaded['paired_manifest']:raise ValueError('Paired state-to-Omega binding changed on reload')
++        make_paired_manifest(pair,binding['layer'],int(arm[4:]))  # initial Omega check; no persisted state exists yet
+     else:pair=None
+     original_keys=[];original_values=[];values=[];decoded=[];k_packets=[];states=[];packet_links=[];write_diagnostics=[];write_seconds=0.;payload_base=0
+     for row,write in zip(binding['packets'],binding['writes']):

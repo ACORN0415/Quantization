@@ -1,0 +1,11 @@
+{
+  "pid": 552189,
+  "synthetic_tensor_paths": [
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_fixed.pt",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_p0.pt",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_wo.pt",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/prepared/layer18.pt"
+  ],
+  "denied_external_tensor_paths": [],
+  "scope": "audit-hook .pt path events; source files permitted"
+}

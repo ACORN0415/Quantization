@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/diagnose.py", line 440, in <module>
+    child(args.worker,args.layer,args.arm)
+  File "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/diagnose.py", line 388, in child
+    result=prepare_layer(binding,access) if kind=='prepare' else evaluate_layer(binding,arm,access,json.loads((HERE/f'PREPARE_{layer}.json').read_text()))
+  File "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/diagnose.py", line 229, in prepare_layer
+    record,_=access.save_tensor(f'layer{binding["layer"]}.pt',state)
+  File "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/diagnose.py", line 125, in save_tensor
+    if tensor_digest(value)!=tensor_digest(restored):raise ValueError('Saved state reload mismatch')
+  File "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/diagnose.py", line 136, in tensor_digest
+    if isinstance(value,dict):return {str(k):tensor_digest(v) for k,v in value.items()}
+  File "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/diagnose.py", line 136, in <dictcomp>
+    if isinstance(value,dict):return {str(k):tensor_digest(v) for k,v in value.items()}
+  File "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/diagnose.py", line 136, in tensor_digest
+    if isinstance(value,dict):return {str(k):tensor_digest(v) for k,v in value.items()}
+  File "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/diagnose.py", line 136, in <dictcomp>
+    if isinstance(value,dict):return {str(k):tensor_digest(v) for k,v in value.items()}
+  File "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/diagnose.py", line 136, in tensor_digest
+    if isinstance(value,dict):return {str(k):tensor_digest(v) for k,v in value.items()}
+  File "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/diagnose.py", line 136, in <dictcomp>
+    if isinstance(value,dict):return {str(k):tensor_digest(v) for k,v in value.items()}
+  File "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/diagnose.py", line 135, in tensor_digest
+    if isinstance(value,torch.Tensor):return {'shape':list(value.shape),'dtype':str(value.dtype),'sha256':tsha(value)}
+  File "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/diagnose.py", line 30, in tsha
+    def tsha(x):return hashlib.sha256(x.detach().contiguous().view(torch.uint8).numpy().tobytes()).hexdigest()
+RuntimeError: self.stride(-1) must be 1 to view BFloat16 as Byte (different element sizes), but got 128

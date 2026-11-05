@@ -1,0 +1,18 @@
+{
+  "status": "prepared_source_frozen_awaiting_reviews_and_root_LOCK",
+  "updated_utc": 1793883892.2182994,
+  "scope": "driver and synthetic fixture only",
+  "driver_sha256": "1cca97fd1fa08d6a08b3102c077fed56254636ffe67468f9d75f89df0b03c5f4",
+  "ready_sha256": "aeb17d6ed268df301cf9a88bf94b067bbb996887014154b24f62c5e00154ffd7",
+  "synthetic_result_sha256": "c61c9ebd37e42fe783dbd6fb53611ff3e828eb588ddcf9aebae544f383e25c3e",
+  "checks_passed": 31,
+  "actual_Opus_review_complete": false,
+  "real_data_reads": 0,
+  "GPU_calls": 0,
+  "actual_effect_measurements": 0,
+  "blocking": [
+    "root LOCK absent",
+    "actual Opus source review pending"
+  ],
+  "old_pilot_decision": "stop_quality maintained"
+}

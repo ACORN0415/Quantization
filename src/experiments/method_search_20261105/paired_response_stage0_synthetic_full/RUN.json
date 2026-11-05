@@ -1,0 +1,155 @@
+{
+  "status": "completed",
+  "started_monotonic": 545969.568595054,
+  "started_utc": 1793885680.805955,
+  "lock_sha256": "8f76526fdee8cb79a0bb4cd38741464302ff5b7fca43195f74b0cea526e8d3fc",
+  "supervisor_pid": 554162,
+  "stages": [
+    {
+      "label": "prepare_18_state",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_18_R_bf16",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_18_R_fp32",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_18_FULL",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_18_FIXED17",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_18_BIT8",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_18_RMU",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_18_RP3",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_18_RP3Q",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_18_FULLP1",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_18_RQ",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_18_FULLQ",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_18_FULLP1Q",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_18_FM3",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_18_FM8",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_18_PAIR17",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_18_PAIR29",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_18_PAIR43",
+      "exit_code": 0
+    },
+    {
+      "label": "prepare_24_state",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_24_R_bf16",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_24_R_fp32",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_24_FULL",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_24_FIXED17",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_24_BIT8",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_24_RMU",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_24_RP3",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_24_RP3Q",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_24_FULLP1",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_24_RQ",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_24_FULLQ",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_24_FULLP1Q",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_24_FM3",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_24_FM8",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_24_PAIR17",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_24_PAIR29",
+      "exit_code": 0
+    },
+    {
+      "label": "arm_24_PAIR43",
+      "exit_code": 0
+    }
+  ],
+  "decision": "stop_fixed_Gaussian_rank32",
+  "elapsed_seconds": 466.4807781210402
+}

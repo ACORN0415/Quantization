@@ -1,0 +1,27 @@
+{
+  "created_utc": "2026-11-05T13:44:14.233600+00:00",
+  "scope": "read-only checks of saved synthetic metadata/source hashes; no tensor loads or rerun",
+  "checks": {
+    "completed_68": true,
+    "unique_68": true,
+    "17_arms_4_endpoints": true,
+    "all_rows_valid": true,
+    "within_original_20min": true,
+    "bounded_max_RSS": true,
+    "bounded_disk": true,
+    "result_hash": true,
+    "actual_LOCK_RUN_absent": true,
+    "copied_3_sources_identical": true,
+    "no_denied_external_pt_attempts": true,
+    "all_recorded_tensor_events_inside_fixture": true
+  },
+  "synthetic_only": true,
+  "row_count": 68,
+  "io_audit_count": 44,
+  "actual_method_effect_measurements": 0,
+  "synthetic_decision_is_not_research_decision": true,
+  "source_v4_sha256": "f3e250ad6a0afa9b5147063fc90563ba23ce4d64d0b857489551c2eb7d3eab15",
+  "result_sha256": "cd82771ea7f61ef6e6eb8e6cd5dc955e87058802cae9d823b4ea421c5e39c6b4",
+  "fixture_status_sha256": "10e57a118f378d08993e1fc0ef2c78f4634eb7f8e8adcd9a3848cd151227a4e4",
+  "time_seconds_including_original_build_failure_and_fix": 967.929181098938
+}

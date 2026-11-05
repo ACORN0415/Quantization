@@ -1,0 +1,24 @@
+--- preserved_V3/diagnose.py
++++ active_V4/diagnose.py
+@@ -27,7 +27,11 @@
+         for block in iter(lambda:f.read(1024**2),b''):h.update(block)
+     return h.hexdigest()
+ 
+-def tsha(x):return hashlib.sha256(x.detach().contiguous().view(torch.uint8).numpy().tobytes()).hexdigest()
++def tsha(x):
++    flat=x.detach().contiguous().reshape(-1)
++    if flat.stride(0)!=1:
++        flat=torch.empty(flat.numel(),dtype=flat.dtype,device=flat.device).copy_(flat)
++    return hashlib.sha256(flat.view(torch.uint8).numpy().tobytes()).hexdigest()
+ def save_json(path,data):
+     path=Path(path);tmp=path.with_suffix(path.suffix+'.tmp')
+     tmp.write_text(json.dumps(data,indent=2,allow_nan=False)+'\n');tmp.replace(path)
+@@ -72,7 +76,7 @@
+         raise PermissionError('Pending contract, cap or arm mismatch')
+     if lock.get('total_seconds')!=LIMIT_SECONDS or lock.get('rss_bytes')!=LIMIT_RSS or lock.get('disk_bytes')!=LIMIT_DISK:
+         raise PermissionError('Resource contract mismatch')
+-    declared=json.loads((HERE/'SOURCES_V3.json').read_text())['sources']
++    declared=json.loads((HERE/'SOURCES_V4.json').read_text())['sources']
+     if lock.get('sources')!=declared:raise PermissionError('LOCK source set incomplete or differs from draft')
+     for p,h in declared.items():
+         if sha(p)!=h:raise PermissionError('Source hash changed: '+p)

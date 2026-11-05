@@ -1,0 +1,371 @@
+{
+  "status": "passed",
+  "cases": 24,
+  "rows": [
+    {
+      "dtype": "torch.bfloat16",
+      "case": "singleton_last",
+      "shape": [
+        12,
+        128,
+        1
+      ],
+      "stride": [
+        128,
+        1,
+        128
+      ],
+      "old_error": "RuntimeError('self.stride(-1) must be 1 to view BFloat16 as Byte (different element sizes), but got 128')",
+      "flatten_only_error": null,
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.bfloat16",
+      "case": "all_singleton_stride128",
+      "shape": [
+        1,
+        1
+      ],
+      "stride": [
+        128,
+        128
+      ],
+      "old_error": "RuntimeError('self.stride(-1) must be 1 to view BFloat16 as Byte (different element sizes), but got 128')",
+      "flatten_only_error": "RuntimeError('self.stride(-1) must be 1 to view BFloat16 as Byte (different element sizes), but got 128')",
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.bfloat16",
+      "case": "ordinary",
+      "shape": [
+        12,
+        128
+      ],
+      "stride": [
+        128,
+        1
+      ],
+      "old_error": null,
+      "flatten_only_error": null,
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.bfloat16",
+      "case": "transposed",
+      "shape": [
+        128,
+        12
+      ],
+      "stride": [
+        1,
+        128
+      ],
+      "old_error": null,
+      "flatten_only_error": null,
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.bfloat16",
+      "case": "scalar",
+      "shape": [],
+      "stride": [],
+      "old_error": "RuntimeError('self.dim() cannot be 0 to view BFloat16 as Byte (different element sizes)')",
+      "flatten_only_error": null,
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.bfloat16",
+      "case": "empty",
+      "shape": [
+        0
+      ],
+      "stride": [
+        1
+      ],
+      "old_error": null,
+      "flatten_only_error": null,
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.float16",
+      "case": "singleton_last",
+      "shape": [
+        12,
+        128,
+        1
+      ],
+      "stride": [
+        128,
+        1,
+        128
+      ],
+      "old_error": "RuntimeError('self.stride(-1) must be 1 to view Half as Byte (different element sizes), but got 128')",
+      "flatten_only_error": null,
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.float16",
+      "case": "all_singleton_stride128",
+      "shape": [
+        1,
+        1
+      ],
+      "stride": [
+        128,
+        128
+      ],
+      "old_error": "RuntimeError('self.stride(-1) must be 1 to view Half as Byte (different element sizes), but got 128')",
+      "flatten_only_error": "RuntimeError('self.stride(-1) must be 1 to view Half as Byte (different element sizes), but got 128')",
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.float16",
+      "case": "ordinary",
+      "shape": [
+        12,
+        128
+      ],
+      "stride": [
+        128,
+        1
+      ],
+      "old_error": null,
+      "flatten_only_error": null,
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.float16",
+      "case": "transposed",
+      "shape": [
+        128,
+        12
+      ],
+      "stride": [
+        1,
+        128
+      ],
+      "old_error": null,
+      "flatten_only_error": null,
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.float16",
+      "case": "scalar",
+      "shape": [],
+      "stride": [],
+      "old_error": "RuntimeError('self.dim() cannot be 0 to view Half as Byte (different element sizes)')",
+      "flatten_only_error": null,
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.float16",
+      "case": "empty",
+      "shape": [
+        0
+      ],
+      "stride": [
+        1
+      ],
+      "old_error": null,
+      "flatten_only_error": null,
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.float32",
+      "case": "singleton_last",
+      "shape": [
+        12,
+        128,
+        1
+      ],
+      "stride": [
+        128,
+        1,
+        128
+      ],
+      "old_error": "RuntimeError('self.stride(-1) must be 1 to view Float as Byte (different element sizes), but got 128')",
+      "flatten_only_error": null,
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.float32",
+      "case": "all_singleton_stride128",
+      "shape": [
+        1,
+        1
+      ],
+      "stride": [
+        128,
+        128
+      ],
+      "old_error": "RuntimeError('self.stride(-1) must be 1 to view Float as Byte (different element sizes), but got 128')",
+      "flatten_only_error": "RuntimeError('self.stride(-1) must be 1 to view Float as Byte (different element sizes), but got 128')",
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.float32",
+      "case": "ordinary",
+      "shape": [
+        12,
+        128
+      ],
+      "stride": [
+        128,
+        1
+      ],
+      "old_error": null,
+      "flatten_only_error": null,
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.float32",
+      "case": "transposed",
+      "shape": [
+        128,
+        12
+      ],
+      "stride": [
+        1,
+        128
+      ],
+      "old_error": null,
+      "flatten_only_error": null,
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.float32",
+      "case": "scalar",
+      "shape": [],
+      "stride": [],
+      "old_error": "RuntimeError('self.dim() cannot be 0 to view Float as Byte (different element sizes)')",
+      "flatten_only_error": null,
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.float32",
+      "case": "empty",
+      "shape": [
+        0
+      ],
+      "stride": [
+        1
+      ],
+      "old_error": null,
+      "flatten_only_error": null,
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.float64",
+      "case": "singleton_last",
+      "shape": [
+        12,
+        128,
+        1
+      ],
+      "stride": [
+        128,
+        1,
+        128
+      ],
+      "old_error": "RuntimeError('self.stride(-1) must be 1 to view Double as Byte (different element sizes), but got 128')",
+      "flatten_only_error": null,
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.float64",
+      "case": "all_singleton_stride128",
+      "shape": [
+        1,
+        1
+      ],
+      "stride": [
+        128,
+        128
+      ],
+      "old_error": "RuntimeError('self.stride(-1) must be 1 to view Double as Byte (different element sizes), but got 128')",
+      "flatten_only_error": "RuntimeError('self.stride(-1) must be 1 to view Double as Byte (different element sizes), but got 128')",
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.float64",
+      "case": "ordinary",
+      "shape": [
+        12,
+        128
+      ],
+      "stride": [
+        128,
+        1
+      ],
+      "old_error": null,
+      "flatten_only_error": null,
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.float64",
+      "case": "transposed",
+      "shape": [
+        128,
+        12
+      ],
+      "stride": [
+        1,
+        128
+      ],
+      "old_error": null,
+      "flatten_only_error": null,
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.float64",
+      "case": "scalar",
+      "shape": [],
+      "stride": [],
+      "old_error": "RuntimeError('self.dim() cannot be 0 to view Double as Byte (different element sizes)')",
+      "flatten_only_error": null,
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    },
+    {
+      "dtype": "torch.float64",
+      "case": "empty",
+      "shape": [
+        0
+      ],
+      "stride": [
+        1
+      ],
+      "old_error": null,
+      "flatten_only_error": null,
+      "fixed_matches_independent": true,
+      "input_preserved": true
+    }
+  ],
+  "driver_sha256": "f3e250ad6a0afa9b5147063fc90563ba23ce4d64d0b857489551c2eb7d3eab15",
+  "regression_sha256": "619fafa048fd7fa87510a977669d04940489caba70367d3b850d0fa34ea4ae4d",
+  "original_tensor_reads": 0,
+  "GPU_calls": 0,
+  "scope": "generic hash helper only; no full pipeline completion claim"
+}

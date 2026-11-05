@@ -1,0 +1,101 @@
+Paired response stage0 CPU 진단 등록 초안 — 실제 실행 미승인
+2026-11-05, Codex method_gap. 실제 Opus/root 검토와 LOCK 이전에는 실행할 수 없다.
+이 파일은 root PAIRED_DIAGNOSTIC_PROPOSAL_V2_ROOT_KO.txt의 구현 연결 명세다.
+현재 실제 캡처 열기/해시 재읽기/실자료 효과/GPU/모델 로드/커밋은 각각 0회다.
+기존 full-H 전체 생성 pilot의 stop_quality 결론은 유지한다.
+
+1. 결정과 후보
+R_fp32 K4/V4 위에 저장한 K-only paired rank32 Gaussian 응답 차분이 추가 저장 상한
+안에서 강한 등록 기준선보다 유리한지 판별한다. seed17/29/43을 모두 평가한다.
+Omega FP32 하나, 청크별 Dz/DN FP32, 공통 exponent offset FP64를 쓴다.
+core의 수정된 보상합 및 min_denominator_ratio=0.1, 해당 R_fp32 출력으로 fallback한다.
+FULL을 paired 기본값으로 바꾸지 않는다. 결과를 보고 seed/rank/threshold/팔을 바꾸지 않는다.
+
+2. 정보 시점과 입력
+INPUT_BINDINGS_DRAFT.json에 기존 manifest의 경로/해시/바이트를 전사했다.
+실제 파일의 존재·해시·내용은 이번 준비에서 재검증하지 않았다. 실행 때 해시와 크기를
+검증한 뒤 weights_only=True CPU 로드하며 파일 해시를 각 프로세스 종료 전 재확인한다.
+p0_s101 층18/24 c7의 q4680 전체만으로 original raw C=QᵀQ/4680을 FP64로 만든다.
+FULL의 rotated raw H/damped H는 common의 FP32 Q@H128 → FP64 통계와 동일하게 구성하고
+원래 저장 해시와 대조한다. lambda=.01 mean(diag), inverse Cholesky FP32를 사용한다.
+PSAC basis는 raw C의 FP64 eigh top eigenvectors를 BF16, eigenvalues를 FP32로 저장한다.
+rank1/3/8은 사전에 고정이다. raw C, rotated H, damped H, U는 서로 다른 이름으로 기록한다.
+BIT8 head는 p0 과거6청크 K와 동일 R_fp32 복원의 raw-C 가중 오차를 사용하며 argmax
+동점은 가장 작은 head다. p0 native_av나 평가 결과는 선택에 사용하지 않는다.
+평가는 기존 seed307의 층18/24×call0/3 네 endpoint. write1..6 call4 K/V가 과거이며
+current chunk7은 read별 BF16이다. q는 floor(arange128*4680/128)로 사전 고정한다.
+모든 Q/K는 post-RoPE 원좌표다. fixed17은 기존 p0 선택 R/choice를 그대로 재사용한다.
+
+3. 공통 참조 및 비교
+주 참조: Attn(Q128, raw pastK + currentK, common pastV4 + currentV_BF16).
+별도 full-BF16 참조는 pastV도 원본을 쓴다. 저장 native_av는 이미 Q128이며 full-BF16
+경로이므로 주 참조로 사용하지 않는다. CPU-vs-native 차이는 별도의 수치 floor 열이다.
+순수 attention_adapter는 q-block32 FP32 bmm/softmax/bmm와 같은 logits의 FP32 LSE를
+함께 반환한다. LSE는 과거6청크+현재 전체를 포함한다. paired는 [H,Q,Dv]/[H,Q],
+post-Wo 점수는 [Q,H,Dv]에서 계산한다. 주 SSE는 FP32 차분@Wo.T 후 FP64 제곱합이며
+bias는 차분에서 상쇄된다. K-only NSE의 분모는 새 K-only 참조 출력+bias 에너지다.
+기존 결과 NSE를 재사용하지 않는다.
+
+15개 팔:
+R_bf16, R_fp32, FULL, FIXED17, BIT8,
+RP3 (R_fp32+projectedPSAC3), FULLP1,
+RQ (R_fp32+QKSA), FULLQ, FULLP1Q,
+FM3/FM8 (R_fp32+full-M PSAC3/8), PAIR17/29/43.
+FULL은 O_offline 기존 패킷을 재사용한다. projected 행 선별은 실제 저장 BF16 U/FP32 λ가
+정의하는 M_r에 의한다. full-M은 raw C를 계속 보유하는 별도 비용점이다.
+QKSA는 계수1, 실제 저장 K4 scale 간격, Hadamard code 좌표, 과거 토큰에만 적용한다.
+FULLP1Q는 독립 균등오차를 보장하지 않는 단순 조합 대조로 남기며 사후 제외하지 않는다.
+
+4. byte 및 비용
+공통 과거 KV payload=54,097,926B/층/6청크. 추가 cap=1,806,361B.
+이는 peer 실제 K8 head 치환 코드 증가1,806,336B + head/header25B로 고정했다.
+공통 H128 FP32 65,536B는 별도이며 새 방식의 두 map으로 중복 청구하지 않는다.
+paired logical payload=1,403,904B. FULL U=786,432B. projectedPSAC3 dense 계획1,694,328B,
+FULL+projectedPSAC1 dense 계획1,800,600B. 실제 sparse 패킷 및 모든 공유 basis/λ/header를
+더해 산정한다. full-M raw C=1,572,864B도 persistent에 포함한다. FM3/FM8이 cap 안이면
+강한 주 비교에 포함하고 cap 밖이면 비용 높은 참고점으로 남긴다.
+실제 상태와 패킷을 저장·재로드해 해시/원소 바이트를 확인한다. paired 읽기는 재로드된
+Omega/Dz/DN/offset으로 수행한다. 새 FIXED17/BIT8 K패킷도 보존한다. 기존 R/FULL 패킷은
+외부 원파일의 해시 참조로 보존한다. 입력 보존은 파일 해시 전후 비교이며 이를 전체
+실자료 중간 메모리의 동등성 증명으로 표현하지 않는다.
+shared 통계/회전H/factor/eigh/basis/비트선택 비용을 나눠 기록한다. 검증·pack/decode가
+포함된 write/read CPU 시간과 독립 프로세스 peak RSS를 보고한다. 공통 사전 준비는
+실험용 합집합이므로 그 총합을 개별 방식의 단독 비용으로 귀속하지 않는다.
+재사용한 R/FULL 패킷의 encode 비용은 이번에 미측정이며 0이 아니다. FIXED17 선택 검색도
+재측정하지 않았으므로 기존 선택 비용을 무료로 취급하지 않는다.
+모든 GPU 실행/전송/allocator overhead는 미측정이다. logical payload는 총 RAM과 다르다.
+현재 검증·직렬화 오버헤드를 포함한 CPU 진단 시간을 최적 GPU 비용으로 해석하지 않는다.
+
+5. 실행 유효성
+원본 캡처를 열기 전에 supervisor clock 시작(LOCK/source hash 확인도 포함) 후 총45분.
+CPU4 threads, 팔별 순차 독립 process RSS8GiB, 새 파일 합2GiB, GPU/생성/다운로드0.
+최초 도달 상한에서 자기 child process group만 중지한다. 실패/상한 후 재시도하지 않는다.
+처음 생성한 RUN을 재사용해 다시 실행하지 않는다. 부재 LOCK/미완료 검토/미결 계약이면
+원본 파일 접근 전에 거부한다. LOCK에는 root_execution_authorized, actual_opus_review_complete,
+validity_policy_accepted=true, pending=[], review_evidence_sha256, 정확 source set/cap/arms/budget,
+input_bindings_sha256가 필요하다. 검토 증거 파일 해시도 직접 검증한다.
+연결 검사는 각 read의 실제 형상에서 효과 점수보다 먼저 수행한다: Khat=K paired 상태0
+및 출력 원소 바이트 동일, PSAC 활성행0/복원 동일, QKSA Δ0의 공통 CPU attention 동일.
+이는 codec bypass 검사이며 BF16 rotation roundtrip이 원본과 동일하다는 주장이 아니다.
+실제 scale FP16/finite/strict-positive 및 정확 frame padding/packed byte 수를 검사한다.
+위반 시 clamp/fallback으로 양자화 정책을 바꾸지 않고 invalid로 중지한다.
+R_bf16/R_fp32/FULL/FIXED17의 새 K-only SSE는 기존 fixed_rotation_control의 동일 SSE와
+math.isclose(rel_tol=1e-9, abs_tol=1e-9)로 비교한다. 불일치는 참조·산술 연결 무효이며
+새 효과로 해석하거나 결과를 본 뒤 허용오차를 완화하지 않는다.
+합성 연결 31검사는 기존 작은 tensor만 사용했다. 실제 전체 크기 처리시간/메모리와
+anchor 재현은 아직 미검증이며 45분 완료를 보장하지 않는다.
+
+6. 판정과 산출물
+모든15팔×4endpoint=60행이 있어야 한다. 중복/누락은 partial이다.
+각 endpoint에서 cap내 등록 기준선 중 가장 작은 SSE와 비교하여 3seed 각각 >=10% 감소,
+fallback<=0.1%, cap 준수, 유효성 모두 통과해야 continue_local_feasibility다.
+baseline SSE0이면 성공으로 세지 않는다. 하나라도 유효하게 미달하면
+stop_fixed_Gaussian_rank32로 종료한다. 상한/미완료는 partial_budget, 구현/참조 오류는 invalid.
+이 기준은 개발자료의 다음 자원 배분 기준이며 통계적 확증·신규성·전체생성 품질 입증이 아니다.
+원본 pilot의 stop_quality를 변경하지 않는다. 학습 feature 자동 확장도 하지 않는다.
+
+7. 현재 준비와 미결
+소스와 합성 준비만 작성했다. 실제 Opus의 최종 코드 검토 및 root LOCK은 없으며 실행불가다.
+상기 과학적 기준과 1,806,361B cap은 초안에서 고정했다. root가 검토 후 명시적으로 LOCK한다.
+합성검사 중 오류 기록: V2 최초 시도에서 failure-record f-string 따옴표 SyntaxError 발생,
+소스 로드 전에 종료; 문법 수정 후 V2/V3/V4는 모두 통과. 실제 자료에는 접근하지 않았다.

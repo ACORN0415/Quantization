@@ -1,0 +1,38 @@
+{
+  "status": "V2_prepared_source_frozen_for_final_independent_review",
+  "created_utc": 1793884444.0414164,
+  "source_editing_stopped": true,
+  "previous_ready_preserved": "DRIVER_READY.json",
+  "historical_snapshot": "snapshots/before_amendment_v2/SNAPSHOT.json",
+  "actual_Opus_principle_reviews_received": true,
+  "actual_Opus_final_source_review_complete": false,
+  "root_LOCK_exists": false,
+  "real_capture_reads": 0,
+  "real_tensor_hash_rechecks": 0,
+  "actual_effect_measurements": 0,
+  "GPU_calls": 0,
+  "commits": 0,
+  "checks_passed": 51,
+  "expected_cells": 68,
+  "arms": 17,
+  "cap_extra_bytes": 1806361,
+  "sha256": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/diagnose.py": "8009d8c71d6df9b1ac884337cab9e4d32ecb7459c00f101daf3c285e28cee78a",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/fixture_selftest.py": "04bc87a8104042bd6231e167a7e9610f16f135e83bdaeb368d0c1e36e1a3eb45",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/FIXTURE_SELFTEST_V7.json": "44e9b6d670de4b767583919777783092867d106f0e74d72b0c5522e445e87c91",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/SOURCES_V2.json": "2dc6bb8e92e0c2a2ccc09944398aa507e01e2d6e840abebae525c46f5b77f8cb",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/AMENDMENT_V2_KO.txt": "3fb5150316b15f1dae0fb03f86a66f3d18af35f343855ec313d545b34e513f0a",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/OMEGA_BINDINGS_V2.json": "f611cce10f052999bbef93daf3f21e18a786daace84d7715c0fe23f233493294",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/MEAN_FINAL_READY.json": "f4aa4c95f3ed331325138217d9a43cf95ae8524df0f11b6083d9b91dd2d3502d"
+  },
+  "pending": [
+    "actual Opus final modified-source review",
+    "root LOCK/validity acceptance"
+  ],
+  "unverified": [
+    "actual captured-input anchors, fallback and effects",
+    "real-size45min/RSS feasibility",
+    "no whole-generation/GPU performance evidence"
+  ],
+  "prior_pilot": "stop_quality unchanged"
+}

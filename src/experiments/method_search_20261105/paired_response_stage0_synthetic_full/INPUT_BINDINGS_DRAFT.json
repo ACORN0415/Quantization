@@ -1,0 +1,863 @@
+{
+  "status": "synthetic_only",
+  "Q128_indices": [
+    0,
+    36,
+    73,
+    109,
+    146,
+    182,
+    219,
+    255,
+    292,
+    329,
+    365,
+    402,
+    438,
+    475,
+    511,
+    548,
+    585,
+    621,
+    658,
+    694,
+    731,
+    767,
+    804,
+    840,
+    877,
+    914,
+    950,
+    987,
+    1023,
+    1060,
+    1096,
+    1133,
+    1170,
+    1206,
+    1243,
+    1279,
+    1316,
+    1352,
+    1389,
+    1425,
+    1462,
+    1499,
+    1535,
+    1572,
+    1608,
+    1645,
+    1681,
+    1718,
+    1755,
+    1791,
+    1828,
+    1864,
+    1901,
+    1937,
+    1974,
+    2010,
+    2047,
+    2084,
+    2120,
+    2157,
+    2193,
+    2230,
+    2266,
+    2303,
+    2340,
+    2376,
+    2413,
+    2449,
+    2486,
+    2522,
+    2559,
+    2595,
+    2632,
+    2669,
+    2705,
+    2742,
+    2778,
+    2815,
+    2851,
+    2888,
+    2925,
+    2961,
+    2998,
+    3034,
+    3071,
+    3107,
+    3144,
+    3180,
+    3217,
+    3254,
+    3290,
+    3327,
+    3363,
+    3400,
+    3436,
+    3473,
+    3510,
+    3546,
+    3583,
+    3619,
+    3656,
+    3692,
+    3729,
+    3765,
+    3802,
+    3839,
+    3875,
+    3912,
+    3948,
+    3985,
+    4021,
+    4058,
+    4095,
+    4131,
+    4168,
+    4204,
+    4241,
+    4277,
+    4314,
+    4350,
+    4387,
+    4424,
+    4460,
+    4497,
+    4533,
+    4570,
+    4606,
+    4643
+  ],
+  "layers": [
+    {
+      "layer": 18,
+      "p0_calibration": {
+        "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_p0.pt",
+        "sha256": "ffd8f1c972c0010f5d7695c44a01cf7918e9012416dcee5b0f62d29a380b6026",
+        "bytes": 220377987,
+        "provenance": "procedural synthetic tensor, not research capture"
+      },
+      "Wo": {
+        "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_wo.pt",
+        "sha256": "dd2f70bd4d0b43a1da8d477ca624a27ad90bf8ab19bf0e16595bd72c59318b17",
+        "bytes": 4722962,
+        "provenance": "procedural synthetic tensor, not research capture"
+      },
+      "writes": [
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_write1.pt",
+          "sha256": "f7a1378647001b953541e628864edc7b2b820a623775b90c73b6d024d55af976",
+          "bytes": 43132713,
+          "provenance": "procedural synthetic tensor, not research capture"
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_write2.pt",
+          "sha256": "269c7b945c5a154d735a9873b398b09cfdc42ea7ff9f34c77c5347673085538e",
+          "bytes": 43132713,
+          "provenance": "procedural synthetic tensor, not research capture"
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_write3.pt",
+          "sha256": "3c9244fb4a01501a9fa4cd85c83f2e0c44efec859348cc0f64a8c3ebda0b5025",
+          "bytes": 43132713,
+          "provenance": "procedural synthetic tensor, not research capture"
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_write4.pt",
+          "sha256": "b0bcbe5388ace6a2e5e61daf91a9378042b10f9756dede530c38dc494543f183",
+          "bytes": 43132713,
+          "provenance": "procedural synthetic tensor, not research capture"
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_write5.pt",
+          "sha256": "77208d901b4b059478f5b83c18063110d333ac25db4dbca9581adf95c5ecf111",
+          "bytes": 43132713,
+          "provenance": "procedural synthetic tensor, not research capture"
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_write6.pt",
+          "sha256": "a00c1d93f22e80a53202595a0931586b8c6230a983aeeb94869e06d0bc214871",
+          "bytes": 43132713,
+          "provenance": "procedural synthetic tensor, not research capture"
+        }
+      ],
+      "reads": [
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_read0.pt",
+          "sha256": "5b36d0f071721af25f574bcb1bbd941af222ad81e92b3e4f6686fdabff761b18",
+          "bytes": 43526240,
+          "provenance": "procedural synthetic tensor, not research capture"
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_read3.pt",
+          "sha256": "cf0a9c2971eb5b192e313bafdb4fd6abe05f350c649339e99aece2a9a4cb8eda",
+          "bytes": 43526240,
+          "provenance": "procedural synthetic tensor, not research capture"
+        }
+      ],
+      "packets": [
+        {
+          "chunk": 1,
+          "V": {
+            "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c1_V.pt",
+            "sha256": "3c560ddf434cb419b72253bc3d74ea72271412d7c415109baf6324b56c9c225f",
+            "bytes": 4502046,
+            "provenance": "procedural synthetic tensor, not research capture"
+          },
+          "V_tensor_payload_bytes": 4500480,
+          "K": {
+            "R_bf16": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c1_R_bf16.pt",
+                "sha256": "620274f130a8623a841885a987277cba6224f906fb002f0d9b180a4c95a69dcb",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "533c3d756a05badf815fcb1f0ea6a9e5f1ef6585f828effe14ea96b9651b6317",
+              "scale_sha256": "3994e740727e0bba3a43331db2ba5a0abb1f4993cd9f70575a21c0b776c4968d"
+            },
+            "R_fp32": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c1_R_fp32.pt",
+                "sha256": "52ff212171effcfb8040d26ad716e2f4167c052036e4b207ba92a8aaa6d7ead6",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "fa4ae0d4cc125571e9d3ad8b1157db5fda9d526df030b2256cbae432ce100619",
+              "scale_sha256": "3994e740727e0bba3a43331db2ba5a0abb1f4993cd9f70575a21c0b776c4968d"
+            },
+            "O_offline": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c1_O_offline.pt",
+                "sha256": "9e57b34b8532f5febe7b054b36bf04afd055894395142f68889d139b8669049b",
+                "bytes": 4517715,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "56b6198ef0c954e87e9784f1566f84fb929fb542c18c80ff4c8186c4113388bc",
+              "scale_sha256": "3994e740727e0bba3a43331db2ba5a0abb1f4993cd9f70575a21c0b776c4968d"
+            }
+          }
+        },
+        {
+          "chunk": 2,
+          "V": {
+            "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c2_V.pt",
+            "sha256": "de07efd8af6ac62e62c7f753fbc964fb022878ac02418fa3256d4f997247decc",
+            "bytes": 4502046,
+            "provenance": "procedural synthetic tensor, not research capture"
+          },
+          "V_tensor_payload_bytes": 4500480,
+          "K": {
+            "R_bf16": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c2_R_bf16.pt",
+                "sha256": "e824eec6d0eb341f83847bfbce44627e08d815a817485beac3848ef3662049a6",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "038f7f3491260d4e908620af881162c199c663c950a513656a8d5c287b233842",
+              "scale_sha256": "2823661332757c636f77f442835f5f3a084a777a2103d005400f4b56a449575d"
+            },
+            "R_fp32": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c2_R_fp32.pt",
+                "sha256": "8a1b2fa8a5ddda627d874712e09c40bd9182443f0087dd91f2e00f8e92ea8453",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "7225fce2f260b9cd399c30531c9b5cf1e4bf885b62d731dc895bd5da0eabd67b",
+              "scale_sha256": "2823661332757c636f77f442835f5f3a084a777a2103d005400f4b56a449575d"
+            },
+            "O_offline": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c2_O_offline.pt",
+                "sha256": "9dde7ad9d074b5a8afb068c4a624fb3943b2fa89b0a69ae208c6da2d0a43a364",
+                "bytes": 4517715,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "54a179a509e8aa73a95c2dcb472b660babd1a1c425f63d54958e072346e2b3a3",
+              "scale_sha256": "2823661332757c636f77f442835f5f3a084a777a2103d005400f4b56a449575d"
+            }
+          }
+        },
+        {
+          "chunk": 3,
+          "V": {
+            "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c3_V.pt",
+            "sha256": "b1bede6a76dff52ad9c96e998c541d671cf1514e26c7da2ba7c1f780f059bdb5",
+            "bytes": 4502046,
+            "provenance": "procedural synthetic tensor, not research capture"
+          },
+          "V_tensor_payload_bytes": 4500480,
+          "K": {
+            "R_bf16": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c3_R_bf16.pt",
+                "sha256": "c958367d4e28cc9e10240e6bffca2b56da19fe646344f6c36f5f02c2275b8e3f",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "96e07b898ad502fdab053e6c325c91da91e3adab84a38c36d35928c525860158",
+              "scale_sha256": "768bf02cf45071248fb50719734354563836bf5bfe1aaa015cfeb822cab7deba"
+            },
+            "R_fp32": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c3_R_fp32.pt",
+                "sha256": "f00d2b886434d97a05bfc35342bba4756d05a164bf327ab55b4cced04bfe83db",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "61b100e8962594d6b9b931dfd1f2b076bab67ee1f438214b26ed64b4cfd153e8",
+              "scale_sha256": "768bf02cf45071248fb50719734354563836bf5bfe1aaa015cfeb822cab7deba"
+            },
+            "O_offline": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c3_O_offline.pt",
+                "sha256": "87b6e6e07312de7a805f9eb7cacbb6805e06fa329e65624da066a45b9b935f79",
+                "bytes": 4517715,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "b804e9442c4d6b399204a8bc9121595f8411ef63ddfd96ea858bbacc7fca2d63",
+              "scale_sha256": "768bf02cf45071248fb50719734354563836bf5bfe1aaa015cfeb822cab7deba"
+            }
+          }
+        },
+        {
+          "chunk": 4,
+          "V": {
+            "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c4_V.pt",
+            "sha256": "a223499ae888f0409fc34b5b380e8fcd676071c33e7385ff8a3b7595bde3c1d7",
+            "bytes": 4502046,
+            "provenance": "procedural synthetic tensor, not research capture"
+          },
+          "V_tensor_payload_bytes": 4500480,
+          "K": {
+            "R_bf16": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c4_R_bf16.pt",
+                "sha256": "b641b57366f4de8c5ad45afb7dfac225ba5fb354227fb3116a93fd556ac9d606",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "795569ae354304cff89c1b5e64479e7e0cf93f959457bb8b1ed8c3384668a523",
+              "scale_sha256": "4ca46001bab2478d456144d62bdf824bd8964a600f19a72da8a9ef890fbcb7f5"
+            },
+            "R_fp32": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c4_R_fp32.pt",
+                "sha256": "b666d6e782d0762f39802c742b6c14c9e1d45021f36e38f82a96d4de7bee2e77",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "d9dbd934088fe69e38c816db12fe9169f7d7dde065352b840c4a8dac2d73283f",
+              "scale_sha256": "4ca46001bab2478d456144d62bdf824bd8964a600f19a72da8a9ef890fbcb7f5"
+            },
+            "O_offline": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c4_O_offline.pt",
+                "sha256": "be081d8e7acf2cebb24ba929a572186a0c53dfc5720a7373d7fb5b24c17f0762",
+                "bytes": 4517715,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "27e96d913ad15eb50ee5441eaa2c6d948ab4716caff90fb80bfe55c0377abecc",
+              "scale_sha256": "4ca46001bab2478d456144d62bdf824bd8964a600f19a72da8a9ef890fbcb7f5"
+            }
+          }
+        },
+        {
+          "chunk": 5,
+          "V": {
+            "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c5_V.pt",
+            "sha256": "098ca56a1bb42a01431147fdd3e764193ce4a90cf2cb36c2f0d961d13c7bf668",
+            "bytes": 4502046,
+            "provenance": "procedural synthetic tensor, not research capture"
+          },
+          "V_tensor_payload_bytes": 4500480,
+          "K": {
+            "R_bf16": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c5_R_bf16.pt",
+                "sha256": "ca6f63dc19e48ca97b1d94bb6053b0e6ddcf404429c78f0b6896095c352acac2",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "72a71b396e43abaf7e84ddd1e129b92f0c1b2689e2ccdce46fd2769d6ad66215",
+              "scale_sha256": "3ce2cfd98dfb695c825f919e9205869a9448dbcda01a64aa37fb82db98328224"
+            },
+            "R_fp32": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c5_R_fp32.pt",
+                "sha256": "7e78a9bd17fe112ebf9d2033f10c5c3448e6f598ebebe56a1bb9d69ff9859ae6",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "762560d08eb078d8deace2d1c129a8d9146eadb3a5f40744ecb02fdd9095d70b",
+              "scale_sha256": "3ce2cfd98dfb695c825f919e9205869a9448dbcda01a64aa37fb82db98328224"
+            },
+            "O_offline": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c5_O_offline.pt",
+                "sha256": "43248e28dd821e21d391e5d4a9815ee6fac8382d889296c79976fee7cf65f318",
+                "bytes": 4517715,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "ebf8723847cb56744022b4698df1caa8154c51ce0a66739cdd10245e139785e6",
+              "scale_sha256": "3ce2cfd98dfb695c825f919e9205869a9448dbcda01a64aa37fb82db98328224"
+            }
+          }
+        },
+        {
+          "chunk": 6,
+          "V": {
+            "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c6_V.pt",
+            "sha256": "8b4f8af7bf91d7a525337df24f95231243aab43fdff3b4fceff7ec86464f314f",
+            "bytes": 4502046,
+            "provenance": "procedural synthetic tensor, not research capture"
+          },
+          "V_tensor_payload_bytes": 4500480,
+          "K": {
+            "R_bf16": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c6_R_bf16.pt",
+                "sha256": "b8730f53f6b8436d190a72e707eaa905c3b4e0fc6b79f2cdfdd3d27de67e1e95",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "e2965fe9741af2c79df12448be14f6538da79003840af27dd64a513c1077384b",
+              "scale_sha256": "20d6c5c0e29f2d3bdb9375d86c2af07d96358fb0d4971c72b30483701485d5c9"
+            },
+            "R_fp32": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c6_R_fp32.pt",
+                "sha256": "f84a6d1def762915f0b4f27188dbac05e657292e472462f3f09873f0d696ea3c",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "60b729f9d71abc12715777d3428290babe071aec71a62a016cd9df861366f863",
+              "scale_sha256": "20d6c5c0e29f2d3bdb9375d86c2af07d96358fb0d4971c72b30483701485d5c9"
+            },
+            "O_offline": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c6_O_offline.pt",
+                "sha256": "0a8fd533157d9798be472968040a61d23b880144f8d129379f9894d32eebdeaf",
+                "bytes": 4517715,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "cdbdd7e13d437f9de7fe7f1a2ed2e9d98c8a6ff50780096a3bf47048905af901",
+              "scale_sha256": "20d6c5c0e29f2d3bdb9375d86c2af07d96358fb0d4971c72b30483701485d5c9"
+            }
+          }
+        }
+      ],
+      "offline_rotated_raw_H_sha256": "1ff0eddd2278be4927e6ea9743cf4fa69c4c24b8e7c37b37bf92a1ae04a06b7f",
+      "offline_rotated_damped_H_sha256": "cbbc07650db6749e2a77acf51834b13ab2bef81214b88945fd5c386a4f93b201",
+      "fixed_state_artifact": {
+        "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_fixed.pt",
+        "sha256": "aa3fdcace7a4985233e9f54b2ff1a31f630dbe0829afb5fdee825d6ffde129c0",
+        "bytes": 1574626,
+        "provenance": "procedural synthetic tensor, not research capture"
+      },
+      "fixed_matrix_sha256": "4b772749bd0ab3684fa37e870a0ca4a960581e288b634d60363cd8843047e535",
+      "fixed_U_sha256": "65be609c216e2a55e128ed9e2105226f1e49ce16aba9025cfbffa238e034a832",
+      "fixed_raw_C_sha256": "20f19d2a55c6273484bba01a71a4ddf4a74d590b94875e2c8e1f1dcb821f580e",
+      "anchors": {
+        "0": {
+          "R_bf16": 6.189462097309644e-07,
+          "R_fp32": 6.188110191177291e-07,
+          "FULL": 6.270621144970242e-07,
+          "FIXED17": 6.188110191177291e-07
+        },
+        "3": {
+          "R_bf16": 6.119345000073332e-07,
+          "R_fp32": 6.126475298226523e-07,
+          "FULL": 6.221284361944354e-07,
+          "FIXED17": 6.126475298226523e-07
+        }
+      }
+    },
+    {
+      "layer": 24,
+      "p0_calibration": {
+        "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_p0.pt",
+        "sha256": "cd460e7e51ce197e1d5f15fd387657b3e813208f884b456c4fd898388289d667",
+        "bytes": 220377987,
+        "provenance": "procedural synthetic tensor, not research capture"
+      },
+      "Wo": {
+        "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_wo.pt",
+        "sha256": "66c16353099cc6d2cd97ae6cf9e76e0e291e1b46648caf5eb37ce38b4d29d919",
+        "bytes": 4722962,
+        "provenance": "procedural synthetic tensor, not research capture"
+      },
+      "writes": [
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_write1.pt",
+          "sha256": "25bd2375eb1cc3179645ac11c7bd42ce168e0335e77b069642a84b9909ae61f9",
+          "bytes": 43132713,
+          "provenance": "procedural synthetic tensor, not research capture"
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_write2.pt",
+          "sha256": "34744d979f87f096f0d0040d82614a2c0093f78c1dd90f5434ef7ac09e17ab6a",
+          "bytes": 43132713,
+          "provenance": "procedural synthetic tensor, not research capture"
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_write3.pt",
+          "sha256": "187d833e3316f6636a4b7ef696391ff304d634b1c6a8d5b43986280a29965018",
+          "bytes": 43132713,
+          "provenance": "procedural synthetic tensor, not research capture"
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_write4.pt",
+          "sha256": "0f698a0e88dce47190ef083b0ce493a1b153f73c34c8eda4d2a10c0e0bc01d94",
+          "bytes": 43132713,
+          "provenance": "procedural synthetic tensor, not research capture"
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_write5.pt",
+          "sha256": "9cd448e6a0c1feb927b19ce51e6b1fa83219d53eb61669a0eb47104175c009b6",
+          "bytes": 43132713,
+          "provenance": "procedural synthetic tensor, not research capture"
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_write6.pt",
+          "sha256": "171914a95739fc0353bc108b4873d82a56b5fb9b707d35179edff4960a6f94da",
+          "bytes": 43132713,
+          "provenance": "procedural synthetic tensor, not research capture"
+        }
+      ],
+      "reads": [
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_read0.pt",
+          "sha256": "5b73ca5fe9738c64bf82951dd0f7d52decaf5a78dd9acc077a926d8b4bc92ff9",
+          "bytes": 43526240,
+          "provenance": "procedural synthetic tensor, not research capture"
+        },
+        {
+          "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_read3.pt",
+          "sha256": "396dbc394a1b9c58c57723290513e8a1784ed56e009fa7d1b55739dbf0faaa88",
+          "bytes": 43526240,
+          "provenance": "procedural synthetic tensor, not research capture"
+        }
+      ],
+      "packets": [
+        {
+          "chunk": 1,
+          "V": {
+            "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c1_V.pt",
+            "sha256": "1adf4c1b2ed83ef170adde7739fa56d039983f66f47f9fa541a8627204d7723c",
+            "bytes": 4502046,
+            "provenance": "procedural synthetic tensor, not research capture"
+          },
+          "V_tensor_payload_bytes": 4500480,
+          "K": {
+            "R_bf16": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c1_R_bf16.pt",
+                "sha256": "d3d30a40ce164629d176d95da8014734d4e4986af9a67fe669d88692b93d9a27",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "8ab5aa42d0d4459112ec3dfac3da386ee212606f2963e70bbb1913945343cac1",
+              "scale_sha256": "1eb1bdac2f43c66e1cf58cd3d986e8f434315b8f0f2323e9f79d9a40037e0873"
+            },
+            "R_fp32": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c1_R_fp32.pt",
+                "sha256": "e78d02ea2e70247ccd68b1636fba769d581a0eab911fa55f4d4e60d1d55a4b64",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "0f67e42cbcc4714207a1035b7450c87162fff60cee68a1c1d0c8228a4e8e637e",
+              "scale_sha256": "1eb1bdac2f43c66e1cf58cd3d986e8f434315b8f0f2323e9f79d9a40037e0873"
+            },
+            "O_offline": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c1_O_offline.pt",
+                "sha256": "82011c857d43c1310d7f73b4bae4325bc308c3b604c91eb99f5a9970ce99fc39",
+                "bytes": 4517715,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "66fa1ac1a4bc3122696af42f9b0cbc2e5c46883b59a7a39ec82dad506915dafe",
+              "scale_sha256": "1eb1bdac2f43c66e1cf58cd3d986e8f434315b8f0f2323e9f79d9a40037e0873"
+            }
+          }
+        },
+        {
+          "chunk": 2,
+          "V": {
+            "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c2_V.pt",
+            "sha256": "b839d1efcf54d9724517c9e7b907eec06bee543f5ac0b80a78311cae84978c5a",
+            "bytes": 4502046,
+            "provenance": "procedural synthetic tensor, not research capture"
+          },
+          "V_tensor_payload_bytes": 4500480,
+          "K": {
+            "R_bf16": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c2_R_bf16.pt",
+                "sha256": "af2b5c070fbe69fb62a0865df1524f57561014e3297c27e699d319346b330124",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "35aad48674fa78fcda2d0edff12c94a9a0db524de72257055e34ab17480d9778",
+              "scale_sha256": "b17eb55acd94073a1e19e78855b5caee04ddd5a4ad4e95db07caa5e28ad01701"
+            },
+            "R_fp32": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c2_R_fp32.pt",
+                "sha256": "e1552295522e12048a201a756a9f78d45454877d84093a6ef2a661372cd07130",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "afbdec0d125fd300f0f167900e3107f157a3f4f0f7263165360621cf51354b24",
+              "scale_sha256": "b17eb55acd94073a1e19e78855b5caee04ddd5a4ad4e95db07caa5e28ad01701"
+            },
+            "O_offline": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c2_O_offline.pt",
+                "sha256": "d5cdf4bb23a4a51ff09a5a83d281f332eff03867113b25fd219d0fa0c50a9b06",
+                "bytes": 4517715,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "8565b78dd927759c2f9b84c8cb93da203c0131ae3ec8b55a55fb37f3f2f7d4bc",
+              "scale_sha256": "b17eb55acd94073a1e19e78855b5caee04ddd5a4ad4e95db07caa5e28ad01701"
+            }
+          }
+        },
+        {
+          "chunk": 3,
+          "V": {
+            "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c3_V.pt",
+            "sha256": "af4265e11462769b3052d7e675d292f4d68ac35d87ee8bb35f68848e25fad48d",
+            "bytes": 4502046,
+            "provenance": "procedural synthetic tensor, not research capture"
+          },
+          "V_tensor_payload_bytes": 4500480,
+          "K": {
+            "R_bf16": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c3_R_bf16.pt",
+                "sha256": "4a41a11cf7bd33e838d9fb7cdd371f7039d65fb729230a15a27ceb7b2a30fd07",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "adeb250297eb518dcd20b8ab5d2324f2b2bb944e4d7495231d4dab1a5da6ca7b",
+              "scale_sha256": "f47f15495e48a793a4d60624f157750b99a52fe5d4eafce57a7cf46c739cf9e1"
+            },
+            "R_fp32": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c3_R_fp32.pt",
+                "sha256": "cd18823ed1a33b98c55cc703eac198529f33cb5b976cddf49ca8dc94f389b356",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "7340874d7fee72f55921b9bf2a10613fdf79d2eab0da50632099bba8fec845c1",
+              "scale_sha256": "f47f15495e48a793a4d60624f157750b99a52fe5d4eafce57a7cf46c739cf9e1"
+            },
+            "O_offline": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c3_O_offline.pt",
+                "sha256": "cd52820238dc7dfdf83b9103f714494d2677f670a4e7e7fe9bc8b13f0f47b01c",
+                "bytes": 4517715,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "0d079df5c192c8da60bbf75bce70c5df74225822996f14f6ce5020b7e962d3f1",
+              "scale_sha256": "f47f15495e48a793a4d60624f157750b99a52fe5d4eafce57a7cf46c739cf9e1"
+            }
+          }
+        },
+        {
+          "chunk": 4,
+          "V": {
+            "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c4_V.pt",
+            "sha256": "879ce4ed50ea24f658bb7386303f91ff379786099ef61d9b7d8802c4b128ebdc",
+            "bytes": 4502046,
+            "provenance": "procedural synthetic tensor, not research capture"
+          },
+          "V_tensor_payload_bytes": 4500480,
+          "K": {
+            "R_bf16": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c4_R_bf16.pt",
+                "sha256": "9a1561af4b75abeb7d1d56e05d12bfa7c1e94795396b1bca2206e501c59bd470",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "69e88ffa1143f62529c0335d1ed68a9c9bed3fc02b912d772b62c3f77be98a21",
+              "scale_sha256": "cdf294ef2322f9f66d1d5a814e423e792f0e4f2a0b84761505a6edbb9b40b599"
+            },
+            "R_fp32": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c4_R_fp32.pt",
+                "sha256": "7781a419fcc9a49eac77384e712f162c598caf1af90eb19e49c7508031bd2701",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "50f95329ce25db32d5e9b3483e603d8018a70476d3d9b80f60d00f4badf085b8",
+              "scale_sha256": "cdf294ef2322f9f66d1d5a814e423e792f0e4f2a0b84761505a6edbb9b40b599"
+            },
+            "O_offline": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c4_O_offline.pt",
+                "sha256": "614717abb625123693a9188e6bf1fe3bfc14912f69d529a137aebbed7d7eb52d",
+                "bytes": 4517715,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "8668583ec0ce83707650cccfeeaef83743d4e290a256c031e8738883c2b10910",
+              "scale_sha256": "cdf294ef2322f9f66d1d5a814e423e792f0e4f2a0b84761505a6edbb9b40b599"
+            }
+          }
+        },
+        {
+          "chunk": 5,
+          "V": {
+            "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c5_V.pt",
+            "sha256": "571d577abf6549b8e9ff0e1a368d2fab4926d34af9dba9e3b562e6b973b19852",
+            "bytes": 4502046,
+            "provenance": "procedural synthetic tensor, not research capture"
+          },
+          "V_tensor_payload_bytes": 4500480,
+          "K": {
+            "R_bf16": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c5_R_bf16.pt",
+                "sha256": "25df2cd51b2f154a8cd35409fa3e9a9a7efc3a00226f9596a2ddd5fc0742fe3c",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "7a2b8890101a3e117ddff4102b36ada7c0c9b4a8b9b6857882f86e7bf224969d",
+              "scale_sha256": "0c67dc7e7bb2ac0033dcc1274d02d188f1289c0dada2955f057cf49b5046e353"
+            },
+            "R_fp32": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c5_R_fp32.pt",
+                "sha256": "efd9120afa2daa7588d6bbfc584085c01a7c7aa778b7f98a07a152eff7b277a7",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "857eaa72de523e494213787682b6c003a36a0a17823ebac433dcebf78f1344d7",
+              "scale_sha256": "0c67dc7e7bb2ac0033dcc1274d02d188f1289c0dada2955f057cf49b5046e353"
+            },
+            "O_offline": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c5_O_offline.pt",
+                "sha256": "1f569a25685e8ce37e143159905110dc3e1a6d0ffda477f69ac457221c6d5762",
+                "bytes": 4517715,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "0761d2cfa7e7f9e9b0c93feadab233fb6dcbabd8f5d59fdc19d2a8c96cc7acb1",
+              "scale_sha256": "0c67dc7e7bb2ac0033dcc1274d02d188f1289c0dada2955f057cf49b5046e353"
+            }
+          }
+        },
+        {
+          "chunk": 6,
+          "V": {
+            "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c6_V.pt",
+            "sha256": "c5461de8f07830c44ceaaf01dd179bbc18cc37073f2c3aace52753135e1ccffe",
+            "bytes": 4502046,
+            "provenance": "procedural synthetic tensor, not research capture"
+          },
+          "V_tensor_payload_bytes": 4500480,
+          "K": {
+            "R_bf16": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c6_R_bf16.pt",
+                "sha256": "8f0bf66a404ac5f7751fb76495a4200bd2a45933f06d1f18994495048bf60e30",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "26a37f3b3e0c0d6de892fadff58f6e3dc9d480c73bf40e15e0264de6209115b7",
+              "scale_sha256": "899e1dc06a9daaf4f581621d3dfc6c62e92f382462382074e86c365303c2b489"
+            },
+            "R_fp32": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c6_R_fp32.pt",
+                "sha256": "cae361a7a953c39a02e6d8f1be234a9ae17becd25a52f8555e665b4830e72ddb",
+                "bytes": 4517694,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "80ccc6b6198d40c7b0621d62814bf66e0c6d65cba6e791b931084c6da8f1dbd1",
+              "scale_sha256": "899e1dc06a9daaf4f581621d3dfc6c62e92f382462382074e86c365303c2b489"
+            },
+            "O_offline": {
+              "artifact": {
+                "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c6_O_offline.pt",
+                "sha256": "11bd72c9e6b418e740eb8a3aab0e81f1a49b97aea0f2f9699d0f6a357dc8af34",
+                "bytes": 4517715,
+                "provenance": "procedural synthetic tensor, not research capture"
+              },
+              "payload_bytes": 4515841,
+              "code_sha256": "2e469c33a04021f871d1d06df1230dadd0ae3d614183aadff0445f17d789d159",
+              "scale_sha256": "899e1dc06a9daaf4f581621d3dfc6c62e92f382462382074e86c365303c2b489"
+            }
+          }
+        }
+      ],
+      "offline_rotated_raw_H_sha256": "405420713e5053bc5c940f9ed470b3cc8eb38f9e6900930770a77427777287b8",
+      "offline_rotated_damped_H_sha256": "c0dffcad6bf4c21814d65e7e209a86bfdbd97730b927fdb9122ede1761aebd7c",
+      "fixed_state_artifact": {
+        "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_fixed.pt",
+        "sha256": "373e914ec3bb5d60eee5c2b221072a5375c1951ee8d9abb43155a9871722e53f",
+        "bytes": 1574626,
+        "provenance": "procedural synthetic tensor, not research capture"
+      },
+      "fixed_matrix_sha256": "4b772749bd0ab3684fa37e870a0ca4a960581e288b634d60363cd8843047e535",
+      "fixed_U_sha256": "fcb11d073b91ed3f1cf59c16d46b82c27adcf9c901e17655616dd51cf3872436",
+      "fixed_raw_C_sha256": "79666b539a76a4386265dc767402e46f664a66199c4f23967dc28ebf60b6b64a",
+      "anchors": {
+        "0": {
+          "R_bf16": 6.193031232872516e-07,
+          "R_fp32": 6.196120858354172e-07,
+          "FULL": 6.268176519681674e-07,
+          "FIXED17": 6.196120858354172e-07
+        },
+        "3": {
+          "R_bf16": 6.183208005364242e-07,
+          "R_fp32": 6.169900958919661e-07,
+          "FULL": 6.236395367606029e-07,
+          "FIXED17": 6.169900958919661e-07
+        }
+      }
+    }
+  ]
+}

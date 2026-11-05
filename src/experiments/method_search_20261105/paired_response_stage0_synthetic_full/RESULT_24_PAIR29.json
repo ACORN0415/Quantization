@@ -1,0 +1,531 @@
+{
+  "status": "completed",
+  "arm": "PAIR29",
+  "layer": 24,
+  "rows": [
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "arm": "PAIR29",
+      "primary_Konly": {
+        "sse": 3.9094134013627725e-05,
+        "reference_energy": 26.434188383502327,
+        "nse": 1.4789231826019109e-06
+      },
+      "full_BF16_reference": {
+        "sse": 0.001454813575710325,
+        "reference_energy": 26.436648843424095,
+        "nse": 5.503018118244583e-05
+      },
+      "CPU_vs_native_floor": {
+        "sse": 6.852880485533834e-07,
+        "reference_energy": 26.43664279137455,
+        "nse": 2.5921901429063888e-08
+      },
+      "extra_persistent_bytes": 1403904,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1403904,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": {
+        "finite_min": -0.0002688653932020652,
+        "finite_p1": -0.000175526352708416,
+        "finite_p50": -4.723625336082073e-05,
+        "finite_p99": 8.374032385264997e-05,
+        "finite_max": 0.00010319767948165854,
+        "total_pairs": 1536,
+        "finite_pairs": 1536,
+        "nonfinite_pairs": 0,
+        "nan_pairs": 0,
+        "positive_infinity_pairs": 0,
+        "negative_infinity_pairs": 0,
+        "above_log10_fraction_all_pairs": 0.0,
+        "scope": "descriptive only; positive infinity included in upper-tail count"
+      },
+      "read_diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 0,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 0,
+        "exact_zero_bypass": false
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.3732412069803104,
+      "read_seconds": 0.5029310500249267
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "arm": "PAIR29",
+      "primary_Konly": {
+        "sse": 3.911201092384375e-05,
+        "reference_energy": 26.434423642049918,
+        "nse": 1.4795862945022669e-06
+      },
+      "full_BF16_reference": {
+        "sse": 0.0014551980010908201,
+        "reference_energy": 26.436859048024363,
+        "nse": 5.504428489206503e-05
+      },
+      "CPU_vs_native_floor": {
+        "sse": 6.799400293881487e-07,
+        "reference_energy": 26.436877296944623,
+        "nse": 2.5719377585745767e-08
+      },
+      "extra_persistent_bytes": 1403904,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1403904,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": {
+        "finite_min": -0.0002328102786051703,
+        "finite_p1": -0.0001767870985880347,
+        "finite_p50": -4.8370476786456405e-05,
+        "finite_p99": 7.892201928110956e-05,
+        "finite_max": 0.0001185169435683383,
+        "total_pairs": 1536,
+        "finite_pairs": 1536,
+        "nonfinite_pairs": 0,
+        "nan_pairs": 0,
+        "positive_infinity_pairs": 0,
+        "negative_infinity_pairs": 0,
+        "above_log10_fraction_all_pairs": 0.0,
+        "scope": "descriptive only; positive infinity included in upper-tail count"
+      },
+      "read_diagnostics": {
+        "state_nonfinite": 0,
+        "query_log_nonfinite": 0,
+        "normalized_log_nonfinite": 0,
+        "potential_unscaled_exp_overflow": 0,
+        "coefficient_exp_underflow": 0,
+        "base_exp_underflow": 0,
+        "unsafe_denominator_queries": 0,
+        "nonfinite_output_queries": 0,
+        "output_cast_nonfinite_queries": 0,
+        "fallback_queries": 0,
+        "exact_zero_bypass": false
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.645094848005101,
+      "read_seconds": 0.6176631619455293
+    }
+  ],
+  "state_artifact": {
+    "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/prepared/l24_PAIR29_state.pt",
+    "sha256": "c1d254b94fe3d97b2f19ac5198ab0fc52ebbe7139f5d7b995a819814b197ccc0",
+    "bytes": 1412652
+  },
+  "paired_manifest": {
+    "layer": 24,
+    "seed": 29,
+    "torch_version": "2.6.0+cu124",
+    "dtype": "torch.float32",
+    "device": "cpu",
+    "omega_sha256": "a25be49f998791bfb91bede867cfe3d850811573a71b26431a1cce591d75d5e7",
+    "omega_tensor_bytes": 196608,
+    "layer_independent_ownership": true,
+    "chunks": [
+      {
+        "layer": 24,
+        "seed": 29,
+        "omega_sha256": "a25be49f998791bfb91bede867cfe3d850811573a71b26431a1cce591d75d5e7",
+        "chunk_id": "1",
+        "tensors": {
+          "dz": {
+            "shape": [
+              12,
+              32
+            ],
+            "dtype": "torch.float32",
+            "sha256": "4d93e7feba8c93067f62c920046c569ddd085939495fe0eb9390ef5eacb81d91"
+          },
+          "dn": {
+            "shape": [
+              12,
+              32,
+              128
+            ],
+            "dtype": "torch.float32",
+            "sha256": "ea2d359fba8af90366292980874767b57014ee7108dff6064200cdd3ffbbb5d5"
+          },
+          "offset": {
+            "shape": [
+              12,
+              32
+            ],
+            "dtype": "torch.float64",
+            "sha256": "a92eb72724f227bed488ce95415cbc2c5f19c837b6869c476a5fd74789857e9f"
+          }
+        }
+      },
+      {
+        "layer": 24,
+        "seed": 29,
+        "omega_sha256": "a25be49f998791bfb91bede867cfe3d850811573a71b26431a1cce591d75d5e7",
+        "chunk_id": "2",
+        "tensors": {
+          "dz": {
+            "shape": [
+              12,
+              32
+            ],
+            "dtype": "torch.float32",
+            "sha256": "24d4900e5ab04c954defb167d775d117c938bc69c7c9c2dbc04ffdace29c0c31"
+          },
+          "dn": {
+            "shape": [
+              12,
+              32,
+              128
+            ],
+            "dtype": "torch.float32",
+            "sha256": "65fb7aa9d46929b7d0e6b309e9b9a675aa38efaa0b39a473af65e80d3de7f2f3"
+          },
+          "offset": {
+            "shape": [
+              12,
+              32
+            ],
+            "dtype": "torch.float64",
+            "sha256": "c741d80aa4dd834216d0d2d823e29c29c26cd0d6e322b4bd56f583f7d6bde2e6"
+          }
+        }
+      },
+      {
+        "layer": 24,
+        "seed": 29,
+        "omega_sha256": "a25be49f998791bfb91bede867cfe3d850811573a71b26431a1cce591d75d5e7",
+        "chunk_id": "3",
+        "tensors": {
+          "dz": {
+            "shape": [
+              12,
+              32
+            ],
+            "dtype": "torch.float32",
+            "sha256": "295f942ccdc0ba857f1807f0293121bdf001e99068706e11b0df26e77be053ee"
+          },
+          "dn": {
+            "shape": [
+              12,
+              32,
+              128
+            ],
+            "dtype": "torch.float32",
+            "sha256": "994f3331783c9d96834b8a8fa9dc383d959700871e4bb9639956dac9011d104e"
+          },
+          "offset": {
+            "shape": [
+              12,
+              32
+            ],
+            "dtype": "torch.float64",
+            "sha256": "93c85f83ae9dbbe24929ea4e8f1a2e5e617b00f8c1aa35b852dbebc61b95b9ea"
+          }
+        }
+      },
+      {
+        "layer": 24,
+        "seed": 29,
+        "omega_sha256": "a25be49f998791bfb91bede867cfe3d850811573a71b26431a1cce591d75d5e7",
+        "chunk_id": "4",
+        "tensors": {
+          "dz": {
+            "shape": [
+              12,
+              32
+            ],
+            "dtype": "torch.float32",
+            "sha256": "0eac339b3c04ffb13c9112077c952ef65f547200bad35f1a27ac62cb88481f3e"
+          },
+          "dn": {
+            "shape": [
+              12,
+              32,
+              128
+            ],
+            "dtype": "torch.float32",
+            "sha256": "6510dc8b12fb47445af2cedc80db2b13ee7a5d1986bbf2fa22a0e44f642497cb"
+          },
+          "offset": {
+            "shape": [
+              12,
+              32
+            ],
+            "dtype": "torch.float64",
+            "sha256": "15c3f892437efc5a33e0339a529ea8f953ba96d845ce1e95eb4edad6e5611483"
+          }
+        }
+      },
+      {
+        "layer": 24,
+        "seed": 29,
+        "omega_sha256": "a25be49f998791bfb91bede867cfe3d850811573a71b26431a1cce591d75d5e7",
+        "chunk_id": "5",
+        "tensors": {
+          "dz": {
+            "shape": [
+              12,
+              32
+            ],
+            "dtype": "torch.float32",
+            "sha256": "476980b08b690f032e66021ac00d6e27f7fc8d2d71370f81313d1da21bac7168"
+          },
+          "dn": {
+            "shape": [
+              12,
+              32,
+              128
+            ],
+            "dtype": "torch.float32",
+            "sha256": "1fcbbcce811fa42f8c192b46953c7a49f897641ea8324a6f98287382609e19d7"
+          },
+          "offset": {
+            "shape": [
+              12,
+              32
+            ],
+            "dtype": "torch.float64",
+            "sha256": "3fa3c5d6153af15d2a6c0bc3a6fa4abc4416981c8f1a4d34b6f10a1d590c5640"
+          }
+        }
+      },
+      {
+        "layer": 24,
+        "seed": 29,
+        "omega_sha256": "a25be49f998791bfb91bede867cfe3d850811573a71b26431a1cce591d75d5e7",
+        "chunk_id": "6",
+        "tensors": {
+          "dz": {
+            "shape": [
+              12,
+              32
+            ],
+            "dtype": "torch.float32",
+            "sha256": "68138c37bdad40410dd105c55475aeaf95b102ca9cc29e68188e8322a7fddd9f"
+          },
+          "dn": {
+            "shape": [
+              12,
+              32,
+              128
+            ],
+            "dtype": "torch.float32",
+            "sha256": "eeaedadc70ae2efb74abee789e7f75c0f59ef4235b5f2701a3076d3fcea9f8bc"
+          },
+          "offset": {
+            "shape": [
+              12,
+              32
+            ],
+            "dtype": "torch.float64",
+            "sha256": "6f0ee71df10ed2f927ed12ff4e83c2259b36814b237ebf017b6383e726e1be54"
+          }
+        }
+      }
+    ]
+  },
+  "packet_state_links": [],
+  "source_loads": [
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/prepared/layer24.pt",
+      "sha256": "ab34ac670d570c74d2c3c9d9a997829985cf19e87a8c2f1f872cb873b44977ae",
+      "load_hash_seconds": 0.005568820051848888
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_wo.pt",
+      "sha256": "66c16353099cc6d2cd97ae6cf9e76e0e291e1b46648caf5eb37ce38b4d29d919",
+      "load_hash_seconds": 0.0040631829760968685
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_write1.pt",
+      "sha256": "25bd2375eb1cc3179645ac11c7bd42ce168e0335e77b069642a84b9909ae61f9",
+      "load_hash_seconds": 0.031049179029650986
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c1_V.pt",
+      "sha256": "1adf4c1b2ed83ef170adde7739fa56d039983f66f47f9fa541a8627204d7723c",
+      "load_hash_seconds": 0.003403833950869739
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c1_R_fp32.pt",
+      "sha256": "e78d02ea2e70247ccd68b1636fba769d581a0eab911fa55f4d4e60d1d55a4b64",
+      "load_hash_seconds": 0.002790251048281789
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_write2.pt",
+      "sha256": "34744d979f87f096f0d0040d82614a2c0093f78c1dd90f5434ef7ac09e17ab6a",
+      "load_hash_seconds": 0.020870617940090597
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c2_V.pt",
+      "sha256": "b839d1efcf54d9724517c9e7b907eec06bee543f5ac0b80a78311cae84978c5a",
+      "load_hash_seconds": 0.0026063580298796296
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c2_R_fp32.pt",
+      "sha256": "e1552295522e12048a201a756a9f78d45454877d84093a6ef2a661372cd07130",
+      "load_hash_seconds": 0.002694893046282232
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_write3.pt",
+      "sha256": "187d833e3316f6636a4b7ef696391ff304d634b1c6a8d5b43986280a29965018",
+      "load_hash_seconds": 0.0308882889803499
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c3_V.pt",
+      "sha256": "af4265e11462769b3052d7e675d292f4d68ac35d87ee8bb35f68848e25fad48d",
+      "load_hash_seconds": 0.0028234919300302863
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c3_R_fp32.pt",
+      "sha256": "cd18823ed1a33b98c55cc703eac198529f33cb5b976cddf49ca8dc94f389b356",
+      "load_hash_seconds": 0.0026688840007409453
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_write4.pt",
+      "sha256": "0f698a0e88dce47190ef083b0ce493a1b153f73c34c8eda4d2a10c0e0bc01d94",
+      "load_hash_seconds": 0.027053902973420918
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c4_V.pt",
+      "sha256": "879ce4ed50ea24f658bb7386303f91ff379786099ef61d9b7d8802c4b128ebdc",
+      "load_hash_seconds": 0.0026177490362897515
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c4_R_fp32.pt",
+      "sha256": "7781a419fcc9a49eac77384e712f162c598caf1af90eb19e49c7508031bd2701",
+      "load_hash_seconds": 0.002763619995675981
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_write5.pt",
+      "sha256": "9cd448e6a0c1feb927b19ce51e6b1fa83219d53eb61669a0eb47104175c009b6",
+      "load_hash_seconds": 0.03042857302352786
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c5_V.pt",
+      "sha256": "571d577abf6549b8e9ff0e1a368d2fab4926d34af9dba9e3b562e6b973b19852",
+      "load_hash_seconds": 0.0027956209378317
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c5_R_fp32.pt",
+      "sha256": "efd9120afa2daa7588d6bbfc584085c01a7c7aa778b7f98a07a152eff7b277a7",
+      "load_hash_seconds": 0.0027370010502636433
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_write6.pt",
+      "sha256": "171914a95739fc0353bc108b4873d82a56b5fb9b707d35179edff4960a6f94da",
+      "load_hash_seconds": 0.027116609970107675
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c6_V.pt",
+      "sha256": "c5461de8f07830c44ceaaf01dd179bbc18cc37073f2c3aace52753135e1ccffe",
+      "load_hash_seconds": 0.002614001976326108
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c6_R_fp32.pt",
+      "sha256": "cae361a7a953c39a02e6d8f1be234a9ae17becd25a52f8555e665b4830e72ddb",
+      "load_hash_seconds": 0.0027867640601471066
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/prepared/l24_PAIR29_state.pt",
+      "sha256": "c1d254b94fe3d97b2f19ac5198ab0fc52ebbe7139f5d7b995a819814b197ccc0",
+      "load_hash_seconds": 0.0020565330050885677
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_read0.pt",
+      "sha256": "5b73ca5fe9738c64bf82951dd0f7d52decaf5a78dd9acc077a926d8b4bc92ff9",
+      "load_hash_seconds": 0.027400279068388045
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_read3.pt",
+      "sha256": "396dbc394a1b9c58c57723290513e8a1784ed56e009fa7d1b55739dbf0faaa88",
+      "load_hash_seconds": 0.02113524405285716
+    }
+  ],
+  "write_seconds_including_validation": 0.8280027261935174,
+  "write_diagnostics": [
+    {
+      "feature_nonfinite": 0,
+      "feature_exp_underflow": 0,
+      "naive_exp_subtraction_collision": 0,
+      "nonzero_log_difference_lost": 0,
+      "state_cast_underflow": 0,
+      "state_nonfinite": 0,
+      "tensor_payload_bytes": 201216
+    },
+    {
+      "feature_nonfinite": 0,
+      "feature_exp_underflow": 0,
+      "naive_exp_subtraction_collision": 0,
+      "nonzero_log_difference_lost": 0,
+      "state_cast_underflow": 0,
+      "state_nonfinite": 0,
+      "tensor_payload_bytes": 201216
+    },
+    {
+      "feature_nonfinite": 0,
+      "feature_exp_underflow": 0,
+      "naive_exp_subtraction_collision": 0,
+      "nonzero_log_difference_lost": 0,
+      "state_cast_underflow": 0,
+      "state_nonfinite": 0,
+      "tensor_payload_bytes": 201216
+    },
+    {
+      "feature_nonfinite": 0,
+      "feature_exp_underflow": 0,
+      "naive_exp_subtraction_collision": 0,
+      "nonzero_log_difference_lost": 0,
+      "state_cast_underflow": 0,
+      "state_nonfinite": 0,
+      "tensor_payload_bytes": 201216
+    },
+    {
+      "feature_nonfinite": 0,
+      "feature_exp_underflow": 0,
+      "naive_exp_subtraction_collision": 0,
+      "nonzero_log_difference_lost": 0,
+      "state_cast_underflow": 0,
+      "state_nonfinite": 0,
+      "tensor_payload_bytes": 201216
+    },
+    {
+      "feature_nonfinite": 0,
+      "feature_exp_underflow": 0,
+      "naive_exp_subtraction_collision": 0,
+      "nonzero_log_difference_lost": 0,
+      "state_cast_underflow": 0,
+      "state_nonfinite": 0,
+      "tensor_payload_bytes": 201216
+    }
+  ],
+  "legacy_K_encode_cost": "not remeasured: reused artifact, never zero cost",
+  "shared_tensor_bytes": 196608,
+  "correction_packet_tensor_bytes": 1207296,
+  "cache_KV_payload_bytes": 54097926,
+  "extra_persistent_bytes": 1403904,
+  "common_H128_bytes_separate": 65536,
+  "worker_wall_seconds": 12.553071350906976,
+  "peak_RSS_bytes": 3423080448
+}

@@ -1,0 +1,316 @@
+{
+  "status": "completed",
+  "arm": "FULLP1Q",
+  "layer": 24,
+  "rows": [
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "arm": "FULLP1Q",
+      "primary_Konly": {
+        "sse": 6.234764965125328e-07,
+        "reference_energy": 26.434188383502327,
+        "nse": 2.358598975944526e-08
+      },
+      "full_BF16_reference": {
+        "sse": 0.0014118718169311133,
+        "reference_energy": 26.436648843424095,
+        "nse": 5.3405854323412294e-05
+      },
+      "CPU_vs_native_floor": {
+        "sse": 6.852880485533834e-07,
+        "reference_energy": 26.43664279137455,
+        "nse": 2.5921901429063888e-08
+      },
+      "extra_persistent_bytes": 1800600,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1800600,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.660043057985604,
+      "read_seconds": 1.1758187940577045
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "arm": "FULLP1Q",
+      "primary_Konly": {
+        "sse": 6.203889205720598e-07,
+        "reference_energy": 26.434423642049918,
+        "nse": 2.3468978517284225e-08
+      },
+      "full_BF16_reference": {
+        "sse": 0.0014118637861063822,
+        "reference_energy": 26.436859048024363,
+        "nse": 5.340512590930848e-05
+      },
+      "CPU_vs_native_floor": {
+        "sse": 6.799400293881487e-07,
+        "reference_energy": 26.436877296944623,
+        "nse": 2.5719377585745767e-08
+      },
+      "extra_persistent_bytes": 1800600,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1800600,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.6153228629846126,
+      "read_seconds": 1.2182285799644887
+    }
+  ],
+  "state_artifact": {
+    "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/prepared/l24_FULLP1Q_state.pt",
+    "sha256": "3b1d3a115ff045062cab23083e4b17d3b121ccd6307a4b79b80b5b631cb0b93f",
+    "bytes": 2131226
+  },
+  "paired_manifest": null,
+  "packet_state_links": [],
+  "source_loads": [
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/prepared/layer24.pt",
+      "sha256": "ab34ac670d570c74d2c3c9d9a997829985cf19e87a8c2f1f872cb873b44977ae",
+      "load_hash_seconds": 0.005917691043578088
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_wo.pt",
+      "sha256": "66c16353099cc6d2cd97ae6cf9e76e0e291e1b46648caf5eb37ce38b4d29d919",
+      "load_hash_seconds": 0.004376001073978841
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_write1.pt",
+      "sha256": "25bd2375eb1cc3179645ac11c7bd42ce168e0335e77b069642a84b9909ae61f9",
+      "load_hash_seconds": 0.03169279906433076
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c1_V.pt",
+      "sha256": "1adf4c1b2ed83ef170adde7739fa56d039983f66f47f9fa541a8627204d7723c",
+      "load_hash_seconds": 0.003496411954984069
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c1_O_offline.pt",
+      "sha256": "82011c857d43c1310d7f73b4bae4325bc308c3b604c91eb99f5a9970ce99fc39",
+      "load_hash_seconds": 0.002762506017461419
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_write2.pt",
+      "sha256": "34744d979f87f096f0d0040d82614a2c0093f78c1dd90f5434ef7ac09e17ab6a",
+      "load_hash_seconds": 0.020705385017208755
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c2_V.pt",
+      "sha256": "b839d1efcf54d9724517c9e7b907eec06bee543f5ac0b80a78311cae84978c5a",
+      "load_hash_seconds": 0.0027650600532069802
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c2_O_offline.pt",
+      "sha256": "d5cdf4bb23a4a51ff09a5a83d281f332eff03867113b25fd219d0fa0c50a9b06",
+      "load_hash_seconds": 0.0029081259854137897
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_write3.pt",
+      "sha256": "187d833e3316f6636a4b7ef696391ff304d634b1c6a8d5b43986280a29965018",
+      "load_hash_seconds": 0.02086905005853623
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c3_V.pt",
+      "sha256": "af4265e11462769b3052d7e675d292f4d68ac35d87ee8bb35f68848e25fad48d",
+      "load_hash_seconds": 0.002741244970820844
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c3_O_offline.pt",
+      "sha256": "cd52820238dc7dfdf83b9103f714494d2677f670a4e7e7fe9bc8b13f0f47b01c",
+      "load_hash_seconds": 0.0027833449421450496
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_write4.pt",
+      "sha256": "0f698a0e88dce47190ef083b0ce493a1b153f73c34c8eda4d2a10c0e0bc01d94",
+      "load_hash_seconds": 0.02058864792343229
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c4_V.pt",
+      "sha256": "879ce4ed50ea24f658bb7386303f91ff379786099ef61d9b7d8802c4b128ebdc",
+      "load_hash_seconds": 0.0028508990071713924
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c4_O_offline.pt",
+      "sha256": "614717abb625123693a9188e6bf1fe3bfc14912f69d529a137aebbed7d7eb52d",
+      "load_hash_seconds": 0.0028427940560504794
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_write5.pt",
+      "sha256": "9cd448e6a0c1feb927b19ce51e6b1fa83219d53eb61669a0eb47104175c009b6",
+      "load_hash_seconds": 0.020725812995806336
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c5_V.pt",
+      "sha256": "571d577abf6549b8e9ff0e1a368d2fab4926d34af9dba9e3b562e6b973b19852",
+      "load_hash_seconds": 0.0027546510100364685
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c5_O_offline.pt",
+      "sha256": "1f569a25685e8ce37e143159905110dc3e1a6d0ffda477f69ac457221c6d5762",
+      "load_hash_seconds": 0.0028793030651286244
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_write6.pt",
+      "sha256": "171914a95739fc0353bc108b4873d82a56b5fb9b707d35179edff4960a6f94da",
+      "load_hash_seconds": 0.020660420996136963
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c6_V.pt",
+      "sha256": "c5461de8f07830c44ceaaf01dd179bbc18cc37073f2c3aace52753135e1ccffe",
+      "load_hash_seconds": 0.00274057500064373
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_c6_O_offline.pt",
+      "sha256": "11bd72c9e6b418e740eb8a3aab0e81f1a49b97aea0f2f9699d0f6a357dc8af34",
+      "load_hash_seconds": 0.0028524930821731687
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/prepared/l24_FULLP1Q_state.pt",
+      "sha256": "3b1d3a115ff045062cab23083e4b17d3b121ccd6307a4b79b80b5b631cb0b93f",
+      "load_hash_seconds": 0.003572152927517891
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_read0.pt",
+      "sha256": "5b73ca5fe9738c64bf82951dd0f7d52decaf5a78dd9acc077a926d8b4bc92ff9",
+      "load_hash_seconds": 0.02124368806835264
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l24_read3.pt",
+      "sha256": "396dbc394a1b9c58c57723290513e8a1784ed56e009fa7d1b55739dbf0faaa88",
+      "load_hash_seconds": 0.021142362034879625
+    }
+  ],
+  "write_seconds_including_validation": 0.4937898488715291,
+  "write_diagnostics": [
+    {
+      "dense_bytes": 168508,
+      "sparse_bytes": 279613,
+      "selected_bytes": 168508,
+      "sparse_index_width_bytes": 2,
+      "active_rows": 55917,
+      "total_rows": 56160,
+      "clipped_coefficients": 740,
+      "basis_bytes_shared": 3072,
+      "eigenvalue_bytes_shared": 48,
+      "metric_tensor_bytes_shared": 3120,
+      "retained_full_moment_bytes": 0,
+      "before_query_error": 0.16797428817424812,
+      "after_screened_query_error": 0.00030488716788510105,
+      "metric_definition": "stored_U_BF16_diag_stored_lambda_FP32_UT"
+    },
+    {
+      "dense_bytes": 168508,
+      "sparse_bytes": 279803,
+      "selected_bytes": 168508,
+      "sparse_index_width_bytes": 2,
+      "active_rows": 55955,
+      "total_rows": 56160,
+      "clipped_coefficients": 721,
+      "basis_bytes_shared": 3072,
+      "eigenvalue_bytes_shared": 48,
+      "metric_tensor_bytes_shared": 3120,
+      "retained_full_moment_bytes": 0,
+      "before_query_error": 0.1668001830263244,
+      "after_screened_query_error": 0.0003053330738620163,
+      "metric_definition": "stored_U_BF16_diag_stored_lambda_FP32_UT"
+    },
+    {
+      "dense_bytes": 168508,
+      "sparse_bytes": 279788,
+      "selected_bytes": 168508,
+      "sparse_index_width_bytes": 2,
+      "active_rows": 55952,
+      "total_rows": 56160,
+      "clipped_coefficients": 696,
+      "basis_bytes_shared": 3072,
+      "eigenvalue_bytes_shared": 48,
+      "metric_tensor_bytes_shared": 3120,
+      "retained_full_moment_bytes": 0,
+      "before_query_error": 0.16776676648956446,
+      "after_screened_query_error": 0.00030510176299255727,
+      "metric_definition": "stored_U_BF16_diag_stored_lambda_FP32_UT"
+    },
+    {
+      "dense_bytes": 168508,
+      "sparse_bytes": 279663,
+      "selected_bytes": 168508,
+      "sparse_index_width_bytes": 2,
+      "active_rows": 55927,
+      "total_rows": 56160,
+      "clipped_coefficients": 748,
+      "basis_bytes_shared": 3072,
+      "eigenvalue_bytes_shared": 48,
+      "metric_tensor_bytes_shared": 3120,
+      "retained_full_moment_bytes": 0,
+      "before_query_error": 0.16900424185733826,
+      "after_screened_query_error": 0.0003056437677771966,
+      "metric_definition": "stored_U_BF16_diag_stored_lambda_FP32_UT"
+    },
+    {
+      "dense_bytes": 168508,
+      "sparse_bytes": 279603,
+      "selected_bytes": 168508,
+      "sparse_index_width_bytes": 2,
+      "active_rows": 55915,
+      "total_rows": 56160,
+      "clipped_coefficients": 738,
+      "basis_bytes_shared": 3072,
+      "eigenvalue_bytes_shared": 48,
+      "metric_tensor_bytes_shared": 3120,
+      "retained_full_moment_bytes": 0,
+      "before_query_error": 0.167131031449003,
+      "after_screened_query_error": 0.0003052930430235589,
+      "metric_definition": "stored_U_BF16_diag_stored_lambda_FP32_UT"
+    },
+    {
+      "dense_bytes": 168508,
+      "sparse_bytes": 279718,
+      "selected_bytes": 168508,
+      "sparse_index_width_bytes": 2,
+      "active_rows": 55938,
+      "total_rows": 56160,
+      "clipped_coefficients": 713,
+      "basis_bytes_shared": 3072,
+      "eigenvalue_bytes_shared": 48,
+      "metric_tensor_bytes_shared": 3120,
+      "retained_full_moment_bytes": 0,
+      "before_query_error": 0.16758217326582178,
+      "after_screened_query_error": 0.000304238311274125,
+      "metric_definition": "stored_U_BF16_diag_stored_lambda_FP32_UT"
+    }
+  ],
+  "legacy_K_encode_cost": "not remeasured: reused artifact, never zero cost",
+  "shared_tensor_bytes": 789552,
+  "correction_packet_tensor_bytes": 1011048,
+  "cache_KV_payload_bytes": 54097926,
+  "extra_persistent_bytes": 1800600,
+  "common_H128_bytes_separate": 65536,
+  "worker_wall_seconds": 13.894650461967103,
+  "peak_RSS_bytes": 3619479552
+}

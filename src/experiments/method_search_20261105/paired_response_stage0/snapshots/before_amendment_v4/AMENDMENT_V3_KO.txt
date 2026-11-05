@@ -1,0 +1,41 @@
+Stage0 V3 — PAIR 초기 제어 경로의 미정의 reloaded 변수 수정
+2026-11-05. root가 발견한 실행 결함의 한정 수정이며 실자료/효과/GPU/커밋0.
+
+결함과 기존 검사 범위
+V2 evaluate_layer는 PAIR 생성 직후 reloaded['paired_manifest']를 참조했다.
+reloaded는 이후 write 완료·save_tensor 뒤에만 정의되므로 모든 PAIR 팔이 첫 쓰기 전
+UnboundLocalError를 내는 결함이다. V2 소스/READY/V7/관련 기록을
+snapshots/before_amendment_v3/에 복사·해시 보존했고 원본 V2 결과/READY는 수정하지 않았다.
+기존 AST 파싱과 합성 helper 51건 통과는 전체 evaluate_layer 실행 검증이 아니었다.
+이 결함이 유효성 확인 이전 실자료 실행을 막았을 것이지만, 작동하는 드라이버로 볼 수 없다.
+
+최소 수정
+초기 PAIR 생성 직후에는 make_paired_manifest(pair, layer, seed) 자체로 planned Omega
+해시/환경을 검사한다. 아직 존재하지 않는 persisted state와 비교하지 않는다.
+실제 save_tensor/reload 이후의 manifest 동등성 비교는 그대로 유지한다.
+다른 수식/팔/입력/비트/scale/cap/gate/예산은 수정하지 않았다.
+행정 변경은 active source manifest 경로를 SOURCES_V3.json으로 옮긴 것뿐이다.
+AMENDMENT_V3_SOURCE.patch가 전체 driver diff다.
+
+실제 초기 제어 경로 회귀
+pair_entry_regression.py가 evaluate_layer 함수 본문을 직접 호출했다.
+가짜 DataAccess는 빈 prepared 상태, 정상 [1536,1536] FP32 Wo/[1536] bias를 제공한다.
+첫 write load는 의도된 FirstWriteReached 예외로 막아 실제 K/V나 원자료를 만들거나
+읽지 않는다. 보존된 V2의 코드도 그대로 compile/exec하되 __file__만 원래 live 위치로
+지정해 동일한 frozen relative helper 경로를 사용한다. 함수 본문/분기는 monkeypatch하지 않는다.
+PAIR17/29/43 각각:
+- 보존 V2: prepared/Wo까지만 접근, reloaded UnboundLocalError, first write 미도달.
+- 수정 V3: planned Omega 검사를 통과, budget guard 1회, first_write sentinel 도달.
+총6사례 기대 결과 일치. 원본 .pt 열기0, 실제 효과0, CUDA 초기화0.
+PAIR_ENTRY_REGRESSION_V1.json에 예외 종류·텍스트·접근 순서·소스 해시를 보존했다.
+기존 합성 연결 검사도 별도 fixture_selftest_v3.py/FIXTURE_SELFTEST_V8.json으로 현재 소스에서
+51건 통과했다. V7 원결과는 수정하지 않았다.
+
+범위와 활성 기록
+이 회귀는 초기 제어 경로만 검증한다. write 처리 이후 전체 효과 루프, 실제 캡처 연결,
+45분/RSS8GiB 완료, 실제 점수는 여전히 미검증이다. 테스트 수가 전체 검증을 뜻하지 않는다.
+활성 기록: diagnose.py, SOURCES_V3.json, DRIVER_READY_V3.json,
+AMENDMENT_V3_KO.txt, PAIR_ENTRY_REGRESSION_V1.json, FIXTURE_SELFTEST_V8.json.
+V2 amendment의17팔/68행/byte 분류·fallback·Omega/mean 기준을 그대로 승계한다.
+최종 실제 Opus 소스 검토와 root LOCK은 여전히 별도이며 실행을 시작하지 않는다.
+이전 full-H pilot stop_quality는 변하지 않는다.

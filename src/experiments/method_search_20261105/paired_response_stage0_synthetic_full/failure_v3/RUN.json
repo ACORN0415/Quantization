@@ -1,0 +1,15 @@
+{
+  "status": "invalid",
+  "started_monotonic": 545705.044116753,
+  "started_utc": 1793885416.2814353,
+  "lock_sha256": "5f34ee71d59fc24430fa424a3d0191520d324c6e93e8c74a1cbe8459b4532fef",
+  "supervisor_pid": 552182,
+  "stages": [
+    {
+      "label": "prepare_18_state",
+      "exit_code": 1
+    }
+  ],
+  "error": "RuntimeError('Stage failed: prepare_18_state')",
+  "elapsed_seconds": 2.6196813309798017
+}

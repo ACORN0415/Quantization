@@ -1,0 +1,92 @@
+{
+  "status": "passed",
+  "cases": 6,
+  "observations": [
+    {
+      "source": "preserved_invalid_V2",
+      "arm": "PAIR17",
+      "exception_type": "UnboundLocalError",
+      "exception_text": "local variable 'reloaded' referenced before assignment",
+      "synthetic_load_sequence": [
+        "prepared",
+        "Wo"
+      ],
+      "budget_guards": 0,
+      "expected_observation": true
+    },
+    {
+      "source": "preserved_invalid_V2",
+      "arm": "PAIR29",
+      "exception_type": "UnboundLocalError",
+      "exception_text": "local variable 'reloaded' referenced before assignment",
+      "synthetic_load_sequence": [
+        "prepared",
+        "Wo"
+      ],
+      "budget_guards": 0,
+      "expected_observation": true
+    },
+    {
+      "source": "preserved_invalid_V2",
+      "arm": "PAIR43",
+      "exception_type": "UnboundLocalError",
+      "exception_text": "local variable 'reloaded' referenced before assignment",
+      "synthetic_load_sequence": [
+        "prepared",
+        "Wo"
+      ],
+      "budget_guards": 0,
+      "expected_observation": true
+    },
+    {
+      "source": "active_V3",
+      "arm": "PAIR17",
+      "exception_type": "FirstWriteReached",
+      "exception_text": "stop before any K/V data or score",
+      "synthetic_load_sequence": [
+        "prepared",
+        "Wo",
+        "first_write"
+      ],
+      "budget_guards": 1,
+      "expected_observation": true
+    },
+    {
+      "source": "active_V3",
+      "arm": "PAIR29",
+      "exception_type": "FirstWriteReached",
+      "exception_text": "stop before any K/V data or score",
+      "synthetic_load_sequence": [
+        "prepared",
+        "Wo",
+        "first_write"
+      ],
+      "budget_guards": 1,
+      "expected_observation": true
+    },
+    {
+      "source": "active_V3",
+      "arm": "PAIR43",
+      "exception_type": "FirstWriteReached",
+      "exception_text": "stop before any K/V data or score",
+      "synthetic_load_sequence": [
+        "prepared",
+        "Wo",
+        "first_write"
+      ],
+      "budget_guards": 1,
+      "expected_observation": true
+    }
+  ],
+  "source_sha256": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/snapshots/before_amendment_v3/diagnose.py": "8009d8c71d6df9b1ac884337cab9e4d32ecb7459c00f101daf3c285e28cee78a",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/diagnose.py": "d3e2ca259bb2895d44218095ed95f6b810350ac2ceedba55de59063375f57018",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/pair_entry_regression.py": "8bcec4c34863bb8e3b51909d1574964d872c285f5be5c261e5392884907f3c21"
+  },
+  "scope": "actual evaluate_layer entry path only, no completed effect loop or full real-data runtime validation",
+  "synthetic_source_locator": "__file__ is live original location for preserved source relative helper paths",
+  "original_tensor_file_reads": 0,
+  "new_GPU_calls": 0,
+  "actual_effect_measurements": 0,
+  "elapsed_seconds": 0.1715547100175172
+}

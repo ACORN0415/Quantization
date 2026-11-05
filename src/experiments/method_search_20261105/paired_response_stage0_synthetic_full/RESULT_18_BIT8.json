@@ -1,0 +1,262 @@
+{
+  "status": "completed",
+  "arm": "BIT8",
+  "layer": 18,
+  "rows": [
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "arm": "BIT8",
+      "primary_Konly": {
+        "sse": 5.662061738961732e-07,
+        "reference_energy": 26.436962795118642,
+        "nse": 2.141721718505116e-08
+      },
+      "full_BF16_reference": {
+        "sse": 0.0014845923830402682,
+        "reference_energy": 26.440985763727973,
+        "nse": 5.614739164062665e-05
+      },
+      "CPU_vs_native_floor": {
+        "sse": 7.052791489881747e-07,
+        "reference_energy": 26.440964836522014,
+        "nse": 2.6673729697412416e-08
+      },
+      "extra_persistent_bytes": 1806361,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1806361,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.582149479072541,
+      "read_seconds": 0.5724010069388896
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "arm": "BIT8",
+      "primary_Konly": {
+        "sse": 5.603063438465455e-07,
+        "reference_energy": 26.436456334944392,
+        "nse": 2.1194457258097713e-08
+      },
+      "full_BF16_reference": {
+        "sse": 0.0014842002833328097,
+        "reference_energy": 26.44047770232277,
+        "nse": 5.613364100461861e-05
+      },
+      "CPU_vs_native_floor": {
+        "sse": 7.116566474602867e-07,
+        "reference_energy": 26.440439425526787,
+        "nse": 2.691546218302338e-08
+      },
+      "extra_persistent_bytes": 1806361,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 1806361,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.6066160619957373,
+      "read_seconds": 0.5628250240115449
+    }
+  ],
+  "state_artifact": {
+    "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/prepared/l18_BIT8_state.pt",
+    "sha256": "79f3057908e1a6a9df419dcf867f0222f4378bc6cc934880fdea9d00a1856c4e",
+    "bytes": 40687932
+  },
+  "paired_manifest": null,
+  "packet_state_links": [
+    {
+      "layer": 18,
+      "chunk": 1,
+      "state_sha256": "5546553f7cb4ddcc2f3955fe73a13be613ad3d953df249b100529a263ba6df9b",
+      "selected_head": 8,
+      "packet_sha256": "b822ebdc0415f64c35854232ca06887b4e7be50d84e0d91e3d5390379f539b4e"
+    },
+    {
+      "layer": 18,
+      "chunk": 2,
+      "state_sha256": "5546553f7cb4ddcc2f3955fe73a13be613ad3d953df249b100529a263ba6df9b",
+      "selected_head": 8,
+      "packet_sha256": "f8a07e5f1894ec214d552014b9a8778b4010a6973ebe93aed28712e2223eed01"
+    },
+    {
+      "layer": 18,
+      "chunk": 3,
+      "state_sha256": "5546553f7cb4ddcc2f3955fe73a13be613ad3d953df249b100529a263ba6df9b",
+      "selected_head": 8,
+      "packet_sha256": "d72fda7892f39998118a3bf6e67c3927cd10c5df5b0025474874f6138b792a48"
+    },
+    {
+      "layer": 18,
+      "chunk": 4,
+      "state_sha256": "5546553f7cb4ddcc2f3955fe73a13be613ad3d953df249b100529a263ba6df9b",
+      "selected_head": 8,
+      "packet_sha256": "eff4a3c4a5c9c54d74e71b710b126d0e92fa6e5fab07f973bda95af6ba8796ac"
+    },
+    {
+      "layer": 18,
+      "chunk": 5,
+      "state_sha256": "5546553f7cb4ddcc2f3955fe73a13be613ad3d953df249b100529a263ba6df9b",
+      "selected_head": 8,
+      "packet_sha256": "f0c5bb8e895223ead3f57d1f1292d87a95273b97e2d90aab7e8ece0ea049253f"
+    },
+    {
+      "layer": 18,
+      "chunk": 6,
+      "state_sha256": "5546553f7cb4ddcc2f3955fe73a13be613ad3d953df249b100529a263ba6df9b",
+      "selected_head": 8,
+      "packet_sha256": "f2365ea516255004fd3c69422f4ae8abe52c8f4a05f284a1778a0cb3413b8c63"
+    }
+  ],
+  "source_loads": [
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/prepared/layer18.pt",
+      "sha256": "046a7e2128757b884ea2f480d4898852662fc9d4219de4cf72164c782532b5da",
+      "load_hash_seconds": 0.005482717067934573
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_wo.pt",
+      "sha256": "dd2f70bd4d0b43a1da8d477ca624a27ad90bf8ab19bf0e16595bd72c59318b17",
+      "load_hash_seconds": 0.004044455010443926
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_write1.pt",
+      "sha256": "f7a1378647001b953541e628864edc7b2b820a623775b90c73b6d024d55af976",
+      "load_hash_seconds": 0.03016232803929597
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c1_V.pt",
+      "sha256": "3c560ddf434cb419b72253bc3d74ea72271412d7c415109baf6324b56c9c225f",
+      "load_hash_seconds": 0.0032768540550023317
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c1_R_fp32.pt",
+      "sha256": "52ff212171effcfb8040d26ad716e2f4167c052036e4b207ba92a8aaa6d7ead6",
+      "load_hash_seconds": 0.0027647230308502913
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_write2.pt",
+      "sha256": "269c7b945c5a154d735a9873b398b09cfdc42ea7ff9f34c77c5347673085538e",
+      "load_hash_seconds": 0.020978991058655083
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c2_V.pt",
+      "sha256": "de07efd8af6ac62e62c7f753fbc964fb022878ac02418fa3256d4f997247decc",
+      "load_hash_seconds": 0.0028047870146110654
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c2_R_fp32.pt",
+      "sha256": "8a1b2fa8a5ddda627d874712e09c40bd9182443f0087dd91f2e00f8e92ea8453",
+      "load_hash_seconds": 0.0028430389938876033
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_write3.pt",
+      "sha256": "3c9244fb4a01501a9fa4cd85c83f2e0c44efec859348cc0f64a8c3ebda0b5025",
+      "load_hash_seconds": 0.020826625055633485
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c3_V.pt",
+      "sha256": "b1bede6a76dff52ad9c96e998c541d671cf1514e26c7da2ba7c1f780f059bdb5",
+      "load_hash_seconds": 0.002760133007541299
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c3_R_fp32.pt",
+      "sha256": "f00d2b886434d97a05bfc35342bba4756d05a164bf327ab55b4cced04bfe83db",
+      "load_hash_seconds": 0.0028265680884942412
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_write4.pt",
+      "sha256": "b0bcbe5388ace6a2e5e61daf91a9378042b10f9756dede530c38dc494543f183",
+      "load_hash_seconds": 0.0207906870637089
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c4_V.pt",
+      "sha256": "a223499ae888f0409fc34b5b380e8fcd676071c33e7385ff8a3b7595bde3c1d7",
+      "load_hash_seconds": 0.0028132929001003504
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c4_R_fp32.pt",
+      "sha256": "b666d6e782d0762f39802c742b6c14c9e1d45021f36e38f82a96d4de7bee2e77",
+      "load_hash_seconds": 0.0029377369210124016
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_write5.pt",
+      "sha256": "77208d901b4b059478f5b83c18063110d333ac25db4dbca9581adf95c5ecf111",
+      "load_hash_seconds": 0.02094444609247148
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c5_V.pt",
+      "sha256": "098ca56a1bb42a01431147fdd3e764193ce4a90cf2cb36c2f0d961d13c7bf668",
+      "load_hash_seconds": 0.0027924049645662308
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c5_R_fp32.pt",
+      "sha256": "7e78a9bd17fe112ebf9d2033f10c5c3448e6f598ebebe56a1bb9d69ff9859ae6",
+      "load_hash_seconds": 0.002911818097345531
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_write6.pt",
+      "sha256": "a00c1d93f22e80a53202595a0931586b8c6230a983aeeb94869e06d0bc214871",
+      "load_hash_seconds": 0.020571455010212958
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c6_V.pt",
+      "sha256": "8b4f8af7bf91d7a525337df24f95231243aab43fdff3b4fceff7ec86464f314f",
+      "load_hash_seconds": 0.0027952599339187145
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c6_R_fp32.pt",
+      "sha256": "f84a6d1def762915f0b4f27188dbac05e657292e472462f3f09873f0d696ea3c",
+      "load_hash_seconds": 0.002810748992487788
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/prepared/l18_BIT8_state.pt",
+      "sha256": "79f3057908e1a6a9df419dcf867f0222f4378bc6cc934880fdea9d00a1856c4e",
+      "load_hash_seconds": 0.1282488340511918
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_read0.pt",
+      "sha256": "5b36d0f071721af25f574bcb1bbd941af222ad81e92b3e4f6686fdabff761b18",
+      "load_hash_seconds": 0.02168592798989266
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_read3.pt",
+      "sha256": "cf0a9c2971eb5b192e313bafdb4fd6abe05f350c649339e99aece2a9a4cb8eda",
+      "load_hash_seconds": 0.020929256919771433
+    }
+  ],
+  "write_seconds_including_validation": 0.5324444801080972,
+  "write_diagnostics": [],
+  "legacy_K_encode_cost": "new encoding measured",
+  "shared_tensor_bytes": 25,
+  "correction_packet_tensor_bytes": 0,
+  "cache_KV_payload_bytes": 55904262,
+  "extra_persistent_bytes": 1806361,
+  "common_H128_bytes_separate": 65536,
+  "worker_wall_seconds": 12.861196934944019,
+  "peak_RSS_bytes": 3402240000
+}

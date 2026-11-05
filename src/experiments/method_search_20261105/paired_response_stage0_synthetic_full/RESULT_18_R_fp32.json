@@ -1,0 +1,219 @@
+{
+  "status": "completed",
+  "arm": "R_fp32",
+  "layer": 18,
+  "rows": [
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "arm": "R_fp32",
+      "primary_Konly": {
+        "sse": 6.188110191177291e-07,
+        "reference_energy": 26.436962795118642,
+        "nse": 2.340703899738389e-08
+      },
+      "full_BF16_reference": {
+        "sse": 0.001484648524202624,
+        "reference_energy": 26.440985763727973,
+        "nse": 5.614951490346025e-05
+      },
+      "CPU_vs_native_floor": {
+        "sse": 7.052791489881747e-07,
+        "reference_energy": 26.440964836522014,
+        "nse": 2.6673729697412416e-08
+      },
+      "extra_persistent_bytes": 0,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 0,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.582454888965003,
+      "read_seconds": 0.5608640349237248
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "arm": "R_fp32",
+      "primary_Konly": {
+        "sse": 6.126475298226523e-07,
+        "reference_energy": 26.436456334944392,
+        "nse": 2.3174343870469465e-08
+      },
+      "full_BF16_reference": {
+        "sse": 0.0014842450783769906,
+        "reference_energy": 26.44047770232277,
+        "nse": 5.6135335188993244e-05
+      },
+      "CPU_vs_native_floor": {
+        "sse": 7.116566474602867e-07,
+        "reference_energy": 26.440439425526787,
+        "nse": 2.691546218302338e-08
+      },
+      "extra_persistent_bytes": 0,
+      "cap_eligible": true,
+      "validity": "valid",
+      "dense_extra_bound_bytes": 0,
+      "fallback_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_pairs_total": 1536,
+      "exact_zero_bypass_pair_fraction": 0.0,
+      "log_denominator_ratio_summary": null,
+      "read_diagnostics": {
+        "fallback_queries": 0
+      },
+      "noquant": {
+        "paired_exact": true,
+        "PSAC_exact": true,
+        "QKSA_exact": true,
+        "scope": "codec bypass / exact-zero branch only, not nonzero reader arithmetic or BF16 rotation roundtrip"
+      },
+      "connection_validity_seconds": 3.383416992961429,
+      "read_seconds": 0.49404625804163516
+    }
+  ],
+  "state_artifact": {
+    "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/prepared/l18_R_fp32_state.pt",
+    "sha256": "3f0d9d0eb5a92656643006473f7ec7186ae030a5512b93f0c2a46e9bba6979e8",
+    "bytes": 1028
+  },
+  "paired_manifest": null,
+  "packet_state_links": [],
+  "source_loads": [
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/prepared/layer18.pt",
+      "sha256": "046a7e2128757b884ea2f480d4898852662fc9d4219de4cf72164c782532b5da",
+      "load_hash_seconds": 0.00556736602447927
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_wo.pt",
+      "sha256": "dd2f70bd4d0b43a1da8d477ca624a27ad90bf8ab19bf0e16595bd72c59318b17",
+      "load_hash_seconds": 0.004067589994519949
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_write1.pt",
+      "sha256": "f7a1378647001b953541e628864edc7b2b820a623775b90c73b6d024d55af976",
+      "load_hash_seconds": 0.030794334015809
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c1_V.pt",
+      "sha256": "3c560ddf434cb419b72253bc3d74ea72271412d7c415109baf6324b56c9c225f",
+      "load_hash_seconds": 0.003583559999242425
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c1_R_fp32.pt",
+      "sha256": "52ff212171effcfb8040d26ad716e2f4167c052036e4b207ba92a8aaa6d7ead6",
+      "load_hash_seconds": 0.002775582019239664
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_write2.pt",
+      "sha256": "269c7b945c5a154d735a9873b398b09cfdc42ea7ff9f34c77c5347673085538e",
+      "load_hash_seconds": 0.021263564005494118
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c2_V.pt",
+      "sha256": "de07efd8af6ac62e62c7f753fbc964fb022878ac02418fa3256d4f997247decc",
+      "load_hash_seconds": 0.002596236066892743
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c2_R_fp32.pt",
+      "sha256": "8a1b2fa8a5ddda627d874712e09c40bd9182443f0087dd91f2e00f8e92ea8453",
+      "load_hash_seconds": 0.0028494710568338633
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_write3.pt",
+      "sha256": "3c9244fb4a01501a9fa4cd85c83f2e0c44efec859348cc0f64a8c3ebda0b5025",
+      "load_hash_seconds": 0.020687442971393466
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c3_V.pt",
+      "sha256": "b1bede6a76dff52ad9c96e998c541d671cf1514e26c7da2ba7c1f780f059bdb5",
+      "load_hash_seconds": 0.0025963260559365153
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c3_R_fp32.pt",
+      "sha256": "f00d2b886434d97a05bfc35342bba4756d05a164bf327ab55b4cced04bfe83db",
+      "load_hash_seconds": 0.00278449896723032
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_write4.pt",
+      "sha256": "b0bcbe5388ace6a2e5e61daf91a9378042b10f9756dede530c38dc494543f183",
+      "load_hash_seconds": 0.020706859068013728
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c4_V.pt",
+      "sha256": "a223499ae888f0409fc34b5b380e8fcd676071c33e7385ff8a3b7595bde3c1d7",
+      "load_hash_seconds": 0.0026432638987898827
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c4_R_fp32.pt",
+      "sha256": "b666d6e782d0762f39802c742b6c14c9e1d45021f36e38f82a96d4de7bee2e77",
+      "load_hash_seconds": 0.0028976619942113757
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_write5.pt",
+      "sha256": "77208d901b4b059478f5b83c18063110d333ac25db4dbca9581adf95c5ecf111",
+      "load_hash_seconds": 0.020731886033900082
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c5_V.pt",
+      "sha256": "098ca56a1bb42a01431147fdd3e764193ce4a90cf2cb36c2f0d961d13c7bf668",
+      "load_hash_seconds": 0.002670885995030403
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c5_R_fp32.pt",
+      "sha256": "7e78a9bd17fe112ebf9d2033f10c5c3448e6f598ebebe56a1bb9d69ff9859ae6",
+      "load_hash_seconds": 0.0028066710801795125
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_write6.pt",
+      "sha256": "a00c1d93f22e80a53202595a0931586b8c6230a983aeeb94869e06d0bc214871",
+      "load_hash_seconds": 0.020550415036268532
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c6_V.pt",
+      "sha256": "8b4f8af7bf91d7a525337df24f95231243aab43fdff3b4fceff7ec86464f314f",
+      "load_hash_seconds": 0.0026261929888278246
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_c6_R_fp32.pt",
+      "sha256": "f84a6d1def762915f0b4f27188dbac05e657292e472462f3f09873f0d696ea3c",
+      "load_hash_seconds": 0.0028340619755908847
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/prepared/l18_R_fp32_state.pt",
+      "sha256": "3f0d9d0eb5a92656643006473f7ec7186ae030a5512b93f0c2a46e9bba6979e8",
+      "load_hash_seconds": 0.0002603590255603194
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_read0.pt",
+      "sha256": "5b36d0f071721af25f574bcb1bbd941af222ad81e92b3e4f6686fdabff761b18",
+      "load_hash_seconds": 0.021519816014915705
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/inputs/l18_read3.pt",
+      "sha256": "cf0a9c2971eb5b192e313bafdb4fd6abe05f350c649339e99aece2a9a4cb8eda",
+      "load_hash_seconds": 0.021040043910034
+    }
+  ],
+  "write_seconds_including_validation": 8.173985406756401e-06,
+  "write_diagnostics": [],
+  "legacy_K_encode_cost": "not remeasured: reused artifact, never zero cost",
+  "shared_tensor_bytes": 0,
+  "correction_packet_tensor_bytes": 0,
+  "cache_KV_payload_bytes": 54097926,
+  "extra_persistent_bytes": 0,
+  "common_H128_bytes_separate": 65536,
+  "worker_wall_seconds": 11.513361345976591,
+  "peak_RSS_bytes": 3467059200
+}

@@ -1,0 +1,29 @@
+{
+  "status": "incomplete_or_invalid",
+  "synthetic_only": true,
+  "started_utc": 1793885180.0,
+  "deadline_utc": 1793886380.0,
+  "stages": [
+    {
+      "stage": "build",
+      "returncode": 0
+    },
+    {
+      "stage": "full_driver",
+      "returncode": 1
+    }
+  ],
+  "max_RSS_by_pid": {
+    "552106": 3757748224,
+    "552182": 410738688,
+    "552189": 2010996736
+  },
+  "actual_method_effect_measurements": 0,
+  "original_capture_reads": 0,
+  "GPU_calls": 0,
+  "active_stage": "full_driver",
+  "active_pid": 552182,
+  "disk_bytes": 1368181324,
+  "error": "RuntimeError('synthetic stage exception: full_driver')",
+  "elapsed_seconds": 239.2419557571411
+}

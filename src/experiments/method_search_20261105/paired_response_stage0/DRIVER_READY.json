@@ -1,0 +1,39 @@
+{
+  "status": "prepared_for_independent_review_not_execution",
+  "created_utc": 1793883892.2180674,
+  "source_editing_stopped": true,
+  "actual_Opus_review_complete": false,
+  "root_LOCK_exists": false,
+  "RUN_exists": false,
+  "real_capture_reads": 0,
+  "real_tensor_hash_rechecks": 0,
+  "actual_effect_measurements": 0,
+  "GPU_calls": 0,
+  "new_model_loads": 0,
+  "commits": 0,
+  "synthetic_checks": 31,
+  "synthetic_result_sha256": "c61c9ebd37e42fe783dbd6fb53611ff3e828eb588ddcf9aebae544f383e25c3e",
+  "driver_sha256": "1cca97fd1fa08d6a08b3102c077fed56254636ffe67468f9d75f89df0b03c5f4",
+  "fixture_sha256": "7ddb1e6cf31fc29d92c91e7d1e686158bcf45125de326892a2d1a2d72baa6b8d",
+  "source_manifest_sha256": "957646286490ddd2cf762afbaca023892f5445a7e9f0f4636dd5e8ed6aa8de65",
+  "input_binding_sha256": "7b65bd1c71c5f80a8391af5e21cebb06a9a904844a6fe28ef342f43bee8c526b",
+  "registration_sha256": "e5a28d27764323efed352743d73a0b3f2ecfadf9953bcd3a14ffd2378c5400db",
+  "static_parse": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/diagnose.py": "parse_ok",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/fixture_selftest.py": "parse_ok"
+  },
+  "extra_cap_bytes": 1806361,
+  "expected_effect_cells": 60,
+  "execution_blockers": [
+    "actual independent Opus source review incomplete",
+    "root scientific/validity acceptance and LOCK absent"
+  ],
+  "unverified": [
+    "real data anchors and noquant full-shape validity",
+    "45-minute full-shape completion and actual RSS",
+    "actual captured-input effectiveness",
+    "GPU or online feasibility"
+  ],
+  "scope": "synthetic integration and source/JSON binding only; old pilot stop_quality maintained",
+  "preparation_failure_record": "An attempted V2 load hit a failure-record f-string syntax error before imports/data; repaired before V2 successful result. V1..V5 historical results retained; V5 binds current final source."
+}

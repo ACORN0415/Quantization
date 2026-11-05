@@ -1,0 +1,242 @@
+업무2 실제 Claude Opus 5.5 독립 검토 — pilot 판정·paired 수치·입력/참조 연결·제안v2
+작성: 2026-11-05 21:56 KST 이후(셸 시각 확인 21:56:33 KST 시작). 실행 모델 ID claude-opus-5-5(이 채팅의 실행 환경이 보고한 식별자).
+Orca session: claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5(관리자 명세가 전달한 값이며, 이 검토자가 Orca API로 따로 조회하지는 않음).
+Task/Dispatch ID: 없음. worker-start 연결은 terminal_handle_stale로 실패했다(관리자 명세 기준). 자동 연결이 완료됐다고 기록하지 않는다.
+권한 범위: 읽기와 이 보고서 1개 작성만 했다. 소스/LOCK/결과 수정, GPU, 모델·실자료 tensor 로드, 합성검사 재실행, 설치, git은 모두 0회다.
+과거 Fable/Codex 검토를 Opus 검토로 다시 표시하지 않는다. stage0(paired_response_stage0, PAIRED_CAP_RESOLUTION_ROOT.json)은 범위 밖이며 완료로 보지 않는다.
+
+======================================================================
+0. 결론 요약
+======================================================================
+A. full-H rollout pilot의 stop_quality 판정: 타당. 유지한다.
+B. paired core c66e2e3(수치 수정 V2): 합성 범위에서는 타당하다. 실자료 안전성, 범용 정확성, GPU 효율은 입증하지 않았다.
+C. CPU attention adapter 2008265c: 계약은 타당하다. 실제 캡처 연결과 FA2 동등성은 아직 검증하지 않았다.
+D. 제안v2(입력·공통 K-only 참조·강한 결합대조·자원계약): 수정 필요(경미). 수학이나 정보시점의 치명적 오류는 찾지 못했다.
+   다만 LOCK 전에 다음 다섯 가지를 명세에 고정해야 한다.
+   (1) 결합대조 대칭성: R_fp32+projected PSAC rank3+QKSA가 빠져 있다.
+   (2) fallback≤0.1%의 분모와 단위.
+   (3) Omega/seed와 층 간 공유 여부 및 hash 바인딩.
+   (4) full-M rank8의 총바이트 명시.
+   (5) 분모비 상한쪽 꼬리 기록.
+   이 다섯 항목을 반영하면 수용할 수 있다. 실행 승인은 아니다.
+
+======================================================================
+1. 직접 확인한 hash(현재 파일 sha256sum)
+======================================================================
+일치:
+- core.py c66e2e3e…2eb82
+- PREPARATION_MANIFEST_V2.json 1547f85c…db514
+- attention_adapter.py 2008265c…0b8
+- full_obq_rollout_pilot/LOCK.json 4fcbbda6…5414
+- QUALITY.json 6cd48cda…3d1d
+- selftest.py e385982b…
+- cancellation_regression.py 8d028876…
+- SELFTEST_V4.json e9eeca18…
+- CANCELLATION_REGRESSION_V1.json f8a40be4…
+- AMENDMENT_V2_KO.txt 4d014a5f…
+- PREPARATION_MANIFEST.json e869209b…
+- ATTENTION_ADAPTER_READY.json 04fbe4f2…
+- attention_adapter_selftest.py 4d2a9cc9…
+- ATTENTION_ADAPTER_SELFTEST_V1.json 5cfcac6a…
+- ATTENTION_ADAPTER_PREPARATION_KO.txt adc398a3…
+- PAIRED_CORE_AMENDMENT_REVIEW_CODEX_KO.txt 2a81a880…
+- PAIRED_CORE_AMENDMENT_AUDIT_CODEX.json 56a82afd…
+- PAIRED_BUDGET_CHECK_ROOT.json 3322b191…
+저장된 검사 결과:
+- SELFTEST_V4는 35/35 pass이며 source_hashes가 현재 core/selftest를 가리킨다.
+- CANCELLATION_REGRESSION_V1은 33/33 pass이며 현재 core를 가리킨다.
+- ADAPTER_SELFTEST_V1은 27/27 pass이며 현재 adapter를 가리킨다.
+- AMENDMENT_PROBE의 두 사례는 output=1, 기대값 1, 오차 0, fallback False이고 source가 c66e2e3이다.
+- 원 PROBE(2665be65)는 output 0, 기대값 1, fallback False다. 즉 유효한 native 1→0 소실이 있었고 fallback이 없었다.
+이 수치는 저장 JSON을 읽은 것이며 재실행한 결과가 아니다. 최초 manifest, 003dd4a, 최초 35건 통과는 현재 승인으로 쓰지 않는다.
+
+======================================================================
+2. pilot 판정 독립 확인 (A: 타당)
+======================================================================
+근거:
+- pilot_common.py decide() 소스(약 112~128행)
+- QUALITY.json rows/decision
+- RUN.json(elapsed 1182.421009936952초, generations 8, vae_decodes 8)
+- AUDIT_FINAL_CODEX.json(checks 709, errors 0)
+- REGISTRATION_DRAFT_KO.txt 31~35행(Q1~Q3, 중단선)
+QUALITY rows의 late_latent nse와 late 창 값으로 직접 재계산했다.
+- rain 대 R_bf16: 1−1.13805/1.20741=0.05745. 대 R_fp32: 1−1.13805/1.23967=0.08198. 둘 다 Q1 10%에 미달한다.
+- coast는 0.6011/0.3603으로 통과했다.
+- MUSIQ late: rain O_full 72.2457 − R_bf16 74.4248 = −2.1791. 사전 중단선 −2보다 낮으므로 bad=True, 따라서 stop_quality다.
+- Q3의 평균 조건도 대 R_bf16 (−0.101−2.179)/2=−1.14 < −0.5로 미달이다.
+- Q2: DINO 차이는 네 비교 모두 양수다(+0.0088~+0.0347). 통과.
+보고된 수치(5.7449%/8.1978%, −2.179109, Q2 통과/Q3 미달)는 저장값과 일치한다.
+
+중요한 해석 경계:
+(a) MUSIQ 중단선이 없었더라도 Q1 미달 때문에 판정은 signal이 될 수 없고 최대 undecided다. 따라서 stop_quality와 undecided의 차이가 진행 신호 여부를 바꾸지 않는다.
+(b) rain의 BF16 late MUSIQ는 64.22로 압축 팔(72.2~74.4)보다 낮다. FULL의 MUSIQ 하락은 BF16 참조 쪽으로 이동한 결과일 수 있다.
+    이는 이 Q3 설계가 참조 충실도와 무참조 화질을 혼합했다는 관측이며 등록 이후의 해석이다.
+    이 관측으로 판정을 뒤집거나 기준을 완화할 수 없다. 다음 등록에서 지표 목적을 미리 분리하는 설계 교훈으로만 쓴다.
+(c) descriptive_RTN_spread는 두 RTN 산술의 차이다. 기기 잡음 추정이 아니며 override 근거가 될 수 없다. QUALITY에도 그렇게 표기돼 있다.
+
+사후 그림/통계(pilot_posthoc_metrics)도 확인했다.
+- summarize.py는 chunk_ids=min((i+3)//12,41)을 쓴다. 첫 청크 9프레임에 이후 41×12프레임이므로 501프레임이고, 점선 21은 frame 249 시작과 일치한다.
+- 그림의 청크별 NSE는 청크 비율의 평균이다. 등록 지표인 후반 합산 SSE/에너지와 같은 값이 아니다. INTERPRETATION도 이를 구분하고 있다.
+- 특징 분산(rain 후반 BF16 0.138 대 FULL 0.047)은 서술 통계다. 정지, 인과, motion-quality의 증거로 쓰면 안 된다. 현재 문서의 표현은 이 범위를 지킨다.
+
+======================================================================
+3. paired core c66e2e3 (B: 합성 범위 타당)
+======================================================================
+core.py 전체를 읽었다(257행).
+- φ(x)=exp(Ωᵀx/d^¼ − ‖x‖²/(2√d))/√R는 E=exp(q·k/√d)다. adapter의 logits /sqrt(dim)과 스케일이 맞는다(dim=128 전제).
+- Dz와 DN 모두 Vhat 하나를 쓰고, K와 Khat이 같은 Ω와 같은 offset을 쓴다. K-only 차분 계약과 일치한다.
+- read()는 coeff=exp(logφ(q)+offset−logZ_base−m)이다. 정규화된 (O·1+Σc·DN)/(1+Σc·Dz)를 공통 스케일 e^{−m}에서 계산한다. 식은 맞다.
+- 수정 내용: 보정 분자와 분모를 0에서 시작한다. feature×chunk 축을 순차 Neumaier로 합산하고, native 항은 마지막에 같은 보상합으로 더한다. 원 반례(정확히 상쇄하는 ±DN, base_scale≈e^{−49})에서 native 항이 소실되지 않음을 소스로 확인했다.
+남는 한계(비차단, 기록 필요):
+(B1) 조건수/상쇄 위험 진단이 없다. Σ|항| 대비 |합| 같은 값을 계산하지 않는다.
+     보정 합이 정확히 상쇄되지 않고 반올림 수준(≈1e−16×|항|)만 남는 경우에 문제가 된다. base_scale이 그보다 작으면 결과는 잡음이 지배한다.
+     잡음이 양수이면 분모비가 커서 lower-bound 검사를 통과하고 fallback도 되지 않는다.
+     Codex가 권고한 '항 절대합/잔여 기록'은 c66e2e3에 구현되지 않았다. 대신 SSE 점수에서는 해가 그대로 드러나므로 gate가 오염되지는 않는다.
+     → driver는 core가 반환하는 log_denominator_ratio의 양쪽 꼬리 분포를 기록한다(소스 수정 불필요).
+(B2) min_denominator_ratio는 하한만 검사한다. 추정치가 폭주해 분모비가 ≫1이 되는 경우는 fallback으로 세지 않는다. 이것도 B1과 같은 기록으로 보완한다.
+(B3) ChunkState에 Ω fingerprint가 없다. append는 shape/dtype만 확인한다. driver/manifest에서 seed별 Ω hash와 state를 묶어야 한다(Codex 지적에 동의).
+(B4) 상태가 모두 0이면 비유한 query/logZ 검사 전에 우회한다. 출력 오염은 없다. 하지만 noquant 검사(Khat=K)는 이 우회만 통과하므로 reader 산술을 검사하지 못한다.
+     → noquant 통과를 reader 검증으로 세지 않는다.
+(B5) FP64 feature×chunk 순차 루프와 보상 배열은 진단 비용이다. GPU 비용 주장에 쓰지 않는다.
+Codex 한정 재검토의 결과(원반례 2개 오차 0, 33회귀, math.fsum 6.22e−15)는 그 범위 내에서 저장 기록과 일치한다.
+
+======================================================================
+4. attention adapter 2008265c (C: 계약 타당, 연결 미검증)
+======================================================================
+- dense visible window에서 과거와 현재를 모두 연결하고 mask는 없다.
+- q-block32로 bmm/√D → softmax → bmm을 한다. 같은 FP32 logits에서 logsumexp로 LSE를 구한다.
+- 출력은 [Q,H,Dv]와 paired용 [H,Q,Dv], logz [H,Q]이며 core.read 입력 형상과 맞는다.
+- post_wo_difference: delta=(cand−ref).reshape(Q,−1)@Woᵀ를 FP32로 계산하고 제곱합은 FP64로 한다. bias는 delta에서 상쇄되고 참조 에너지에만 들어간다. 에너지가 0이면 None을 반환한다.
+- PAIRED_READ_PATH_ROOT_KO는 store.attend→flash_attn_varlen_func(causal=False, window −1)라고 기록한다. 따라서 '현재 청크 완전 가시 + 가시 과거'라는 dense 계약이 실제 경로와 맞는다. 이것은 소스 기록의 대조이며 실행 대조는 아니다.
+- logz가 FP32이므로 coeff의 상대오차는 약 1e−6 수준이다. PRF 잡음보다 매우 작아 비차단이다.
+미검증 항목: 실제 캡처 연결, CPU FP32와 저장 native_av/FA2의 floor, GPU 비용, logical LSE 224,640B가 실제 할당되는지.
+
+======================================================================
+5. 제안v2 검토 (D: 수정 필요·경미)
+======================================================================
+5.1 입력·정보시점·공통 참조 — 수용
+- FULL H_damped(회전), PSAC C_orig(원좌표·비중심·무damping), projected U/λ는 모두 p0 l18/l24_c7 q 4680개에서만 만든다. 별도 이름과 hash로 기록하도록 명시돼 있다.
+- 평가 Q128이나 first-reader Q로 다시 선택하지 않는다.
+- K8 head 선택도 p0만 쓰고 평가 endpoint를 사용하지 않는다.
+- 공통 K-only 참조는 Attn(Q128, 원K₁..₆+현재K₇, V4₁..₆+현재 BF16 V₇)이다. 같은 CPU FP32 logits에서 output/LSE를 함께 계산한다.
+- native_av는 이미 Q128이며 BF16 V이고 LSE가 없다. 그래서 floor 용도로만 쓴다. QIDS를 다시 적용하지 않는다.
+- 새 NSE의 분모는 새 K-only 참조 에너지다. 과거 fixed_rotation k_only_reference.nse(전체 BF16 분모)를 이전하지 않는다.
+- 입력 연결 근거(INPUT_BINDING)는 정적 계약이다(tensor 로드/hash 재검사 0). 제안도 이를 '향후 재검증'으로 표시한다.
+- 과거 common.guard/RUN 마감과 fair diagnose의 import 시점 START를 재사용하지 말라는 경고를 driver가 지켜야 한다.
+
+5.2 후보 — 수용
+- R_fp32+paired rank32, seed 17/29/43만 둔다. FULL+paired는 786,432+1,403,904=2,190,336B로 cap을 초과하므로 넣지 않는다. 일관된다.
+- gate는 각 endpoint×각 seed 모두 ≥10%이며, seed 선택이나 평균 통과를 금지한다. 보수적이며 적절하다.
+
+5.3 강한 결합대조 — 오류 1건(비대칭 누락)
+[D1] 현재 결합 목록:
+     - R_fp32+QKSA
+     - FULL+QKSA
+     - FULL+projected rank1+QKSA
+     빠진 조합: R_fp32+projected rank3+QKSA.
+     이 조합은 1,694,328B로 cap 안이고 추가 상주 상태가 없다. FULL 쪽에는 같은 형태의 3중 결합을 넣고 R_fp32 쪽에서는 빠뜨린 것은 대칭성에 어긋난다.
+     결과를 보기 전이므로 지금 추가해도 사후 팔 추가가 아니다. 추가하거나, 제외 이유를 LOCK 문서에 쓴다.
+     (K8 head와 QKSA의 결합은 head별 Δ가 달라 구현 범위가 커지므로 이번 판단에서 요구하지 않는다. 제외 사실만 기록하면 된다.)
+- full-M과 projected는 다른 필터라는 점, full-M rank3/8은 cap 밖 높은 비용점으로 주판정과 분리한다는 점이 명시돼 있다. 수용한다.
+- 실패한 baseline도 제외하지 않는다는 문구가 있다. 수용한다.
+- 'endpoint별 최소 SSE 팔'은 oracle처럼 후보에 불리한 보수적 기준이다. 후보는 1.40MB, 비교 대상은 최대 1.80MB이므로 후보에 유리한 설정이 아니다.
+[D2] full-M rank8 총량이 문서에 없다. dense rank8 3,394,176B + header 168B + rawM 1,572,864B = 4,967,208B 및 basis 표기(budget 기준)를 비용표에 명시하라.
+
+5.4 자원 계약 — 산술 확인, 수용(조건부)
+직접 재계산(N=28,080 과거 토큰=6×4680, H12, D128):
+- paired: DN/Dz FP32 6×12×(32×128+32)×4=1,188,864. Ω 12×128×32×4=196,608. offset FP64 6×12×32×8=18,432. 합 1,403,904. ✓
+- FULL U FP32 12×128²×4=786,432 ✓. rawM FP64 12×128²×8=1,572,864 ✓
+- PSAC dense: 28+56,160(r+2) per packet×6 + U BF16 12×128×r×2 (+λ 12r×4).
+  - rank1: 1,011,048+3,072+48=1,014,168
+  - rank3: 1,694,328
+  - FULL+rank1: 1,800,600
+  - full-M rank3: 1,694,184+1,572,864=3,267,048 ✓
+- 공통 과거 KV: 6×(4,515,841+4,500,480)=54,097,926 ✓
+이 값들은 tensor/packet 범위이며 peak가 아니다. 문서도 이를 분리한다. projected는 별도 offline adaptation이고 공식 PSAC 재현이 아니라는 점이 명시돼 있다.
+cap의 정확한 metadata 정수는 stage0 합성 패킹 뒤 LOCK하는 것으로 돼 있다. 이번 검토에서 확정하지 않는다.
+  - PAIRED_CAP_RESOLUTION_ROOT.json(1,806,361)이 있는 것은 보았지만, 그 근거인 bit_baseline은 후속 검토 대상이다.
+  - 그 값이면 FULL+rank1의 여유는 5,761B에 불과하다. PSAC가 sparse/dense를 선택하므로 실제 packet은 dense 이하다. cap 판정은 실제 직렬화 bytes로 해야 한다.
+45분/CPU4/RSS8GiB/2GiB:
+  - 실제 크기 attention은 Q128×K32,760×H12×D128으로 호출당 약 13 GFLOP이며 팔×seed×endpoint 수십 회 수준이다. 4스레드로 충분히 들어갈 규모로 추정한다(추정, 미측정).
+  - 실행 승인은 아니다.
+[D3] Ω seed 정의:
+     - gaussian(heads,dim,rank,seed)는 같은 seed이면 층18/24에 같은 Ω를 만든다. 층 간 공유 여부를 명세하고 seed별·층별 Ω sha256을 기록한다.
+     - 비용은 층당 196,608B로 세는 것이 보수적이며 현재 계산과 같다.
+     - Ω 생성 dtype/device/torch 버전(2.6.0) 의존성도 기록한다.
+
+5.5 유효성·종료 — 문구 보완
+[D4] 'fallback≤0.1%'의 분모가 정의되지 않았다.
+     endpoint×seed마다 H×Q=12×128=1,536 쌍이므로 사실상 ≤1쌍이다. 집계 단위(endpoint×seed별인지, 전체 합산인지)를 정한다.
+     all_fallback 배치, exact_zero_bypass, cast 실패를 포함하는지도 정한다.
+[D5] log_denominator_ratio 분포(최소/분위/최대)와 '>log 10' 비율을 기록 항목으로 고정한다(B1/B2). gate는 바꾸지 않는다.
+- noquant 검사가 zero-bypass만 통과한다는 점(B4)을 명시한다. 이를 reader 정확성 검증으로 세지 않는다.
+
+======================================================================
+6. 가능한 주장 / 미입증 주장
+======================================================================
+가능한 주장:
+- pilot은 등록 규칙상 stop_quality이고 수치는 저장값과 일치한다.
+- paired core는 확인된 상쇄 반례를 해소했고, 합성 35+33 검사를 현재 소스로 통과했다.
+- CPU adapter는 같은 logits의 output/LSE와 post-Wo 차분 계약을 갖는다.
+- 제안v2의 바이트 산술과 정보시점 설계는 내부적으로 일관된다.
+미입증 주장:
+- paired의 실자료 효과(현재 0건)
+- Gaussian rank32의 실자료 수용량
+- 일반화와 독립 보류 성능
+- 전체 생성 개선
+- 신규성(KVLinC/EVA/signed base-aware 대비)
+- GPU 비용과 FA2 동등성
+- 총 peak 메모리
+- 범용 수치 안정성
+합성 통과, 국소 6 endpoint 이득, 검토 합의는 효과 증거가 아니다.
+
+======================================================================
+7. 가장 강한 반론
+======================================================================
+같은 Ω를 쓰더라도 positive random feature로 차분 exp(q·k)−exp(q·k̂)를 추정하면 상대 분산이 매우 클 가능성이 높다.
+- 단일 커널 PRF의 분산은 exp(‖q+k‖²/√d) 꼴로 커진다.
+- 차분의 신호는 q·δ/√d로, ‖q‖‖δ‖보다 대략 √d배 작다.
+- 따라서 rank 32에서 post-RoPE 실제 노름이면 보정 잡음이 신호보다 클 개연성이 높다.
+또한 gate가 FULL 결합까지 포함한 최선 팔보다 10% 더 나아야 하므로, 사전 기대 통과 확률은 낮다(이론적 추정, 측정 아님).
+그래도 이 검사는 싸고 종료 규칙이 명확하므로 실행할 가치를 부정하지는 않는다.
+다만 미달이 나오면 '고정 Gaussian rank32 인스턴스 종료'로만 기록하고, 학습형 feature의 불가능성으로 일반화하지 않는다. 제안 문서도 이 점을 이미 지키고 있다.
+대표되지 않은 기준선 계열이 있다. 같은 cap으로 M-가중 오차가 큰 토큰/행만 BF16 K로 보존하는 토큰 단위 혼합정밀도가 그것이다.
+PSAC의 행 필터와 가깝지만 같지는 않다. 결과 주장은 '등록한 비교 집합 내'로 한정해야 한다.
+대안: 근거가 충분한 새 방법 대안은 없다(억지 제안 안 함).
+
+======================================================================
+8. 직접 확인 / 미확인
+======================================================================
+직접 읽은 것:
+- AGENTS.md, CLAUDE_REVIEW_PROTOCOL_KO.md
+- 제안v2, RESOURCE_CONTRACT_ISSUE, BUDGET_CHECK, CAP_RESOLUTION(내용만, 후속 범위)
+- core.py 전체, attention_adapter.py 전체
+- AMENDMENT_V2, MANAGER_STATUS, MANIFEST_V1/V2, PREPARATION_KO, 세 selftest JSON 요약
+- CORE_INDEPENDENT/AMENDMENT_REVIEW Codex 문서, 두 probe JSON 결과
+- INPUT_BINDING_CODEX_KO, PROJECTED_METRIC_INDEPENDENT_CODEX_KO, PROJECTED_PREPARATION_ROOT_CHECK(앞부분), BASELINE_INDEPENDENT_CODEX_KO(앞부분)
+- READ_PATH_ROOT, NEXT_DECISION, POST_PILOT_DECISION, PREPARATION_ROOT_CHECK, LEDGER E020/E021/D011/E022
+- pilot의 QUALITY/RUN/COUNTERS/AUDIT 요약/ROOT_DECISION_AT_LOCK/ADMIN 변경 앞부분/STAGE2_BINDING status
+- pilot 소스: decide()·latent_metric, packed_adapter.py 전체, worker.py 주요 행 grep
+- posthoc INTERPRETATION/RESULT/feature_summary/summarize.py 주요 행/trajectories.png
+미확인:
+- INPUT_BINDING_CODEX.json 전체
+- 업무1 projected 소스 자체
+- baseline core 소스
+- supervisor/audit_posthoc/quality 전체
+- STAGE2_BINDING 세부
+- fixed_rotation_control RESULT
+- 원문 논문(QuantWM/QKSA/KVLinC)
+- 실제 캡처 파일의 존재/hash
+- 합성 검사 재실행
+- MANAGER_STATE.json/HISTORY 상세
+- stage0 driver/packing(후속 검토 예정)
+
+======================================================================
+9. 남은 불확실성
+======================================================================
+- 실제 노름에서 PRF 분산과 fallback 빈도
+- CPU FP32 대 native 기준 floor 값
+- stage0 cap metadata 정수와 K8 packing의 정확성
+- 결합 팔들의 실제 구현 연결(QKSA on OBQ 잔차의 가정 위반 정도)
+- 45분 안에 마칠 수 있는지에 대한 실측
+LOCK 전에 D1~D5를 반영하고, stage0 산출물이 도착하면 그 부분만 후속 검토한다.

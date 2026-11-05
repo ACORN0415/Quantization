@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/diagnose.py", line 437, in <module>
+    if args.supervisor:supervisor()
+  File "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_synthetic_full/diagnose.py", line 419, in supervisor
+    raise RuntimeError('Stage failed: '+label)
+RuntimeError: Stage failed: prepare_18_state

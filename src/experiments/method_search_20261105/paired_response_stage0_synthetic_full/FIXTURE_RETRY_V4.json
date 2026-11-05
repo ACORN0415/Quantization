@@ -1,0 +1,14 @@
+{
+  "synthetic_only": true,
+  "created_utc": 1793885680.045006,
+  "authority": "root-approved hash-only validity correction and one full synthetic rerun; not real experiment rerun",
+  "reason": "V3 prepare rank1 hash stride error",
+  "original_deadline_utc": 1793886380.0,
+  "input_regeneration": false,
+  "failure_preserved": "failure_v3/",
+  "copied_source_sha256": {
+    "diagnose.py": "f3e250ad6a0afa9b5147063fc90563ba23ce4d64d0b857489551c2eb7d3eab15",
+    "bit_baseline.py": "73fccb81cbc3a938678a064057940b0ea43bcfa9888c4ce4ef7cd461f5e9da3d",
+    "mean_baseline.py": "faa3c3291c234c55eeaee48a7d3c0fb783d4d37775551811b102360e4e732618"
+  }
+}

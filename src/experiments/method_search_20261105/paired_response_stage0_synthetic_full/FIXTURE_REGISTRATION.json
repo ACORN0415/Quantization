@@ -1,0 +1,18 @@
+{
+  "scope": "synthetic production-shape full-pipeline runtime fixture only",
+  "started_utc": 1793885180.0,
+  "limit_seconds": 1200,
+  "cpu_threads": 4,
+  "rss_bytes_per_process": 8589934592,
+  "generated_disk_cap": 2147483648,
+  "original_tensor_reads_allowed": false,
+  "GPU_allowed": false,
+  "real_method_effect_measurements": 0,
+  "original_stage0_LOCK_RUN_may_be_created": false,
+  "copied_source_sha256": {
+    "diagnose.py": "d3e2ca259bb2895d44218095ed95f6b810350ac2ceedba55de59063375f57018",
+    "bit_baseline.py": "73fccb81cbc3a938678a064057940b0ea43bcfa9888c4ce4ef7cd461f5e9da3d",
+    "mean_baseline.py": "faa3c3291c234c55eeaee48a7d3c0fb783d4d37775551811b102360e4e732618"
+  },
+  "source_changes_permitted": false
+}
