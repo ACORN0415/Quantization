@@ -1,0 +1,47 @@
+fixed-offline OBQ GPU encoder 비용 1단계 사전 등록안
+2026-11-05. root/Claude 검토 및 별도 실행 지시 전 GPU 실행 금지.
+
+범위
+새 kernel 개발 없이 batch Torch와 CUDA Graph를 사용한다. 알고리즘 신규성 검사가 아니라 이미 CPU/native reader에서 확인한 fixed-offline-H OBQ의 실행 비용이다. online first-reader H 준비는 이번 범위에서 제외한다.
+고정 사례: fresh causal capture L18 write chunk1, L24 write chunk6. 같은 생성의 reference BF16 reader chunk2/7 경과시간을 맥락으로 쓴다. 두 사례만으로30층 비용을 실측했다고 하지 않는다.
+
+연산 정의
+- 원본 causal_obq/common.py·capture·packet·reference 결과는 수정하지 않는다.
+- p0 보정 Q→동일 CPU FP64 H/factorize→FP32 U를 offline 재구성한다. 저장된 O_offline packet과 code/scale bytes가 정확히 같아야 한다. 준비 CPU 시간/전송/상주 bytes 별도 보고.
+- T_code: immutable resident rotated BF16 K [3,98,16,12,128], FP16 scale [3,98,1,12,128], FP32 U [12,128,128]에서 code assignment+실제 nibble pack+sentinel까지. 주 비교 RTN_FP32 대 batch Torch OBQ다. native BF16 RTN은 동일 CPU packet과의 추가 정확성 대조다.
+- batch OBQ는 token/head 행을 함께 계산하되128 channel 순서를 유지한다. w는 매 호출 새 FP32 복사이고 immutable 원본을 수정하지 않는다. scale 확장·workspace·출력 할당과 pack 모두 timed 범위에 포함한다. factor 계산은 offline이므로 steady-state T_code에 포함하지 않되 별도 보고한다.
+- T_encoder: resident 원본 BF16 K에서 Hadamard FP32 곱→BF16 반올림→frame pad→native BF16 scale→FP16 저장→동일 code+pack+sentinel까지. 같은 원본의 CPU rotate/scale/native RTN 및 O_offline packet과 정확히 일치할 때만 유효 비용으로 보고한다.
+- GPU 회전/scale가 CPU와 다르면 phase별 불일치 원소 수를 기록하고 T_encoder를 unsupported_numerical_equivalence로 남긴다. 허용오차로 바꾸거나 T_code 성공을 T_encoder 성공으로 확대하지 않는다. 유효 T_code 결과는 보존한다.
+
+형식/바이트
+원본4680토큰,3×(1560+8)pad=4704토큰,12head,D128,group16. 패딩 code도 저장한다.
+K packet=3,612,672 packed bytes+903,168 scale bytes+1 sentinel=4,515,841 bytes. 기존 reader 형상/인덱스/scale dtype/packet metadata 유지. shape/kind는 고정 Python metadata다.
+offline U786,432bytes, resident original K/rotated K/scale/Hadamard 및 graph static copy를 각각 기록한다. 같은 cache payload와 같은 실제 peak 사용량을 혼동하지 않는다.
+
+정확성(타이밍 전)
+- 준비 CPU frames/factor와 batch CPU code+pack이 저장된 R_fp32/R_bf16/O_offline packet과 전 원소 바이트 일치.
+- GPU batch eager의 세 code packet도 같은 CPU reference와 packed bytes/scale/sentinel 전 원소 일치.
+- graph 출력도 동일 기준 전 원소 일치. graph·eager의 원본 입력 및 factor 불변을 확인한다.
+- synthetic CPU 검사: full-H 순차 보상의 head-loop 기준과 batch 계산 정확 일치; identity factor가 FP32 RTN과 일치; all packet fields/byte count/입력 보존.
+- torch TF32 off, float32 matmul precision highest. compile/fast-math/FMA 변경 또는 factor dtype 변경은 이번에 시도하지 않는다.
+
+타이밍/할당/graph
+- 사례×eager/graph의4개 worker process를 순차 실행해 메모리 이력 분리. 모델 로드0. 각 process는 해당 두 알고리즘의 resident 입력을 공유한다.
+- 각 유효 stage에서5회 warmup,20 paired rounds. round parity로 AB/BA 순서 교차. GPU events와 synchronize한 host wall time을 둘 다 기록한다. median/IQR/paired 차이와 매 round 원자료 보존.
+- eager의 transient allocation/FP32 workspace 초기화는 호출에 포함한다. graph는 capture private pool을 재사용하며 static input copy와 workspace 재초기화를 replay마다 포함한다. fixed U는 copy마다 갱신하지 않는다.
+- graph 입력주소가 달라질 실제 상황을 반영해 T_code는 z/scale를 static input에 copy 후 replay, T_encoder는 원본 K를 static input에 copy 후 replay한다. 이 D2D copy를 timed 범위에서 빼지 않는다.
+- graph capture/초회 allocation/5warmup은 steady-state20회에서 제외하되 준비 시간 및 capture peak 메모리로 별도 보고한다. 정확성 hash/CPU copy는 steady-state timer 밖이다.
+- graph capture 실패/OOM/4GiB peak allocated memory 초과는 graph_unavailable로 기록한다. 캡처 종료 시 현재 allocation뿐 아니라 캡처 중 torch.cuda.max_memory_allocated를 검사한다. eager 경로도 같은 peak 상한을 넘으면 resource cap 위반을 명시하고 유효 타이밍으로 판정하지 않는다. eager 유효 결과는 graph 불가 때문에 무효로 만들지 않는다. 반복해서 graph 구성을 바꾸거나 자원 상한을 올리지 않는다.
+- GPU 정확성 실패는 invalid로 기록하고 해당 경로 timing을 진행하지 않는다. 수치 기준 변경/반복 후보 탐색 없음.
+
+비용 해석과 결정
+- 임의1ms/5% 성공 기준을 만들지 않는다. 유효 T_code/T_encoder의 실제 RTN 대비 지연 차이, code 단계 비중, memory를 보고 다음 자원 배분을 결정한다.
+- 같은 BF16 reference run의 consumer chunk2/7 시간과 비교한 부가비용 비율을 보고한다.30층 동시 적용 추정은30×층별 encoder 증분의 범위로 명확히 표시하며 실제 전체 생성 지연으로 표현하지 않는다.
+- measured T_code/T_encoder는 서로 다른 실행이므로 단순 차이가 정확한 stage decomposition은 아니다. '비중 근사'로 표시하고 구성 구간 중첩/allocator 효과를 한계로 둔다.
+- batch+graph만으로 요구 비용이 감당되면 fused 개발 근거가 약해진다. T_code가 크고 total encoder를 줄일 여지가 확인될 때만 후속 fused 코드 검토 근거가 된다.
+
+상한/실행
+전체 run 시작부터15분: 파일검증·CPU준비·process launch·GPU transfer·capture·warmup·정확성·timing 포함. GPU peak allocated4GiB/worker 판정 상한, CPU4threads/RSS8GiB, 새 folder2GiB. GPU 다른 작업이 종료된 뒤 시작. 모델/영상생성0.
+자원 검사는 관측 기반이다. GPU peak는 단계/round가 끝났을 때 초과를 검출하며 allocation을 사전에4GiB로 물리적으로 제한하지 않는다. parent의 CPU 준비·해시 함수 내부를 중간에 강제 중단하지는 못하고 함수 반환 후 시간 상한을 검사한다. GPU worker subprocess에는 전체 남은 시간 timeout을 적용한다. 실제 초과가 발생하면 기록하며 엄밀한 선제 hard cap이라고 부르지 않는다.
+상한 또는 필수 코드/source hash 실패 시 incomplete_or_invalid, 완료된 worker 결과는 보존. graph_unavailable은 지원 범위 결과이며 전체 실험 무효로 처리하지 않는다. 원본 causal 실험 결과는 절대 덮어쓰지 않는다.
+root/Fable 코드 검토 후 lock하고 실행한다. 지금 산출물은 계획·코드·CPU 합성 검증뿐이다.

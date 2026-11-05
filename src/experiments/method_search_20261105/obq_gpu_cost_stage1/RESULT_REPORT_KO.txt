@@ -1,0 +1,58 @@
+OBQ GPU 비용 1단계 결과 — 2026-11-05
+
+결론: 고정 offline factor를 쓰는 GPU code 생성·INT4 패킹은 시험한 두 사례에서 CPU 저장 패킷과 정확히 같았다. T_code 실행 비용은 측정했다. 그러나 전체 GPU encoder 비용과 실제 캐시 소유권을 유지한 Graph 비용은 아직 측정하지 못했다. 본 검사는 신규 알고리즘 또는 전체 생성 성능 입증이 아니다.
+
+실행 및 범위
+RTX 4090(SM89), PyTorch 2.6.0+cu124, CUDA 12.4. L18 write chunk1, L24 write chunk6의 기존 fresh causal 캡처를 사용했다. 모델 로드 0, 생성 0, 추가 GPU 재실행 0. 등록된 eager/Graph 네 독립 프로세스 모두 완료했다. 전체 run 7.871008초(900초 상한), 부모 CPU peak RSS 0.794 GiB, worker 최대 RSS 0.962 GiB, 실행 종료 시 새 디스크 88,219,465 bytes. 실험 원본·등록·기준을 결과 후 바꾸지 않았다.
+
+정확성
+CPU 준비 및 GPU eager의 R_fp32/O_offline/R_bf16 모두 동결 CPU packed·scale·sentinel 전 원소 바이트 일치. 두 사례의 Graph R_fp32/O_offline도 측정 전후 정확 일치했고 입력 K/z/scale/U를 보존했다. 각 K 패킷은 4,515,841 bytes(3,612,672 packed+903,168 FP16 scale+1 sentinel)이다. 이 결론은 GPU 양자화 코드 생성/패킹의 일치이며 전체 encoder의 일치가 아니다.
+
+GPU 회전의 CPU 불일치와 등록된 처리
+사례            BF16 rotated 불일치 / 7,225,344원소      scale 불일치 / 451,584원소
+L18 chunk1       1,117                                     12
+L24 chunk6       1,069                                     11
+eager와 Graph에서 같은 불일치 수였다. GPU FP32 Hadamard 곱 후 BF16 반올림 결과가 CPU와 달랐으며, 이에 따라 일부 scale도 달랐다. 현재 검사는 수학 라이브러리의 누산 순서 차이를 세부 분해하지 않았다. 작은 차이라고 품질 영향이 없다고 주장하지 않는다. 등록에 따라 T_encoder 네 경로를 unsupported_numerical_equivalence로 기록하고 타이밍을 생략했다. 허용오차 변경·재실행은 하지 않았다.
+
+T_code: immutable resident z/scale/U → code 생성+실제 pack+sentinel
+모든 값은 ms이며, 주표는 synchronize한 host 중앙값 [Q1,Q3]. 5 warmup 후 20 paired AB/BA round. CUDA event 원자료도 별도 보존했다.
+사례/모드          RTN_FP32 host             OBQ host                  paired(OBQ−RTN) host       GPU event 중앙값(RTN / OBQ)
+L18 c1 eager   0.148183 [0.147218,0.152982]   7.893140 [7.873471,7.911686]   7.744797 [7.721833,7.763558]   0.135680 / 7.878144
+L18 c1 graph   0.159380 [0.156276,0.161837]   4.932230 [4.929406,4.937018]   4.772974 [4.771885,4.776927]   0.147456 / 4.918784
+L24 c6 eager   0.147601 [0.147001,0.152767]   7.978046 [7.967395,7.991420]   7.827935 [7.810059,7.846385]   0.135168 / 7.963648
+L24 c6 graph   0.157792 [0.155835,0.159964]   4.931421 [4.930246,4.933643]   4.773238 [4.770966,4.777597]   0.146432 / 4.919808
+
+중대한 구현 범위: Graph 출력의 저장 수명
+잠긴 graph replay는 capture pool의 static out을 그대로 반환한다. 다음 replay가 이전 패킷을 덮어쓰므로 현재 Graph 수치는 borrowed output의 코드 비용이다. 실제 과거 청크를 보존하는 encoder 비용으로 사용할 수 없다. 이 결함은 root가 실행 시작 후 지적했고 실제 Fable도 확인했다. 이미 시작한 등록 검사를 변경하지 않고 범위를 제한해 보고했다. eager packed/sentinel은 호출마다 새 할당이지만 scale은 immutable 입력을 공유한다. 엄격한 owned packet 비교에서는 두 경로 모두 동일한 소유권 정책을 정해야 한다. Graph에서 capture 밖의 출력 clone 비용과 서로 다른 두 입력 연속 replay 후 첫 패킷 불변 검사가 필요하다. 이번 결과로 그 비용이나 검사를 대신하지 않는다.
+
+준비·상주·메모리
+offline p0 H/factor CPU 재구성 시간: L18 42.785ms, L24 34.098ms. 이 비용은 고정 factor를 구축하는 준비 비용이며 매 청크의 T_code에 넣지 않았다. 준비/자료검증 전체는 각각 0.501/0.459초였다. 원본 GPU 입력 K 14,376,960B, rotated z 14,450,688B, scale 903,168B, U 786,432B, Hadamard 65,536B가 동시에 상주했다. U는 매 replay마다 갱신·복사하지 않는다.
+worker 초회 CUDA 준비를 포함한 initial_H2D 구간: L18 eager 108.967ms, Graph 87.006ms; L24 eager 92.639ms, Graph 92.370ms. 순수 PCIe 대역폭 측정으로 해석하지 않는다.
+Graph setup(내부 side-stream 예열3회와 capture 포함)은 L18 85.359ms, L24 77.689ms. 그 뒤5회 warmup은 steady-state timing에서 제외되며 독립 시간 열은 없고 worker 전체 경과시간에 포함된다. Graph 각 replay의 z/scale D2D 입력 복사15,353,856B는 timed 범위에 포함했다.
+eager peak allocated 130,485,760B(124.441MiB), reserved142,606,336B(136MiB). Graph peak allocated165,037,056B(157.392MiB), reserved264,241,152B(252MiB). 두 알고리즘·입력·workspace·Graph pool을 합친 worker peak이며 Graph private pool만을 따로 측정한 수치는 아니다. 4GiB 판정 상한 초과는 없었다. 같은 K payload가 같은 전체 peak 메모리를 뜻하지 않는다.
+
+전체 생성 시간과의 관계: 맥락용 추정만
+같은 clean BF16 reference 실행의 소비자 chunk2는1.092388초, chunk7은1.689169초(각 denoise4회+cache refresh1회)였다. 이 실행은 비용 검사와 다른 실행이며 다음 수치는 생성 지연 실측이 아니다.
+L18 eager: T_code 한 층 증분/해당 BF16 청크 0.709%; 30층이 모두 같은 비용이라는 가정의 단순30배 21.269%.
+L18 graph: T_code 한 층 증분/해당 BF16 청크 0.437%; 30층이 모두 같은 비용이라는 가정의 단순30배 13.108%. Graph 값에는 owned output 복사가 없다.
+L24 eager: T_code 한 층 증분/해당 BF16 청크 0.463%; 30층이 모두 같은 비용이라는 가정의 단순30배 13.903%.
+L24 graph: T_code 한 층 증분/해당 BF16 청크 0.283%; 30층이 모두 같은 비용이라는 가정의 단순30배 8.477%. Graph 값에는 owned output 복사가 없다.
+측정한 eager code 증분만 단순30배하면 약0.232~0.235초/청크다. Graph borrowed-output 증분은 약0.143초/청크지만 배포 가능한 비용으로 채택하지 않는다. 전체 encoder는 미측정이고 겹침·다른 층 특성·allocator 상호작용도 검증하지 않았으므로 이를 전체 rollout slowdown 또는 정확한 추가 비용 상한으로 부를 수 없다.
+
+판단과 다음 자원
+1. 고정 offline H를 이용한 GPU code 경로의 수치 이식 가능성은 두 사례에서 확인했다. 기존 reader payload를 바꾸지 않는 장점과 128채널 순차 보상 비용은 별도다.
+2. 단순 batch Torch의 eager code 비용은 RTN보다 층당 약7.7~7.8ms 크다. Graph로 약4.77ms의 증분까지 줄어드는 관측이 있으나 출력 소유권을 유지하는 구현에서 재확인해야 한다. launch/메모리 구간을 따로 프로파일하지 않아 원인을 전부 launch overhead로 귀속하지 않는다.
+3. 따라서 지금 바로 custom fused kernel을 개발하기보다, 별도 사전 등록에서 owned packet·두 입력 수명 검사와 GPU 전처리의 정의를 확정하는 것이 먼저다. CPU packet과의 정확 일치 실패를 이번 실험 안에서 완화해서는 안 된다. 전체 GPU encoder의 실제 출력과 기존 native reader를 연결한 유효성 검사가 필요하다.
+4. 전체 encoder 비용이 없으므로 code 단계 비중도 구할 수 없다. 본 결과는 fused 개발 효과를 보장하지 않으며 새로운 방법론의 신규성이나 전체 생성 품질을 추가로 입증하지 않는다.
+
+읽기 전용 감사
+audit_result.py로 잠긴 source17개, 준비 파일2개, worker 결과4개의 해시를 확인했다. CPU 준비 expected packet의18개 텐서 필드를 동결 원자료와 전 원소 비교했고 각 실제4515841B를 확인했다. 총80 paired round/160 알고리즘 타이밍 관측의 순서·중앙값·사분위·paired 차이를 독립 선형 보간 계산으로 재계산했다. 264개 검사 통과,0.537초, GPU 재실행0. GPU 출력 수치는 저장된 worker의 정확 일치 assertion 기록을 확인한 것이며, GPU 값을 독립 재실행한 감사는 아니다.
+감사 첫 시도는 리뷰 파일이 잠금 후 추가 검토2를 append한 탓에 현재 전체파일 해시 비교에서 중단됐다. 당시 본문6863 bytes의 prefix가 REVIEW_LINK의 사전 SHA와 정확히 같음을 검증하고 REVIEW_AT_LOCK_KO.txt로 보존했다. REVIEW_APPEND_RECORD.json에 경위를 남긴 뒤 감사만 재수행했다. benchmark/등록/LOCK/측정 결과 변경 및 GPU 재실행은 없다.
+실제 Fable의 최초 실행 전 검토 및 수정본 검토를 받았고, 추가 검토2의 출력 수명 지적을 결과 해석에 반영했다. 결과 자체의 후속 독립 검토는 root가 진행할 대상이다.
+
+주요 해시
+benchmark.py 3f1fc5b32a52a406a99f470ba81b93a9fc856021ef1baed455447cc43f189f10
+REGISTRATION_DRAFT_KO.txt 6093e0b4cc4d6bcf8d03217ea32763b9716c3f758625184829f0d88c58dfd8f7
+LOCK.json d697eb1667e1bb32b58f590e10f7fa83ea476b93bbe743ac6752ffc1eb698648
+RESULT.json 350983e636a242b7632c398ba947b8b534e178b9fe0c8d73b29eca77fc6564e7
+AUDIT_RESULT.json 0ff1184fac2d794822d53b905697ae294c994efda6e19159747466b1f60b8c61

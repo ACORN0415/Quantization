@@ -1,0 +1,34 @@
+{
+  "registered_utc": 1793871491.2964208,
+  "sha256": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_cost_stage1/benchmark.py": "3f1fc5b32a52a406a99f470ba81b93a9fc856021ef1baed455447cc43f189f10",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_cost_stage1/REGISTRATION_DRAFT_KO.txt": "6093e0b4cc4d6bcf8d03217ea32763b9716c3f758625184829f0d88c58dfd8f7",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/common.py": "436f7b2762397ecce840b91feb535094a9008c54066e4e796c3df248f9071c35",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/LOCK.json": "c3d0d6f1f4f919155d2dd30ea103b7faaccc1523eaae7c6d1c99027060fceb2d",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/manifest.json": "48ef58dc03c7db3f3a3bea71b0538ca549152ac41b34faba9a0030f566afa8b9",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/manifest.json": "44079f0ea622e9789ce62c5d9da0a53303127b85995fa11ee92fa2a80438a10a",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/reference/manifest.json": "e68486d66c32baf1ef6638a86e2d24df806e5565e6fdfa056a9af1ca1905dc85",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l18_write1.pt": "b1f98005ab4aa08767444aff45822321bf701b6d26ad1537a8f8934255ed25e8",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c1_R_fp32.pt": "72920136ff74da059f5764eefb48a765a90de527a334a863489d5e667487ed95",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c1_O_offline.pt": "6374aa3a03cb2d32dd750daee72f710c658926524c7336c14dc2143820ed76c9",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l18_c1_R_bf16.pt": "fb372d36638f90d2fac388d6e6856388503631d64d5e70b78bd4c77f09371835",
+    "/home/acorn0415/sfq_data/kv_alllayer_capture/p00_s101/l18_c7.pt": "4f38ad533ff8e307fb53f21651ea695452b4dd7f26e1c1728f84f363cba3e698",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/l24_write6.pt": "903d76a77c92167c6d70a3331bcfe15b58d069fbbaae14230864e336734dca58",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c6_R_fp32.pt": "c71fc2b8ff88c4ff3d2e4aab448a69904f8a0f9e1f93e485845a8faaa39dfba0",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c6_O_offline.pt": "98e4532f4f06ba42dc5dab5f5b073ed222cfd35047d54116064b46f0648600c4",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/l24_c6_R_bf16.pt": "87b27eaf367fea1301300185268a9e3112e5cd9da821271accf0469aa1982768",
+    "/home/acorn0415/sfq_data/kv_alllayer_capture/p00_s101/l24_c7.pt": "97197b6d4a772bdaefabdcfeb59de3153390736a055191f17cf4bb580e1fa3cb"
+  },
+  "selftest_sha256": "85d6777648baa08defe28ae44513b9adf225fdff73bbcffb3cb1ebf0356f4550",
+  "cases": [
+    [
+      18,
+      1
+    ],
+    [
+      24,
+      6
+    ]
+  ],
+  "seconds_cap": 900
+}

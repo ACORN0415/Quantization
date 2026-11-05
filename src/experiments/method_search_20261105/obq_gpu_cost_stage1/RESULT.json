@@ -1,0 +1,77 @@
+{
+  "status": "completed",
+  "started_utc": 1793871499.8759978,
+  "lock_sha256": "d697eb1667e1bb32b58f590e10f7fa83ea476b93bbe743ac6752ffc1eb698648",
+  "prepared": [
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_cost_stage1/prepared_l18_c1.pt",
+      "sha256": "108f11bd2b453283b13f240986a65fe2ddde14d0b8087c0c79e0140b8391da05",
+      "bytes": 44069687,
+      "layer": 18,
+      "chunk": 1,
+      "offline_H_factor_CPU_seconds": 0.04278545593842864,
+      "CPU_rotation_scale_seconds": 0.01268901105504483,
+      "CPU_prepare_verify_seconds": 0.5010492869187146,
+      "BF16_reference_consumer_chunk_seconds": 1.0923879819456488,
+      "source_write_sha256": "b1f98005ab4aa08767444aff45822321bf701b6d26ad1537a8f8934255ed25e8",
+      "calibration_sha256": "4f38ad533ff8e307fb53f21651ea695452b4dd7f26e1c1728f84f363cba3e698"
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_cost_stage1/prepared_l24_c6.pt",
+      "sha256": "02c1ca745293356d792fdf11146c4da32736f153026aa64866fb3b34bdcf2a79",
+      "bytes": 44069687,
+      "layer": 24,
+      "chunk": 6,
+      "offline_H_factor_CPU_seconds": 0.034097988973371685,
+      "CPU_rotation_scale_seconds": 0.008625530987046659,
+      "CPU_prepare_verify_seconds": 0.4593064869986847,
+      "BF16_reference_consumer_chunk_seconds": 1.6891693100333214,
+      "source_write_sha256": "903d76a77c92167c6d70a3331bcfe15b58d069fbbaae14230864e336734dca58",
+      "calibration_sha256": "97197b6d4a772bdaefabdcfeb59de3153390736a055191f17cf4bb580e1fa3cb"
+    }
+  ],
+  "workers": [
+    {
+      "layer": 18,
+      "chunk": 1,
+      "mode": "eager",
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_cost_stage1/l18_c1_eager.json",
+      "sha256": "bb7b57780e5899bdc861e73a864b215b971a9a4c79710e2333e4e9f4fd3ecebb",
+      "exit_code": 0,
+      "status": "completed"
+    },
+    {
+      "layer": 18,
+      "chunk": 1,
+      "mode": "graph",
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_cost_stage1/l18_c1_graph.json",
+      "sha256": "dac90cd48cdc3a87164ff6c662c8bc791506f8ca77b92fae64e35b295bae63fa",
+      "exit_code": 0,
+      "status": "completed"
+    },
+    {
+      "layer": 24,
+      "chunk": 6,
+      "mode": "eager",
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_cost_stage1/l24_c6_eager.json",
+      "sha256": "bb4365ccb4d88b7fb4b9a4c93e85dfad62b098abae7c005f362c530b56f00045",
+      "exit_code": 0,
+      "status": "completed"
+    },
+    {
+      "layer": 24,
+      "chunk": 6,
+      "mode": "graph",
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_cost_stage1/l24_c6_graph.json",
+      "sha256": "e4716706f1a9fc79784d11c5a2b25ac21f41a989034d8810cc4f02e36f3ea8a3",
+      "exit_code": 0,
+      "status": "completed"
+    }
+  ],
+  "models_loaded": 0,
+  "generations": 0,
+  "finished_utc": 1793871507.5112572,
+  "elapsed_seconds": 7.871008433052339,
+  "cpu_parent_peak_rss_bytes": 852004864,
+  "new_directory_bytes": 88219465
+}

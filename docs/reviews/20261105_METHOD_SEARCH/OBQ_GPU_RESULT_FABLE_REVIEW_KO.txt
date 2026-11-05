@@ -1,0 +1,37 @@
+OBQ GPU 비용 1단계 실측 결과 검토 — obq_gpu_cost_stage1 — Claude Fable 5.1 — 2026-11-05 KST
+Task/Dispatch ID: 없음. 읽기 전용, GPU 재실행 0. 읽은 것: RESULT.json, LOCK.json, worker 4개 json(stages·samples 요약), AUDIT_RESULT.json(상단), REVIEW_APPEND_RECORD.json, RESULT_REPORT_KO.txt(60행).
+
+== 판단: 실측 유효, 보고서의 범위 한정 적절. fused 단계는 "비트 일치 조건부"로 진행 가치 있음 ==
+유효성(직접 확인)
+- 해시: benchmark.py 3f1fc5b3… = LOCK = 실행 전 검토본. RESULT.json 350983e6… = 메시지 = AUDIT 기록. LOCK d697eb16… = RESULT.lock_sha256.
+- 4 worker 모두 completed·exit 0, RTX 4090 SM89, torch 2.6.0+cu124. eager 검증 3팔 전 원소 일치, 입력 보존 True, RSS ≤ 0.96 GiB, peak alloc 130/165 MB(4 GiB 상한 안), 전체 7.87 s.
+- 타이밍 자료: 사례·모드당 20 round, AB/BA 각 10, OBQ host 중앙값 IQR ≤ 0.04 ms, GPU event와 host 차이 ≤ 0.02 ms → 측정 안정. 감사 264검사·80 paired round 재계산 통과(저장값 기준, GPU 재실행 아님).
+- T_encoder 4경로 unsupported: 회전 불일치 1117/1069(비율 1.5e-4), scale 12/11. 실행 전 검토의 예측과 같은 원인(cuBLAS/MKL 합산 순서 → BF16 경계 뒤집힘). 등록대로 처리했고 사후 완화 없음 ✓.
+- 리뷰 파일 append로 생긴 감사 해시 불일치는 prefix 스냅샷(REVIEW_AT_LOCK_KO.txt)으로 보존·기록 — 적절. 원본 코드·LOCK·결과 변경 0.
+
+== 수치 해석(추가) ==
+- T_code 층·청크당: RTN 0.148 ms, OBQ eager 7.9 ms, OBQ graph(borrowed) 4.93 ms. 증분 eager 7.75~7.83, graph 4.77 ms.
+- eager에서 GPU event 7.878 ms ≈ host 7.893 ms → GPU 타임라인이 거의 꽉 차 있다. 즉 eager도 launch 대기가 아니라 커널 실행 시간이 지배한다.
+- graph 4.92 ms에 대해 단계마다 남은 열 전체를 읽고 쓰는 추정 왕복 3.7 GB를 나누면 ≈ 750 GB/s — 4090의 실효 대역폭 근처. (추정) 전역 workspace 메모리 바운드.
+  따라서 Graph·compile로는 더 못 줄이고, 행을 레지스터에 상주시키는 융합 커널만이 다음 자릿수를 연다. 보고서 2항의 "원인을 launch로 귀속하지 않음"과 일치하며, 제 해석은 메모리 바운드 쪽이다.
+- 30층 단순 외삽(보고서 표기대로 추정): eager 0.23 s/청크, graph 0.14 s/청크(owned 복사 제외). 참조 소비자 청크 1.09~1.69 s 대비 8~22%. 전체 encoder 비용은 미측정(회전 단계 unsupported).
+
+== fused 단계 범위에 대한 의견 ==
+보고서 3항(먼저 owned packet·수명 검사·GPU 전처리 정의 확정)과 주 작업자 계획(fused + owned graph 대조)은 충돌하지 않는다. 한 등록에 세 묶음을 넣되 순서를 고정하면 된다:
+ (a) owned-output graph: replay() 안·capture 밖 clone, eager도 같은 소유권 정책(packed·scale·sentinel), 서로 다른 두 입력 연속 replay 후 첫 패킷 불변. 비용 작고 필수.
+ (b) GPU-native 전처리 변형: GPU 회전·scale 위에서 코드 동등성 + 4 endpoint 출력 감소 gate. "CPU 이식 비트 성공"이라 쓰지 않음.
+ (c) fused(warp 1행·4warp 블록·레지스터 상주·니블 패킹 융합): CUDA C++ load_inline, 컴파일 ≤ 2, `-fmad=false`(또는 __fmul_rn/__fsub_rn), IEEE 나눗셈, rintf, 연산 순서 동일. Triton은 FMA 축약 제어가 불확실해 비트 일치 요구와 맞지 않음.
+     사전 실패 기준: eager/owned graph와 packed 비트 불일치 → 튜닝 없이 종료·원인 기록; 일치하되 owned graph 대비 2배 미만 → 중단. GPTQ lazy-batch 블록화는 비트 불일치이므로 정확 tier로 쓰지 않음.
+ (a)(b)가 실패하면 (c)를 돌리지 않는다. 45분·2 cases·생성 0은 적절. 성공해도 커널 공학이지 기여가 아니다.
+
+== 미확인 ==
+GPU 값 재실행 없음. 메모리 바운드 해석은 왕복량 추정에 기초한 가설이며 프로파일(ncu) 미실시. 이 검토는 승인이 아니라 권고다.
+
+== 정정(주 작업자 지적 수용, 2026-11-05) ==
+1. "eager에서 event ≈ host → 커널 실행 지배"는 틀렸다. CUDA event 구간은 같은 스트림의 start/end 마커 사이 GPU 타임라인이며 host launch 대기로 생긴 공백도 포함한다. 따라서 event≈host는 자명하고
+   launch 대기 유무를 말해 주지 않는다. 말할 수 있는 것: graph replay는 커널 사이 host launch가 없으므로 graph 4.92 ms는 커널 실행(+graph 오버헤드)에 가깝고, eager−graph ≈ 3 ms가 launch 공백·allocator의 상한이다.
+2. "왕복 3.7 GB / 4.9 ms ≈ 750 GB/s → 메모리 바운드, compile로 못 줄이고 fused만 가능"은 과장이다. 3.7 GB는 측정이 아니라 단계별 슬랩 크기의 산술 추정이며 프로파일(nsys/ncu) 없이는 병목을 확정할 수 없다.
+   또한 torch.compile(inductor)은 단계당 분리 연산(div·round·clamp·mul·sub·mul·sub)을 1~2 커널로 융합해 슬랩 왕복 횟수를 줄일 수 있으므로 배제할 수 없다(단, inductor 생성 커널의 FMA 축약으로 비트 일치가 깨질 위험은 사전 명시 필요).
+   정확한 서술: "메모리 병목 가설(미프로파일). 단계별 전역 슬랩 왕복을 없애는 쪽(레지스터 상주 fused)이 가장 큰 폭, compile 융합은 중간 폭 후보".
+3. "fused가 owned graph 대비 2배 미만이면 중단"은 제 제안이며 등록되지 않았다. 판정은 전체 encoder 개선·비용으로 한다는 root 입장에 따른다.
+4. stage 2 설계 동의: RTN은 eager/graph 둘 다 허용, OBQ graph는 U도 매 호출 static 복사(786 KB, timed 포함)해 30층이 한 graph를 공유 가능하게 하고 출력 clone 포함. 새 커널의 배포 기여는 자동 확정하지 않음.

@@ -1,0 +1,46 @@
+OBQ GPU 비용 1단계 코드 검토(실행 전) — obq_gpu_cost_stage1/benchmark.py — Claude Fable 5.1 — 2026-11-05 KST
+Task/Dispatch ID: 없음. 읽기 전용, GPU 실행 0. 읽은 것: REGISTRATION_DRAFT_KO.txt 전체, benchmark.py 전체(312행), SELFTEST.json, causal_obq/common.py(23-100행),
+ causal_obq의 capture/packets/reference manifest 키 확인. 해시: benchmark.py 74fb832de75c3f5f…(메시지·SELFTEST 일치), REGISTRATION_DRAFT_KO.txt 7fffeae0715c1383….
+
+== 판단: 실행을 무효로 만드는 버그 없음. 수정 권고 1건(높음, 사전 등록 사항) + 확인 사항 ==
+
+[권고 1 — 높음] T_encoder 유효 조건(243-245행)은 예측 가능한 이유로 거의 확실히 실패해 T_encoder 타이밍이 두 모드 모두 생략된다.
+ - 조건: GPU `k.float()@hm`→BF16이 CPU MKL 결과와 전 원소 비트 일치. 128-길이 FP32 내적의 합산 순서가 cuBLAS와 MKL에서 다르므로 FP32 결과가 마지막 비트에서 다르고,
+   BF16(가수 8비트, 간격 ~4e-3 상대)으로 캐스트할 때 경계 근처 원소가 뒤집힌다. 원소당 확률 ~1e-5 수준이면 7.2M 원소에서 수십~수백 개 불일치 → `unsupported_numerical_equivalence`로 `continue`.
+ - 결과: 이 실험의 주 산출물인 "전체 encoder 비용(회전+scale+코드+pack)"이 보고되지 않는다. T_code만 남는다.
+ - 권고(사후 완화가 아니라 지금 등록): 회전 불일치 시에도 T_encoder 타이밍을 수행하되 정확성 gate를 "GPU 자체 회전 z/s에서 eager로 만든 패킷과 전 원소 일치(자기 일관성)"로 두고,
+   CPU 대비 불일치 원소 수(rotated/scale/code 단계별)는 별도 필드로 기록한다. 회전 단계는 R_fp32·O_offline 두 팔에 공통이므로 paired(OBQ − RTN) 차이의 타당성은 유지된다.
+   현재 코드로는 241-242행에서 불일치 수를 이미 세므로, 245행 `continue`를 "자기 일관성 gate 후 benchmark 진행 + status='timing_valid_cpu_bits_differ'"로 바꾸는 작은 수정이다.
+   이를 거부하면 T_encoder 결과 부재를 실험 설계의 한계로 미리 명시해야 한다.
+
+[확인 — T_code 정확성 gate는 적절하며 비트 일치가 기대된다] 앞서 제가 제기한 FMA 우려를 정정한다. eager/graph 모두 `w/s`, `round`, `c*s`, `w−(..)`, `/u_jj`, `e*u`, `w−=tmp`가
+ 각각 별도 커널의 단일 IEEE 연산이라 FMA 축약이 없고(sub_와 mul이 분리), CPU도 같은 분리 연산이다. 따라서 CPU codes_obq(head 루프)·CPU batch·GPU eager·GPU graph의 코드가 비트 일치해야 정상이며,
+ 불일치는 구현 버그 신호다. 2차 기준(불일치 비율/±1%)은 T_code에는 불필요하고 T_encoder의 회전 단계에만 해당한다(권고 1).
+
+[타이밍 — 누락 없음]
+ - 각 측정 전 synchronize, cuda Event + host perf_counter 병기(207-209행), AB/BA 교차(205행), 20회·5 warmup, median/IQR·paired 차이·원자료 보존 ✓.
+ - eager: 매 호출 새 FP32 w·scale expand·out·pack 할당이 timed 범위 안 ✓. graph: replay 전에 x→static D2D copy가 timed 범위 안(176-178행) ✓, 고정 U는 복사하지 않음 ✓.
+ - graph capture·초회 할당·warmup은 setup_seconds/peak로 분리 보고(181-183행) ✓. eager 128-step Python 루프의 launch 간격은 event 구간에 포함되므로 wall 비용을 반영 ✓.
+[graph 입력 재사용 — 적절] 팔마다 static clone·graph 분리(163-179행), replay마다 원본에서 복사, 출력 `out`은 static 메모리이나 packet_check가 .cpu() 스냅샷으로 비교(69-70행) ✓.
+ capture 전 side-stream warmup 3회(167-170행, PyTorch 권장) ✓. capture 내부의 pack/torch.full 할당은 private pool ✓. 측정 후 재검증(211행) ✓.
+[정확성 gate] worker 진입 시 eager 3팔 패킷을 동결 CPU 패킷과 전 원소 비교(235-237행), 각 stage 측정 전·후 재비교(197, 211행), 입력 텐서 sha 불변(233, 252행) ✓.
+ prepare_case가 H sha를 packets manifest의 offline 기록과 대조(136행) → 통계 provenance 고정 ✓. TF32 off·matmul precision highest(226-227행) ✓.
+[메모리·자원] 900 s 총상한(run guard + subprocess timeout) ✓, 부모·worker RSS 8 GiB ✓, 디스크 2 GiB ✓, GPU 4 GiB cap은 graph capture 후에만 검사(175행)이고 eager는 보고만 — 등록문의 "목표" 표현과 일치.
+ worker 4개 순차 프로세스로 메모리 이력 분리 ✓. GraphUnavailable은 eager 결과를 무효화하지 않음(249-250행) ✓.
+[manifest 의존성 확인] reference/manifest.json chunks[].seconds 존재(chunk2 1.09 s, chunk7 1.69 s), packets/manifest.json offline[].H_sha256 존재, capture/packets artifacts 경로 형식 일치 → prepare_case의 next()/키 접근은 안전.
+
+[사소]
+ - 143행 `chunk+1` 소비자 청크 시간은 참조 BF16 실행의 청크 시간이며 denoise 호출 수가 rollout(5회)과 같은지 등록문에 적어 두면 비율 해석이 명확하다.
+ - 212-213행 paired 차이는 같은 round 안의 두 측정 차이라 순서 효과를 AB/BA로 상쇄 ✓. host_seconds에는 Python 오버헤드가 포함되므로 eager T_code의 "launch bound" 판단은 host 기준으로.
+
+== 미확인 ==
+실행 없음. 권고 1의 불일치 발생 확률은 추정이며 실제 GPU에서 0일 수도 있다(그 경우 현 코드로 충분). 이 검토는 승인이 아니라 권고다.
+
+== 추가 검토(수정본 benchmark.py sha 3f1fc5b32a52a406…, REGISTRATION_DRAFT sha 6093e0b4cc4d6bcf…, SELFTEST 일치) ==
+- gpu_peak_guard(156-161행): torch.cuda.max_memory_allocated 기준, graph 모드는 GraphUnavailable·eager 모드는 MemoryError로 구분. capture 직후(183행)·build 종료(189행)·warmup 후(210행)·
+  매 round 후(222행)·초기 검증 후(250행) 호출. benchmark_stage 시작의 reset_peak_memory_stats(200행) 이후 peak이므로 상주 입력을 포함한 단계별 peak이다 ✓.
+  eager MemoryError → worker invalid → run은 해당 worker에서 중단, 이전 worker 결과 보존(등록문 46행과 일치) ✓. 초기 검증 단계의 eager peak은 수백 MB 수준이라 4 GiB 위반 가능성 낮음.
+- finally에 last_stage_peak/cap_exceeded 기록(272-273행) ✓. 등록문 45행이 관측 기반·비선제 상한임을 명시 ✓(CPU 준비 구간 즉시 중단 불가 포함).
+- 결론: 수정본에도 무효 오류 없음. 잠금 가능.
+- 남은 이견(기록): T_encoder의 CPU 비트 일치 gate(255-258행)는 그대로다. 등록문 14행이 이를 사전 결정으로 못 박았으므로 실행 후 gate를 바꾸는 것은 사후 변경이 된다.
+  따라서 "회전 불일치 → T_encoder 부재"가 나오면 그 상태로 보고하고, 자기 일관성 gate 판본은 별도 등록으로만 가능하다. 지금 결정이 최종임을 주 작업자가 인지해야 한다.

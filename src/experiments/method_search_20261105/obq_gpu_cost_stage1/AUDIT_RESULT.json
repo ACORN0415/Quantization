@@ -1,0 +1,259 @@
+{
+  "passed": true,
+  "audit_sha256": "ac3f338030c1b09fd8e6a70c67f32b03a87cecf0bd48048dcb94b29e049784bd",
+  "result_sha256": "350983e636a242b7632c398ba947b8b534e178b9fe0c8d73b29eca77fc6564e7",
+  "checks_passed": 264,
+  "locked_source_count": 17,
+  "CPU_packet_fields_bytes_compared": 18,
+  "GPU_reexecutions": 0,
+  "models_loaded": 0,
+  "generations": 0,
+  "paired_rounds": 80,
+  "algorithm_timing_observations": 160,
+  "elapsed_seconds": 0.5374612960731611,
+  "rows": [
+    {
+      "layer": 18,
+      "chunk": 1,
+      "mode": "eager",
+      "statistics": {
+        "gpu_seconds": {
+          "R_fp32": {
+            "median": 0.00013567999750375748,
+            "q1": 0.00013414399325847626,
+            "q3": 0.00013952000066637992,
+            "iqr": 5.376007407903661e-06
+          },
+          "O_offline": {
+            "median": 0.007878144025802612,
+            "q1": 0.007859711885452269,
+            "q3": 0.00789785599708557,
+            "iqr": 3.814411163330193e-05
+          },
+          "paired": {
+            "median": 0.007744000025093555,
+            "q1": 0.00772172786295414,
+            "q3": 0.007762944001704454,
+            "iqr": 4.121613875031436e-05
+          }
+        },
+        "host_seconds": {
+          "R_fp32": {
+            "median": 0.00014818296767771244,
+            "q1": 0.00014721829211339355,
+            "q3": 0.00015298198559321463,
+            "iqr": 5.763693479821086e-06
+          },
+          "O_offline": {
+            "median": 0.007893139962106943,
+            "q1": 0.007873471244238317,
+            "q3": 0.00791168597061187,
+            "iqr": 3.8214726373553276e-05
+          },
+          "paired": {
+            "median": 0.00774479698156938,
+            "q1": 0.007721832633251324,
+            "q3": 0.007763557747239247,
+            "iqr": 4.172511398792267e-05
+          }
+        }
+      },
+      "reference_BF16_chunk_seconds": 1.0923879819456488,
+      "per_layer_increment_percent_of_BF16_chunk": 0.7089785963934853,
+      "conditional_30_equal_cost_layers_increment_percent": 21.269357891804557,
+      "encoder_preprocessing": {
+        "rotated_bytes_equal": false,
+        "scale_bytes_equal": false,
+        "rotated_unequal_elements": 1117,
+        "scale_unequal_elements": 12
+      },
+      "graph_output_ownership": "fresh_packed_output_scale_aliases_immutable_input",
+      "peak_allocated_bytes": 130485760,
+      "peak_reserved_bytes": 142606336
+    },
+    {
+      "layer": 18,
+      "chunk": 1,
+      "mode": "graph",
+      "statistics": {
+        "gpu_seconds": {
+          "R_fp32": {
+            "median": 0.00014745600521564483,
+            "q1": 0.0001454080045223236,
+            "q3": 0.00014873600006103517,
+            "iqr": 3.327995538711571e-06
+          },
+          "O_offline": {
+            "median": 0.004918783903121948,
+            "q1": 0.004917247772216797,
+            "q3": 0.004921599864959717,
+            "iqr": 4.352092742920116e-06
+          },
+          "paired": {
+            "median": 0.004771839782595634,
+            "q1": 0.004769792176783085,
+            "q3": 0.004773375980556011,
+            "iqr": 3.5838037729264e-06
+          }
+        },
+        "host_seconds": {
+          "R_fp32": {
+            "median": 0.00015938002616167068,
+            "q1": 0.00015627624816261232,
+            "q3": 0.00016183676780201495,
+            "iqr": 5.560519639402628e-06
+          },
+          "O_offline": {
+            "median": 0.004932229523546994,
+            "q1": 0.004929406277369708,
+            "q3": 0.004937018296914175,
+            "iqr": 7.61201954446733e-06
+          },
+          "paired": {
+            "median": 0.004772974411025643,
+            "q1": 0.0047718849673401564,
+            "q3": 0.0047769272059667856,
+            "iqr": 5.042238626629114e-06
+          }
+        }
+      },
+      "reference_BF16_chunk_seconds": 1.0923879819456488,
+      "per_layer_increment_percent_of_BF16_chunk": 0.436930329691518,
+      "conditional_30_equal_cost_layers_increment_percent": 13.10790989074554,
+      "encoder_preprocessing": {
+        "rotated_bytes_equal": false,
+        "scale_bytes_equal": false,
+        "rotated_unequal_elements": 1117,
+        "scale_unequal_elements": 12
+      },
+      "graph_output_ownership": "borrowed_replayed_static_buffer",
+      "peak_allocated_bytes": 165037056,
+      "peak_reserved_bytes": 264241152
+    },
+    {
+      "layer": 24,
+      "chunk": 6,
+      "mode": "eager",
+      "statistics": {
+        "gpu_seconds": {
+          "R_fp32": {
+            "median": 0.00013516800105571746,
+            "q1": 0.00013414399325847626,
+            "q3": 0.00013926400244235993,
+            "iqr": 5.120009183883666e-06
+          },
+          "O_offline": {
+            "median": 0.007963648080825805,
+            "q1": 0.007953407883644103,
+            "q3": 0.007978240132331848,
+            "iqr": 2.4832248687744682e-05
+          },
+          "paired": {
+            "median": 0.007826432079076767,
+            "q1": 0.007817727889865636,
+            "q3": 0.007844607930630446,
+            "iqr": 2.688004076480989e-05
+          }
+        },
+        "host_seconds": {
+          "R_fp32": {
+            "median": 0.0001476014731451869,
+            "q1": 0.0001470009156037122,
+            "q3": 0.0001527670247014612,
+            "iqr": 5.766109097748995e-06
+          },
+          "O_offline": {
+            "median": 0.007978046021889895,
+            "q1": 0.007967395416926593,
+            "q3": 0.00799142019241117,
+            "iqr": 2.402477548457682e-05
+          },
+          "paired": {
+            "median": 0.007827934517990798,
+            "q1": 0.00781005946919322,
+            "q3": 0.007846385065931827,
+            "iqr": 3.632559673860669e-05
+          }
+        }
+      },
+      "reference_BF16_chunk_seconds": 1.6891693100333214,
+      "per_layer_increment_percent_of_BF16_chunk": 0.4634191771952321,
+      "conditional_30_equal_cost_layers_increment_percent": 13.902575315856964,
+      "encoder_preprocessing": {
+        "rotated_bytes_equal": false,
+        "scale_bytes_equal": false,
+        "rotated_unequal_elements": 1069,
+        "scale_unequal_elements": 11
+      },
+      "graph_output_ownership": "fresh_packed_output_scale_aliases_immutable_input",
+      "peak_allocated_bytes": 130485760,
+      "peak_reserved_bytes": 142606336
+    },
+    {
+      "layer": 24,
+      "chunk": 6,
+      "mode": "graph",
+      "statistics": {
+        "gpu_seconds": {
+          "R_fp32": {
+            "median": 0.00014643200486898423,
+            "q1": 0.0001443839967250824,
+            "q3": 0.00014847999811172486,
+            "iqr": 4.096001386642465e-06
+          },
+          "O_offline": {
+            "median": 0.004919807910919189,
+            "q1": 0.004918015956878662,
+            "q3": 0.004921599864959717,
+            "iqr": 3.5839080810553745e-06
+          },
+          "paired": {
+            "median": 0.004772864021360874,
+            "q1": 0.0047708159349858755,
+            "q3": 0.004776959862560034,
+            "iqr": 6.143927574158228e-06
+          }
+        },
+        "host_seconds": {
+          "R_fp32": {
+            "median": 0.00015779200475662947,
+            "q1": 0.00015583523781970143,
+            "q3": 0.00015996352885849774,
+            "iqr": 4.128291038796306e-06
+          },
+          "O_offline": {
+            "median": 0.004931420960929245,
+            "q1": 0.00493024624302052,
+            "q3": 0.004933642776450142,
+            "iqr": 3.39653342962265e-06
+          },
+          "paired": {
+            "median": 0.0047732380335219204,
+            "q1": 0.004770966479554772,
+            "q3": 0.004777597001520917,
+            "iqr": 6.6305219661444426e-06
+          }
+        }
+      },
+      "reference_BF16_chunk_seconds": 1.6891693100333214,
+      "per_layer_increment_percent_of_BF16_chunk": 0.28257901710443467,
+      "conditional_30_equal_cost_layers_increment_percent": 8.47737051313304,
+      "encoder_preprocessing": {
+        "rotated_bytes_equal": false,
+        "scale_bytes_equal": false,
+        "rotated_unequal_elements": 1069,
+        "scale_unequal_elements": 11
+      },
+      "graph_output_ownership": "borrowed_replayed_static_buffer",
+      "peak_allocated_bytes": 165037056,
+      "peak_reserved_bytes": 264241152
+    }
+  ],
+  "max_worker_RSS_bytes": 1033363456,
+  "limits": [
+    "GPU numerical assertions are read from recorded worker results, not independently rerun.",
+    "No persistent graph-output ownership in locked implementation; graph timing is borrowed-output only.",
+    "No valid full GPU encoder cost: preprocessing differs from frozen CPU bytes.",
+    "Conditional 30-layer cost extrapolation is not a whole-model benchmark."
+  ]
+}

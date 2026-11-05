@@ -153,4 +153,25 @@ D006 [다음 두 업무, 각각 Codex1+Fable1]
 각등록/코드검토후잠금. 업무2는결과에따라rank4/16을자동추가하지않으며,FP32scalar후보와dense참조의수치차이는구분.
 복잡한온라인선택기를추가하기보다고정통계/단순화가효과를유지하는지확인한다.
 
-상태: 국소효과와새입력native경로신호는있으나,전체생성품질/실제GPU비용/신규성의종합검증은아직미완료. 연속연구목표active.
+E013 [GPU code/pack 비용 진단 완료; 전체encoder는미완료]
+obq_gpu_cost_stage1/RESULT.json SHA350983e636a242b7632c398ba947b8b534e178b9fe0c8d73b29eca77fc6564e7.
+두사례×eager/Graph네process7.871초완료. CPU기준패킷과GPUcode/scale/sentinel모두원소byte일치.
+host T_code RTN약0.148ms,OBQeager7.89~7.98ms,OBQGraph4.93ms. 20pairedAB/BA마다같은입력reset/pack포함.
+Graph는static출력을그대로반환해다음replay가덮어쓰므로borrowedoutput비용일뿐실제과거캐시를보존한encoder비용아님.
+이수명문제를root가run시작직후발견,실행중코드를바꾸지않고결과범위제한. ownedpacket복사/두입력수명검사후속필요.
+GPU회전후BF16값1069~1117개,scale11~12개가CPU와달라T_encoder네경로unsupported로기록. 사후bitgate완화없음.
+source17/prepared2/worker4해시,CPU18필드bytes,80paired통계감사264검사통과. 검토append와잠금본문prefix스냅샷을구분.
+Fable결과검토는유효성과한계수용. event≈host만으로launchgap부재를추론하거나추정트래픽으로compile가속불가를단정한부분은채택않음.
+
+L003 [추가최근선행, 실제원문확인]
+FlagRot https://arxiv.org/html/2611.03992v1 (2026-11-02) §C.1: 보정query2차모멘트로identity/H32/H128오류를비교,
+per-channel에서는고정head/subvector선택도평가하고per-token은online선택. 고정선택/centering/목적식자체는신규주장이아님.
+현재full-H 순차정수코드보상과선택변수는다르다. 원문수치가우리영상모델에도성립한다고가정하지않음.
+
+D007 [후속구현 범위]
+sharedGraph는매호출z/scale/U를복사하고반환packet수명을보존해야한다. RTN은사용하지않는U복사를강요하지않음.
+고정warprow융합보상+pack하나를준비하되먼저ownedGraph계약과GPU자체전처리변형의출력유효성을확인.
+고정z/scale/U에서는정확코드일치,CPU와다른GPU회전은별도수치변형으로기록. GPU품질은네nativeendpoint에서두RTN대비20%유지로판정.
+실험GPU/compile전체45분,신규생성0,튜닝탐색없음. fullrollout효과나신규성은여전히별도검증.
+
+상태: 국소효과와새입력native경로신호는있으나,전체생성품질/전체GPUencoder비용/신규성의종합검증은아직미완료. 연속연구목표active.

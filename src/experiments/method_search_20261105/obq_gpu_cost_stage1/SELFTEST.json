@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "code_sha256": "3f1fc5b32a52a406a99f470ba81b93a9fc856021ef1baed455447cc43f189f10",
+  "actual_capture_loads": 0,
+  "gpu_initialized": false,
+  "checks": [
+    "batch==head_loop_full_H_codes",
+    "input_preserved",
+    "identity_factor==RTN",
+    "pack_roundtrip",
+    "CPU_preprocessing_exact",
+    "RTN_FP32/BF16_full_packet_exact"
+  ]
+}
