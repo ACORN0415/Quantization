@@ -1,0 +1,20 @@
+DINO-WM fixed-candidate — W1/W2 최소 delta 후속 검토 (실제 Opus1, root msg_3874c278c0b6)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음.
+경계: 원 전체 검토 REVIEW_OPUS_KO.txt(29e9baaa…, 234beae7 전체, 21:44:59–21:46:06Z)는 불변이며 범위를 소급 확장하지 않는다.
+이번 수신·시작 2026-11-05T21:50:21Z, 상한 min(수신+300s=21:55:21Z, prep 마감 22:07:15Z). 실행 0(import/load/decode/코드 실행 없음), helper 0.
+SHA(직접 계산 앞자리 일치): experiment.py 4046ce102092035e…, SOURCE_W1_W2_DIFF.patch b0549c6149a34963…, READY_W2_CODEX 9dc977dbcb2ff720…, NORMALIZATION_SELFTEST 481477aef9ec20d6…,
+ROOT_SPEC 2f0af0ded2169263…, 로컬 source/datasets/pusht_dset.py 7e630c07f34f83ed…(명세의 7e630c07…와 일치).
+읽은 범위: patch 전체, pusht_dset.py의 상수·action_scale·proprio 구성 행(grep), patch 사후 blob 대조. REPORT_W1_W2_ADDENDUM·READY·MANIFEST_W2·NORMALIZATION_SELFTEST 본문 미열람(해시만).
+patch 결합: `git hash-object`(읽기 전용)로 현재 experiment.py = 611a0d97…, ROOT_SPEC = e9530795… — patch의 사후 blob(611a0d9, e953079)과 일치. 사전 blob(0dda76e)이 원 234beae7인지는 대조하지 않았다.
+
+W1 해소: alpha 0.1·base 1·mode last 유지, ROOT_SPEC reference_objective가 "pinned objective FUNCTION + 의도된 진단 선택, plan_pusht.yaml 기본값·논문 config 재현 주장 아님"으로 바뀌고 결과에
+ objective_choice 필드가 추가된다. 원 yaml alpha 1로 자동 수정하지 않음. → 내 지적(이름과 내용의 불일치)이 정직한 표기로 해소. 원 config 재현이 아니라는 한계는 결과 해석에 남는다.
+W2 해소: normalization()이 pinned pusht_dset.py의 SHA 7e630c07을 요구하고, AST에서 torch.tensor 리터럴만 literal_eval로 읽어 ACTION_MEAN/STD·PROPRIO_MEAN/STD를 기대값과 정확 대조,
+ PushTDataset.__init__ 기본값 action_scale 100.0을 확인한 뒤 실제 전처리에 그 값을 사용한다(import 없음). 직접 확인: 파일 14–19행 리터럴이 기대값과 같고, 29행 action_scale=100.0,
+ 43행 actions/action_scale, 66–73행 proprio = states[..., :2] + velocities, 81–86행 평균·표준편차(proprio_dim으로 slice) — experiment의 proprio(위치2+속도2)·action 전처리와 일치.
+delta 범위: patch는 normalization 함수·호출·결과 필드·objective_choice 기록·ROOT_SPEC 두 문구만 바꾼다. CEM 미사용·recurrence·4팔·16후보·reuse 1e-5 gate·8회 교차 timing·900s 한도 코드는
+ patch에 변경이 없다.
+남은 사항(차단 아님): 새 code/spec 해시로 manifest 결합이 연쇄 변경 — root 최종 manifest는 driver(base smoke)와 pusht_dset.py까지 bound로 포함해야 한다. 후보1 reshape(5,10)와 원
+ traj_slicer '(n f) d -> n (f d)' 일치는 root가 대조했다는 제공 사실이며 나는 직접 대조하지 않았다. mask buffer 저정밀 cast, 단일 사례, 원 논문 재현·제어·저비트 효과 미증명 범위 유지.
+판정: W1·W2 해소, 남은 차단 없음. source 준비 수용은 root 최종 manifest·실행 승인을 대신하지 않는다.
+실제 끝: 2026-11-05T21:50:53Z
