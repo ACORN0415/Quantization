@@ -1,0 +1,21 @@
+{
+  "status": "accepted_structural_metadata_with_explicit_tail_and_integrity_limits",
+  "created_epoch": 1793905882.2952912,
+  "actual_opus_review_completed": "2026-11-05T19:08:34Z",
+  "root_full_source_read": true,
+  "application_HTTP_body_bytes": 2201476,
+  "note": "EOCD bounded-search ranges can contain incidental compressed tail bytes; no zero-payload-byte claim. No decompression/tensor load/full asset download. Accept structural metadata purpose, preserve original wording/results and root scope note.",
+  "integrity_limit": "HF LFS hashes only API declarations, not full archive verification. Central-directory sums not CRC/loader/runtime proof.",
+  "dataset_listing_limit": "All entry group sums calculated but selected list capped2000; incomplete train member list.",
+  "next": "Loader/source gate determines minimal members, then separately bounded acquisition code/LOCK. No model/GPU started here.",
+  "evidence": {
+    "ROOT_SPEC.json": "3801b11a2967b921cf9d914ffad8f1520a4bc46327d1b257e1457c484a504232",
+    "metadata_probe.py": "65e3c24765f50a95a32b369607068c12c7d14510f4ab8b4963036e8381571c97",
+    "READY.json": "d171443caf6c3394bf36d5a0bd9f6ea44afbefe5730e72a3405b8f85661f94df",
+    "ATTEMPT.json": "36856cfc44d748f5be02809ce9c672385f7d3a10e6b0e996ae453067e5d3d225",
+    "RESULT.json": "7393572818a6922cf197413908104abcc2781bfeb11308bd1d6e8fa4acd58bf4",
+    "REPORT_KO.txt": "08711fa5bb7fe27c291985b6398a189206bbc5f5fe2a0e4752ba3934831fc47f",
+    "ROOT_TAIL_SEARCH_SCOPE_NOTE.json": "73d33904f9f7442fc5cd1bea2d9b8bd4b93169aac9c88a23dbafe06545030301",
+    "OPUS_REVIEW_FIXED_KO.txt": "222a67161ff11dda7b337764f65ee2162b8744d26faa9595fea07bd9b96ff95c"
+  }
+}

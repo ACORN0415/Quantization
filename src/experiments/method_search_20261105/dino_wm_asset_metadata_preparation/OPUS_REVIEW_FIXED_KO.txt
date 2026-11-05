@@ -1,0 +1,78 @@
+DINO-WM 선택 archive ZIP metadata — 코드·저장 기록 검토 (Opus2, root msg_08ac1f7e59b0)
+실제 시작 UTC: 2026-11-05T19:07:21Z. 계약 확인은 19:03:09Z에 따로 했다. 원 절대마감은 19:13:41.41Z다.
+모델: claude-opus-5-5, 기존 채팅 session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5. Task/Dispatch: 미연결(자동연결 실패).
+helper는 쓰지 않았다. 범위가 작아 독립 조각이 없었고 부모가 직접 했다.
+reviewer 추가 HTTP·HEAD·Range·API·web 요청은 0이다. 코드·probe 재실행, 추출, 모델·dataset 로드, GPU도 0이다.
+로컬 JSON 읽기와 sha 계산만 했다. 저장된 결과는 root가 허용한 native Codex의 metadata 실행 1회(ATTEMPT 1)이며 나의 실행이 아니다.
+
+hash (직접 sha256, 지정값과 일치)
+- metadata_probe.py 65e3c247…, READY d171443c…, RESULT 73935728…, ATTEMPT 36856cfc…, ROOT_SPEC 3801b11a…
+- READY는 코드 준비와 synthetic 7건, network 0 시점의 역사 기록이다(source sha 65e3c247 결합).
+- ATTEMPT와 RESULT의 source_sha256도 65e3c247이며 RESULT.source_unchanged는 true다.
+
+코드 검토 (248행 전체 읽음)
+- redirect: NoRedirect로 자동 추적을 막고 수동 hop을 최대 9회 한다. 3xx는 Location만 읽고 body를 읽지 않은 채 close한다. HTTPS가 아니면 거부한다.
+  - hop은 재시도가 아니다. 같은 요청을 반복하는 retry loop는 없다.
+- Range 응답
+  - 200이면 body를 읽기 전에 Unsupported를 내고 close한다. 206이 아니면 Unsupported다.
+  - 206이면 Content-Range가 정확히 'bytes lo-hi/total'이고 total이 HF 크기와 같아야 한다. Content-Length가 정확히 n이어야 한다.
+  - 64KiB 단위로 읽으며 누적 body가 8MiB 상한을 넘지 않게 자른다. 길이가 모자라면 Invalid다.
+  - identity가 아닌 encoding은 거부한다.
+- 오류 응답(HTTPError)과 redirect의 body는 읽지 않으므로 누적에서 빠지는 것이 맞다(record의 body_bytes_read 0).
+- 전체 download fallback은 없다. cd_size가 남은 예산을 넘으면 Unsupported다.
+- 요청 수: archive마다 tail(EOCD 탐색 최대 65557B) 1회. central directory가 tail 안에 있으면 추가 요청이 없고, 아니면 1회 더 한다.
+  - ZIP64 locator와 record는 bounded section(20B/56B, 확장 포함)으로 읽는다. spec과 일치한다.
+- 파서
+  - EOCD는 마지막 유효(주석 길이가 맞는) 서명을 고르고 multidisk를 거부한다.
+  - ZIP64 locator와 record를 검증한다(record 끝 = EOCD−20).
+  - member ZIP64 extra는 sentinel 필드만 순서대로 읽는다.
+  - central header 서명, 경계, 중복 extra, 잘림을 Invalid로 거부한다.
+  - 경로 이상: NUL, 절대경로, '..', 역슬래시, 중복, symlink. 암호화 flag, method를 집계한다.
+  - CRC, payload, 압축 해제 검증은 하지 않는다. 명시된 한계다.
+- 자원
+  - guard는 절대마감과 RSS(ru_maxrss)를 검사한다. 요청 timeout은 min(15초, 남은 시간)이다.
+  - 출력 크기는 save에서 16MiB를 검사한다. 스레드 환경변수는 2다(계산이 거의 없음).
+- 실패 보존
+  - Unsupported는 archive status로, Invalid는 전체 invalid_or_incomplete로 기록되며 traceback을 보존한다. finally에서 RESULT를 쓴다.
+- 코드 보장의 한계
+  - body 계수는 애플리케이션 read 기준이다. 헤더, TLS, 200 응답에서 소켓이 미리 받아 둔 바이트는 세지 않는다.
+  - LFS sha256은 HF metadata 값을 기록할 뿐 파일 내용으로 검증하지 않는다(전체 download가 필요하므로).
+  - CDN 객체의 신원은 Content-Range total이 HF 크기와 같은지로만 약하게 결합된다.
+
+저장 기록 대조 (RESULT)
+- status completed_metadata_only. HF revision d5c69e8f 일치, private false, gated false.
+- 요청 7개
+  - API 200(3,424B)
+  - archive별 302 redirect(body 0)와 CDN 206
+  - outputs.zip tail 65,557B
+  - pusht_noise.zip tail 65,557B + central directory 2,066,938B
+  - 206 Content-Range는 모두 요청 구간과 정확히 같다.
+- HTTP body 합 2,201,476B < 8MiB.
+- peak RSS 693,440,512B < 1GiB. 등록 시작 후 285초에 완료했다(< 900초).
+- RESULT 710KB < 16MiB. GPU, 로드, full download, 추출은 모두 0으로 기록됐다.
+- checkpoints/outputs.zip: 953,204,628B, LFS sha 425b0d8c…, ZIP64 아님, entries 30(파일 23).
+  - 압축 953,198,058B, 해제 1,124,537,365B. method stored 7, deflate 23. 암호화 0, 경로 이상 0.
+  - 그룹: outputs/{pusht, point_maze, wall_single}/checkpoints 각 2 member, 해제 약 3.69e8~3.78e8B. 그 밖에 소형 config(.yaml)가 있고 __MACOSX/.DS_Store 부산물이 있다.
+- datasets/pusht_noise.zip: 2,785,304,515B, LFS sha 442f5dee…, ZIP64 아님(4GiB 미만으로 일관됨), entries 18,723.
+  - 압축 2,781,395,209B, 해제 7,370,447,305B. 암호화 0, 경로 이상 0.
+  - 그룹: train(7 member, 해제 5.20e9B, .pth와 .pkl 등), train/obses(18,686개, .mp4 위주, 2.17e9B), val(약 7.9MB).
+  - selected_member_metadata는 2000개 상한에 걸려 불완전하다(selected_metadata_is_complete false). 그룹 합계는 전체 entry 기준이다.
+
+판정: 차단 결함 없음. 등록 계약 범위 안에서 metadata 전용 결과로 유효하다.
+- 확인된 것: 두 선택 archive의 compressed/uncompressed 크기와 member 그룹, 파일 접근(Range 206) 가능성.
+- PushT baseline 후보 그룹
+  - checkpoint: outputs/pusht/checkpoints(해제 약 3.78e8B)와 outputs/pusht의 config/yaml
+  - dataset: pusht_noise의 train/val
+  - 정확한 필수 member 집합은 loader source 근거가 없으므로 후보로만 둔다.
+  - 예: train/obses의 mp4 전부가 필요한지, normalization 통계가 어느 파일에 있는지는 미확인이다.
+- 저장소 전체 21.9GB는 이 작업의 footprint가 아니다. PushT 후보만 대략 잡으면 checkpoint 약 0.38GB(해제)와 dataset 최대 약 7.4GB(해제, archive 2.79GB)의 상한이다.
+- GPU·RAM 실행 가능성, 모델 획득, 학습·평가 성공은 이 결과로 주장할 수 없다.
+
+잔여
+- loader 기준의 필수 member
+- normalization과 config 내용
+- LFS 내용 검증
+- 선택 metadata 상한 2000에 따른 일부 member 목록 누락(그룹 합계는 완전)
+- __MACOSX 제외 정책
+- 실험 아님. 추가 fetch 0.
+종료 UTC: 2026-11-05T19:08:34Z

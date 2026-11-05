@@ -1,0 +1,67 @@
+DINO-WM 지정 두 archive의 메타데이터 전용 확인
+작성: Codex /root/method_gap_codex. 실제 Opus2 독립 소스/기록 검토는 별도이며 여기서 완료로 표시하지 않는다. planning pair의 임시안·결론은 읽지 않았다.
+
+판정
+두 ZIP의 중앙 디렉터리를 읽는 데 성공했다. HF 저장소 총21.93GB를 이 과제의 필수 취득량으로 간주할 필요는 없다. 지정 두 ZIP 자체는 합계3,738,509,143B이며, 그중 PushT 체크포인트/설정과 validation 파일만 따로 존재한다. 그러나 이 작은 묶음만으로 planning 실행이 가능한지는 로더·normalization·추가 backbone 의존성을 확인해야 한다. archive 크기로 GPU/RAM 성공을 주장하지 않는다.
+
+고정 출처
+HF dataset gaoyuezhou/dino_wm
+revision d5c69e8fe60c3ed6b01d2f6e88fbfd66be078e57
+메타데이터 endpoint:
+https://huggingface.co/api/datasets/gaoyuezhou/dino_wm/revision/d5c69e8fe60c3ed6b01d2f6e88fbfd66be078e57?blobs=true
+resolve 경로는 같은 revision의 checkpoints/outputs.zip 및 datasets/pusht_noise.zip이다. API의 반환 sha가 revision과 같음을 확인했다.
+
+선택 archive 용량 — 중앙 디렉터리의 선언값
+1. checkpoints/outputs.zip
+- archive: 953,204,628B.
+- 압축 member 합: 953,198,058B.
+- 추출 member 합: 1,124,537,365B.
+- entries30, 실제 파일23, directory7. 암호화0, path anomaly0.
+- stored directory7개, deflate file23개. __MACOSX resource fork와 .DS_Store가 포함된다.
+- PushT/wall_single/point_maze 세 checkpoint가 각각 들어 있다.
+- HF LFS SHA256 선언: 425b0d8c2a4194d3ec996b553575f69409aa5714176b063d8401789db9179482.
+
+2. datasets/pusht_noise.zip
+- archive: 2,785,304,515B.
+- 압축 member 합: 2,781,395,209B.
+- 추출 member 합: 7,370,447,305B.
+- entries18,723, 실제 파일18,718, directory5. 암호화0, path anomaly0.
+- MP4 18,706개, .pth10개, .pkl2개. directory외 deflate.
+- HF LFS SHA256 선언: 442f5dee246edf670964ed7bdecd248683cd6d00580fa0e4d458abb53f92da08.
+- train/tokens.pth의 추출 선언값은4,791,037,218B이며32bit를 넘는다. 이 값은 per-member ZIP64 extra를 파싱한 결과다. RESULT.zip.zip64는 'EOCD 필드가 sentinel이어서 ZIP64 EOCD 대체 파싱이 필요한가'의 플래그이므로 이 archive의 모든 member가32bit라는 뜻이 아니다.
+
+두 ZIP 전체를 보존하면서 모두 추출하면 payload 단순 합은12,233,493,813B(archive3,738,509,143B + 추출8,494,984,670B)다. 파일시스템·임시 디스크·환경·backbone·프로세스 RAM은 여기에 포함되지 않는다. 실제 추출하지 않았으므로 실행 파일 무결성이나 로드 메모리를 검증한 값이 아니다.
+
+PushT 관련 작은 묶음 — 필요 파일 확정이 아닌 후보
+체크포인트와 설정:
+- outputs/pusht/checkpoints/model_latest.pth: 압축321,091,695B, 추출377,929,744B.
+- outputs/pusht/hydra.yaml: 압축874B, 추출2,021B.
+합계 압축321,092,569B, 추출377,931,765B. 다른 환경 checkpoint나 __MACOSX 파일을 포함하지 않은 수치다.
+
+pusht_noise/val/ 전체:
+- 실제 파일27개: MP4 21개, tokens.pth/states.pth/rel_actions.pth/velocities.pth/abs_actions.pth/seq_lengths.pkl.
+- 압축 합3,080,413B, 추출 합7,907,748B.
+- validation tokens.pth는 추출5,155,125B, states.pth104,471B다.
+- 열람한 것은 이름/크기/압축 형식/offset뿐이며 tensor·pickle·영상 내용은 읽지 않았다.
+
+두 묶음만 합치면 압축 member324,172,982B, 추출385,839,513B다. 이것은 선택 취득이 가능할 경우의 archive entry payload 산술이며, 현 도구가 해당 payload를 다운로드하거나 추출할 수 있다는 뜻이 아니다. 보통 전체 ZIP 다운로드를 그대로 사용하면 이 최소량으로 줄지 않는다.
+
+train 쪽은 전체27개 validation보다 훨씬 크다. train metadata 그룹의 추출 합5,195,606,585B와 train/obses 그룹2,166,932,972B가 따로 집계됐다. training token을 기본 로더가 eager load하는지, normalization을 training action에서 다시 계산하는지, 통계가 별도 저장되는지, checkpoint가 필요한 backbone/decoder까지 포함하는지는 확인하지 않았다. hydra.yaml 내용도 아직 읽지 않았으므로 필수 최소 집합을 선언하지 않는다.
+
+RESULT의 groups/합계는 모든18,723개 central entry를 파싱해 계산했다. selected_member_metadata는 저장량 제한상 앞2,000개만 저장하므로 dataset selected_metadata_is_complete=false다. validation 전체와 두 PushT 모델 파일은 이 범위 안에 있어 위 합계는 완전한 해당 subgroup에 대해 계산했다. 학습 파일의 전체 목록이 보존됐다고 말하지 않는다.
+
+HTTP·자원 기록
+- 코드 고정 SHA256: 65e3c24765f50a95a32b369607068c12c7d14510f4ab8b4963036e8381571c97.
+- 최초 ATTEMPT 1회, 이후 코드 수정·재시도·fallback 없음.
+- API JSON3424B, outputs EOF검색창65,557B, pusht EOF검색창65,557B, pusht central directory2,066,938B. 읽은 HTTP body 합2,201,476B로8MiB 이하.
+- metadata API만 HTTP200을 읽었다. archive는 모두 HTTP206/정확한 Content-Range·Content-Length를 확인했다. 세 archive Range 요청의302 redirect body는 읽지 않았다. outputs 중앙 디렉터리는 EOF창 안에 있어 재요청하지 않았다.
+- EOF 검색은 ZIP 최대 comment를 포함하는65,557B 표준 끝부분 범위다. outputs.zip에서는 이 검색창 중62,205B가 중앙 디렉터리 앞의 압축 member 끝부분과 겹친다. 이것을 순수 구조체 바이트만 받았다고 표현하지 않는다. 용도는 EOCD 탐색이고 해당 압축 payload를 열거나 해제·해석하지 않았다. 그 외 member payload를 목표로 한 Range는0회다. root가 '어떤 incidental payload byte도 금지'로 해석한다면 그 엄격한 범위 적합성은 별도로 판단해야 하며, 여기서 숨기거나 추가 다운로드로 보완하지 않는다.
+- HTTP200/Range 거절은 response body를 읽기 전에 닫고 unsupported 처리하는 코드다. 실제 이번 서버는 Range를 지원했으므로 거절 분기는 실행된 서버 사례가 아니다.
+- ZIP/ZIP64 parser 소규모 합성 검사7개 통과. 실제 EOCD는 두 archive 모두32bit 값으로 충분했고, dataset member ZIP64 extra는 실제 파싱됐다. full archive CRC/LFS SHA를 재계산하지 않았으므로 LFS 값은 API 선언으로만 표시한다.
+- 완료시 등록 시작으로부터284.994초, peak RSS693,440,512B로1GiB 이하. RESULT.json710,364B이고 보고서/소스 포함 전체 출력은16MiB 이하이다. 실제 실행의 자원 상한은 지켰다. 이 도구는 parse/read 지점에서 guard하므로 OS 수준의 hard resource limiter라고 주장하지 않는다.
+- GPU/모델·tensor load/압축 해제/패키지 설치/전체 archive 다운로드/원repo 수정/커밋0. archive metadata window 수신과 full asset acquisition을 구분한다.
+
+다음 취득 판단에 필요한 한 가지
+planner loader source에서 'PushT checkpoint+hydra+val만으로 planning하며 train 통계/추가 weights를 요구하지 않는가'를 먼저 확정한다. 이 조건이 맞고 별도 selective member 취득·무결성 검증 방식이 승인된다면, 이 세트에 한한 다음 취득 상한을 HTTP512MiB/디스크1GiB 정도로 등록할 산술적 여지는 있다. 이는 추가 DINO/backbone/env 의존성을 포함하는 실행 예산이 아니고 지금의 취득 승인이 아니다. 로더가 train 또는 다른 모델을 필요로 하면 그 요구를 더한 별도 상한으로 다시 판단해야 하며, 위 작은 수치를 실행 가능성의 근거로 사용하지 않는다.
+
+보존 RESULT SHA256: 7393572818a6922cf197413908104abcc2781bfeb11308bd1d6e8fa4acd58bf4.

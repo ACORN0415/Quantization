@@ -1,0 +1,24 @@
+{
+  "created_epoch": 1793905684.7371883,
+  "status": "scope_wording_clarification_preserving_original_spec_and_result",
+  "note": "Strictly say bounded ZIP structural search ranges and directory parsing, no full asset/member extraction or model/tensor load. Do not say zero payload-byte transfer: EOCD search windows may overlap compressed member tails. Original ROOT_SPEC and RESULT remain unchanged; actual body byte cap still satisfied. Metadata sums remain central-directory declarations, not payload integrity verification.",
+  "ranges": [
+    {
+      "archive": "checkpoints/outputs.zip",
+      "tail_search_start": 953139071,
+      "central_directory_start": 953201276,
+      "tail_bytes_before_central_directory": 62205,
+      "interpretation": "EOCD search window can contain incidental compressed member bytes before central directory; they were not decompressed or deserialized."
+    },
+    {
+      "archive": "datasets/pusht_noise.zip",
+      "tail_search_start": 2785238958,
+      "central_directory_start": 2783237479,
+      "tail_bytes_before_central_directory": 0,
+      "interpretation": "EOCD search window can contain incidental compressed member bytes before central directory; they were not decompressed or deserialized."
+    }
+  ],
+  "full_asset_downloads": 0,
+  "extracted_members": 0,
+  "HTTP_body_bytes_read": 2201476
+}

@@ -1,0 +1,16 @@
+{
+  "status": "code_prepared_selftest_passed_metadata_run_authorized_by_ROOT_SPEC_not_full_asset_acquisition",
+  "utc": 1793905334.397418,
+  "source_sha256": "65e3c24765f50a95a32b369607068c12c7d14510f4ab8b4963036e8381571c97",
+  "tests": [
+    "ordinary central record",
+    "EOCD",
+    "ZIP64 per member",
+    "ZIP64 EOCD",
+    "truncation/signature rejected",
+    "truncation/signature rejected",
+    "truncation/signature rejected"
+  ],
+  "network_requests_so_far": 0,
+  "root_spec_sha256": "3801b11a2967b921cf9d914ffad8f1520a4bc46327d1b257e1457c484a504232"
+}
