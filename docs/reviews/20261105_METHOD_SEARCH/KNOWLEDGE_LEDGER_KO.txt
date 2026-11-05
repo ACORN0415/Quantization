@@ -376,3 +376,20 @@ SOURCES_V4의58항목과READY의20근거해시를확인해불일치0을기록했
 합성RESULT의stop분기는절차검사결과이며실제후보의효과나종료근거가아니다.원stage0 LOCK/RUN/실제효과/GPU는0이다.
 동일실제Opus2에최종V4변경·전체실행기록·문서우선순위만좁게검토요청했다(msg_3ef3438ca7ec).
 실제자료진단은그검토및root의최종LOCK후에만진행한다.전체연구목표미완료,기존pilot stop_quality유지.
+
+E029 [최초 실자료 RUN 무효: 생산자별 hash 표현 계약 불일치]
+Opus의최종V4수용후root가ca9ad5b의LOCK로실자료1회를시작했다.epoch1793886840.4246237,4.032799초뒤invalid.
+prepare18완료/첫R_bf16패킷anchor검사실패이며read query·attention·SSE·후보점수는0이다.
+causal replay의code_sha256은packed uint8 bytes이지만driver와합성fixture가unpacked int8 bytes로해석했다.
+같은이름의fixed_rotation code_sha256은실제로unpacked코드라서필드이름만으로의대조가불충분했다.
+Codex와실제Opus2가각각첫패킷1개에서파일·scale·packed해시와pack/unpack왕복일치를확인했다.
+합성완주는제어흐름증거이나생산자계약까지독립검증한증거가아니었다.이검증누락을보존한다.
+원RUN/LOCK/소스/실패/로그는e4fbcc6에그대로보존하며이를방법실패나성공으로바꾸지않는다.
+
+D013 [효과점수0에서의명시적수리추가1회예외, 구현검토대기]
+root는원1회계획에추가1회예외를명시적으로제안했다.원2700초마감14:39:00.424624UTC·과학기준·입력·팔·cap은유지한다.
+실제Opus2는결과를보지않은결정적schema수리라는점에서통계판정왜곡없음의조건부의견을냈다.구현검토는별도다.
+V5 sibling의변경은packed해시대조와manifest명뿐이며역치환text/AST가V4와정확히같다.독립packed-schema회귀6건통과.
+root는72source/13READY해시와외부절대마감·once감독기를읽었다.새LOCK/RUN/실제수리실행은아직없다.
+별도Codex와Opus1외부계약대조에서16K-onlySSE기준값의의미와평가식은맞았다.청크별/일괄복원호출의수치일치는미확인이다.
+이후anchor불일치가나와도허용오차를바꾸지않고추가예외를연쇄하지않는다.수리실행도무효면이진단은판단불가로종료한다.

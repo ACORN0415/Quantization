@@ -1,0 +1,20 @@
+--- original_V4/diagnose.py
++++ packet_contract_fix_V5/diagnose.py
+@@ -76,7 +76,7 @@
+         raise PermissionError('Pending contract, cap or arm mismatch')
+     if lock.get('total_seconds')!=LIMIT_SECONDS or lock.get('rss_bytes')!=LIMIT_RSS or lock.get('disk_bytes')!=LIMIT_DISK:
+         raise PermissionError('Resource contract mismatch')
+-    declared=json.loads((HERE/'SOURCES_V4.json').read_text())['sources']
++    declared=json.loads((HERE/'SOURCES_V5.json').read_text())['sources']
+     if lock.get('sources')!=declared:raise PermissionError('LOCK source set incomplete or differs from draft')
+     for p,h in declared.items():
+         if sha(p)!=h:raise PermissionError('Source hash changed: '+p)
+@@ -262,7 +262,7 @@
+         vp=access.load(row['V']);vv=packet_restore_checked(vp,'V')[0];payload_base+=c.nbytes(vp)
+         base_name='O_offline' if arm.startswith('FULL') else 'R_bf16' if arm=='R_bf16' else 'R_fp32'
+         kp=access.load(row['K'][base_name]['artifact']);base=packet_restore_checked(kp,'K')
+-        if tsha(kp['scale'])!=row['K'][base_name]['scale_sha256'] or tsha(c.unpack(kp['packed'],kp['shape']))!=row['K'][base_name]['code_sha256']:raise ValueError('packet tensor anchor')
++        if tsha(kp['scale'])!=row['K'][base_name]['scale_sha256'] or tsha(kp['packed'])!=row['K'][base_name]['code_sha256']:raise ValueError('packet tensor anchor')
+         start=time.monotonic()
+         if arm=='FIXED17':base,kp=fixed17_encode(rawk,shared['R'])
+         elif arm=='RMU':

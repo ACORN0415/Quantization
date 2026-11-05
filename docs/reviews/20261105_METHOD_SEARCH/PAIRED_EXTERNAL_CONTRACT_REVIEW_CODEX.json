@@ -1,0 +1,732 @@
+{
+  "status": "source_contract_review_completed_remaining_inverse_rotation_geometry_difference",
+  "created_utc": "2026-11-05T14:06:05.274748+00:00",
+  "hash_field_checks": [
+    {
+      "kind": "offline_rotated_raw_H_sha256",
+      "layer": 18,
+      "match": true
+    },
+    {
+      "kind": "offline_rotated_damped_H_sha256",
+      "layer": 18,
+      "match": true
+    },
+    {
+      "kind": "fixed_matrix_sha256",
+      "layer": 18,
+      "match": true
+    },
+    {
+      "kind": "fixed_U_sha256",
+      "layer": 18,
+      "match": true
+    },
+    {
+      "kind": "fixed_raw_C_sha256",
+      "layer": 18,
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 18,
+      "chunk": 1,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 18,
+      "chunk": 1,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 18,
+      "chunk": 1,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 18,
+      "chunk": 1,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 18,
+      "chunk": 1,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 18,
+      "chunk": 1,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 18,
+      "chunk": 2,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 18,
+      "chunk": 2,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 18,
+      "chunk": 2,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 18,
+      "chunk": 2,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 18,
+      "chunk": 2,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 18,
+      "chunk": 2,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 18,
+      "chunk": 3,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 18,
+      "chunk": 3,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 18,
+      "chunk": 3,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 18,
+      "chunk": 3,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 18,
+      "chunk": 3,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 18,
+      "chunk": 3,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 18,
+      "chunk": 4,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 18,
+      "chunk": 4,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 18,
+      "chunk": 4,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 18,
+      "chunk": 4,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 18,
+      "chunk": 4,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 18,
+      "chunk": 4,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 18,
+      "chunk": 5,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 18,
+      "chunk": 5,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 18,
+      "chunk": 5,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 18,
+      "chunk": 5,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 18,
+      "chunk": 5,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 18,
+      "chunk": 5,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 18,
+      "chunk": 6,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 18,
+      "chunk": 6,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 18,
+      "chunk": 6,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 18,
+      "chunk": 6,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 18,
+      "chunk": 6,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 18,
+      "chunk": 6,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "offline_rotated_raw_H_sha256",
+      "layer": 24,
+      "match": true
+    },
+    {
+      "kind": "offline_rotated_damped_H_sha256",
+      "layer": 24,
+      "match": true
+    },
+    {
+      "kind": "fixed_matrix_sha256",
+      "layer": 24,
+      "match": true
+    },
+    {
+      "kind": "fixed_U_sha256",
+      "layer": 24,
+      "match": true
+    },
+    {
+      "kind": "fixed_raw_C_sha256",
+      "layer": 24,
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 24,
+      "chunk": 1,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 24,
+      "chunk": 1,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 24,
+      "chunk": 1,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 24,
+      "chunk": 1,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 24,
+      "chunk": 1,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 24,
+      "chunk": 1,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 24,
+      "chunk": 2,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 24,
+      "chunk": 2,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 24,
+      "chunk": 2,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 24,
+      "chunk": 2,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 24,
+      "chunk": 2,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 24,
+      "chunk": 2,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 24,
+      "chunk": 3,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 24,
+      "chunk": 3,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 24,
+      "chunk": 3,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 24,
+      "chunk": 3,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 24,
+      "chunk": 3,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 24,
+      "chunk": 3,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 24,
+      "chunk": 4,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 24,
+      "chunk": 4,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 24,
+      "chunk": 4,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 24,
+      "chunk": 4,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 24,
+      "chunk": 4,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 24,
+      "chunk": 4,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 24,
+      "chunk": 5,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 24,
+      "chunk": 5,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 24,
+      "chunk": 5,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 24,
+      "chunk": 5,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 24,
+      "chunk": 5,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 24,
+      "chunk": 5,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 24,
+      "chunk": 6,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 24,
+      "chunk": 6,
+      "arm": "R_bf16",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 24,
+      "chunk": 6,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 24,
+      "chunk": 6,
+      "arm": "R_fp32",
+      "match": true
+    },
+    {
+      "kind": "code_sha256",
+      "layer": 24,
+      "chunk": 6,
+      "arm": "O_offline",
+      "match": true
+    },
+    {
+      "kind": "scale_sha256",
+      "layer": 24,
+      "chunk": 6,
+      "arm": "O_offline",
+      "match": true
+    }
+  ],
+  "hash_field_count": 82,
+  "all_hash_strings_match": true,
+  "sse_anchor_checks": [
+    {
+      "layer": 18,
+      "call": 0,
+      "arm": "R_bf16",
+      "binding": 580.7241528655179,
+      "producer_Konly": 580.7241528655179,
+      "producer_fullBF16": 823.9133095231056,
+      "match_Konly": true
+    },
+    {
+      "layer": 18,
+      "call": 0,
+      "arm": "R_fp32",
+      "binding": 586.5548416387333,
+      "producer_Konly": 586.5548416387333,
+      "producer_fullBF16": 830.662210440358,
+      "match_Konly": true
+    },
+    {
+      "layer": 18,
+      "call": 0,
+      "arm": "FULL",
+      "binding": 270.103811517985,
+      "producer_Konly": 270.103811517985,
+      "producer_fullBF16": 517.0038262491346,
+      "match_Konly": true
+    },
+    {
+      "layer": 18,
+      "call": 0,
+      "arm": "FIXED17",
+      "binding": 566.1376203584185,
+      "producer_Konly": 566.1376203584185,
+      "producer_fullBF16": 808.3039651402171,
+      "match_Konly": true
+    },
+    {
+      "layer": 18,
+      "call": 3,
+      "arm": "R_bf16",
+      "binding": 558.6247901650838,
+      "producer_Konly": 558.6247901650838,
+      "producer_fullBF16": 798.7048217933816,
+      "match_Konly": true
+    },
+    {
+      "layer": 18,
+      "call": 3,
+      "arm": "R_fp32",
+      "binding": 551.1642245976793,
+      "producer_Konly": 551.1642245976793,
+      "producer_fullBF16": 791.7317510875691,
+      "match_Konly": true
+    },
+    {
+      "layer": 18,
+      "call": 3,
+      "arm": "FULL",
+      "binding": 279.3794359675924,
+      "producer_Konly": 279.3794359675924,
+      "producer_fullBF16": 523.221721351294,
+      "match_Konly": true
+    },
+    {
+      "layer": 18,
+      "call": 3,
+      "arm": "FIXED17",
+      "binding": 560.9421988064071,
+      "producer_Konly": 560.9421988064071,
+      "producer_fullBF16": 801.7479665819509,
+      "match_Konly": true
+    },
+    {
+      "layer": 24,
+      "call": 0,
+      "arm": "R_bf16",
+      "binding": 233.7276936725297,
+      "producer_Konly": 233.7276936725297,
+      "producer_fullBF16": 397.14524626734874,
+      "match_Konly": true
+    },
+    {
+      "layer": 24,
+      "call": 0,
+      "arm": "R_fp32",
+      "binding": 228.6624420657933,
+      "producer_Konly": 228.6624420657933,
+      "producer_fullBF16": 391.4831632770306,
+      "match_Konly": true
+    },
+    {
+      "layer": 24,
+      "call": 0,
+      "arm": "FULL",
+      "binding": 118.22788727900885,
+      "producer_Konly": 118.22788727900885,
+      "producer_fullBF16": 280.6511454872672,
+      "match_Konly": true
+    },
+    {
+      "layer": 24,
+      "call": 0,
+      "arm": "FIXED17",
+      "binding": 260.4715932162598,
+      "producer_Konly": 260.4715932162598,
+      "producer_fullBF16": 425.70248682807625,
+      "match_Konly": true
+    },
+    {
+      "layer": 24,
+      "call": 3,
+      "arm": "R_bf16",
+      "binding": 223.3192851017781,
+      "producer_Konly": 223.3192851017781,
+      "producer_fullBF16": 396.8002718824991,
+      "match_Konly": true
+    },
+    {
+      "layer": 24,
+      "call": 3,
+      "arm": "R_fp32",
+      "binding": 235.6039649531075,
+      "producer_Konly": 235.6039649531075,
+      "producer_fullBF16": 410.7270886169152,
+      "match_Konly": true
+    },
+    {
+      "layer": 24,
+      "call": 3,
+      "arm": "FULL",
+      "binding": 132.046490808782,
+      "producer_Konly": 132.046490808782,
+      "producer_fullBF16": 300.9479915469889,
+      "match_Konly": true
+    },
+    {
+      "layer": 24,
+      "call": 3,
+      "arm": "FIXED17",
+      "binding": 212.10881658315756,
+      "producer_Konly": 212.10881658315756,
+      "producer_fullBF16": 382.8979544910676,
+      "match_Konly": true
+    }
+  ],
+  "all_16_sse_anchors_are_Konly": true,
+  "consumer_source_at_finish_uses_unpacked_code_anchor": true,
+  "source_sha256": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/diagnose.py": "f3e250ad6a0afa9b5147063fc90563ba23ce4d64d0b857489551c2eb7d3eab15",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/INPUT_BINDINGS_DRAFT.json": "7b65bd1c71c5f80a8391af5e21cebb06a9a904844a6fe28ef342f43bee8c526b",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_preparation/attention_adapter.py": "2008265c0de2130b35d52ae05d291020def9aa09ceb118f2a815400d536d90b8",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/common.py": "436f7b2762397ecce840b91feb535094a9008c54066e4e796c3df248f9071c35",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/replay.py": "89483a35303b5d4ddc099854c9e1a06f9522cf84430b2728739270ccf88fb05c",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/manifest.json": "44079f0ea622e9789ce62c5d9da0a53303127b85995fa11ee92fa2a80438a10a",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/diagnose.py": "bc99a8312ccb8695f4db8f8d24959654fcda2899002930292ec71661cc2fc4a2",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/RESULT.json": "4099fb0c8c4afa004405c21b036871986f840b2de044780a3484b4564d84bf97",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/qcov_rotation_baseline_codex/diagnose_rotation.py": "08800ae36db47c55bf05f7f1e2c1c1ad8c86c58143587a810d193051d3093c61",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_capacity_codex/diagnose_obq.py": "07324360458a1d5687cff8932db316af97f9945ab75a689c7f3f7a0f0968af0d",
+    "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/OPUS_STAGE0_INVALID_PACKET_REVIEW_KO.txt": "d7ff7bfd3608722b3962b8d01539fd035400188b22cfe7ee9f72b1b1300ae490"
+  },
+  "actual_tensor_reads": 0,
+  "actual_tensor_hash_recompute": 0,
+  "new_SSE_computations": 0,
+  "GPU_calls": 0,
+  "source_edits": 0,
+  "new_execution_authorized": false,
+  "remaining_risk": "old six-chunk per-head einsum inverse rotation vs new per-chunk shared-H matmul; FIXED17 six-chunk vs per-chunk einsum",
+  "actual_numerical_difference_observed": false,
+  "SSE_tolerance_change_proposed": false
+}

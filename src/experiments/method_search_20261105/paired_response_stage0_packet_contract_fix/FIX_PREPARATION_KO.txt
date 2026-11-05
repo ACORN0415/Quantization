@@ -1,0 +1,41 @@
+V5 causal packet hash 계약 수리 — 준비만 완료, 추가 실행 미승인
+2026-11-05. 원 stage0 V4/LOCK/RUN/실패 결과는 불변이다. 이 sibling은 별도 수리본이다.
+
+원인과 최소 변경
+causal_obq/replay.py의 code_sha256은 packet['packed'] uint8 바이트 hash다.
+V4는 unpacked int8 코드 hash와 비교했다. scale/파일 hash는 이미 등록값과 일치했다.
+V5 driver 변경은 (1) 그 비교를 tsha(kp['packed'])로 변경, (2) SOURCES_V5.json 이름뿐이다.
+V5_SOURCE_DIFF.patch와 합성회귀의 역치환 text/AST 동등성으로 다른 수식/상수/팔/데이터/
+seed/cap/임계가 그대로임을 확인했다. ROOT=HERE.parents[3]/BASE 구조도 유지한다.
+bit/mean/Omega binding/실제 INPUT_BINDINGS는 원본 bytes와 동일하게 복사했다.
+원래 58개 source 근거는 HISTORICAL_SOURCES_V4 및 SOURCES_V5의 원 경로·hash로 보존한다.
+
+합성 회귀 6건
+원 producer의 packed hash 의미를 독립 Python nibble pack으로 구성하고 driver의 실제
+packet-anchor If AST를 실행했다. 정상 packed 허용, unpacked hash 거부, 변경 payload
+거부, 변경 scale 거부를 확인했다. 원 V4가 정상 producer packet을 거부하며 잘못된
+unpacked schema를 허용하는 반례도 보존했다. 실제 tensor 추가 로드/GPU/효과점수0.
+기존 큰 합성 검사를 반복하지 않았다. 이 회귀는 source 계약 분기를 확인하는 것이며
+그 이후 실자료 전체 pipeline의 완주를 미리 보장하지 않는다.
+
+외부 감독기 — 아직 실행하지 않음
+run_guarded_once.py 기본 실행은 준비 설명만 출력한다. --execute와 별도 root LOCK가
+있어야 supervisor를 한 번 시작할 수 있다. LOCK에는 기존 독립 Opus/root 승인 외에
+validity_repair_additional_run_authorized=true, maximum_additional_runs=1,
+original_run_sha256, absolute_deadline_utc를 정확히 명시해야 한다.
+이 준비물 자체가 기존1회 제한에 대한 예외 승인이 아니다. root가 예외를 명시하고
+실제 Opus와 검토한 후 결정한다.
+원 RUN hash/invalid/prepare18 exit0→arm18Rbf exit1, 원 LOCK/source hash를 검사한다.
+ONCE_CLAIM 파일은 exclusive 생성하여 추가 호출을 거부하고, 새 RUN이 있어도 거부한다.
+원 started_utc1793886840.4246237 +2700 =1793889540.4246237,
+즉 2026-11-05 14:39:00.4246237 UTC가 절대 마감이다. 준비·조사·수정시간도 포함한다.
+UTC와 남은 시간의 monotonic 마감을 함께 검사하여 clock rollback으로 늘어나지 않게 한다.
+내부 V4/V5 driver의45분 상수는 그대로이며 외부의 원 절대 마감이 더 빠른 상한이다.
+CPU4, 각 프로세스RSS8GiB, 원 stage0+새 sibling 합계disk2GiB를 강제한다.
+감독기가 만든 자식과 관측한 후손만 PID/create_time identity로 종료한다. 다른 작업을
+정리하지 않는다. 두 번째 실행 오류나 상한이면 정지하며 자동 재시도 루프는 없다.
+
+상태
+실제 새 LOCK/RUN/ONCE_CLAIM을 만들지 않았고 supervisor를 시작하지 않았다.
+원 invalid는 과학적 음성 결과가 아니며 그대로 보존한다. 기존 full-H pilot stop_quality 유지.
+실행 여부는 수정 소스/회귀/감독기의 독립 검토 후 root가 결정한다.

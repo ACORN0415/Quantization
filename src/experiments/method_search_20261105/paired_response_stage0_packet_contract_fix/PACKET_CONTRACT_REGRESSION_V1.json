@@ -1,0 +1,62 @@
+{
+  "status": "passed",
+  "cases": 6,
+  "rows": [
+    {
+      "case": "V4 rejects valid original-producer packet",
+      "accepted": false,
+      "error": "packet tensor anchor",
+      "expected": false,
+      "input_preserved": true
+    },
+    {
+      "case": "V5 accepts valid packed producer anchor",
+      "accepted": true,
+      "error": null,
+      "expected": true,
+      "input_preserved": true
+    },
+    {
+      "case": "V4 accepts mistaken unpacked schema counterexample",
+      "accepted": true,
+      "error": null,
+      "expected": true,
+      "input_preserved": true
+    },
+    {
+      "case": "V5 rejects unpacked-hash manifest",
+      "accepted": false,
+      "error": "packet tensor anchor",
+      "expected": false,
+      "input_preserved": true
+    },
+    {
+      "case": "V5 rejects changed packed payload",
+      "accepted": false,
+      "error": "packet tensor anchor",
+      "expected": false,
+      "input_preserved": true
+    },
+    {
+      "case": "V5 rejects changed scale",
+      "accepted": false,
+      "error": "packet tensor anchor",
+      "expected": false,
+      "input_preserved": true
+    }
+  ],
+  "independent_producer": "packed uint8 payload and stored FP16 scale; Python nibble loop",
+  "actual_source_predicate_executed": true,
+  "authorized_edits_only_text_and_AST_equal": true,
+  "source_sha256": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/diagnose.py": "f3e250ad6a0afa9b5147063fc90563ba23ce4d64d0b857489551c2eb7d3eab15",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_packet_contract_fix/diagnose.py": "b4c53566728ae093d0a215e23fce9def2d035b44f38d0f3f2427fbce2f3749ab",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0_packet_contract_fix/packet_contract_regression.py": "e148370b742ef8e7c9b9e75daa04426c5cb82f22bc9a2c517c4c6f0690a8b8ec"
+  },
+  "python_version": "3.10.22 (main, Oct  1 2026, 20:14:04) [GCC 14.3.0]",
+  "torch_version": "2.6.0+cu124",
+  "real_tensor_reads": 0,
+  "GPU_calls": 0,
+  "actual_effect_measurements": 0,
+  "scope": "packet-anchor branch and exact source diff only; not a new full-pipeline run"
+}

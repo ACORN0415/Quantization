@@ -1,0 +1,36 @@
+외부 해시·SSE 기준 계약 독립 Codex 검토
+범위: 소스와 저장 JSON만 읽음. 실제 .pt 로드0, 재해시0, attention/SSE 새 계산0, GPU0, 실행/소스수정0. 실제 Opus2 원인 보고를 읽었고 독립 producer/consumer 대조를 수행했다. 이 보고서는 새 실행 권한이나 허용오차 변경을 제안하지 않는다.
+
+결론
+등록 binding의16개 SSE 숫자는 전부 fixed_rotation_control/RESULT의 k_only_reference.sse와 같으며 full-BF16 sse를 잘못 가져온 사례는 없다. QIDS, 과거6청크+현재BF16, 공통V4, FP32 attention과 post-Wo 수식도 일치한다. 단, 저장 packet을 실제 K로 복원하는 행렬곱의 호출 형상/연산자가 같지 않다. 따라서 수식 동일성을 엄격한 수치 anchor 동등성으로 단정할 수 없다. 실제 불일치가 있는지는 이 검토에서 계산하지 않았다.
+
+producer→consumer 표
+항목 | producer 식/자료 | consumer 식 | 판정
+causal code_sha256 | replay.py:52,57의 tsha(packet['packed']), uint8 packed nibble | 검토한 V4 diagnose.py는 tsha(unpack(...)), int8 전체codes | 알려진 표현 불일치. V5에서 packed로 고치려는 범위. 실제 tensor는 읽지 않음.
+causal scale_sha256 | replay.py tsha(packet['scale']), FP16 [3,98,1,12,128] | diagnose.py tsha(kp['scale']) | 같은 표현. 36packet의72개 code/scale binding 문자열이 원manifest와 모두 일치.
+raw rotated H | common.hessian의 (q.float()@H128).permute(...).double(), Q^T Q/4680 | 같은 common.hessian(q,return_raw=True)의hr | 같은좌표·FP32회전후FP64moment. mean중심화 없음.
+damped H | 위rawH + .01*mean(diag(rawH))*I, FP64 | 같은함수의hd | 같은식. 2층각raw/damped4개binding문자열 일치.
+FIXED R | fixed calibrate의 family()[argmin perhead], FP32 [12,128,128] | 저장fixed['R']의tsha | 같은객체표현. state artifact 바인딩은 별도 파일해시로 이루어짐.
+FIXED U | c.factorize(dampedH): inverse대칭화,upperCholesky,FP32 | c.factorize(hd)재계산factor의tsha | 같은식; PSAC고유벡터와 다른FULL factor다.
+FIXED raw_C | q원좌표.double()의Q^TQ/4680 | q[0].permute(...).double()의bmm/4680 | 원좌표post-RoPE raw moment, H회전/damping없음. R/U/C 총6binding문자열 일치.
+SSEanchor | fixed RESULT 해당causal endpoint/arm/k_only_reference.sse | primary_Konly.sse | 값전사16/16일치. full-BF16sse와혼동없음. 아래실행경로차이유의.
+
+SSE의 같은 부분
+- old.QIDS 및 새QIDS 모두 floor(arange128*4680/128); 각read0/read3의 동일query 표본이다.
+- 과거write1..6 순서와 현재read K/V를 이어 전체32760토큰을 attention에 전달한다. 과거만LSE/attention을 사용하는 계약이 아니다.
+- K-only참조는 원본pastK+currentK와 V4past+currentBF16V다. full-BF16참조는 originalVpast+currentV다.
+- producer old.attn과 새attention_adapter.attention_window는 kt/vt를같이permute+contiguous, query32블록, FP32 bmm(Q,K^T)/sqrt128, softmax(-1), FP32 bmm(P,V), 같은head순서 출력이다. 새adapter의logsumexp는 별도로같은logits에서계산하며 attention값을바꾸는처리가아니다.
+- old.metric와새post_wo_difference 모두 (candidate-reference).reshape(128,1536)@Wo.T를FP32로구한뒤FP64square sum으로SSE를구한다. bias는차분에서상쇄된다.
+- 옛K-only NSE의분모는fullBF16 reference energy였고 새primary_Konly NSE는K-only reference energy다. 이 차이는이미별도로고정한정의이며 SSEanchor는분모를쓰지않으므로이유로SSE가달라지지않는다. 옛NSE를새NSE와정확동일한수치로비교해서는안된다.
+
+남은 구체적인 호출 차이
+1. R_bf16/R_fp32/FULL의원SSE producer는fixed_rotation_control.evaluation에서원본pastK28080토큰전체를encode한다. rot.rotate는 torch.einsum('...hd,hde->...he',x.float(),r.float())이고 역회전도 per-head R[12,128,128]를사용한다. framepadding은18frame 전체로함께처리한다. 옛코드는causal여섯packet의packed/scale/sentinel을concat한값과새encode packet을정확비교했다.
+2. 새driver는causal저장packet을한청크씩읽고 common.restore로복원한다. 이 함수의역회전은원래 [1,4680,12,128] tensor에 z.float() @ H128.T를수행하고BF16으로변환한다. 이것을여섯개concat한다.
+3. 따라서pack/scale가같아도 old의per-head einsum/M=28080과new의공유H matmul/M=4680은서로다른호출이다. 축별수학식은같지만 GEMM형상/dispatch/누산경로가같다는보장은소스만으로할수없다. BF16변환직전의작은차이까지없다고주장할수없다. 이검토는실제차이를관측한것도아니다.
+4. FIXED17은새driver도per-head einsum이지만각4680청크별로rotation/scale/RTN/inverserotation한다. 원producer는6청크28080전체를한번에처리한다. frame별group경계와scale정책은같고source수학식도같지만matmul호출형상이달라지는점은남는다.
+5. V4복원은양쪽모두같은common.restore의같은6개Vpacket이며원소별BF16code*scale후padding제거,현재V추가다. 여기서는K역회전과같은행렬곱차이가없다.
+
+판단
+이미알려진packed/unpacked해시문제외에숫자전사의의미오류는찾지못했다. 다만원SSE를생성한K역회전호출과현재호출이동일하다는검증은남는다. rel/abs1e-9를임의완화하거나새anchor를측정결과에맞춰교체하자는제안은하지않는다. 필요시root가동일연산경로의수치유효성을분리해판정해야한다. 기존원RUN의invalid/score0, 기존fullpilot stop_quality, 마감14:39UTC 및실제Opus독립검토는그대로다.
+
+저장JSON 전사 대조: 아래JSON에16SSE/82해시항목과검토시점소스SHA를보존한다. 파일해시의입력.pt를현재다시검증한것은아니다. 새로운SSE를계산하지않고JSON값만비교했다.
