@@ -1,0 +1,97 @@
+업무 1(2차) — frozen-H OBQ K 코드 선택의 신규성·기준선 독립 대조 — Claude Fable 5.1 — 2026-11-05 KST
+Task/Dispatch ID: 없음(채팅·파일 경로). 읽기 전용, GPU 0, 기존 파일 변경 0. 직접 읽은 것: obq_capacity_codex/{REGISTRATION_KO.txt, diagnose_obq.py 전체,
+ RESULT.json 2층 전체, REPORT_KO.txt, AUDIT_RECORD.json, run.log 끝}. 문헌은 arXiv abstract 페이지와 일부 HTML 본문(SAW-INT4, QuantWM)을 읽었다.
+ abstract만 읽은 논문은 그렇게 표시한다. "선행연구 없음"은 증명하지 않았다(검색 3회, 영어 arXiv 한정).
+사소한 정정 수용: FAIR RSS 2,306,633,728 B = 2.148 GiB(제가 GB를 GiB로 썼음). "두 prompt의 노름 유사"는 가중치 성질의 시사이지 입증이 아님. pooled SSE 정의 유지에 이견 없음.
+
+== 0. 검토 대상이 실제로 무엇인가(코드 기준) ==
+- 통계: p0 l{18,24} chunk7 call0의 query 4680개를 Hadamard 회전해 head별 H = QᵀQ/4680 (FP64) + 0.01·mean(diag) damping. 평가 prompt p4의 query는 코드 선택에 쓰지 않음.
+  → 이는 "다른 입력에서 얻은 오프라인 보정 통계"이며, SAW-INT4·OSCAR·NOVA-KV의 calibration query 2차 모멘트와 같은 정보 시점이다. "보정 없음"을 주장할 수 없다.
+- 알고리즘(obq_codes 79-111행): chol(H⁻¹) 상삼각으로 128채널 고정 순서 순차 보상, 고정 grid(Hadamard + 프레임 g16 채널별 absmax/7 scale, FP16) 위 [-8,7] 코드 선택.
+  토큰은 행으로 독립, 같은 head H 공유 → 정확히 GPTQ의 행 공유 구조. 대각 H는 FP32 RTN과 코드 일치(검증됨).
+- 결과: post-Wo SSE 층18 −39.7/−40.2%, 층24 −32.8/−34.8%(BF16/FP32 RTN 대비), logit MSE −47/−41%, K 재구성 SSE +61/+53%. payload 54,097,926 B 동일. CPU 코드 선택 1.3 s/6청크/층.
+- 즉 "K 텐서 오차를 키우며 출력 오차를 줄이는" 잡음 성형이고, 회전 결과(R-4: 텐서 ×1.2, 출력 ×0.5)와 같은 방향의 더 강한 판본이다.
+
+== 1. 선행연구 대조(확인한 범위) ==
+A. query 공분산 기반 "회전/변환" 계열 — 모두 오프라인 통계, 순차 코드 보상 없음(abstract·본문에서 OBQ/sequential/error compensation 언급 0):
+ - SAW-INT4 2604.19157 (본문 HTML 확인): 층별 M = (1/N)Σqqᵀ + damping → 고유분해로 회전, Hadamard와 결합, INT4, paged/fused 커널. 비교표에서 "Hessian-aware(+BDR)" 변형이
+   Qwen3-4B에서 65.52 vs 73.78로 크게 나쁘고 Qwen3-8B에서 70.59 vs 69.86으로 비슷. 저자 결론: 서빙 제약 아래 Hessian/VQ 추가 이득은 미미. 인용 Kim et al. 2026 "HAPPI"는 독립 검색에서 못 찾음.
+ - OSCAR 2605.17757 (abstract): attention-aware 공분산을 오프라인 추정 → 고정 회전 + clipping, INT2, SGLang/vLLM 커널.
+ - NOVA-KV 2608.04074 (abstract): 보정 query 2차 모멘트로 닫힌형 비직교 key 변환(일반화 Parseval) + VQ, INT2.
+ - OptR 2608.02691 (abstract): post-W_O 출력 오차를 목표로 head별 직교 보정을 학습, INT2, QuaRot/OSCAR 대비 우위.
+ - AATC 2608.14191 (abstract): 백색잡음 모형에서 attention-aware 왜곡이 K/V 가산 분해 → transform coding + reverse water-filling 비트 배분(보정 집합).
+ - HeadQ 2605.03562: 철회됨(v3). query basis의 저랭크 residual side code를 logit에 가산. 인용 근거로 쓰지 말 것.
+B. 비디오 자기회귀 생성에서의 KV 양자화 — 가장 가까운 영역:
+ - QuantWM 2609.26425 (본문 HTML 확인): 비디오 월드 모델(Matrix-Game-2, HY-World 1.5, LingBot-World-v2, LongCat-Video, Causal-Forcing), INT2 residual + 256 centroid.
+   QSAC = "온라인" 과거 query 2차 모멘트의 대각을 채널 가중치로 써서 centroid 선택(토큰별 코드 선택을 query 민감도로 결정). 부록에서 "전체 2차형(full quadratic form)"도 시험했으나
+   일관된 이득 없고 지연 증가 → 대각 채택. PSAC = 과거 query 2차 모멘트 상위 8 고유벡터로 K 잔차 보정(INT8 계수 저장), 청크 경계마다 재계산.
+   → "query 민감도 기반 온라인 코드 선택"과 "query 주성분 보정"은 같은 도메인에서 이미 있다. 다만 순차(GPTQ형) 보상은 아니고, 4비트·Hadamard·RotateKV 비교는 없다.
+ - Tuncer et al. 2605.26266 (abstract): 청크 자기회귀 비디오 확산(MAGI-1, SkyReels-V2, HY-WorldPlay) INT2 KV의 "Jensen bias"를 step size·query 노름으로 온라인 점수 보정. 회전·보상 없음.
+C. 보상/보정 계열: KVLinC 2510.05373(Hadamard V + 학습된 선형 보정 어댑터로 K 오차 상쇄, 오프라인 학습), GEAR·QJL(잔차 저장), 2609.04263(저랭크 attention 어댑터로 양자화 캐시 회복).
+   모두 "추가 저장 또는 모델 수정"이며 같은 payload·같은 reader에서의 코드 선택이 아니다.
+D. 이론: "GPTQ as Babai's nearest plane"(ICLR 2026, 2507.18553) — GPTQ = Hessian 계량의 격자 최근접 평면 반올림. 따라서 이 인스턴스는 "q 공분산 계량에서의 Babai 반올림을 K 코드에 적용"으로
+   정확히 기술되며 알고리즘 신규성은 없다. 이 틀은 오히려 유용하다: 회전(기저 변경) vs 보상(같은 기저에서 격자 반올림)의 차이를 정확히 말할 수 있다.
+E. 검색 결과: "GPTQ/OBS 순차 오차 전파를 KV key 코드에 적용"한 논문은 3회 검색에서 찾지 못했다. 부재 증명이 아니다. 가장 가까운 반증적 자료는
+   SAW-INT4의 Hessian 변형 열세와 QuantWM 부록의 full-quadratic 무이득이다. 두 자료 모두 방법이 다르므로(회전 변형, centroid 선택) 직접 반증은 아니지만 "같은 통계를 쓰는 더 싼 방법이 이긴다"는 경고다.
+
+== 2. "qcov 회전" vs "순차 코드 보상"의 구분(선형대수) ==
+- 회전(SAW/OSCAR/OptR): 저장 기저를 q 고유기저로 바꿔 RTN 오차(기저에서 백색)가 q 에너지 작은 방향에 놓이게 한다. 온라인 추가 비용 0, 그러나 reader도 같은 기저로 q를 회전해야 한다(커널 변경).
+  채널별 scale이 있으면 채널 j의 오차 에너지 ∝ scale_j², 손상 ∝ λ_j·scale_j². 비트 배분(AATC)으로 더 줄인다.
+- 보상(이 인스턴스): Hadamard 기저·균일 grid·reader 불변을 유지하고, 코드 선택으로 오차를 H⁻¹ 방향(λ 작은 방향)으로 밀어낸다 = Babai 반올림. 온라인 비용: head당 128 순차 단계(토큰은 배치).
+  장점은 저장 형식·reader·커널이 기존 Hadamard-INT4 그대로라는 점뿐이다. 이것이 유일하게 남을 수 있는 차별점이다.
+- 두 방법은 같은 통계(QᵀQ)를 쓰므로 "같은 H에서 회전+RTN이 보상+RTN과 같거나 낫다"면 보상의 존재 이유가 없다. 이 비교가 Codex 설계에 빠져 있다(기준선이 Hadamard RTN뿐).
+
+== 3. 판정: 남는 구체 공백 1개, 단 기준선 결과 전에는 "부족" ==
+공백(가설): "청크 자기회귀 비디오 확산의 INT4 K에서, 다른 prompt에서 고정한 QᵀQ로 reader 불변·동일 payload의 순차 코드 보상이, 같은 QᵀQ로 만든 고유기저 회전+RTN(SAW-INT4형)보다
+ post-Wo 오차를 더 줄이거나 그 위에 가산되는가." 검색 범위에서 이 비교는 없다. SAW-INT4는 LLM·INT4에서 Hessian 변형이 졌고, QuantWM은 INT2·centroid에서 2차형이 무이득이었다.
+현재 자료(2층·p0→p4·단일 읽기)는 이 공백을 열어 둘 뿐 채우지 못한다. 신규성 주장은 아래 기준선 결과 후에만 가능하다.
+가장 싼 강한 기준선(CPU, 같은 캡처·같은 2층, 각 1분 미만):
+ R1 ROT_QCOV: head별 U_h = eigvec(H_damped), K' = K_h U_h 기저에서 프레임 g16 채널별 RTN INT4, 복원 후 U_hᵀ. scale 수 동일 → payload 동일. 온라인 비용 0(reader는 q도 U_h 회전).
+ R2 ROT_QCOV + OBQ: R1 기저에서 같은 순차 보상(가산성 검사).
+ R3 (선택) Hadamard RTN + λ 가중 채널별 비트 배분(평균 4비트 유지, AATC형) — payload 근사 동일.
+ 판정(사전): OBQ_FULL이 R1보다 두 층 모두 ≥20% 작으면 "보상이 회전을 넘는다"로 공백 유지; R1이 OBQ_FULL의 10% 이내이거나 더 작으면 보상 경로 종료(회전이 더 싸다);
+ R2가 R1보다 ≥20% 작으면 "가산" 서술만 허용. 비교 지표는 Codex와 같은 post-Wo SSE, 같은 128 query.
+정보 시점·비용 정리(원고에 써야 할 것): H는 다른 prompt의 오프라인 보정(공짜 아님), 층당 H 786 KB(12×128×128 FP32), 쓰기 시 head당 128 순차 단계(GPU 측정 없음),
+ K 재구성 오차 +50~60%(R-8이 보인 누적 민감도 때문에 rollout에서 역전될 수 있음 — 미측정), 2층·1 청크·개발 prompt.
+
+== 4. 추가 반론(결과 해석) ==
+- "두 RTN 대비 20%" 기준은 Hadamard RTN이 약한 기준선이라는 점을 가린다. 20%는 통계·회전 모두 모르는 기준선 대비이므로 신규 효과 크기가 아니다.
+- logit MSE가 46% 줄었는데 post-Wo는 40% → 대부분 logit 경로. V4 공통 오차(v_only NSE 1.3e-3/0.9e-3)가 바닥을 만들어 K-only 기준 감소는 55%/50%다. 보고서가 이미 분리했음. 적절.
+- OBQ의 K 재구성 오차 증가는 "현재 청크 BF16·과거만 양자화" 설정에서 측정됐다. rollout에서는 과거 청크 K가 다시 다음 청크의 입력에 영향을 주므로(자기회귀), 텐서 오차 증가가
+  누적으로 돌아올 수 있다. R-8의 회전 결과(p4 FR −3.65)가 그 선례다. causal write/read 검사 전에 R1 기준선을 먼저 두는 것이 더 싸다.
+
+== 미확인 ==
+HAPPI(Kim 2026) 원문 미확인. OSCAR·NOVA-KV·OptR·AATC·Tuncer는 abstract만. 비영어·워크숍 논문 미검색. R1~R3은 제안이며 실행하지 않았다.
+이 검토는 승인 절차가 아니라 권고다.
+
+== 5. 추가 확인: "first-reader query 조건부" 코드 선택의 정보 시점과 선행연구 ==
+코드 확인(src/kvq/store.py attend 112-139행): 새 청크의 query가 attend()에 들어온 시점에 직전 pending 청크를 segments로 옮기고, cutoff(start − residual_tokens)를 넘은
+ 세그먼트를 그 자리에서 encode_pair로 1회 부호화한 뒤 raw를 버린다. 따라서 chunk c의 코드는 c+1 call0(residual 0일 때)의 query가 존재하는 시점에 결정되고 이후 call 1..4와
+ c+2..c+6 읽기에서 고정 재사용된다. 주 작업자의 서술(causal, 추가 raw 보존 없음)은 맞다. 단 encode_pair에 query를 넘기는 인터페이스는 현재 없다(구현 변경 필요).
+정보 시점 대조:
+ - 같은 도메인 QuantWM QSAC: 과거 생성 단계의 query 2차 모멘트(온라인·누적)로 chunk 경계에서 K 코드(centroid)를 선택. 이것은 "과거 reader" 통계이며 first reader(c+1)는 아니다.
+ - LLM: SnapKV(프롬프트 끝 관측창 query로 프롬프트 KV 보존 결정), QAQ(최근 attention 창으로 토큰별 비트 결정; 저자들이 "양자화 시점에 점수가 없다"며 예측으로 대체),
+   MiKV·ZipCache(attention 기반 saliency 혼합 정밀도, 주기적 재압축), ReadKV 2610.11245(읽기 시 query별 채널 정밀도), MixKVQ(현재 창 query 크기로 채널 보존).
+ → "reader(query) 정보로 압축 결정을 내린다"는 정보 시점 자체는 새롭지 않다. 차이는 (i) 결정 대상이 정밀도·보존·centroid가 아니라 고정 grid의 격자 반올림이라는 점,
+   (ii) 청크 생성 구조 덕에 예측이 아닌 실제 first reader를 쓸 수 있다는 점뿐이다. (ii)는 ChunkStore의 구조적 성질이지 방법이 아니다. 결론: 정보 시점의 차이 없음.
+ - "first reader query를 OBQ/Babai 반올림의 계량으로 쓰는" 조합은 검색에서 못 찾았다(부재 증명 아님). 이 조합의 가치는 frozen offline H(이미 40%/33%) 대비
+   추가 이득으로만 성립한다. 동료 Codex의 수학 정리(W=K, X=Qᵀ 치환의 GPTQ)와 필수 기준선(query cov 회전+RTN)에 동의한다.
+평가 설계의 문제(명세 잠금 전에 반영 권고):
+ - 기존 캡처는 chunk 7 call0의 q만 있다. chunk 6의 first reader가 바로 이 q이므로, 이 q로 H를 만들고 같은 q로 평가하면 in-sample(낙관 상한)이다.
+   first-reader 변형의 공정한 평가 reader는 c+1 call 1..4와 c+2.. call0인데 캡처돼 있지 않다. 즉 현재 자료로는 first-reader 변형을 공정하게 평가할 수 없다.
+ - 가장 싼 대안(CPU, 기존 캡처): 같은 call0 q 4680개를 공간 분할(짝/홀 토큰)해 H용과 평가용으로 나눈다. 같은 call이므로 여전히 낙관적이지만, frozen p0 H 대비 추가 이득의 상한을 준다.
+   상한이 10% 미만이면 first-reader 경로는 닫는다(오프라인 H가 더 싸고 reader 변경이 없다). 상한이 크면 그때만 GPU 캡처(c+1 call0..4, c+2 call0; R-4와 같은 40 forward 규모)를 등록한다.
+ - 팔: H_frozen_p0(기존) / H_first_reader(분할) / H_oracle(평가 q 자체, 상한) / ROT_QCOV(각 H의 고유기저 회전+RTN). 사전 기준은 3절과 같은 20%/10%.
+ - 위험: first reader(call0, 최고 잡음 단계)의 query 통계가 call 1..4(낮은 잡음)와 다르면 코드가 첫 reader에 과적합된다. 미측정. GPU 캡처 없이는 답할 수 없다.
+
+== 6. qcov 회전 대조 설계에 대한 사전 의견(코드·명세 수령 전, 2026-11-05) ==
+- 정정 수용: "온라인 비용 0"은 틀림. post-RoPE K/Q에는 가중치 fold가 불가하므로 쓰기 시 K 변환·읽기 시 역변환(현재 Hadamard 경로의 restore가 Ht 곱)이 매 토큰 필요하다.
+  정확한 표현은 "현재 Hadamard 경로와 같은 128×128 곱 1회로 Hadamard를 U로 대체, 순차 보상 단계는 없음".
+- R2(U 기저 OBQ) 불필요에 동의: 순수 U 기저에서 H = Λ(대각)이므로 보상 항이 0이고 RTN과 코드가 같다(FP 잔차 제외).
+- 그러나 "U 다음에 전체 128 Hadamard"를 섞으면 양자화 오차가 Hadamard 좌표에서 백색 → U 좌표에서도 등방 → λ 가중 손실 Σλ_j σ²가 평범한 Hadamard RTN과 같아진다.
+  즉 U·H_full 기저는 scale 차이를 빼면 B0와 동치에 가깝고, 정렬 효과가 사라진다. 이 팔만 두면 "회전은 효과 없음"이 설계상 거의 자동이다.
+  정렬을 보존하려면 (a) 순수 U(채널별 scale이 λ 큰 방향의 오차를 키울 수 있음 — SAW-INT4가 Hessian 변형에서 진 이유로 추정) 또는
+  (b) λ 순서로 정렬한 채널을 16 또는 32 블록으로 나눈 블록 대각 Hadamard(SAW-INT4의 BDR 유사)여야 한다. (b) 기저에서는 H가 비대각이므로 OBQ(R2)가 다시 의미를 가진다.
+- 권고 팔: B0 Hadamard RTN(기존) / R1a 순수 U RTN / R1b U+블록 Hadamard(λ 정렬 블록 16) RTN / OBQ_FULL(기존, Hadamard 기저) / 선택 R2b = R1b 기저 OBQ.
+  모두 같은 scale 정책(프레임 g16 채널별 absmax/7, FP16)·같은 payload 수. scale 값은 기저가 다르므로 같을 수 없음(동의).
+- 공개 정의: U_h = eigvec(H_damped,h) 열을 고유값 내림차순 정렬, 부호는 첫 성분 양수로 고정, Hadamard는 Sylvester /√n, 블록은 연속 채널. 이것이 "원리 대조"이며 OSCAR 재현이 아니라는 표현에 동의.

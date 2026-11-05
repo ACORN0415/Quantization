@@ -1,0 +1,34 @@
+{
+  "passed": true,
+  "scope": "saved-record consistency and current code/registration hashes; no attention/capture recomputation",
+  "checks": [
+    {
+      "layer": 18,
+      "gains": {
+        "B0_BF16_RTN": 0.397492016024125,
+        "B0_FP32_RTN": 0.40230294376795595
+      },
+      "payload_bytes": 54097926,
+      "logit_mse_reduction_vs_native": 0.4668863597062206,
+      "key_sse_increase_vs_native": 0.6080330550938382,
+      "diagonal_equals_fp32_rtn": true
+    },
+    {
+      "layer": 24,
+      "gains": {
+        "B0_BF16_RTN": 0.3278128342461004,
+        "B0_FP32_RTN": 0.34786099590802044
+      },
+      "payload_bytes": 54097926,
+      "logit_mse_reduction_vs_native": 0.4083755476247458,
+      "key_sse_increase_vs_native": 0.5300101000838473,
+      "diagonal_equals_fp32_rtn": true
+    }
+  ],
+  "decision": "proceed_causal_capture",
+  "elapsed_seconds": 18.55149424006231,
+  "max_rss_bytes": 2528157696,
+  "result_sha256": "518d47923f654d9dd3a16e52fcc1a168f90018fbfd89f450f351639ad1ae5491",
+  "registration_lock_sha256": "a2b93fb5db1f09050035133f1e0342672a8c906b68b70ded7990fc60492cee16",
+  "folder_bytes_at_audit": 43439
+}

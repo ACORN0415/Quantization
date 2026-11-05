@@ -1,0 +1,24 @@
+{
+  "registered_utc": "2026-11-05T08:05:26.246426+00:00",
+  "status": "locked_before_real_capture_measurements",
+  "registration_sha256": "f63cb29b064b2373d5e6bd69fadc7345e4e90ba3bcb173eb51969346d75b2c49",
+  "code_sha256": "105fe0d3c651be19707b1a8bf0c672ef56550b7f73d776277d02bf5e04cb3cb9",
+  "selftest": "SELFTEST_v2.json",
+  "review_codex": "CROSS_REVIEW_KO.txt",
+  "review_fable": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/FAIR_FABLE_REVIEW_KO.txt",
+  "review_scope": "Fable independently reviewed confounds and comparison design, not current code. Root inspected code and Codex synthetic checks. Fable code cross-review requested but not yet received.",
+  "decision": "Execute bounded development diagnostic under unchanged criteria, prompts0/4 layers8/20/28/29, frame primary, chunk secondary. No independent holdout claim.",
+  "resource_limits": {
+    "cpu_threads": 4,
+    "wall_seconds": 2700,
+    "rss_bytes": 8589934592,
+    "gpu_calls": 0,
+    "new_disk_bytes": 2147483648
+  },
+  "notes": [
+    "Groups shift across second frame, not only one boundary.",
+    "Uniform head baseline includes all12 heads.",
+    "No sign test treating layers as independent.",
+    "Actual payload bytes exclude Python headers and runtime workspaces."
+  ]
+}

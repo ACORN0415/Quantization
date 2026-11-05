@@ -1,0 +1,5 @@
+2026-11-05 독립 재집계 첫 실행의 보고 경로 오류.
+audit_result.py가 base payload를 group['base4']['payload_bytes']에서 읽어 KeyError가 났다.
+등록 실행의 실제 저장 필드는 group['base_payload_bytes']이며 별도 감사 코드의 필드 접근만 바로잡았다.
+RESULT.json, diagnose.py, REGISTRATION_PROPOSAL_KO.txt 및 실험 결과/판정은 수정하지 않았다.
+첫 리다이렉션으로 생긴 비어 있는 AUDIT_RESULT.json은 보존하고 재실행 결과는 AUDIT_RESULT_v2.json에 저장한다.

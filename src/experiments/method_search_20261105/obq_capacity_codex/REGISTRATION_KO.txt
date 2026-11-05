@@ -1,0 +1,30 @@
+2026-11-05 — frozen-calibration OBQ K code optimization CPU capacity diagnostic
+상태: 실캡처 점수 계산 전 고정. 독립 신규 방법 검증/온라인 방법/보정 없는 방법이 아니다.
+자료: kv_alllayer_capture p00_s101에서 H만 계산, p04_s101에서 평가. 층18/24, chunk7 call0.
+두 입력 모두 기존 개발 자료이다. p0 H를 고정한 뒤 p4 query를 사용하지 않고 p4 과거 K 코드만 최적화한다.
+평가 query index: floor(arange(128)*4680/128), 동일128개를 모든 팔에 사용. 과거28080(6청크), 현재4680 BF16.
+K는 모든head INT4. frame1560 단위로 8개 zero-pad, token-group16, 채널별 scale.
+회전 K.float() @ Hadamard128(float32) -> BF16. scale=(absmax_BF16/7)_BF16 clamp_min1e-8 후 FP16 저장.
+V는 기존 chunk4680/group16 INT4, 모든 팔 공통. 현재 K/V는 원래 BF16 그대로.
+복원: intcode->BF16 * scale->BF16, padding 제거, inverse Hadamard FP32 -> BF16, attention FP32 CPU.
+H: p0 q BF16->FP32, Hadamard FP32, 그 결과를 FP64로 Q^T Q /4680.
+Hfull_damped=H+0.01*mean(diag(H))*I. Hdiag_damped=diag(diag(Hfull_damped)).
+L=chol(inv(Hdamped)).T(FP64) -> FP32, 고정채널순서0..127. 보상workspace FP32.
+팔:
+ B0_BF16_RTN: 원래 BF16 quotient->round->clamp[-8,7].
+ B0_FP32_RTN: 동일 BF16 산출/FP16 저장 scale를 FP32로 확장하고 FP32 quotient->round->clamp.
+ OBQ_FULL: 동일 grid/scale에서 full-H Cholesky 순차 error compensation으로 integer code 선택.
+ OBQ_DIAG: 같은산술 diagonal-H 대조; 0 off-diagonal 보상은 생략하되 B0_FP32_RTN과 모든코드 일치를 검사.
+OBQ는 원본 floor/ceil 두 값 중 선택이라는 제약이 아니며 고정 grid 위 code optimization이다.
+예상 logit 손실과 K 재구성 손실은 보조. 주지표는 원래BF16 K/V FP32 CPU reference 대비 post-Wo SSE/NSE.
+V4 공통인 K-only reference와 원래GPU native_av와의 CPU차이도 별도 기록한다.
+판정: 두 층 각각 OBQ_FULL SSE가 B0_BF16_RTN과 B0_FP32_RTN 모두 대비 >=20% 감소하면 causal write/read 캡처를 해볼 신호.
+ 어느 층에서든 어느 RTN 기준선 대비 >=10% 악화이면 이 capacity 인스턴스 종료. 그 외 판단불가.
+ 20%/10%는 이번 자원배분 기준이며 통계적 유의성/최종 논문 성공 기준이 아니다. 층을 독립표본으로 p값 계산하지 않는다.
+실제 uint8 nibble pack/unpack 왕복, code범위, 동일 scale 원소비트, 네 팔 정확히 같은 tensor payload bytes를 검사한다.
+cache payload와 shared Hadamard/H/L 통계·workspace를 구분한다. payload 동등은 전체 peak동등이나속도동등이 아니다.
+H는 p0 offline 보정 통계이며 공짜가 아니다. 자료 로드+H구성 시간, 코드선택 시간, Hraw/Hdamped/Hdiag 상주량,
+head별 Cholesky factor/inverse와 순차 보상workspace 크기 및 전체 maxRSS를 별도 기록한다.
+종료 상한: 실캡처 최초로드부터1200초, CPU4threads,RSS8GiB,추가파일2GiB. 첫상한에서멈추고미완료수보고. 구현/합성검사는별도.
+실행 전에 합성 diagonal-H==FP32 RTN, 기존 HeadRule 산술==B0, no-quant attention 항등, 실제pack왕복을 통과한다.
+REGISTRATION_LOCK.json에 이 파일/코드/참조 모듈 SHA256과 실행 시작 이전 시각을 보존한다. 실패시기준변경/후보추가없음.

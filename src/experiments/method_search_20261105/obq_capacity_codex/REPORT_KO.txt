@@ -1,0 +1,67 @@
+고정 보정 query 통계로 K 정수 코드를 선택하는 OBQ 용량 진단
+작성: Codex 업무 2 / 2026-11-05
+
+판단
+등록한 다음 단계 진행 기준을 통과했다. p0에서 고정한 query 2차 모멘트를 이용한 순차 오차 보상이 p4 두 층에서, 같은 실제 K/V 저장 payload를 사용하는 Hadamard+RTN보다 post-Wo 출력 SSE를 줄였다. 네이티브 BF16 RTN 대비 감소는 층18 39.749%, 층24 32.781%이고, FP32 RTN 대비도 각각40.230%,34.786%다. 두 층 각각 두 RTN 대비20%라는 사전 기준을 충족했다.
+
+이는 새 양자화 방법의 신규성이나 최종 영상 품질을 입증한 결과가 아니다. OBQ/GPTQ 자체는 알려진 알고리즘이며, 현재는 기존 개발 캡처 두 층에 대한 CPU 국소 진단이다. 단계 판정 'proceed_causal_capture'는 독립적인 실제 쓰기/읽기 검사를 할 근거가 생겼다는 뜻이다.
+
+1. 개입과 기준선
+- p00_s101 층18/24의 chunk7 query4680개로 head별H를 한 번 만들었다. H=Q_rot^T Q_rot/4680, lambda=.01*mean(diag(H)). 이 H는 p04 평가 이전에 고정했다. p04 query는 점수 계산에만 사용했고 코드 선택에 사용하지 않았다.
+- p04의 같은 층 chunk7에서 128개query를 floor(i*4680/128)로 고정했다. 과거6청크28080토큰의 K만 개입하고 현재4680토큰의 K/V는 BF16 그대로다.
+- K: 모든head INT4, Hadamard128, frame1560에서8개zero-padding, group16. 원래 BF16 absmax/7 산술과 FP16 저장 scale를 그대로 사용했다. scale와 group은 모든 팔에서 동일하다. V: 기존 chunk4680/group16 INT4 공통.
+- B0_BF16_RTN: 기존 BF16 나눗셈/반올림. B0_FP32_RTN: 동일 scale에서 FP32 나눗셈/반올림. OBQ_FULL: FP64 inverse/Cholesky를 FP32로 변환하고 128채널 고정순서로 FP32 순차 보상. OBQ_DIAG: 같은 damping의 대각H; off-diagonal 0인 갱신은 생략한다.
+- OBQ는 원래 값의 floor/ceil 중 선택만 허용한 방법이 아니다. 보상으로 이동한 값에서 고정 grid의 [-8,7] integer code를 선택한다.
+- attention은 공통 FP32 CPU 계산이다. 원래 BF16 K/V의 같은 CPU 경로가 주 기준이고, 출력차를 Wo로 투영한 SSE/NSE를 측정했다. 여기서 native BF16 RTN이라는 이름은 양자화 산술을 뜻하며 BF16 GPU attention 실행을 뜻하지 않는다.
+
+2. 결과
+                         층18 SSE / NSE          층24 SSE / NSE
+B0_BF16_RTN         480.769372 / .004559315   133.099680 / .002698876
+B0_FP32_RTN         484.639137 / .004596013   137.191452 / .002781845
+OBQ_FULL            289.667385 / .002747024    89.467897 / .001814150
+OBQ_DIAG            484.639137 / .004596013   137.191452 / .002781845
+
+OBQ_FULL 감소율:
+- BF16 RTN 대비: 층18 39.7492016%, 층24 32.7812834%.
+- FP32 RTN 대비: 층18 40.2302944%, 층24 34.7860996%.
+- 두 층 모두 통과; 층을 합산해 좋은 결과로 나쁜 층을 가리지 않았다. 유의확률이나 신뢰구간은 계산하지 않았다.
+
+보조 결과:
+- logit MSE는 BF16 RTN 대비46.689%(층18),40.838%(층24) 감소했다.
+- 반대로 K 재구성 SSE는60.803%,53.001% 증가했다. 이 사례에서는 K의 원소별 복원오차를 줄이는 선택과 query를 거친 출력오차를 줄이는 선택이 일치하지 않았다. 이것을 일반 법칙으로 확대하지 않는다.
+- V4 공통의 K-only reference에 대한 SSE도 층18 342.348678→154.210752, 층24 88.525720→44.557861로 감소했다. K/V 손실의 독립 가산 분해를 주장하지 않는다.
+- BF16/FP32 RTN 코드 차이 수는272,420 /275,357이었다. 그 차이만으로 개선을 주장하지 않도록 두 기준선 모두 통과하도록 등록했다.
+- diagonal 코드·복원 점수는 FP32 RTN과 정확히 같았다. 이번 차이는 같은 scale에서의 FP32 산술 전환만으로 설명되지 않는다.
+- 원래 저장된 GPU native_av와 CPU 기준의 post-Wo NSE 차이는 층18 2.809e-6, 층24 2.505e-6이었다. CPU 결과로 실제 GPU attention에서의 감소를 확정하지 않는다.
+- top16 spectral energy는 설명용으로만 보존했다. 성공·중단 기준에 사용하지 않았다.
+
+3. 실제 저장량과 비용
+모든 팔에서 과거6청크의 K+V 실제 tensor payload는54,097,926 B였다. K27,095,046 B(프레임padding·scale·청크별sentinel 포함), V27,002,880 B이다. uint8 nibble pack/unpack의 모든 code 일치를 검사했다. 모든 scale SHA256도 팔 간 같았다.
+이 숫자는 과거 캐시 payload만 의미한다. 공통 현재 BF16 K/V, 원본 평가 입력, Python 객체, Hadamard와 encoder 보정 통계·workspace를 포함하지 않는다. 같은 payload가 같은 전체 메모리나 같은 속도를 뜻하지 않는다.
+
+- 실제 캡처 진단 전체18.551초, CPU4threads, maxRSS2,528,157,696 B(약2.35GiB), GPU0, 모델 다운로드0.
+- 두 층의 보정자료 로드+H구성 구간은0.281/0.261초였다. 데이터가 이미 준비된 현재 파일시스템 조건의 단회 시간이다.
+- OBQ의 코드선택 함수 구간은6청크·12head당 층18 1.291초, 층24 1.319초였다. 그룹/회전/scale 생성과 pack/restore/attention 전체를 포함하지 않는 CPU 구간이다.
+- B0의 코드들은 팔 루프 전에 계산됐다. 따라서 RESULT.json의 B0 quantize_seconds는 실제 RTN 생성 시간을 포함하지 않으며, total_arm_seconds 역시 B0 생성 비용이 빠져 있다. 이 값들로 OBQ/RTN 실행시간 배율 또는 처리량을 비교하면 안 된다. root 코드 검토에서 발견해 결과 해석에 반영했다. 등록 후 코드를 바꾸거나 동일 실험의 시간 수치를 덮어쓰지 않았다.
+- 층별 Hraw/Hdamped/Hdiag 3개의 FP64 버퍼 합계4,718,592 B, head별 FP32 Cholesky65,536 B, FP64 inverse131,072 B, head별 순차 보상workspace14,450,688 B, shared Hadamard65,536 B를 기록했다. xg.float/expanded-scale/answer/packing temporary와 원본 입력 등 추가 버퍼도 상주하므로 이 부분합이 전체 peak의 설명이 되지는 않는다. 전체 maxRSS는 별도 값이다.
+- H는 공짜인 캐시 부가 상태가 아니다. p0 보정 자료 확보비와 고정 encoder 상태가 필요하다. 이번 시간에는 과거 p0 생성 자체의 비용이 포함되지 않는다.
+- 이후 속도 판단은 동일 전처리 범위·반복·실행 순서를 등록한 별도 측정이 필요하다.
+
+4. 유효성 확인과 보존
+실제 점수 계산 전에 SELFTEST.json을 기록하고 REGISTRATION_LOCK.json에 코드·명세·의존 모듈 해시, query목록, 시각을 고정했다. 기존 HeadRule codes/scales/restore 일치, 실제 PackedChunk payload/복원 일치, diagonal==FP32 RTN, full 알고리즘 identity-H==FP32 RTN, no-quant 공통 attention 경로 일치 및 입력 보존 검사가 통과했다.
+캡처4개는 원본 manifest SHA256/크기와 대조했다. 평가 입력 q/k/v의 원소 바이트를 전후 비교했다. 후보를 추가하거나 기준·lambda·group·query indices를 결과에 따라 변경하지 않았다.
+후속 audit_record.py는 읽기 전용으로 등록 해시·점수/감소율 산술·대각 대조·동일 payload·시간/메모리 상한·기록 순서를 재검사했다. attention을 독립 재계산한 감사는 아니다.
+
+주요 파일:
+- REGISTRATION_KO.txt: 사전 명세, SHA256 a8df9ed9bc2e5ff2a8a03be4bc83d3787256c537bb13e9c21ba19fd92431e990
+- diagnose_obq.py: 실행 코드, SHA256 07324360458a1d5687cff8932db316af97f9945ab75a689c7f3f7a0f0968af0d
+- REGISTRATION_LOCK.json: SHA256 a2b93fb5db1f09050035133f1e0342672a8c906b68b70ded7990fc60492cee16
+- RESULT.json: SHA256 518d47923f654d9dd3a16e52fcc1a168f90018fbfd89f450f351639ad1ae5491
+- AUDIT_RECORD.json: 저장기록 일관성 감사 통과.
+
+5. 주장 범위와 다음 한 단계
+말할 수 있는 것은 '같은 회전·group·scale·실제 캐시 payload에서, 고정 p0 query 통계의 비대각 성분을 사용하는 OBQ 코드 선택이 p4 두 층의 CPU post-Wo 오차를 줄였다'까지다. 온라인 자기 query 적응, 독립 입력 일반화, denoising 누적 효과, 전체 영상 품질, GPU 속도, PSAC/KVLinC 등 강한 방법 대비 우위, 신규성은 미검증이다. P0와P4는 이미 개발에 사용된 입력이다.
+
+다음 한 단계는 새 damping/회전을 검색하는 것이 아니라, 고정 p0 보정 통계를 유지한 채 새 입력의 실제 쓰기 시점에 pack하고 이후 읽기 시점에 검증하는 제한된 causal write/read 검사다. 같은 frame/group/scales로 두 RTN을 유지하고, 독립 query의 native attention 출력과 동일 범위 encode 시간·peak를 함께 기록해야 한다. 신규 GPU 검사는 본 작업자가 실행하지 않았으며 주 작업자가 다음 명세와 강한 비교 기준을 확정한다.
+
+검토 상태: root의 코드 검토에서 발견한 RTN 타이밍 누락을 반영했다. 실제 Claude Fable의 이 실행에 대한 독립 검토 결과는 본 보고서 작성 시 아직 전달받지 않았다. 이를 완료된 Claude 검토로 표시하지 않는다.

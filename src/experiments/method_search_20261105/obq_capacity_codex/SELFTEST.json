@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "checks": [
+    "existing HeadRule codes/scales/restore exact",
+    "PackedChunk actual payload and restoration exact",
+    "diagonal==FP32 RTN all codes",
+    "full algorithm identity-H==FP32 RTN",
+    "no-quant attention exact",
+    "input preserved"
+  ],
+  "payload_bytes_one_chunk": 4515841,
+  "code_sha256": "07324360458a1d5687cff8932db316af97f9945ab75a689c7f3f7a0f0968af0d",
+  "time_utc": 1793866466.8743649
+}

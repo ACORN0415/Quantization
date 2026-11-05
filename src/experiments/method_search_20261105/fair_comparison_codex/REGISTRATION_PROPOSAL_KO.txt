@@ -1,0 +1,53 @@
+같은 바이트 head 선택 CPU 진단 — 등록 제안, 2026-11-05
+상태: Claude 쌍 검토 및 주 작업자 확인 전. 실제 캡처 점수를 아직 읽거나 계산하지 않았다.
+
+목적: (a) frame/chunk 그룹 경계의 효과 (b) head 추가 비트의 효과 (c) norm 선택 규칙 자체의 효과를 분리한다.
+새 논문 방법의 확증이 아니라 기존 개발 자료를 이용한 다음 자원 배분 진단이다.
+
+자료: 이미 개발에 사용된 p0/p4, seed101, chunk7 첫 denoise, layer8/20/28/29 Q/K/V/W_o 캡처 8개.
+초안 수정 이력(실캡처 미측정): 처음 layer0/14/28/29를 제안했으나 기존 analysis_p00/p04의
+평균 K norm argmax가 다른 층이8/20뿐이라는 주 작업자의 재집계에 따라 0/14를8/20으로 바꿨다.
+8/20은 선택 변화 조건,28/29는 큰 손상이 있으나 고정 head로 충분할 가능성이 큰 조건이다.
+새 결과를 보고 바꾼 것이 아니라 기존 개발 관측으로 판별 조건을 선정한 것이며 일반화 표본이 아니다.
+capture_all_layers.py로 저장된 post-RoPE K, 과거6청크(28080), 현재4680을 사용한다.
+두 프롬프트 모두 이미 개발 사용 자료이므로 한쪽을 선택, 다른쪽을 평가해도 독립 보류 집합으로 부르지 않는다.
+
+통제: K만 FP32 Hadamard→BF16; RTN input dtype BF16; FP16 scale; 역회전 FP32→BF16.
+V는 모든 팔에서 chunk g16 INT4. 현재 청크 K/V BF16. q와 W_o는 동일 FP32 CPU 참조 계산.
+group_unit=frame와 chunk를 모두 명시하고, 팔 이름에 포함한다.
+
+팔(각 group_unit):
+  base4: 모든 K head INT4, 선택 효과 평가의 동일 바이트 기준선이 아님.
+  fixed_h00..h11: 6개 과거 청크 모두 같은 head h를 INT8, 나머지INT4.
+  norm: 청크별 회전 전 mean-token L2 norm 최대 head를 INT8, 나머지INT4.
+  best_fixed_on_other_prompt: 반대 개발 프롬프트의 post-W_o SSE 최소 fixed_h, 동점은 작은 h.
+  fixed_norm_on_other_prompt: 반대 개발 프롬프트의 과거 K 평균 norm 최대 head를 모든 청크에 고정.
+  uniform_fixed_expectation: 12 fixed_h의 SSE 산술평균(입력에 무관하게 head 하나를 균등 추출한 기대손실).
+  best_fixed_on_same_input: 진단용 참조, 배포 가능한 방법/실용 기준선으로 주장하지 않는다.
+
+바이트: uint8 nibble packing을 실제 생성한다. 12head 모두 low4bits + 보호 head의 high4bits + FP16 scales + 청크별 uint8 head index.
+고정 선택도 동일1바이트 head index를 저장한다. padding code를 포함한다. chunk/frame 간 padding 차이는 보고한다.
+모든 same-group mixed 후보의 실제 tensor payload가 정확히 같아야 유효하다.
+Python 객체/공통 형상 정보/공유 회전 행렬/attention 임시 메모리는 payload 바이트에 포함되지 않음을 기록한다.
+이 CPU 표현은 실제 GPU 커널·속도 검증이 아니다.
+
+지표: full4680 queries에 대한 post-W_o SSE와 CPU BF16-input/FP32-attention 기준 출력 에너지로 나눈 NSE.
+각 layer/prompt별 결과, 모든8사례의 sum(SSE)/sum(ref energy), 선택 head, byte수, 총시간·최대RSS.
+큰 층의 SSE가 총합을 지배할 수 있으므로 층별 감소율과 비악화 개수도 필수 보고한다.
+같은 모델·프롬프트의 층들을 독립 표본으로 간주한 p값 또는 신뢰구간을 계산하지 않는다.
+양자화 없는 동일계산은 정확히 같아야 한다. 원래 GPU native 출력 대비 FP32 CPU 차이도 별도 기록한다.
+이는 native GPU 품질/rollout과 동일한 검증이 아니다.
+
+판정 제안(결과 전에 고정):
+  계속할 근거: frame grouping의 norm이 best_fixed_on_other_prompt보다 총 SSE 5% 이상 감소,
+  두 평가 프롬프트 각각 총 SSE 감소, 8사례 중6이상 비악화(상대1e-5 이내는 수치 동점).
+  고정 규칙으로 충분: norm이 1% 이상 개선하지 못하고, 선택이 8사례중6이상 고정 또는 동일바이트 고정선택보다 악화.
+  그 사이: 판단 불가. 무조건 새 GPU 생성으로 확장하지 않고 이득 규모·이유를 검토한다.
+  최초 두 기준은 이번 개발 부분문제의 계속/종료 근거이며 분야 전체의 부재 증거가 아니다.
+  chunk grouping은 위 판정의 재현성과 그룹 상호작용 설명용 보조 결과이다.
+  전수 선택의 진단 gap 자체만으로 새 선택기 필요성을 주장하지 않는다.
+
+자원: GPU0회, CPU4스레드, 총45분/최대RSS8GiB/신규 디스크2GiB, 먼저 도달한 상한에서 중단.
+  결과 미완료를 실패로 바꾸지 않고 완료한 사례 수를 보고한다. 실행 중 기준·layer·prompt를 바꾸지 않는다.
+  첫 검증은 합성 입력의 pack 왕복, 기존 HeadRule/RotatedRTN 산술 동등성, head 출력 재조립 동등성이다.
+  실제 캡처 실행은 검토 완료 후 주 작업자가 등록 파일 hash와 함께 명시적으로 시작한다.

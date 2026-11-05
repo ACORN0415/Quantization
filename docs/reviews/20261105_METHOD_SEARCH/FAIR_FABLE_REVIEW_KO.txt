@@ -1,0 +1,103 @@
+업무 1 독립 검토 — 회전+head 정밀도(K4h8_V4) 비교 조건 감사 — Claude Fable 5.1 — 2026-11-05 KST
+Task/Dispatch ID: 없음(채팅 요청으로 수행, 조정자 Task 연결 전). 읽기 전용, CPU 소규모 계산만. GPU·모델 로드·기존 파일 수정 없음.
+대상: /home/acorn0415/Quantization. 직접 읽은 파일은 맨 끝 "확인/미확인" 참조. 짝 Codex 결과는 아직 전달받지 않았다.
+
+== 판단: 수정 필요 ==
+"K4h8_V4가 K4V4_rotK보다 좋다(+0.54 MUSIQ, DINO +0.026)"를 head 선택 효과라고 주장할 수 없다.
+이유 1(가장 중요): 같은 저장소의 R-8 결과가 head 규칙 없이 양자화기 구현만 바꾼(청크 4680 g16 → 프레임 1560 g16) 회전 K4의
+ FR MUSIQ를 p0 75.69→75.32(−0.37), p4 73.20→71.27(−1.93)로 보고한다(kv_alignment_compounding/REPORT_KO.txt 주의 1;
+ run_tf_fr.py:41이 HeadRuleQuantizer(head_upgrade=False), :63이 R-1과 같은 pilot.compressed_cache 경로임을 확인).
+ 즉 "같은 방법·다른 그룹 경계"만으로 생기는 변동이 ±0.4~1.9이고, 주장하는 효과 +0.54는 그 안에 있다.
+이유 2: 비트 혼재. K4h8는 층마다 head 1개를 INT8로 올리므로 K 코드 비트 4.33, 저장된 packed 추정은
+ K 4,500,480→4,796,931 B(+6.6%), 층0 KV 합계 54,005,760→55,784,466 B(+3.3%). "추가 비트" 효과와 "어느 head를 고르느냐" 효과가 분리되지 않았다.
+ (보고서의 "+2.7%"는 sampling.json의 packed_estimate 비(1.0329)와 맞지 않는다. 44%가 아니라 44.3%. 작은 오기이나 바이트 주장은 수정 요망.)
+이유 3: seed 1개, prompt 10개 평균 차 +0.54, prompt별 부호가 섞임(10개 중 K4h8 우세 4: p2 +2.1, p4 +2.1, p5 +1.9, p7 +3.2; 열세 6:
+ p0 −0.6, p1 −0.7, p3 −0.2, p6 −1.2, p8 −0.7, p9 −0.5). 부호검정으로는 유의하지 않다. DINO도 우세 6/열세 4.
+
+== 1) +0.54를 head 선택 효과라 주장 가능한가: 아니오. 근거 행 ==
+- kv_headrule_all/REPORT_KO.txt 평균행: rotK 72.37, K4h8 72.91, K8V8 72.52. 사전 기준은 "rotK − 0.5 이상이면 성공"(비열등 기준)이었다.
+  등록문(REGISTRATION_KO.txt)은 채택 기준이지 효과 입증 기준이 아니다. 보고서의 "성공"은 비열등 통과이며 우월 증거가 아니다.
+- kv_headrule_k4/quality.json decisions: p7 +3.25 MUSIQ이나 DINO −0.037, p9 DINO +0.216이나 MUSIQ −0.52. 두 지표가 엇갈린다.
+- 비교 기준선 K4V4_rotK는 R-1/R-3(run_rotation_rollout.py: RotatedRTN→Quantizer('rtn',4,4,group=16) on 4680 토큰 청크, pad 8/청크).
+  K4h8는 headrule_quantizer.py rtn_frame: FRAME=1560 단위 g16, pad 8/프레임(총 24/청크), scale 수 293→294/채널.
+  그룹 경계: 1560은 16의 배수가 아니므로(97.5) 기준선의 그룹 97(토큰 1552..1567)이 프레임 경계를 넘고, 3120은 정확히 경계(195)다.
+  따라서 두 팔은 토큰 1552..1567 구간 그룹 하나와 pad 위치가 다르다. 작아 보이지만 R-8이 이 차이로 p4 −1.9를 관측했다.
+- 선형대수: Hadamard(Sylvester, /sqrt(128))·float32 곱·dtype 복귀·fp16 scale·int8 컨테이너·clamp(-high-1,high)는 두 경로가 동일하다
+  (headrule_quantizer.py:16-32, quant.py:58-61, run_rotation_rollout.py:30-56). 노름 argmax는 비회전 k에서 계산하지만 직교 회전에
+  불변이므로 문제 없음. 복원도 둘 다 float32에서 Ht 곱 후 dtype 복귀. 이 축의 confound는 없음(직접 읽어 확인).
+- head 메타데이터: packed_estimate에 self.n_frames(=3) 바이트를 더하는데 head 번호는 청크당 1개이므로 과대 계상(무시 가능).
+  자체 bytes()는 pad 코드를 codes_el에 포함하지만 n_head/n_other는 pad 제외 → 혼합 산식. 결과에 영향 없는 수준.
+- 가장 중요한 추가 관측(encode_events.jsonl, p0/4/7/9 × 2팔 직접 집계): 선택된 head는 층마다 거의 상수다.
+  30층 중 대부분 1개, 최대 3개의 서로 다른 head만 42청크·4 prompt에서 등장하고 층별 최빈 head는 prompt 간에 같다
+  (예: 층29→9, 층27·28→11, 층0→11). 즉 "쓰기 시점 적응 선택"이 실제로 한 일은 오프라인 고정표와 거의 같다.
+  이는 선택 효과를 검증하기 쉽게 만든다(고정표 팔로 대체 가능)는 뜻이며, 동시에 "적응성"을 신규성으로 주장하면 안 된다는 뜻이다.
+
+== 2) 가장 싼 공정 비교 ==
+원칙: 같은 양자화기 코드(headrule_quantizer.py), 같은 프레임 경계·pad·scale 수, 같은 head 메타데이터 바이트, V4 동일. 팔 간 차이는 "어느 head를 8비트로 올리는가"만.
+ (a) rotK4-frame: head_upgrade=False. R-8 p0/p4 결과가 이미 있다(75.32/71.27). 10 prompt는 R-8b/c 결과를 재사용할 수 있으면 생성 0회.
+ (b) K4h8 norm(기존): 층별 노름 argmax. 기존 결과 재사용.
+ (c) K4h8 fixed: encode_events에서 뽑은 층별 최빈 head 고정표. 예측: (b)와 거의 동일 → 같으면 "적응 선택" 성분 0 확정. 비용 10 prompt 생성.
+ (d) K4h8 random: 층별 무작위 head(seed 고정, 노름 argmax 제외) INT8. 비트·바이트·메타데이터 동일. 이것이 "추가 비트" 대조군이다.
+     (b)−(d)가 선택 효과, (d)−(a)가 추가 비트 효과. 예측(가설): 층27-29 외에서는 (d)≈(b).
+ (e) 가능하면 K4h8 threshold: R-4 관측대로 massive head가 있는 층(27-29)만 승격(+0.3%). (b)와 같으면 바이트 주장이 더 강해진다.
+우선순위: CPU 단일 읽기(아래 3)로 (a)(b)(c)(d)를 먼저 돌려 (b)−(d)가 post-Wo NSE에서 0에 가까우면 GPU 생성은 (c)(d) 중 (d)만.
+생성 비용 상한: 팔 하나당 10 prompt×210 forward = 2100 forward, 약 15분(79 s/prompt). 두 팔이면 30분. 사전 기준은 아래.
+
+== 3) 기존 캡처를 쓰는 paired-query post-Wo 검사 설계 ==
+자료: sfq_data/kv_alllayer_capture/p{00,04}_s101/l{00..29}_c7.pt (post-RoPE K/V/Q, 청크7 call0, BF16 이력, 바이트 일치 확인됨).
+이것은 생성에 쓴 p0/p4와 같은 prompt·seed이므로 "독립 보류 입력"이 아니다. 명칭을 "개발 캡처 단일 읽기 진단"으로 한정한다.
+설계: 같은 q(4680)·같은 V4 복원·같은 past 28080 토큰에 대해 K 팔 (a)(b)(c)(d)를 적용하고 softmax 재계산 후 W_o 투영 오차 NSE를 비교.
+ 이미 analyze_all_layers.py와 noise_shaping run_head_rule_lowbit.py가 같은 계산을 한다. 추가 코드는 팔 (c)(d)와 "청크 4680 경계" 팔뿐.
+ 통계: 30층×2 prompt = 60 쌍. 팔 간 차이의 부호검정 + 층별 비(ratio)의 중앙값. 층27-29를 분리 보고(massive head 층).
+ 이미 있는 값(head_rule_p00_l29.json): 층29 K4_V4 7.2e-3 → K4+h8 4.3e-4(×0.06), 층14 5.0e-4 → 4.2e-4(×0.82).
+ 즉 head INT8의 단일 읽기 이득은 층29형에 집중돼 있고 층14형에서는 작다. 무작위 head 팔이 층14에서 같은 ×0.8을 내면 그것은 비트 효과다.
+full rollout(GPU 10 prompt 생성)으로 가는 기준:
+ - 진행: 60쌍에서 (b)의 post-Wo NSE가 (d)보다 작은 쌍 ≥ 45(부호검정 p<0.01 근사) 그리고 층27-29 이외에서도 중앙값 비 ≤ 0.9.
+ - 실패(선택 효과 없음): (b)와 (d)의 중앙값 비가 0.9~1.1 안이고 층27-29에서만 차이 → "massive head 층 임계 규칙"으로 축소하고 적응 선택 주장 철회.
+ - 판단 불가: 그 사이. 이 경우 GPU 생성을 늘리지 말고 보류 prompt(새 10개) 확보가 먼저.
+생성 단계 기준(사전 등록 권고): 10 prompt 후반 MUSIQ에서 (b)−(d) 부호검정 우세 ≥ 8/10 이고 평균 차 ≥ +1.0(R-8이 보인 구현 변동 1.9보다 작으니
+ seed 2개로 반복 요구), DINO 평균 (b) ≥ (d). 실패: 우세 ≤ 6/10. 새 보류 prompt 없이 "일반화" 단어를 쓰지 않는다.
+
+== 4) AGENTS.md 최신 배정 변경(업무마다 Claude 1 + Codex 1) 타당성 ==
+타당하다. 독립 검토와 CPU 구현을 다른 모델이 맡으면 같은 오류(예: 그룹 경계 가정)를 공유할 확률이 낮아진다.
+단, 두 검토자의 동의가 증거가 아니라는 기존 규칙은 유지해야 하며, 검토자가 다른 작업자의 원자료를 수정하지 않는다는 제한도 맞다.
+보완 제안 1개: 짝 간 자료 전달은 주 작업자가 파일 경로로만 하고, 검토자가 먼저 독립 결론을 저장한 뒤 상대 결과를 본다(이번 순서가 맞다).
+
+== 5) 치명점 하나: R-8 "주의 1" 해석과 R-6/R-7 등록의 불일치 ==
+R-8 보고는 "그룹 경계만으로 FR MUSIQ 2점이 바뀐다 → ±1.5 기준은 너무 촘촘했다"고 스스로 기록했다. 그런데 같은 날 R-7 등록은
+그 구현 변동보다 작은 임계(평균 −0.5, DINO ≥)로 K4h8를 "최종 구성으로 채택"했고, 비교 기준선은 경계가 다른 R-1/R-3 rotK다.
+즉 한 실험에서는 잡음으로 인정한 크기를 다른 실험에서는 채택 근거로 썼다. R-7의 "채택"은 비열등 통과로 다시 써야 하고,
+비교 기준선을 frame-경계 rotK(R-8 팔)로 바꾸거나 (d) 무작위 head 대조를 추가하기 전에는 "head 규칙 효과"를 원고에 쓰지 않는 것을 권고한다.
+또 R-8 보고의 "차이는 그룹 경계뿐"은 pad 바이트(8→24/청크)와 scale 수(293→294)도 포함하므로 "양자화기 구현 차이"로 표현하는 것이 정확하다.
+
+== 미측정·미확인 ==
+- 짝 Codex 결과 미수령. R-8b/c/d 결과·등록문은 읽지 않음(R-8d 진행 중이므로 건드리지 않음).
+- 캡처 텐서로 (c)(d) 팔 CPU 계산은 시간 상한 때문에 실행하지 않았다(설계만 제시). 기존 head_rule_*.json 값만 인용.
+- p1,2,3,5,6,8의 encode_events는 집계하지 않음(p0/4/7/9 8개 run만). R-3 quality.json의 rotK 행은 REPORT 표로만 확인.
+- V 경로·cross-attention·속도는 범위 밖. MUSIQ/DINO 계산기 자체는 검토하지 않음.
+직접 읽은 파일: AGENTS.md, CLAUDE_REVIEW_PROTOCOL_KO.md, WORK_ORDER_KO.txt, FAIR_FABLE_REQUEST.txt,
+ kv_headrule_rollout/headrule_quantizer.py·REPORT_KO.txt, kv_headrule_k4/run_headrule_k4.py·REPORT·REGISTRATION·quality.json·sampling.json,
+ kv_headrule_all/REPORT·REGISTRATION·quality.json·p01 sampling.json, kv_rotation_rollout/run_rotation_rollout.py(1-80행)·quality.json·sampling.json,
+ src/kvq/quant.py, kv_alllayer_capture/REPORT·capture_all_layers.py(1-60행)·tensor_vs_output.py·manifest, analyze_all_layers.py(grep),
+ noise_shaping_cpu_stage0/run_head_rule_lowbit.py(1-25행)·head_rule_p00_l29/l14·p04_l29.json, kv_alignment_compounding/REGISTRATION·REPORT(각 40행)·run_tf_fr.py·run_tf_fr_r8d.py(grep),
+ sfq_data/kv_headrule_k4/*/encode_events.jsonl·kv_rotation_rollout/p00_K4V4_rotK/encode_events.jsonl.
+이 검토는 승인 절차가 아니며 권고다. 주 작업자가 근거로 판단하고 남은 이견을 사용자에게 보고한다.
+
+== 추가(직접 계산, CPU 단일 읽기, 4 층·2 prompt, 약 2.5분) ==
+캡처 l{29,14,5}_c7(p0)·l14(p4)에 대해 past 28080 토큰 K를 팔별로 양자화(V4 g16 동일, 현재 청크 K/V는 BF16), 같은 q로 softmax·W_o 재계산.
+post-Wo NSE(참조 native_av 기준). 팔: a0=rotK 청크4680 g16(R-1 경계), a=rotK 프레임1560 g16(R-8/headrule 경계), b=노름 head INT8,
+d2=노름 2위 head INT8, dmin=노름 최소 head INT8, rand=무작위 head INT8(seed 7), all8=12 head 전부 INT8(K8 상한).
+ p0 l29 (hsel 9, 노름 104 vs 2위 26): a0 6.84e-3 | a 6.82e-3 | b 3.55e-4 (×0.052) | d2 6.82e-3 | dmin 6.82e-3 | rand 6.80e-3·6.82e-3 | all8 3.07e-4
+ p0 l14 (hsel 4, 노름 22 vs 19):     a0 5.05e-4 | a 5.02e-4 | b 4.14e-4 (×0.82)  | d2 4.41e-4 | dmin 5.01e-4 | rand 4.89e-4·4.41e-4 | all8 1.46e-4
+ p0 l5  (hsel 1, 노름 23 vs 21):     a0 1.44e-3 | a 1.45e-3 | b 1.41e-3 (×0.97)  | d2 1.38e-3 | dmin 1.45e-3 | rand 1.45e-3·1.45e-3 | all8 4.17e-4
+ p4 l14 (hsel 4):                     a0 4.85e-4 | a 4.84e-4 | b 4.03e-4 (×0.83)  | d2 4.21e-4 | dmin 4.83e-4 | rand 4.68e-4·4.21e-4 | all8 1.45e-4
+해석(관측 → 결론):
+ (i) 그룹 경계(a0 vs a)는 단일 읽기 오차를 0.5% 이내로만 바꾼다. 따라서 R-8의 p4 −1.9 MUSIQ는 단일 읽기 차이가 아니라 자기회귀
+     생성이 미세 섭동에 민감한 결과다. 같은 민감도가 K4h8 vs rotK 비교에도 작용하므로 +0.54는 섭동 잡음 범위다(1)의 결론 보강).
+ (ii) 선택 효과는 massive head 층(l29형)에 집중: 노름 head만 ×0.05, 다른 어떤 head도 ×1.0. 여기서는 선택이 전부이고 비트는 무관.
+ (iii) 분산 층(l14·l5형)에서는 노름 head ×0.82~0.97이며 2위·무작위 head도 ×0.87~0.97로 비슷하다 → 비트 효과와 선택 효과가 같은 자릿수.
+     all8(×0.29)에 비해 head 하나로 얻는 이득은 작다.
+ (iv) 따라서 가장 싼 공정한 생성 비교는 (d) 무작위 head가 아니라 "massive 층만 승격(임계 규칙, R-6 보고의 +0.3% 제안)" 대 "전 층 노름 head(현 K4h8)"다.
+     둘이 같으면 효과의 원천이 층27-29의 head 선택임이 확정되고 바이트 주장도 +3.3%→+0.3%로 강화된다. 다르면 분산 층의 비트 효과가 생성에서 의미 있다는 뜻.
+     이 비교도 seed 1개·10 prompt로는 ±2 MUSIQ 잡음에 묻히므로, 3)의 CPU 60쌍 검사를 먼저 하고 생성은 seed 2개로 사전 등록할 것을 권고한다.
+미확인: 4 층·2 prompt만 계산했다(전 30층 아님). 노름 2위 head가 일부 층에서 argmax보다 낫다(l5, l14 d2<b) → 선택 규칙 자체도 최적이 아니다.

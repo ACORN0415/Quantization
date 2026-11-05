@@ -1,0 +1,106 @@
+관측 기반 연구 지식 장부 — 2026-11-05, 진행 중
+
+E001 [코드·기존 결과 직접 확인]
+K4h8_V4 vs 기존 K4V4_rotK의 +0.54 MUSIQ는 head 선택의 분리된 효과가 아니다.
+기존은 청크4680 g16, HeadRule은1560프레임별g16. 두 번째 프레임의 그룹 격자가8토큰 이동하며 padding/scale 수도 달라진다.
+코드: src/experiments/kv_headrule_rollout/headrule_quantizer.py, kv_headrule_k4/run_headrule_k4.py, src/kvq/quant.py.
+대응: 같은 group_unit에서 norm/12fixed를 같은 실제 packed tensor payload로 비교. 업무1 등록 LOCK 참조.
+
+E002 [기존 JSON 재계산, 새 GPU/캡처 평가 아님]
+kv_alllayer_capture analysis_p00/p04의 전체과거평균 K norm argmax는28/30층에서일치.
+다른층8(10→4),20(5→3). 이 통계는 청크별norm 선택이항상동일하다는뜻은아님.
+같은frame경계의기존CPU K4h8/rot K4비교에서층28 NSE감소85.3/88.0%,29는95.0/96.0%.
+head비트의효과일수있으나매입력재선택의효과와구분해야함.
+
+E003 [검토 반론의 수용/비수용]
+Fable FAIR 리뷰의그룹하나만변경 설명은철회됨. 층을독립표본으로부호검정하는제안도철회됨.
+normhead제외 random대신12head균등기대손실을보고한다.
+합성코드변경후hash는SELFTEST_v2로이미재검증. 등록LOCK코드hash105fe0d3… 유지.
+Fable가제안한판정지표/대상층변경은실측시작후채택하지않음: 전체SSE는등록된개발부분문제의목적이며층별ratio를함께보고한다.
+기하평균을추가보고해도탐색적설명이며기존계속/종료판정을대체하지않는다.
+
+L001 [원문 확인, 신규성 부정/긍정 확정 아님]
+QuantWM https://arxiv.org/html/2609.26425v3 §4.2,§5.1: PSAC는query주부분공간에K잔차를투영. U BF16,C INT8이원문구현.
+paired 응답보정이필요하면같은예산의이강한기준선을포함해야한다. FP16 C로비용을불리는비교금지.
+PN-Mix https://arxiv.org/html/2610.19605v1 §4-5: query/key의RoPE채널쌍norm으로prefill한번saliency를골라재사용.
+단순norm중요도나query-sensitive비트선택일반명제는새기여가아님. 우리head선택과동일방법이라는뜻도아님.
+SAW-INT4 https://arxiv.org/html/2604.19157v1 §3,AppendixA.3: query2차모멘트고유기저회전이며GPTQ순차code선택이아님.
+SageAttention https://github.com/thu-ml/SageAttention/blob/main/sageattention/core.py: sequence축K mean subtraction이기존옵션.
+mean-centering 자체를새방법으로제안하지않는다.
+
+E004 [수학 합성검사]
+method_gap_codex/toy_sign_result.json과CROSS_REVIEW_FABLE_KO.txt:
+H의고유값상위16집중도만으로RTN개선가능성이나배율을판정할수없음.
+집중도.9346인대각H는RTN최적일수있고,집중도.15인상관블록H에서도다른grid code가30.5%목적값개선가능.
+Fable의.4/.6스펙트럼종료문턱철회. 고유값은설명용통계만.
+
+E005 [인과·정보시점 제약]
+기존캡처q는chunk7첫denoise(읽기q). 이를과거chunk1..6쓰기결정에쓰면온라인방법으로는미래정보이용.
+다른프롬프트p0에서H를고정하고p4에쓰는진단은offline calibration설정이며온라인무보정방법의검증은아님.
+실제쓰기q는clean-context재실행시점이므로향후그시점q를별도캡처해야causal-self-query가설을시험가능.
+seed변경/그룹구현변경의차이를반복타이밍측정잡음과동일시하지않음.
+
+D001 [주 작업자 자원 결정]
+업무1 same-byte선택효과8개개발캡처 CPU45분상한 실행.
+업무2 stationarycalibration의효용부터OBQ capacity CPU20분상한. 병목18/24각각BF16-RTN과FP32-RTN보다NSE20%감소면신호.
+Fable의paired진단우선권고와달리짧은OBQ진단을먼저선택: 구현과정보요구가작고추가상태없이회수되는오류를분리할수있음.
+이선택은신규성확정이나전체모델성공을뜻하지않는다. 두결과를보아다음자원을정한다.
+
+E006 [실캡처 CPU 진단 완료; GPU 0회]
+fair_comparison_codex/RESULT.json: p0/p4 × 층8/20/28/29, frame그룹 동일.
+norm 재선택은 반대 개발 prompt에서 정한 고정head 대비 총SSE 0.1508% 악화.
+개선1/동점5/악화2. chunk그룹 확인도 0.1350% 악화. 고정norm표 대비 이득은0.1238%.
+401.672초, maxRSS 2306633728B=2.148GiB. 등록·코드·캡처·payload 감사 통과.
+Fable FAIR_FABLE_RESULT_REVIEW_KO.txt가 실행과 종료판정 수용. Fable의 '두prompt norm유사→가중치성질'은
+관측만으로 원인을 확정할 수 없어 채택하지 않음. 층28/29 고정head 보호효과와 온라인 재선택효과는 구분.
+이 개발부분문제의 적응선택 추가개발을 종료하며, 모든입력의 고정head충분성이나 생성+0.54의 원인을 주장하지 않음.
+
+E007 [실캡처 CPU 진단 완료; GPU 0회]
+obq_capacity_codex/RESULT.json: p0 읽기Q의 H를 고정하여 p4 K의 INT4코드만 순차보상.
+층18/24 각각 post-Wo SSE가 BF16 RTN 대비39.749%/32.781%, FP32 RTN 대비40.230%/34.786% 감소.
+두층각각 두기준선대비20% 감소라는 등록문턱통과. K복원SSE는오히려60.803%/53.001% 증가,
+logit MSE는46.689%/40.838% 감소. 알려진 query-aware 목적과 일치하는 관측이며 새발견 주장은 아님.
+네팔 pastKV payload=54097926B; DIAG=FP32 RTN 코드/출력 일치; source보존통과.
+18.551초, maxRSS2528157696B, RESULT SHA518d47923f654d9dd3a16e52fcc1a168f90018fbfd89f450f351639ad1ae5491.
+RTN 코드 사전계산시간이 팔타이머에서 빠져 OBQ/RTN 속도비율은 무효: 비용판정에 사용하지 않음.
+Fable GAP_FABLE_OBQ_REVIEW_KO.txt는 코드유효성을 확인했으며 결과감사·후속causal설계는 진행중.
+
+D002 [양성신호 후 자원결정]
+업무1은 OBQ/GPTQ→KV의 실제 선행연구·강한기준선 대조, 업무2는 실제쓰기/후속읽기 검사의 설계·준비.
+각 업무에 Codex1+Claude Fable1 배정. 기존R8d GPU 실행과 겹치지 않으며, 후속GPU검사는 명세잠금 후.
+OBQ 알려진방법의 이식 자체는 신규기여로 부르지 않음. p0/p4 개발자료의2층신호는 독립검증이나 생성품질 입증이 아님.
+
+L002 [원문 상태 및 강한 기준선]
+HeadQ https://arxiv.org/abs/2605.03562 : v3(2026-05-19) 저자철회 상태를root가현재abs에서직접확인.
+v1 아이디어를문헌검토이력으로남길수는있으나검증된성능근거나현재유효논문으로사용하지않음.
+GPTQ as Babai https://arxiv.org/abs/2507.18553 : 뒤에서앞으로 GPTQ가최근접평면법과같다는기존분석.
+우리 clipping된고정grid 구현에 논문의 unclipped오차보장을 자동적용하지않음.
+Practical Online KV Cache Compaction https://arxiv.org/html/2608.00902v1 §3.2:
+다음 turn queries를모은뒤 raw turn을압축·고정하는선행설계존재. 토큰선택/attention matching이며우리INT4코드와같지는않지만
+'첫소비자 query를사용하도록압축을늦춤' 자체가새롭다는주장은불가.
+두검토자는같은p0통계를쓰는query-covariance 회전+RTN 기준선이필요하다고판단. 새GPU전에기존자료에서검사준비.
+고정통계 회전도 post-RoPE 변환·역변환 실행비용이있으므로 '온라인비용0'으로쓰지않음.
+
+E008 [로컬 실행순서 직접 확인, 효과는 미측정]
+src/kvq/store.py ChunkStore.attend는현재query를인자로받은뒤직전pending BF16청크를최초encode한다.
+따라서chunk c의코드를 c+1 call0 Q로정해고정하는것은현재저장정책내에서인과적으로가능하고새raw보존지연은불필요.
+과거모든청크를마지막평가q로다시양자화하는것은다른정보조건이며허용하지않음.
+새진단은각청크의first-reader H/own-refresh H/frozen-p0 H를구분하고미래call3에서의효과를별도로본다.
+
+E009 [같은 개발자료의 강한 회전 핵심 대조, CPU 완료]
+qcov_rotation_baseline_codex/RESULT.json: p0 원좌표 Q통계의 per-head U와 U Hadamard P를고정해p4평가.
+층18 SSE U=973.803120, UHP=450.856588, 기존OBQ=289.667385.
+층24 SSE U=189.104634, UHP=136.664766, 기존OBQ=89.467897.
+OBQ는두회전중더낮은UHP대비35.752%/34.535% 감소. 두층두회전모두10%이상감소등록조건통과.
+기존Hadamard code/scale hash·SSE·payload재현통과; 무개입회전SSE는RTN SSE의0.022~0.056%로1%유효gate통과.
+14.999초, RSS2409893888B, GPU0. 기존OBQ결과해시518d4792…재사용이며독립입력/새OBQ반복으로집계하지않음.
+OSCAR전체방법재현이아닌per-head핵심회전대조. 모든회전/변환을배제하거나보상이유일한방법이라고주장하지않음.
+Fable의 'Hadamard가정렬을지운다'는백색등방오차가정의직관일뿐실제scale/clipping오류의결론으로사용않음.
+
+D003 [다음 실행]
+causal_obq에새문장+seed307, BF16참조/계측각1회,4개nativeBF16read endpoint와5개codec팔을결과전등록.
+순수정보시점제약CPU재생→실제GPU attention 검사이며온라인GPU encoder나양자화전체생성을구현한것아님.
+기존R8dquality종료와GPU유휴를확인후최대30분/2생성으로실행예정. 대기시간은별도최대2시간.
+각GPU단계직전GPU재확인;실패재시도0;동시driver방지와자기자식프로세스만종료하도록실행조정코드검토중.
+
+상태: 실제방법효과/독립보류입력/실제GPU비용/신규성의종합검증은아직미완료. 사용자요청한연속연구목표는active.

@@ -1,0 +1,62 @@
+비교 조건 독립 감사 — Codex, 2026-11-05
+상태: 코드 읽기 및 합성 검증 단계. 실제 캡처의 후보 점수는 아직 측정하지 않음.
+
+1. 기존 rollout 비교에는 그룹 경계 변경이 혼재한다.
+kv_rotation_rollout/run_rotation_rollout.py의 RotatedRTN 구현은 청크 4680을 통째로 kvq.Quantizer에 전달한다.
+kv_headrule_k4/run_headrule_k4.py의 Observed는 HeadRuleQuantizer(k_bits=4, k_delta=False, head_upgrade=True)를 사용한다.
+headrule_quantizer.py는 1560 토큰 프레임마다 rtn_frame()을 호출한다.
+따라서 청크 기준은 ceil(4680/16)=293그룹, 마지막 8토큰 padding이고,
+프레임 기준은 3*ceil(1560/16)=294그룹, 프레임마다 8토큰씩 총24 padding이다.
+두 번째 프레임부터 그룹 시작점이 바뀌므로 scale과 복원값이 달라진다.
+R-6/R-7의 회전-only 대비 약 +0.54 MUSIQ는 head 승격만의 효과로 식별되지 않는다.
+
+2. 이미 존재하는 '같은 경계' 비교와의 구분.
+kv_alllayer_capture/analyze_all_layers.py의 K4V4_rotK는 HeadRuleQuantizer(...head_upgrade=False)이다.
+이 CPU 팔은 frame grouping이며 같은 파일의 K4h8_V4와 그룹 경계가 같다.
+즉 동일 문자열 K4V4_rotK가 rollout의 chunk grouping과 CPU 전층 분석의 frame grouping을 가리킨다.
+CPU 결과를 rollout 비교의 동일 조건 검증으로 바로 연결할 수 없다.
+
+3. 산술 조건.
+두 구현 모두 K를 FP32 Hadamard 행렬로 회전한 뒤 입력 dtype(BF16)으로 변환한다.
+RTN의 scale 산출·나눗셈·round는 입력 dtype, 저장 scale은 FP16이다.
+복원은 codes.to(dtype)*scale.to(dtype), 역회전은 FP32 후 입력 dtype 변환이다.
+보호 head 선택은 회전 전 K의 토큰별 L2 norm 평균 argmax이며 청크당 한 번이다.
+head rule의 k_delta=False이면 시간 잔차는 사용하지 않는다. V는 기존 청크 단위 Quantizer 그대로다.
+따라서 실제 코드 경로는 q를 회전해 attention에 넣는 방식이 아니라 K를 역회전해 전달한다.
+수학적 q/K 공유회전 설명과 실제 복원 커널의 연산·비용을 구분해야 한다.
+
+4. packed_estimate의 한계와 누락.
+HeadRuleKState.bytes()는 codes의 실제 padded 원소 수가 아니라 FRAME*n_frames 원소 수로 packed 비트를 계산한다.
+padding을 실제 저장하는 형식을 가정하면 padding24*128*(11*4+8)/8 = 19,968바이트/청크가 혼합 K payload 추정에서 빠진다.
+동일하게 head를 승격하지 않은 frame K4는 padding24*12*128/2=18,432바이트/청크 차이가 있다.
+복원 시 padding 코드를 합성하는 별도 packed 형식이라면 이 코드를 저장하지 않을 수 있다.
+따라서 아직 존재하지 않는 packed 형식의 추정을 무조건 버그라고 단정하지 않는다.
+현재 추정만으로는 어느 형식을 뜻하는지 불명확하며, 실제 저장 레이아웃을 고정해야 한다.
+scale은 실제294그룹을 세므로 scale 누락은 없다.
+head index는 객체의 단일 int이지만 packed_estimate는 n_frames=3바이트를 더한다.
+보고서의 '청크당1바이트'와 구현의 추정은 일치하지 않는다.
+현재 resident 코드는 모두 int8 컨테이너이므로 4비트 실제 메모리 절약은 입증되지 않았다.
+
+5. 가장 싼 유효한 다음 비교.
+동일 frame 경계, 동일 K4/K8 혼합 구성, 동일 scale 저장 dtype과 실제 packed tensor payload에서
+청크별 norm-head, 입력에 무관한 각 fixed-head 12개, 다른 개발 프롬프트에서 정한 fixed-head를 비교한다.
+추가 비트 이득은 no-upgrade와의 비교로, 선택 규칙의 이득은 동일 바이트의 fixed-head와의 비교로 구분한다.
+frame/chunk 경계 효과는 no-upgrade끼리 별도 비교한다.
+모든 후보는 V4 동일·현재 청크 BF16 동일·같은 Q/K/V와 W_o를 사용한다.
+
+6. 효율적인 전수 대조가 가능하다.
+각 attention head는 W_o 전까지 독립이다. K4 모든 head 출력과 K8 모든 head 출력을 두 번 계산하면,
+고정 head h만 승격한 출력은 K4 출력의 h번째 조각을 K8 출력의 h번째 조각으로 바꾸어 정확히 구성한다.
+그 후 W_o를 적용하므로 head 간 교차항도 보존된다. 'head별 오차 제곱의 합'으로 대체하지 않는다.
+청크별로 선택 head가 달라지는 norm 규칙은 별도 attention을 계산해야 한다.
+12후보 전수의 가장 좋은 결과는 진단용 상한이며 배포 가능한 query-free 선택기로 부르지 않는다.
+
+7. 새 합성 검증(SELFTEST.json).
+새 CPU nibble codec의 frame grouping 복원값은 기존 HeadRule의 upgrade/no-upgrade와 모든 BF16 원소가 일치했다.
+chunk grouping 복원값도 기존 Quantizer + 회전/역회전과 모든 BF16 원소가 일치했다.
+INT4 전 코드·INT8 전 코드의 nibble 왕복을 통과했고, 보호 head 12개 모두 동일 payload 4,816,897바이트/청크였다.
+독립 attention의 고정 head 출력 재조립과 직접 대체 계산은 합성 입력에서 비트 일치, post-W_o 차이 0이었다.
+실제 캡처 평가0회, GPU0회, 최대RSS 약0.62GiB. 이 검증은 실제 모델에서 선택의 이득을 뜻하지 않는다.
+
+판단: 수정 필요. head 선택 연구를 기각하는 결과는 아직 없으나, 기존 +0.54를 선택 규칙의 독립 효과로 쓰는 것은 불가.
+실험 원본 파일·GPU 실행·기존 결과는 변경하지 않았다.

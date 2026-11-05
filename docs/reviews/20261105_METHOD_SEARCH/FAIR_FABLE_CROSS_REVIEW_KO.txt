@@ -1,0 +1,46 @@
+업무 1 교차 검토 — 짝 Codex CPU 진단(fair_comparison_codex)의 실행 유효성 — Claude Fable 5.1 — 2026-11-05 KST
+Task/Dispatch ID: 없음(terminal_handle_stale, 채팅·파일로 진행). 읽기 전용. 실행·기존 파일 변경·추가 agent 없음.
+읽은 파일: src/experiments/method_search_20261105/fair_comparison_codex/{AUDIT_KO.txt, REGISTRATION_PROPOSAL_KO.txt, diagnose.py(전체 359행), SELFTEST.json},
+ kv_alllayer_capture/analysis_p00·p04.json(층별 head_by_knorm·knorm). 범위: 실행 유효성만. 캡처 실행 0회.
+
+== 판단: 코드 경로는 유효, 실행 전 수정 3건 필요 ==
+A. [실행 차단 사항] diagnose.py가 SELFTEST 이후 수정됐다. SELFTEST.json의 diagnose.py sha256은 f573ac27…, 현재 파일은 105fe0d3…이다.
+   층 변경(8/20/28/29) 후에도 바뀌므로, 실행 직전 selftest를 다시 돌려 새 sha를 기록하고 등록문 sha(현재 f63cb29b…)도 갱신한 뒤 --registration-sha256으로 실행해야 한다.
+   코드의 sha 게이트(336행)와 출력 덮어쓰기 금지(327행)는 올바르다.
+B. [집계 유효성] summarize()의 gain = 1 − Σnorm_sse/Σfixed_sse (256-261행)는 층·prompt에 걸친 "원시 SSE 합"이다. 층마다 출력 에너지가 다르므로
+   에너지가 큰 층이 분모·분자를 지배한다. 더구나 층28·29는 p0/p4 모두 같은 head(11, 9)를 고르므로 norm = fixed_on_other_prompt로 동점이 되어
+   분모에만 더해져 l8/l20의 이득을 희석한다. 이 설계로는 "고정 규칙으로 충분" 판정이 거의 자동이다.
+   권고: 사례별 NSE 비(norm/fixed)의 기하평균 또는 로그비 합으로 판정하고, 원시 합은 보조로만 보고. 동점 사례는 nonworse 집계에서 분리 표기
+   (현재 nonworse≥6/8은 28·29의 4개 동점만으로 4를 채우므로 사실상 2/4 기준).
+C. [층 선택의 식별력] analysis_p00/p04.json으로 30층을 확인한 결과 p0/p4의 노름 argmax가 다른 층은 8과 20뿐이고 둘 다 거의 동점이다
+   (1위/2위 노름 비: l8 1.008/1.008, l20 1.004/1.002). 나머지 28개 층은 같은 head를 고른다. 즉 이 자료에서 "입력 적응 선택"은 사실상 정적 표이며,
+   l8/l20 검사는 "노름이 거의 같은 두 head 중 어느 쪽을 올리느냐"를 재는 것이라 선택 효과 0이 예상되고, 그 0은 규칙 자체의 반증이 아니다.
+   권고: 등록문의 질문을 (c) "입력 적응"이 아니라 "노름 기준이 고르는 head가 균등 기대(uniform_fixed_expectation)·최적 고정보다 얼마나 좋은가"로
+   바꾸고, 층은 노름 격차가 큰 27·28·29(비 2.2/1.22/3.98)와 격차가 작은 14·5 같은 분산 층을 짝지어 "격차 크기 ↔ 선택 이득" 관계를 보는 것이 식별력이 있다.
+   기존 head_rule_*.json과 제 1차 검토의 4층 계산(l29 norm ×0.05 vs 다른 head ×1.0, l14 ×0.82 vs 2위·무작위 ×0.87~0.97)이 이 방향의 예비 근거다.
+
+== 코드 읽기로 확인한 항목(유효) ==
+- quant()(65-74행)는 rtn_frame·Quantizer.encode와 연산 순서·dtype이 같다. PackedChunk는 청크 전체를 회전한 뒤 프레임을 자르므로 encode_k와 같다.
+  chunk grouping은 RotatedRTN(회전→Quantizer 4680 pad 8)과 같다. 복원 경로(codes·scale 곱 → cat → float32 역회전 → dtype)도 같다. selftest가 비트 일치를 확인.
+  단 CPU 간 일치이며 GPU rollout이 실제로 저장한 bf16 값과의 비트 일치는 보장하지 않는다(float32 matmul 라이브러리 차이). 결론에 영향 없음.
+- nibble 패킹(52-62, 98-99, 114-121행): int8을 uint8로 보고 >>4가 상위 니블, 복원에서 c>=8 부호 보정 후 보호 head만 상위 니블 결합. 올바르다. 원소 수 짝수 보장.
+- head 재조립(209-213행): attention은 head별 독립(bmm 배치)이며 V·q 동일이므로 "전 head INT4 출력의 h번째를 전 head INT8 출력으로 치환"은
+  고정 head h 팔과 수학적으로 같고 W_o 교차항을 보존한다. bmm 배치 간 수치 독립은 라이브러리 가정이지만 1e-5 동점 허용이 이를 덮는다.
+- V: 모든 팔에서 chunk g16 INT4 동일, 현재 청크 K/V BF16 유지(156, 172행) — rollout과 같은 조건. norm head는 청크별 비회전 K 노름 argmax(191행)로 encode_k와 같다.
+- 바이트: 12 fixed·norm 팔의 payload 동일을 assert(221, 226행). padding 코드 포함과 head index 1바이트는 등록문대로.
+- 자원: attn 블록 64 → logits 약 100 MB, K 복원 200 MB. 최대 RSS 2 GiB 미만 예상. 시간은 사례당 attention 6회 + PackedChunk 144회 재생성(216행, 바이트 계산만을 위해
+  12 head × 6 청크를 매번 재양자화)으로 약 2~3분, 8사례 20~25분 → 45분 상한 안. 재생성은 낭비이나 유효성 문제는 아니다(그룹당 1회로 줄일 수 있다).
+- guard()·finally 저장·incomplete 처리(45-49, 349-355행) 적절. LAYERS 상수(32행)는 층 변경 시 등록문과 함께 바꿔야 한다.
+
+== 주 작업자 수정 사항에 대한 응답 ==
+- "프레임1 전체 g16 격자가 8토큰 이동" — 맞다. 1560 ≡ 8 (mod 16)이므로 프레임1(토큰 1560..3119, 98그룹)의 격자가 통째로 다르고 프레임0·2는 정렬된다.
+  제 1차 검토의 "그룹 하나만 다르다"는 틀렸다. 다만 제가 계산한 a0(청크) vs a(프레임)의 post-Wo NSE 차이 0.5% 이내(4사례)는 이 전체 이동을 포함한 값이므로 결론은 유지된다.
+- "norm 제외 무작위는 불리한 기준선 → 12 fixed 균등 기대 사용" — 동의. 제 (d) 팔은 그 균등 기대의 표본 2개에 해당한다. 다만 B에서 말한 대로 균등 기대는
+  현재 보고만 되고 판정에 쓰이지 않으므로, 판정 보조 지표로 norm/uniform 비를 사례별로 넣기를 권고한다.
+- "층을 독립 표본으로 부호검정하지 않음" — 동의. 같은 prompt의 층들은 독립이 아니다. 제 1차 보고의 60쌍 부호검정 제안은 철회하고 사례별 비의 분포 보고로 대체한다.
+- AUDIT 4절(packed_estimate가 padding 코드를 제외)과 head index 3바이트 지적은 제 확인과 일치한다.
+
+== 미확인 ==
+- 캡처 실행 결과 없음. 위 B·C는 analysis_p00/p04.json의 노름 값에 근거한 설계 예측이며 실행 결과가 아니다.
+- diagnose.py의 수정 내용(selftest 이후 diff)은 보지 못했다. selftest 재실행으로만 확인 가능.
+이 검토는 승인 절차가 아니라 권고다.

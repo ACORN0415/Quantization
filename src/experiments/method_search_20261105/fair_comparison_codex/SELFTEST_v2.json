@@ -1,0 +1,18 @@
+{
+  "status": "pass",
+  "real_captures_evaluated": 0,
+  "gpu_calls": 0,
+  "same_frame_existing_codec_bit_equal": true,
+  "same_chunk_existing_codec_bit_equal": true,
+  "mixed_frame_k_payload_bytes": 4816897,
+  "frame_group_count": 294,
+  "chunk_group_count": 293,
+  "all_fixed_heads_equal_payload": true,
+  "head_reassembly_max_post_sse": 0.0,
+  "source_sha256": {
+    "diagnose.py": "105fe0d3c651be19707b1a8bf0c672ef56550b7f73d776277d02bf5e04cb3cb9",
+    "headrule_quantizer.py": "6176c7b22866fc2150f8eb54273840a0c68e04c595f21da4100a22daf0610d8f",
+    "quant.py": "61c4d3cabd22109b389fe90623bff5b3eff3b4dcdcc596ffa3a8b7f054903250"
+  },
+  "max_rss_bytes": 661069824
+}

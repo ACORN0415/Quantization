@@ -1,0 +1,38 @@
+{
+  "claude_fair": {
+    "session": "claude_7167c0b2_86fb_4a17_b991_393ed0d47c37",
+    "surface": "chat",
+    "cwd": "/home/acorn0415",
+    "task_attachment": "failed_terminal_handle_stale",
+    "request_id": "cf2a9e41-ba99-4b94-bde2-9207650c1d1a",
+    "task_id": null,
+    "dispatch_id": null
+  },
+  "claude_gap": {
+    "session": "claude_131e855b_fd2a_4531_a3a5_9b092b5af23d",
+    "surface": "chat",
+    "cwd": "/home/acorn0415",
+    "task_attachment": "not_attempted_after_same_surface_handle_failure",
+    "task_id": null,
+    "dispatch_id": null
+  },
+  "codex_fair": "/root/fair_comparison_codex",
+  "codex_gap": "/root/method_gap_codex",
+  "note": "Claude prompts delivered as actual native chats. Task auto-report attachment unavailable; review files are the result channel. No CLI replacement.",
+  "pairing_rule": "Each work item has one Codex and one actual Claude Fable. Two work items have two of each.",
+  "phase_2": {
+    "work_1": {
+      "scope": "OBQ prior art and same-calibration covariance-rotation baseline",
+      "codex": "/root/fair_comparison_codex",
+      "claude_session": "claude_7167c0b2_86fb_4a17_b991_393ed0d47c37",
+      "delivered_messages": ["msg_155904fd98b8", "msg_9f5a70ce089c", "msg_ac5579a50e88"]
+    },
+    "work_2": {
+      "scope": "OBQ capacity audit and causal information-constrained fresh-input capture/replay",
+      "codex": "/root/method_gap_codex",
+      "claude_session": "claude_131e855b_fd2a_4531_a3a5_9b092b5af23d",
+      "delivered_messages": ["msg_c89244ba9b8d", "msg_1a5508754a21"]
+    },
+    "gpu_constraint": "Existing R8d generation and quality work must finish before new GPU work. Preparation and CPU diagnostics may proceed."
+  }
+}
