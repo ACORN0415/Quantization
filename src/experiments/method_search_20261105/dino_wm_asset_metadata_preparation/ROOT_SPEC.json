@@ -1,0 +1,44 @@
+{
+  "status": "metadata_only_preparation_not_model_acquisition",
+  "start_epoch": 1793905121.409743,
+  "deadline_epoch": 1793906021.409743,
+  "target_repo": "gaoyuezhou/dino_wm",
+  "repo_revision": "d5c69e8fe60c3ed6b01d2f6e88fbfd66be078e57",
+  "paths": [
+    "checkpoints/outputs.zip",
+    "datasets/pusht_noise.zip"
+  ],
+  "purpose": "Determine named selected archive/compressed and extracted footprints and minimal usable file groups before deciding any model/data acquisition or real experiment. Total repository storage is not required task footprint.",
+  "allowed": "Public HF metadata and strict HTTP Range reads of ZIP EOCD/ZIP64/central-directory only; no archive data-body/weights/tensors deserialization/extraction/model or environment install. If server ignores Range/returns200, close before reading body and mark unsupported.",
+  "limits": {
+    "wall_seconds": 900,
+    "CPU_threads": 2,
+    "RSS_bytes": 1073741824,
+    "HTTP_total_body_bytes": 8388608,
+    "output_bytes": 16777216,
+    "asset_archives": 2,
+    "GPU": 0,
+    "tensor_or_model_loads": 0,
+    "model_dataset_full_downloads": 0,
+    "installation": 0
+  },
+  "checks": [
+    "Bind HF revision/file size/LFS SHA metadata when available.",
+    "Validate HTTP206 and exact Content-Range; account actual bytes. Bounded reads and per-request timeouts.",
+    "Parse ZIP64 if needed; sum uncompressed/compressed entry sizes; count methods/encrypted/path anomalies. No extraction.",
+    "List checkpoint/config/normalization and dataset member groups needed for one PushT baseline; do not assert exact required set without planner loader source support.",
+    "Do not claim GPU/RAM feasibility from archive sizes alone. Report uncertainty and concrete next asset limit if sensible."
+  ],
+  "pair": [
+    "method_gap_codex code and metadata probe",
+    "existing actual Opus2 code/record review via manager"
+  ],
+  "writer_scope": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_asset_metadata_preparation",
+  "failure": "No retry loop, no switching to full download if Range denied, preserve failure. At most original header plus one central directory request per archive apart from bounded ZIP64 record needs.",
+  "input_metadata": {
+    "revision": "d5c69e8fe60c3ed6b01d2f6e88fbfd66be078e57",
+    "private": false,
+    "gated": false,
+    "storage_total_not_task_footprint": 21933291793
+  }
+}
