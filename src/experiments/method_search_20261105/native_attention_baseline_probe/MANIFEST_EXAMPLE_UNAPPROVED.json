@@ -1,0 +1,45 @@
+{
+  "status": "UNAPPROVED_CODE_PREPARATION_EXAMPLE",
+  "root_execution_authorized": false,
+  "actual_Opus_source_review_completed": false,
+  "code_sha256": "d15153969bfe5547f9d5a3bf0a45de31cfc11c65ad5e617321e7c2779eba0c7e",
+  "spec_sha256": "8f521365c696d380c0bc67e91cb5c8f3e9cb24fe64ef65358584c91f55cc8c03",
+  "interpreter": "/home/acorn0415/sfq_data/env/bin/python",
+  "limits": {
+    "wall_seconds": 900,
+    "CPU": 4,
+    "RSS_bytes": 8589934592,
+    "GPU_allocator_bytes": 4294967296,
+    "output_bytes": 268435456
+  },
+  "bound_files": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_probe/probe.py": "d15153969bfe5547f9d5a3bf0a45de31cfc11c65ad5e617321e7c2779eba0c7e",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_probe/ROOT_SPEC.json": "8f521365c696d380c0bc67e91cb5c8f3e9cb24fe64ef65358584c91f55cc8c03",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_probe/SELFTEST_CODEX.json": "3c385f605bfef981722289de6e4b741c5502713506b15af46f5b829c3ff8ec07",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_probe/SELFTEST_SCOPE_ADDENDUM.json": "e6d3e13f26da113bb0f8fc1dd14b31898c34f991ea74e6fd8b4a332a0aeebbc0",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_feasibility/adapter.py": "e9658942f04d89ac62dbf08a483282485124b1d29b1ed63bef97d97691de29aa",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_feasibility/CPU_IMPORT_CODEX.json": "2e571f33011ded9b99c711e9f61d21006e950af2da71cd4a81acc9132d147564",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_feasibility/REPORT_OPUS_KO.txt": "6c34e79312f07476802f6b4235385e9a81c0f85faed5c4f475027c0836e2fe90",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_feasibility/REPORT_CODEX_KO.txt": "31c8be7490bb108549cad3dc2f0465b5718aad73b16567551bd9b723778ea373",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_feasibility/ROOT_FINAL_DECISION.json": "96f987a095f5c9c27d382c100d48d67f6b015b1bfaec2101fb4f485ccea5221c",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_feasibility/source/sageattention/triton/quant_per_block.py": "990b4881fb5e8d70b59fa7b796dab20693c82761175ee51fc4c5329d51e1d377",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_feasibility/source/sageattention/triton/attn_qk_int8_per_block.py": "f7563994203a2bb95282ac3474beb8df59391d2b1c268b8757477cc59203250b",
+    "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torch/__init__.py": "5a190666c3853aa236c4d48ed64e2d4bbcd23bd32c21e64c0867646a6852e43f",
+    "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torch/version.py": "fb37823f3a4c3c29cd008fac7d3ce5aeb8e7da6f883b17aa9ea6d73ce6eecbfd",
+    "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/triton/__init__.py": "6ee0b6e8d20e313e9cc26a1891ce63938ea36f77e996863afdb39960ac3374a4",
+    "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/triton/runtime/jit.py": "f02f0e82f674a5144bfbc4b63db2bd2a7a7a9ba91b184e8ed629a66695d52330",
+    "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/triton/backends/nvidia/compiler.py": "ea8d8a4744679bb406b914485b1743669eb685f24949cd210f8fb72c103d2e46",
+    "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/flash_attn/__init__.py": "19de6aae2ed6ace6bd29a0fa45c1872da7302b308bc2461144d3152f1a287ab8",
+    "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/flash_attn/flash_attn_interface.py": "d8eaf989a5401fedd23d11a336a7f38e67596d0a4d5a279df14cbe2d7de2ed75",
+    "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/flash_attn_2_cuda.cpython-310-x86_64-linux-gnu.so": "49bd9d3367051b74dd86039532a3786cdf324fd88befcd0b7b3f3aeaae1abbd2"
+  },
+  "runtime_environment": {
+    "PYTHONNOUSERSITE": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "FLASH_ATTENTION_TRITON_AMD_ENABLE": "FALSE",
+    "TRITON_CACHE_DIR": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_probe/triton_cache",
+    "CUDA_CACHE_PATH": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_probe/cuda_cache"
+  },
+  "failure_rule": "First runtime/shape/numerical/byte/counter/cap failure stops; no fallback, source/tolerance/fixture change or automatic retry.",
+  "nonclaims": "Older Sage1 component pipeline with explicit adapter; no original highlevel API/Sage2++/SOTA/video quality/new method claim."
+}

@@ -1,0 +1,63 @@
+{
+  "status": "passed_CPU_source_import_no_GPU_benchmark",
+  "wall_seconds": 0.723989725112915,
+  "interpreter": "/home/acorn0415/sfq_data/env/bin/python",
+  "adapter_sha256": "e9658942f04d89ac62dbf08a483282485124b1d29b1ed63bef97d97691de29aa",
+  "origins": {
+    "quant_per_block": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_feasibility/source/sageattention/triton/quant_per_block.py",
+    "attn_qk_int8_per_block": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_attention_baseline_feasibility/source/sageattention/triton/attn_qk_int8_per_block.py"
+  },
+  "prospective_shapes": [
+    {
+      "batch": 1,
+      "heads": 12,
+      "head_dim": 128,
+      "q_valid": 4680,
+      "q_padded": 4736,
+      "kv_valid": 4680,
+      "kv_padded": 4736,
+      "causal": false
+    },
+    {
+      "batch": 1,
+      "heads": 12,
+      "head_dim": 128,
+      "q_valid": 4680,
+      "q_padded": 4736,
+      "kv_valid": 18720,
+      "kv_padded": 18752,
+      "causal": false
+    },
+    {
+      "batch": 1,
+      "heads": 12,
+      "head_dim": 128,
+      "q_valid": 4680,
+      "q_padded": 4736,
+      "kv_valid": 32760,
+      "kv_padded": 32768,
+      "causal": false
+    },
+    {
+      "batch": 1,
+      "heads": 12,
+      "head_dim": 128,
+      "q_valid": 4680,
+      "q_padded": 4736,
+      "kv_valid": 56160,
+      "kv_padded": 56192,
+      "causal": false
+    }
+  ],
+  "torch_CUDA_initialized": false,
+  "GPU_kernel_calls": 0,
+  "CUDA_JIT_compilation_calls": 0,
+  "model_tensor_loads": 0,
+  "installs": 0,
+  "packages": {
+    "torch": "2.6.0+cu124",
+    "triton": "3.2.0",
+    "flash-attn": "2.7.4.post1"
+  },
+  "scope": "Only imports and pure shape arithmetic. Source JIT decorators exist; GPU compilation/execution and numerical correctness remain untested."
+}

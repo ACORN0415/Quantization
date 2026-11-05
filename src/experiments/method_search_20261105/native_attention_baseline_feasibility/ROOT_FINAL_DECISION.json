@@ -1,0 +1,17 @@
+{
+  "status": "accept_CPU_import_feasibility_prepare_separate_bounded_GPU_probe",
+  "created_epoch": 1793917458.769598,
+  "root_independence": "Root REPORT31c8be74 written before opening Opus REPORT; source scopes differ and native quota not retried.",
+  "Opus_report_sha256": "6c34e79312f07476802f6b4235385e9a81c0f85faed5c4f475027c0836e2fe90",
+  "root_report_sha256": "31c8be7490bb108549cad3dc2f0465b5718aad73b16567551bd9b723778ea373",
+  "agreement": "Existing official pure Triton INT8QK/FP16PV path can avoid C++build dependency; old/weaker baseline, not Sage2++ or SOTA novelty evidence. Actual GPU/JIT compatibility and correctness remain untested.",
+  "root_choices": [
+    "Load only two standalone math modules using private names; do not create a synthetic sageattention package or quant stub and do not claim original core API was imported.",
+    "Use explicit pad+key-mask adapter for nonaligned lengths because masked loads omit other and official docs leave those lanes undefined; actual bug not demonstrated.",
+    "V is prepared FP16; Q-scale includes softmax scale times log2e. Cache only K/V, quantize changing Q each call.",
+    "Use numeric and bytewise comparisons distinctly; torch.equal on float tensor alone is not a byte comparison.",
+    "Do not use this older baseline to assert SOTA kernel novelty or revive the closed decode-retention candidate."
+  ],
+  "GPU_execution_authorized": false,
+  "next": "Prepare one900s max synthetic native-component baseline probe, small arithmetic validation before large-shape timing, independently source-reviewed before root launch."
+}

@@ -1,0 +1,20 @@
+{
+  "status": "feasible_source_only_older_Triton_baseline_CPU_import_passed_GPU_untested",
+  "completed_epoch": 1793917275.9336545,
+  "deadline_epoch": 1793918154.2434118,
+  "source_files_new": 4,
+  "source_modified": false,
+  "adapter_sha256": "e9658942f04d89ac62dbf08a483282485124b1d29b1ed63bef97d97691de29aa",
+  "files": {
+    "ROOT_SPEC.json": "49ebedde5fb97367e945848bf93c674642aa9639d7cb53e8c749d6d83b482280",
+    "SOURCE_MANIFEST_CODEX.json": "eb41cbda579c9a65e8bf2d75dd16e427682007fa22dd630954016510db6ae112",
+    "CPU_IMPORT_CODEX.json": "2e571f33011ded9b99c711e9f61d21006e950af2da71cd4a81acc9132d147564",
+    "REPORT_CODEX_KO.txt": "31c8be7490bb108549cad3dc2f0465b5718aad73b16567551bd9b723778ea373"
+  },
+  "relative_source_roots": "source/sageattention/triton",
+  "actual_Opus_feasibility_compared": false,
+  "root_GPU_execution_authorized": false,
+  "new_method_adopted": false,
+  "model_loads_installs_GPU": 0,
+  "legacy_not_SOTA_comparison": true
+}

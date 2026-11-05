@@ -1,0 +1,64 @@
+{
+  "status": "authorized_probe_code_preparation_not_GPU_execution",
+  "created_epoch": 1793917458.7698395,
+  "code_preparation_deadline_epoch": 1793919258.7698398,
+  "question": "Does the older official INT8QK/FP16PV Triton component path actually compile and match its chosen quantized reference on this4090, and what are full-preparation versus prepared-K/V whole-call costs relative to FA2 at known video shapes?",
+  "is_not": "No new algorithm, no revival of QVG decoder reuse, no same-codec comparison against QVG PRQ, no SOTA/quality/new methodology claim.",
+  "arms": [
+    "FA2 BF16 original valid shape",
+    "official older Triton modules via explicit full-preparation pad/mask pipeline",
+    "same pipeline with K/V prepared once and Q freshly quantized each call"
+  ],
+  "small_tests": {
+    "seed": 321,
+    "cases": [
+      "random Q37 K73 H2 D64",
+      "zero-Q37 K73 H2 D64"
+    ],
+    "reference": "Saved INT8 codes/scales dequantized with CPUFP64 softmax (base2 scales times ln2) and FP16 V; whole versus prepared output bytes must match.",
+    "normalized_Frobenius_error_max": 0.01,
+    "max_absolute_error_max": 0.05,
+    "gates_meaning": "Numerical implementation sanity versus same quantized representation; not BF16/video-quality thresholds.",
+    "failure": "Any small-case failure stops before all large timing."
+  },
+  "large_shapes": {
+    "B": 1,
+    "H": 12,
+    "D": 128,
+    "Q": 4680,
+    "K": [
+      4680,
+      18720,
+      32760,
+      56160
+    ],
+    "dtype": "BF16 raw inputs; FP16V within Sage1 path",
+    "mask": "noncausal valid K plus explicit zero-padding and broadcast boolean padding mask",
+    "warmup_cycles": 2,
+    "timing_cycles": 8,
+    "crossed_order": "three-arm cyclic order, identical per-cycle Q fixture (alternating two fresh fixed Q tensors), static K/V only reused"
+  },
+  "source": "Pinned original math modules unchanged; private import adapter. Source JIT decorators CPU imported, no C++ extension needed.",
+  "runtime_limits_proposal": {
+    "wall_seconds": 900,
+    "CPU": 4,
+    "RSS_bytes": 8589934592,
+    "GPU_allocator_bytes": 4294967296,
+    "output_bytes": 268435456,
+    "GPU_processes": 1,
+    "process_launches": 1,
+    "models_datasets_loads": 0,
+    "installs": 0,
+    "CXX_package_builds": 0,
+    "GPU_JIT": "Triton compile only during authorized runtime, first-use compile cost recorded separately and included in total cap"
+  },
+  "preservation": "Save small-case codes/scales/V/outputs for separate CPU arithmetic audit, large-case scalar errors/timings/byte digests/counters only. No enormous score matrix or full large QKV artifact.",
+  "root_execution_authorized": false,
+  "actual_Opus_source_review_required": true,
+  "forbid": [
+    "Package/global environment modification",
+    "Counterexample-driven tolerance or fixture changes",
+    "Automatic retry after runtime failure",
+    "Claim numerical match to BF16 or total video speedup from this synthetic probe"
+  ]
+}

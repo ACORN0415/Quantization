@@ -1,0 +1,71 @@
+native low-precision attention 기준선 실행 가능성 — Opus2 독립 준비 보고 (root msg_b9a44ba4931f)
+수신 UTC: 2026-11-05T22:18:11Z(이 시각 셸 확인). 원 마감은 22:35:54.24Z다(root 시작 + 20분, 재설정 없음). 끝 시각은 파일 말미에 적는다.
+모델: claude-opus-5-5, 기존 채팅 session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5. Task/Dispatch: 미연결(자동연결 실패). helper는 쓰지 않았다(시간 제약, 부모 직접).
+독립성: 같은 폴더의 SOURCE_MANIFEST_CODEX.json, source/ 폴더, root 초안과 결론은 열지 않았다. 입력은 ROOT_SPEC.json뿐이다.
+수행: 공식 GitHub 원문을 WebFetch로 열람했다(작은 요약 모델 경유. 인용이 짧게 요약돼 있어 verbatim 전문 대조는 아님).
+- 로컬 설치 metadata 파일을 읽었다.
+- install, build, compile, JIT, GPU, CUDA 또는 extension import, 모델·tensor·pickle 로드, 원환경·프로젝트 변경은 모두 0이다. CPU toy도 실행하지 않았다.
+
+로컬 환경 (dist-info 직접 읽음)
+- flash_attn 2.7.4.post1. site-packages에 flash_attn_2_cuda.cpython-310 .so가 있다(import하지 않음).
+- triton 3.2.0. sageattention은 없음.
+- Torch 2.6.0+cu124, nvcc 12.4, RTX 4090(SM89)은 root가 제공한 사실이다.
+
+source 계수 (repo 1개 = thu-ml/SageAttention, 추가 source 6개 이내)
+- 요청 8회: GitHub commit API metadata 1, 원문 7.
+- 고유 source 파일 6개(모두 성공): sageattention/__init__.py, core.py(2회 열람), quant.py, triton/attn_qk_int8_per_block.py, triton/quant_per_block.py, setup.py
+- pin: commit d1a57a546c3d395b1ffcbeecc66d81db76f3b4b5 (2026-01-17T17:43:28Z, main을 1회 조회). 원문은 이 commit 경로로 읽었다(__init__와 core 첫 열람은 main 경로이며, 같은 시점의 main이다).
+
+선정안 1개: SageAttention 공식 repo의 순수 Triton 경로 sageattn_qk_int8_pv_fp16_triton (CUDA 재빌드 없음)
+- 성격과 한계
+  - INT8 QK(Q 128행, K 64토큰 블록별 scale) + FP16 PV로 구성된 SageAttention1 계열 Triton kernel이다.
+  - 같은 repo의 Sage2 CUDA 경로(INT8 QK per-warp/thread + FP8 PV)나 Sage2++보다 약하거나 오래된 기준선이다. SOTA 기준선이나 Sage2·Sage2++ 대체로 쓰지 않는다.
+- 소스 사실 (요약 인용)
+  - core.py의 sageattn_qk_int8_pv_fp16_triton: quantization_backend 기본값 "triton", tensor_layout "HND"/"NHD", is_causal False, sm_scale 기본 1/sqrt(head_dim 원래 값), smooth_k True(km = k의 seq 평균을 빼는 것), return_lse 옵션.
+    - assert: CUDA, fp16 또는 bf16, 같은 device와 dtype, 마지막 dim contiguous.
+    - head_dim은 128 이하이면 padding하고 128을 넘으면 ValueError다. D128은 그대로 쓴다. 출력을 원래 head_dim으로 자른다.
+  - triton/quant_per_block.per_block_int8(q,k,km,BLKQ=128,BLKK=64,sm_scale,tensor_layout): Q에 sm_scale×1.44269504(log2 e)를 접어 넣고, int8 값과 FP32 scale을 낸다. km이 있으면 k에서 뺀다. import는 torch와 triton뿐이다.
+  - triton/attn_qk_int8_per_block.forward(q,k,v,q_scale,k_scale,tensor_layout,attn_mask,output_dtype=fp16,return_lse)
+    - qo_len과 kv_len을 각 tensor에서 따로 얻고 경계를 mask한다. 따라서 rectangular를 지원한다.
+    - BLOCK_M 128, BLOCK_N 64, GQA 지원. assert는 없다. import는 torch, math, triton뿐이다.
+- 미래 형상(B1/H12/D128, Q 4680, K 4680/18720/32760/56160, noncausal): source 계약상 지원된다(qo와 kv 길이 분리, 비배수 길이 masking, D128 무padding, HND/NHD).
+  - Triton 3.2에서 실제 컴파일되는지, 수치, 성능은 미검증이다. setup.py에는 Triton 요구 버전이 없다.
+- 차단 사실과 최소 우회
+  - 공식 package를 import하면 __init__ → core가 `from .quant import ...`를 하고, quant.py는 `from . import _fused`(컴파일 extension)를 try/except 없이 import한다.
+  - 따라서 CUDA 빌드 없이는 `import sageattention`이 실패한다(소스 판독).
+  - core의 sm80/89/90_compile import는 try/except로 보호돼 있으므로 문제없다.
+  - 최소 adaptation(새 방법 아님, 명시적 import adapter, 구현·실행은 하지 않음)
+    1) 고정 commit의 sageattention/ source를 읽기 전용 디렉터리에 둔다. 합성 package 'sageattention'의 __path__를 그 디렉터리로 지정한다(원 __init__는 실행하지 않음).
+    2) sys.modules['sageattention.quant']에 '호출하면 raise하는' stub을 미리 등록한다. quantization_backend='triton'이면 core는 quant의 함수를 호출하지 않는다(소스 판독).
+    3) 원 core.py를 그대로 import해 원 함수 sageattn_qk_int8_pv_fp16_triton을 쓴다. 이것이 whole API다.
+  - 이때 core가 top-level에서 import하는 Triton 파일 다섯 개(quant_per_block_varlen, attn_qk_int8_per_block_causal, attn_qk_int8_block_varlen, attn_qk_int8_per_block_causal_varlen, quant_per_thread)도 같은 commit 원문으로 있어야 한다.
+    - 나는 이 다섯 개를 읽지 않았다(source 6개 상한). 이들이 torch와 triton 외의 것을 import하는지는 미확인이며, 실행 전에 검사해야 할 필수 항목이다.
+  - shadowing 검사: import 전후 sys.modules['sageattention*'].__file__가 고정 디렉터리와 sha에 일치하는지, stub quant가 호출되지 않았는지(호출 카운터 0) 확인한다.
+- whole API 대 prepared-input 동일성 검사 계획 (실행 전 등록 대상, 지금 실행하지 않음)
+  - 같은 fp16(또는 bf16) 합성 Q, K, V에 대해 두 경로를 비교한다.
+    (a) 원 sageattn_qk_int8_pv_fp16_triton(HND, noncausal, smooth_k=True, backend triton)
+    (b) 같은 commit 함수를 직접 호출하는 prepared 경로: km = k.mean(seq); per_block_int8_triton(q,k,km,sm_scale,HND); attn_false(...); head_dim 슬라이스
+  - 출력 tensor bytes(torch.equal)가 같은지와 dtype·shape를 사전에 등록한다.
+  - 차이가 있으면 '동일 포맷이 아님'으로 기록하며 허용오차를 사후에 정하지 않는다.
+  - FA2(flash_attn 2.7.4.post1)의 같은 형상 dense 출력은 정확도와 비용을 서술하는 참조일 뿐 gate가 아니다. 단 기준값과 오차 척도는 사전에 고정한다.
+- 비용 분리 (계획)
+  - prep: smooth_k 평균, Q·K per-block int8 양자화, bf16→fp16 변환
+  - kernel: attn_false
+  - 전체: whole API
+  - FA2는 kernel 단독으로 따로 잰다. Triton 첫 컴파일 시간과 autotune 여부(미확인)는 warmup으로 분리해 기록한다.
+  - 상한과 runtime gate는 별도로 검토한 명세에서 정한다. 현재 성능이나 실행 성공을 주장하지 않는다.
+
+대안(선정하지 않음, 정보만): Sage2 CUDA 빌드
+- setup.py 판독: SM 8.9는 CUDA 12.4 이상을 요구하므로 현 nvcc 12.4는 이 검사를 통과한다. SM 12.0만 12.8을 요구한다.
+- extension _qattn_sm80, _qattn_sm89, _fused를 빌드한다. env: TORCH_CUDA_ARCH_LIST, EXT_PARALLEL/MAX_JOBS, SAGEATTN_SKIP_CUDA_BUILD. nvcc -O3 --use_fast_math 등.
+- 다만 다음은 미확인이다: 이 commit의 sm89 경로가 Sage2++ 기능(12.8 필요)을 포함하는지, 빌드 시간·디스크, Torch 2.6 ABI 적합성.
+- 빌드는 격리 디렉터리와 root 승인 아래에서만 하며, 이번에 실행하지 않았다.
+- Sage2++의 12.8 요구는 무시하지 않는다. 현 12.4에서 Sage2++를 쓴다고 주장하지 않는다.
+
+미확인
+- 위 Triton 파일 5개와 sm*_compile 모듈 본문
+- Triton 3.2와의 호환성
+- autotune 여부
+- 실제 CUDA 실행, 정확도, 성능
+- WebFetch 요약과 원문의 글자 단위 대조
+종료 UTC: 2026-11-05T22:20:26Z

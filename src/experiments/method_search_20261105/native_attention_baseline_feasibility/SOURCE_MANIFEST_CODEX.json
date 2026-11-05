@@ -1,0 +1,34 @@
+{
+  "commit": "d1a57a546c3d395b1ffcbeecc66d81db76f3b4b5",
+  "retrieved_epoch": 1793916992.0637727,
+  "files": [
+    {
+      "path": "sageattention/triton/__init__.py",
+      "url": "https://raw.githubusercontent.com/thu-ml/SageAttention/d1a57a546c3d395b1ffcbeecc66d81db76f3b4b5/sageattention/triton/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "sageattention/triton/quant_per_block.py",
+      "url": "https://raw.githubusercontent.com/thu-ml/SageAttention/d1a57a546c3d395b1ffcbeecc66d81db76f3b4b5/sageattention/triton/quant_per_block.py",
+      "bytes": 4117,
+      "sha256": "990b4881fb5e8d70b59fa7b796dab20693c82761175ee51fc4c5329d51e1d377",
+      "git_blob": "19a9c36bd594c3a96fd20938b2e72c392d1002ff"
+    },
+    {
+      "path": "sageattention/triton/attn_qk_int8_per_block.py",
+      "url": "https://raw.githubusercontent.com/thu-ml/SageAttention/d1a57a546c3d395b1ffcbeecc66d81db76f3b4b5/sageattention/triton/attn_qk_int8_per_block.py",
+      "bytes": 8031,
+      "sha256": "f7563994203a2bb95282ac3474beb8df59391d2b1c268b8757477cc59203250b",
+      "git_blob": "401ac3c06abca675484923d43b18231aaf7d886c"
+    },
+    {
+      "path": "setup.py",
+      "url": "https://raw.githubusercontent.com/thu-ml/SageAttention/d1a57a546c3d395b1ffcbeecc66d81db76f3b4b5/setup.py",
+      "bytes": 10642,
+      "sha256": "db9b707a3b6cda661534ab25ffc24ffdc3d17137fb44117b99569fb00ea3fd96",
+      "git_blob": "6b2c5b43efd134d045ebb12b373ab7843b4e9755"
+    }
+  ]
+}

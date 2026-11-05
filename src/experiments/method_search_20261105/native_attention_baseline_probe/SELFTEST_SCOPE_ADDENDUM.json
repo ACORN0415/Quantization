@@ -1,0 +1,19 @@
+{
+  "status": "passed_CPU_padding_and_byte_contract_not_GPU",
+  "checks": [
+    "unapproved rejected",
+    "Q/K padded shapes",
+    "all padded values0",
+    "K mean from valid keys",
+    "broadcast mask zero query stride and128storagebytes",
+    "mask valid keys only",
+    "K-only preparation does not allocate paddedQ",
+    "V FP16",
+    "byte comparator distinguishes signedzero",
+    "Torch CUDA not initialized"
+  ],
+  "model_dataset_GPU_loads": 0,
+  "source_sha256": "85129ada27087caf2c3ba63ca4e0bd6c6f2e70712f4c21d95cd2a3131339d88c",
+  "runtime_seconds": 0.6935093402862549,
+  "source_version_note": "Selftest ran before additional Torch/FA2/SM89 provenance guards; padding/byte helper bodies unchanged. Not a complete runtime test of final source."
+}

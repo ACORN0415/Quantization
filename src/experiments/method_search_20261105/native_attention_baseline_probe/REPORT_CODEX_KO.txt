@@ -1,0 +1,7 @@
+기존 Sage1 component baseline — 단1회GPU검사 코드 준비
+실행권한없음. package설치/C++build/model/data로드/GPU실행0. 실제root가작성한코드이며독립native감사로표현하지않는다.
+기존private loader와원본수학source두개를그대로사용하고상위core API는import하지않는다. 따라서whole API벤치라고부르지않고pad/mask component pipeline의전체비용으로한정한다. 유효K로평균을구한뒤K/V를64, Q를128배수로0pad하며key-valid booleanmask는zero-stride view다. K준비에서Qpad를중복하지않는다. V는FP16으로변환한다.
+두작은형상(Q37/K73/H2/D64,random및zeroQ)에서full/prepare codes/scales/V/mask와출력의uint8 view비트일치를검사한다. 같은quantized표현CPUFP64 softmax참조와relativeFrobenius<=0.01 AND maxabs<=0.05를요구하며영상품질문턱이아니다. 실패하면큰형상에진행하지않는다.
+네큰형상은B1H12D128/Q4680,K4680/18720/32760/56160이다. 두고정Qfixture를바꿔읽고K/V만cache한다. 각팔warmup2+timing8을3팔순서회전으로교차한다. query양자화는매호출이며사전K/V준비는setup비용에포함해따로보고한다. FA2와수치차이는서술자료이고품질gate가아니다.
+실제원본Tritonattention launch를observer가그대로위임하고CompiledKernel PTX의INT8 MMA를확인한다(실제실행전미검증). 호출기록도실제quant/attention호출지점에서세고예상총Q100/K56/attn100/FA248을검사한다. 최초JIT비용은작은검사와case setup에포함하고전체900초상한에서도뺄수없다. GPU4GiB/RSS8GiB/CPU4/output256MiB/단일root프로세스와외부한도감독이필요하다.
+CPU helper검사는unapproved거부·padding모양/0·유효K평균·broadcast mask원소/stride/storage·Q중복패딩없음·V FP16·signedzero를구별하는byte비교를통과했다. 이후Torch/FA2/SM89 provenance guard만추가했고그차이와기존selftest범위를별도기록했다. 모든실제GPU수치·JIT호환성은미확인이다. 실제Opussource검토와새rootmanifest/실행전커밋후에만단1회실행한다.

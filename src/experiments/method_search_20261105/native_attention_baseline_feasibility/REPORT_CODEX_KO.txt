@@ -1,0 +1,27 @@
+기존 native 저정밀 attention 기준선의 실행 가능성 — Codex 독립 준비
+root Codex가직접수행했다(native quota 재시도·모델계정대체0). 상대Opus새보고서/초안은읽지않았다.
+
+선택: 공식 저장소의 순수 Triton INT8-QK/FP16-PV 구형 경로를 먼저 실행 가능한 최소 기준선으로 준비할 수 있다. 현재환경CPU import는성공했다. GPU compile/실행/숫자정확성/성능은아직확인하지않았다. SageAttention2++나FP8-PV경로와동급SOTA로표시하지않고이구형기준선에이겼다는것을새방법신규성으로쓰지않는다.
+
+현재 실행환경
+/home/acorn0415/sfq_data/env/bin/python: Torch2.6.0+cu124, Triton3.2.0, FlashAttention2.7.4.post1이설치돼있다. SageAttention배포패키지는없다. nvcc12.4다. pinnedSage setup.py는SM89에서CUDA12.4를허용하지만SM89의FP16accum소스까지포함한다. README는Sage2++에CUDA12.8을요구한다. 따라서설치또는컴파일성공을가정하지않고현재준비에서는C++build를실행하지않는다.
+
+최소 source closure와 적응
+Sage commit d1a57a546c3d395b1ffcbeecc66d81db76f3b4b5의triton/quant_per_block.py·attn_qk_int8_per_block.py는Torch/Triton만직접import하며상대C++확장을요구하지않는다. emptytriton/__init__과setup.py까지4개source를고정GitBlob대조해저장했다. adapter.py는두수학source를private이름으로불러오며global sageattention패키지를가짜로설치하지않는다. source수정은없다.
+CPU_IMPORT_CODEX에서실제task interpreter로Torch/Triton및두source를import했다. TorchCUDA미초기화,실제GPUkernel호출0/CUDA JIT컴파일0/modeldata load0이다. JITdecorator정의는있으나GPUcompile이나호환성증거와구분한다. 설치·원환경수정0이다.
+
+미리 해결해야 할 경계 조건
+1. 직사각형 Q/K길이를host forward에서각각사용하므로noncausal Q4680,K4680/18720/32760/56160은소스차원상정의된다. head128/H12/B1은해당기본타일128x64와맞는다. GPU메모리/성능이나모든입력정확성을보장하는말은아니다.
+2. quantkernel과attention K/V load가일부masked-load에other를주지않는다. Triton load문서는other=None일때masked값을undefined로정의한다. 이소스계약만으로실제NaN/오류발생을단정하지않지만4680등비정렬tail을무조건안전하다고도하지않는다.
+   다음별도probe가필요하면source를고치기보다입력을Q128/K64배수로0pad하고유효K booleanmask를broadcastview로전달하는명시적adapter를먼저정의한다. 전체QxK mask를물리화하지않고,평균은유효K에서만산출하고,출력은유효Q로crop한다. 이pad+mask는아직구현·수치검사되지않았다.
+3. per_block_int8는Qscale에sm_scale*log2(e)를접고Kscale에는1을쓴다. attention은exp2를사용한다. 원core의이scale계약과V를FP16으로준비하는경로를그대로유지해야한다. BF16V와FP16P를혼합dot하게내버려두지않는다. preparedK비교에서도동일centeredK/padding/code/scale/V를사용해야한다.
+4. one stable KV fixture를여러Q가읽는prepared입력과전체준비를포함한호출을같은format으로비교해야한다. QVG INT2 PRQ와Sage INT8을같은코덱으로취급하지않는다. 이전복원값유지후보와다른기존baseline에대한비용학습이며새방법주장이아니다.
+
+제안되는 후속 한 번(아직권한없음)
+먼저작은불규칙형상에서수학검사를통과시키고,그뒤네큰형상의FA2/구형Sage전체준비/동일K사전준비경로의whole-callwall/CUDAevent/준비비용/최대메모리를분리한다. 작은검사는같은INT8code복원참조와native연산을비교하고,두Sage경로의codes/scales·출력원소bytes가같아야한다. BF16 FA2와저정밀출력차이는서술이며영상품질gate가아니다. 큰형상에서는같은Qfixture를교차순서반복측정하며최초JIT시간을따로기록한다. 실제native TensorCore사용은실행trace/compiled code 확인전단정하지않는다.
+별도runtime명세에서시간·정확성·warmup·반복·출력상한·1회조건을고정하고실제Opus source검토/최종root결합후에만GPU를실행한다. 현재는codefeasibility준비만종료하며새kernel/GPU/설치/환경업데이트를시작하지않는다.
+
+근거
+https://github.com/thu-ml/SageAttention/tree/d1a57a546c3d395b1ffcbeecc66d81db76f3b4b5
+https://triton-lang.org/main/python-api/generated/triton.language.load.html
+원core의FP16V변환/scale계약은이전attention_cache_execution_gap_review_20261106의동일commit읽은범위로재사용한다. masked-load문서는현재공식문서이며task Triton3.2에서의실제컴파일결과를검사한것은아니다.
