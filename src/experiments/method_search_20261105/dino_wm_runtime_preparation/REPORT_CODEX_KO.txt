@@ -1,0 +1,42 @@
+DINO-WM 격리 실행 준비: 안전한 체크포인트 메타데이터와 고정 의존성 제안
+작성: Codex /root/method_gap_codex. ROOT_SPEC의 15분 한정 준비. 실제 Opus1 독립 결론은 읽지 않았다.
+판정: 31개 자산 취득은 완료됐지만 원래 DINO-WM 실행 경로를 닫기에는 부족하다. 추가 DINOv2 소스·가중치와 최소 source import closure가 미고정이다. 지금은 GPU smoke나 설치를 시작할 상태가 아니다. 다음 한 단계는 이 미확정 항목의 작은 텍스트·아티팩트 명세를 닫는 것이다. 새 양자화 선택기 개발로 넘어가지 않는다.
+
+1. 실제로 확인한 설정과 객체 구조
+취득 hydra.yaml 2,021B: img_size224, frameskip5, num_hist3, num_pred1, has_predictor/has_decoder=true, state_based=false, train_encoder=false, encoder=models.dino.DinoV2Encoder(name=dinov2_vits14, feature_key=x_norm_patchtokens), env=pusht, with_velocity/with_target=true. 원 환경 전체복제와 현재 환경 overlay는 서로 다르다.
+
+체크포인트 377,929,744B는 PyTorch ZIP 469개 항목이다. model_2/data.pkl 91,697B만 읽고 pickletools가 내놓은 34,347개 opcode를 제한된 추상 stack으로 처리했다. GLOBAL/REDUCE/NEWOBJ/BUILD는 호출하지 않고 이름·인수·상태를 inert Node로만 보존했다. 어떤 data/<storage> payload도 열지 않았고 torch/pickle.load, named GLOBAL import, 모델/텐서 복원은 0회다. 파일명을 grep해 key를 추정하지 않았다.
+최상위 EMPTY_DICT→SETITEMS→STOP까지 해석한 key는 정확히 다음 7개다:
+  epoch, predictor, predictor_optimizer, decoder, decoder_optimizer, action_encoder, proprio_encoder.
+encoder key가 없다. 단순 클래스명 부재가 아니라 원 loader가 검사하는 최상위 key 부재다. predictor/decoder/action/proprio object 아래에는 각각 75/47/2/2개의 storage member 참조가 있으며 ZIP에 대응하는 storage 크기 합계는 88,788,256 / 46,860,300 / 440 / 200B다. 이는 저장 메타데이터 참조의 존재이며 tensor 수치·정확한 실행 가능성·메모리 피크를 검증한 결과가 아니다. optimizer가 같은 parameter storage를 참조하므로 key별 storage 합계를 전체 모델 크기로 더하면 안 된다.
+
+원 plan.py:354–364는 전체 payload를 torch.load한 뒤 모델 key만 device로 옮긴다. 376–379는 encoder가 없으면 train_cfg.encoder를 instantiate한다. models/dino.py는 torch.hub.load('facebookresearch/dinov2', name)를 호출하며 revision을 고정하지 않는다. 따라서 현재 자산만으로는 별도 encoder가 필요 없다는 주장은 틀리다. 기존 설치/cache에 동일 encoder가 있는지 이번 범위에서는 확인하지 않았다. 동일한 원래 모델 소스 commit과 pretrained weight URL·크기·SHA를 고정하기 전에는 mutable Hub 자동취득을 허용하면 안 된다. HF Transformers의 다른 DINOv2 구현을 넣어 원 구현과 동등하다고 가정하지 않는다.
+
+원 loader는 새 predictor를 생성한 뒤 저장 predictor.state_dict를 strict=True로 복사한다(plan.py393–406). 현재 Torch2.6에 맞게 checkpoint load 정책을 명시할 필요가 있다. 향후 신뢰된 원 SHA checkpoint를 대상으로 map_location='cpu'와 명시적인 weights_only 정책을 root가 검토해야 한다. 그 작업은 지금 실행하지 않았다. 얇은 loader가 planner import를 피할 수는 있지만, 전체 pickle에 포함된 Accelerate optimizer 클래스의 import 요구까지 자동으로 사라지지는 않는다.
+
+2. 가장 작은 환경 준비와 뒤로 미룰 의존성
+현재 interpreter는 /home/acorn0415/sfq_data/env/bin/python (Python3.10.22, Torch2.6.0+cu124/Torchvision0.21.0+cu124)다. 원 environment.yaml은 Python3.9.19, Torch2.3.0/Torchvision0.18.0이다. conda 환경 전체를 설치하면 기존 GPU 라이브러리와 연구환경을 불필요하게 바꾸므로 권고하지 않는다.
+
+미승인 최소 후보는 Hydra1.2.0 / OmegaConf2.3.0 / antlr4-runtime4.9.3 / Accelerate0.26.1이다. 원 데이터 reader를 연결할 때 Decord0.6.0이 추가된다. 정확한 PyPI filename/크기/SHA256/metadata URL은 PACKAGE_CANDIDATES_CODEX.json과 PYPI_METADATA_VERIFIED_CODEX.json에 있다. 13개 선정 artifact를 공식 버전 JSON으로 부모가 다시 대조했으며 실제 wheel/sdist는 받지 않았다. antlr4 4.9.3은 sdist만 있어 향후 bounded build 계약이 필요하다. 이 목록은 의존성 해석이 완료된 설치 lock이 아니다.
+
+기존 Accelerate1.15.0, OmegaConf2.4.0을 task overlay에서만 원 버전으로 가리키는 안이다. Hydra1.2.0의 requires OmegaConf~=2.2는 2.4를 원천 거부한다는 뜻이 아니다. 2.3.0 고정은 원 환경과 맞추기 위한 선택이며, 조사 중 본 Hydra1.3.2의 <2.4 제약과 구분한다. 원 Accelerate0.26.1과 현재 huggingface-hub2.3.0 등의 전이 API 호환성은 아직 확인하지 않았다. --no-deps는 그 호환성을 보장하지 않는다.
+
+실제 PushT 환경 후속에만 gym0.23.1/gym-notices0.0.8/cloudpickle2.1.0/pymunk6.8.0/cffi1.16.0/pycparser2.22/pygame2.5.2/shapely2.0.3 후보를 따로 둔다. gym도 sdist만 있으며 빌드가 미승인이다. 기존 scikit-image0.25.2/matplotlib3.10.9/Pillow12.3.0은 원 버전과 다르고 headless rendering/API 호환성은 미검증이다. 모델 load·predictor smoke에 환경 시뮬레이터 전체가 필요하다고 가정하지 않는다.
+
+plan.py는 top-level에서 gym/wandb/submitit/env/evaluator를 import한다. logging=False로 그 import가 없어지지 않는다. 원 wandb0.13.1의 protobuf<4 요구는 현재 protobuf7.36.2와 맞지 않는다. 따라서 최초 모델 smoke는 loading·모델 구성·엄격한 state_dict 복사 순서를 보존한 얇은 진입점을 별도로 검토하고, planner 전체는 후속 import closure로 둔다. env/__init__의 다른 환경 등록 등 미사용 import를 우회한다면 명시적인 adaptation이며 원 CLI와 같다고 표시하지 않는다.
+
+3. 기존 환경 불변인 overlay 계약
+미래 root가 정확한 목록을 승인한 뒤에만 별도 task directory에 --target 설치한다. /home/acorn0415/sfq_data/env/bin/python을 그대로 실행하고 user-site를 끄며 source/overlay 경로를 명시한다. 새 child venv가 기존 venv의 Torch를 상속한다고 가정하지 않는다. pip resolver/빌드 isolation의 자동 다운로드, Torch/Torchvision/Triton/NVIDIA wheel 취득을 금지한다. --no-deps와 정확한 파일 SHA 검증을 쓰되 미확인 의존성을 숨기지 않는다. import 시 실제 torch 경로·버전이 원 환경에서 온 것인지 확인해야 한다. 기존 환경 파일은 전혀 수정하지 않았다.
+
+소스는 huawei-noah/noah-research의 be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM 하위 파일만 exact raw로 취득하는 방안을 제안한다. Noah monorepo 전체 clone은 필요하지 않다. 최초 checkpoint class source군 7파일 19,380B, world-model/dataset군 7파일 26,280B, planner/env 후속군 12파일129,292B를 git blob과 함께 열거했다. 일부 파일은 tree metadata만 확인했고 내용·전이 imports를 읽지 않았으므로 이 합계가 완결된 소스 크기는 아니다. 특히 models/__init__와 distributed_fn 패키지 import closure가 미확정이다. 현재 실제 읽은 upstream source는 부모6+helper4=10개이며, 새 소스를 더 읽어 상한을 늘리지 않았다.
+
+4. 이후 actor GPU smoke 전에 필요한 조건
+가장 먼저: 미확정 DINOv2 source/weight metadata와 최소 checkpoint import closure를 닫고, 승인된 overlay를 만든 뒤 네트워크 차단·CPU import 검사로 패키지 출처를 확인한다. 추가 자산/설치/모델 역직렬화/GPU는 별도 root 실행 명세가 필요하다. 현재 manifest의 root_execution_authorized=false와 closure_complete=false를 유지한다.
+
+향후 얇은 smoke adapter는 원 hydra의 frame skip/history/이미지 transform/행동 및 proprio 정규화/encoder feature_key와 원 predictor 로딩을 보존해야 한다. 임의 dummy encoder/새 action selector를 끼우지 않는다. 원 val dataset 경로를 사용할 때 train 메타데이터도 읽는 factory 계약은 이미 취득한 31파일과 연결해야 한다. actual actor/환경 성공률은 아직 측정하지 않았다.
+
+ROOT_STRONG_BASELINE_NOTE를 읽었다. FP32 출력 dtype만으로 FP32 내부 산술을 주장하지 말고 autocast/TF32/matmul precision/attention kernel을 기록해야 한다. 이후 새로운 양자화 필요성을 판단할 때 ordinary BF16 predictor + 고정 FP32 encoder/검증된 observation feature 재사용을 단순 기준선으로 검토해야 한다. 이번 업무에서는 그 팔이나 새 실험을 추가하지 않았다. 기존의 어떤 시간·메모리·제어 품질 요구도 아직 실제 실행으로 위반됐다고 측정하지 않았다.
+
+5. 범위와 남은 불확실성
+helper runtime_dependencies는 기존 source4개와 PyPI17 JSON327,334B를 독립 확인했다. 부모는 pinned source6개66,309B, GitHub tree747,464B, 선정 artifact 재검증 PyPI13 JSON278,882B를 읽었다. 합계 애플리케이션 응답 body1,419,989B이며 HTTP headers/transport bytes는 포함하지 않는다. 원 checkpoint 내부 data.pkl은 세 번의 제한된 opcode 확인에만 읽었고 storage payload는 읽지 않았다. zip directory metadata 읽기는 이에 별도다. parser peak ru_maxrss693,440,512B, 실제 abstract scan0.033초이며 전체 준비시간과 다르다.
+GPU/model/tensor load/wheel·model payload download/설치/clone/원환경수정/git은 모두0이다. 추가 source는 텍스트 캐시이며 설치하거나 import하지 않았다. 현재 산출물은 준비 판단으로, 모델 실행 성공·GPU/RAM 적합성·제어 품질·새 방법 효과·신규성의 증거가 아니다. 실제 Opus1 검토는 root가 별도 취합한다.

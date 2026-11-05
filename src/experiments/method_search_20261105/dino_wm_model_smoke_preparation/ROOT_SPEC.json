@@ -1,0 +1,57 @@
+{
+  "status": "code_preparation_only_no_model_execution",
+  "created_epoch": 1793908872.9752107,
+  "codex_deadline_epoch": 1793910072.9752107,
+  "claude_seconds_from_ready_receipt": 600,
+  "claude_hard_outer_epoch": 1793911272.9752107,
+  "pair": [
+    "fair_comparison_codex",
+    "actual retained Opus2 after source-closure review"
+  ],
+  "writer_scope": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_model_smoke_preparation",
+  "inputs": [
+    "../dino_wm_runtime_source_closure/SOURCE_MANIFEST_PROPOSED.json",
+    "../dino_wm_runtime_source_closure/REPORT_CODEX_KO.txt",
+    "../dino_wm_runtime_preparation/SAFE_PICKLE_METADATA.json",
+    "../dino_wm_runtime_preparation/REPORT_CODEX_KO.txt"
+  ],
+  "target": "Prepare a concise offline trusted-checkpoint CPU/GPU model-connection smoke with an explicit FP32 namespace/import and offline DINO wrapper adaptation. No model execution in this task.",
+  "requirements": [
+    "Root alone executes after setup artifacts, independent source/weight SHA audit, actual Opus review, and separate complete root-approved manifest. Reject missing approvals/paths/hashes.",
+    "Preserve original QuantWM source bytes. Synthetic models package namespace bypasses quantizing __init__ explicitly; verify actual imported module paths before and after checkpoint load. Do not stub optimizer objects or omit actual pickle classes.",
+    "Trusted SHA-matched original model_latest.pth only; map_location=cpu and explicit weights_only=False justified by verified official asset provenance. No other pickle file. CPU checkpoint restore stage distinct from GPU stage. Network/hub auto loading disabled.",
+    "Official DINO direct constructor exact pinned kwargs, local SHA-verified official weight, explicit weights_only=True if valid state_dict, strict=True. Offline wrapper preserves x_norm_patchtokens/latent_ndim2/emb_dim/patch_size. Record it as adapter, not original hub execution.",
+    "Use acquired hydra.yaml; explicit model_epoch latest/file path. Exact VWorldModel resizing224->196/patch196, history3, frameskip5, concat_dim1, action/proprio dims from actual source/config/tensor shapes; assert evidence, do not silently guess.",
+    "Recreate predictor with original plan.py construction semantics and strict state_dict. Verify old checkpoint predictor versus recreated predictor on same bounded FP32 synthetic CPU input after eval, with result and allclose tolerance predeclared. This is execution equivalence smoke, not real-world quality.",
+    "Construct original VWorldModel with loaded components and offline encoder wrapper, preserving num_hist/num_pred/repeats/source forward/rollout. wm.eval() returns None: do not assign or chain its return.",
+    "Prepare one bounded synthetic image/proprio/action model-connection test using source-derived exact APIs. Register expected shapes/finite checks before execution; no data/quantization/calibration/control-success tests or speculative experiment arms.",
+    "Future FP32 GPU smoke fixes TF32 matmul/cuDNN off/autocastoff, records float32 matmul precision/attention fallback/XFORMERS_DISABLED and actual dtype. One root-owned process. No routine retries.",
+    "Preserve failure details; distinguish import success, CPU load/forward equivalence, GPU encode/predict/rollout success. Do not call synthetic test full PushT/CEM run or quality/novelty evidence.",
+    "Keep source small. No framework or generic process supervisor; root will apply external timeout/one-GPU lease."
+  ],
+  "preparation_limits": {
+    "CPU": 2,
+    "RSS_GiB": 2,
+    "output_MiB": 8,
+    "network": 0,
+    "GPU": 0,
+    "model_tensor_pickle_load": 0,
+    "installation": 0
+  },
+  "proposed_later_execution_bounds_not_authority": {
+    "wall_seconds": 600,
+    "CPU": 4,
+    "RSS_GiB": 8,
+    "GPU_processes": 1,
+    "GPU_allocator_GiB": 8,
+    "output_MiB": 128,
+    "source_readonly": true
+  },
+  "deliverables": [
+    "model_smoke.py",
+    "MANIFEST_EXAMPLE_UNAPPROVED.json",
+    "REPORT_CODEX_KO.txt",
+    "READY_CODEX.json",
+    "REVIEW_OPUS_KO.txt"
+  ]
+}

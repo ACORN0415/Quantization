@@ -1,0 +1,97 @@
+{
+  "status": "root_primary_source_readback_not_independently_reviewed_no_method_adoption",
+  "created_epoch": 1793908540.7372222,
+  "purpose": "Constrain later decision-error diagnostic and novelty claims while runtime setup is prepared. No GPU/data-effect inspection.",
+  "sources": [
+    {
+      "title": "ARC-Bench",
+      "url": "https://arxiv.org/html/2609.05461v1",
+      "read_scope": "abstract; sections2,3,4.1-4.2; AppendixA.1-A.4 via primary HTML lines65-143,254-276",
+      "supported_facts": [
+        "Fixed-candidate scoring audits compare model scores against separately executed terminal-state costs.",
+        "The paper distinguishes generated-candidate JEPA-WM scoring audits from complete CEM reruns; its encoder swaps are controlled variants.",
+        "Its terminal-ranking probe is explicitly a localizability diagnostic; it does not establish a deployed closed-loop repair.",
+        "The cited checkpoints and action chunks are not automatically identical to our newly acquired DINO-WM PushT checkpoint."
+      ],
+      "root_inference": "Dense latent-score preference must be called reference-score preference, not task-optimal oracle. Generic action-ranking failure is already prior work; no novelty claim from detecting it."
+    },
+    {
+      "title": "PreDE",
+      "url": "https://arxiv.org/html/2609.19441v1",
+      "read_scope": "abstract; sectionsII-IV.B primary HTML lines87-137",
+      "supported_facts": [
+        "Offline mean action deviation is calibrated with measured development closed-loop labels, then used to accept, reject or defer unseen quantization configurations.",
+        "Its agreement statement assumes within-setting single-crossing of acceptable/degraded labels; it is not an unconditional guarantee for an untested policy or configuration."
+      ],
+      "root_inference": "Action disagreement alone does not prove task degradation. An offline degradation predictor is not an untouched new problem. A counterexample to ordering would test its assumption, not itself supply a better deployable quantizer."
+    },
+    {
+      "title": "Where Bits Matter in World-Model Planning",
+      "url": "https://arxiv.org/html/2602.11882v1",
+      "read_scope": "abstract; sections2-4 primary HTML lines58-106",
+      "supported_facts": [
+        "DINO-WM Wall mixed/asymmetric/module-retention comparisons are already reported, with paired goals and two planner budgets.",
+        "The reported per-output-channel weight-only quantizer dequantizes for inference; its implementation statement is not evidence of a packed GPU speedup.",
+        "The paper notes budget-dependent signs in a smaller strict replication."
+      ],
+      "root_inference": "Keeping the encoder higher precision while lowering predictor precision is a strong existing simple baseline, not a new methodology."
+    },
+    {
+      "title": "OnPTQ",
+      "url": "https://arxiv.org/html/2609.36828v1",
+      "read_scope": "abstract; section4.1-4.2 lines123-151 and margin-analysis excerpt",
+      "supported_facts": [
+        "Shared-prefix reference-versus-quantized pairwise margin erosion, near misses and counterfactual continuation consequences already guide calibration."
+      ],
+      "root_inference": "A broad decision-boundary-aware or future-consequence-aware quantizer claim would overlap existing work. Continuous-action CEM setting difference alone does not establish useful novelty."
+    },
+    {
+      "title": "QuantWAMs",
+      "url": "https://arxiv.org/html/2607.28405v1",
+      "read_scope": "abstract; section3.2 excerpt and section6 limitations",
+      "supported_facts": [
+        "Joint video/action training gradients provide weight saliency; reachable rollout auditing revises precision schedules.",
+        "The paper limits efficiency evidence to its backend and block-level measurements and does not establish end-to-end transfer."
+      ],
+      "root_inference": "Task-aware precision allocation is already prior. Our existing observed deployment gap is still unmeasured."
+    },
+    {
+      "title": "Sampling-based Kinodynamic Planning with World Models",
+      "url": "https://arxiv.org/html/2610.12910v1",
+      "read_scope": "abstract; sectionV.A.5 and TableIII primary HTML lines303-312",
+      "supported_facts": [
+        "For its DINO-WM PushT experiment, the paper reports FP16/TF32/FP32 results together and a lower FP16 CEM median runtime.",
+        "Its finite-sample task-success comparison is not an equivalence theorem or a guarantee for our checkpoint/GPU."
+      ],
+      "root_inference": "Ordinary reduced floating-point precision must be a real baseline before attributing utility to a novel low-bit method. This is a reported precedent, not our observation."
+    },
+    {
+      "title": "world-model-compression-mpc public source",
+      "url": "https://github.com/aazminu/world-model-compression-mpc/tree/dd9bc4bc529c60a6ec0c703c5ff33e6c9795ba3e",
+      "read_scope": "fixed commit README, recursive tree, full operator_distillation.py4518B and cem_mpc_planner.py5157B; ROOT_ADDITIONAL_PRIOR_READBACK.json",
+      "supported_facts": [
+        "The source implements diagonal-Gaussian forward KL and a separately parameterized elite BCE head; the student action standard deviation is fixed in fit_epoch.",
+        "The included planner/environment are pure-Python small analytical models; PushTBlockEnv is a simplified coordinate update, not evidence of original DINO-WM/Pymunk PushT execution."
+      ],
+      "root_inference": "Generic CEM distribution/elite distillation is already publicly articulated. Do not claim preserving planner moments/elite sets is itself untouched; the inspected toy implementation does not prove a successful PTQ solution for our model."
+    },
+    {
+      "title": "worldmodel-ptq-asymmetry public repository",
+      "url": "https://github.com/sebspel/worldmodel-ptq-asymmetry/tree/adb2805bdee4323a86951f6587016519fc38c1e3",
+      "read_scope": "fixed commit README only; source/engines/results not executed or verified",
+      "supported_facts": [
+        "README describes FP32/FP16/FP8/INT8 TensorRT engine comparisons with a stable-worldmodel-based DINOv3-WM variant and LeWM."
+      ],
+      "root_inference": "Real backend plus closed-loop quantization comparisons already have a public implementation lead. It is a different checkpoint/model stack, and README claims alone do not establish its numeric results or direct applicability."
+    }
+  ],
+  "future_diagnostic_requirements": [
+    "Keep ordinary BF16 predictor, FP32 encoder and verified invariant-observation reuse as simple-baseline candidates.",
+    "Log actual CEM returned mu as well as sampled-candidate/elite scores; do not confuse best-sample logs with returned-plan cost.",
+    "Reference-score ordering recovery and real simulator control benefit are separate outcomes.",
+    "Do not expose simulator candidate terminal outcomes to a proposed deployment selector.",
+    "No new method adopted and no experimental success claimed from these source readings."
+  ],
+  "review_plan": "Include this source-scope update in the next actual Codex+Opus diagnostic-design task after bounded runtime source/setup preparation; do not reopen completed candidates or add current implementation requirements.",
+  "updated_epoch": 1793908718.824852
+}

@@ -1,0 +1,50 @@
+{
+  "status": "code_preparation_only_no_execution",
+  "created_epoch": 1793908376.4583187,
+  "codex_deadline_epoch": 1793909576.4583187,
+  "claude_review_seconds_from_complete_source_receipt": 600,
+  "claude_hard_outer_epoch": 1793910776.4583187,
+  "pair": [
+    "method_gap_codex",
+    "actual retained Opus1 after runtime-plan review"
+  ],
+  "writer_scope": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_runtime_setup_preparation",
+  "target": "Prepare a small manifest-driven isolated source/package/encoder acquisition and CPU import setup runner. No environment setup or payload acquisition in this code-preparation task.",
+  "inputs": [
+    "../dino_wm_runtime_preparation/REPORT_CODEX_KO.txt",
+    "../dino_wm_runtime_preparation/PROPOSED_ACQUISITION_MANIFEST_CODEX.json",
+    "../dino_wm_runtime_source_closure/ROOT_SPEC.json"
+  ],
+  "allowed": [
+    "Write the runner and an UNAPPROVED manifest schema/example with pending source/weight fields. It must reject incomplete/unapproved manifest.",
+    "Consume existing official package metadata and later source-closure manifest; do not duplicate their network investigation.",
+    "Use only tiny local fake payloads and local no-network checks for mandatory-field, byte/hash/size/path and no-overwrite contracts. No actual pip install/build/model import execution."
+  ],
+  "requirements": [
+    "Final source SHA must be bound in root-approved manifest at actual execution. Root alone executes.",
+    "Dedicated new destination under /home/acorn0415/sfq_data/dino_wm_planning/; existing sfq_data/env must remain unchanged. Exact URL/size/SHA for package artifacts, git blob for source; reject shadow Torch/CUDA artifacts.",
+    "Official DINOv2 weight may have no advertised SHA. Permit only an explicit root-approved official HTTPS exact URL/size contract, record first-acquired SHA and provenance, require independent post-acquisition SHA before model load. Never pretend unknown digest was verified.",
+    "No resolver or automatic torch.hub downloads. Stream bounded artifacts into exclusive files, verify size/hash, do not overwrite/retry silently. Avoid full monorepo clone.",
+    "Task-local --target overlay, same interpreter, PYTHONNOUSERSITE=1. Wheel install uses --no-deps --no-index local artifacts. sdist allowed only if root explicitly lists approved source and bounded offline build, --no-build-isolation/--no-deps/--no-index with installed build-tool versions recorded.",
+    "Optional later CPU import subprocess uses CUDA_VISIBLE_DEVICES empty and records torch path/version/CUDA initialized=False, imported package/source paths; no torch.load/pickle.load/hub/model construction. Inspect/record imports rather than claiming complete original-runtime reproduction.",
+    "Separate acquisition success, offline install/build success, CPU import success, and not-yet-model-smoke status. Preserve failure artifacts. Future stage budgets explicit and root externally enforces wall timeout.",
+    "Keep implementation small; do not create generic scheduler, framework, or extensive gate machinery. No quantization selector."
+  ],
+  "limits": {
+    "CPU": 2,
+    "RSS_GiB": 2,
+    "output_MiB": 8,
+    "network": 0,
+    "GPU": 0,
+    "actual_model_tensor_load": 0,
+    "actual_package_payloads": 0,
+    "actual_installs_or_builds": 0
+  },
+  "deliverables": [
+    "setup_runtime.py",
+    "MANIFEST_EXAMPLE_UNAPPROVED.json",
+    "REPORT_CODEX_KO.txt",
+    "READY_CODEX.json",
+    "REVIEW_OPUS_KO.txt (independent actual Claude)"
+  ]
+}

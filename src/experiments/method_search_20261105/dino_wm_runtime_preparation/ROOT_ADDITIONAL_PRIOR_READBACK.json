@@ -1,0 +1,216 @@
+{
+  "created_epoch": 1793908657.1804688,
+  "scope": "primary GitHub metadata and bounded source; no execution or payload",
+  "repos": [
+    {
+      "repo": "aazminu/world-model-compression-mpc",
+      "revision": "dd9bc4bc529c60a6ec0c703c5ff33e6c9795ba3e",
+      "commit_date": "2026-10-20T15:18:22Z",
+      "metadata_sha256": "d0e68aed5c2fdea68c00eabf9c7b97d17eeced7cc757b1d91de3a8d79c354376",
+      "files": [
+        {
+          "path": "README.md",
+          "url": "https://raw.githubusercontent.com/aazminu/world-model-compression-mpc/dd9bc4bc529c60a6ec0c703c5ff33e6c9795ba3e/README.md",
+          "bytes": 1364,
+          "sha256": "a15341fd61a6a875da9f5199d8e64342a43879b5d7de2c66610309d2ba1477dd",
+          "text": "# World-Model Compression & MPC Operator Distillation (`world-model-compression-mpc`)\n\nSystematic framework for compressing latent dynamics world models used inside closed-loop **Cross-Entropy Method (CEM)** Model Predictive Control (MPC) planners.\n\n## Core Contributions\n\n1. **Weight SVD vs. Activation-Aware SVD (`asvd_compression.py`)**:\n   - Implements low-rank factorization of latent predictor matrices $W \\in \\mathbb{R}^{d_{\\text{out}} \\times d_{\\text{in}}}$ with parameter-budget rank selection $r = \\lfloor \\frac{\\rho \\cdot d_{\\text{out}} d_{\\text{in}}}{d_{\\text{out}} + d_{\\text{in}}} \\rfloor$.\n   - Scales columns by empirical latent activation second moments $S_{jj} = (\\mathbb{E}[x_j^2])^{\\alpha/2}$ prior to truncated SVD, reducing multi-step rollout compounding error on high-energy latent dimensions.\n2. **Closed-Loop CEM Planner on `TwoRoom` and `PushT` (`cem_mpc_planner.py`)**:\n   - Evaluates how open-loop MSE vs. elite-set trajectory ordering affects closed-loop task success across bottleneck doorway navigation (`TwoRoom`) and planar contact manipulation (`PushT`).\n3. **Cache-Based Operator Distillation (`operator_distillation.py`)**:\n   - Compares **Forward KL** distillation against **Hybrid Forward KL + Elite-Classification**, aligning the student world model's top-$K$ elite trajectory rankings with the uncompressed teacher planner.\n"
+        },
+        {
+          "path": "operator_distillation.py",
+          "error": "HTTP Error 404: Not Found"
+        },
+        {
+          "path": "src/world_model_compression_mpc/operator_distillation.py",
+          "url": "https://raw.githubusercontent.com/aazminu/world-model-compression-mpc/dd9bc4bc529c60a6ec0c703c5ff33e6c9795ba3e/src/world_model_compression_mpc/operator_distillation.py",
+          "bytes": 4518,
+          "sha256": "d5e22d6445a8b0d65a8c3ede5083e94007975687d406d56588f22f33a720034f",
+          "text": "from __future__ import annotations\n\nimport math\nfrom dataclasses import dataclass\nfrom typing import List, Sequence, Tuple\n\n\n@dataclass(frozen=True)\nclass CachedTrajectorySample:\n    latent_feature: Tuple[float, ...]\n    teacher_action_mean: Tuple[float, ...]\n    teacher_action_std: Tuple[float, ...]\n    teacher_cost: float\n    is_elite: int  # 1 if in top-K teacher CEM elites, else 0\n\n\n@dataclass(frozen=True)\nclass DistillationLosses:\n    forward_kl_loss: float\n    elite_bce_loss: float\n    hybrid_total_loss: float\n\n\ndef gaussian_forward_kl(\n    teacher_mean: Sequence[float],\n    teacher_std: Sequence[float],\n    student_mean: Sequence[float],\n    student_std: Sequence[float],\n) -> float:\n    \"\"\"Diagonal Gaussian Forward KL: D_KL(N(mu_T, sigma_T^2) || N(mu_S, sigma_S^2)).\"\"\"\n    kl = 0.0\n    for mt, st, ms, ss in zip(teacher_mean, teacher_std, student_mean, student_std):\n        st_safe = max(st, 1e-4)\n        ss_safe = max(ss, 1e-4)\n        kl += (\n            math.log(ss_safe / st_safe)\n            + (st_safe * st_safe + (mt - ms) ** 2) / (2.0 * ss_safe * ss_safe)\n            - 0.5\n        )\n    return kl\n\n\nclass HybridOperatorDistiller:\n    \"\"\"Trains a compressed student scoring head with Forward KL + Elite-Set Binary Cross-Entropy.\"\"\"\n\n    def __init__(\n        self,\n        feature_dim: int,\n        action_dim: int,\n        elite_loss_weight: float = 1.5,\n        learning_rate: float = 0.15,\n    ) -> None:\n        self.feature_dim = feature_dim\n        self.action_dim = action_dim\n        self.elite_loss_weight = elite_loss_weight\n        self.learning_rate = learning_rate\n        self.action_weights: List[List[float]] = [\n            [0.0 for _ in range(feature_dim)] for _ in range(action_dim)\n        ]\n        self.elite_weights: List[float] = [0.0 for _ in range(feature_dim)]\n        self.elite_bias: float = 0.0\n\n    @staticmethod\n    def _sigmoid(z: float) -> float:\n        if z >= 0.0:\n            return 1.0 / (1.0 + math.exp(-min(z, 50.0)))\n        ez = math.exp(max(z, -50.0))\n        return ez / (1.0 + ez)\n\n    def predict_action_mean(self, feat: Sequence[float]) -> List[float]:\n        return [\n            sum(self.action_weights[d][j] * feat[j] for j in range(self.feature_dim))\n            for d in range(self.action_dim)\n        ]\n\n    def predict_elite_prob(self, feat: Sequence[float]) -> float:\n        z = self.elite_bias + sum(self.elite_weights[j] * feat[j] for j in range(self.feature_dim))\n        return self._sigmoid(z)\n\n    def fit_epoch(\n        self,\n        cache: Sequence[CachedTrajectorySample],\n        use_hybrid_elite_loss: bool = True,\n    ) -> DistillationLosses:\n        if not cache:\n            raise ValueError(\"cache cannot be empty\")\n        total_kl = 0.0\n        total_bce = 0.0\n        n = len(cache)\n        student_std = [0.35] * self.action_dim\n\n        for sample in cache:\n            pred_mean = self.predict_action_mean(sample.latent_feature)\n            kl = gaussian_forward_kl(\n                sample.teacher_action_mean,\n                sample.teacher_action_std,\n                pred_mean,\n                student_std,\n            )\n            total_kl += kl\n\n            # Gradient of Forward KL w.r.t student_mean_d is (student_mean_d - teacher_mean_d) / sigma_S^2\n            for d in range(self.action_dim):\n                grad_m = (pred_mean[d] - sample.teacher_action_mean[d]) / (student_std[d] ** 2)\n                for j in range(self.feature_dim):\n                    self.action_weights[d][j] -= (self.learning_rate / n) * grad_m * sample.latent_feature[j]\n\n            p_elite = self.predict_elite_prob(sample.latent_feature)\n            y = float(sample.is_elite)\n            p_clamped = max(1e-6, min(1.0 - 1e-6, p_elite))\n            bce = -(y * math.log(p_clamped) + (1.0 - y) * math.log(1.0 - p_clamped))\n            total_bce += bce\n\n            if use_hybrid_elite_loss:\n                err = (p_elite - y) * self.elite_loss_weight\n                self.elite_bias -= (self.learning_rate / n) * err\n                for j in range(self.feature_dim):\n                    self.elite_weights[j] -= (self.learning_rate / n) * err * sample.latent_feature[j]\n\n        mean_kl = total_kl / n\n        mean_bce = total_bce / n\n        hybrid = mean_kl + (self.elite_loss_weight * mean_bce if use_hybrid_elite_loss else 0.0)\n        return DistillationLosses(\n            forward_kl_loss=round(mean_kl, 5),\n            elite_bce_loss=round(mean_bce, 5),\n            hybrid_total_loss=round(hybrid, 5),\n        )\n"
+        },
+        {
+          "path": "src/world_model_compression_mpc/cem_mpc_planner.py",
+          "url": "https://raw.githubusercontent.com/aazminu/world-model-compression-mpc/dd9bc4bc529c60a6ec0c703c5ff33e6c9795ba3e/src/world_model_compression_mpc/cem_mpc_planner.py",
+          "bytes": 5157,
+          "sha256": "762f62a2f31be69eabca7f6c30b36ee24b73e97fc7864638dbf717daefabe6b5",
+          "text": "from __future__ import annotations\n\nimport math\nimport random\nfrom dataclasses import dataclass\nfrom typing import Callable, List, Sequence, Tuple\n\nVector = List[float]\n\n\n@dataclass(frozen=True)\nclass CEMPlanResult:\n    best_action_sequence: List[Vector]\n    mean_action_sequence: List[Vector]\n    std_action_sequence: List[Vector]\n    elite_indices: List[int]\n    best_cost: float\n\n\nclass TwoRoomDoorwayEnv:\n    \"\"\"2D continuous navigation environment with a wall at x=0 and a narrow doorway gap at y in [-0.25, 0.25].\"\"\"\n\n    def __init__(self, wall_x: float = 0.0, door_half_width: float = 0.25, dt: float = 0.25) -> None:\n        self.wall_x = wall_x\n        self.door_half_width = door_half_width\n        self.dt = dt\n\n    def step(self, state: Sequence[float], action: Sequence[float]) -> Vector:\n        x0, y0 = state[0], state[1]\n        vx = max(-1.5, min(1.5, action[0]))\n        vy = max(-1.5, min(1.5, action[1]))\n        x1 = x0 + self.dt * vx\n        y1 = y0 + self.dt * vy\n\n        # Check wall crossing at x = wall_x\n        crossed_wall = (x0 < self.wall_x <= x1) or (x1 <= self.wall_x < x0)\n        if crossed_wall and abs(0.5 * (y0 + y1)) > self.door_half_width:\n            # Blocked by wall outside doorway aperture\n            x1 = self.wall_x - 0.02 if x0 < self.wall_x else self.wall_x + 0.02\n        return [round(x1, 5), round(y1, 5)]\n\n\nclass PushTBlockEnv:\n    \"\"\"Planar T-block manipulation dynamics (block_x, block_y, block_theta) pushed by end-effector delta.\"\"\"\n\n    def __init__(self, dt: float = 0.2) -> None:\n        self.dt = dt\n\n    def step(self, state: Sequence[float], action: Sequence[float]) -> Vector:\n        bx, by, theta = state[0], state[1], state[2]\n        ux = max(-1.0, min(1.0, action[0]))\n        uy = max(-1.0, min(1.0, action[1]))\n        utheta = max(-1.0, min(1.0, action[2])) if len(action) > 2 else 0.35 * (ux - uy)\n        return [\n            round(bx + self.dt * ux, 5),\n            round(by + self.dt * uy, 5),\n            round(theta + self.dt * utheta, 5),\n        ]\n\n\nclass CEMTrajectoryPlanner:\n    \"\"\"Cross-Entropy Method (CEM) MPC planner over a learned or analytical transition dynamics model.\"\"\"\n\n    def __init__(\n        self,\n        horizon: int = 6,\n        action_dim: int = 2,\n        num_samples: int = 32,\n        num_elites: int = 6,\n        opt_iterations: int = 4,\n        seed: int = 42,\n    ) -> None:\n        if num_elites < 1 or num_elites > num_samples:\n            raise ValueError(\"num_elites must be between 1 and num_samples\")\n        self.horizon = horizon\n        self.action_dim = action_dim\n        self.num_samples = num_samples\n        self.num_elites = num_elites\n        self.opt_iterations = opt_iterations\n        self.seed = seed\n\n    def plan(\n        self,\n        initial_state: Sequence[float],\n        goal_state: Sequence[float],\n        step_fn: Callable[[Sequence[float], Sequence[float]], Vector],\n    ) -> CEMPlanResult:\n        rng = random.Random(self.seed)\n        means = [[0.0 for _ in range(self.action_dim)] for _ in range(self.horizon)]\n        stds = [[1.0 for _ in range(self.action_dim)] for _ in range(self.horizon)]\n\n        best_seq = [list(m) for m in means]\n        best_cost = float(\"inf\")\n        last_elite_indices: List[int] = []\n\n        for _ in range(self.opt_iterations):\n            candidates: List[List[Vector]] = []\n            costs: List[Tuple[float, int]] = []\n\n            for s_idx in range(self.num_samples):\n                seq: List[Vector] = []\n                state = list(initial_state)\n                rollout_cost = 0.0\n                for t in range(self.horizon):\n                    act = [\n                        max(-1.5, min(1.5, rng.gauss(means[t][d], stds[t][d])))\n                        for d in range(self.action_dim)\n                    ]\n                    seq.append(act)\n                    state = step_fn(state, act)\n                    dist_sq = sum((state[i] - goal_state[i]) ** 2 for i in range(len(goal_state)))\n                    weight = 2.5 if t == self.horizon - 1 else 1.0\n                    rollout_cost += weight * dist_sq\n\n                candidates.append(seq)\n                costs.append((rollout_cost, s_idx))\n\n            costs.sort(key=lambda item: item[0])\n            last_elite_indices = [idx for _, idx in costs[: self.num_elites]]\n            if costs[0][0] < best_cost:\n                best_cost = costs[0][0]\n                best_seq = candidates[costs[0][1]]\n\n            for t in range(self.horizon):\n                for d in range(self.action_dim):\n                    elite_vals = [candidates[idx][t][d] for idx in last_elite_indices]\n                    m = sum(elite_vals) / self.num_elites\n                    var = sum((v - m) ** 2 for v in elite_vals) / max(self.num_elites - 1, 1)\n                    means[t][d] = round(m, 5)\n                    stds[t][d] = round(max(math.sqrt(var), 0.05), 5)\n\n        return CEMPlanResult(\n            best_action_sequence=best_seq,\n            mean_action_sequence=means,\n            std_action_sequence=stds,\n            elite_indices=last_elite_indices,\n            best_cost=round(best_cost, 5),\n        )\n"
+        }
+      ],
+      "tree_metadata": {
+        "url": "https://api.github.com/repos/aazminu/world-model-compression-mpc/git/trees/dd9bc4bc529c60a6ec0c703c5ff33e6c9795ba3e?recursive=1",
+        "bytes": 5118,
+        "sha256": "c802beb55f0db7d44f032723c8ef968bade945316dd444aa1e00d804377e9b27",
+        "truncated": false,
+        "entries": [
+          {
+            "path": ".editorconfig",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "f8d8a85e215e9e47320e44d6b2ee6b7a49582c43",
+            "size": 209,
+            "url": "https://api.github.com/repos/aazminu/world-model-compression-mpc/git/blobs/f8d8a85e215e9e47320e44d6b2ee6b7a49582c43"
+          },
+          {
+            "path": ".github",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "0df388f39ae1ebc13f32563e7062b9422d453071",
+            "url": "https://api.github.com/repos/aazminu/world-model-compression-mpc/git/trees/0df388f39ae1ebc13f32563e7062b9422d453071"
+          },
+          {
+            "path": ".github/workflows",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "8cd1cce4a068bed570f399d6dc3940171a515089",
+            "url": "https://api.github.com/repos/aazminu/world-model-compression-mpc/git/trees/8cd1cce4a068bed570f399d6dc3940171a515089"
+          },
+          {
+            "path": ".github/workflows/ci.yml",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "4c0464284d4e0f47e4d16d0415900fd3cdcede4e",
+            "size": 451,
+            "url": "https://api.github.com/repos/aazminu/world-model-compression-mpc/git/blobs/4c0464284d4e0f47e4d16d0415900fd3cdcede4e"
+          },
+          {
+            "path": ".gitignore",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "2c433f12a181bf21bf48ffdf786db474ad22b632",
+            "size": 100,
+            "url": "https://api.github.com/repos/aazminu/world-model-compression-mpc/git/blobs/2c433f12a181bf21bf48ffdf786db474ad22b632"
+          },
+          {
+            "path": ".zenodo.json",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "8d489bded16b42e05f6a5c10d82567f74e8279b6",
+            "size": 1224,
+            "url": "https://api.github.com/repos/aazminu/world-model-compression-mpc/git/blobs/8d489bded16b42e05f6a5c10d82567f74e8279b6"
+          },
+          {
+            "path": "CHANGELOG.md",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "496c5021f76ce37601b2231687ae84e310f49fb6",
+            "size": 903,
+            "url": "https://api.github.com/repos/aazminu/world-model-compression-mpc/git/blobs/496c5021f76ce37601b2231687ae84e310f49fb6"
+          },
+          {
+            "path": "README.md",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "f1ee84b8b16233981062108e27ec539bc27bdfa7",
+            "size": 1364,
+            "url": "https://api.github.com/repos/aazminu/world-model-compression-mpc/git/blobs/f1ee84b8b16233981062108e27ec539bc27bdfa7"
+          },
+          {
+            "path": "pyproject.toml",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "09ec9c9af78e77d548552a66ce880d050652e543",
+            "size": 546,
+            "url": "https://api.github.com/repos/aazminu/world-model-compression-mpc/git/blobs/09ec9c9af78e77d548552a66ce880d050652e543"
+          },
+          {
+            "path": "scripts",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "d42686d55aca4f8ef5ec093fcdb967f569b603a1",
+            "url": "https://api.github.com/repos/aazminu/world-model-compression-mpc/git/trees/d42686d55aca4f8ef5ec093fcdb967f569b603a1"
+          },
+          {
+            "path": "scripts/benchmark.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "b48936b4c732f9f2a1c8d7928396f6be0a5e2b2b",
+            "size": 254,
+            "url": "https://api.github.com/repos/aazminu/world-model-compression-mpc/git/blobs/b48936b4c732f9f2a1c8d7928396f6be0a5e2b2b"
+          },
+          {
+            "path": "src",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "7d7adda10b63562f7a03c42e88aba86dde92d902",
+            "url": "https://api.github.com/repos/aazminu/world-model-compression-mpc/git/trees/7d7adda10b63562f7a03c42e88aba86dde92d902"
+          },
+          {
+            "path": "src/world_model_compression_mpc",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "ffb4ba3bd70e8174d58e4099532ae4146e5ae8b9",
+            "url": "https://api.github.com/repos/aazminu/world-model-compression-mpc/git/trees/ffb4ba3bd70e8174d58e4099532ae4146e5ae8b9"
+          },
+          {
+            "path": "src/world_model_compression_mpc/__init__.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "12899a3d0003c5f67a385ca6c6c53fcc91bda582",
+            "size": 805,
+            "url": "https://api.github.com/repos/aazminu/world-model-compression-mpc/git/blobs/12899a3d0003c5f67a385ca6c6c53fcc91bda582"
+          },
+          {
+            "path": "src/world_model_compression_mpc/__main__.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "4ccbcbfbd2a8c9ce46eb2dfa27ee424a715f6e5a",
+            "size": 6498,
+            "url": "https://api.github.com/repos/aazminu/world-model-compression-mpc/git/blobs/4ccbcbfbd2a8c9ce46eb2dfa27ee424a715f6e5a"
+          },
+          {
+            "path": "src/world_model_compression_mpc/asvd_compression.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "a5c9f537f57acb7fcabe633f82a7f6774372c2ca",
+            "size": 6761,
+            "url": "https://api.github.com/repos/aazminu/world-model-compression-mpc/git/blobs/a5c9f537f57acb7fcabe633f82a7f6774372c2ca"
+          },
+          {
+            "path": "src/world_model_compression_mpc/cem_mpc_planner.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "d0433f30860012b014888808678bf24570d97d1e",
+            "size": 5157,
+            "url": "https://api.github.com/repos/aazminu/world-model-compression-mpc/git/blobs/d0433f30860012b014888808678bf24570d97d1e"
+          },
+          {
+            "path": "src/world_model_compression_mpc/operator_distillation.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "36f9e915ce48b877eea4295d19097431e760347f",
+            "size": 4518,
+            "url": "https://api.github.com/repos/aazminu/world-model-compression-mpc/git/blobs/36f9e915ce48b877eea4295d19097431e760347f"
+          },
+          {
+            "path": "tests",
+            "mode": "040000",
+            "type": "tree",
+            "sha": "2fbc8591b85d1006c0e76ae6db7107a931a68938",
+            "url": "https://api.github.com/repos/aazminu/world-model-compression-mpc/git/trees/2fbc8591b85d1006c0e76ae6db7107a931a68938"
+          },
+          {
+            "path": "tests/test_world_model_mpc.py",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "5ead010debf9a4409bbcb80b4be99acdad7dd235",
+            "size": 6062,
+            "url": "https://api.github.com/repos/aazminu/world-model-compression-mpc/git/blobs/5ead010debf9a4409bbcb80b4be99acdad7dd235"
+          }
+        ]
+      }
+    },
+    {
+      "repo": "sebspel/worldmodel-ptq-asymmetry",
+      "revision": "adb2805bdee4323a86951f6587016519fc38c1e3",
+      "commit_date": "2026-09-26T10:23:08Z",
+      "metadata_sha256": "b0388e03dbf506d8c6674dafd3a51337895605ab02adffea2ce91674d1dce5ed",
+      "files": [
+        {
+          "path": "README.md",
+          "url": "https://raw.githubusercontent.com/sebspel/worldmodel-ptq-asymmetry/adb2805bdee4323a86951f6587016519fc38c1e3/README.md",
+          "bytes": 14988,
+          "sha256": "6c544acf9b624f003875fa4178e00a5da1f68bb187a5582f09356ff64cd684bb",
+          "text": "# Post-training quantisation of world models: LeWM vs DINOv3-WM\n\nA research repository comparing the **planning-cycle latency** and **Push-T task performance** of two\nself-supervised world models under reduced-precision inference, on a single NVIDIA L40S.\n\n- **LeWM** — the reference implementation from [`stable-worldmodel`](https://github.com/galilai-group/stable-worldmodel),\n  used unmodified: encoder co-trained with the predictor, a single CLS-token latent.\n- **DINOv3-WM** — this project's variant of DINO-WM: the platform's `prejepa` predictor with the\n  reference DINOv2 backbone swapped for a frozen **DINOv3**, predicting over the full 196-patch grid.\n\nBoth are exported PyTorch → ONNX → TensorRT and evaluated closed-loop against a CEM planner at\n**FP32, FP16, FP8 (E4M3) and INT8**, with the two 8-bit precisions calibrated by both **`max`** and\n**`entropy`**. Every speed number is reported with the success rate measured on the same solves.\n\nTraining, the Push-T environment, the CEM solver and the evaluation loop come from\n`stable-worldmodel` and are used as they are; their entrypoints are vendored here, so both\ntrainings reproduce from scratch. The code written in this repository starts at a trained\ncheckpoint: export, calibration, quantisation, benchmarking and the statistical analysis.\n\n## Repository map\n\n| Path | What it is |\n| --- | --- |\n| `SPEC.md` | The contract: requirements, invariants, scope, ownership boundaries |\n| `docs/architecture.md` | Non-obvious design rationale — silent-failure traps, platform quirks, library deviations |\n| `docs/platform_api.md` | The `stable-worldmodel` API as read from the pinned installed source |\n| `src/` | The owned code: adapter, export, calibration, engine runtime, shims, benchmark, statistics, report |\n| `scripts/` | Vendored platform entrypoints (`train/`, `plan/`) — provenance and the recorded divergences in each one's `VENDORED.md` |\n| `conf/experiment/` | Hydra overlays layered on the vendored configs |\n| `tests/` | The owned code's contract tests (CPU-only; the GPU legs are exercised on the pod) |\n| `reports/figs/` | The one committed display figure, re-copied from a render and never hand-edited |\n\n## Setup\n\n```bash\ncp .env.example .env    # then fill in STABLEWM_HOME, WANDB_API_KEY, HF_TOKEN\n```\n\n`.env` is the single source for runtime configuration — never `export` these into a shell. It is\ngitignored and read once on `import src`. `STABLEWM_HOME` must point at persistent storage (on\nRunPod, the mounted network volume): datasets, checkpoints, TensorRT engines and every report land\nunder it, and it is **required** — leaving it unset raises rather than silently writing to the\nephemeral container filesystem.\n\n```bash\n./setup.sh\n```\n\nInstalls uv, syncs the locked dependencies (torch cu124), then installs TensorRT, the NVIDIA\nTensorRT Model Optimizer and a CUDA-12 `onnxruntime-gpu` **outside** the lock — see\n`docs/architecture.md` for why that split is load-bearing. It also fetches the Push-T expert\ndataset. A later bare `uv sync` prunes the out-of-lock installs; re-run `setup.sh` to restore them.\n\n## Reproducing the study\n\nTwo stages, run in order. The first is the platform's own training entrypoints and produces the\ncheckpoints; the second is this repository's code.\n\n| Stage | Runs on | Produces |\n| --- | --- | --- |\n| 1. Training | L40S (LeWM) / H200 SXM (DINOv3-WM) | The two checkpoints, under `$STABLEWM_HOME/checkpoints/` |\n| 2. Optimisation pipeline | L40S, then anywhere | The engines, the recorded samples, and the reported artifacts |\n\n### 1. Training the two world models\n\nBoth trainings are the platform's own entrypoints, vendored under `scripts/train/` — the source\ntag, the commit, and the deliberate divergences from it are recorded in `scripts/train/VENDORED.md`.\nEach track is set up by a Hydra overlay in `conf/experiment/`; the only code this repository\ncontributes to a training run is the one encode-path override (`src/dino_patch.py`), which the\nDINOv3-WM overlay reaches through `model._target_`.\n\n```bash\nuv run python -m scripts.train.lewm --config-dir conf +experiment=lewm\n```\n\n```bash\nuv run python -m scripts.train.prejepa --config-dir conf +experiment=dinov3\n```\n\n`--config-dir conf` puts this repository's overlays on Hydra's search path; `+experiment=` selects\none. Invoke them as `python -m scripts.…` and never by file path: importing the `scripts` package\nis what reads `.env`, and the vendored entrypoints never import `src`. Without that hook the\nplatform falls back to its `~/.stable_worldmodel` default — on the pod, the ephemeral container\nfilesystem where a multi-hour run's checkpoints are lost on restart — and `WandbLogger` stalls on an\ninteractive login prompt.\n\n| | LeWM | DINOv3-WM |\n| --- | --- | --- |\n| Entrypoint | `scripts/train/lewm.py` | `scripts/train/prejepa.py` |\n| Vendored base config | `scripts/train/config/lewm.yaml` | `scripts/train/config/prejepa.yaml` |\n| Overlay | `conf/experiment/lewm.yaml` | `conf/experiment/dinov3.yaml` |\n| Encoder | scratch ViT-Tiny, co-trained under SIGReg | DINOv3 ViT-S/16 (`dinov3_small`), frozen |\n| What trains | the whole model — encoder, predictor, action encoder, projectors | the predictor and the proprio/action embedders; the backbone alone is frozen |\n| Encoder latent | one CLS token, `(B, 192)` | the full patch grid, `(B, 196, 384)` |\n| Predictor input width | 192 — the action enters as a separate conditioning argument, not concatenated | 404 per patch = 384 visual + 10 proprio + 10 action, the extras tiled onto every patch |\n| Epochs / batch size | 10 / 128 | 10 / 128 |\n| Training GPU | L40S | H200 SXM |\n| Checkpoints written | `checkpoints/lewm/weights_epoch_{1..10}.pt` | `checkpoints/dino/weights_epoch_{5,10}.pt` |\n\nTraining is **epoch-capped, not wall-clock-capped** (`SPEC.md` §Execution Rules). Batch size is held\nequal across the tracks; training *hardware* is not, and neither carries into inference — the engine\nis built and benchmarked on the same L40S from the checkpoint weights alone.\n\nCheckpoints land under `$STABLEWM_HOME/checkpoints/<output_model_name>/`: one `weights_epoch_N.pt`\nper save, plus the `config.json` the model is later rebuilt from. Both entrypoints save on an\ninterval — every epoch for LeWM, every fifth for DINOv3-WM — so the directory holds several `.pt`\nfiles and `load_pretrained` cannot resolve a bare folder. That is why the eval overlays name the\nfile (`policy: lewm/weights_epoch_10.pt`). Both entrypoints also hand `spt.Manager` a resume path —\n`$STABLEWM_HOME/checkpoints/<subdir>/<output_model_name>_weights.ckpt`, where `subdir` is the Hydra\njob id for LeWM and unset for DINOv3-WM — so if that file exists a re-run **resumes** from it\ninstead of training from scratch.\n\n**The DINOv3-WM track is three config deltas on the platform's DINO-WM (`prejepa`) training**, and\nnothing else — same predictor, same loss, same framework:\n\n1. `backbone.name` / `backbone.type` → `dinov3_small`. There is no `backbone=` config *group*, so\n   `backbone=dinov3` would select nothing; both keys are set directly.\n2. `patch_size` 14 → 16. DINOv3 is a /16 model, and this key also drives the config-derived\n   `num_patches = (224 // 16)² = 196`. Left at the DINOv2 default of 14 it yields 256 — silently\n   wrong, not an error.\n3. `model._target_` → `src.dino_patch.DINOv3PreJEPA`, the register-aware encode override that drops\n   CLS **and** the four register tokens so the grid is the true 196 patches rather than 200. It is\n   baked into the saved `config.json` at train time, which is how it reaches eval and export too.\n\nThe overlay also pins the run: `dataset_name` to the `pusht_expert_train.lance` that `setup.sh`\nfetches (the vendored default names a *video* dataset that is never downloaded), the batch size up\nfrom the vendored 32 to 128 for parity with LeWM, `trainer.precision` to `bf16-mixed`,\n`output_model_name` to `dino`, and `num_workers` down to 6 — under DDP each rank spawns its own\nworker set and each worker fans out OpenBLAS threads, so the vendored 16 exhausts the pod's thread\ncap and surfaces as a spurious `KeyboardInterrupt` during worker spawn rather than as an\nout-of-resources error. The LeWM overlay is smaller: the paper's 10 epochs, where the vendored\nconfig defaults to 100, and batch size 128. Both enable W&B into the shared project, which the\nvendored `launcher/local.yaml` leaves off, so training, eval and benchmark runs land together.\n\nDINOv3's weights are gated on Hugging Face — set `HF_TOKEN` before the first run or the download\n401s. The Push-T dataset itself is public.\n\nBefore trusting a checkpoint, confirm both encode paths still produce the latents the rest of the\nstudy is sized for:\n\n```bash\nuv run python -m scripts.verify_encode\n```\n\nIt builds the two real backbones and asserts LeWM's single-token latent and DINOv3-WM's 196-patch\ngrid, differentially against the un-overridden 200-token path. An inactive override is silent\neverywhere else.\n\nWhat the epoch cap costs is measurable rather than assumed. The epoch-5 DINOv3-WM snapshot has its\nown overlay and its own `dino_ep5` track, evaluated under the identical pipeline — same dataset, CEM\nconfig, seeds and callback — without touching the headline `dino` artifacts: its engines live in\n`engines/dino_ep5/`, its SR rows key under `dino_ep5`, and it is deliberately absent from the\ntwo-track headline. It builds its own engines and depends on nothing else in the study, so it needs\nonly the L40S and the epoch-5 checkpoint:\n\n```bash\nuv run python -m src.export model=dino_ep5 precision=fp32\n```\n\n```bash\nuv run python -m src.sr_eval --config-dir conf +experiment=eval_dino_ep5 precision=fp32\n```\n\n### 2. The optimisation pipeline\n\nTraining is not part of `src.pipeline` — nothing in it runs through an engine. Everything from the\ntrained checkpoint onward is one orchestrated run:\n\n```bash\nuv run python -m src.pipeline\n```\n\nIt executes the stages below in order, appending to `pipeline_manifest.json`. Add\n`stages=<a,b,c>` to resume a subset (always run in canonical order), `tracks=lewm` for one model,\n`diagnostics=true` to include the gates and smoke checks, or `dry_run=true` to print the plan.\n\n| Stage | Command it runs | Produces |\n| --- | --- | --- |\n| `archive` | in-process | Snapshots the previous run's artifacts before they are superseded |\n| `export` | `src.export model= precision= [calibration_method=]` | TensorRT engines under `$STABLEWM_HOME/engines/` |\n| `sr_eval` | `src.sr_eval precision= calibration_method=` | `sr.json` — success rate + the raw per-cycle latency vectors |\n| `isolation` | `src.sr_eval encoder_precision= predictor_precision=` | Component-isolation SR, under composite `enc-<A>+pred-<B>` keys |\n| `benchmark` | `src.study track= precision= calibration_method=` | `results.<track>.json` + `latencies.<track>.json` (raw engine-step samples) |\n| `stats` | `src.stats from= out=` | `stats.json` — the confidence intervals and independence tests |\n| `report` | `src.report from= calibration_method=` | The reported tables and figure |\n| `gpu_telemetry` | `src.gpu_telemetry from=` | Throttle diagnostics from the logged `nvidia-smi dmon` telemetry |\n| `figs` | in-process | Refreshes the committed `reports/figs/` copy |\n\nDiagnostic stages (`pytest`, `verify_encode`, `smoke`, `fidelity`, `sr_shim`, `precision_match`,\n`probe_ranges`) are off by default. `fidelity`, `sr_shim` and `precision_match` are **owner\nsign-off surfaces**: they print a drift table rather than passing or failing, because the judgement\nthey support is not a tolerance (`SPEC.md` §Implementation Boundaries).\n\nOnly the export, evaluation and benchmark stages need the L40S. Everything downstream reads the\nstored samples, so a render or a re-analysis runs anywhere:\n\n```bash\nuv run python -m src.report\n```\n\nIt resolves `$STABLEWM_HOME/reports/phase5` itself, from `.env`. Do not write that path into the\ncommand — your shell expands `$STABLEWM_HOME` before Python reads `.env`, so it would collapse to\n`/reports/phase5`. Pass `from=` only to read a *different* directory, as a literal path:\n\n```bash\nuv run python -m src.report from=/mnt/archive/2026-08-07\n```\n\n### 3. Encoder-embedding capture\n\nRuns only the encoder engines of one track over three fixed frame sets and saves every engine's\nembeddings: `dataset` (10,000 frames strided over the episodes the calibration set never touched),\n`eval_init` and `eval_goal` (the 50 eval episodes' initial and goal frames). Needs the built encoder\nengines; run it once per track:\n\n```bash\nuv run python -m src.embeddings track=lewm\n```\n\n```bash\nuv run python -m src.embeddings track=dino\n```\n\nAdd `sets=eval_init,eval_goal` to capture a subset. Output lands under\n`$STABLEWM_HOME/reports/embeddings/`: `frames.<set>.json` (the frame list, written once and checked on\nevery later run) and `<track>/<set>/encoder.<precision>[.<method>].npy` (float32, row `i` = frame\n`i`) with a sidecar `.json` recording which tokens were saved and which the engine cannot provide.\nA re-run fills only the missing engines.\n\n## Artifacts\n\nEverything durable lives under `$STABLEWM_HOME/reports/phase5/`, never in git. The **canonical**\nartifacts are the raw ones — `results.<track>.json`, `latencies.<track>.json` and `sr.json`, which\ncarry the samples every statistic is re-derived from. `stats.json` and the rendered outputs are\nregenerable views of them, and a render never rewrites its own inputs.\n\n| Artifact | Contents |\n| --- | --- |\n| `speed_table.<method>.txt` | Per-cycle p50/p95, sample size, and success rate, each absolute value with its 95% interval |\n| `latency_means_table.txt` | Mean encode-step and predictor-step latency per engine call, and the per-cycle component total, cycle and residual overhead, with bootstrap intervals |\n| `isolation_table.<method>.txt` | Success rate per component-isolation configuration |\n| `speed_vs_sr.png` | Success rate against median per-cycle latency, faceted per model |\n| `gpu_logs/` | Per-run `nvidia-smi dmon` telemetry and its throttle diagnostics |\n\nTables carrying an 8-bit row are **method-scoped by filename** and name their calibration method in\nthe body: an INT8 or FP8 engine is a per-method build, so one method's numbers are never printed\nunder the other's label. `latency_means_table.txt` spans both, because its configuration column\nnames the method on every row.\n\n## Running the tests\n\n```bash\nuv run python -m pytest -q\n```\n\nCPU-only and hardware-free — they pin the contracts of the owned code (call-count weighting,\nequal-n truncation, method scoping, artefact immutability, the statistical constructions) against\nsynthetic fixtures. The engine legs are exercised on the pod through the diagnostic stages.\n\n## Licence\n\nMIT — see `LICENSE`. That covers the code written here; the vendored platform files under\n`scripts/` remain under their own upstream MIT licence, reproduced in `licenses/` and pointed to\nfrom each directory's `VENDORED.md`.\n"
+        }
+      ]
+    }
+  ]
+}

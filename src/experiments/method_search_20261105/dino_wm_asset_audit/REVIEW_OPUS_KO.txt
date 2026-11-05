@@ -1,0 +1,49 @@
+DINO-WM 취득 자산 감사 — 기록 검토 최종 (Opus2, root msg_aed57f5d7c2c 업무 A)
+배정 수신 UTC: 2026-11-05T19:44:14Z(관리자 기준 19:44:10.870Z). 이때 예비 기록 확인을 했다.
+최종 감사 자료 수신과 검토 시작: 19:50:31Z. 보수적 상한은 19:54:10.870Z이고 hard outer는 20:10:09Z다. 최종 자료를 받았다고 600초를 다시 세지 않았다.
+모델: claude-opus-5-5, 기존 채팅 session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5. Task/Dispatch: 미연결(자동연결 실패). helper는 쓰지 않았다(부모 직접).
+수행: 작은 JSON·텍스트·소스 읽기와 작은 파일 sha만. 추가 HTTP, 3.7GB 재해시, 감사 재실행, 모델·tensor·pickle 로드, GPU, 설치, 원본 변경은 모두 0이다.
+
+hash (직접 sha256, 지정값과 일치)
+- 감사: REPORT_CODEX_KO 583f621f…, AUDIT_CODEX 0bea658d…(status passed, checks 1093, file hash 49개, source_sha256 = verify_assets.py)
+- verify_assets.py e5e90a88…, 감사 ROOT_SPEC 05994857…
+- 취득(19:44 예비 확인 때 직접 확인)
+  - acquire_assets.py bab23d80…: 내가 19:22에 288행 전체를 검토한 동결 버전과 같다. 이것이 과거 source familiarity의 범위다.
+  - APPROVED_ACQUISITION bc2cb7f1…, RESULT 471c12f3…, ROOT_EXECUTION_FINAL 55d5f6ab…, RUN 88678715…
+읽은 범위
+- REPORT_CODEX 앞부분 약 5,000자(판정, 직접 재검증, 기록 대조, 디스크 해석, 감사 자원의 앞부분)
+- AUDIT_CODEX 최상위 필드
+- verify_assets.py 188행 중 측정·검사 관련 grep 행(26, 40-59, 127-155, 174, 184)
+- 미확인: REPORT 나머지 꼬리, AUDIT 1093 checks 개별 항목, verify_assets.py 전체 흐름
+
+1. 독립 바이트 증명 (감사 기록과 소스 근거; 내가 바이트를 다시 읽지 않음)
+- 두 ZIP 전체를 독립 스트리밍 SHA256로 계산했고, 승인 manifest와 HF LFS 값과 일치한다(425b0d8c…, 442f5dee…; 953,204,628B와 2,785,304,515B).
+- 선택 31개 member: 각 ZIP member를 다시 압축 해제하며 추출 파일과 같은 위치에서 바이트를 비교했다(verify_assets.py 143-155).
+  - 두 쪽의 crc32가 모두 중앙 디렉터리 CRC와 RESULT 기록에 같아야 한다(152행).
+  - SHA와 크기를 함께 비교했고, 추출 합은 711,665,947B다.
+  - 31개 구성: PushT model/config 2, val metadata 4, val MP4 21, train metadata 4.
+- 실제 asset tree: 일반 파일 33개(ZIP 2 + 추출 31), 4,450,175,090B.
+  - 미승인 파일, .part, symlink는 없다(59, 127, 141행 검사). 추출 경로가 extracted 아래에 있는지(resolve)도 확인했다.
+- 감사 범위에 명시된 미검사: 비선택 member의 압축 해제와 CRC, payload의 의미적 안전성, tensor 유효성, 모델 로드, DINO 의존성, planning 품질과 실행 준비(174행 scope 'not_checked').
+
+2. 취득 당시 자기기록 (독립 계측이 아님; 감사 scope 'record_only'와 같음)
+- root 실행: completed, exit 0, 73.138초, 1회. RUN claim 1개.
+- 승인 manifest sha가 RUN과 RESULT에서 같다. 승인 epoch(…262.88)이 실행 시작(…279.38)보다 앞선다.
+- HTTP body 3,738,509,143B(302 2개는 body 0, 200 2개는 ZIP 크기 그대로). 애플리케이션 read 기준이며 헤더와 전송 계층은 제외다.
+- worker peak RSS 200,105,984B. GPU, 역직렬화, 설치 0회는 소스와 기록으로만 뒷받침된다.
+- 디스크: 기록값 4,450,272,477B는 RESULT를 쓰기 전 계산이다. 실제 payload 4,450,175,090B보다 97,387B 크다. 감사의 설명(기록 폴더 포함 시점 차이)이 타당하며 둘 다 12GiB 이하다.
+
+3. 감사 자체의 자원과 관찰
+- 감사 wall 4.056초, 독립 스트리밍 5,162,626,837B, ru_maxrss 693,440,512B(< 1GiB).
+  - 스트리밍량은 ZIP 3.74e9에 추출 파일 읽기와 member 압축 해제 각 7.1e8을 더한 값과 거의 같다(차이 약 0.79MB는 메타 읽기로 추정).
+  - 약 1.27GB/s는 page cache와 SHA 하드웨어 가속이 있으면 가능한 범위다. 그러나 독립 재현하지 않았다(미확인).
+- 관찰: 감사 ru_maxrss(693,440,512B)가 이전 metadata probe RESULT의 peak RSS와 바이트 단위로 같다.
+  - 둘 다 RUSAGE_SELF(26, 184행)이고 다른 프로세스이므로 우연이거나 같은 인터프리터 기본 상주량일 수 있다. 원인은 미확인이다.
+  - 상한 판정에는 영향이 없다.
+- 승인 manifest의 nonclaims에 초안 문구 'Not execution authorization'이 남아 있다(감사도 같은 해석). 명시 status와 승인 플래그, approved_epoch, root 실행 기록이 실제 상태를 규정한다. 기록 위생상의 주의점이다.
+
+판정: 타당(한정). 차단 결함 없음.
+- 승인된 두 ZIP의 전체 SHA와, 승인 31개 선택 파일의 바이트·SHA·CRC가 독립 감사로 직접 증명됐다(감사 기록 기준). 미승인 추출물과 잔여 .part는 없다.
+- 취득 당시 HTTP·시간·RSS·호출 0회는 자기기록이며 독립 계측으로 확대하지 않는다.
+- 이 결과는 자산 저장 무결성까지만이다. 모델 호환성, 로드 가능성, FP32 planning 실행 성공, 품질은 주장하지 않는다.
+종료 UTC: 2026-11-05T19:51:20Z

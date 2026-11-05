@@ -1,0 +1,24 @@
+DINO-WM 격리 runtime 준비 — 독립 비판 (실제 Opus1, root msg_aed57f5d7c2c / 업무 B)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음(역사적 terminal_handle_stale).
+시각: 최초 배정 수신 19:44:41Z(관리자 기준 accepted 19:44:10.886Z), 예비 준비 19:44~19:45Z, 최종 자료 수신·검토 시작 19:52:40Z, 종합 상한 19:54:10.886Z, hard outer 20:10:09Z.
+대상 SHA(직접 계산 앞 16자리 일치 확인): REPORT_CODEX_KO 07522ae37cfe7bfa…, PROPOSED_ACQUISITION_MANIFEST_CODEX 7b6c57be16997c47…, SAFE_PICKLE_METADATA 69b9ac757f5cad50…,
+PACKAGE_CANDIDATES_CODEX 9b8f98b5d9d1cfeb…. 읽은 범위: REPORT 앞 약3.5KB(1절 전체와 2절 일부), manifest 앞부분, package 후보 목록·키. SAFE_PICKLE_METADATA 본문 미열람(내 독립 스캔과 대조).
+추가 외부 HTTP 0, torch.load/pickle.load/설치/다운로드/GPU 0. helper 0(약2분). 준비 폴더의 Codex 중간 파일은 예비 단계에서 열지 않았다.
+
+판정: Codex의 "자산만으로 원 실행 경로를 닫기에 부족, 지금 설치·GPU smoke 시작 불가"에 동의한다. 차단 항목은 아래 4개.
+일치(독립 근거): 내 비실행 opcode 스캔(pickletools.genops, 실행 0)에서 키형 문자열은 epoch/predictor/predictor_optimizer/decoder/decoder_optimizer/action_encoder/
+ proprio_encoder 각 1회, 'encoder'와 models.dino 전역 0회였다. Codex의 추상 stack이 최상위 key 7개를 정확히 같게 보고 — 내 것은 문자열 근거일 뿐이고 최상위 확정은 Codex 해석에 의존한다.
+ 필요 클래스 경로: models.vit.*, models.vqvae.*, models.proprio, torch.nn/optim, accelerate.optimizer.AcceleratedOptimizer, accelerate.state.*, accelerate.utils.dataclasses.* (내 스캔).
+차단 1) encoder 추가 취득: hydra는 DinoV2Encoder(dinov2_vits14)이고 ckpt에 encoder key가 없으므로 torch.hub 원격 로드가 필요. Codex 제안대로 dinov2 repo commit과 weight URL·크기·SHA를
+ 고정한 로컬 자산 없이는 진행 불가. 동의.
+차단 2) accelerate: 전체 unpickle이 accelerate 객체를 복원하므로 accelerate와 그 transitive import(huggingface_hub, safetensors, psutil 등)가 필요하다. 0.26.1과 pickle 상태 호환은
+ Codex도 pending으로 둠. 대안인 optimizer 객체 스텁 Unpickler는 원 loader와 다른 adapter라 동등성 검사가 별도로 필요하다.
+차단 3) checkpoint 파일명: 실제 파일은 checkpoints/model_latest.pth다. plan.py 기본 주석 'final'과 다르므로 model_epoch=latest 명시가 필요(REPORT에서 언급을 확인하지 못함 — 누락이면 추가 필요).
+차단 4) closure 미완료: package 후보는 hydra-core 1.2.0, omegaconf 2.3.0, antlr4 4.9.3(sdist, 빌드 별도 승인), accelerate 0.26.1, decord 0.6.0뿐이고 closure_complete=False.
+ plan.py import에 있는 gym·wandb·submitit, env/pusht의 물리 의존, decord의 ABI(wheel 플랫폼)·torch 2.6 호환은 후보/미확인. 실제 PushT env용 추가 항목은 별도 필드로만 있음.
+위험(차단 아님): omegaconf 2.3.0 overlay는 기존 env의 2.4.0을 가린다(같은 인터프리터 우선 삽입). hydra-core 1.2.0의 요구 범위로 2.4.0이 가능한지 확인 후 다운그레이드 필요성을 결정할 것.
+ overlay 전략(전용 --target, 같은 인터프리터, PYTHONNOUSERSITE, child venv 상속 가정 금지, sfq_data/env 불변, torch shadow 거부)은 타당.
+강한 기준선 범위(root 메모 반영): FP32 기준과 BF16 predictor+FP32 encoder 등 실행 기준선은 dtype·TF32·matmul precision·attention kernel 기록과 함께 별도 등록이 필요하며, 이번
+ 준비에서 실험·효과는 0이다. manifest는 미승인 제안이며 root가 향후 결정한다(사용자 재승인 흐름 아님).
+미확인: REPORT 나머지 절, SAFE_PICKLE_METADATA 본문, accelerate transitive 목록·버전, dinov2 commit/weight 자산, decord wheel 플랫폼, env/pusht 의존.
+실제 끝: 2026-11-05T19:53:21Z

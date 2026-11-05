@@ -1,0 +1,21 @@
+DINO-WM runtime 준비 — 최종 READY 결합 후속 부록 (실제 Opus1, root msg_c79f0a95fea5)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음.
+경계: 원 부분 검토 REVIEW_OPUS_KO.txt(SHA 32252c89…, 19:53:21Z, REPORT 앞 약3.5KB·manifest 일부만)는 불변이며 그 범위를 소급 확장하지 않는다. 이 부록은 root가 새로 허용한 후속이다.
+최종 자료 수신·시작 2026-11-05T19:56:53Z, 상한 = min(수신+600s, hard outer 20:10:09Z). 추가 외부 HTTP 0, torch.load/pickle.load/storage 열람/설치/GPU 0, helper 0.
+SHA(직접 계산 앞자리 일치): READY_CODEX 2340bdbcf1f5c04b…, REPORT 07522ae37cfe7bfa…, manifest 7b6c57be16997c47…. READY: plan_complete_unapproved_runtime_not_ready, source_closure_complete false,
+DINO_encoder_weight_pin_complete false, root_execution_authorized false, source 10/HTTP 1,419,989B, GPU/load/download/install 0.
+읽은 범위: READY 앞부분, REPORT 2–5절(나머지 전부), manifest source_groups 개수와 checkpoint_class_imports 목록, SAFE_PICKLE_METADATA의 top_level_keys·top_level 앞부분.
+
+판정: 원 판정 유지(현 자산으로 원 실행 경로 미폐쇄·설치/GPU smoke 불가에 동의). 변경·보완:
+ - top-level key: SAFE_PICKLE_METADATA가 추상 stack으로 7개 key와 key별 referenced_globals·storage 참조를 기록한다. 내 근거는 문자열 출현뿐이었고 최상위 확정은 이 Codex 기록에 의존한다 — 증거 차이 유지.
+ - accelerate: REPORT 2절에 따르면 기존 env에 Accelerate 1.15.0이 있다. 내 원 보고의 "로컬 메타 목록에 없음"은 root 목록 기준 서술이었고 설치 부재 주장이 아니었다. 0.26.1 overlay와
+   huggingface-hub 2.3.0 등의 전이 호환은 Codex도 미확인 — 차단 2 유지.
+ - omegaconf: 2.3.0은 원 환경 정합 선택이며 hydra 1.2.0이 2.4를 거부한다는 뜻이 아니라고 REPORT가 명시 — 내 위험 지적은 "필요성 선택"으로 해소, 차단 아님.
+ - core-model 대 planner 구분: manifest가 checkpoint class 7파일(models/__init__, vit, vqvae, proprio, distributed_fn 3개)·world-model/dataset 7파일·planner/env 후속 12파일로 나누고,
+   최초 smoke는 원 load/strict state_dict 순서를 보존한 얇은 진입점, planner 전체(gym/wandb/submitit/env)는 후속 closure로 둔다 — 타당. wandb 0.13.1의 protobuf<4와 현 protobuf 7.36.2
+   불일치 지적도 확인.
+ - 차단 3 유지: REPORT 전문에서 'latest'를 찾지 못했다. 실제 파일은 checkpoints/model_latest.pth이므로 얇은 진입점·manifest에 model_epoch=latest(또는 정확한 파일명) 명시가 필요하다.
+ - 차단 1(DINOv2 commit·weight 고정)과 4(closure 미완)는 READY의 false 플래그와 일치. 공식 weight 사전 digest가 없다는 점 자체를 영구 불가로 보지 않으며, 고정 HTTPS·크기 + 1회 취득 후
+   독립 SHA 계약은 별도 Opus2 업무 범위다.
+미해결: models/__init__·distributed_fn import closure, accelerate 전이 호환, DINOv2 자산 고정, model_epoch 지정, gym/antlr4 sdist 빌드 계약, decord ABI. 실험·효과·실행 0.
+실제 끝: 2026-11-05T19:57:26Z

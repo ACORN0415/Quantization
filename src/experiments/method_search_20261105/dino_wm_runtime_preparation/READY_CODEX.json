@@ -1,0 +1,54 @@
+{
+  "status": "plan_complete_unapproved_runtime_not_ready",
+  "completed_epoch": 1793908302.9488742,
+  "deadline_epoch": 1793908509.116919,
+  "source_files_read": 10,
+  "HTTP_body_bytes": 1419989,
+  "GPU": 0,
+  "tensor_or_model_loads": 0,
+  "package_or_model_payload_downloads": 0,
+  "installation": 0,
+  "counterpart_review_read": false,
+  "source_closure_complete": false,
+  "DINO_encoder_weight_pin_complete": false,
+  "root_execution_authorized": false,
+  "files": {
+    "REPORT_CODEX_KO.txt": {
+      "sha256": "07522ae37cfe7bfa203696f2a7d832e38e92c9abb5d07b0bb16c5f0c9e965b8a",
+      "bytes": 9989
+    },
+    "PROPOSED_ACQUISITION_MANIFEST_CODEX.json": {
+      "sha256": "7b6c57be16997c477ff30a4b343b6e490da41b2a0c8f497c7e969f4ad5f63265",
+      "bytes": 14114
+    },
+    "PACKAGE_CANDIDATES_CODEX.json": {
+      "sha256": "9b8f98b5d9d1cfeb244b1af619a0794644b7ba01fee1a0516aba8765f722d30d",
+      "bytes": 3394
+    },
+    "PYPI_METADATA_VERIFIED_CODEX.json": {
+      "sha256": "56d76fb80835e3eacb504489c424b81382cfea798b4e5071653e4689185c6fee",
+      "bytes": 16240
+    },
+    "SAFE_PICKLE_METADATA.json": {
+      "sha256": "69b9ac757f5cad50432e373e5000e7588646077037d0c448ac0ab5915a1f6293",
+      "bytes": 104150
+    },
+    "scan_pickle_metadata.py": {
+      "sha256": "0c5a66407861ca3832b88ca827823b2e664f89c7e1a77725ab91584130b065cc",
+      "bytes": 5063
+    },
+    "LOCAL_VERSIONS_CODEX.json": {
+      "sha256": "206a8a79b01820ad91491111a644eb2a94ef55b748bbb2a641b6740aead4bf6c",
+      "bytes": 956
+    },
+    "TREE_METADATA.json": {
+      "sha256": "9932e4c64585b95dac5a3f3fa6d0efdc718643673e90f6aaf94c799724a5fb4f",
+      "bytes": 94513
+    },
+    "PINNED_SOURCE_READBACK_CODEX.json": {
+      "sha256": "1e0e33be9581716687423212febec807a592a01931f019eb081050bc77f9e085",
+      "bytes": 70822
+    }
+  },
+  "own_output_bytes": 319241
+}

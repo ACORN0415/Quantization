@@ -1,0 +1,387 @@
+{
+  "status": "official_metadata_only",
+  "body_bytes": 278882,
+  "documents": [
+    {
+      "name": "hydra-core",
+      "version": "1.2.0",
+      "metadata_url": "https://pypi.org/pypi/hydra-core/1.2.0/json",
+      "body_bytes": 17818,
+      "body_sha256": "b130d2037e04e83e05d6c182e890d789656f79788d3db13d1db7accab8471a74",
+      "requires_python": "",
+      "requires_dist": [
+        "omegaconf (~=2.2)",
+        "antlr4-python3-runtime (==4.9.*)",
+        "packaging",
+        "importlib-resources ; python_version < \"3.9\""
+      ],
+      "artifact": {
+        "filename": "hydra_core-1.2.0-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/68/0d/0da98325011cb09e1f6439f0adcc98a0f5261d3578bf182438562096913e/hydra_core-1.2.0-py3-none-any.whl",
+        "size": 151068,
+        "digests": {
+          "blake2b_256": "680d0da98325011cb09e1f6439f0adcc98a0f5261d3578bf182438562096913e",
+          "md5": "0725d982f42ab166e22fa26cbd50daca",
+          "sha256": "b6614fd6d6a97a9499f7ddbef02c9dd38f2fec6a9bc83c10e248db1dae50a528"
+        },
+        "packagetype": "bdist_wheel",
+        "requires_python": null
+      },
+      "artifact_requested": false
+    },
+    {
+      "name": "omegaconf",
+      "version": "2.3.0",
+      "metadata_url": "https://pypi.org/pypi/omegaconf/2.3.0/json",
+      "body_bytes": 6095,
+      "body_sha256": "e58407f13e7ae3696e258110fa4b1fb283cb545fda3d4fca1abeaaf45fc1e471",
+      "requires_python": ">=3.6",
+      "requires_dist": [
+        "antlr4-python3-runtime (==4.9.*)",
+        "PyYAML (>=5.1.0)",
+        "dataclasses ; python_version == \"3.6\""
+      ],
+      "artifact": {
+        "filename": "omegaconf-2.3.0-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/e3/94/1843518e420fa3ed6919835845df698c7e27e183cb997394e4a670973a65/omegaconf-2.3.0-py3-none-any.whl",
+        "size": 79500,
+        "digests": {
+          "blake2b_256": "e3941843518e420fa3ed6919835845df698c7e27e183cb997394e4a670973a65",
+          "md5": "dbf735464e1d9ae66ad7b663ecd0a204",
+          "sha256": "7b4df175cdb08ba400f45cae3bdcae7ba8365db4d165fc65fd04b050ab63b46b"
+        },
+        "packagetype": "bdist_wheel",
+        "requires_python": ">=3.6"
+      },
+      "artifact_requested": false
+    },
+    {
+      "name": "antlr4-python3-runtime",
+      "version": "4.9.3",
+      "metadata_url": "https://pypi.org/pypi/antlr4-python3-runtime/4.9.3/json",
+      "body_bytes": 1819,
+      "body_sha256": "3988b2bf1e1e3b06ea09a34f986346ae098bd19239e69e0e01bfe308020fe6e2",
+      "requires_python": "",
+      "requires_dist": null,
+      "artifact": {
+        "filename": "antlr4-python3-runtime-4.9.3.tar.gz",
+        "url": "https://files.pythonhosted.org/packages/3e/38/7859ff46355f76f8d19459005ca000b6e7012f2f1ca597746cbcd1fbfe5e/antlr4-python3-runtime-4.9.3.tar.gz",
+        "size": 117034,
+        "digests": {
+          "blake2b_256": "3e387859ff46355f76f8d19459005ca000b6e7012f2f1ca597746cbcd1fbfe5e",
+          "md5": "ecdf93d9a4c8acd16ec3ade04e2b5195",
+          "sha256": "f224469b4168294902bb1efa80a8bf7855f24c99aef99cbefc1bcd3cce77881b"
+        },
+        "packagetype": "sdist",
+        "requires_python": null
+      },
+      "artifact_requested": false
+    },
+    {
+      "name": "accelerate",
+      "version": "0.26.1",
+      "metadata_url": "https://pypi.org/pypi/accelerate/0.26.1/json",
+      "body_bytes": 21258,
+      "body_sha256": "0c8266c9b2bd8b74f23578a3b2b5442ab66ac5ce046ffa2ac283a8c84bf2fbe5",
+      "requires_python": ">=3.8.0",
+      "requires_dist": [
+        "numpy >=1.17",
+        "packaging >=20.0",
+        "psutil",
+        "pyyaml",
+        "torch >=1.10.0",
+        "huggingface-hub",
+        "safetensors >=0.3.1",
+        "black ~=23.1 ; extra == 'dev'",
+        "ruff >=0.0.241 ; extra == 'dev'",
+        "hf-doc-builder >=0.3.0 ; extra == 'dev'",
+        "urllib3 <2.0.0 ; extra == 'dev'",
+        "pytest ; extra == 'dev'",
+        "pytest-xdist ; extra == 'dev'",
+        "pytest-subtests ; extra == 'dev'",
+        "parameterized ; extra == 'dev'",
+        "datasets ; extra == 'dev'",
+        "evaluate ; extra == 'dev'",
+        "transformers ; extra == 'dev'",
+        "scipy ; extra == 'dev'",
+        "scikit-learn ; extra == 'dev'",
+        "deepspeed ; extra == 'dev'",
+        "tqdm ; extra == 'dev'",
+        "bitsandbytes ; extra == 'dev'",
+        "timm ; extra == 'dev'",
+        "rich ; extra == 'dev'",
+        "black ~=23.1 ; extra == 'quality'",
+        "ruff >=0.0.241 ; extra == 'quality'",
+        "hf-doc-builder >=0.3.0 ; extra == 'quality'",
+        "urllib3 <2.0.0 ; extra == 'quality'",
+        "rich ; extra == 'rich'",
+        "sagemaker ; extra == 'sagemaker'",
+        "datasets ; extra == 'test_dev'",
+        "evaluate ; extra == 'test_dev'",
+        "transformers ; extra == 'test_dev'",
+        "scipy ; extra == 'test_dev'",
+        "scikit-learn ; extra == 'test_dev'",
+        "deepspeed ; extra == 'test_dev'",
+        "tqdm ; extra == 'test_dev'",
+        "bitsandbytes ; extra == 'test_dev'",
+        "timm ; extra == 'test_dev'",
+        "pytest ; extra == 'test_prod'",
+        "pytest-xdist ; extra == 'test_prod'",
+        "pytest-subtests ; extra == 'test_prod'",
+        "parameterized ; extra == 'test_prod'",
+        "wandb ; extra == 'test_trackers'",
+        "comet-ml ; extra == 'test_trackers'",
+        "tensorboard ; extra == 'test_trackers'",
+        "dvclive ; extra == 'test_trackers'",
+        "pytest ; extra == 'testing'",
+        "pytest-xdist ; extra == 'testing'",
+        "pytest-subtests ; extra == 'testing'",
+        "parameterized ; extra == 'testing'",
+        "datasets ; extra == 'testing'",
+        "evaluate ; extra == 'testing'",
+        "transformers ; extra == 'testing'",
+        "scipy ; extra == 'testing'",
+        "scikit-learn ; extra == 'testing'",
+        "deepspeed ; extra == 'testing'",
+        "tqdm ; extra == 'testing'",
+        "bitsandbytes ; extra == 'testing'",
+        "timm ; extra == 'testing'"
+      ],
+      "artifact": {
+        "filename": "accelerate-0.26.1-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/a6/b9/44623bdb05595481107153182e7f4b9f2ef9d3b674938ad13842054dcbd8/accelerate-0.26.1-py3-none-any.whl",
+        "size": 270886,
+        "digests": {
+          "blake2b_256": "a6b944623bdb05595481107153182e7f4b9f2ef9d3b674938ad13842054dcbd8",
+          "md5": "f6a3b7764be1c8523013016014fe8af4",
+          "sha256": "04df826b84ac7bad8a0a8ab90e6aeacdecb1ea5a2d744d7e94f6735c29183227"
+        },
+        "packagetype": "bdist_wheel",
+        "requires_python": ">=3.8.0"
+      },
+      "artifact_requested": false
+    },
+    {
+      "name": "decord",
+      "version": "0.6.0",
+      "metadata_url": "https://pypi.org/pypi/decord/0.6.0/json",
+      "body_bytes": 5285,
+      "body_sha256": "00f849b1a23d583719b5bb3e348b070c078db315ffe0a67bf5dc4fa65c6fb482",
+      "requires_python": "",
+      "requires_dist": [
+        "numpy (>=1.14.0)"
+      ],
+      "artifact": {
+        "filename": "decord-0.6.0-py3-none-manylinux2010_x86_64.whl",
+        "url": "https://files.pythonhosted.org/packages/11/79/936af42edf90a7bd4e41a6cac89c913d4b47fa48a26b042d5129a9242ee3/decord-0.6.0-py3-none-manylinux2010_x86_64.whl",
+        "size": 13602299,
+        "digests": {
+          "blake2b_256": "1179936af42edf90a7bd4e41a6cac89c913d4b47fa48a26b042d5129a9242ee3",
+          "md5": "8559e32d2aaa80b3eefa608d65c97e64",
+          "sha256": "51997f20be8958e23b7c4061ba45d0efcd86bffd5fe81c695d0befee0d442976"
+        },
+        "packagetype": "bdist_wheel",
+        "requires_python": null
+      },
+      "artifact_requested": false
+    },
+    {
+      "name": "gym",
+      "version": "0.23.1",
+      "metadata_url": "https://pypi.org/pypi/gym/0.23.1/json",
+      "body_bytes": 2181,
+      "body_sha256": "eabcd00df97cb0834c492848d0a0dabdcb6b08b24ebe617db92f074e83bb88e4",
+      "requires_python": ">=3.7",
+      "requires_dist": null,
+      "artifact": {
+        "filename": "gym-0.23.1.tar.gz",
+        "url": "https://files.pythonhosted.org/packages/87/86/3f5467531428b6ce6f3c12d3121b4304d2ea1536a50775a4df036add37b8/gym-0.23.1.tar.gz",
+        "size": 626191,
+        "digests": {
+          "blake2b_256": "87863f5467531428b6ce6f3c12d3121b4304d2ea1536a50775a4df036add37b8",
+          "md5": "bba57e36fff36dd02f6b5f05eab1cbc0",
+          "sha256": "d0f9b9da34edbdace421c9442fc9205d03b8d15d0fb451053c766cde706d40e0"
+        },
+        "packagetype": "sdist",
+        "requires_python": ">=3.7"
+      },
+      "artifact_requested": false
+    },
+    {
+      "name": "gym-notices",
+      "version": "0.0.8",
+      "metadata_url": "https://pypi.org/pypi/gym-notices/0.0.8/json",
+      "body_bytes": 3372,
+      "body_sha256": "e28d5a1f626835572a35422559869923bd512490479973650bf68ced39443171",
+      "requires_python": "",
+      "requires_dist": null,
+      "artifact": {
+        "filename": "gym_notices-0.0.8-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/25/26/d786c6bec30fe6110fd3d22c9a273a2a0e56c0b73b93e25ea1af5a53243b/gym_notices-0.0.8-py3-none-any.whl",
+        "size": 2965,
+        "digests": {
+          "blake2b_256": "2526d786c6bec30fe6110fd3d22c9a273a2a0e56c0b73b93e25ea1af5a53243b",
+          "md5": "24239b8c00f3d924f8a30ea9665221be",
+          "sha256": "e5f82e00823a166747b4c2a07de63b6560b1acb880638547e0cabf825a01e463"
+        },
+        "packagetype": "bdist_wheel",
+        "requires_python": null
+      },
+      "artifact_requested": false
+    },
+    {
+      "name": "cloudpickle",
+      "version": "2.1.0",
+      "metadata_url": "https://pypi.org/pypi/cloudpickle/2.1.0/json",
+      "body_bytes": 9426,
+      "body_sha256": "c47f000324380994533d2bf57ae366ae80e7c7e15ec51a7707354f63c1f8e66f",
+      "requires_python": ">=3.6",
+      "requires_dist": null,
+      "artifact": {
+        "filename": "cloudpickle-2.1.0-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/25/40/2c9db9cfb85a8a21c61528f6660c47662b3e59576efac610d8268d47abba/cloudpickle-2.1.0-py3-none-any.whl",
+        "size": 25842,
+        "digests": {
+          "blake2b_256": "25402c9db9cfb85a8a21c61528f6660c47662b3e59576efac610d8268d47abba",
+          "md5": "7a7667e5defbc5ba50ec09430561754c",
+          "sha256": "b5c434f75c34624eedad3a14f2be5ac3b5384774d5b0e3caf905c21479e6c4b1"
+        },
+        "packagetype": "bdist_wheel",
+        "requires_python": ">=3.6"
+      },
+      "artifact_requested": false
+    },
+    {
+      "name": "pymunk",
+      "version": "6.8.0",
+      "metadata_url": "https://pypi.org/pypi/pymunk/6.8.0/json",
+      "body_bytes": 55505,
+      "body_sha256": "457631f528535d295e056f852e592f1ff5daaf43d6a71a69bc207842195afe6c",
+      "requires_python": ">=3.7",
+      "requires_dist": [
+        "cffi>=1.15.0",
+        "pyglet<2.0.0; extra == \"dev\"",
+        "pygame; extra == \"dev\"",
+        "sphinx; extra == \"dev\"",
+        "aafigure; extra == \"dev\"",
+        "wheel; extra == \"dev\"",
+        "matplotlib; extra == \"dev\"",
+        "numpy; extra == \"dev\""
+      ],
+      "artifact": {
+        "filename": "pymunk-6.8.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+        "url": "https://files.pythonhosted.org/packages/a9/b3/32bf7de305626552a039efc1ad7d8bbf9b64c10042cdaead7cd82fbbf0e3/pymunk-6.8.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+        "size": 1064171,
+        "digests": {
+          "blake2b_256": "a9b332bf7de305626552a039efc1ad7d8bbf9b64c10042cdaead7cd82fbbf0e3",
+          "md5": "41aab23446012c6cba0374cc601fa183",
+          "sha256": "78973d4ef0fa715e127ca408f6063c82722b883d98cf216dddd906aa00debf4e"
+        },
+        "packagetype": "bdist_wheel",
+        "requires_python": ">=3.7"
+      },
+      "artifact_requested": false
+    },
+    {
+      "name": "cffi",
+      "version": "1.16.0",
+      "metadata_url": "https://pypi.org/pypi/cffi/1.16.0/json",
+      "body_bytes": 47259,
+      "body_sha256": "81724c91463ea1cc54180306bcf4a6b5695a69535737dfd547c382590199e92f",
+      "requires_python": ">=3.8",
+      "requires_dist": [
+        "pycparser"
+      ],
+      "artifact": {
+        "filename": "cffi-1.16.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+        "url": "https://files.pythonhosted.org/packages/c9/7c/43d81bdd5a915923c3bad5bb4bff401ea00ccc8e28433fb6083d2e3bf58e/cffi-1.16.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+        "size": 443865,
+        "digests": {
+          "blake2b_256": "c97c43d81bdd5a915923c3bad5bb4bff401ea00ccc8e28433fb6083d2e3bf58e",
+          "md5": "107b486471232e528f26e6f13f5141e5",
+          "sha256": "e4108df7fe9b707191e55f33efbcb2d81928e10cea45527879a4749cbe472614"
+        },
+        "packagetype": "bdist_wheel",
+        "requires_python": ">=3.8"
+      },
+      "artifact_requested": false
+    },
+    {
+      "name": "pycparser",
+      "version": "2.22",
+      "metadata_url": "https://pypi.org/pypi/pycparser/2.22/json",
+      "body_bytes": 3111,
+      "body_sha256": "20c42cf1fed593b0d26f1bfe7dbffac67637ccfc17b7f4502938f27b99bfcf6b",
+      "requires_python": ">=3.8",
+      "requires_dist": null,
+      "artifact": {
+        "filename": "pycparser-2.22-py3-none-any.whl",
+        "url": "https://files.pythonhosted.org/packages/13/a3/a812df4e2dd5696d1f351d58b8fe16a405b234ad2886a0dab9183fb78109/pycparser-2.22-py3-none-any.whl",
+        "size": 117552,
+        "digests": {
+          "blake2b_256": "13a3a812df4e2dd5696d1f351d58b8fe16a405b234ad2886a0dab9183fb78109",
+          "md5": "e9bf4a92f270e6482393bd716406ff85",
+          "sha256": "c3702b6d3dd8c7abc1afa565d7e63d53a1d0bd86cdc24edd75470f4de499cfcc"
+        },
+        "packagetype": "bdist_wheel",
+        "requires_python": ">=3.8"
+      },
+      "artifact_requested": false
+    },
+    {
+      "name": "pygame",
+      "version": "2.5.2",
+      "metadata_url": "https://pypi.org/pypi/pygame/2.5.2/json",
+      "body_bytes": 63259,
+      "body_sha256": "8d24db7f09c83a04495d259991a60c629abb8171f6d597deca41926620168070",
+      "requires_python": ">=3.6",
+      "requires_dist": null,
+      "artifact": {
+        "filename": "pygame-2.5.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+        "url": "https://files.pythonhosted.org/packages/c8/c7/0d77e0e327bf09c12f445f92f5bad0b447375d7b836c5bac5255ead8436f/pygame-2.5.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+        "size": 13962116,
+        "digests": {
+          "blake2b_256": "c8c70d77e0e327bf09c12f445f92f5bad0b447375d7b836c5bac5255ead8436f",
+          "md5": "8d7b7c411f785b15799cc7c3be670d56",
+          "sha256": "03879ec299c9f4ba23901b2649a96b2143f0a5d787f0b6c39469989e2320caf1"
+        },
+        "packagetype": "bdist_wheel",
+        "requires_python": ">=3.6"
+      },
+      "artifact_requested": false
+    },
+    {
+      "name": "shapely",
+      "version": "2.0.3",
+      "metadata_url": "https://pypi.org/pypi/shapely/2.0.3/json",
+      "body_bytes": 42494,
+      "body_sha256": "3c36467a38ccd339b031f61c52c777756c40ef924a7b3c4f89a507fe140ebc0c",
+      "requires_python": ">=3.7",
+      "requires_dist": [
+        "numpy <2,>=1.14",
+        "numpydoc ==1.1.* ; extra == 'docs'",
+        "matplotlib ; extra == 'docs'",
+        "sphinx ; extra == 'docs'",
+        "sphinx-book-theme ; extra == 'docs'",
+        "sphinx-remove-toctrees ; extra == 'docs'",
+        "pytest ; extra == 'test'",
+        "pytest-cov ; extra == 'test'"
+      ],
+      "artifact": {
+        "filename": "shapely-2.0.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+        "url": "https://files.pythonhosted.org/packages/3e/d2/2afa1e563d417401ac364017a4d4d2d13a9dacb7dcbb83cc13f48a1efe41/shapely-2.0.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+        "size": 2471916,
+        "digests": {
+          "blake2b_256": "3ed22afa1e563d417401ac364017a4d4d2d13a9dacb7dcbb83cc13f48a1efe41",
+          "md5": "cad6cbd5113e7736b70292ce417d0b9d",
+          "sha256": "f10d2ccf0554fc0e39fad5886c839e47e207f99fdf09547bc687a2330efda35b"
+        },
+        "packagetype": "bdist_wheel",
+        "requires_python": ">=3.7"
+      },
+      "artifact_requested": false
+    }
+  ],
+  "all13_selected_artifact_hashes_match_helper": true,
+  "payloads_requested": 0
+}

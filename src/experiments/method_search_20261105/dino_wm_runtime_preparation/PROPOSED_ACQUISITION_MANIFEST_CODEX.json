@@ -1,0 +1,287 @@
+{
+  "status": "UNAPPROVED_PROPOSAL_NOT_EXECUTABLE",
+  "root_execution_authorized": false,
+  "created_epoch": 1793908157.360494,
+  "root_spec_sha256": "e03af6de1c1e5f32f72717a8762f7ef9935d17a7951b115a941bca0223cad192",
+  "interpreter": "/home/acorn0415/sfq_data/env/bin/python",
+  "overlay_strategy": "dedicated --target directory; same existing interpreter, PYTHONNOUSERSITE=1, explicit source/overlay insertion before site-packages; do not create child venv assuming Torch inheritance",
+  "future_install_constraints": [
+    "only root-approved exact filenames and SHA256; no resolver/network fallback",
+    "--no-deps; pre-resolve import closure and declared dependency conflicts",
+    "sdist builds require explicit separate source/build manifest; no implicit build isolation download",
+    "never modify sfq_data/env or existing package files",
+    "verify imported torch/torchvision files and versions still originate in existing environment; reject shadow copies",
+    "no automatic torch.hub remote load; use later approved pinned local DINOv2 source and weight artifact"
+  ],
+  "package_candidates_file": "PACKAGE_CANDIDATES_CODEX.json",
+  "repository": "https://github.com/huawei-noah/noah-research",
+  "revision": "be738be37a0535f75f541a6c1201ce19f95499b0",
+  "source_strategy": "exact raw file subset with pinned commit and git blob; proposed groups, not complete import closure. Avoid clone of Noah monorepo. No checkout/install performed.",
+  "source_groups": {
+    "checkpoint_class_imports": [
+      {
+        "path": "models/__init__.py",
+        "git_blob_sha1": "ac9012aedda104618fd2bfd2e7fc3d2547746118",
+        "bytes": 63,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/models/__init__.py",
+        "read_this_phase": false,
+        "sha256_if_read": null,
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "models/vit.py",
+        "git_blob_sha1": "eb52e802d3bf149bfcbd333f294f011fbf15f327",
+        "bytes": 3992,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/models/vit.py",
+        "read_this_phase": true,
+        "sha256_if_read": "ae79e86c1be2fc9ac9c2642882c2ddccf2cea65e85cf29b094672aec5d030387",
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "models/vqvae.py",
+        "git_blob_sha1": "0a0d84083cc59429f8eecdb04f25c250236c18ed",
+        "bytes": 7425,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/models/vqvae.py",
+        "read_this_phase": true,
+        "sha256_if_read": "377005da5c79355da6c7db88eded7a04e432c29ddf4279ea89e5364730ff1461",
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "models/proprio.py",
+        "git_blob_sha1": "8fb70990ef31e018aafc64ffcb9477f4b2e0ec18",
+        "bytes": 2131,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/models/proprio.py",
+        "read_this_phase": true,
+        "sha256_if_read": "b0f7c761c45a6a889dc51f6d9cf4539480d1a0bd2bd200ad44c4b9373a573c72",
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "distributed_fn/__init__.py",
+        "git_blob_sha1": "b944d9842bb22621e15dcf48c2d8c5d43695335b",
+        "bytes": 235,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/distributed_fn/__init__.py",
+        "read_this_phase": false,
+        "sha256_if_read": null,
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "distributed_fn/distributed.py",
+        "git_blob_sha1": "b2509f119e9025cab696d6a9ddce81ff226b5edc",
+        "bytes": 3025,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/distributed_fn/distributed.py",
+        "read_this_phase": false,
+        "sha256_if_read": null,
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "distributed_fn/launch.py",
+        "git_blob_sha1": "531317b5bcef49c55fbee82e229b0ef5c66d9cdd",
+        "bytes": 2509,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/distributed_fn/launch.py",
+        "read_this_phase": false,
+        "sha256_if_read": null,
+        "transitive_closure_verified": false
+      }
+    ],
+    "world_model_and_original_dataset": [
+      {
+        "path": "models/dino.py",
+        "git_blob_sha1": "69380fd4c57cdd6bf1434ca834f228c14744d93c",
+        "bytes": 1266,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/models/dino.py",
+        "read_this_phase": true,
+        "sha256_if_read": "3e77b3990cdb16fd6620f03fda51e12e236a36804ac2e859b530fc6d501ac746",
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "models/visual_world_model.py",
+        "git_blob_sha1": "40bc298c8424a38d38670711968178fafe3966d0",
+        "bytes": 13050,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/models/visual_world_model.py",
+        "read_this_phase": false,
+        "sha256_if_read": null,
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "datasets/__init__.py",
+        "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "bytes": 0,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/datasets/__init__.py",
+        "read_this_phase": false,
+        "sha256_if_read": null,
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "datasets/pusht_dset.py",
+        "git_blob_sha1": "050f5ee4bac520985ac2c2fdc6eed323d193fda0",
+        "bytes": 6375,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/datasets/pusht_dset.py",
+        "read_this_phase": true,
+        "sha256_if_read": "7e630c07f34f83ed06d6ccd558d189679ab7869a4cd817ad0199d151ffe939e7",
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "datasets/traj_dset.py",
+        "git_blob_sha1": "d5c0de6458c2e5f3d6e74a00879671a7b30dc257",
+        "bytes": 4886,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/datasets/traj_dset.py",
+        "read_this_phase": true,
+        "sha256_if_read": "cf9f538ad3d7a08768b75102df4c4be29149c6732a29845cb4f076a136cc028c",
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "datasets/img_transforms.py",
+        "git_blob_sha1": "abf51fc36e590650431bf4a234e73a33c50ee47f",
+        "bytes": 282,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/datasets/img_transforms.py",
+        "read_this_phase": false,
+        "sha256_if_read": null,
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "conf/env/pusht.yaml",
+        "git_blob_sha1": "8be2072e66cc0896b78800bb92b03e752b03082b",
+        "bytes": 421,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/conf/env/pusht.yaml",
+        "read_this_phase": true,
+        "sha256_if_read": "506a2039d0164ff9928855928faa4ee1a33b2030888420b588bdf78f3a4859de",
+        "transitive_closure_verified": false
+      }
+    ],
+    "planning_environment_later_not_minimal_smoke": [
+      {
+        "path": "plan.py",
+        "git_blob_sha1": "c3536408f60b20ed9b42348245e0173a3fb91ac8",
+        "bytes": 19891,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/plan.py",
+        "read_this_phase": true,
+        "sha256_if_read": "f368dd634d7781a411a0dc1d8869d312ff105d2d5c8608cc2854d8f5a6a965a4",
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "utils.py",
+        "git_blob_sha1": "d51672b5ba0a7236b342023ec944f380a6bf05ea",
+        "bytes": 2818,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/utils.py",
+        "read_this_phase": false,
+        "sha256_if_read": null,
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "env/__init__.py",
+        "git_blob_sha1": "91d1d27fd0173072fc103e0e1de9175e24c422df",
+        "bytes": 902,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/env/__init__.py",
+        "read_this_phase": false,
+        "sha256_if_read": null,
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "env/venv.py",
+        "git_blob_sha1": "92ce94952bec944b11ed115782074cdc0af3c889",
+        "bytes": 38874,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/env/venv.py",
+        "read_this_phase": false,
+        "sha256_if_read": null,
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "env/pusht/__init__.py",
+        "git_blob_sha1": "273d396b8787dbf741b112552bf119cf354024cd",
+        "bytes": 32,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/env/pusht/__init__.py",
+        "read_this_phase": false,
+        "sha256_if_read": null,
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "env/pusht/pusht_env.py",
+        "git_blob_sha1": "93582f33a7259636c65bdbebbfb872b9b70a3634",
+        "bytes": 43907,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/env/pusht/pusht_env.py",
+        "read_this_phase": true,
+        "sha256_if_read": "1aaac87d49b619eed2370297d5393cd3e22e22f08bbfb2870ee1422e86ef4c3a",
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "env/pusht/pusht_wrapper.py",
+        "git_blob_sha1": "1cae1f36f83ca7da30627164ca8676c9ed967a6e",
+        "bytes": 3844,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/env/pusht/pusht_wrapper.py",
+        "read_this_phase": false,
+        "sha256_if_read": null,
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "planning/__init__.py",
+        "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "bytes": 0,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/planning/__init__.py",
+        "read_this_phase": false,
+        "sha256_if_read": null,
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "planning/base_planner.py",
+        "git_blob_sha1": "95ffd91f103dda6169c610ef9aa7ab41f7640e44",
+        "bytes": 1088,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/planning/base_planner.py",
+        "read_this_phase": false,
+        "sha256_if_read": null,
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "planning/cem.py",
+        "git_blob_sha1": "a3bf46b17cf6678e080c318226d39ed31aa509e0",
+        "bytes": 6039,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/planning/cem.py",
+        "read_this_phase": false,
+        "sha256_if_read": null,
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "planning/evaluator.py",
+        "git_blob_sha1": "f981ee3c1c9e146c316859044a830b860de396b1",
+        "bytes": 9655,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/planning/evaluator.py",
+        "read_this_phase": false,
+        "sha256_if_read": null,
+        "transitive_closure_verified": false
+      },
+      {
+        "path": "planning/objectives.py",
+        "git_blob_sha1": "70d1a8647b3c54b13fb377ac1fb3d5c5b500e05d",
+        "bytes": 2242,
+        "raw_url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/planning/objectives.py",
+        "read_this_phase": false,
+        "sha256_if_read": null,
+        "transitive_closure_verified": false
+      }
+    ]
+  },
+  "additional_encoder": {
+    "required_by_original_loader": true,
+    "name": "dinov2_vits14",
+    "feature_key": "x_norm_patchtokens",
+    "reason": "top-level encoder key absent in bounded abstract pickle stack; plan.py fallback + hydra target + models/dino.py hub call",
+    "source_repository": "https://github.com/facebookresearch/dinov2",
+    "revision": null,
+    "weight_url": null,
+    "weight_sha256": null,
+    "weight_bytes": null,
+    "status": "PENDING_FIXED_SOURCE_AND_WEIGHT_METADATA_NOT_AUTHORIZED",
+    "alternative_HF_implementation_equivalence": false
+  },
+  "unresolved": [
+    "distributed_fn and package __init__ transitive imports were outside 10-file reading limit",
+    "DINOv2 hub source and original matching pretrained weights are not pinned",
+    "old Accelerate and current HF Hub APIs are untested",
+    "actual PushT wrapper/registration import closure and headless renderer compatibility untested",
+    "Torch2.6 weights_only/load policy must be explicit; broad module pickle executes constructors/state on future trusted load",
+    "same interpreter mixed-version overlay is not original Python3.9/Torch2.3 environment reproduction"
+  ],
+  "model_loads": 0,
+  "GPU": 0,
+  "package_model_payload_downloads": 0,
+  "installations": 0
+}
