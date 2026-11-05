@@ -1,0 +1,19 @@
+{
+  "status": "not_adopted_current_four_choice_state_rounding_candidate",
+  "created_epoch": 1793904365.8414667,
+  "math": "Conditional two future preactivation error formula is valid under registered finite-tail/T>=2 constraints. Proxy is a channel/time2x2 approximation, not full Conv or RGB objective.",
+  "prior": "AQuant directly optimizes runtime activation rounding for output reconstruction; generic2D quadratic block search covers four-neighbor subproblem. Specific causal constraints alone do not establish novelty.",
+  "baseline_correction": "Four floor/ceil enumeration and sequential compensation are not identical. Both orders and actual grid bounds must be allowed; general2D block enumeration is stronger. Root scalar note and actual Opus corrected prior overstatement.",
+  "counterexample": "Native Codex derived spatial1x1,2inputchannels case where proxy1.6→1 but true localSSE0→1. Establishes lack of monotonic guarantee, not actual-model failure.",
+  "resource_fact": "State32/1888573440B is measured in completed BF16 streaming worker trace. Peak simultaneous composition/time contribution/deployment bottleneck remain unidentified. Earlier Opus unmeasured-payload wording corrected in preserved addenda.",
+  "decision_basis": "No observed failing simple RTN/scale-tuned/ordinary block-rounding baseline under an independently meaningful deployment requirement, weak algorithmic differentiation, no real-effect evidence. Do not allocate GPU to this candidate.",
+  "scope": "Not an impossibility theorem for finite-state quantization, general output-aware rounding, all 2D block methods, or quantization research. No actual model/weights/activation/effect experiment done for this hypothesis.",
+  "next": "Separate problem-based search; do not append ranks/seeds/proxy corrections to rescue current candidate.",
+  "evidence": {
+    "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/FUTURE_STATE_ROUNDING_CRITIQUE_CODEX_KO.txt": "27087ab444f3a6451026da2bf4ac7a22467ba6705f42c148a1409c167faddfa7",
+    "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/FUTURE_STATE_ROUNDING_CRITIQUE_OPUS_KO.txt": "05d1ac9afd7bc531a05b170b20702ea3d16af8167d4815c9889047486e4b9ed2",
+    "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/FUTURE_STATE_ROUNDING_PRIMARY_ADDENDUM_OPUS_KO.txt": "dffe776bbf8cb4c70ef383339ba1c6fd58eb3d724b89b71d8adcaf561847e545",
+    "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/FUTURE_STATE_ROUNDING_CONTRIBUTION_SCOPE_ADDENDUM_OPUS_KO.txt": "d38e457da6fd1e1349c36ca2507a9c1cb341ad7a1c3c5bf737ad44b2d3cfaa19",
+    "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/FUTURE_STATE_ROUNDING_MATH_SCOPE_ADDENDUM_OPUS_KO.txt": "2b443e20f6cba6ff50a019d078180562c7c214856bc834739ef5284ff559c163"
+  }
+}

@@ -1,0 +1,47 @@
+future-state rounding 비판 — root 공개 1차 출처 보충 부록 (Opus2, root msg_d00430f903b3)
+작성 UTC: 2026-11-05T18:36:46Z~2026-11-05T18:37:47Z. 원마감은 18:51:56Z이며 연장하지 않는다.
+모델: claude-opus-5-5, 기존 채팅 session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5. Task/Dispatch: 미연결(자동연결 실패).
+원 보고서 FUTURE_STATE_ROUNDING_CRITIQUE_OPUS_KO.txt는 이미 최종 반환했다(msg_d4e9cdc8cd0f). 수정하지 않았고, 직접 sha는 05d1ac9afd7bc531a05b170b20702ea3d16af8167d4815c9889047486e4b9ed2(05d1ac9a…)다.
+이 보충 사실은 원 보고서를 반환한 뒤에 받았다. 따라서 원 판정 당시에는 반영되지 않았다.
+- 입력: root facts JSON(sha 9cda7d82…)과 부모가 WebFetch로 직접 연 1차 출처 2편.
+  - 요약 모델을 거친 판독이며 수식 원문 대조는 하지 않았다.
+  - 이번 업무의 primary 누계는 5편(AdaRound, GPTQ, OBC, AQuant, 2610.40345)으로 한도 6 이내다. repo는 0이다.
+- helper는 쓰지 않았다(부모 직접). 상대 Codex 결론은 열람하지 않았다. 실행, 로드, 다운로드, 수정은 0이다.
+
+AQuant v3 https://arxiv.org/html/2208.11945 (부모 열람: 본문 Sec.2·4·5 요지)
+- activation rounding을 직접 다룬다. weight만 다루는 AdaRound와 다르다.
+- border가 activation 값의 함수다. 배포형은 B(x)=b1·x+b0이고(Eq.8), 추론 때 원소마다 동적으로 적용된다.
+- coarse-grained: 출력 채널이 border를 공유한다. border 수는 activation vector 길이이며, conv에서는 ic×k²다(Sec.4.2-4.3). img2col 기준이다.
+- 목적: 해당 layer의 자기 weight로 계산한 출력 재구성 MSE ||(W+ΔW)·round_B(x) − Wx||²다(Eq.9). layer/block 단위다.
+  - 명시적 Hessian이나 다음 layer weight는 쓰지 않는다.
+  - 다만 ||W Δx||² = Δxᵀ(WᵀW)Δx이므로, 'activation 오차를 그 activation을 소비하는 weight로 사상한 출력 오차'라는 목적 구조는 가설과 같다.
+- 오버헤드(본문 주장): 추가 연산과 메모리 O(1/oc), 지연 약 5‰(V100, naive fused kernel). 실제 low-bit 추론은 하지 않았다고 명시한다.
+- temporal cache, video, 3D conv는 다루지 않는다.
+
+A Unified Hessian-Guided Framework (2610.40345v1) https://arxiv.org/html/2610.40345v1 (부모 열람: 본문~부록 C 직전, 마지막 약 3.5k자 미열람)
+- 출력 Fisher/KL proxy를 쓴다: ½||ΔZ||²_{H_Z}, Kronecker 근사(Eq.4-6).
+- 최적화 대상: transform, weight scale·rounding(block-LDL 보정), activation clipping γx(후보 집합에서 선택, Eq.17).
+- activation rounding은 최적화하지 않는다. 부록 A.1에서 균일 잡음 d²/12로 모델링하며, 런타임은 표준 round()다.
+- KV4 설정이 언급되지만 그 cache 처리 방법은 본문에 없다. video와 3D conv는 없다.
+
+가설 판정에 미치는 영향
+- 가장 가까운 선행은 AQuant로 갱신한다. '출력 재구성 오차를 줄이도록 activation rounding을 선택한다'는 의사결정과 목적 구조가 이미 공개돼 있다.
+  - 원 보고서의 'WᵀW activation 변형은 3편 범위에 없다'는 진술은 AQuant로 범위가 줄어든다. 직접 선행이 존재한다.
+  - 가설의 기각(채택 가능성 없음)은 약해지지 않고 강해진다.
+- 남는 구조 차이 (사실 정리이며 신규성 주장이 아님)
+  (1) cache state는 저장 code가 하나이고 미래 tap 두 개(W0·W1)에서 재사용된다. 따라서 한 원소의 rounding이 모든 사용처에서 일관돼야 한다.
+      - AQuant은 img2col 위치마다 border를 둔다. 같은 값이 패치 위치마다 다르게 반올림될 수 있는 구조로 판독된다(추론).
+      - 그러나 '한 번 저장하고 여러 tap에서 쓰는 값'의 출력 오차 Hessian을 모든 사용처의 WᵀW 합으로 모으는 것은 Hessian 정의 그대로다. 새 결정이 아니다.
+  (2) AQuant은 학습된 값-의존 border(비용이 있음)를 쓴다. 가설은 고정 Gram에서 floor/ceil 조합을 탐색한다. 둘 다 같은 목적의 다른 근사다.
+  (3) causal 정보 경계: 두 방식 모두 현재 activation과 고정 weight만 쓴다. 미래 입력 정보는 쓰지 않는다.
+- 강한 기준선에 AQuant식 border(동일 bit·metadata)를 B5로 추가해야 한다.
+  - 다만 가설이 채택 불가이므로, 실제 검사가 필요해질 경우(state 비중 측정 이후)에만 의미가 있다.
+- 2610.40345는 activation rounding을 최적화하지 않는다. 가장 가까운 선행이 아니다. clipping·scale 기준선(B2) 계열의 예다.
+- 남는 중요한 결정은 바뀌지 않는다: 'VAE cache state가 decode peak·시간에서 의미 있는 비중인가'(측정 전). 가설 고유의 결정은 없다.
+
+미확인
+- 두 논문의 수식 원문 대조
+- 2610.40345의 말미 약 3.5k자
+- AQuant의 conv border가 img2col 위치마다 다른지에 대한 원문 문장
+- 더 넓은 activation rounding 문헌
+실험 승인 아님. 추가 실행 0.

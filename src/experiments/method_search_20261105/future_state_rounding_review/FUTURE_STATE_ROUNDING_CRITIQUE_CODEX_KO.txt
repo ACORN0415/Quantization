@@ -1,0 +1,120 @@
+두 신규 temporal state의 공동 반올림 — 독립 수학·선행연구 판정
+Codex /root/method_gap_codex. 등록 시작 1793903516.2731528, 절대 마감 1793904716.2731528(2026-11-05 18:51:56 UTC).
+읽은 범위: root의 미채택 가설/명세, native vae.py, 기존 streaming RESULT.json, 1차 논문 5편의 관련 원문 및 공개 저장소 1개. 상대 Opus의 임시안·판정·부록은 읽지 않았다. root가 양쪽에 제공한 공개 출처와 streaming 완료 사실만 받았다. native helper 재사용을 시도했지만 thread limit 오류로 시작하지 못했고 재시도/대체 생성 없이 직접 수행했다.
+GPU/torch import/모델·원 tensor load/새 효과 실험/코드 수정/커밋 0. 아래 반례는 수식의 유리수 산술 도출이며 모델 실측이나 합성 프로그램 실행 결과가 아니다.
+
+단일 판단: 현재 제안은 새 방법 후보로 채택하지 않는다.
+
+두 상태가 미래 두 preactivation에 주는 식은 제한된 조건에서 맞다. 그러나 그것을 채널별 2×2 블록으로 줄여 네 floor/ceil 조합을 고르는 알고리즘은 기존 quadratic metric의 binary rounding을 2변수 블록으로 특수화한 것이다. 시간 방향의 알려진 재사용 구조를 반영한다는 실용적 차이는 있지만, 현재는 기존 단순 기준선을 이길 미해결 조건이나 비용 요구가 확보되지 않았다. AQuant는 runtime activation rounding과 그 추가 비용을 이미 직접 다루므로 '기존 rounding은 weight 전용'이라는 차별화도 안 된다.
+더 강하게, 이 제안의 proxy가 개선되면서 정확한 두 출력 오차는 0에서 양수로 악화되는 작은 반례가 있다. 따라서 proxy 비증가를 방법 효과로 세거나 proxy 성공을 이유로 전체 영상 검사를 시작하지 않는다. 이전 state operator-scale 초안의 비채택과 별개로 이 공동 반올림 초안도 이 범위에서 비채택한다.
+
+1. 정확한 조건부 식과 정보 시점
+
+A=W_old, B=W_prev를 공간 convolution을 포함한 선형 연산자로 두고, 현재 호출에서 새로 얻은 마지막 두 입력 feature의 복원 오차를 e0,e1이라 하자(복원값−원값). kernel temporal index는 오래된 것부터 A,B,W_cur, temporal kernel=3, stride=1, dilation=1, cache 길이2라고 고정한다.
+다음 호출의 첫 두 입력과 weight/bias를 양 경로에서 동일하게 고정하면 실수 산술의 차이는
+  d0=A e0+B e1,
+  d1=A e1.
+그 뒤 출력에는 이 두 원래 상태가 직접 사용되지 않는다. 따라서
+  L(e)=||A e0+B e1||²+||A e1||² = eᵀ H e,
+  J=[[A,B],[0,A]], H=JᵀJ
+    =[[AᵀA,AᵀB],[BᵀA,BᵀB+AᵀA]].
+이 local squared reconstruction loss의 Hessian은 2H이며, Taylor 근사가 아니라 이 선형 조건부 문제의 정확한 quadratic이다. 전체 네트워크 loss의 Hessian이라고 부르면 안 된다.
+
+원본 두 신규 feature와 이미 고정된 A/B, 다음 호출의 실행 스케줄은 write 시점에 알 수 있다. 미래 입력값은 위 차분에서 소거되므로 해당 metric 자체에는 미래 정보가 필요 없다. 반면 다음 BF16 영상/RGB 손실로 각 write의 코드를 직접 고르면 미래 정보가 들어간다. teacher activation을 섞는 경우에도 보정 입력의 offline 결정인지 실제 read 이후 선택인지 구분해야 한다.
+
+현 호출 출력은 양자화 전에 원 BF16 state로 이미 계산하고, 다음 호출용 저장물만 바꾼다는 개입이 필수다. 원 코드의 cache_x clone 생성은 conv 호출 전이지만, quantization은 현 conv에 들어갈 x/old state를 제자리로 바꾸지 않으며 현 출력 이후 저장 state에만 적용해야 한다. 다른 층/앞선 상태의 오차까지 full BF16와 비교하면 별도 잔여 오차 r가 있어 ||r+Je||²의 선형 교차항도 생긴다. 이 식만으로 전체 RGB 오차를 분해하거나 단조 개선을 보장할 수 없다.
+
+2. 실제 native 경로에서 필요한 경계 조건
+
+- T>=2는 저장 cache의 시간 길이가 아니라 이번 conv에 새로 들어온 x.shape[2]>=2여야 한다. 저해상도 경로도 steady cache는2칸이지만 현재 x는1칸이고 나머지는 직전 state에서 이어 붙인다. 두 raw 신규 값을 가졌다고 볼 수 없다.
+- source의 temporal upsample=[True,True,False]를 적용하면 첫 호출의 Rep 특수 처리 뒤 낮은 해상도 호출들은 T=1, 중간 단계는 T=2, 뒤 단계는 T=4다. source 추적으로 정상 구간의32개 저장 state 중20개가 두 신규 tail을 갖는 범위이며, 첫 호출에는 같은 가정을 적용하지 않는다. 실제 시행 시에는 정적 개수보다 각각의 runtime 입력 T/Rep 상태를 검증해야 한다.
+- 일반 residual/head conv는 spatial3×3/padding1, temporal upsample의 time_conv는3×1×1/padding(1,0,0)이다. 후자는 출력 채널2C를 시간으로 재배열한다. 그 단순 재배열은 L2를 보존하지만 이후 spatial upsample/conv까지 같은 loss는 아니다.
+- encoder downsample의 temporal stride2 kernel이나 다른 dilation/group/길이에는 제시한 두 항을 그대로 적용하지 않는다. 다음 호출이1개 feature만 처리하면 두 번째 영향의 실제 사용 시점과 state carry/재양자화를 다시 모델링해야 한다. 마지막 호출 뒤 cache를 버리는 경우 미래 손실은0이므로 이를 개선 사례로 집계하지 않는다.
+- A/B의 convolution bias는 같은 연산이라 차분에서 소거된다. native BF16 convolution은 반올림이 포함되므로 실제 output subtraction이 실수 식의 Conv(e)와 원소 바이트까지 같다는 보장은 없다. 실제 출력 기준을 확인해야 한다.
+
+3. 2×2 proxy가 남기는 것과 버리는 것
+
+입력 위치 p·채널 c의 같은 시간 쌍만 유지하면
+  L_tilde=sum_(c,p) [a_(c,p)e0²+b_(c,p)e1²+2c_(c,p)e0e1].
+공간 내부에서 위치별 참여 tap이 같을 때 a=||A[:,c,:,:]||²,
+  b=a+||B[:,c,:,:]||², c=<A[:,c,:,:],B[:,c,:,:]>.
+spatial zero padding의 경계에서는 해당 input impulse가 실제 output에 도달하는 tap만 합산해야 한다. 모든 위치에 전체 kernel norm을 쓰는 것은 boundary까지 exact한 대각 블록이 아니다. 1×1 spatial kernel에는 이 문제가 없지만 다른 입력 채널 간 교차항은 여전히 빠진다. 여러 공간 위치의 convolution 출력이 겹치는 항도 일반3×3에서는 생략된다.
+
+d=||B_c||²일 때 c²<=a d이므로 ab−c²>=a²>=0다. a>0이면 이2×2 metric은 positive definite이다. a=0이면 c=0이고 오래된 상태는 이 조건부 loss에 영향을 주지 않는다. PSD라는 사실은 full H에 대한 상계/하계 또는 실제 손실 비증가를 뜻하지 않는다.
+
+고정 유효 grid에서 c=0이면 각 좌표의 nearest rounding이 weighted squared error도 최소이므로 공동 선택의 엄격한 이득이 없다. c!=0도 충분조건은 아니다. 실제 fractional part, scale, clipping과 상대 계수에 따라 RTN이 네 후보의 최선일 수 있다. tie에서는 기존RTN을 보존하도록 미리 정하는 것이 적절하다.
+
+finite/positive scale, clipping, scale 저장 dtype, 실제 decode 곱의 dtype을 고정하고 실제 RTN 코드도 후보에 포함해야 proxy 비증가를 말할 수 있다. 수학적 floor/ceil의 복원값과 BF16 구현의 복원값을 혼용하면 그 성질마저 보장되지 않는다. 저장 payload는 같아도 encoder 계수(a,b,c)·pair 접근·임시 버퍼와 runtime은 공짜가 아니다.
+
+네 floor/ceil 후보의 전수 최적해와 순차 보상 rounding은 같은 알고리즘이 아니다. 한 좌표를 고정하고 다른 좌표의 연속 최적점을 반올림하는 순서에 따라 결과가 달라지며, 전체 정수 grid를 허용하면 원래 floor/ceil 밖 코드도 나올 수 있다. 정확히 같은 후보 집합의2변수 exhaustive 비교와, 양방향 순차 방식의 허용 코드범위를 별도로 기록해야 한다. 이를 구분해도 일반 작은 quadratic block rounding이라는 분류는 변하지 않는다.
+
+4. 실제 손실을 악화시키는 명시적 반례
+
+공간1×1, 입력 채널2, 출력 채널1, stride1이며 A=[1,2], B=[1,0]로 둔다. 두 채널의 (old,new) 원 feature는 각각 (0.4,0.4), (0.6,0.8). 고정 step1의4bit grid에0과1이 있으며 clipping은 없다.
+
+독립 RTN의 오차:
+  채널1=(-0.4,-0.4), 채널2=(+0.4,+0.2).
+전체 두 출력 차이는
+  d0=(-0.4+2×0.4)+(-0.4)=0,
+  d1=-0.4+2×0.2=0.
+즉 정확한 L_RTN=0이다.
+
+채널1의 proxy는 a=1,b=2,c=1. 네 코드 조합의 proxy는
+  (floor,floor):0.8,
+  (ceil,floor):0.2,
+  (floor,ceil):0.4,
+  (ceil,ceil):1.8.
+따라서 공동 반올림은 old만 ceil로 바꾼다. 채널2는 a=b=4,c=0이므로 RTN을 유지하며 proxy0.8이다. 전체 proxy는1.6→1.0으로 내려간다.
+그런데 새 실제 d0=0.6+2×0.4−0.4=1, d1=0이므로 L_candidate=1로 증가한다. 공간 경계나 수치 round-off가 없는 경우에도 채널 간 상쇄를 파괴한다.
+
+일반적으로 E=H−H_tilde와 proxy 감소 G=L_tilde(RTN)−L_tilde(candidate)>0에 대해
+  L(candidate)−L(RTN)
+  <=−G+||E||₂ (||e_candidate||²+||e_RTN||²).
+따라서 G가 오른쪽 누락항의 경계를 넘어야 이 충분조건으로 실제 감소를 보장한다. 현재 실제 E의 크기나 해당 여유는 측정하지 않았다. 이 경계를 계산하지 않고 proxy만 통과시켜도 된다는 논리는 없다. 반례는 실모델의 효과가 없다는 증명이 아니라, 제안한 비증가 보장이 actual Conv loss에는 성립하지 않는다는 증명이다.
+
+5. 가장 가까운 기존 방법 — 목적함수와 구현 범위
+
+A. AdaRound, Up or Down? Adaptive Rounding for Post-Training Quantization, ICML2020.
+https://proceedings.mlr.press/v119/nagel20a/nagel20a.pdf
+§3.1의 fixed-scale floor/ceil binary choice, task-Hessian quadratic, §3의 local reconstruction/soft relaxation을 확인했다. 원 대상은 offline weight이다. 이번 J를 고정하고 변수만 stored activation으로 바꾸면 동일한 quadratic grid-rounding 문제이고, block size2로 네 조합을 전수 평가하는 것은 일반적인 작은 블록 풀이이다. AdaRound가 Wan state에 동일 코드를 이미 구현했다는 주장은 하지 않는다.
+
+B. AQuant, Efficient Adaptive Activation Rounding for Post-Training Quantization, arXiv2208.11945v3.
+https://arxiv.org/html/2208.11945v3
+§3, §4.1–4.3 원문을 읽었다. activation이 runtime마다 달라 offline weight flip과 같지 않음을 명시하고, weight/activation에 의존하는 border와 실제 실행비용을 다룬다. Eq9는 E|| (W+ΔW) round_B(x)−Wx ||²이다. ΔW=0, W=J로 두면 이번 조건부 state reconstruction이 그 일반 문제에 들어간다. Eq6의 element-wise border는 ΔW=0에서0.5이지만, 이것만 보고 AQuant 전체가 activation 상호작용을 못 다룬다고 결론 내리면 안 된다. 실제 §4.2–4.3은 보정 자료에서 channel-shared b1*x+b0와 출력 재구성을 학습한다. 본안은 그 learned univariate border와 달리 현재 두 값에 대한 bivariate·계수 고정·4후보 탐색이다. 차이는 존재하지만 새 목적함수는 아니다. 공개 AQuant 코드는 이번 제한된 검색에서 확인하지 못했으며 미발견을 신규성으로 쓰지 않는다.
+
+C. SQuant, ICLR2022, arXiv2202.07471.
+https://arxiv.org/html/2202.07471
+§2.3–3.4의 Hessian 근사, element/kernel/channel 수준 오차항과 data-free grid flipping을 확인했다. calibration 없이 작은 구조의 계수/오차합을 써서 싼 rounding을 한다는 주장에도 가까운 선행이다. 다만 원 목적변수는 weight이고 본안의 exact temporal H와는 다르다.
+공식 repo는 이번 조사에서 유일하게 읽은 clevercool/SQuant, commit9cc77fc2953629386c0ea985ae54bf6f28bfd3f9다.
+https://github.com/clevercool/SQuant/blob/9cc77fc2953629386c0ea985ae54bf6f28bfd3f9/quant_modules.py#L255
+weight adaptive_round와 input activation의 _forward 경로를 구분한다. quant_affine.py:127의 activation은 .round()이므로 이 코드가 runtime joint activation rounding을 구현했다고 주장하지 않는다. compile/실행은 하지 않았다.
+
+D. Q-Mamba, Findings ACL2025.
+https://aclanthology.org/2025.findings-acl.551/
+https://aclanthology.org/2025.findings-acl.551.pdf
+직전 독립 조사에서 읽은 공식 PDF의 DSQ/ESR 원문 범위와 이번 공식 메타데이터 확인을 사용했다. persistent hidden state quantization과 재구성/보정을 이미 다룬다. finite causal convolution input-tail의 두 시점 metric과 같은 알고리즘은 아니며, 이를 직접 중복 증거로 과장하지 않는다. '저장 상태'라는 대상 자체의 신규성은 없다.
+
+E. LightVAE, arXiv2610.14726v1.
+https://arxiv.org/html/2610.14726v1#S4.SS2
+§4의 projected-history caching을 재확인했고 직전 원문 검토 범위를 이어 사용했다. 시간 kernel을 저랭크화하고 투영 이력을 저장하며 복원 학습을 한다. 고정 원weight와4bitgrid를 유지하는 본안과 제약이 다르지만, 미래 temporal 연산에 맞춘 저장 표현을 만든다는 넓은 발상은 이미 가깝다. 이 조사에서는 두 번째 repo를 추가로 열지 않았다.
+
+비교 결론: fixed-weight/no calibration/두 신규 state/동일 payload라는 제약을 명시하면 구현 선택은 구별된다. 그러나 그 제약 아래의4조합 열거는 일반2×2 metric rounding의 직접 특수화다. 알려진 구조를 작은 비용으로 이용한다는 engineering 후보는 될 수 있어도, 아직 관측된 실패·알고리즘상의 비자명한 이득·실행 요구가 없어 새 연구로 채택할 근거는 없다. 기존 논문에 Wan 실험이 없다는 사실은 이 판단을 뒤집지 않는다.
+
+6. 가장 강한 단순 대조와 판별 순서
+
+현재 배포 선택은 exact-output BF16 streaming이다. 새 RESULT.json을 읽어 두 팔의 first30개/920,325,120B, steady64·last125에서32개/1,888,573,440B 실제 state 관측을 확인했다. allocated peak는 native5,727,909,376B에서 stream4,527,433,216B로 내려갔다. 이는 실측이며 이제 state 수치는 정적 추정만은 아니다. 하지만 전체 peak의 동시 구성, state가 차지하는 시간, 실제 더 작은 배포 상한 위반은 여전히 미식별이다. 새 양자화의 필요성을 입증하지 않는다.
+
+손실 state 저장이 실제로 필요하다는 별도 조건이 생긴다면 최소 강한 대조는 다음이다.
+- 같은 유효 scale·clipping·dtype·pack bytes의 plain RTN. proxy 개선과 실제 Conv 개선을 각각 보고한다.
+- 보정 입력만으로 scale/clipping을 고른 RTN. 실행 예산과 후보 수를 동일하게 보고하고 보류 입력에서 재선택하지 않는다.
+- 작은 고정 state 문제에서는 전체 J 기반 정확한 reconstruction을 직접 평가하는 generic block rounding/coordinate-flip. 순차 보상 기준선은 old→new와 new→old 두 순서를 모두 포함하고, 원 floor/ceil 제한인지 전체 유효 정수 grid인지 구분한다. 이것은 큰 런타임 배포법이 아니라 proxy가 놓친 항과 값싼 특수화의 비용을 평가할 강한 국소 대조다. AQuant를 비교할 때는 original activation border 학습·보정 비용을 포함하고 weight-only로 축소하지 않는다.
+
+이제 곧바로 full video를 만들 필요는 없다. 만약 독립적인 배포 요구가 생겨 engineering 진단을 별도 승인한다면 최초 검사는 '실제 원weight 및 보류된 신규 pair에서 코드 선택이 바뀌고, 실제 두 미래 preactivation SSE가 같은바이트 RTN보다 낮은가' 하나다. 미래 입력은 평가에만 사용하고 write 선택에는 사용하지 않는다. 원state에서 실제native conv를 돌린 no-intervention 동일성, 입력 T/stride/dilation/padding/Rep/bias, frozen scale 및 실제 packet 왕복이 먼저 유효해야 한다. proxy만 개선/동점, actual loss 악화, scale-tuned RTN이 충분하면 종료한다. 오류·자원초과·계측누락은 무효로 분리한다. 이때에도 국소 개선은 RGB 이득이나 신규성의 증거가 아니다.
+
+현재는 그런 배포 요구와 가장 싼 RTN 실패 관측이 없고, 수학적 차별성도 약하므로 이 진단에 새 GPU나 VAE를 배정하지 않는 것이 최종 권고다. 새 rank/seed/보정 항을 붙여 이 후보를 연장하지 않는다. 진행 중이던 BF16 streaming 결과 정리는 기존 업무로 마무리하고, 본 두-state rounding 제안은 비채택으로 보존한다.
+
+근거 무결성과 범위
+streaming RESULT.json SHA256: 5c613d3d856387db6aab866861e3f3d2ead009813275ab94c302d7f53e7148d7.
+SQuant quant_modules.py SHA256: b13a8800f7e8463eb9bba07904ca7be081e5adec028ad01c464e2bf7c359c0c6.
+SQuant quant_affine.py SHA256: 9abb3b1948d54bc4920313764315ab81903411b4a67ff916a43214968f078708.
+이번 보고서는 효과 측정/전체 문헌 무중복 인증/실제 Opus 검토를 대신하지 않는다. source와 논문에 기초한 수학적·자원 배분 판정이다.

@@ -1,0 +1,113 @@
+future-state rounding 미채택 가설 독립 비판 (Opus2, root msg_7990c6eff7ec)
+시작 UTC: 2026-11-05T18:33:34Z. 업무 시작 epoch은 1793903516.27(18:31:56Z), 절대마감은 18:51:56Z다.
+모델: claude-opus-5-5, 기존 채팅 session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5. Task/Dispatch: 미연결(자동연결 실패).
+대상: FUTURE_STATE_ROUNDING_CRITIQUE_SPEC_ROOT.json, ROOT_UNADOPTED_FUTURE_STATE_ROUNDING_KO.txt.
+독립성: method_gap의 동시 보고서와 임시안을 읽지 않았다. 이전 operator-scale과 generic 결론은 재사용하지 않고 분리했다.
+수행: 정적 수학과 소스 판독, 문서 1개 작성만. 실행, 로드, 다운로드, 수정은 0이다. 실험 승인이 아니다.
+
+1. native source로 정확한 미래 tap 사용식 확인 (local src/wan/modules/vae.py, upstream과 동일 sha a4c1d936)
+- 저장 시점
+  - ResidualBlock.forward(202-220)와 Resample upsample3d(103-137)는 현재 conv 입력 x의 마지막 CACHE_T=2 frame을 clone해 cache_x로 둔다.
+  - 그다음 '이전' cache로 현재 conv를 계산하고, 마지막에 feat_cache[idx]=cache_x로 교체한다.
+  - 따라서 새로 저장한 state는 현재 호출에는 쓰이지 않고 다음 호출에서만 쓰인다. 현재 출력은 원본(BF16) 값으로 이미 계산된다. 가설의 전제는 소스와 맞다.
+- 다음 호출: CausalConv3d.forward(28-36)는 x=cat([s_old, s_new, cur...])이고, 앞 padding이 2−2=0인 kernel_t=3 conv다.
+  - 출력 frame 0 = W0·s_old + W1·s_new + W2·cur0
+  - 출력 frame 1 = W0·s_new + W1·cur0 + W2·cur1
+  - 따라서 저장 오차의 국소 선형 영향은 δy0 = W0 e_old + W1 e_new, δy1 = W0 e_new다.
+  - root가 쓴 식(index 0이 가장 오래된 W_old, 1이 W_prev)과 일치한다.
+  - stride 1. 시간 kernel 3인 경우는 residual conv (3,3,3)와 time_conv (3,1,1)이고, kernel 1인 shortcut·conv1·conv2는 cache를 쓰지 않는다.
+- 호출 형태에 따른 정정·보완(소스 관찰)
+  (a) 다음 호출 입력이 1 frame이면(T=1 경로) 그 호출의 출력은 δy0 하나뿐이다.
+      그런데 그 호출이 새 cache를 만들 때 cat([feat_cache[-1], cur])로 '이전 cache의 마지막 frame' s_new를 다시 carry한다(110-118, 207-213행).
+      그래서 e_new는 그다음 호출에서 W0 e_new로 한 번 더 쓰인다. 미래 사용 항의 집합은 같지만 두 호출에 나뉜다.
+      또 carry되는 값은 이미 양자화된 저장값이다. 재저장 시 다시 양자화하면 이중 양자화가 될 수 있다(정책 미정).
+  (b) 첫 호출의 upsample3d는 'Rep' 표지를 쓰고 cache 없이 time_conv를 한다(105-108, 127-128). 다음 호출의 앞 frame은 zeros와 cat된다(119-125). 경계 호출은 식이 다르다.
+  (c) T≥2 조건은 decoder 중·고해상도 단계에서 성립한다. time 2배 upsample 이후 호출당 2 frame, 그다음 4 frame이다. 즉 state 바이트가 큰 층에 해당한다.
+      저해상도 첫 단계(T=1)에는 root 말대로 joint-write 가정을 적용하지 않는다.
+  (d) downsample3d 경로는 encoder용이며 decode와 무관하다.
+- 국소 손실 L = ||δy0||² + ||δy1||² (출력 채널과 공간 합).
+  - 입력 채널 c 단위로 공간·채널 교차항을 버린 대각 proxy는 다음과 같다.
+    a_c = ||W0[:,c]||², b_c = ||W0[:,c]||² + ||W1[:,c]||², c_c = <W0[:,c], W1[:,c]>
+    (W의 kh·kw까지 펼친 내적)
+  - root 식과 일치한다.
+  - 정확한 국소 Hessian은 (C_in·k_h·k_w·2)×(C_in·k_h·k_w·2) 크기의 조밀 행렬이다. 입력 채널 사이 항 <W_t[:,c], W_t'[:,c']>와 3×3 공간 이웃 항이 있다.
+  - time_conv (3,1,1)은 공간 교차항이 없지만 채널 교차항은 남는다.
+- 이 손실은 다음 conv의 preactivation까지만이다. 이후 RMS norm, SiLU, 다음 층, RGB, 그리고 다른 층 state 오차와의 상호작용은 포함하지 않는다(root도 인정).
+
+2. 일반 기법의 특수화 여부 (부모 분석과 helper의 1차 문헌, 아래 통합)
+- floor/ceil 4조합 중 2차 proxy를 최소화하는 선택
+  = 고정 Hessian H=W^T W(하류 weight에서 온 것) 아래에서 activation 오차 벡터의 2차 형식을 최소화하는 rounding.
+  - 이는 AdaRound(가중치의 up/down을 2차 근사로 선택)와 OBQ/GPTQ(2차 오차 최소화 + 순차 보상)를 대상만 'cache state activation'으로, Hessian만 '하류 conv weight Gram'으로 바꾼 구조다.
+  - 2×2 블록 대각화는 그 단순한 근사다.
+- '독립 RTN보다 proxy가 증가하지 않는다'는 RTN이 후보에 포함되어 생기는 자명한 성질이다. 발견이 아니다(root 동의).
+- 이 프로젝트의 기존 FULL/OBQ K-cache rounding(query Hessian H=QᵀQ, 순차 보상)과도 같은 계열이다.
+  - 그 경우 국소 SSE 이득이 전체 영상 품질로 이어지지 않아 pilot이 stop_quality였다(full_obq_rollout_pilot). 이것이 강한 사전 경고다.
+- 남는 차이 후보: (i) Hessian이 데이터가 아니라 고정 weight에서 와서 causal 시점에 사용 가능하다. (ii) state write 경계와 미래 tap 구조.
+  - (i)은 'output-aware activation rounding with weight Gram'의 일반 형태에 포함된다.
+  - (ii)는 Conv3D의 시간 kernel 구조를 Hessian 블록으로 쓴 것일 뿐이다.
+  - 둘 다 새 미해결 결정이라기보다 적용 위치의 차이다(판정은 아래).
+
+3. 강한 기준선 (같은 bit 수, 같은 scale metadata, 같은 실제 state 바이트)
+B1. 같은 shared grid의 독립 RTN.
+B2. scale·clipping을 MSE-optimal로 고른 RTN. 채널별 scale을 쓰면 그 metadata 바이트도 동일하게 센다.
+B3. 대각 Hessian 가중 RTN 대신 '전체 2×2 블록이 아닌 순차 GPTQ식 보상'.
+    - e_old를 먼저 양자화하고, 그 오차를 e_new의 연속값에 −(c_c/b_c)·e_old로 보상한 뒤 양자화한다.
+    - 4조합 탐색과 계산량이 비슷하다. 가장 직접적인 일반 기법 기준선이다.
+B4. state 바이트를 줄이지 않는 BF16 state. 이는 품질 상한이며, 메모리 이득의 기준이기도 하다.
+- 가장 결정적인 단순 기준선은 B2와 B3다. 가설은 B3의 2변수 특수화와 거의 같다. B3 대비 이득이 없으면 기각한다.
+
+4. proxy만으로 할 수 없는 주장과 필요한 검사 범위
+- proxy만으로 불가능한 주장:
+  - 실제 다음 conv 출력 오차의 감소(교차항을 생략했으므로)
+  - 비선형 이후 오차, RGB 오차, 품질
+  - 메모리·시간 이득
+- 필요한 최소 검사(제안이며 실행 승인 아님): 고정 latent 1개의 decoder replay에서 T≥2 층의 저장 state를 대상으로 한다. 같은 bit와 metadata에서 B1/B2/B3/가설을 비교한다.
+  (a) 실제 다음 호출 conv preactivation 오차 ||δy||²: 정확한 conv로 계산하고 proxy와 비교한다.
+  (b) 최종 RGB 오차
+  - 가설이 B3 대비 (a)와 (b) 모두에서 사전 고정한 차이 이상으로 낫지 않으면 종료한다.
+  - 앞서 정한 우선순위도 따른다. state 바이트가 peak의 유의미한 부분인지 먼저 확인하는 프로파일이 선행이다. 그렇지 않으면 이 검사 자체가 불필요하다.
+
+5. 판정: 채택 가능성 없음(현재 근거). 일반 기법(AdaRound/OBQ/GPTQ식 2차 rounding)의 특수화다.
+- 수학은 소스와 맞게 정정·확인했다.
+  - 미래 tap 식은 맞다.
+  - 보완할 점: T=1 carry 경로, 첫 호출 'Rep'과 zero 경계, carry된 양자화값의 재양자화 문제, 조밀 Hessian 대비 대각 proxy의 생략.
+- 남는 중요한 미결 결정 1개: 'VAE cache state의 바이트가 실제 decode peak와 시간에서 의미가 있는가'.
+  - 이는 이전 비판의 프로파일 결정과 같다. 이 가설 고유의 새 결정은 없다.
+  - state 비중이 크다는 측정이 나오기 전에는 rounding 정책을 비교할 이유가 없다.
+- causal 정보 경계: 고정 weight Gram만 쓰므로 미래 activation이나 평가 입력 정보를 사용하지 않는다(합법).
+  - 반면 데이터 의존 scale(B2)은 현재 frame 통계만 쓰면 causal하다.
+
+6. 1차 문헌 대조 (helper가 WebFetch로 arXiv abs/html 열람. 요약 모델을 거친 인용이므로 수식 기호는 PDF 재대조가 필요하다. 3편/최대 6편, repo 0)
+- AdaRound https://arxiv.org/abs/2004.10568
+  - Sec.3.1 Eq.9·12-13: weight마다 floor 또는 ceil을 고르는 이진 선택이다. 목적은 E[ΔwᵀHΔw]이고 원문은 QUBO라 부른다.
+  - Sec.3.2: H ≈ E[xxᵀ⊗diag]로 근사해 행별 preactivation MSE ||ΔW x||²로 축소한다. Eq.21-24는 rectified sigmoid로 이를 완화한 최적화다.
+  - 대상은 weight만이다. activation은 min/max scale을 쓸 뿐 rounding을 최적화하지 않는다.
+- GPTQ https://arxiv.org/abs/2210.17323
+  - Eq.1: argmin ||WX−ŴX||², H=2XXᵀ.
+  - Eq.2·Alg.1: OBQ식 순차 보상이다. 열을 양자화하고 오차를 H⁻¹ 행으로 남은 열에 보정한다.
+  - activation 양자화는 포함하지 않는다고 명시한다.
+- OBC/OBQ https://arxiv.org/abs/2208.11580 (본문 대부분 열람, 마지막 약 8k자 미열람)
+  - ||WX−ŴX||², H=2XXᵀ, 행 독립. Eq.7은 one-at-a-time 선택과 보정이다.
+  - activation은 부록 A.4에서 scale과 zero point만 다룬다.
+- 확인된 차이: 세 편 모두 weight를 대상으로 입력 Gram XXᵀ를 쓴다.
+  - 가설은 activation(state)을 대상으로 하류 weight Gram WᵀW를 쓴다. 이 정확한 변형은 확인한 범위에 없다.
+  - 그러나 수학적으로 ||W Δx||² = Δxᵀ(WᵀW)Δx는 ||ΔW x||²와 같은 이차형식의 역할을 바꾼 것(전치)이다.
+    - floor/ceil 이진 선택(AdaRound)과 순차 보상(GPTQ/OBQ)의 해법이 그대로 적용된다.
+  - 3편에 없다는 사실은 신규성의 근거가 아니다. 더 넓은 activation rounding 문헌은 탐색하지 않았다.
+- helper: native general-purpose 1개(depth 1, 웹 열람만). model 인자를 생략했다(도구 설명상 부모 상속).
+  - helper가 자기 보고한 ID는 "claude-opus-5-5"다. 별도 provider ID는 관측하지 못했다.
+  - 분담: helper는 1차 문헌 3편, 부모는 소스 식, 호출 형태, Hessian 구조, 기준선, 판정, 통합.
+
+최종 판정
+- 채택 가능성 없음(현재 근거). 일반 2차 rounding(AdaRound/OBQ/GPTQ)의 역할을 바꾼(activation, WᵀW) 특수화이고 2×2 블록 대각 근사다. 새 미해결 선택을 남기지 않는다.
+- 남는 중요한 결정 1개: VAE cache state가 실제 decode peak와 시간에서 의미 있는 비중인가(측정 전). 이 가설 고유의 결정은 없음.
+- 실험 승인 아님. 추가 실행 0.
+
+미확인
+- 정확 국소 Hessian의 교차항 크기
+- T=1 carry와 재양자화 정책
+- 더 넓은 activation-rounding 선행
+- OBC 마지막 부분
+- 실제 state 바이트 비중
+- PDF 수식 원문 대조
+종료 UTC: 2026-11-05T18:35:42Z
