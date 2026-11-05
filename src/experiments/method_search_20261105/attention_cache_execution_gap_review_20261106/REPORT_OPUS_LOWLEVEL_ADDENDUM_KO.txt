@@ -1,0 +1,31 @@
+attention-cache 실행 공백 — 저수준 entry 확인 부록 (실제 Opus1, 원 REPORT_OPUS b269b0f6 불변)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음.
+후속 수신·시작 2026-11-05T22:10:20Z, 원 마감 22:24:02Z 유지. helper 0(부모 직접 4회 요청). GPU·load·설치·컴파일 0. root Codex 파일 미열람.
+계수(이번 추가): 요청 4회 모두 성공 — metadata 2(GitHub API commits/main, csrc/qattn 디렉터리 목록), source 2(csrc/qattn/attn_cuda_sm89.h,
+ csrc/qattn/sm89_qk_int8_sv_f8_accum_f32_fuse_v_scale_attn.cu; 둘 다 WebFetch 요약 경유, 행 번호 없음). 누계 source 7/10(이전 5+2), metadata 2 별도, repo 1/2, 논문 0/5.
+commit 고정: thu-ml/SageAttention main = d1a57a546c3d395b1ffcbeecc66d81db76f3b4b5(2026-01-17). 이번 2개 source는 이 commit 경로로 읽음. 초기 helper의 core.py·quant.py는
+ main(당시 commit 미확인)이었다.
+
+저수준 entry 계약(직접 읽은 요약 기준)
+ - attn_cuda_sm89.h: qk_int8_sv_f8_accum_{f32,f16}_[fuse_v_scale_][fuse_v_mean_]attn[_inst_buf](query,key,value,output,query_scale,key_scale,[value_scale],[value_mean],
+   tensor_layout,is_causal,qk_quant_gran,sm_scale,return_lse) 선언.
+ - fuse_v_scale_attn host wrapper: query·key int8, scales float32 3D, 모든 텐서 CUDA. value dtype은 검사하지 않음(FP8 확인 주석 처리, int8_t*로 재해석).
+   value 레이아웃은 시퀀스 축이 마지막([b,h_kv,head_dim,L], layout 1)이며 L ≥ ceil(kv_len/64)*64. key_scale은 per-warp [b,h_kv,ceil(kv_len/64)] 또는 per-thread ×4,
+   query_scale per-warp [b,h_qo,ceil(qo_len/128)*4]. value_scale [b,h_kv,head_dim] — 채널당 시퀀스 전체 하나. qk_quant_gran은 per-warp/per-thread만. GQA 허용, causal 선택, lse 반환 가능.
+   host에 SM 아키텍처 검사 없음, 일부 크기 검사는 assert라 NDEBUG 빌드에서 빠질 수 있음. head_dim 허용값은 매크로(미열람).
+ - Python 노출: 초기 helper가 core.py에서 sm89_compile 모듈의 이 함수 호출을 확인. pybind_sm89.cpp 본문은 읽지 않았다 — 노출 경로는 core.py 사용 근거로 추론.
+
+판정 변경
+ 1) 초기 보고의 "사전 양자화 입력을 받는 공개 API 없음"은 "문서화된 high-level API에는 없음"으로 한정한다. 저수준 바인딩 entry는 int8 Q/K, FP8 V(전치·64 패딩), 외부 scale을 그대로 받는다.
+ 2) 갱신된 가장 강한 단순 기준선(새 커널 없음, 얇은 wrapper/metadata):
+    - K: 과거 토큰을 전역 위치 기준 64토큰 블록 int8 + per-warp scale로 영속 저장, smooth용 평균은 고정 벡터 사용(모든 key 공통 이동이라 softmax 불변). 청크 4680은 64 배수가 아니므로
+      청크 경계 블록 1개만 양쪽 청크가 확정된 뒤 다시 양자화(작은 비용, 정량 미측정). 현재 청크 Q/K는 매 호출 양자화.
+    - V: FP8 + 채널당 전역 고정 scale(사전 보정 값)을 쓰면 시퀀스 길이와 무관하게 재양자화 없이 영속 저장 가능 — 단 클리핑 위험·품질 영향 미측정. full horizon 용량으로 미리 할당한
+      전치·패딩 버퍼에 append.
+ 3) 실제로 커널 변경이 필요한 부분: 청크별 독립 V scale(per-block V scale)을 유지하려는 경우뿐. 그 경우만 진짜 실행 공백이며, 그것도 커널 인터페이스 공학이지 양자화 방법 신규성은 약하다.
+ → 후보 1은 더 약해졌다. 먼저 (a) 공개 sageattn 교체, (b) 위 저수준 wrapper 기준선을 거친 뒤에도 남는 비용·품질 문제가 관측될 때만 의미가 있다. 채택 없음 유지.
+ 4) 후보 2 문구 정정: 초기 보고의 "decode+layout 0.578s·concat 0.80s로 상한이 작다"는 철회한다. ROOT_SPEC대로 이 값은 중첩 계측 구간이며 Amdahl 절약 상한이 아니다.
+    기각 근거는 B→R 재사용이 전체 생성 시간에서 이득을 보이지 않았다는 별도 관측과, 융합이 QVG codec 공학이라는 점으로 한정한다. 융합 이득은 미측정이다.
+미확인: pybind_sm89.cpp·core.py의 d1a57a5 시점 본문, CUDA 커널의 V 치환 순서·head_dim 매크로, 고정 V scale의 품질 영향, 청크 경계 재양자화 비용, sageattn 설치 가능성.
+최종 판별(권한 아님): 같은 형상에서 FA2 vs 공개 sageattn vs 저수준 wrapper(고정 V scale)의 attention 시간·출력 차를 서술로 비교 — 실행 승인 아님.
+실제 끝: 2026-11-05T22:11:34Z

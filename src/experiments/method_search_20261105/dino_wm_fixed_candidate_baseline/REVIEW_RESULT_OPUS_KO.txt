@@ -1,0 +1,53 @@
+DINO-WM 고정 후보 기준선 단 1회 실행 결과 — 기록 검토 (Opus2, root msg_a06eb1b6d35c 업무 2)
+수신과 시작: 2026-11-05T21:59:11Z. 상한은 수신 + 300초 = 22:04:11Z이며 공유 outer는 22:14:06Z다. 끝 시각은 파일 말미에 적는다.
+모델: claude-opus-5-5, 기존 채팅 session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5. Task/Dispatch: 미연결(자동연결 실패). helper는 쓰지 않았다.
+- root가 Codex 측을 직접 작성했다. 독립 native 검토가 아니다.
+- NEXT_RESOURCE_CODEX, root 선호안, 상대 Opus 결론은 열지 않았다.
+- 원 source 4046ce10은 Opus1의 검토 대상이다. 내 소스 검토로 소급하지 않는다(source는 읽지 않음).
+- 이번 검토의 추가 실행은 0이다(GPU, 모델, pt·pickle·tensor 로드, 재생산, 코드 실행, network).
+- root의 과거 실제 실행 1회와 구분한다.
+
+hash (직접 sha256, 지정값과 일치)
+- ROOT_EXECUTION_FINAL e79ae47d…, RESULT 92aa26fd…, ROOT_POSTRUN_AUDIT a875928f…, REPORT_RESULT_CODEX e026469f…
+- 기록상 code 4046ce10…와 manifest 06ec7bb6…이 ROOT_FINAL과 RESULT에서 일치한다. AUDIT의 source·result sha도 일치한다. commit 009f0fc(git은 조회하지 않음).
+읽은 범위
+- ROOT_FINAL 전체
+- RESULT 최상위와 reuse_equivalence, numerical(4개 팔 점수, argmin, calls), objective_choice, predictor_parameter_bytes, error, failed_phase
+- AUDIT 최상위, numerical_summary, scope
+- REPORT_RESULT 앞부분 약 2.5KB
+- 미확인: REPORT 나머지, AUDIT의 97 check 개별, input_adaptation 세부, 2개 CPU artifact(직접 로드하지 않음)
+
+실행과 중단 (기록)
+- root 3.5204초 / 900초, exit 1, 단일 소유 프로세스, 잔류 없음, 전후 GPU idle, site-packages guard와 source·manifest 불변.
+- 표본 RSS 1,939,116,032B, worker 1,927,544,832B.
+- 로드: checkpoint, DINO, dataset tensor, seq_length pickle.
+- failed_phase same_candidate_numerics.
+  - FP32 관측 재사용의 최종 latent가 direct FP32와 torch.allclose(atol=rtol=1e-5)에서 False였다. 최대 절대 차이는 1.0395050e-4이고 torch_equal도 False였다.
+  - 사전 gate대로 timing 전에 중단했다('do not relax gate or continue timing').
+  - gate의 범위는 16개 후보의 최종 latent 좌표 전부이며 중간 tensor는 포함하지 않는다.
+- 판정: 사전 등록 gate가 정상 작동한 '등록 조건 실패(stop_equivalence)'다.
+  - 같은 권한 아래에서 허용오차를 바꾸거나 재시도해 구제할 수 없다. 이 기록은 추가 GPU 실행의 근거가 아니다.
+  - max_abs 하나로는 상대오차를 포함한 allclose 판정을 재구성할 수 없다. 판정은 worker 기록을 따른다(REPORT와 동의).
+  - 원인 가설(direct encoder batch 4 대 reuse batch 1의 연산 형상 차이)은 중간 feature가 없어 확정되지 않는다. REPORT의 표현과 같다.
+
+저장 순위 (gate 이전에 계산된 스칼라, 범위 한정)
+- 4개 팔(direct_fp32, reuse_fp32, reuse_bf16, reuse_fp16) 모두 16개 후보에서 argmin은 후보 1이고 전체 순위가 같다(AUDIT complete_order_equals_direct true).
+- FP32 기준 1위와 2위의 차이는 0.4367668이다.
+- direct 대비 점수 최대 차이: reuse_fp32 8.94e-7, bf16 6.65e-3, fp16 7.28e-4.
+- 호출 수: direct는 encoder 4, predictor 20. reuse는 encoder 1, predictor 20. decoder 0.
+- 한계
+  - 실행 자체가 gate에서 실패했다.
+  - 입력은 기록된 개발 영상 1개이고 후보는 거친 고정 16개다.
+  - 실제 dtype 최종 확인 필드, 최종 GPU peak, FINAL_LATENTS는 gate 뒤에 있어 존재하지 않는다.
+    - BF16·FP16 팔이 실제로 BF16·FP16으로 계산됐는지는 기록으로 확인할 수 없다. predictor parameter bytes가 절반(40,245,200B)이라는 정황만 있다.
+  - 따라서 BF16·FP16의 효과, 성능, 메모리, Pareto, 선택 안전성, 제어 성공을 단정할 수 없다.
+  - '선택 오류를 관측하지 못함'은 이 한 입력과 거친 후보에 한정된다.
+- AUDIT 97은 hash, 입력 변환, seed 후보, 저장 스칼라 순위의 대조다. FINAL_LATENTS가 없어 점수를 독립적으로 재생산하지 못했다(AUDIT 원문).
+  - 초기 inline 감사 스크립트의 구문 오류(실행 0) 기록도 보존돼 있다.
+
+결론
+- source 준비는 성공했지만, 실제 실행은 사전 동등성 gate에서 실패했다.
+- timing과 정밀도 비용 비교는 미측정이다.
+- 새 방법의 필요성이나 효과의 증거는 없다. 연구 전체는 미완료다.
+- 이 검토는 실험 권한을 부여하지 않으며, 다음 자원 제안은 하지 않는다.
+종료 UTC: 2026-11-05T21:59:50Z

@@ -1,0 +1,24 @@
+DINO-WM fixed-candidate 실패 이후 다음 자원 — 독립 판단 (실제 Opus1, root msg_a06eb1b6d35c 업무1)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음.
+실제 수신·시작 2026-11-05T21:59:13Z, 상한 min(수신+300s=22:04:13Z, outer 22:14:06Z). 독립성: NEXT_RESOURCE_CODEX.json, REPORT_RESULT_CODEX_KO.txt, 상대 Opus 새 결론 미열람.
+읽은 것: RESULT.json 최상위·reuse_equivalence·numerical 요약(SHA 92aa26fd… 일치), ROOT_EXECUTION_FINAL SHA(e79ae47d…) 확인, 이전 내 source 검토. 추가 실행·외부 요청 0, helper 0.
+
+관측(저장 기록): source 준비 수용과 별개로 실제 run은 사전 규칙대로 stop_equivalence — FP32 reuse가 direct FP32와 allclose(1e-5) 실패, max_abs 1.0395e-4, timing 이전 중단, wall 3.06s.
+ gate 이전에 기록된 16후보 점수에서 네 팔 모두 argmin=후보1(기록 행동), 앞 6개 점수가 소수 넷째 자리 안팎에서 같다. 그러나 이 run은 무효이므로 이 점수 일치를 동등성 근거나 BF16/FP16 안전·
+ 새 방법 가치의 근거로 쓰지 않는다. timing은 측정되지 않았다. 원인(direct는 encoder batch 4, reuse는 batch 1 → 다른 GEMM 경로)은 가설이다.
+ 나의 이전 미채택 20쌍 CEM 제안은 이 결과로 검증되지 않았다.
+
+남은 중요 결정 1개: "DINO-WM 저정밀 계획에 연구 자원을 계속 쓸 실측 동기가 있는가?"
+ 지금까지 실측된 문제는 없다 — FP32 연결은 됨, 배포 메모리·지연 요구 없음, fake-quant는 비용 이득이 아님, 가까운 선행(encoder 고정밀+predictor 저정밀, FP16 PushT, OnPTQ/QuantWAMs/PreDE/
+ ARC-Bench)이 문제 공간을 덮는다. 이번 실패는 측정 계약의 실패이지 저정밀 문제의 발견이 아니다.
+권고: DINO-WM 저정밀 방법 탐색은 보류하고, 새 공백 탐색으로 자원을 옮긴다 — 단 root가 구체 배포 제약(메모리·지연 목표)을 제시하면 그때 재개.
+ 이유: 같은 질문을 다시 등록해 통과시켜도 얻는 것은 "보통 부동소수 저정밀의 단일 사례 점수 차·timing"이고, 그 자체로 새 방법 필요성을 만들지 못한다.
+
+재개할 경우 가장 싼 확인 1개(설계 제안, 현재 GPU 권한 없음):
+ - 같은 입력·16후보로 재등록하되 reuse 팔은 direct와 같은 encoder batch 형상(BATCH개 관측을 한 번 encode 후 microbatch 간 재사용)으로 정의하고, 1e-5 동등성 gate는 그대로 둔다
+   (완화·이번 run 구제 아님). 또는 reuse 팔을 빼고 direct FP32 / direct BF16 predictor / direct FP16 predictor 3팔만 둔다.
+ - 결정 시점 정보: 이번 실패 기록, 동결 smoke 경로. 준비 비용: 팔 정의 몇 줄 변경 + 새 검토. 상한: 이번과 같은 900s·1 GPU.
+ - 성공(유효): gate 통과 후 팔별 점수·순위·교차 timing 보고 — 이것은 서술이며 task-quality gate가 아니다.
+ - 실패/무효: gate 재실패면 reuse 팔 제외 결정을 결과 전에 고정, 호출수·dtype 계약 위반, 상한 초과. 결과를 보고 허용오차를 바꾸지 않는다.
+ - 이 확인이 말하지 못하는 것: 제어 성공, 저비트 영향, 실제 저비트 비용, 일반화.
+실제 끝: 2026-11-05T21:59:50Z

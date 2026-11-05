@@ -1,0 +1,34 @@
+{
+  "status": "root_authorized_baseline_code_feasibility_only_not_GPU_or_method_adoption",
+  "created_epoch": 1793916954.2434118,
+  "deadline_epoch": 1793918154.2434118,
+  "target": "Choose an existing native low-precision dense attention baseline that can be run without modifying the installed Torch/CUDA environment on RTX4090.",
+  "known_environment": "Torch2.6.0+cu124/Triton3.2.0/nvcc12.4/no Sage package. FA2 exists from past experiments; exact active package path/version to inspect before proposing run.",
+  "motivation": "Self-attention is measured large in one stored video profile; actual end-to-end gain of existing native low-precision backend and its preparation fraction are not measured. Do not invent a deployment latency requirement.",
+  "allow": [
+    "Read existing/pinned public source, at most1repo and6 additional source files",
+    "Prepare isolated source-only import adapter or exact minimal supported build recipe with no install/compile execution",
+    "Pure scalar or small synthetic CPU validation without model/data tensor loads"
+  ],
+  "forbid": [
+    "GPU/JIT-CUDA execution",
+    "pip/package install or global toolchain update",
+    "model/tensor pickle load or model acquisition",
+    "new algorithm claim",
+    "claim Sage1 and Sage2++ are interchangeable strong baselines"
+  ],
+  "candidate_runtime_grid_if_feasible": "Prospective synthetic B1/H12/D128,Q4680,K4680/18720/32760/56160 rectangular noncausal shapes; no video quality/control claim. Whole API/prepared-input same-format identity and FA2 descriptive cost only. Runtime bounds and gates require separate reviewed spec.",
+  "priority": "Prefer official pure-Triton existing attention path if it avoids a CUDA rebuild; if that is an older/weaker baseline say so and do not use it to establish SOTA novelty. If viable native Sage2 can compile under current12.4, a build recipe may be returned but do not execute build.",
+  "limits": {
+    "seconds": 1200,
+    "CPU": 2,
+    "GPU": 0,
+    "model_loads": 0,
+    "installs": 0,
+    "compiler_runs": 0,
+    "source_files": 6,
+    "repos": 1
+  },
+  "writer": "Root Codex direct; native quota limit not retried; actual retained Opus independently reviews feasibility/limits before any execution.",
+  "root_GPU_execution_authorized": false
+}

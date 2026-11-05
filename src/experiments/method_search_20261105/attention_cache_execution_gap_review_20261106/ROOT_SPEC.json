@@ -1,0 +1,33 @@
+{
+  "status": "authorized_bounded_source_gap_search_not_experiment",
+  "created_epoch": 1793916242.1044314,
+  "deadline_epoch": 1793917442.1044314,
+  "scope": "At most2 candidate gaps in the execution of persistent quantized KV with dense video attention on RTX4090. Generic sparse selectors, repeated decode retention, fixed GaussianPRF and DINO-WM selectors stay closed/suspended.",
+  "observed_sources": [
+    "kv_reuse_stage1/profile_B.json: self_attention11.24s of24.6s, concat0.80s, decode+layout0.578s. Instrumented overlapping intervals; not an Amdahl speed bound.",
+    "Current Self-Forcing shape query4680,head128,chunked repeated denoising; exact current contracts must be verified from stored sources.",
+    "Prior sparse direct-selection did not beat FA2 in4 shapes; no generic sparse-policy restart."
+  ],
+  "question": "Do public hardware-executable quantized dense-attention paths leave a real persistent-KV preparation/read cost or unsupported condition that cannot already be removed by a simple exposed backend/API change?",
+  "submit": [
+    "Concrete cost/condition; own measurement vs source report vs hypothesis",
+    "Closest existing implemented solution and exact remaining gap",
+    "Strongest simple baseline including existing low-level packed-input kernel interfaces",
+    "Single minimal future discriminator only if real novelty+feasibility survives; otherwise reject."
+  ],
+  "limits": {
+    "CPU": 2,
+    "seconds": 1200,
+    "GPU": 0,
+    "model_tensor_loads": 0,
+    "installs": 0,
+    "compilations": 0,
+    "model_downloads": 0,
+    "primary_papers_max": 5,
+    "repos_max": 2,
+    "source_files_max": 10
+  },
+  "independence": "Root Codex and one retained actual Opus5.5 independently propose; root native quota failure retained, no alternate account/model retries. Do not read counterpart draft before both returns.",
+  "new_method_adopted": false,
+  "GPU_execution_authorized": false
+}

@@ -1,0 +1,1270 @@
+{
+  "retrieved_epoch": 1793916263.2695854,
+  "repo": "thu-ml/SageAttention",
+  "commit": "d1a57a546c3d395b1ffcbeecc66d81db76f3b4b5",
+  "date": "2026-01-17T17:43:28Z",
+  "commits_url": "https://api.github.com/repos/thu-ml/SageAttention/commits?per_page=1&until=2026-11-05T22:04:00Z",
+  "tree_url": "https://api.github.com/repos/thu-ml/SageAttention/git/trees/d1a57a546c3d395b1ffcbeecc66d81db76f3b4b5?recursive=1",
+  "tree": {
+    "sha": "d1a57a546c3d395b1ffcbeecc66d81db76f3b4b5",
+    "url": "https://api.github.com/repos/thu-ml/SageAttention/git/trees/d1a57a546c3d395b1ffcbeecc66d81db76f3b4b5",
+    "tree": [
+      {
+        "path": ".github",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "0c8a3284ca71c229ee953f586396c12ac277cc43",
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/trees/0c8a3284ca71c229ee953f586396c12ac277cc43"
+      },
+      {
+        "path": ".github/workflows",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "ef03225be33ee3d92c9a9b8fcc53096b8a20eecf",
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/trees/ef03225be33ee3d92c9a9b8fcc53096b8a20eecf"
+      },
+      {
+        "path": ".github/workflows/publish.yml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5ac9ae960034ccae531da182f713f392607ece02",
+        "size": 977,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/5ac9ae960034ccae531da182f713f392607ece02"
+      },
+      {
+        "path": ".gitignore",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "fbe48b6746b740140ff28a284a6c282ac903ce3d",
+        "size": 153,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/fbe48b6746b740140ff28a284a6c282ac903ce3d"
+      },
+      {
+        "path": "LICENSE",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "927221d60ead6d111f4083b06c39a1be702dbb08",
+        "size": 11357,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/927221d60ead6d111f4083b06c39a1be702dbb08"
+      },
+      {
+        "path": "MANIFEST.in",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "34832bb65a78e7e185b2a714952f4aa4c32d0e0f",
+        "size": 217,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/34832bb65a78e7e185b2a714952f4aa4c32d0e0f"
+      },
+      {
+        "path": "README.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "88a3fb78f881eb8253d842a31be91912dd5ede9b",
+        "size": 11335,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/88a3fb78f881eb8253d842a31be91912dd5ede9b"
+      },
+      {
+        "path": "assets",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "56ae5cc406b7ad1a72b93af5b826936027a5a043",
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/trees/56ae5cc406b7ad1a72b93af5b826936027a5a043"
+      },
+      {
+        "path": "assets/2.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c562537b39194c657dab31f56ebf2d1da4de7650",
+        "size": 4000671,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/c562537b39194c657dab31f56ebf2d1da4de7650"
+      },
+      {
+        "path": "assets/22.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "bade9e289eb2a8f0c67987305ea3ab231c467e1e",
+        "size": 5820738,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/bade9e289eb2a8f0c67987305ea3ab231c467e1e"
+      },
+      {
+        "path": "assets/23.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6f323a1a1a7409bf89a43eaa7b6d3d5d69c50665",
+        "size": 6016452,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/6f323a1a1a7409bf89a43eaa7b6d3d5d69c50665"
+      },
+      {
+        "path": "assets/24.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "492c72e0224d0a9d5a6ff943ebcfce11afda1557",
+        "size": 503377,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/492c72e0224d0a9d5a6ff943ebcfce11afda1557"
+      },
+      {
+        "path": "assets/25.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0864f7a462fd568096011a67dde58f12a5a3b0a9",
+        "size": 433644,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/0864f7a462fd568096011a67dde58f12a5a3b0a9"
+      },
+      {
+        "path": "assets/26.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "edae968f9636bca79e8d0c4c70caa494cdb975f4",
+        "size": 198124,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/edae968f9636bca79e8d0c4c70caa494cdb975f4"
+      },
+      {
+        "path": "assets/3090_hd128.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9127e65e5268ab7be74a3a74968224762eb862b9",
+        "size": 75425,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/9127e65e5268ab7be74a3a74968224762eb862b9"
+      },
+      {
+        "path": "assets/3090_hd64.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "4ba0850dbe670298bb2f2bd2a070aa17fac39313",
+        "size": 74419,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/4ba0850dbe670298bb2f2bd2a070aa17fac39313"
+      },
+      {
+        "path": "assets/4090_hd128.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "82255e0f56ea08bd0413dcc362568e5ab3d0e129",
+        "size": 97059,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/82255e0f56ea08bd0413dcc362568e5ab3d0e129"
+      },
+      {
+        "path": "assets/4090_hd64.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9628dba4b7eae746ee122d61f074aa401f107983",
+        "size": 95755,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/9628dba4b7eae746ee122d61f074aa401f107983"
+      },
+      {
+        "path": "assets/4090_sageattn2++.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "64e6262ec9e23e1617b328ce91783aab272a6ded",
+        "size": 270385,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/64e6262ec9e23e1617b328ce91783aab272a6ded"
+      },
+      {
+        "path": "assets/5090_sageattn2++.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a18ecf3f007d8e96680350774c2da44731b44c53",
+        "size": 226776,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/a18ecf3f007d8e96680350774c2da44731b44c53"
+      },
+      {
+        "path": "assets/A100_hd128.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d18ab2931068c9a3a4e67e1337f48622658c2d07",
+        "size": 84309,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/d18ab2931068c9a3a4e67e1337f48622658c2d07"
+      },
+      {
+        "path": "assets/A6000_hd128.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8ab5ed3915f7a08933f8f7791631c125df369e24",
+        "size": 82899,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/8ab5ed3915f7a08933f8f7791631c125df369e24"
+      },
+      {
+        "path": "assets/A6000_hd64.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3426f8fb9bd9abd7d8abe3f96216a752fc44bb32",
+        "size": 79133,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/3426f8fb9bd9abd7d8abe3f96216a752fc44bb32"
+      },
+      {
+        "path": "assets/A800_hd128.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "cee03a0e99ec178151daaf55a854bca64ff46fea",
+        "size": 83587,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/cee03a0e99ec178151daaf55a854bca64ff46fea"
+      },
+      {
+        "path": "assets/H100_hd128.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "698373e77dc7ccd30c608846299d50612ec77ba7",
+        "size": 111500,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/698373e77dc7ccd30c608846299d50612ec77ba7"
+      },
+      {
+        "path": "assets/H100_hd64.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "39f083bca30071a291504b217931eee979bb3263",
+        "size": 114428,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/39f083bca30071a291504b217931eee979bb3263"
+      },
+      {
+        "path": "assets/H20_hd128.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "519229c6bfe9d12d1f9148de99ade609e398e285",
+        "size": 97893,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/519229c6bfe9d12d1f9148de99ade609e398e285"
+      },
+      {
+        "path": "assets/H20_hd64.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9d579c3111dd9a0e0a268edc127399fce9e6b112",
+        "size": 99486,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/9d579c3111dd9a0e0a268edc127399fce9e6b112"
+      },
+      {
+        "path": "assets/H800_hd128.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e19d97ed65559318f27e8e0851635469ee2a027a",
+        "size": 110322,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/e19d97ed65559318f27e8e0851635469ee2a027a"
+      },
+      {
+        "path": "assets/H800_hd64.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "34f038d7a64b5d5b77b8296eb695231d2d88d7cb",
+        "size": 112060,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/34f038d7a64b5d5b77b8296eb695231d2d88d7cb"
+      },
+      {
+        "path": "assets/L20_hd128.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c4651f3a84c80e56ec9af4ddede19d24f3c8a73d",
+        "size": 83063,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/c4651f3a84c80e56ec9af4ddede19d24f3c8a73d"
+      },
+      {
+        "path": "assets/L20_hd64.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b2d83fb58a73ef6b3d39874a596ce2ed3a8234c9",
+        "size": 83567,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/b2d83fb58a73ef6b3d39874a596ce2ed3a8234c9"
+      },
+      {
+        "path": "assets/cogvideo1.5_example.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "fdc78cbfa283df3d2fa8794b2e70aa6d0ada96d2",
+        "size": 2039590,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/fdc78cbfa283df3d2fa8794b2e70aa6d0ada96d2"
+      },
+      {
+        "path": "assets/cogvideox1.5_fa2_example.gif",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f82aba680ddd2947087093f007138a825c559a99",
+        "size": 3348771,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/f82aba680ddd2947087093f007138a825c559a99"
+      },
+      {
+        "path": "assets/cogvideox1.5_fa3_example.gif",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f82aba680ddd2947087093f007138a825c559a99",
+        "size": 3348771,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/f82aba680ddd2947087093f007138a825c559a99"
+      },
+      {
+        "path": "assets/cogvideox1.5_fa3fp8_example.gif",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "606e9cededb63bab41c890275757115dbd8baef9",
+        "size": 6006539,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/606e9cededb63bab41c890275757115dbd8baef9"
+      },
+      {
+        "path": "assets/cogvideox1.5_sage_example.gif",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "fe890acad6d168a4e21072cbf1d8844140826d45",
+        "size": 3368300,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/fe890acad6d168a4e21072cbf1d8844140826d45"
+      },
+      {
+        "path": "assets/hunyuanvideo_example.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "80df96971168d33ac2720118dde06ae5568159b0",
+        "size": 922878,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/80df96971168d33ac2720118dde06ae5568159b0"
+      },
+      {
+        "path": "assets/mochi_example.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d6c9166e545f28361b43700b0bcbbc03d94b050d",
+        "size": 2175100,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/d6c9166e545f28361b43700b0bcbbc03d94b050d"
+      },
+      {
+        "path": "assets/sage3_result.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2d0753d8e92b18252c72f62a93ddaa3a8ee00efd",
+        "size": 2907692,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/2d0753d8e92b18252c72f62a93ddaa3a8ee00efd"
+      },
+      {
+        "path": "assets/sage3_speed.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "60c1949aec1c1c4b9ccd8d4afdd640d2863ec977",
+        "size": 767375,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/60c1949aec1c1c4b9ccd8d4afdd640d2863ec977"
+      },
+      {
+        "path": "bench",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "a154d316ec55b66e6775d1c69c8dc45afce71a8c",
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/trees/a154d316ec55b66e6775d1c69c8dc45afce71a8c"
+      },
+      {
+        "path": "bench/README.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8bfe80e717c604a81e3387f9f7e081339a9805e6",
+        "size": 2027,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/8bfe80e717c604a81e3387f9f7e081339a9805e6"
+      },
+      {
+        "path": "bench/bench_baseline.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f03aa35ff754a11065330e3ebd5c6af62022609b",
+        "size": 2479,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/f03aa35ff754a11065330e3ebd5c6af62022609b"
+      },
+      {
+        "path": "bench/bench_fa3.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9e50ff0d29a501855da58f9dd775cc0bd95dfaee",
+        "size": 2118,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/9e50ff0d29a501855da58f9dd775cc0bd95dfaee"
+      },
+      {
+        "path": "bench/bench_fa3_fp8.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a7b849c0b10d9df59e0074762acefaf0d1fa9bd6",
+        "size": 3024,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/a7b849c0b10d9df59e0074762acefaf0d1fa9bd6"
+      },
+      {
+        "path": "bench/bench_qk_int8_pv_fp16_cuda.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "669b7e4a648d84bd43cb3f546b9d30948d85b706",
+        "size": 4566,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/669b7e4a648d84bd43cb3f546b9d30948d85b706"
+      },
+      {
+        "path": "bench/bench_qk_int8_pv_fp16_triton.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ed6556ca2bfd62b7df6f54722a7dfc754147be60",
+        "size": 2814,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/ed6556ca2bfd62b7df6f54722a7dfc754147be60"
+      },
+      {
+        "path": "bench/bench_qk_int8_pv_fp8_cuda.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "924334a1f1affa3e07301db27d7271db7325c9bf",
+        "size": 6971,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/924334a1f1affa3e07301db27d7271db7325c9bf"
+      },
+      {
+        "path": "bench/bench_qk_int8_pv_fp8_cuda_sm90.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2c637e8309e773e6f583734f00ac648f8af3aef5",
+        "size": 4219,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/2c637e8309e773e6f583734f00ac648f8af3aef5"
+      },
+      {
+        "path": "bench/utils.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b6bd7fb6d29ba451ef3a282c11b4b7ded3445247",
+        "size": 5316,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/b6bd7fb6d29ba451ef3a282c11b4b7ded3445247"
+      },
+      {
+        "path": "csrc",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "920446933fbdd9bcfcf5b88e65488ea5c9583b76",
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/trees/920446933fbdd9bcfcf5b88e65488ea5c9583b76"
+      },
+      {
+        "path": "csrc/cp_async.cuh",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c877c16e20e0adb5058eb90368010066052e50cd",
+        "size": 5101,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/c877c16e20e0adb5058eb90368010066052e50cd"
+      },
+      {
+        "path": "csrc/dispatch_utils.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6d798e681751a4cb379abcb24317669a50f431c6",
+        "size": 6233,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/6d798e681751a4cb379abcb24317669a50f431c6"
+      },
+      {
+        "path": "csrc/fused",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "0afdd0cd7c5f63ec53d64c73d86db060c0d47409",
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/trees/0afdd0cd7c5f63ec53d64c73d86db060c0d47409"
+      },
+      {
+        "path": "csrc/fused/fused.cu",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "fb8b9f15c4106a911861f3eff30d7a21bc665762",
+        "size": 35567,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/fb8b9f15c4106a911861f3eff30d7a21bc665762"
+      },
+      {
+        "path": "csrc/fused/fused.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "268b283513792d29ac0a7efe8505b9cac395cb8e",
+        "size": 2445,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/268b283513792d29ac0a7efe8505b9cac395cb8e"
+      },
+      {
+        "path": "csrc/fused/pybind.cpp",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "bffdb06008fb3e20cf506aece6d56dc94fd9572f",
+        "size": 2107,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/bffdb06008fb3e20cf506aece6d56dc94fd9572f"
+      },
+      {
+        "path": "csrc/math.cuh",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0a60c08365557d31a2092ad87d24f6dede8e3cfd",
+        "size": 4624,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/0a60c08365557d31a2092ad87d24f6dede8e3cfd"
+      },
+      {
+        "path": "csrc/mma.cuh",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "7cda7a5e09b725aa18ff2f8c1b08fe9604dd3761",
+        "size": 26952,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/7cda7a5e09b725aa18ff2f8c1b08fe9604dd3761"
+      },
+      {
+        "path": "csrc/numeric_conversion.cuh",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "88f80f501e64af9377efbe1d996ee4b06cd97682",
+        "size": 4685,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/88f80f501e64af9377efbe1d996ee4b06cd97682"
+      },
+      {
+        "path": "csrc/permuted_smem.cuh",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e831b9390c6cba15c56430805cbea72dcd06efe9",
+        "size": 7915,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/e831b9390c6cba15c56430805cbea72dcd06efe9"
+      },
+      {
+        "path": "csrc/qattn",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "d0ac97d02654838667adf62ba39009d2a8eb8417",
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/trees/d0ac97d02654838667adf62ba39009d2a8eb8417"
+      },
+      {
+        "path": "csrc/qattn/attn_cuda_sm80.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "83e830de5243958e468b3d8290efdf99eb8cb638",
+        "size": 2568,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/83e830de5243958e468b3d8290efdf99eb8cb638"
+      },
+      {
+        "path": "csrc/qattn/attn_cuda_sm89.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f45f8d7ca61858768a1cdd56c8e311bff7283242",
+        "size": 4225,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/f45f8d7ca61858768a1cdd56c8e311bff7283242"
+      },
+      {
+        "path": "csrc/qattn/attn_cuda_sm90.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "822ab7f43f54ab3a49d2b09479288dd4e269546c",
+        "size": 1687,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/822ab7f43f54ab3a49d2b09479288dd4e269546c"
+      },
+      {
+        "path": "csrc/qattn/attn_utils.cuh",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6f8b87c87288ae341ffbce718f0e3b4ba869938c",
+        "size": 36500,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/6f8b87c87288ae341ffbce718f0e3b4ba869938c"
+      },
+      {
+        "path": "csrc/qattn/pybind_sm80.cpp",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0d5e71ce9e1196a2c775b8488234e949842c4d1c",
+        "size": 1261,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/0d5e71ce9e1196a2c775b8488234e949842c4d1c"
+      },
+      {
+        "path": "csrc/qattn/pybind_sm89.cpp",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "559179ceba53826116d0f67e2c1d2859fb0e7bf0",
+        "size": 1771,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/559179ceba53826116d0f67e2c1d2859fb0e7bf0"
+      },
+      {
+        "path": "csrc/qattn/pybind_sm90.cpp",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8900b641dd4a7ff1e0833a515007c0a7eb416633",
+        "size": 948,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/8900b641dd4a7ff1e0833a515007c0a7eb416633"
+      },
+      {
+        "path": "csrc/qattn/qk_int_sv_f16_cuda_sm80.cu",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "bdedaf66d873aa38a51ef36c0a0342426df1ebaa",
+        "size": 56016,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/bdedaf66d873aa38a51ef36c0a0342426df1ebaa"
+      },
+      {
+        "path": "csrc/qattn/qk_int_sv_f8_cuda_sm89.cuh",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f39719f97ab8999b2c247bd3fb2fa8d51fdb372a",
+        "size": 30457,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/f39719f97ab8999b2c247bd3fb2fa8d51fdb372a"
+      },
+      {
+        "path": "csrc/qattn/qk_int_sv_f8_cuda_sm90.cu",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e9e5ccf55a72a90ab2da886339f49846d1f4c9cb",
+        "size": 33350,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/e9e5ccf55a72a90ab2da886339f49846d1f4c9cb"
+      },
+      {
+        "path": "csrc/qattn/sm89_qk_int8_sv_f8_accum_f16_attn_inst_buf.cu",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c66a81f16ac8c8320d3594d119f61c0062f32f39",
+        "size": 6918,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/c66a81f16ac8c8320d3594d119f61c0062f32f39"
+      },
+      {
+        "path": "csrc/qattn/sm89_qk_int8_sv_f8_accum_f16_fuse_v_scale_attn_inst_buf.cu",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "727030fd9e5a14c85749fa56c08ce70cf65ea76e",
+        "size": 7242,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/727030fd9e5a14c85749fa56c08ce70cf65ea76e"
+      },
+      {
+        "path": "csrc/qattn/sm89_qk_int8_sv_f8_accum_f32_attn.cu",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d99d1aa8d6cd0c3e8a0c17e58d5755a7f827b796",
+        "size": 6911,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/d99d1aa8d6cd0c3e8a0c17e58d5755a7f827b796"
+      },
+      {
+        "path": "csrc/qattn/sm89_qk_int8_sv_f8_accum_f32_attn_inst_buf.cu",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "14b9b03a2e78cbf25eed43fa5d9894d1a5152d7d",
+        "size": 6918,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/14b9b03a2e78cbf25eed43fa5d9894d1a5152d7d"
+      },
+      {
+        "path": "csrc/qattn/sm89_qk_int8_sv_f8_accum_f32_fuse_v_scale_attn.cu",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "918b15640095309eac7676dfd6e2f9f2176d6eff",
+        "size": 7235,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/918b15640095309eac7676dfd6e2f9f2176d6eff"
+      },
+      {
+        "path": "csrc/qattn/sm89_qk_int8_sv_f8_accum_f32_fuse_v_scale_attn_inst_buf.cu",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "cc1a85c544849652883bfe5989a2a5b847f59192",
+        "size": 7243,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/cc1a85c544849652883bfe5989a2a5b847f59192"
+      },
+      {
+        "path": "csrc/qattn/sm89_qk_int8_sv_f8_accum_f32_fuse_v_scale_fuse_v_mean_attn.cu",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "fb3db8b970b85982c3872a56ae0b5ff547855933",
+        "size": 7536,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/fb3db8b970b85982c3872a56ae0b5ff547855933"
+      },
+      {
+        "path": "csrc/reduction_utils.cuh",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f6f74c456fe11876778de7f130b3d6ddf807132c",
+        "size": 5578,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/f6f74c456fe11876778de7f130b3d6ddf807132c"
+      },
+      {
+        "path": "csrc/utils.cuh",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ca83d2ceca07a145ca52ef52f232d7889724e5be",
+        "size": 1618,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/ca83d2ceca07a145ca52ef52f232d7889724e5be"
+      },
+      {
+        "path": "csrc/wgmma.cuh",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f25d6c8755e5d6cdcf5b8d1fdb38f3b9b2f1e0c9",
+        "size": 16764,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/f25d6c8755e5d6cdcf5b8d1fdb38f3b9b2f1e0c9"
+      },
+      {
+        "path": "example",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "ec7c384146de35d6b8c4f29ad11cdc6ebeb9476a",
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/trees/ec7c384146de35d6b8c4f29ad11cdc6ebeb9476a"
+      },
+      {
+        "path": "example/README.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ac2bcfeca4a9feba78ae53b295ef97af97805ef7",
+        "size": 3348,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/ac2bcfeca4a9feba78ae53b295ef97af97805ef7"
+      },
+      {
+        "path": "example/cogvideox_infer.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "42c6269c3610c9df8e04e70292ace8604b260453",
+        "size": 2786,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/42c6269c3610c9df8e04e70292ace8604b260453"
+      },
+      {
+        "path": "example/hunyuan_infer.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "16863804fa307560a4f5ec0ccc77864b91653b29",
+        "size": 3331,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/16863804fa307560a4f5ec0ccc77864b91653b29"
+      },
+      {
+        "path": "example/ltx_infer.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5e9dbbf9bdd5288d95e0d2708473cc0aa6586b40",
+        "size": 5131,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/5e9dbbf9bdd5288d95e0d2708473cc0aa6586b40"
+      },
+      {
+        "path": "example/mochi_infer.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f0d91b5216c33ea9a31559118b04244103addb3e",
+        "size": 2769,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/f0d91b5216c33ea9a31559118b04244103addb3e"
+      },
+      {
+        "path": "example/modify_model",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "001a54f8801f0f288868b96f22fe513492a72d4a",
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/trees/001a54f8801f0f288868b96f22fe513492a72d4a"
+      },
+      {
+        "path": "example/modify_model/modify_hunyuan.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "efe1418d97bd6c803a6fe71fec472e32c2804004",
+        "size": 6420,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/efe1418d97bd6c803a6fe71fec472e32c2804004"
+      },
+      {
+        "path": "example/modify_model/modify_ltx.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "219023c157b539aecc17829562bb61979dd81756",
+        "size": 3583,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/219023c157b539aecc17829562bb61979dd81756"
+      },
+      {
+        "path": "example/modify_model/modify_mochi.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0f0c9968c55b678cbf45cfdbb592d5649a1d7d40",
+        "size": 4775,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/0f0c9968c55b678cbf45cfdbb592d5649a1d7d40"
+      },
+      {
+        "path": "example/modify_model/modify_wan.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6a36e2b18845ccb03c340fe61daacf214c3fede8",
+        "size": 4044,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/6a36e2b18845ccb03c340fe61daacf214c3fede8"
+      },
+      {
+        "path": "example/parallel_sageattn_cogvideo.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "531a8b563b22e348c64c0e3fd4193aa0a5170a91",
+        "size": 4241,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/531a8b563b22e348c64c0e3fd4193aa0a5170a91"
+      },
+      {
+        "path": "example/run_parallel.sh",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c660d165fb7a3639b77c6d97d2d83fbc9cae7f86",
+        "size": 1651,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/c660d165fb7a3639b77c6d97d2d83fbc9cae7f86"
+      },
+      {
+        "path": "example/videos",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "4ce28111ffef28d5c6104b17158560eb208db994",
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/trees/4ce28111ffef28d5c6104b17158560eb208db994"
+      },
+      {
+        "path": "example/videos/.gitignore",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1b3d6e22db6056618e32ed91dce558a18542e032",
+        "size": 105,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/1b3d6e22db6056618e32ed91dce558a18542e032"
+      },
+      {
+        "path": "example/videos/ltx_first_frames",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "1e54ed854667b49ba9bcddc94352feb9852789c8",
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/trees/1e54ed854667b49ba9bcddc94352feb9852789c8"
+      },
+      {
+        "path": "example/videos/ltx_first_frames/0.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d55d79c7531edbd733d687216d6b8809dfd8b87c",
+        "size": 1179295,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/d55d79c7531edbd733d687216d6b8809dfd8b87c"
+      },
+      {
+        "path": "example/videos/ltx_first_frames/1.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "26fd1ce27f3e81779b511576b6f516568234a64a",
+        "size": 945836,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/26fd1ce27f3e81779b511576b6f516568234a64a"
+      },
+      {
+        "path": "example/videos/ltx_first_frames/10.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b5752e3becd8188d53d87046d7a91fad594ae67c",
+        "size": 884766,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/b5752e3becd8188d53d87046d7a91fad594ae67c"
+      },
+      {
+        "path": "example/videos/ltx_first_frames/11.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8f41f75763e788f05e4ba67ad479137012f825e8",
+        "size": 929894,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/8f41f75763e788f05e4ba67ad479137012f825e8"
+      },
+      {
+        "path": "example/videos/ltx_first_frames/2.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3f8c73e4b53ecdbf21e6969dd16e15f1c44922b7",
+        "size": 963147,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/3f8c73e4b53ecdbf21e6969dd16e15f1c44922b7"
+      },
+      {
+        "path": "example/videos/ltx_first_frames/3.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2872dfcc8528a862fe460b96506e000fab6d5112",
+        "size": 1085865,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/2872dfcc8528a862fe460b96506e000fab6d5112"
+      },
+      {
+        "path": "example/videos/ltx_first_frames/4.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "7aed77411482102f63efd26576ebed50d04258bd",
+        "size": 751709,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/7aed77411482102f63efd26576ebed50d04258bd"
+      },
+      {
+        "path": "example/videos/ltx_first_frames/5.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c8ef8e60f00b1d9c660c5fdb261d31c7c33da267",
+        "size": 1398108,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/c8ef8e60f00b1d9c660c5fdb261d31c7c33da267"
+      },
+      {
+        "path": "example/videos/ltx_first_frames/6.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "efa28983881258fc6c5b6129a534e95ff3e5339c",
+        "size": 1128776,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/efa28983881258fc6c5b6129a534e95ff3e5339c"
+      },
+      {
+        "path": "example/videos/ltx_first_frames/7.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "21e9aaafc4a9b86abd918af59a55f5b462c55363",
+        "size": 1153887,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/21e9aaafc4a9b86abd918af59a55f5b462c55363"
+      },
+      {
+        "path": "example/videos/ltx_first_frames/8.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "27c6188aefb33297d8f5dd7cf3300f0a046b0816",
+        "size": 1135759,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/27c6188aefb33297d8f5dd7cf3300f0a046b0816"
+      },
+      {
+        "path": "example/videos/ltx_first_frames/9.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "61b589df80ea43e744f0508daa914571a24ff217",
+        "size": 1204720,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/61b589df80ea43e744f0508daa914571a24ff217"
+      },
+      {
+        "path": "example/videos/testing_prompts.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6c701f0f61a8f9e259e5837b40058f046552a974",
+        "size": 7311,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/6c701f0f61a8f9e259e5837b40058f046552a974"
+      },
+      {
+        "path": "example/wan_infer.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "27c2937a9eefb1dc082f413120530b04b06a08df",
+        "size": 4658,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/27c2937a9eefb1dc082f413120530b04b06a08df"
+      },
+      {
+        "path": "pyproject.toml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8ae70544c50f4f48f4a9c9ab31ed2b2981a94966",
+        "size": 140,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/8ae70544c50f4f48f4a9c9ab31ed2b2981a94966"
+      },
+      {
+        "path": "sageattention",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "75b7c56c83bb7e32ca056f4b358ea74349b1d92a",
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/trees/75b7c56c83bb7e32ca056f4b358ea74349b1d92a"
+      },
+      {
+        "path": "sageattention/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "73b0256db14c1b0d7b010478f4ea50b14c7ed5ce",
+        "size": 241,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/73b0256db14c1b0d7b010478f4ea50b14c7ed5ce"
+      },
+      {
+        "path": "sageattention/core.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "96da4c02a3c40ba3802191de51f3e45638d64646",
+        "size": 43949,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/96da4c02a3c40ba3802191de51f3e45638d64646"
+      },
+      {
+        "path": "sageattention/fa3_wrapper.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "91b1a842906a60bffe06ed67b54c492b747417f3",
+        "size": 2517,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/91b1a842906a60bffe06ed67b54c492b747417f3"
+      },
+      {
+        "path": "sageattention/quant.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e0208b0b607acfbf202c6b2480fe8e278dba15b9",
+        "size": 11870,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/e0208b0b607acfbf202c6b2480fe8e278dba15b9"
+      },
+      {
+        "path": "sageattention/sm80_compile.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3bb111b4e2106d8126424f6b287864442c51428b",
+        "size": 4858,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/3bb111b4e2106d8126424f6b287864442c51428b"
+      },
+      {
+        "path": "sageattention/sm89_compile.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "29febca02d5a5e449cbfcc627e5370340d89b29d",
+        "size": 4894,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/29febca02d5a5e449cbfcc627e5370340d89b29d"
+      },
+      {
+        "path": "sageattention/sm90_compile.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "24e415c8ed710163689ae9649903df438cd1280c",
+        "size": 2988,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/24e415c8ed710163689ae9649903df438cd1280c"
+      },
+      {
+        "path": "sageattention/triton",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "dc701e37f4ba52f60f05226e70b62d393d7af81f",
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/trees/dc701e37f4ba52f60f05226e70b62d393d7af81f"
+      },
+      {
+        "path": "sageattention/triton/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "size": 0,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+      },
+      {
+        "path": "sageattention/triton/attn_qk_int8_block_varlen.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "724c411a9621639f6a547e94902f62395943314d",
+        "size": 5852,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/724c411a9621639f6a547e94902f62395943314d"
+      },
+      {
+        "path": "sageattention/triton/attn_qk_int8_per_block.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "401ac3c06abca675484923d43b18231aaf7d886c",
+        "size": 8031,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/401ac3c06abca675484923d43b18231aaf7d886c"
+      },
+      {
+        "path": "sageattention/triton/attn_qk_int8_per_block_causal.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "06621f0cb0a8956b49f7bfc55887114821055ed5",
+        "size": 7227,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/06621f0cb0a8956b49f7bfc55887114821055ed5"
+      },
+      {
+        "path": "sageattention/triton/attn_qk_int8_per_block_causal_varlen.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "79eec97edc5203ca862a129aff777583a3542635",
+        "size": 6520,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/79eec97edc5203ca862a129aff777583a3542635"
+      },
+      {
+        "path": "sageattention/triton/quant_per_block.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "19a9c36bd594c3a96fd20938b2e72c392d1002ff",
+        "size": 4117,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/19a9c36bd594c3a96fd20938b2e72c392d1002ff"
+      },
+      {
+        "path": "sageattention/triton/quant_per_block_varlen.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0294a67bea14dec4189012154a0da41f6d5702ab",
+        "size": 3914,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/0294a67bea14dec4189012154a0da41f6d5702ab"
+      },
+      {
+        "path": "sageattention/triton/quant_per_thread.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ab81f57c3e6dd9df89946ba54c4e2c3844c94d34",
+        "size": 9383,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/ab81f57c3e6dd9df89946ba54c4e2c3844c94d34"
+      },
+      {
+        "path": "sageattention3_blackwell",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "63f8b4781bb1b6daa8e483f3d83ced8c1b2e0b02",
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/trees/63f8b4781bb1b6daa8e483f3d83ced8c1b2e0b02"
+      },
+      {
+        "path": "sageattention3_blackwell/README.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "13b779e0e1958c2c9bf633fbd93aeba5e1772fb9",
+        "size": 3222,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/13b779e0e1958c2c9bf633fbd93aeba5e1772fb9"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "2c21a9b05b046364621845281f78ab36e6eecf79",
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/trees/2c21a9b05b046364621845281f78ab36e6eecf79"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "20e95dac6051a5d06fee6c00e12e5016d4819560",
+        "size": 611,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/20e95dac6051a5d06fee6c00e12e5016d4819560"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/api.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5fa25107fc1131e9a6cdd53761386c806500c4ce",
+        "size": 5491,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/5fa25107fc1131e9a6cdd53761386c806500c4ce"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/blackwell",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "b623e67af40ded38ee409296bc9caacc13cd51db",
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/trees/b623e67af40ded38ee409296bc9caacc13cd51db"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/blackwell/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2e33087c53f36e50efce2ba54b90d9a7562262d5",
+        "size": 25,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/2e33087c53f36e50efce2ba54b90d9a7562262d5"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/blackwell/api.cu",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "196978f5ace4fc88218f5c63acf32d852697b0a4",
+        "size": 14776,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/196978f5ace4fc88218f5c63acf32d852697b0a4"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/blackwell/block_info.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "bd0d454886761c7d33891a9d3ac067efe85a6937",
+        "size": 2876,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/bd0d454886761c7d33891a9d3ac067efe85a6937"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/blackwell/blockscaled_layout.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6c36f3ccecba4563e5ad36779982b931f549bcfe",
+        "size": 7374,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/6c36f3ccecba4563e5ad36779982b931f549bcfe"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/blackwell/cute_extension.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "bcd7cf3b5ac7c807acb0d923cafc9de34f3d5ddc",
+        "size": 12714,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/bcd7cf3b5ac7c807acb0d923cafc9de34f3d5ddc"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/blackwell/epilogue_tma_ws.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "85e82a0537899a8d09d5f64c95769a8673adfce1",
+        "size": 10533,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/85e82a0537899a8d09d5f64c95769a8673adfce1"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/blackwell/kernel_traits.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5035f4b58d63678303eacc902347c13ba0ccceb9",
+        "size": 9621,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/5035f4b58d63678303eacc902347c13ba0ccceb9"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/blackwell/kernel_ws.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5adc82aee0dd8457528b0a25d252905e7a3b128f",
+        "size": 9766,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/5adc82aee0dd8457528b0a25d252905e7a3b128f"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/blackwell/launch.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3167df323a4920637893892b6d46afc252b8c71a",
+        "size": 5619,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/3167df323a4920637893892b6d46afc252b8c71a"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/blackwell/mainloop_tma_ws.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d6ef18f4ad0b14c37fdb3d9f68b6406b396c9833",
+        "size": 46735,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/d6ef18f4ad0b14c37fdb3d9f68b6406b396c9833"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/blackwell/named_barrier.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "bd8aefb6a0f077da2bd8c932094f7ff42b107e10",
+        "size": 3751,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/bd8aefb6a0f077da2bd8c932094f7ff42b107e10"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/blackwell/params.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9e357dbbf865606fab258f98140716796fa55afe",
+        "size": 5358,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/9e357dbbf865606fab258f98140716796fa55afe"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/blackwell/softmax_fused.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "25b1b46a3d4ae841b015b20c467a3abb96953c32",
+        "size": 8358,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/25b1b46a3d4ae841b015b20c467a3abb96953c32"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/blackwell/static_switch.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e870643e7d1abfb0216f70259a336e928fa15164",
+        "size": 5220,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/e870643e7d1abfb0216f70259a336e928fa15164"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/blackwell/tile_scheduler.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a559bef0743567a88fc2b70e8cbccdc967e0597e",
+        "size": 8159,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/a559bef0743567a88fc2b70e8cbccdc967e0597e"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/blackwell/utils.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "793270196e3e93ca6b2601c4dc5c13c81c401a9f",
+        "size": 14885,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/793270196e3e93ca6b2601c4dc5c13c81c401a9f"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/quantization",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "53ee3cccac323effd12af64c5a2d47789a68c284",
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/trees/53ee3cccac323effd12af64c5a2d47789a68c284"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/quantization/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5d46677a1b5dc857306659426da30557fde09e2e",
+        "size": 24,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/5d46677a1b5dc857306659426da30557fde09e2e"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/quantization/cuda_utils.h",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "89013d69da285411f0c4e32fd07e04054d2fe311",
+        "size": 1662,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/89013d69da285411f0c4e32fd07e04054d2fe311"
+      },
+      {
+        "path": "sageattention3_blackwell/sageattn3/quantization/fp4_quantization_4d.cu",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "381687ce74798f18610267c7db38ce43942c90aa",
+        "size": 25796,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/381687ce74798f18610267c7db38ce43942c90aa"
+      },
+      {
+        "path": "sageattention3_blackwell/setup.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "04e3888bdf1b10d0c73a2e8628f0d48db8556b23",
+        "size": 6526,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/04e3888bdf1b10d0c73a2e8628f0d48db8556b23"
+      },
+      {
+        "path": "setup.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6b2c5b43efd134d045ebb12b373ab7843b4e9755",
+        "size": 10642,
+        "url": "https://api.github.com/repos/thu-ml/SageAttention/git/blobs/6b2c5b43efd134d045ebb12b373ab7843b4e9755"
+      }
+    ],
+    "truncated": false
+  }
+}

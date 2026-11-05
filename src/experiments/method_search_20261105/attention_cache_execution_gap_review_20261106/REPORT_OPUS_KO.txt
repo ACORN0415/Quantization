@@ -1,0 +1,29 @@
+persistent 양자화 KV + dense video attention 실행 공백 — 독립 source 탐색 (실제 Opus1, root msg_262745d1dcee)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음.
+실제 수신·시작 2026-11-05T22:06:08Z, 원 절대 마감 22:24:02Z. 독립성: 이 폴더의 ROOT_SPEC 외 root 가설·REPORT_CODEX·임시안 미열람.
+helper 1개(Agent 도구 subagent_type fork; 도구 계약상 부모 모델 상속, 별도 provider ID 미관측): SageAttention 공개 source 판독. 부모: 로컬 profile·attention 경로·통합.
+GPU 0, 모델·tensor load 0, 설치·컴파일·다운로드 0. 이번 검토자 측정 0 — 아래 시간은 모두 root 저장 기록.
+계수: 논문 0편. repo 1개(thu-ml/SageAttention main, commit SHA 미확인) — raw source 2개 성공(sageattention/core.py, sageattention/quant.py; WebFetch 요약 경유, 행 번호 없음).
+ 로컬 source 3개: kv_reuse_stage1/profile_B.json, kv_reuse_stage1/REPORT_KO.md 1–45행, src/wan/modules/attention.py(grep). 합계 source 5/10, repo 1/2, 논문 0/5.
+
+로컬 관측(root 기록, 재측정 아님): kv_reuse_stage1은 QVG 공식 codec(INT2, group64, centroids256)·FA2 dense attention. profile_B: 생성 24.63s 중 self_attention 11.24s, concat 0.80s, decode+layout
+ 0.578s, read_total 1.41s — 중첩 구간이라 더할 수 없고 Amdahl 상한도 아니다. 복원값 재사용(R)은 B 대비 거의 차이가 없어 종료됨. attention 경로는 flash_attn_varlen_func(BF16/FP16 입력).
+SageAttention 공개 source(helper):
+ - 모든 high-level entry(sageattn, sageattn_qk_int8_pv_fp8_cuda, sageattn_varlen)는 FP16/BF16 q·k·v만 받고 매 호출 내부에서 양자화. SM89 경로는 QK INT8 + PV FP8(accum fp32+fp16).
+ - K: 64토큰 블록 scale, smooth_k의 평균은 넘겨받은 k 전체에서 매번 계산. V: 채널당 scale 하나가 전체 kv_len에 걸침, 64 단위 패딩·치환 레이아웃.
+ - 사전 양자화 입력을 받는 공개 API 없음. 내부 확장 함수(qk_int8_sv_f8_accum_*_attn)는 int8/fp8 텐서를 받지만 공개 계약이 아니다. head_dim ≤128.
+
+후보 1(유일): "과거 KV를 SageAttention 형식으로 영속 저장해 매 호출 재양자화를 없애는 실행 경로"
+ - 비용/조건: 공개 API는 매 forward마다 과거 전체 K/V(최대 수만 토큰)를 다시 양자화·평균 계산·V 치환한다(source 사실). 그 시간이 sageattn 전체에서 차지하는 비중은 미측정(가설).
+ - 가장 가까운 구현: SageAttention 공개 API 자체(BF16 입력, 내부 양자화). 가장 강한 단순 기준선: FA2 호출을 sageattn(_varlen)로 바꾸는 것 — 기존 API 교체이며 새 방법이 아니다.
+ - 남는 정확한 공백: (a) V scale이 채널당 전역이라 청크별 독립 scale의 영속 V를 그대로 넣을 수 없음, (b) 청크 4680은 64의 배수가 아니라 K 블록 경계·V 패딩이 청크를 가로지름,
+   (c) smooth_k 평균이 매 호출 전체 k 의존 — 고정 평균으로 바꾸면 softmax 불변이지만 커널 계약 밖, (d) 현재 codec(QVG INT2)과 형식이 달라 decode→requant 필요.
+   이는 커널 인터페이스 공학(V 청크 scale 지원, 고정 평균, 청크 정렬)이며 양자화 방법론의 신규성은 약하다.
+ - 실용 가치: 불확실. 재양자화 비중이 작으면 가치 없음. 4090 실행 가능성: 공개 API는 SM89 지원, 내부 커널 수정은 CUDA 컴파일 필요(이번 권한 밖).
+ - 최소 미래 판별 1개(권한 아님): 기존 B 설정과 같은 형상(head_dim 128, q 4680, 과거 KV 길이 단계별)에서 FA2 vs 공개 sageattn을 교체만 해 attention 시간을 재고,
+   torch profiler로 sageattn 내부 K/V 양자화·치환 커널 시간 비중을 분리한다. 비중이 작으면(사전 문턱은 root가 결과 전에 고정) 후보 기각, 크면 영속 형식 공학을 검토.
+   정확성은 sageattn 출력과 FA2 출력의 post-Wo 차이를 서술로 기록(품질 gate 아님). 공개 sageattn 설치 자체가 별도 승인 대상이다.
+후보 2: 없음. decode+layout·concat(중첩 0.58s·0.80s)을 attention에 융합하는 안은 상한이 작고(B→R 재사용도 이득 없음), QVG codec 자체 공학이라 기각.
+판정: 새 방법 채택 없음. 후보 1은 "기존 API 교체 측정"이 먼저이며, 그것으로 풀리면 공백이 아니다.
+미확인: SageAttention commit SHA·CUDA 커널 본문(v_scale 축소 축·치환 상세), sageattn 설치 가능성, 실제 재양자화 비중, 우리 codec을 Sage 형식으로 바꿀 때의 메모리.
+실제 끝: 2026-11-05T22:08:09Z

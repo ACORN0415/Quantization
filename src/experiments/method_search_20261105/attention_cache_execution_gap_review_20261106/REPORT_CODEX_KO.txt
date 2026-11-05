@@ -1,0 +1,46 @@
+영상 dense 저정밀 attention의 persistent KV 실행 공백 — Codex 독립 검토
+작성: root Codex. native quota 오류를 유지하며 모델/계정 대체·재시도하지 않았다. 상대 Opus 새 초안/결론은 읽지 않았다.
+
+선택: 현재 두 후보 모두 새 연구 방법으로 채택하지 않는다. 설치·커널 구현·GPU 실험을 시작하지 않는다. 이 결론은 아래 두 구성에만 한정하며 연구 전체 종료가 아니다.
+
+직접 다시 읽은 내부 관측
+kv_reuse_stage1/profile_B.json은 generation24.6259955초, self_attention11.2374036초, decoder0.2601994초, decode_and_layout0.5776579초, concat0.7982271초다. 모두 과거 한 실행의 중첩 계측으로 합산하거나 절약 상한으로 쓰지 않는다. 이것은 새 SageAttention 측정이 아니다. schedule은4680단위로60forward다. 해당파일의 allocated11.248GB/reserved14.177GB는 이profile의 값이고, 다른설정의6.8GB와 합쳐 현재전체 메모리를 단정하지 않는다.
+
+공개 코드에서 실제로 남는 조건
+SageAttention commit d1a57a546c3d395b1ffcbeecc66d81db76f3b4b5 (2026-01-17, Nov5시각 이전의 최신commit 조회)에서 SM89 경로가 있다. core.py의FP8함수는 호출마다 K의시퀀스평균을 구하고 QK양자화·V의전치/64padding/순열/FP8변환을 수행한다. 반면sm89_compile.py와pybind는이미양자화된Q/K/V및scales를받는커널을노출한다. 따라서매번같은준비를반복하는상위함수가있다는것과새알고리즘이필요하다는것은다르다.
+quant.py의Vscale은[B,H,D]로K위치축이없고, SM89kernel575행이후Vscale을전체PV누적후곱한다. 신규토큰의범위가바뀌거나청크마다다른scale을쓸때단순FP8byteconcat으로원표현이유지된다고할수없다. K평균도전체시퀀스기준이어서append/evict때현재기본전처리를정확히재현하려면기존값에영향이갈수있다. 이들은소스계약의관측이며우리자료에서의범위실패·재양자화시간·품질손상은미측정이다.
+
+후보 A: 이미 준비된 저정밀 K/V를 반복 denoise에서 직접 재사용
+문제의존재: 상위wrapper에반복준비호출이있음(source). 우리에서Sage반복준비가병목이라는관측은없음.
+가까운해결책/최강단순기준선: 기존저수준커널에한번준비한동일codes/scales/layout를넘긴다. Q는변하므로매호출양자화하고불변KV만구분한다. RoPE·현재chunk·캐시퇴거가실제불변조건을깨는지별도계약이필요하다.
+신규성판단: 준비호이스팅자체는기존API의정상사용과일반캐싱이다. 이조건으로새방법을채택하지않는다. QVG PRQ(INT2)저장을그대로Sage INT8K/FP8V로읽을수있다는뜻도아니다. 전환비용과저장바이트가달라진다.
+실용성: profile의11.24초를이캐싱의절감가능량으로가져올수없다. Sage의실제call-time준비비용도없다. 현시점GPU검사없음.
+
+후보 B: chunk마다 평균/scale을 고정한 native quantized KV와 이를 한 번에 읽는 attention
+문제의존재: 현재SageSM89 Vscale은시퀀스공유이고전체K평균도동적이다. 청크별고정표현의append/evict는별도처리가필요하다(source). 전체문헌이못푸는공백이나우리실제손상은아직없다.
+가장단순한강한방법: 각청크의기존Sage커널결과와LSE를구하고합친다. K를청크평균mu로중심화했다면해당표현의score에q·mu/sqrt(d)를복원해청크질량을맞춘다. 이정체성/청크별Vscale적용/합산자체는새발견이아니다. Sagecore는mean의LSE복원및return_lse를이미제공하고FlashInfer에는merge_state/merge_states가있다. 단같은Q표현·scale·logbase·마스크를정의해야하고서로다르게양자화한청크결과를원BF16과정확히같다고주장하면안된다.
+특히SagePython이반환하는LSE는natural log지만FlashInfer cascade.cuh는base2를명시하고exp2로합친다. 직접연결시자연로그를log2로변환해야한다. 이것은기존라이브러리통합조건이며새방법이아니다.
+남을수있는차별점: 청크마다다른Vscale/중심을한fused KV-loop에서처리해multi-call+merge의추가비용을줄이는것. 하지만우리형상에서multi-call/준비비용이얼마인지,단순frozen/globalscale이나기존캐시backend로충분한지,실제품질·동일바이트조건이어떤지없다. 기존fused/paged저정밀attention전체의미해결이라고확인한것도아니다. 그러므로새방법이나GPU개발을채택하지않는다.
+만약별도실용요구로재검토한다면최소검사는①동일단일quantized표현에대한split+LSE복원참조②기존Sage통합호출③기존prepared-input호출④정적scale/현재BF16구간처리를포함한전체cost의비교다. 현재승인된실험은아니며숫자를보기전자원/정확성기준을등록해야한다.
+
+가까운 추가 선행의 제약
+Quantized Keys Steal Attention(2605.26266) §4.2는일반cumulant전개와분산/2교정을이미설명하고FP/MXFP/NVFP확장을분산추정문제로명시한다. QVG와의조합실험도§5.1/Table1에있다. 따라서평균또는분산보정을추가한다거나QVG와조합한다는수준은새제안이아니다. AppendixC는FlexAttention score_mod로dense보정행렬을피하며현재형상에맞는효율이자동보장되지는않는다.
+LongLive2 §3.2는chunk별NVFP4cache와병렬복원을이미구현하며전체KV압축이곧nativeFP4attention직접읽기라는뜻은아니다. HyperQuant §5.2는pseudo-quant품질경로와실제압축배포를구분하고dither/unbiased inner-product를다룬다. 내적의기대불편성이softmax출력의불편성을보장하지는않으므로넓은unbiased주장도새방법으로가져오지않는다.
+SAR-KV는공개검색색인에서chunkmean+lowbitresidual/routing을확인했으나원PDF는브라우저확인화면으로열지못했다. 초록/색인발췌를fullpaper검토로표시하지않고이논문하나로완전중복을확정하지않는다.
+
+실행가능성/범위
+Task Python3.10 환경의package metadata는Torch2.6.0+cu124/Triton3.2.0/SageAttention없음이다. nvcc12.4다. README의Sage2++ 요구는CUDA>=12.8이고Ada의일반Sage2는>=12.4다. ++의발표속도를현재환경직접재현가능수치로쓰지않는다. 코드존재와4090전체형상실행성공은별개다. 설치/컴파일/모델다운로드/GPU/실자료tensorload는0이다.
+초기LOCAL_METADATA는systemPython으로조회한것이라Torch부재가나왔으며task환경조회로정정하고둘다별도보존했다. 잘못된환경조회로실행불가를주장하지않는다.
+
+자료 접근과 종료
+외부repo2개/Sage8+FlashInfer2=source10파일을고정GitBlob과대조했다. core는dispatch+SM89함수전체및관련검색,quant는V전체함수와K평균참조,CUDAkernel은scale주소/누적후Vscale/LSE출력부분,FlashInfer는merge_state와base2 merge-kernel부분을읽었다. 모든repo전체를감사한것이아니다.
+논문5개접근시도: Sage2++·KeySteal·LongLive2·HyperQuant 관련원문절4개성공/SAR-KV full원문접근실패. 검색결과목록·공식문서·NVIDIA설명페이지는별도다. 기한내이조사를종료하고상대독립안반환후대조한다. 현재새방법효과0/새GPU0/신규성확보0.
+
+원문/코드
+https://github.com/thu-ml/SageAttention/tree/d1a57a546c3d395b1ffcbeecc66d81db76f3b4b5
+https://github.com/flashinfer-ai/flashinfer/tree/fc63d8ec43a15b7df0c21bfbdfc8bbb6c74a9499
+https://docs.flashinfer.ai/tutorials/recursive_attention.html
+https://arxiv.org/html/2505.21136v1
+https://arxiv.org/html/2605.26266v1
+https://arxiv.org/html/2605.18739v1
+https://arxiv.org/html/2606.23406v1
