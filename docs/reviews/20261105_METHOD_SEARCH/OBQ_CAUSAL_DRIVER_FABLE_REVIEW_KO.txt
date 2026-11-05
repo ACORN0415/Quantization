@@ -1,0 +1,22 @@
+run_when_idle.py 드라이버 검토 — Claude Fable 5.1, 2026-11-05 17:42 KST (GPU 0, 파일 변경 0)
+대상: src/experiments/method_search_20261105/causal_obq/run_when_idle.py  sha256 fd74002f6a2352ad8bb51f47d59d060f75ce200329e763d05a0efc0dd428c3fe (전문 142행 읽음)
+판단: 실행 무효 오류 없음. 대기 조건 두 개를 현재 머신에서 실제로 검증했다(아래 1). 비차단 권고 2개(아래 3).
+
+1. 대기 조건의 실제 동작 (지금 직접 확인)
+ - gpu_idle(): nvidia-smi --query-compute-apps=pid 가 현재 R8d quality 프로세스(pid 450402, sfq_data/env python, 10286MiB, util 100%)를 실제로 나열한다. 컨테이너 PID 네임스페이스로 프로세스가 안 보이는 환경이 아니므로 "비어 있음=유휴" 판정이 유효하다.
+ - prior_terminal(): r8d_driver.sh 4·8–9행이 R8d quality를 r8c/quality.json에 쓰고(이전 R8c 파일은 quality_r8c_p0p4.json으로 이동 완료), 현재 파일은 started_utc 1793867407(17:30 KST) ≥ 문턱 1793861586(15:53:06 KST), status 'running', rows 21. quality가 'completed'로 바뀌면 참이 된다. R8d 체인은 quality 후 CHAIN_EXIT만 남으므로 그 뒤 GPU 작업 없음.
+ - 두 조건 AND + 3초 뒤 재확인 → R8d를 방해할 경로가 없다. 2h 대기 초과 시 생성 0으로 종료(안전 실패).
+
+2. 구조 확인
+ - 대기(≤7200s)와 실험(1800s) 시계 분리. 드라이버의 1800s는 자체 start 기준, 스크립트 guard()는 RUN.json(reference 시작 시 생성) 기준이라 드라이버가 수십 초 더 엄격 → "최초 상한에서 멈춤"과 일치, 무효 아님.
+ - 4단계 순서 reference→capture→cpu_packets(CUDA_VISIBLE_DEVICES='')→native_read. 실패 시 재실행 0(returncode≠0 → RuntimeError, 로그 'x' 모드로 재시작도 차단). STATUS/RUN.json 존재 시 거부.
+ - start_new_session=True로 자식이 자기 pgid를 가지므로 killpg(child.pid)는 자식 그룹만 종료. 다른 프로세스를 건드리는 코드 없음.
+ - verify_lock(): LOCK에 드라이버 절대경로(resolve) 키 필수 + 전 항목 해시 재검사, 각 단계 전 반복. common.lock_files()에는 드라이버가 없으므로 LOCK 생성 시 수동 추가가 필요하며, 빠지면 38행 assert로 실행 금지 — 의도대로.
+ - SIGTERM→KeyboardInterrupt→자식 정리→status 'stopped' 기록. OK.
+
+3. 비차단 권고
+ (a) 드라이버 timeout/정지 시 자식에 SIGTERM을 바로 보내면 자식 Python은 핸들러가 없어 즉시 죽고 해당 단계 manifest가 'running'으로 남는다(capture/replay의 except는 KeyboardInterrupt만 잡음). SIGINT를 먼저 보내고 5초 후 SIGTERM/SIGKILL로 올리면 manifest에 'failed'+traceback이 남아 사후 판독이 쉽다. 생략 시 DRIVER_STATUS.json을 최종 상태의 권위로 명시.
+ (b) prior_terminal()은 R8d quality 'failed'도 종료로 받아들인다. R8d 실패 시에도 이 실험이 시작되는 것이 의도인지 등록문에 한 줄 적을 것(방해 금지 조건 자체는 gpu_idle로 유지되므로 안전).
+
+4. 새 GPU 큐 등록 여부: 조정자 방침(qcov 강한 기준선 CPU 결과 후 결정, LOCK 전 실행 0)에 동의. 이 드라이버는 그 결정 뒤에만 띄우며, 띄우기 전 LOCK에 코드 4개·명세 최종·드라이버 fd74002f… 해시가 모두 있어야 한다.
+확인/미확인: 드라이버 전문·r8d_driver.sh·현재 nvidia-smi·ps·quality.json 필드 직접 확인. run_tf_fr_r8d.py가 예외 시 status를 'failed'로 쓰는지는 읽지 않음(안 쓰면 대기 초과로 안전 종료).

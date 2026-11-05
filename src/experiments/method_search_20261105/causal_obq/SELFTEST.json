@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "checks": [
+    "all five K arms exact codes/scales/restore/payload vs locked capacity",
+    "nonuniform diagonal full OBQ exact FP32 RTN",
+    "V actual pack/restoration exact original Quantizer",
+    "input preserved",
+    "first-reader source mapping fixed",
+    "query indices fixed"
+  ],
+  "time_utc": 1793867661.0742202,
+  "source_sha256": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/common.py": "c8229f658172acd2dc6731425537be4dc45442156b9f2f44e4bdff96bc49edfe",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture.py": "0ab5be6aadba4a7fad87ed5d63583410b5aa4deb276a32ce598f5e3b86b075a9",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/replay.py": "757474f7fc75b700d30415d2e0845be4cbeee5157157f8c6825508e5168733e8",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/selftest.py": "6080c28b9bbfd9a3069990fab872429a8a292af9e7328c59ea05625c8269fcea"
+  },
+  "new_k_payload_bytes": 4515841,
+  "v_payload_bytes": 4500480,
+  "gpu_calls": 0
+}

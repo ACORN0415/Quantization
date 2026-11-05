@@ -1,0 +1,20 @@
+causal_obq 드라이버 수정·최종 명세 변경 범위 확인 — Claude Fable 5.1, 2026-11-05 (GPU 0, 파일 변경 0)
+해시 대조(직접 sha256sum, 조정자 통보와 모두 일치):
+ run_when_idle.py 7d345860…324d01 / replay.py 89483a35…fb05c / REGISTRATION_DRAFT_KO.txt 971ce0f9…57b01
+ common.py 436f7b27 / capture.py 2f378ad4 / selftest.py cd2a1e1f — 내 코드 검토 해시 그대로.
+
+1. 드라이버 수정 확인(40–158행 읽음): 실행 무효 오류 없음.
+ - wait-seconds 1..7200 강제(71행), sleep min(15, 잔여)(90행), 3초 유휴 재확인 전 잔여 검사(92–95행).
+ - DRIVER_STARTED.json을 'x' 모드로 생성(77행) → 동시 런처 배제. 예외 후에도 마커가 남아 재시작을 거부하므로 재실행 0 정책과 일치.
+ - GPU 단계(reference/capture/native_read) 직전 gpu_idle 재확인(109–110행), cpu_packets는 CUDA 비가시.
+ - stop_own_child를 단계 except(129행)와 바깥 finally(147행)에서 호출. 성공 단계 후 child=None이므로 중복 호출은 no-op. 다른 프로세스 접촉 없음.
+ - 이전 권고 (a) SIGINT 선행은 미채택(SIGTERM 직행). 비차단이며, 정지 시 단계 manifest가 'running'으로 남을 수 있으니 DRIVER_STATUS.json을 최종 상태의 권위로 보면 된다.
+
+2. replay.py: 변경은 26행 키 이름 'offline_prepare_including_validation_factor_seconds' 하나뿐임을 grep으로 확인. 결정 로직·팔·패킷 경로 불변.
+ 주의: SELFTEST_V2.json의 replay 해시는 구버전 37c76bec이다. selftest가 replay를 import하지 않더라도 LOCK 내부 일관성을 위해 selftest를 재실행해 V3를 남기거나, LOCK에 "replay는 키 이름 1곳 변경, selftest는 37c76bec에서 통과"를 명시할 것.
+
+3. 명세: 19행 "참조/계측 생성은 raw BF16 kv_cache 경로, ChunkStore residual_tokens=0은 배포정책 가정" 추가 확인. 45행 "시간에 pack/unpack 왕복 검증 포함, production encoder 성능으로 해석하지 않음" 추가 확인. 요청한 두 문장이 반영됐고 등록 기준(20%/10%, 4 endpoint)은 변경 없음.
+
+4. qcov 강한 기준선 CPU 결과(UHP 대비 35.8/34.5%)는 이번 요청 범위 밖이라 파일을 읽지 않았다. 검토가 필요하면 경로를 보내 달라.
+
+결론: 이 변경 범위에 대해 fable_reviewed 유지 가능. LOCK에는 위 6개 해시 + 드라이버 해시가 들어가야 하고, 2항의 selftest 불일치만 처리하면 된다.

@@ -1,0 +1,24 @@
+실행 조정 코드 변경분 재검토 — Codex 업무2 — 2026-11-05
+대상: run_when_idle.py
+SHA256: 7d345860c28b5f52d53a5748a074900594d071ae6df888d87c0f4dbba7324d01
+검토 방식: 소스 읽기, 해시 확인, 실행 없는 Python compile. GPU/실험/LOCK/driver 시작0회. 수학 selftest를 반복하지 않았다.
+
+판단: 이전에 요청한 네 보완이 반영됐다. 이번 변경 범위에서 추가로 실험을 막아야 할 결함을 발견하지 않았다. 실제 GPU/시간 제한의 작동을 실행해 검증했다는 뜻은 아니다.
+
+1. 단계별 GPU 확인
+CPU packets를 제외한 reference/capture/native_read 모두 Popen 전 gpu_idle()를 확인하며, 점유가 있으면 재시도 없이 멈춘다. CPU 단계 사이에 다른 GPU 작업이 시작됐는데 native_read가 그대로 실행되는 이전 공백을 보완했다. 이는 시작 전 점유 확인이며, 외부 프로그램의 이후 GPU 진입까지 막는 전역 스케줄러 잠금은 아니다.
+
+2. 단일 driver
+DRIVER_STARTED.json을 open('x')로 생성하므로 동시에 두 launcher가 exists 검사를 통과해도 하나만 시작 표식을 만든다. STATUS/RUN과 함께 재시작을 거부한다. 실패 후 표식도 유지하는 설계가 이번 무재시도 정책과 일치한다.
+
+3. 대기 상한
+wait_seconds를1..7200으로 제한한다. 대기 sleep은남은시간과15초중작은값이며, 마지막3초확인구간도잔여시간이있을때만진행한다. 기존의임의대기상한확대와sleep자체의상한초과를보완했다. GPU질의는별도10초timeout이고상태확인/해시검증의실행시간이있으므로,7200초를실제프로세스종료시각의밀리초단위경계로해석하지않는다.
+
+4. 자식 종료 범위
+start_new_session=True로 만든 자기 자식의PGID만종료한다. stop_own_child를내부예외와outerfinally모두에서호출해,자식할당후내부wait예외처리진입전에빠지는경로도정리한다. 다른R8d프로세스를죽이는경로는없다. 작업timeout후최대5초TERM유예와KILL후회수시간은정리시간이며추가실험허용이아니다.
+
+변경되지 않은 유효한 조건
+R8d quality.json의시작시각필터와terminal상태,최초GPU빈상태및추가3초확인,단계별등록해시검사,실험전체1800초잔여timeout,stage실패시자동재시도0회가유지됐다. qcov 결과 판단과root/Fable 최종승인·등록잠금은주작업자의선행결정이며이검토자가대신하지않는다.
+
+별도 비용라벨
+replay.py의 offline_prepare_including_validation_factor_seconds는factor_seconds를포함하는준비전체시간으로정정됐다. 두값을합산하지않는다는명세도확인했다. 이라벨변경은수학계산이나측정범위를변경하지않는다.

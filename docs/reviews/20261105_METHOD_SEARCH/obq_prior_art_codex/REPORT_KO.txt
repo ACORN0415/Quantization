@@ -1,0 +1,86 @@
+OBQ capacity 양성 결과: 선행연구와 강한 기준선 검토
+작성: Codex 독립 검토, 2026-11-05. GPU 실행·모델 로드·기존 실험 수정 없음.
+범위: 지정 5편, 원래 GPTQ, KIVI, first-consumer 정보 시점의 직접 반례 1편.
+
+판단
+
+현재 구현은 알려진 GPTQ 순차 보상을 Key 행렬에 적용한 것이다. 새 목적함수나 새 양자화 알고리즘으로 채택할 신규성 근거는 부족하다. p4 두 층의 약 40%/33% post-Wo SSE 감소는 주 작업자가 전달한 기존 측정이며, 본 검토에서 다시 측정하지 않았다. 효과는 의미 있는 capacity 관측이지만, 동일 Query 정보를 이용하는 기존 회전 방식보다 좋은지는 아직 모른다.
+
+계속할 검사 하나는 남는다. 기존 pending BF16 기간 안에 이미 만들어지는 첫 소비자의 Query로 직전 청크를 한 번만 정수 코드화하고, 이후 Query에도 이득이 유지되는지 확인하는 것이다. 이것도 신규성 확정이 아니라 알려진 GPTQ의 인과적 실행 가능성과 비용을 검사하는 단계다. 'Query가 생길 때까지 압축을 미룬다' 자체는 이미 선행이 있다.
+
+1. 현재 코드와 GPTQ의 정확한 관계
+
+확인한 로컬 파일:
+src/experiments/method_search_20261105/obq_capacity_codex/diagnose_obq.py
+src/experiments/method_search_20261105/obq_capacity_codex/REGISTRATION_KO.txt
+
+K의 행은 토큰, 열은 head feature다. Q는 Query 토큰×feature다.
+  ||Q(K-Khat)^T||_F^2 = sum_i e_i^T (Q^T Q) e_i.
+따라서 GPTQ의 W=K, X=Q^T로 치환하면 목적함수가 같다. 현재 코드의 damped inverse Hessian 상삼각 Cholesky, 한 feature의 코드를 정한 뒤 나머지 feature를 보상하는 순서는 공식 GPTQ 구현과 같은 계산이다. 'OBQ'라는 계열 명칭은 가능하지만 이 코드가 최초 OBQ의 임의 원소별 greedy 순서를 구현하는 것은 아니다.
+공식 GPTQ 고정 revision: 2d65066eeb06a5c9ff5184d8cebdf33662c67faf, gptq.py 91–132행.
+https://github.com/IST-DASLab/gptq/blob/2d65066eeb06a5c9ff5184d8cebdf33662c67faf/gptq.py#L91
+
+축 구분은 중요하다. K scale이 토큰 16개별·채널별이더라도 logit 목적함수의 Hessian은 D×D feature 축이다. 토큰마다 다른 scale은 해당 행의 정수 격자를 결정할 뿐, Hessian을 토큰 축으로 바꾸지 않는다. 정규화된 정수 좌표 z=k/s에서 계산한다면 그룹별 D_s H D_s가 필요하지만, 현재 코드는 물리적 K 좌표에서 보상하고 feature마다 해당 scale로 반올림하므로 그 변환을 별도로 할 필요가 없다. 이 논리는 고정 scale과 raw-logit 제곱 오차에 해당한다. softmax·V·Wo까지 포함한 정확 출력 Hessian이라고 부르면 안 된다.
+
+현재 코드는 p0 Query 통계로 H를 고정하고 p4를 평가한다. 입력별 미래 Query를 요구하지 않는 offline 보정이다. 반면 현재 평가 Query로 모든 과거 청크를 다시 코드화하면 과거 쓰기 시점의 정보 조건을 위반한다. 두 조건을 혼동하지 않는다.
+
+2. 가장 가까운 지정 선행연구
+
+[HeadQ, arXiv:2605.03562v1, §3.1, §4]
+상태 정정: 현재 arXiv v3는 2026-05-19 저자 철회이며 이유로 ethical concerns를 명시한다. 아래 v1 방법은 공개된 아이디어의 이력으로만 남긴다. 유효한 성능 근거나 재현된 강한 기준선으로 사용하지 않는다.
+https://arxiv.org/abs/2605.03562
+Key 오차를 Query가 읽는 score 공간에서 다룬다. 보정 post-RoPE Query의 저차원 PCA 기저를 저장하고, Key를 쓸 때 기본 양자화 잔차의 side code를 추가 저장한다. 읽을 때 현재 Query와 side code로 logit 보정한다. 현재의 고정 INT4 격자 code 재선택과 구현은 다르지만, Query-visible 오차 및 고정 보정 기저라는 논리는 겹친다. side code 바이트와 읽기 비용을 제외한 비교는 불공정하다. 본문에서 공식 실행 코드 링크는 확인하지 못했다.
+https://arxiv.org/html/2605.03562v1#S4
+
+[NOVA-KV, arXiv:2608.04074v1, §3.1, §4]
+Q^TQ 가중 Key 오차를 명시하고 비직교 변환과 작은 그룹 VQ를 결합한다. 따라서 '전체 Query covariance로 Key 양자화'는 차별점이 아니다. 공개 fit_vq_codebook.py는 per-layer/head Query moment, centered K covariance, Sigma_Q^(1/2) V 변환과 역변환, 고정 그룹 순열을 계산한다. group_vq_codec.py는 변환 공간 nearest-centroid 배정을 수행한다. 읽은 경로는 GPTQ의 sequential scalar-code 보상과 다르다. VQ 코드북·norm·변환 상태와 읽기 커널을 포함해야 실제 비용 비교가 된다.
+https://arxiv.org/html/2608.04074v1#S3.SS1
+https://github.com/Amir-zsh/nova-kv/blob/d81c77b007d7a8e50ed608134fcb0feba0269ef8/calibration/fit_vq_codebook.py#L87
+https://github.com/Amir-zsh/nova-kv/blob/d81c77b007d7a8e50ed608134fcb0feba0269ef8/calibration/group_vq_codec.py#L115
+
+[OSCAR, arXiv:2605.17757v1, §3]
+Query covariance 고유기저 U_Q, Hadamard H, bit-reversal P를 결합한 R_K=U_Q H P와 고정 clipping을 사용한다. online은 고정 변환 후 scalar quantization이며 INT2 paged 커널을 제공한다. 공개 compute_qqt는 Query head 통계를 층 안에서 평균한다. torch.linalg.eigh의 반환 순서·부호를 사용하며 별도 sign canonicalization은 보이지 않는다. compose_rotation의 r_h_pbr가 논문의 조합이다. 이것이 현재 Hadamard-only RTN보다 먼저 대조할 단순하고 강한 기준선이다. 전체 OSCAR 재현과 핵심 회전만 기존 코덱에 적용한 대조는 구분해야 한다.
+https://arxiv.org/html/2605.17757v1#S3
+https://github.com/FutureMLS-Lab/OSCAR/blob/41ebcdba3db5f0ce1339c3727caea80df575d437/rotation/compute_kv_rotation.py#L85
+https://github.com/FutureMLS-Lab/OSCAR/blob/41ebcdba3db5f0ce1339c3727caea80df575d437/rotation/compute_kv_rotation.py#L215
+
+[SAW-INT4, arXiv:2604.19157v1, Appendix A.3]
+offline decode Query의 head-pooled second moment, 0.01 mean-diagonal damping, 고유기저 회전을 사용한다. 본문에 'Hessian-aware'라고 되어 있어도 이는 GPTQ code 보상 자체가 아니다. Appendix의 runtime 식은 (q H_b) R_l이며 OSCAR의 U_Q H P와 곱 순서가 다르다. 고유값 내림차순·부호 고정도 명시한다. SAW 이름을 붙여 임의의 합성 회전을 만들면 안 된다. 공개 루트 저장소는 주요 실행 코드를 submodule로 연결한다. 이번 제한 시간에는 submodule 전체 실행 경로를 감사하지 않았다.
+https://arxiv.org/html/2604.19157v1#A1.SS3
+https://github.com/togethercomputer/saw-int4/blob/e51bfa7291d52cd14b86e4c6ded6c002d0444ff0/.gitmodules
+
+[QuantWM, arXiv:2609.26425v3, §4.1–4.2]
+이전 생성 step Query의 전체 M을 정의한 뒤 비용 때문에 대각 근사하여 centroid 후보를 평가한다. QSAC는 Query 가중치와 residual 그룹 범위를 함께 쓰고, PSAC는 같은 역사 통계의 주요 부분공간에서 남은 logit 오차를 보정한다. 즉 '영상에서 역사 Query 통계 사용'과 '전체 covariance의 유용성'을 처음 제안한다고 할 수 없다. fixed INT4 격자에서 추가 residual payload 없이 코드만 바꾸는 것은 읽은 QSAC/PSAC와 다른 조작이지만, GPTQ와의 조합 신규성은 별도 문제다. 공식 프로젝트 페이지는 영상 비교만 제공하여 이 조사에서 실행 코드를 확보하지 못했다.
+https://arxiv.org/html/2609.26425v3#S4
+https://quantwm-project.github.io/QuantWM/
+
+3. 비용·정보 시점에 대한 직접 선행 반례
+
+KIVI §3.1은 KV가 streaming 구조이므로 GPTQ류 최적화는 overhead 때문에 부적절하다고 이미 논의한다. §3.3의 residual cache도 최근 원본을 잠시 유지하다가 그룹이 차면 한 번 양자화한다. 따라서 'GPTQ를 KV에 써보자'와 '양자화를 지연한다'는 조합 동기만으로 신규성이 충분하지 않다. 다만 이 문헌의 비용 판단이 우리 4680-token chunk/128-dimension에 그대로 성립하는지는 실제 비용으로 확인할 수 있다.
+https://arxiv.org/html/2402.02750v1#S3.SS1
+
+Practical Online KV Cache Compaction for LLM Agents §3.2는 완료 turn을 raw 상태로 유지하고, 다음 turn의 실제 Query를 얻은 뒤 압축하여 고정하고 원본을 폐기한다. 방법은 token eviction/attention matching이므로 fixed-grid INT4 code 선택과 동일하지 않다. 그래도 '첫 소비자 Query를 기다리는 압축'의 넓은 주장을 반박하는 직접 선행이다. 해당 연구의 지연 기간에는 원본 유지 비용이 있고, 우리의 이미 존재하는 pending 기간 안에서 수행 가능한지는 코드와 계측으로 별도 확인해야 한다.
+https://arxiv.org/html/2608.00902v1#S3.SS2
+
+4. 다음 검사로 남길 하나의 구체적 차이
+
+질문: 직전 청크가 이미 pending BF16인 실행에서 첫 소비자의 Q가 계산되자, attention 실행 전에 직전 청크를 한 번 코드화하는 것이 offline p0-H GPTQ 및 offline Query 회전+RTN보다 이후 읽기 출력 오차를 더 줄이는가? 그 이득이 실제 쓰기 비용을 감당할 만큼 남는가?
+
+조건:
+- 오직 해당 청크 최초 소비 시점에 가용한 Q만 사용한다. 나중 평가 Q로 이미 기록한 청크를 다시 최적화하지 않는다.
+- 첫 소비 Q의 적합 오차와 이후 소비 Q의 일반화 오차를 따로 보고한다. 첫 소비 오차 감소만으로 미래 보존 성과라고 하지 않는다.
+- 원래 pending 기간, frame 경계, per-channel scale 산출 정책, nibble packing, V 경로를 유지한다. 새 원본 보존 기간·재양자화·side code가 없음을 호출/상태 기록으로 확인한다.
+- 최소 강한 대조는 동일 p0 통계로 고정한 covariance rotation+RTN이다. 현재 OBQ_FULL를 변환 없이 쓰는 known-method 기준선으로 함께 둔다. 회전하면 scale 값은 바뀌므로 숫자 scale의 일치가 아니라 산출 정책·metadata 바이트를 맞춘다.
+- 고정 H는 offline factor 비용을 amortize할 수 있다. 입력별 H는 통계 수집·분해가 매 청크 비용이다. 새 dense R도 encoder/decoder 상태와 회전 시간이 든다. KV payload만 같다고 총비용이 같다고 하면 안 된다.
+- 현재 구현은 feature 128단계 순차 update다. 이는 offline model-weight GPTQ와 달리 매 청크의 online 쓰기 비용이다. 커널 융합·병렬화로 해결될 것이라고 가정하지 않고 측정한다.
+
+이 차이는 실험할 이유이지 신규성 입증이 아니다. offline 회전+RTN으로 같은 이득이 나오면 새로운 code solver 개발의 근거가 약해진다. 첫 소비에만 맞고 이후 읽기에서 이득이 사라지면 Query 시점 후보도 종료한다. 기존 방법으로 부족하고 비용을 통과한 경우에만 다음 보류 입력으로 간다. 이 보고서는 새로운 threshold나 실험 팔을 몰래 등록하지 않는다.
+
+5. 검색 범위와 미확인
+
+검색어 묶음: KV cache/GPTQ/OBQ, key quantization/error compensation/Cholesky, CALI/CaliKV/GPTQKV/GPTQ-KV, query-aware rounding, first-query/delayed/query-conditioned quantization. 지정 5편의 목적함수·정보 시점·관련 부록을 확인했다. GPTQ 공식 code, OSCAR calibration code, NOVA calibration/VQ code를 읽었다. 공개 저장소 전체의 모든 branch·commit·커널은 감사하지 않았다. CALI 또는 GPTQKV라는 이름으로 현재 구현과 같은 공식 논문/코드를 이번 검색에서 식별하지 못했다. 부재나 최초성을 증명한 것이 아니다. 가중치 GPTQ와 KV RTN을 한 파이프라인에서 지원한다는 문구는 GPTQ로 KV를 보상했다는 증거로 집계하지 않았다.
+
+직접 확인한 것: 원문·공개 코드·로컬 구현의 구조.
+전달받은 것: p4 SSE 감소율, ChunkStore의 first-consumer encode 위치.
+미확인: 새 causal 경로의 실제 성능, GPTQ online GPU 시간, 모든 강한 기준선의 재현, 독립 입력 일반화.
+조사 범위 종료. 다음 자원은 광범위 문헌 재탐색보다 등록된 causal 검사와 covariance 회전 핵심 대조에 배분하는 것이 타당하다.

@@ -1,0 +1,38 @@
+qcov 회전 대조 코드 검토(실행 전) — qcov_rotation_baseline_codex — Claude Fable 5.1 — 2026-11-05 KST
+Task/Dispatch ID: 없음. 읽기 전용, GPU 0, 기존 파일 수정 0, 측정 0.
+읽은 것: REGISTRATION_KO.txt 전체, diagnose_rotation.py 전체(270행), SELFTEST.json(요약). 현재 해시: diagnose_rotation.py 08800ae36db47c55bf05…(메시지와 일치),
+ REGISTRATION_KO.txt 940efce9302793506324…. SELFTEST의 code_sha256도 08800ae3…로 일치. OSCAR 공개 코드(revision 41ebcdba, rotation/compute_kv_rotation.py)는 raw 원문을 직접 읽어 대조했다.
+
+== 판단: 무효로 만드는 오류 없음. 실행 가능. 해석 주의 2건, 실패 시 "무효"로 떨어지는 단정문 2건 ==
+
+A. 정의·정보 동등성(확인)
+- 통계: p0 chunk7 call0의 원 좌표 q로 head별 C = QᵀQ/N, symmetrize, FP64 eigh(51-55행). OBQ의 H는 Hadamard 회전 q로 만든 HᵀCH + damping이므로 정보량 동일(직교 변환, damping은 고유벡터 불변).
+- 회전 축: rotate(x,r) = x @ r(41행), K_rot = K U, 복원 K = rec Uᵀ(91행). q는 원 좌표 그대로 복원 K와 내적 → 직교성으로 logit 보존(selftest fp64 maxabs 1e-13). 방향 일치.
+- 양자화·복원: make_frames(72-80행)와 packed_restore(83-93행)는 obq_capacity의 산술(absmax/7 BF16, FP16 scale, FP32 코드, BF16 code×scale, FP32 역회전, BF16 cast)과 같은 순서.
+  selftest 128-133행이 Hadamard를 r로 넣었을 때 코드·scale·복원·payload가 기존 경로와 비트 일치함을 확인. 실제 실행에서도 185-191행이 B0_FP32_RTN의 code/scale sha·payload·SSE(1e-9)를 재현해야 진행.
+- payload 동일 assert(189, 207행), q 위치·reference_energy 동일 assert(176, 181행), 입력 보존(229행), 사전 판정식(253-258행)이 등록문과 일치.
+- OSCAR 공개 코드 대조(원문): compose = rotation @ hadamard @ pbr(R·H·P), Hadamard는 head_dim 전체 Sylvester, 통계는 kv head 평균, damping 없음. 등록문 서술과 일치.
+  이 구현은 head별 통계(per-head adaptation)이고 damping 없음·P 최후방 적용도 공개 정의와 같다. 공개 코드의 CLI 기본값은 "plain"이고 R·H·P는 주석상 "validated"다 — 등록문에 그 사실을 적어 두면 좋다(무효 사유 아님).
+
+B. 해석 주의(결과 전에 등록문 해석란에 반영 권고, 팔·문턱 변경 아님)
+1. UHP는 정렬 효과가 없는 팔이다. 전체 128 Hadamard가 U 뒤에 오면 양자화 오차가 UH 좌표에서 백색 → U 좌표에서도 등방 → λ 가중 손실이 B0와 같은 구조가 된다.
+   예측: UHP SSE ≈ B0_FP32_RTN(수 % 이내). 이 결과는 "회전 기준선이 약하다"가 아니라 "전체 Hadamard가 q-cov 정렬을 지운다"로 읽어야 한다.
+   정렬을 실제로 시험하는 팔은 U뿐이다. 따라서 판정의 실질 비교는 OBQ_FULL 대 U_FP32_RTN이다.
+2. U 팔은 채널별 scale 때문에 B0보다 나빠질 수 있다(λ 큰 방향에 K 에너지도 크면 오차가 그 방향에 집중). SAW-INT4의 Hessian 변형 열세와 같은 기제로 추정.
+   U가 B0보다 나쁘면 "같은 통계의 고정 회전은 RTN에서 쓸모가 없고, 보상(격자 반올림)이 그 통계를 쓰는 유일한 경로"라는 서술이 가능하다. 반대로 U가 OBQ에 10% 이내로 붙으면 보상 경로 종료.
+   두 경우 모두 사전 판정식이 그대로 처리하므로 코드 변경 불필요.
+
+C. 실패 시 무효(거짓 결과가 아님)로 떨어지는 단정문 — 알고만 둘 것
+1. 79행 assert torch.equal(sn, ss.to(bf16)): 새 기저에서 어떤 채널·그룹의 absmax/7가 FP16 정규 최소(6.1e-5) 아래로 가면 FP16 왕복이 깨져 assert 실패 → 실행 무효.
+   K 에너지가 작은 고유 방향이 있으면 가능. 발생하면 "수치 범위" 사유로 기록하고 팔을 바꾸지 말 것.
+2. 188행 anchor code sha 일치: einsum 기반 rotate와 기존 `k.float() @ hm`의 FP32 합산 순서가 28080 토큰 형상에서 비트 동일해야 한다. selftest는 4680 형상에서만 확인했다.
+   불일치 시 assert로 무효 처리되며 결과 오염은 없다. 필요하면 재현만을 위해 anchor 계산에 기존 old.make_frames를 쓰는 것이 더 안전하나, 지금 코드를 바꾸지 않아도 된다.
+
+D. 사소
+- noquant 1% gate(224행)는 kref(V4 공통) 기준이라 올바르다. 회전만의 BF16 왕복 오차는 selftest에서 상대 2.5e-6이므로 통과 예상.
+- `rotation_persistent_bytes` = 786,432 B/층(FP32 12×128×128). 읽기 시 역회전 비용은 현재 Hadamard 경로와 같은 1회 곱이며 0이 아님(등록문 서술 적절).
+- 고유벡터 부호·순서 비정규화는 U 단독·채널별 scale에서 결과 불변(selftest 순열 동변성 확인). 퇴화 고유공간 의존성은 기록으로 충분.
+
+== 미확인 ==
+실행 결과 없음. OSCAR 원문은 compute_kv_rotation.py 한 파일만 읽었다(clipping·커널 미확인). 실제 형상에서의 einsum/matmul 비트 동일성은 실행에서만 판명.
+이 검토는 승인이 아니라 권고다.

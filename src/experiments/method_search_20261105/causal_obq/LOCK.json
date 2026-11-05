@@ -1,0 +1,42 @@
+{
+  "registered_utc": 1793868435.4508913,
+  "root_accepted": true,
+  "fable_reviewed": true,
+  "sha256": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/common.py": "436f7b2762397ecce840b91feb535094a9008c54066e4e796c3df248f9071c35",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture.py": "2f378ad4f14c07539b2bf29d4e32c5fdddc8a709574dafaa8357c3471c254c51",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/replay.py": "89483a35303b5d4ddc099854c9e1a06f9522cf84430b2728739270ccf88fb05c",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/selftest.py": "cd2a1e1f47e984c95c5c4e6b42eb1fb504e16c9c3ee34f9004e3832dc6473375",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/REGISTRATION_DRAFT_KO.txt": "971ce0f986dfeb44e002738130634b70fe82fe0d0e2adbe6c4508c241cd57b01",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/run_when_idle.py": "7d345860c28b5f52d53a5748a074900594d071ae6df888d87c0f4dbba7324d01",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/SELFTEST_V2.json": "2d37693275f9ee2269c00dde08975fe8be83f56225733854db1d1916b2ce815c",
+    "/home/acorn0415/Quantization/src/kvq/lockstep.py": "2ef170749c3a0a344273ccbb07629eaa9103cc01f2b7b99e64285be9c9569eff",
+    "/home/acorn0415/Quantization/src/kvq/store.py": "8960e23326fae1af43793bcd408d977722bc29c8c5306e48299914d42b3f7acb",
+    "/home/acorn0415/Quantization/src/wan/modules/causal_model.py": "8da6416213a6bf790148afee7ff766bd676427be04433352621cd6a07d03de7d",
+    "/home/acorn0415/Quantization/src/scripts/p3_tf_fr.py": "03a1ded8b1c8626d75e4c974221808393d122e6a4e04b077fb0d12dc9c11c201",
+    "/home/acorn0415/Quantization/src/wan/modules/attention.py": "02ad719a76e6bdec79d18fc62b094ef2ad7c28b2d593c9f395ae1226041b7c9d",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_capacity_codex/RESULT.json": "518d47923f654d9dd3a16e52fcc1a168f90018fbfd89f450f351639ad1ae5491",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/qcov_rotation_baseline_codex/RESULT.json": "6361f0a96488eeddebb47c6ec85aaa878b67ac3cb4b9cff5f9931654ff1eedce"
+  },
+  "review_sha256": {
+    "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/OBQ_CAUSAL_CODE_FABLE_REVIEW_KO.txt": "a1f5ff679d75db7ddea3bc18d7dca9606e0a6ae206b96d8da6159fc7bd25bd44",
+    "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/OBQ_CAUSAL_CODE_FABLE_REVIEW_ADDENDUM_KO.txt": "b710842ca0b0c78f3fc244f715c0b228784ba72758f3b351c881a58b25af95a2",
+    "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/OBQ_CAUSAL_DRIVER_FABLE_REVIEW_ADDENDUM_KO.txt": "03d2712514e25c2a2940f972967b551694d63497cbabbe285d82f6b45661a490",
+    "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/QCOV_RESULT_FABLE_REVIEW_KO.txt": "1f2b68de25495afe0adddb57162fe02bc3fcd579565734bae533616d742e3400",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/DRIVER_CODEX_REVIEW_KO.txt": "7cddb91ef49aa2c95628122c785e28c66b3cc1c6e1fd153031c1188bf4f3e677"
+  },
+  "selftest_note": "SELFTEST_V2 validates mathematical code; replay.py later changed only the offline preparation timing field name (37c76bec -> 89483a35), independently reviewed by Fable and Codex. No mathematical path or measured interval changed.",
+  "research_scope": "Fresh input causal-information-constrained replay, not online GPU encoding or quantized full-model rollout.",
+  "wait_policy": "R8d terminal completed/failed and no GPU jobs; R8d scientific success is not a dependency. Driver status is authoritative if child manifests remain running after external termination.",
+  "resource_limits": {
+    "waiting_seconds": 7200,
+    "experiment_seconds": 1800,
+    "generations": 2,
+    "cpu_threads": 4,
+    "model_process_rss_bytes": 42949672960,
+    "replay_rss_bytes": 8589934592,
+    "gpu_allocated_bytes": 23622320128,
+    "new_disk_bytes": 4294967296
+  },
+  "root_decision": "Proceed after strong rotation controls. Keep preregistered five arms/four endpoints; do not add mixed-precision alternatives or extend a failed run. Full rollout remains a later requirement."
+}

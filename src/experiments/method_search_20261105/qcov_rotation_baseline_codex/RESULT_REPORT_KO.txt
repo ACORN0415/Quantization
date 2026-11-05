@@ -1,0 +1,49 @@
+고정 Query covariance 회전 핵심 대조 결과
+2026-11-05, Codex. 실행 전 root 및 실제 Claude Fable 검토 완료.
+
+결론: 등록한 continue_causal_feasibility 조건을 통과했다.
+동일 p0 Query 정보를 사용한 U+RTN, U·H·P+RTN 모두에 대해 기존 OBQ가 두 개발 층에서 10% 이상 낮은 post-Wo SSE를 유지했다. 따라서 단순한 이 두 회전이 OBQ의 이득을 설명하거나 대체하지는 못했다. 다음 자원은 이미 계획한 인과적 실행 검사에 쓸 수 있다.
+이는 새로운 알고리즘의 신규성, 독립 입력 일반화, 전체 생성 품질, GPU 쓰기 비용의 성공을 뜻하지 않는다.
+
+주 결과(낮은 SSE가 좋음)
+층 | 기존 Hadamard FP32 RTN | U FP32 RTN | UHP FP32 RTN | 기존 OBQ_FULL | OBQ의 U 대비 감소 | OBQ의 UHP 대비 감소
+18 | 484.639137 | 973.803120 | 450.856588 | 289.667385 | 70.2540% | 35.7518%
+24 | 137.191452 | 189.104634 | 136.664766 | 89.467897 | 52.6887% | 34.5348%
+
+두 회전의 p4 점수를 보고 배포 회전을 선택한 것이 아니다. 등록된 두 대조 모두를 두 층에서 넘는지 확인했다. U와 UHP는 원문 핵심 회전의 per-head adaptation이며 전체 OSCAR 구현/INT2 clipping/커널의 재현이 아니다.
+기존 OBQ 및 B0 값은 보존한 obq_capacity_codex/RESULT.json에서 재사용했다. 새 실험의 독립 반복 수로 세지 않는다. 같은 p0/p4 개발 자료를 다시 쓰므로 보류 입력 일반화 결과가 아니다.
+
+정확성·바이트
+- 실제 p0/p4 파일과 manifest hash 확인. q/k/v 원소 바이트 보존.
+- 실제 형상의 기존 Hadamard FP32 RTN code/scale hash, packed payload 정확 일치. reference_energy 및 SSE도 등록 rtol=1e-9/atol=1e-9 통과.
+- 실제 nibble pack/unpack의 전체 code 일치. 네 새 층×회전 결과의 cache payload는 모두 54,097,926 bytes.
+  K 27,095,046 bytes, V 27,002,880 bytes. 기존 B0/OBQ와 같음.
+- 별도 고정 회전 상태는 팔별 층당 786,432 bytes(FP32, 12×128×128). 같은 cache payload가 같은 총상주 메모리를 뜻하지 않는다.
+- 양자화 없는 BF16 회전/복원 post-Wo SSE(K 원본+V4 참조 대비):
+  L18 U 0.270220, UHP 0.107276; L24 U 0.064218, UHP 0.031331.
+  기존 FP32 RTN SSE의 0.0221–0.0558%로 등록 1% 기준을 통과했고, 기존 CPU 대 native BF16 오차의 0.254–0.912배다.
+  따라서 본 회전 대조 차이를 단순한 무개입 회전 반올림 오차로 설명할 근거는 작다. 수치 오차가 정확히 0이라는 뜻은 아니다.
+
+자원
+- 실제 캡처 검증·통계·두 회전·기준 재현·보조 무개입 검사·저장 총 14.998976초.
+- CPU4threads, peak RSS 2.244389GiB, GPU0, 모델 로드0, 새 생성0.
+- 결과/코드/감사 등 새 폴더는 감사 당시 약189KB로 disk2GiB 상한 이내.
+- offline 회전 준비, rotate/scale, code, pack+restore, attention CPU 시간은 RESULT.json에 분리 기록했다.
+  기존 OBQ 시간과 실행 이력이 다르고 실제 GPU online kernel을 측정하지 않았으므로 속도 우위 주장은 하지 않는다. 회전·복원 read 비용도 0으로 놓지 않는다.
+
+실행 후 감사
+audit_result.py는 torch/GPU 없이 저장된 스칼라와 등록 hash를 재계산한다. 9개 고정 파일 hash, SELFTEST hash, 결과의 lock hash, 이전 결과 hash, 원본 재사용 항목, bytes, noquant 기준, 전체 주판정이 통과했다. 원자료 텐서 전체를 별도 과정에서 다시 attention 계산한 감사는 아니다.
+첫 감사에서는 V의 청크별 pad를 빠뜨린 손계산 식이 실패했다. 실제 fixed_v4 경로를 확인하여 6×4688 토큰으로 수정했으며 내용은 AUDIT_ATTEMPT_NOTE_KO.txt에 남겼다. 실험 코드·등록·lock·RESULT.json 및 판정 기준은 변경하지 않았다.
+
+Claude 리뷰의 수용/비수용
+- 수용: 좌표 방향, 공개 UHP 조합, per-head adaptation, byte 및 기존 경로 대조, 잠재 scale 범위/anchor 불일치의 무효 처리. 두 잠재 실패는 실제 실행에서 발생하지 않았다.
+- B1의 '전체 Hadamard가 정렬 효과를 지우므로 UHP는 정렬 효과가 없다'는 일반 단정은 수용하지 않는다. 백색 등방 양자화 잡음을 가정한 직관은 가능하지만 실제 채널별 scale·clipping·상관된 오차에서 자동 성립하지 않는다. 이번 UHP 측정값을 그대로 보고한다.
+- B2의 '보상이 통계를 사용하는 유일한 경로'도 수용하지 않는다. 이번 두 회전의 열세는 모든 회전, 비직교 변환, clipping, VQ 또는 다른 코덱을 배제하지 않는다. NOVA-KV 등은 다른 변환을 사용한다.
+- 코드 CLI는 OSCAR에서 plain이 기본값이며 r_h_pbr는 공개 코드가 validated로 표시한 명시적 조합이다. 등록한 UHP는 그 명시적 조합을 사용했다.
+
+해시
+diagnose_rotation.py: 08800ae36db47c55bf05f7f1e2c1c1ad8c86c58143587a810d193051d3093c61
+REGISTRATION_LOCK.json: b34f73fd33aae70b36358a94a65b8fa68b56cdda39b79e4ef644f1bf323e2f5e
+RESULT.json: 6361f0a96488eeddebb47c6ec85aaa878b67ac3cb4b9cff5f9931654ff1eedce
+
+다음 판단: 기존 GPTQ의 동일 정수 격자 보상이 시험한 강한 회전 두 개보다 유리한 development 관측은 유지한다. 인과적인 최초 소비 Query로 코드를 결정했을 때 이후 읽기에서도 이득이 유지되는지, 그 쓰기 비용을 감당하는지를 다음 등록 검사로 확인한다. 이 보고서 자체가 신규성을 승인하거나 전체 모델 실행을 새로 승인하는 것은 아니다.

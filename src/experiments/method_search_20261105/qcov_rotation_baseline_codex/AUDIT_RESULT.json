@@ -1,0 +1,61 @@
+{
+  "passed": true,
+  "audit_scope": "stored scalar recomputation + hashes; no raw tensor recalculation",
+  "source_hash_checks": 9,
+  "code_sha256": "08800ae36db47c55bf05f7f1e2c1c1ad8c86c58143587a810d193051d3093c61",
+  "result_sha256": "6361f0a96488eeddebb47c6ec85aaa878b67ac3cb4b9cff5f9931654ff1eedce",
+  "registration_sha256": "b34f73fd33aae70b36358a94a65b8fa68b56cdda39b79e4ef644f1bf323e2f5e",
+  "summary": [
+    {
+      "layer": 18,
+      "B0_FP32_RTN_sse": 484.6391365632025,
+      "OBQ_FULL_sse": 289.6673852586657,
+      "rotations": {
+        "U_FP32_RTN": {
+          "sse": 973.8031198481242,
+          "OBQ_gain_percent": 70.25400932132537,
+          "noquant_sse": 0.2702203259059533,
+          "noquant_percent_of_B0": 0.055757017029662334,
+          "noquant_vs_cpu_native_floor": 0.9122869186065157,
+          "rotation_persistent_bytes": 786432
+        },
+        "UHP_FP32_RTN": {
+          "sse": 450.85658777175536,
+          "OBQ_gain_percent": 35.751768275079776,
+          "noquant_sse": 0.10727584945713745,
+          "noquant_percent_of_B0": 0.02213520150639907,
+          "noquant_vs_cpu_native_floor": 0.362172437672988,
+          "rotation_persistent_bytes": 786432
+        }
+      }
+    },
+    {
+      "layer": 24,
+      "B0_FP32_RTN_sse": 137.19145156925504,
+      "OBQ_FULL_sse": 89.46789659630703,
+      "rotations": {
+        "U_FP32_RTN": {
+          "sse": 189.10463387476563,
+          "OBQ_gain_percent": 52.68868098940555,
+          "noquant_sse": 0.0642176203261729,
+          "noquant_percent_of_B0": 0.046808762201743646,
+          "noquant_vs_cpu_native_floor": 0.5198806335207344,
+          "rotation_persistent_bytes": 786432
+        },
+        "UHP_FP32_RTN": {
+          "sse": 136.66476572623728,
+          "OBQ_gain_percent": 34.53477484055662,
+          "noquant_sse": 0.031330770260429734,
+          "noquant_percent_of_B0": 0.022837261288553228,
+          "noquant_vs_cpu_native_floor": 0.2536416112735691,
+          "rotation_persistent_bytes": 786432
+        }
+      }
+    }
+  ],
+  "decision_recalculated": "continue_causal_feasibility",
+  "payload_bytes": 54097926,
+  "elapsed_seconds": 14.998976493021473,
+  "max_rss_GiB": 2.2443885803222656,
+  "new_directory_bytes": 189145
+}

@@ -1,0 +1,14 @@
+causal_obq 최종 해시 대조 보충 — Claude Fable 5.1, 2026-11-05
+대조 결과(직접 sha256sum): common 436f7b27…071c35, capture 2f378ad4…254c51, replay 37c76bec…11b4e1, selftest cd2a1e1f…473375, 명세 5f7728f0…4340b.
+ 조정자 통보 해시 4개와 SELFTEST_V2.json의 4개 해시가 모두 현재 파일과 일치한다. 내 본 검토(OBQ_CAUSAL_CODE_FABLE_REVIEW_KO.txt 스냅샷 2)가 읽은 코드와 같은 버전이다.
+ 코드 검토 판단 유지: 실행 무효 오류 없음. 반영 확인: build 전 peak reset + build 후 guard(capture.py 25–30행), offline factor 층별 1회·온라인 factor 비용 포함(replay 25행, common factorize/codes_obq), p0 raw H 해시 capacity 대조(replay 23–24행), residual_tokens 기본값 assert(capture 33–36행).
+
+남은 항목 1개(명세 문장, 코드 변경 불필요):
+ 명세 17–19행은 "ChunkStore 규칙 명시 + 기본값 assert"와 "causal_model BF16 path"라고만 적어, 생성이 ChunkStore로 돈다고 읽힌다. 실제 생성은 lockstep.bf16_cache(src/kvq/lockstep.py:6–13)의 raw dict 캐시('store' 키 없음)이므로 causal_model.py:245–255의 raw 경로다.
+ 정보 시점 결론은 불변(과거 K = call4, capture 72–76행 바이트 일치 assert)이며 ChunkStore의 first-reader 가용성은 store.py 123–134행으로 별도 확인된다. 다만 "이 실행이 ChunkStore residual 0으로 돌았다"는 뜻이 되지 않도록 명세에 한 문장을 추가할 것:
+ "참조/계측 생성은 raw BF16 kv_cache 경로이며, ChunkStore residual_tokens=0은 배포 정책 가정이다(기본값만 assert)." 이 수정은 명세 해시만 바꾸고 코드 해시는 바꾸지 않으므로 코드 재검토는 필요 없다. 최종 명세 해시를 LOCK에 기록해 주면 된다.
+
+용어 수용: call0의 청크6 H가 평가 q와 같은 입력을 쓰는 것은 배포상 실제 가용 정보이므로 oracle이라 부르지 않는다. 보고에서 "call0 = 최근 청크 동일 입력 포함, call3 = 미사용 미래 endpoint"로 구분하면 충분하다. leave-out·단일청크 팔 미채택과 20% 유지도 수용한다.
+선택 사항(채택 여부 자유, 비차단): 층 18/24 모듈 post-hook으로 active 소비 assert. 미채택 시 라벨 보장은 기존 전층 캡처 선례와 native_av 바이트 일치에 의존한다는 점만 기록.
+
+이 검토를 LOCK의 fable_reviewed 근거로 써도 된다. 조건: LOCK의 코드 해시 4개가 위와 같고, 명세는 위 한 문장을 반영한 최종 해시일 것.

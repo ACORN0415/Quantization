@@ -1,0 +1,39 @@
+first-reader H 설계의 인과 조건 검토 — Claude Fable 5.1, 2026-11-05 (추가 검토, GPU 0, 파일 변경 0)
+직접 읽음: src/kvq/store.py 97–166 (ChunkStore.attend 전문), src/inference.py 39–40, 76–78 (residual_tokens 기본 0, store_factory).
+
+1. 코드 사실 (확인)
+ - attend()는 매 call마다 pending을 현재 call의 (key, value)로 덮어쓴다(128행). 청크 c의 5 call 중 마지막(call4, context_noise 재실행)의 K/V가 최종 pending이다.
+ - 청크 c+1의 첫 call(start 증가)에서 pending이 segments에 raw로 추가되고(123행), residual_tokens=0이면 cutoff=start이므로 같은 call 안에서 즉시 encode_pair(134행)된 뒤 attention(166행)이 실행된다.
+ - 따라서 encode 시점에 함수 스코프에 `query`(청크 c+1 call0의 Q)가 존재한다. 주 작업자 주장은 맞다: "청크 c를 c+1 call0 Q로 H를 만들어 1회 encode"는 현재 경로에서 인과적이다(존재하지 않는 정보를 쓰지 않음).
+ - 전제: residual_tokens=0(채택 구성). residual>0이면 첫 encode 시점이 뒤로 밀려 first reader가 달라진다. 등록문에 residual_tokens==0을 assert로 명시할 것.
+ - 현재 코드는 `query`를 quantizer에 넘기지 않는다. 구현 시 encode_pair 호출부에 query를 전달하는 새 경로가 필요하며 기존 파일 변경 없이 새 store 서브클래스로 가능하다(이번 검토 범위 밖).
+
+2. 인과 조건은 충족되나, 평가 설계에서 구분해야 할 세 가지
+ (a) 자기-읽기(self-read) 혼입: c7 call0 평가에서 청크 6의 H는 c7 call0 Q로 만들어지고, 평가 q 128개도 c7 call0 Q에서 뽑는다. 배포에서는 정당하지만 진단으로는 청크 6이 oracle 조건이다.
+     처리: ① H_6 추정에서 평가 index 128개를 제외(leave-out)하고 "같은 call·보류 토큰" 조건이라고 라벨; ② 단일 청크 양자화 분해(청크 j만 양자화, 나머지 원본; 6회×팔, q128이라 비용 무시)로 청크 6 vs 1–5 기여를 분리 보고.
+     softmax 결합 때문에 분해 합 ≠ 전체이나 상대 비교에는 충분하다.
+ (b) 결정 지표는 c7 call3(다른 denoise step의 Q)로 둔다. 거기서는 모든 청크(6 포함)의 H가 다른 call의 Q이므로 누출이 없다. c7 call0은 보조 지표(a 처리 후).
+     call0 Q는 가장 높은 timestep(잡음 최대) 입력에서 나온다고 가정(denoising_step_list 설정값 미확인). 잡음 지배 Q가 일반화에 유리한지 불리한지는 예측 불가 → call3 결과가 답한다.
+ (c) 읽기 분포: 청크 c의 캐시는 c+1..c+6 × 5 call = 최대 30번 읽힌다. first-reader H는 그중 첫 1회에 정확히 맞춘 것이다. c7에서 청크 1(거리 6)과 청크 6(거리 1)의 이득 차이가 거리 의존성을 보여 주므로 (a)의 분해를 거리별로도 읽는다.
+
+3. 팔 구성 제안 (같은 payload, 모두 인과; 결정 팔 3, 설명 팔 2)
+ A0 RTN.  A1 FIRST_READER_H: 청크 c마다 H_c = c+1 call0 Q(회전 좌표), 청크 6은 leave-out.  A2 WRITER_H: H_c = 청크 c call4 Q(clean, 자기 Q) — 추가 캡처 6 Q × 2층 = 170MB로 S1(timestep) 분리.
+ A3 FROZEN_P0_H: capacity와 동일 해시(오프라인 보정 대조).  A4 ORACLE: 평가 call Q 전체로 H(누출 상한 라벨, 결정 불사용, 생략 가능).
+ A1 vs A2가 이 추가 정보의 핵심 질문이다: "노이즈 최대 step의 미래 reader Q"와 "clean step의 자기 Q" 중 어느 것이 뒤 읽기에 전이되는가. 둘 다 배포 가능하므로 승자가 방법 정의가 된다.
+
+4. 캡처 요구 (층 18/24, 새 미사용 prompt + seed, 훅 run 1 + 무훅 참조 run 1)
+ - Q: 청크 2..7 call0(first reader, 6개), 청크 1..6 call4(writer, 6개), 청크 7 call3(평가). 각 14.4MB.
+ - 청크 7 call0·call3: 현재 청크 K/V, native_av, wo/bias. 과거 28080 K/V(=청크1–6 call4 K/V)는 BF16 참조 run이므로 c7 call0 파일 1회.
+ - 합계 ≈ 2층 × (13×14.4 + 2×60 + 200)MB ≈ 1.0GB. disk 4GiB·생성 2회 상한 안.
+ - 훅이 궤적을 바꾸지 않았음을 무훅 run latent와 바이트 일치로 증명. 모든 팔이 같은 텐서 해시를 소비(pairwise 기록). 평가 q index 규칙은 capacity와 동일(128개).
+
+5. 판정 제안 (결과 전 주 작업자가 고정; 수치는 제안)
+ - 주: c7 call3에서 A1 이득(전체 참조 sse, A0 대비) ≥ 15% 두 층, 그리고 청크 1–5 분해 이득이 청크 6 이득의 1/2 이상(거리에 따라 소멸하지 않음) → 신호.
+ - 종료: c7 call3에서 A1 ≤ 0% 어느 층이든, 또는 이득이 청크 6에만 집중(1–5 합 ≤ 5%) → first-reader 변형 종료. A2가 15% 이상이면 writer-H로 교체 검토(새 등록).
+ - 판단 불가: 그 사이. K-only 참조 값도 병기(V4 바닥 28–34% 때문).
+ - 비용: encode가 c+1 call0의 critical path에 들어간다(Cholesky + 128단계 루프). 생성 시간 영향은 이 진단에서 못 재며 방법 채택 전 GPU 실측 필수(이전 검토 R2 유지).
+
+6. 가장 강한 반론
+ first-reader H가 call3에서 이기더라도 "미래 Q로 과거 K를 양자화한다"는 설정 자체는 QuantWM의 historical-Query-sensitivity(과거 Q→현재 K)와 정보 방향이 반대일 뿐 같은 계열이며, HeadQ/OSCAR/SAW-INT4의 보정 Q 공분산과도 같은 양(QᵀQ)을 쓴다. 차이는 "보정 0·바이트 0·반올림만·온라인"이고, 이것이 기여로 남으려면 A3(오프라인 보정)보다 나쁘지 않아야 한다. A1 < A3이면 온라인성의 가치가 없다.
+
+확인/미확인: §1 코드 직접 확인. denoising_step_list·context_noise 실제 값 미확인(설정 파일 위치 못 찾음). 새 캡처 코드 미존재로 설계만 제공.

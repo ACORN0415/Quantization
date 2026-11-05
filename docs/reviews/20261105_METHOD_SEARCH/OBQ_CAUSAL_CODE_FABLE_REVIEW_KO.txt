@@ -1,0 +1,52 @@
+causal_obq 실제 코드 검토 — Claude Fable 5.1, 2026-11-05 (10분 상한, GPU 0, 파일 변경 0)
+대상: src/experiments/method_search_20261105/causal_obq/{REGISTRATION_DRAFT_KO.txt, common.py, capture.py, replay.py, selftest.py, SELFTEST.json, SELFTEST_V2.json}
+주의: 검토 도중 파일이 갱신됐다(17:34→17:36). 아래 두 스냅샷을 모두 읽었고, 판단은 두 번째(현재) 기준이다. LOCK.json은 최종 파일의 해시를 다시 잡아야 하며, 그 해시가 아래와 다르면 이 검토는 그 버전을 읽은 것이 아니다.
+스냅샷 1(최초 읽음): capture 0ab5be6a…, replay 757474f7…, common c8229f65…, selftest 6080c28b…  (SELFTEST.json이 가리키는 버전)
+스냅샷 2(현재, 전체 재읽음: common 35–106행, capture 20–125행, replay 1–60·80–135행 grep):
+capture.py: 2f378ad4f14c07539b2bf29d4e32c5fdddc8a709574dafaa8357c3471c254c51
+replay.py: 37c76bec1dabac4fd59d429e0dd21f2a1364ec12daf9809bca5052516f11b4e1
+common.py: 436f7b2762397ecce840b91feb535094a9008c54066e4e796c3df248f9071c35
+selftest.py: cd2a1e1f47e984c95c5c4e6b42eb1fb504e16c9c3ee34f9004e3832dc6473375
+REGISTRATION_DRAFT_KO.txt: 5f7728f0b543614db2e6cf1dacd259177e633d7662bce4f520f1b282a1a4340b
+SELFTEST_V2.json: passed= True
+common.py : 436f7b2762397ecce840b91feb535094a9008c54066e4e796c3df248f9071c35
+capture.py : 2f378ad4f14c07539b2bf29d4e32c5fdddc8a709574dafaa8357c3471c254c51
+replay.py : 37c76bec1dabac4fd59d429e0dd21f2a1364ec12daf9809bca5052516f11b4e1
+selftest.py : cd2a1e1f47e984c95c5c4e6b42eb1fb504e16c9c3ee34f9004e3832dc6473375
+
+판단: 실행을 무효로 만드는 오류는 찾지 못했다. 아래 1은 잠금 유효성, 2–3은 등록문에 적어야 할 사실, 4–7은 해석·기록 보완이다. 팔·기준 추가 요구 없음.
+
+1. 잠금 유효성 (실행 전 필수)
+ - SELFTEST.json은 스냅샷 1 해시를 가리키므로 현재 코드에 대한 합성검사 증거가 아니다. SELFTEST_V2.json이 현재 해시와 일치하는지 확인한 뒤 LOCK에 V2만 참조할 것(위 출력으로 대조).
+ - check_lock()은 LOCK의 fable_reviewed/root_accepted와 10개 파일 해시를 검사한다(common.py 98–105행). 이 파일 검토를 fable_reviewed=true의 근거로 쓰려면 LOCK 해시 = 위 스냅샷 2 해시여야 한다. 이후 한 글자라도 바뀌면 재검토 대상.
+
+2. 참조/계측 생성이 ChunkStore 경로가 아니라는 사실 (무효 아님, 등록문 수정 필요)
+ - pilot.bf16_cache는 src/kvq/lockstep.py:6–13의 raw dict(k, v, global/local_end_index)이고 'store' 키가 없다. 따라서 causal_model.py:202의 ChunkStore 분기가 아니라 245–255행의 raw 경로(매 call마다 roped_key를 같은 슬롯에 덮어씀, 윈도 = 마지막 max_attention_size 토큰)로 실행된다.
+ - 정보 시점 결론은 바뀌지 않는다: raw 경로에서도 과거 청크의 K = 그 청크 마지막 call(call4)의 K이고, capture.py 72–76행이 청크7 read에서 writes[1..6]과 윈도 과거 K/V의 바이트 일치를 assert한다. first-reader 가용성은 ChunkStore.attend(store.py 123–134행) 코드로 별도 확인된 사실이다.
+ - 그러나 capture.py 33–36행의 inspect.signature(ChunkStore).parameters['residual_tokens'].default==0 assert는 "이 실행이 ChunkStore residual 0으로 돌았다"는 뜻이 아니라 기본값 확인일 뿐이다. 등록문 §소스/실행 순서에 "생성은 raw BF16 캐시 경로, ChunkStore는 배포 정책 가정"으로 명시하고, 원하면 assert 'store' not in cache[0]을 추가해 경로를 기록할 것.
+
+3. attention 호출 서명 일치 (확인)
+ - causal_model.py:251–255는 attention(roped_query, k_window, v_window) 세 위치 인자만 넘긴다. replay native()의 attention(q,kf,vf)와 서명이 같고, causal_model.py:2가 wan.modules.attention.attention을 그대로 import하므로 같은 함수다. native_av 바이트 일치 assert(replay 90행 부근)가 이를 실행 시 재확인한다.
+
+4. 층 라벨 보강 (권고, 1–2행)
+ - 라벨은 pre-hook(active)→다음 model.attention 호출이 소비하는 구조다. 계층 18/24 self-attention이 model.attention을 정확히 1회 호출한다는 전제가 깨지면 ctx가 다음 층 호출에 붙어 wo(index로 로드)와 불일치하는데, 현재 assert는 pre-hook 횟수(40)만 센다. 해당 모듈에 forward(post) hook을 달아 "모듈 종료 시 active가 비어 있음"을 assert하면 소비 여부가 보장된다. 기존 전층 캡처가 같은 구조로 성공했으므로 무효 가능성은 낮지만 비용이 0이다.
+
+5. 결정 규칙과 first-reader call0 endpoint (해석)
+ - O_first_reader의 청크6 H = l{l}_first_reader6.pt = 청크7 call0 q 전체 = 평가 q(QIDS 포함)와 동일 텐서. 등록문 7항이 이를 "합법적 시점이나 일반화 증거 아님"으로 적었고, 결정은 4 endpoint의 min이므로 call0 과대가 단독으로 signal을 만들 수는 없다(call3도 20%를 넘어야 함). 결과 보고 시 O_first_reader는 call3 두 층을 주 수치로, call0은 self-read 포함 수치로 라벨할 것.
+ - O_own_refresh, O_offline은 어느 endpoint에도 평가 q 정보가 없다(packets()는 write/first_reader/p0 파일만 연다: replay 24–25행, read 파일은 native()에서만).
+
+6. 시간 측정의 비교 가능성 (기록)
+ - O_offline은 factorize(hoff)를 1회 선계산(replay 25행, factor_seconds 별도)하고 encode_k에 factors를 넘기므로 인코딩 시간에 역행렬·Cholesky가 빠진다. O_own_refresh/O_first_reader는 codes_obq 안에서 head별 inv+cholesky를 매 청크 수행하므로 포함된다. 등록문의 "오프라인 H 준비는 1회 비용 별도"와 일치하나, 팔 간 seconds를 나란히 놓을 때 이 차이를 표에 적어야 한다.
+ - 모든 팔의 encode_k 시간에 pack 후 unpack 왕복 검증(common 82행)이 포함된다. 검증 비용은 encoder 비용이 아니며 RTN 팔의 상대 시간을 부풀린다. 측정 범위 정의에 명시.
+
+7. 자원·종료 (기록)
+ - guard()의 30분 시계는 reference 시작(RUN.json)부터이고 packets/native도 같은 시계를 본다(common 108행). GPU attention 재생이 R-8d 대기 등으로 밀리면 TimeoutError → incomplete(무효 아님). 등록문의 "최초 상한에서 멈춤"과 일치.
+ - CUDA peak: 현재 capture.py 26–30행이 build 전에 reset하고 after_build/after_encode peak를 기록한다. root 지적 반영 확인. 22GiB guard는 가중치 상주 포함 max_allocated 기준.
+ - 디스크: artifact 31개(층당 wo1+write6+first_reader6+read2=15, ×2, +latent) ≈ 2×(6×43MB+6×14MB+2×60MB)+α ≈ 0.95GB. 4GiB 안.
+
+8. 직접 확인한 수학/산술 동일성
+ - hessian(): 회전·FP64·λ=0.01·mean diag — capacity와 동일. replay 23–24행이 p0 raw H 해시를 capacity RESULT.json의 hessian_raw_sha256과 assert로 대조한다(좋음).
+ - codes_obq(): capacity obq_codes와 동일 갱신식. frames(): 3프레임×(1560+8pad)/16그룹, absmax/7, FP16 scale 왕복 assert — 동일.
+ - restore(): int8→BF16×scale(BF16)→pad 제거→역Hadamard FP32→BF16 — 동일. encode_v(): 4688=293×16 그룹, 선행 Quantizer와 일치는 selftest 주장(현재 해시의 V2로 재확인 필요).
+
+확인/미확인: 위 행 번호는 현재 스냅샷 기준 직접 읽음. p3_tf_fr.run_chunk 내부(5 call 구성)는 등록문 기술과 model_pre assert(timestep·current_start)에 의존, 직접 읽지 않음. selftest.py 본문은 읽지 않았고 결과 JSON만 봤다. HeadQ/NOVA-KV/OSCAR 본문 미확인(신규성 미확정 유지).

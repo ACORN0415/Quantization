@@ -1,0 +1,57 @@
+Query covariance 회전 핵심 대조: 사전 등록안
+2026-11-05, Codex. 실제 캡처 점수 측정 전. root/Claude 검토와 lock 이후 실행.
+
+질문: 기존 p0-H OBQ_FULL의 이득이 동일 Query 정보를 쓰는 단순 고정 회전+RTN보다 남는가?
+신규 방법 개발이나 전체 OSCAR 재현이 아니다. p0/p4는 이미 여러 번 본 개발 입력이며 독립 보류 입력이 아니다.
+
+입력/평가 고정
+- p00_s101을 통계용, p04_s101을 평가용으로 사용. 층18/24, c7, 기존 capacity와 같은 파일·manifest hash.
+- q 128개 위치 floor(arange(128)*4680/128). 6개 과거 청크 K만 회전+INT4. 현재 청크 K는 원래 BF16.
+- V는 기존 capacity의 fixed_v4와 동일. q/k/v/Wo/bias/native_av 읽기 전용. CPU FP32 attention, FP64 SSE 누적.
+- 주 지표는 기존 capacity와 같은 전체 post-Wo SSE. K-only 참조 SSE·logit MSE·원 Key SSE는 보조.
+
+새 팔은 두 개뿐
+1 U_FP32_RTN: head별 p0 원 좌표 Q로 C=Q^TQ/N, symmetrize, FP64 torch.linalg.eigh의 U를 FP32 저장.
+2 UHP_FP32_RTN: 같은 U와 고유값으로 공개 OSCAR의 U@Hadamard@Pbr을 FP64로 구성 후 FP32 저장.
+출처 revision 41ebcdba3db5f0ce1339c3727caea80df575d437:
+https://github.com/FutureMLS-Lab/OSCAR/blob/41ebcdba3db5f0ce1339c3727caea80df575d437/rotation/compute_kv_rotation.py
+compute_qqt 85–99행: covariance symmetrize와 eigh. make_br_perm_matrix 35–42행: 고유값 내림차순 index를 bit-reversal 위치에 배치. compose_rotation 243–244행: U H P.
+공개 코드는 layer 안 head 통계를 평균하지만 여기서는 OBQ와 같은 per-head 정보량을 허용하는 adaptation이다.
+공개 eigh 고유값 오름차순·그에 대응하는 U, 부호를 그대로 사용한다. 별도 부호·순서를 p4 결과로 탐색하지 않는다.
+고유값/변환 hash와 orthogonality를 남긴다. 퇴화 고유공간의 basis 선택은 라이브러리에 의존하므로 실행 환경을 기록한다.
+순수 U도 사전에 정한 별도 강한 기준선이다. U기저에 다시 OBQ하는 팔은 추가하지 않는다.
+마지막 순수 channel permutation은 token-group/per-channel scale에서 원리상 quantize/역변환 후 동등하다. P 유무를 별도 방법의 이득으로 집계하지 않는다.
+
+양자화와 바이트
+- K@R을 FP32로 계산한 후 BF16로 변환. frame=1560에 8 zero pad, token group=16, 채널별 absmax/7를 native BF16에서 계산, clamp_min(1e-8), FP16 scale 저장.
+- 코드는 BF16 입력과 저장 scale을 FP32로 변환해 round ties-to-even, clamp[-8,7]. 기존 OBQ의 FP32 code 산술과 같다.
+- 4-bit 실제 nibble pack/unpack의 모든 code 일치 검증. 복원은 BF16 code*BF16 scale, pad 제거, FP32 @R^T, BF16 cast. 기존 capacity와 같은 decoder 연산 순서.
+- 회전별 scale 값은 달라도 같은 scale 정책/형상/dtype/바이트다. 실제 cache payload는 두 팔 및 기존 B0/OBQ 모두 같아야 한다.
+- per-head FP32 R은 층당 786432 bytes로 encoder/decoder가 공유할 수 있는 상태다. transpose view는 새 보존 배열이 아니다. 실제 영구 보존 matrix 바이트와 offline FP64 준비 배열을 별도 보고한다. 읽기/복원 회전 비용은 0이 아니다.
+
+기존 자료 재사용
+- obq_capacity_codex/RESULT.json의 B0_BF16_RTN, B0_FP32_RTN, OBQ_FULL을 해시 고정하여 재사용. 기존 코드·등록·결과 수정 없음.
+- 새 구현으로 기존 Hadamard+FP32 RTN을 한 번 재계산하여 code/scale hash와 bytes가 원본과 정확히 같고, reference_energy 및 SSE가 rtol=1e-9, atol=1e-9 이내인지 확인한다. 실패 시 새 효과를 판정하지 않는다.
+- 이 재계산을 독립 반복/새 입력으로 세지 않는다. 재사용 OBQ CPU 시간과 새 회전 CPU 시간은 실행 이력이 다르므로 속도 우위 판정에 사용하지 않는다.
+
+무개입·합성 검증(실제 점수 전)
+- 고정 seed 합성 Query, K로 FP64 U/UHP orthogonality maxabs<=1e-10.
+- FP64 noquant QK logit 보존 maxabs<=1e-10; FP32 noquant roundtrip/logit은 rtol=5e-5, atol=5e-5.
+- BF16 회전·복원은 그 자체로 반올림이 있어 비트 항등을 요구하지 않는다. 합성에서는 오차를 기록하고, 실제 캡처에서는 noquant transform 후 post-Wo SSE를 각 팔에 별도 기록한다. 이 보조 지표로 threshold를 바꾸지 않는다.
+- 실제 noquant 회전 SSE(K 원본+V4 참조 대비)가 각 팔에서 B0_FP32_RTN 전체 SSE의 1% 이하여야 산술 대조가 유효하다. 넘으면 수치 경로 혼입으로 효과 판정을 보류한다. CPU 대 native BF16 baseline 오차와의 비율도 기록한다. 1%는 원 quantization SSE보다 충분히 작은 산술 교란을 요구하는 사전 기준이다.
+- 합성 identity rotation 실제 pack/unpack roundtrip, 기존 Hadamard FP32 RTN code/scale/restore 일치. 입력 tensor 원소 bytes 보존.
+- 임의 순수 channel permutation에 대해 동일 token-group/channel scale로 만든 code·scale이 정확히 순열 관계이고, unpermute 후 복원이 정확히 같음을 합성 검증한다. 회전 행렬곱 자체의 FP32 합산 순서는 별도 허용오차 항목이다.
+- selftest code hash와 lock code hash 일치. CPU-only import, CUDA_VISIBLE_DEVICES='', torch4threads.
+
+사전 결정
+- 계속: OBQ_FULL SSE가 두 층 각각에서 U_FP32_RTN과 UHP_FP32_RTN 모두보다 10% 이상 작다.
+- 강한 단순 대조로 공백 불확실: 어느 한 층/회전에서 OBQ_FULL가 열세(수치적 동점 rtol=1e-9, atol=1e-9 제외).
+- 나머지: 추가 효과가 등록 10% 조건에 부족, 판단 유보. 사후 threshold 완화/좋은 층 선택 없음.
+- 회전 대조 중 p4에서 더 좋은 것을 선택하는 배포 규칙을 만들지 않는다. 두 팔 모두를 넘는지 보는 보수적 판정이다.
+- 이 threshold는 다음 자원 배분을 위한 기준이며 통계적 신규성·전체 모델 품질의 충분조건이 아니다.
+
+비용/상한
+- 실제 캡처 시작부터 20분. 파일 검증, 통계, 회전, 패킹, attention, 보조 noquant, 결과 저장 포함. CPU4threads, RSS8GiB, 새 disk2GiB.
+- 원본 모델/GPU 실행0, 새 캡처0. 생성 영상0. timeout/RSS/파일 해시/항등 검사 실패는 미완료 또는 무효로 기록하고 효과를 판정하지 않는다.
+- offline load/stat/eigen 시간, online형 rotate+scale+code+pack/decode 단계 시간, CPU attention 평가 시간 분리. 이것으로 GPU 배포 overhead가 작다고 주장하지 않는다.
+- root의 별도 실행 지시 전 run하지 않는다. 실행 후 후보·대상·기준을 변경하지 않는다.

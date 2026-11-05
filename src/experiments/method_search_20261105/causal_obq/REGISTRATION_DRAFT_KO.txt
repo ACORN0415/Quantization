@@ -1,0 +1,51 @@
+Causal OBQ 후속 판별 검사 등록안 v1 — 2026-11-05
+상태: 구현·합성검사 준비용. 잠금 전 root 코드 검토로 first-reader 팔 추가. 아직 잠금/Claude 검토/GPU 실행 안 됨.
+
+질문과 범위
+기존 p0→p4 CPU 검사에서 관측된 post-Wo 감소가 개발 후 최초 검사 입력의 실제 BF16 attention에도 남는가? 자기 청크의 clean refresh query를 쓰는 H, 인코딩 시점의 첫 읽기 query를 쓰는 H, 사전 p0 H 중 무엇이 충분하며 인코딩 비용은 얼마인가?
+이 단계는 실제 GPU 쓰기 경로를 양자화 경로로 교체하는 실행이 아니다. 무개입 BF16 생성에서 얻은 trace를 정보 시점 제약에 따라 재생해 CPU에서 실제 packed 코드를 만든 뒤, 동일 형상의 GPU attention으로 읽는다. 따라서 '인과 정보 제약의 재생 진단'이라 부른다. 실제 온라인 GPU encoder·전체 모델 양자화 rollout·새 방법 완성은 주장하지 않는다.
+
+새 입력 고정
+ID fresh_dog_stream_307, seed307.
+A brown dog walks across a shallow stream on smooth stones, pauses to look toward the riverbank, then continues forward. A continuous low tracking shot in soft afternoon light, with reeds moving gently in the background.
+기존 p1/p2는 seed101/202의 여러 개발 결과에 노출되어 제외했다. 새 문장과 seed307은 현재 저장소 검색에서 기존 실행 기록이 발견되지 않았다. 이것은 검색 범위의 진술이며 통계적인 독립 표본 집합을 의미하지 않는다. 개발 후 최초 검사 입력1개로만 표현한다.
+
+자원/생성
+GPU가 비고 root가 잠금·Fable 검토를 확인한 뒤 시작한다. 전체30분, 생성2회, 추가disk4GiB, CPU4threads, 순수CPU replay RSS8GiB / 모델생성 프로세스RSS40GiB, GPU allocated peak22GiB 상한. 모든 준비자료 읽기·실제2생성·CPU replay·추가 단위 GPU attention 재생·검증을30분에 포함한다. 최초상한에서멈추고 미완료수/무효기록을남긴다.
+기존모델생성기록maxRSS35,537,399,808 B를확인했다. 모델로딩/텍스트인코더를포함한전체프로세스를8GiB로제한할수없어40GiB로분리하며두GPU작업을동시에하지않는다.
+두 생성은 같은 입력/seed의8청크24latentframes이다: 1회 무계측 BF16 reference, 1회 passive capture BF16. 각40model forwards, 합80; VAE0. 원래 driver의 all-layer8청크 캡처는67.027초였다. 이번2층만 저장하므로2생성과 작은단위재생은30분보다 충분히짧을것으로예상하나보장하지않는다.
+
+소스/실행 순서
+참조/계측 생성은 raw BF16 kv_cache 경로다. ChunkStore residual_tokens=0은 다음 압축 실행의 배포정책 가정이며, 현재 생성자 기본값을 assert한다. residual>0변형으로일반화하지않는다.
+src/kvq/lockstep.py run_chunk는 denoise4회 후 context_noise=0 refresh1회. src/wan/modules/causal_model.py BF16 path의 attention에 post-RoPE q와 실제window k/v가 전달된다. 기존 write_observer는q가없어사용하지않고 layerprehook+attentionwrapper만사용. 모든hook은원래attention출력을그대로return한다. 기존코드변경0.
+1. 참조8청크의latent를보존한다.
+2. 계측8청크에서층18/24만수집. 각layer호출count/5로chunk,mod5로phase를확인하며generator실제timestep/current_start를교차검증한다.
+3. refresh call4, chunk1..6에서q_full[1,4680,12,128], 현재K/V마지막4680을1회씩저장한다. 같은chunk의denoise K는보정자료에섞지않는다.
+4. 추가로chunk2..7 call0의전체q를층18/24각각1회저장한다. ChunkStore.attend는현재query를받은후직전pending청크를encode하므로첫읽기query는그시점에사용가능하다. chunk i의first-reader H는i+1 call0 q만사용한다.
+5. read는chunk7 denoise call0/3두개를고정한다. q_full,현재K/V,원래nativeAV의query128개를저장한다. 이전refresh K/V6개를연결한값이실제attention과거K/V와모든원소바이트일치하는지검사한다. 전체window복제파일은저장하지않는다. Wo/bias는layer마다1회만.
+6. 모든8청크latent가무계측참조와원소바이트같아야재생한다. sourcehash불변,forward80,층당40call,완료artifact수를검사.
+7. CPU replay는write/first-reader파일과p0offline자료만열어packets를만든다. 평가용read파일은packetssealed이후에만평가프로세스가연다. first-reader c7call0 q와평가c7call0 q가같다는것은합법적시점이지만미래read일반화증거는아니다;call3을별도판정한다. 완료된청크i의packet은다음chunk첫호출전에확정된것으로재생하며,이후read별로코드/scale가변하지않음검사.
+8. GPU unit replay는실제nativeattention에동일fullq4680/fullKV32760형상을전달한다. 먼저BF16원본window재구성이저장nativeAV128개와비트일치해야하며,실패하면해당실행무효로중단한다. 후보모두동일backend/shape/dtype. query128인덱스floor(i*4680/128)만점수집계한다.
+
+고정 후보와 정보 시점
+K모든head4bit, Hadamard128 FP32→BF16, frame1560+zero8,group16,원본BF16absmax/7→storedFP16scale. 기존capacity와동일. V는chunk4680/group16 INT4공통,현재K/V BF16.
+R_bf16: nativeBF16RTN. R_fp32: 같은scale에서FP32RTN.
+O_offline: p00_s101의해당layer c7 query로고정한H. 개발보정자료획득비/로드/H/인코더상태를별도기록한다. 평가입력의query정보는사용하지않는다.
+O_online: 각과거chunk자신의clean refresh query로head별H를계산해그chunk K만인코딩한다. futurechunk/readquery/다른denoise단계query를사용하지않고누적/EMA/혼합없다. chunk별H를동결한다.
+O_first_reader: 과거chunk i의K에i+1 denoise0 query로구한H를사용한다. i=1..6각각해당시점의q를동결하고나중c7q로과거모두를재최적화하지않는다. 현재pendingBF16보존정책이이미보유한K만사용한다.
+세OBQ모두H=Q_rot^TQ_rot/4680,lambda=.01mean(diagH),128채널고정순서,FP64inverse+upperCholesky→FP32보상. scale/grid동일. 기존capacity등록된코드와합성대조한다.
+
+평가
+주endpoint는층18/24×read0/3의4개고정endpoint에서nativeBF16reference대비post-WoSSE. Wo투영은공통FP32,편향은차분에서제거된다. NSE는원본출력energy로정규화한다. 각endpoint에서각OBQ를두RTN모두와비교한다. logitMSE/K-SSE는설명용.
+RTN2+offline+own-refresh+first-reader 총5팔. 각OBQ의다음단계기준: 두RTN대비4개endpoint모두20%이상SSE감소. 어느endpoint에서든두RTN중하나대비10%이상악화하면해당팔중단. 그외판단불가. 온라인만좋아야한다는조건은없으며offline만충분하면단순fixedcalibration을우선한다. 이는자원배분기준이지새논문/통계적유의성기준이아니다.
+세H공급방식간같은예산비교는따로보고하며사후혼합H/추가damping검색없음.
+
+비용과 정확성
+cachepayload는각팔의K packed+scale+sentinel 및공통V packed+scale의실제tensor bytes. H/factor/workspace/현청크BF16/원본trace는별도. samepayload≠sametotalmemory.
+CPU encoder시간은모든팔에서원본K→회전/scale→code선택→uint8pack전체범위를같게측정한다. 이 진단의 시간에는 pack/unpack 왕복 검증도 포함된다. production encoder 성능으로 해석하지 않는다. own-refresh/first-reader H구성시간은각각추가한다. 오프라인H및Cholesky factor는층별1회준비후재사용하는강한단순기준선이다. 두온라인팔은H가chunk별변하므로factor구성도인코딩비용에포함한다. 오프라인준비비는별도기록하며상각가정없음. p0 rawH와원본파일해시는capacity결과와정확일치를검사한다. dry warmup1회후각chunk3회반복,팔순서rotate고정,median과범위보고. 복원/CPU-GPU전송/GPUattention은분리한다. CPUencoder/GPUencoder속도동일주장금지.
+실용비용기준은최종방법성공게이트가아닌다. 현재CPUprototype이baseline BF16 chunk시간을넘는다면그경로로직접배포가능하다고하지않는다. 오차신호가남아도encoder가속/보정선택의기존방법대조가다음에필요하다.
+합성검사: 기존capacity회전·scale·RTN·OBQ코드일치,actualpack왕복,diagonalH==FP32RTN,identity/no-quant,packet불변·시점검사. 실자료전에등록잠금code/source/inputhash및시각보존,파일덮어쓰기금지.
+
+잠금 전 Fable 설계 검토 반영: first-reader 정보시점과residual0조건을수용했다. call0의가장최근chunk는평가query와같은입력을사용하지만배포상합법적이다. leave-out는실제배포알고리즘을바꾸고추가단일청크팔은현재질문을늘리므로채택하지않았다. call3을독립endpoint로두고네endpoint모두20%를요구해call0만좋은결과로진행하지않는다. 기존등록안을15%로완화하지않는다.
+
+비용 필드 명시: offline_prepare_including_validation_factor_seconds는자료로드/H구성/출처검증/factor구성과source기록해시를포함한준비전체시간이다. factor_seconds는그안의부분구간이므로더하지않는다. 이라벨정정은측정범위나수학계산을변경하지않는다.

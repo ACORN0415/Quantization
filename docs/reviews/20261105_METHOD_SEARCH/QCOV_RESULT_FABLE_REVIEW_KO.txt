@@ -1,0 +1,32 @@
+qcov 회전 대조 실측 결과 판정 검토 — qcov_rotation_baseline_codex/RESULT.json — Claude Fable 5.1 — 2026-11-05 KST
+Task/Dispatch ID: 없음. 읽기 전용, GPU 0, 파일 수정 0. 읽은 것: RESULT.json(2층 전체), REGISTRATION_LOCK.json, AUDIT_RESULT.json(상단), AUDIT_ATTEMPT_NOTE_KO.txt, RUN_LOG.txt.
+
+== 판단: 실행 유효, 등록 판정 continue_causal_feasibility 타당 ==
+유효성(직접 확인)
+- 해시: diagnose_rotation.py 08800ae3… = LOCK = SELFTEST = AUDIT. LOCK sha b34f73fd… = RESULT.registration_sha256. prior RESULT(518d4792…) 참조 일치. SELFTEST sha ba9a72e1… = LOCK 기록.
+- anchor 재현 통과(2층), 입력 보존 통과, payload 54,097,926 B 동일(4팔·2층), noquant 회전 오차 ≤ B0의 0.056%/0.022%(gate 1% 통과), 직교성 1e-15.
+- 15.0 s, RSS 2,409,893,888 B = 2.245 GiB(상한 안). 사후 감사의 V 바이트 손계산 오류는 감사 스크립트 산술이며 결과와 무관(노트 확인).
+판정식: 두 층·두 회전 팔 모두 OBQ_FULL이 10% 이상 작음 → 등록 기준의 "계속" 조건 충족. 사후 변경 없음.
+
+== 수치(post-Wo SSE, B0_FP32_RTN 대비 비) ==
+층18: U 2.009 | UHP 0.930 | OBQ 0.598   (U 973.8, UHP 450.9, B0 484.6, OBQ 289.7)
+층24: U 1.378 | UHP 0.996 | OBQ 0.652   (U 189.1, UHP 136.7, B0 137.2, OBQ 89.5)
+OBQ의 회전 대비 추가 감소: U 70.3%/52.7%, UHP 35.8%/34.5%. 주 작업자의 서술(35.8%/34.5% 추가 효과, 신규성 미확정)에 동의.
+
+== 해석(관측 → 가설 구분) ==
+- (관측) UHP ≈ B0(0.93, 0.996). 코드 검토 B1의 예측과 일치. 다만 주 작업자 지적대로 채널별 scale·clipping 구조가 있어 "등방 보장"은 아니므로 "예측과 일치하는 관측"까지만 쓴다.
+- (관측) 순수 U는 B0보다 2.0배/1.4배 나쁘고 logit MSE도 2배(0.0616 vs 0.0309)인데 K 재구성 SSE는 오히려 작다(5.40e5 vs 5.68e5). 텐서 오차와 출력 오차가 또 반대로 움직인다.
+  q 공분산은 매우 비등방(최대 고유값 85~111, 중앙값 0.5~0.8, 상위 16개가 62~69%)이다. (가설) 지배 방향에 K 에너지도 커서 그 채널의 scale이 커지고 오차가 λ 최대 방향에 집중된다.
+  코드 검토 B2의 위험 그대로. SAW-INT4의 Hessian 변형 열세와 같은 기제일 수 있으나 그쪽 논문의 설정과 달라 단정하지 않는다.
+- B2("보상이 유일 경로") 채택 안 함에 동의. 시험하지 않은 싼 대안이 남아 있다: (i) U 기저 + λ 가중 채널별 비트 배분(평균 4비트, AATC형 water-filling), (ii) UHP + OSCAR clipping,
+  (iii) Hadamard 기저에서 λ 가중 채널별 비트 배분. 이들은 "보상 없이 같은 통계를 쓰는" 경로이며, 원고에서 "회전 기준선 2개 대비"로 범위를 한정하면 지금 결과로 충분하다.
+  다음 자원을 이 대안들에 쓸지는 주 작업자 결정 사항이나, (iii)은 reader 변경이 없어 OBQ와 같은 배포 형상이므로 가장 직접적인 대조다(CPU 수 분).
+
+== 다음 단계(causal feasibility)에 대한 사전 권고 — 기존 의견 유지 ==
+- 평가 reader 문제(OBQ_PRIOR_ART 5절): 기존 캡처는 call0 q만 있어 first-reader 변형을 공정하게 평가할 수 없다. frozen p0 H 경로는 지금 자료로 충분하므로, causal 검사의 첫 질문은
+  "first-reader H가 frozen H보다 낫나"가 아니라 "frozen H OBQ 코드가 rollout에서 누적을 일으키지 않나"여야 한다(K 재구성 SSE +61%/+53%, R-8 선례).
+- 등록 시 고정할 것: 비교 팔은 B0 Hadamard RTN과 OBQ(frozen p0 H)만, 지표는 기존 rollout과 같은 후반 MUSIQ/DINO, 실패 기준은 rotK 대비 R-8이 보인 구현 변동(±2)보다 큰 폭으로.
+- 2층·1청크·개발 prompt 결과이므로 "일반화"·"신규성" 단어는 계속 보류. 동의.
+
+== 미확인 ==
+실행 재계산 없음(저장값과 해시만 확인). 대안 (i)~(iii) 미측정. 이 검토는 승인이 아니라 권고다.

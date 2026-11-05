@@ -1,0 +1,10 @@
+RESULT 18 U_FP32_RTN {"sse": 973.8031198481242, "logit_mse": 0.06163318715138134, "packed_payload_bytes": 54097926}
+RESULT 18 UHP_FP32_RTN {"sse": 450.85658777175536, "logit_mse": 0.030428869909252382, "packed_payload_bytes": 54097926}
+RESULT 24 U_FP32_RTN {"sse": 189.10463387476563, "logit_mse": 0.03412701792744595, "packed_payload_bytes": 54097926}
+RESULT 24 UHP_FP32_RTN {"sse": 136.66476572623728, "logit_mse": 0.02246982832226602, "packed_payload_bytes": 54097926}
+{
+  "status": "completed",
+  "decision": "continue_causal_feasibility",
+  "elapsed_seconds": 14.998976493021473,
+  "max_rss_bytes": 2409893888
+}
