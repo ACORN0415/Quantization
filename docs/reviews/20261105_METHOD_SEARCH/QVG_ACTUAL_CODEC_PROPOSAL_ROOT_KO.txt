@@ -26,3 +26,5 @@ QVG 창 수정 다음 단계: 실제 코덱 연결 판별 (준비안)
 - 이 검사가 통과해야 원본전체pipeline/모델의 장기 생성 비교를 준비한다.
 
 결과 전 구조 명확화: W126은 부분span이 생기지 않는다. nativeattention checkpoint는 W21(block7/8/9/41), W63(7/8/21/41), W126(7/8/21/41)이며 W126 block21은 intermediate_full_horizon_not_partial로 표시한다. 부분span 검사는 W21/63에만 적용한다. 각4회·전체630읽기·PRQ5회는 유지한다.
+
+호출/연결 명확화(실행 전): compress_kv_cache 상위5회는 내부K/V PRQ10회다. 원 attention.py wrapper의FA2 varlen entry를 사용하고 SDPA fallback을허용하지않는다. 실제 varlen호출지점과원decoder호출지점을계수한다. 원 QuantizeConfig의유효전체설정(scale_precision/clipping/asymmetric포함)을LOCK/결과에저장한다. 공유packet은고정GPUdevice/읽기전용으로사용하고offload/onload는호출하지않으며 tensor와scalar/container/info/config까지내용hash로검사한다.
