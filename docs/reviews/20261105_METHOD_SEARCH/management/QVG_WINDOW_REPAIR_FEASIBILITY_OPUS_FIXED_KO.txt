@@ -1,0 +1,168 @@
+고정 QVG window — 원인과 수정 가능성 설계 검토 (Opus2, 3분 검토의 확장)
+실제 시작 UTC: 2026-11-05T15:17:35Z (date -u). 종료 UTC는 파일 끝에 적는다.
+실제 모델: claude-opus-5-5. 기존 Opus2 채팅(session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5).
+Task/Dispatch: 미연결(terminal_handle_stale).
+배정: parent msg_16fb7b896ac3 → 관리자 run_37b53bde176e.
+읽기 전용으로 수행했다. sed/grep/date만 썼다. torch import, 실행, tensor, GPU, 수정, 다운로드는 모두 0이다.
+다른 worker의 산출물은 열람하지 않았다. 기존 3분 보고서(37fee221…)는 수정하지 않았고, 아래는 추가 범위만 다룬다.
+root input/material JSON은 이번에도 열지 않았다(시간 배분). 미확인 항목으로 남긴다.
+경로 약칭: CM = Self-Forcing/wan/modules/causal_model.py, CI = Self-Forcing/pipeline/causal_inference.py, KV = quant_videogen/kv_cache.py (HEAD 0601468f).
+
+종합 판정: 조건부 수정 가능(adapter 수준). 단 "assert 삭제", "capacity 확대", "주석 처리된 rolling 직결"은 어느 것도 수정이 아니다(3절).
+
+1. 구현 원인 — 소스 구조(관찰)와 의도(추정) 구분
+관찰
+(a) 원래 Self-Forcing의 rolling 경로 CM:218-265 attn_kv_cache
+  - RoPE를 적용한 K(:223 roped_key, 절대 start_frame)를 dense tensor에 저장한다.
+  - 넘치면 [sink+evict, …) 구간을 sink 뒤로 clone-shift하고(:237-240), 새 값을 끝에 쓴다.
+  - 위치 정보가 K에 미리 들어가 있으므로 물리적으로 이동해도 RoPE 계약이 유지된다.
+(b) QVG 활성 경로 CM:270-312 attn_kv_cache_prerope
+  - RoPE를 적용하지 않은 K를 ChunkedKVCache(KV)에 쓴다(:296).
+  - 읽을 때 read(0,local_end)(:301) 결과에 causal_rope_apply_long_input(:303)을 적용한다. 이 함수(CM:61-100)는 chunk_start_frame=chunk_idx×f로, buffer 시작을 frame 0으로 보는 상대 위치를 쓴다.
+  - Query는 절대 current_start_frame으로 RoPE를 적용한다(:278).
+  - 따라서 "buffer index == 절대 frame"(local==global, eviction 없음)일 때만 두 위치가 일치한다.
+(c) KV.ChunkedKVCache
+  - chunks 리스트는 절대 frame 단위(chunk=1 frame=1560 token)로 index되고, 길이는 max_num_chunks로 고정된다(KV:57,61).
+  - write는 ec≤max_num_chunks를 assert한다(KV:129).
+  - quantized span은 {start_chunk,end_chunk} 절대 index를 메타데이터로 갖는다.
+  - evict_range(KV:224-260)는 "No data is moved"로, 메모리만 해제하고 주소 공간을 늘리지 않는다.
+  - read는 EMPTY chunk에서 ValueError를 낸다(KV:178).
+(d) CI:469-470: 유한 L이면 max_num_chunks=L이다.
+  - 그래서 절대 주소 ≥L frame은 쓸 수 없다. prerope :288-290의 ValueError는 이것을 write assert보다 먼저 막는 가드다.
+  - CM:131 max_attention_size=L×1560과 :299 assert도 같은 가정을 쓴다.
+(e) dense tensor를 전제한 rolling 코드(:229 kv_cache["k"].shape[1], 슬라이스 대입)는 ChunkedKVCache 객체와 quantized span 메타데이터를 다룰 수 없다.
+추정(의도)
+- QVG는 혼합 BF16/양자화 chunk 저장을 위해 rolling을 prerope+절대 주소로 대체했다.
+- 기본 실험은 global(-1) 또는 L이 충분히 큰 설정을 가정했고, 유한 window eviction은 구현 범위 밖으로 남겼다. :288의 ValueError는 그 사실을 드러내는 안전장치로 보인다.
+- evict_range의 존재와 docstring("keep the centroid until all of its chunks are evicted")은 eviction을 계획했다는 흔적이지만, 호출처는 없다.
+- 이는 fixed revision 통합 경로의 제약이다. QVG 방법 전체가 불가능하다는 주장이 아니다.
+
+2. window 21 frame과 양자화 span 24 frame의 불일치 (CI:341-354)
+- 양자화는 chunk_index k(0-based; k≥8, k%8==0) 직전에 [3(k−8), 3k) frame = 24 frame을 한 span으로 압축한다.
+  - 공유 centroid를 쓰며, 0..7 block은 처음에 BF16이다.
+- window W=21 frame(7 block)일 때 block k의 attention 가시 과거는 [3k−18, 3k)다.
+  - 따라서 양자화 시점에 span의 앞 6 frame [3k−24, 3k−18)은 이미 window 밖이다.
+  - 처음(k=8)에도 frame 0..5가 이미 밖이다.
+- 결과
+  (i) BF16를 즉시 퇴거하면 quantize의 read(start,end)(CI:98)가 EMPTY chunk에서 ValueError를 낸다.
+  (ii) 퇴거 단위는 생성 block(3 frame) 단위로 진행되는데, span은 24 frame이라 span 경계와 정렬되지 않는다. 그래서 '부분적으로 window 밖에 있는 span'이 항상 존재한다.
+- 전체 block 삭제로 window를 정의할 수 있는가: 읽기 범위만 [window_start, end)로 정하면 정의된다.
+  - KV.read는 span의 일부 slice(tok_off, KV:186-194)를 지원한다. 단 매 읽기마다 span 전체를 해제한다(비용).
+  - 메모리 해제는 span 단위로만 가능하다(evict_range의 centroid 규칙). 그래서 attention window(21)와 메모리 상주 범위(최대 span 24 + 진행 중 block)가 다르다. 이를 반드시 분리해서 기록해야 한다.
+- 유지해야 할 정보
+  - 부분적으로 살아 있는 span의 quant_data 전체: centroid, 토큰별 code, info.
+  - 양자화를 기다리는 BF16 frame. 정책에 따라 다르다(4절).
+  - span의 절대 start/end.
+  - 마지막 정리 block 경계(global_end).
+
+3. 주소·denoise 덮어쓰기·RoPE·sink의 상호작용
+- 같은 block 반복 호출(denoise 4회와 cache update 1회): current_end==global_end이면 :288 검사를 건너뛰고, :293 local_end를 같은 값으로 다시 계산해 같은 위치를 덮어쓴다.
+  → eviction은 "current_end>global_end인 새 block의 첫 호출"에서만 정확히 1회 일어나야 한다. 반복 호출에서 퇴거하면 안 된다.
+- 이전 확정 구간(이미 cache update된 block)은 다시 쓰지 않는다.
+  - KV.write에서 QUANTIZED chunk에 쓰면 span 전체가 제거되므로(:133-134), 현재 block이 span과 겹치지 않는다는 불변조건이 필요하다.
+  - 현재 소스에서는 양자화 범위가 항상 3k 미만이라 겹치지 않는다(관찰).
+- RoPE: K는 buffer 상대 위치, Q는 절대 위치다.
+  - window 시작 s>0으로 읽으면 K 위치가 s만큼 어긋난다.
+  - RoPE 내적은 위치 차에만 의존하므로 한쪽을 맞추면 된다. K를 절대 위치 s부터 RoPE하거나, Q를 (current_start_frame−s)로 RoPE한다.
+  - 원래 rolling은 절대 위치가 이미 K에 들어 있어 sink 뒤의 위치 간격이 물리적 shift와 무관했다.
+- sink(sink_size>0)
+  - 가시 집합이 [0,S) ∪ [window_start, end)로 연속이 아니게 된다.
+  - long_input RoPE(연속 0부터)를 그대로 쓸 수 없고, 세그먼트별 절대 위치 RoPE가 필요하다.
+  - 원 rolling은 sink K의 절대 위치와 최근 K의 절대 위치를 그대로 유지했다. 원 rolling과 같은 의미를 원하면 절대 위치를 유지해야 한다.
+  - 우리 대상 설정은 sink 0이며, sink 지원은 별도 범위다.
+- 오답 사례
+  - capacity만 키우면(max_num_chunks=126) ValueError는 사라지지만 :301 read(0,·)가 전체 과거를 읽는다. 이는 global attention이 되며 다른 방법이다.
+  - assert만 삭제하면 write assert(KV:129)에 걸리거나 global이 된다.
+  - rolling 함수를 직결하면 dense 전제가 깨지고 양자화 span이 손실된다.
+
+4. 최소 adapter 수정안 1개와 대안 1개 (설계 수준; 구현·실행 안 함)
+[안 A — 절대 주소 유지 + 가상 주소 확대 + window 읽기 + span 단위 해제] (권장, 최소)
+- 상태와 API
+  - ChunkedKVCache의 max_num_chunks를 '전체 생성 frame'(예: 126+3)로 둔다. 주소 공간일 뿐이고, 메모리는 lazy alloc과 evict으로 제한된다.
+  - 층별 window_start_frame 상태를 추가한다. window 크기 W(frame), sink S=0.
+- 수정 지점
+  1) CM:288-290의 ValueError를 window 계약 검사로 바꾼다.
+     - 새 block 첫 호출에서 new_window_start = max(0, current_end_frame − W)를 계산한다. 21 frame은 새 block을 포함한 범위다. 원 rolling의 "num_new+local_end>size" 의미와 같은 크기다.
+     - 이 값은 3-frame 정렬이어야 한다.
+  2) 같은 지점에서 evict_range(old_start, new_window_start)를 호출한다. BF16만 즉시 해제하고, span은 완전히 밖으로 나갔을 때만 해제한다(기존 KV 규칙).
+     - 단 양자화 대기 BF16의 처리는 정책 P를 사전에 하나로 고정해야 한다.
+       P1: 대기 BF16은 양자화 시점까지 해제를 미룬다. 원 QVG의 24 frame span과 centroid 통계를 보존하고, 상주 메모리가 최대 약 27 frame이 된다.
+       P2: span을 [max(3(k−8), window_start), 3k)로 잘라 18 frame만 양자화한다. 메모리는 window에 맞지만 QVG의 압축 단위가 바뀐다.
+     - 권장은 P1이다(원 방법 보존). P2는 다른 방법 변형으로 기록해야 한다.
+  3) :301 read(0,local_end)를 read(window_start_tok, local_end_tok)로 바꾼다.
+  4) :303 RoPE에 window_start_frame을 넘긴다. long_input에 start_frame 인자를 추가하거나 동등한 offset을 준다. Q는 그대로 절대 위치다.
+  5) CM:131/:299의 max_attention_size 검사를 (local_end − window_start) ≤ W×1560으로 바꾼다.
+  6) local==global(절대) 계약은 유지한다. CI의 양자화 범위(절대 sum)는 변경하지 않는다.
+- 보존할 불변조건
+  - 가시 토큰 집합 = [window_start, current_end), 크기 ≤ W×1560.
+  - eviction은 새 block 첫 호출에서만 일어난다.
+  - 읽기 범위는 EMPTY를 포함하지 않는다.
+  - 현재 block은 QUANTIZED chunk와 겹치지 않는다.
+  - 양자화 범위의 모든 chunk는 BF16이고 존재한다(P1).
+  - span 메타데이터의 절대 index는 불변이다.
+  - K와 Q의 RoPE 위치 차는 절대 frame 차와 같다.
+- 비용과 미지수
+  - 매 읽기마다 부분 span 전체를 해제한다(기존에도 존재).
+  - 주소 리스트 길이 126은 무시할 수준이다.
+  - P1의 추가 상주 메모리.
+  - kv_reuse_core의 evict_range/read override와 함께 쓸 때 invalidate 의미를 확인해야 한다(kv_reuse_core.py:131-138, 읽기만 함).
+  - freqs 테이블 길이(절대 frame 126+)는 미확인이다.
+
+[대안 B — 물리 ring/offset 주소 + span 메타데이터 rebase]
+- max_num_chunks=W(+span 대기분)를 유지하고, physical = absolute − base로 둔다. window가 이동하면 base를 증가시킨다.
+  - BF16 chunk 리스트는 회전하고(데이터 이동 없이 index만), quantized span의 start/end는 base만큼 rebase한다.
+- 장점: 주소 공간과 메모리 상한이 일치한다.
+- 단점
+  - CI 양자화 범위(절대)와 Q RoPE를 모두 변환해야 한다.
+  - kv_reuse_core의 span 기반 상태도 rebase해야 한다.
+  - 부분 span이 base 경계 앞에 걸치면 음수 index 처리가 필요하다.
+  - 수정 지점이 CM·CI·KV·adapter 4곳으로 늘어나 오류 위험이 크다.
+- 메모리 상한을 하드 제약으로 증명해야 할 때만 고려한다.
+
+5. GPU 없는 향후 CPU reference 검사의 최소 불변조건과 반례 (지금 구현·실행 안 함)
+1) 경계: 3-frame block, 42 block, W=21과 W=63에서 k=7/8과 21/22 직전·직후.
+   - 가시 범위 = [max(0,3k+3−W), 3k+3)이어야 한다. 오류가 없고 길이 ≤W여야 한다.
+2) 동등성(noquant): W≥전체 frame이면 원 prerope와 출력 bytes가 같아야 한다.
+   - noquant + W 유한이면 dense CPU 기준(window attention, 절대 RoPE)과 일치해야 한다. 원 rolling과 사후 RoPE 산술은 rounding까지 같지는 않으므로 허용오차를 사전에 고정한다.
+3) denoise 반복: 같은 block의 5회 호출에서 eviction이 1회이고, 마지막 cache-update 값이 저장돼야 한다.
+   - 반례: 두 번째 호출에서 eviction이 일어나면 window가 한 block 앞으로 밀린다.
+4) 부분 span
+   - k=8: span[0,24)이고 window 시작 6. read가 slice [6,24)를 정확히 반환하는지 확인한다.
+   - k=16: span[24,48)과 새 span. 옛 span[0,24)은 window 시작이 24 이상이 되는 시점에만 해제되는지 확인한다.
+   - P1: 양자화 시점에 대기 BF16 [3k−24, 3k−18)이 존재하는지 확인한다. 반례: 즉시 퇴거 시 EMPTY read ValueError.
+5) 절대 대 local 주소: span start/end와 CI 양자화 범위가 같은 절대 좌표인지.
+   - 반례: local 좌표로 양자화 범위를 계산하면 다른 frame을 압축한다.
+6) RoPE: 같은 K 값을 s만큼 이동한 window로 읽을 때 q·k logits가 절대 RoPE dense 기준과 같은지(허용오차 내). 반례: offset을 누락하면 logits 불일치.
+7) sink=0만 범위로 한다. sink>0은 비연속 RoPE 반례로 '미지원' 거부 검사를 둔다.
+8) packing/scale/shape: span slice의 토큰 순서와 layout(BSHD), 3-frame 정렬 assert, EMPTY read 거부.
+   - 이 항목에서 kv_reuse_core의 패킹 계약은 기존 stage1 기록 범위를 벗어나지 않는다.
+
+6. 결론 분류와 최소 준비 범위
+- 수정 가능: 3-frame 정렬, sink 0, initial latent 없음 조건에서 window 읽기 + RoPE offset + 새 block 1회 eviction(안 A).
+- 조건부 가능: 양자화 span(24)과 window(21)의 불일치 처리.
+  - 정책 P1(원 span 보존, 대기 BF16 지연 해제)이나 P2(span 절단, 방법 변형)를 사전에 하나만 고정해야 한다.
+  - 상주 메모리와 window를 분리해서 보고해야 한다.
+- 현재 근거 부족
+  - sink>0 지원
+  - initial latent / independent_first_frame 경로(CI:286-)
+  - freqs 길이
+  - 출력 품질·OOM·속도
+  - 원 Self-Forcing rolling과의 수치 동등성
+  - kv_reuse_core override와의 상호작용 세부
+- root의 최소 patch 범위(제안): CM:288-303(+:131/:299 검사)과 CI:469 max_num_chunks 정의, 그리고 adapter 상태 window_start. CI 양자화 범위 식은 P1이면 불변이다.
+  - 5절 1)~6)의 CPU 검사를 먼저 하는 것이 최소 준비다.
+- 이 보고서는 수정이나 GPU 실험의 승인이 아니며, 실제 동작이나 성능의 증명이 아니다.
+
+읽은 범위
+- CM 28-100, 218-312, 340-355
+- CI 62-140, 240-290, 330-365, 464-490
+- KV 1-260
+- kv_reuse_core.py 126-140
+- (이전 검토: kv_reuse_stage1.py:122, stage1 model_setup/manifest 필드)
+미확인
+- root input/material JSON
+- KV 260-328, uncompress
+- CI의 initial latent 경로 세부
+- kv_reuse_core 전체
+- freqs 생성 길이
+실제 종료 UTC: 2026-11-05T15:19:43Z

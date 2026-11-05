@@ -1,0 +1,80 @@
+{
+  "created_utc": "2026-11-05T15:04:14.283433+00:00",
+  "kind": "static_existing_baseline_feasibility_check_not_experiment",
+  "revision": "0601468f2dbba6a17ac7086faec6d41527cad188",
+  "question": "Can the existing native QVG Self-Forcing route directly run 42 blocks of 3 latent frames with local_attn_size 21/63 as a sliding window, without a new cache policy?",
+  "observed_source": {
+    "causal_model.py:352": "forward selects attn_kv_cache_prerope",
+    "causal_model.py:288-290": "overflow raises ValueError instead of shifting/evicting prior history",
+    "causal_model.py:299-302": "assert end <= max_attention_size and read entire prefix [0,end)",
+    "pipeline/causal_inference.py:254-266": "for finite local_attn_size, target_frames is local_attn_size",
+    "pipeline/causal_inference.py:341-354": "compression every eight generation blocks, absolute history ranges",
+    "tools/kv_reuse_stage1.py:122": "tested adapter sets local_attn_size=180",
+    "model_setup.json": "36 latent-frame diagnostic stayed below the configured 180-frame capacity",
+    "tools/kv_reuse_core.py": "reuse alters reconstruction and invalidation, not the native causal attention capacity check"
+  },
+  "static_implication": "The native finite capacity is not an eviction window. Direct 126-latent-frame execution with capacity 21 or 63 will reach an unsupported capacity check. This is not a measured OOM, quality result, or proof that sliding QVG is impossible. Adapting window semantics would require an explicit separate implementation/validation decision.",
+  "first_exceeding_generation_block_1_based": {
+    "capacity_21_frames": 8,
+    "capacity_63_frames": 22
+  },
+  "GPU_calls": 0,
+  "tensor_loads": 0,
+  "new_generations": 0,
+  "source_changes": 0,
+  "evidence": [
+    {
+      "path": "/home/acorn0415/sfq_data/qvg-reuse-reference/experiments/Self-Forcing/wan/modules/causal_model.py",
+      "sha256": "c3575f16dcd50bd0a492b38b3ce9f299f03180f3719115115e1c5a27ed386375"
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/qvg-reuse-reference/experiments/Self-Forcing/pipeline/causal_inference.py",
+      "sha256": "824d8cfbd2985a042e253648c2aaaa06f25cb40d62be504a6330c80242caedba"
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/qvg-reuse-reference/quant_videogen/kv_cache.py",
+      "sha256": "e6f03b8223833021c4ff6bbe16d73ee555e1f2ecdf0d0770b565c7b5b17e6963"
+    },
+    {
+      "path": "/home/acorn0415/Quantization/tools/kv_reuse_stage1.py",
+      "sha256": "e070ce3d54eeb08bc167165b8bd3855ec0bdeb75b8ed64136c553bad06afa48c"
+    },
+    {
+      "path": "/home/acorn0415/Quantization/tools/kv_reuse_core.py",
+      "sha256": "15a9ba893f389a694c181b6b85bad37c68bf2a0dc8841c720e0364d49a9ae752"
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/kv_reuse_stage1/model_setup.json",
+      "sha256": "e4e1b28430c92d949580cb0244b981412c42aa46aab671abdd6c0d40943da422"
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/kv_reuse_stage1/manifest.json",
+      "sha256": "40acd3bec77d76533a4c29a65e9d1e277da14c2ac2d63765ee35a4a47935573e"
+    }
+  ],
+  "historical_source_hashes_match": true,
+  "independent_Codex_review": {
+    "agent": "/root/fair_comparison_codex",
+    "received_utc": "2026-11-05T15:06:29.817148+00:00",
+    "verdict": "agrees with bounded static infeasibility",
+    "scope": "source-only; no torch, GPU, generation, scores, or file changes by reviewer",
+    "additional_checks": [
+      "native rolling implementation exists in inactive attn_kv_cache, call commented at causal_model.py:351",
+      "evict_range has no call site in active Self-Forcing integration; does not relocate absolute positions",
+      "initial no-latent generation exceeds finite capacity at block8/block22 respectively",
+      "reuse adapter does not alter attention window semantics"
+    ]
+  },
+  "actual_Opus_independent_next_direction": "pending; no independent result inferred from this source check",
+  "literature_scope": [
+    {
+      "url": "https://arxiv.org/html/2602.02958v5",
+      "meaning": "Longer context via QVG is already a published direction; portability of this fixed local revision is a separate question."
+    },
+    {
+      "url": "https://arxiv.org/html/2609.26425v3",
+      "meaning": "Cache lifecycle and model-dependent latency are explicitly discussed; failure of one fixed integration is not field-wide novelty."
+    }
+  ],
+  "execution_decision": "Do not launch proposed 21/63-window x 126-latent comparison as a settings-only test. An explicit validated window adapter or a different supported comparison would be a separate decision, not an automatic implementation task."
+}

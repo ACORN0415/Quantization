@@ -1,0 +1,84 @@
+QVG 고정 revision의 창 실행 제약: 원인과 최소 수정 가능성
+작성: Codex 독립 검토, 2026-11-06 KST. 원래 읽기 전용 판정은 보존한다.
+고정 upstream revision 0601468f2dbba6a17ac7086faec6d41527cad188. 검토 시작 시 upstream git status는 깨끗했다. Opus1의 다음방향 독립안을 읽지 않았으며, 이 업무는 별도로 예정된 Opus2 원인·수정가능성 검토와 대조할 자료다.
+
+결론
+현재 옵션만 바꾸어 local_attn_size21/63에서 42생성청크=126latent를 실행하는 것은 불가하다는 판정이 유지된다. 그러나 원래 PRQ 포맷과 24latent 압축 시점을 바꾸지 않은 finite-horizon adapter로 수정할 여지는 있다. 최소안은 절대주소 metadata 슬롯126개 이상과 논리attention창을 분리하고, 창 밖이어도 다음24latent 압축에 필요한 미압축 원본을 보존하며, 부분적으로 살아 있는 packed span은 그대로 두고 필요한 부분만 읽는 것이다. 이는새메모리알고리즘·새논문기여가아니며, 아직실제QVG패치·PRQ검증·GPU성능·생성품질검증을한것이아니다.
+
+1. 왜 활성 분기는 rolling 대신 raises인가
+확인한 구현 사실:
+- causal_model.py:272–312의 활성 pre-RoPE 분기는 capacity가넘으면290행에서raise한다. forward352가이경로를호출한다.
+- K는pre-RoPE로절대frame주소에저장하고, read(0,end)로prefix를읽은뒤 long_input RoPE를다시적용한다. long_input61–110행은 frame위치를0부터추정하고82–95행에서chunk_idx*f를사용한다.
+- ChunkedKVCache는frame별list와절대start/end를가진quantized_spans다. write111–145행의슬롯주소는절대값이며capacityassert129–131행이있다. cyclic주소,baseoffset,재색인구현은없다.
+- 기존dense rolling은causal_model220–269행의별도함수로Tensor.shape와slice-copy를전제하고post-RoPE K를저장한다. 이호출은351행에서주석처리되어있다.
+- native evict_range224–258행은스토리지를해제하지만인덱스를이동하지않는다. 부분packed span은전체보존한다. 활성pipeline/model에서호출되지않는다.
+이 사실들이 현재 prefix-only·고정용량 제약을 설명한다. 개발자가 어떤 성능목표나 우선순위 때문에 raises를 선택했는지는 코드만으로 확인하지 못했다. '복잡한 packed span 이동/RoPE 재색인을 구현하지 않은 제한된 경로'라는 평가는 관찰이며 개발자의 의도를 단정한 설명이 아니다.
+
+2. 21프레임과 24프레임 압축 단위의 충돌
+pipeline/causal_inference.py:341–354는 8생성청크마다 직전8청크를압축한다. 청크당3latent이므로첫압축은index8 시작시[0,24)frame이다. 다음은index16의[24,48),index24의[48,72)순서다. 매청크최종t0기록396–403행은압축시점보다먼저완료된과거값이다.
+21창에맞춰index7(8번째청크)의write완료직후[0,3)을지우면, 다음index8의quantize가필요한[0,24)원본중앞3프레임이없어진다. 압축하려는 입력을이미퇴거된값으로대체하거나[3,24)만압축하면원래24frame중심/코드학습문제를바꾸는것이다.
+따라서압축이완료된경계pending_group_start와visible window_start를분리해야한다. sink0·3frame청크에서index j의현재끝E=3(j+1),L=max(0,E-W),P=24*floor(j/8)로두고, 현재청크호출전에원래24framequantize가성공한이후에만[0,min(L,P))를누적evict한다. P는단순인덱스예측뿐아니라압축완료상태와일치해야한다. 실패한압축의P를앞당기면안된다.
+예: W21,index7은P0이므로원본24frame모두보호한다. index8에서[0,24)압축성공후현재[24,27)을쓰고L6이된다. evict[0,6)은부분span0..24를그대로남기며native read(6,27)은span복원중6..24와현재24..27만attention에넘긴다. index15,E48,L27에서는span0..24가완전히죽어해제되지만미압축[24,48)은다음quantize를위해보호된다.
+새쓰기주소는항상 current_start/current_end의절대주소다. 퇴거후local주소0으로당기거나mod W로바꾸지않는다. finite126프레임의None/상태list를확보하되BF16tensor는기존_alloc_chunk로실제쓰일때만할당한다. 메타데이터용량확대가BF16전량선할당이라는뜻은아니다.
+
+3. RoPE·sink·denoise overwrite·quantize 시점
+- Query는기존causal_rope_apply(start_frame=current_start_frame)를유지한다. 절대위치를window0으로재설정하지않는다.
+- K는pre-RoPE형태로24frame단위압축한다. 창을읽은후그시작절대frame L을사용해RoPE한다. 최소helper변경은long_input의optional start_frame을더해chunk_start_frame=start_frame+chunk_idx*f로하는것이다. start_frame0경로는원래산술을그대로보존한다.
+- W21/63과3frame청크,sink0이면각읽기길이와시작이3frame정렬이므로현재long_input의길이%seq_len assert도유지할수있다. 단순히slice후기존함수를그대로부르면K위치가0부터다시매겨져query절대위치와불일치한다.
+- 최소지원범위는sink0로명확히제한하고sink>0은fail-fast한다. 현재pre-RoPE분기는sink_tokens를계산만하고사용하지않는다. sink>0을지원하려면[0,S)와tail을중복없이결합하고각절대위치로RoPE해야한다. S1이면기존3frame분할조건과맞지않는다. 예컨대전체W를sink포함길이로정의하면tail_start=max(S,E-(W-S))이지만이계약은별도결정사항이다.
+- 같은청크의4denoise+최종context기록5회는같은절대슬롯을덮어써야한다. 새end에서만window/evict상태를전진시킨다. 이미quantized된과거span과현재write가겹치면invalid로거부한다. native write는quantizedspan의일부를덮을때span전체metadata를제거하므로, 남은QUANTIZEDflag가고아가될수있다. 절대새주소+기존quantize시점을지키면현재chunk가이미압축된span을침범하지않는다.
+- 압축은기존pipeline quantize 호출위치·24frame입력·파라미터를유지한다. 창밖BF16을제때처리하려고매청크압축으로바꾸는것은이번최소수정이아니다.
+- 새생성시캐시가빈상태여야한다. 기존inference의else는endindex만0으로돌리므로캐시재사용시span잔재를검사/clear해야한다. 기존kv_reuse_stage1은매run kv_cache1=None으로이를피한다.
+
+4. assert 제거/비활성 rolling 함수 연결만으로 부족한 이유
+capacityraise만지워도ChunkedKVCache.write의ec<=max_num_chunks assert 또는list범위에서실패한다. 슬롯만늘리고max_attention_size assert만지우면read(0,end)가계속전체prefix를읽어21/63창비교가아니게된다. read범위만자르면RoPE원점이틀리고, naive eviction을붙이면미압축24frame입력을잃는다.
+dense rolling 함수를연결하면ChunkedKVCache에Tensor.shape/[]/clone을요구해타입계약부터틀린다. dense텐서로통째로바꾸면packed저장·공유centroid·pre-RoPE양자화의기존조건이바뀐다. 단순한호출교체가아니다.
+
+5. 최소안과 더 큰 변경안
+항목 | 최소 finite-horizon adapter | 더 큰 절대주소 map/ring+span-view 관리
+주소 | 126frame이상 metadata slots,절대주소유지 | 논리절대주소→bounded물리slot/map,wrap세대검사
+압축 | 원래24frame공유span전체보존 | 같은24frame통계유지하려면pending staging은여전히필요; 압축완료후살아있는code부분만가진view/refcount설계가능
+메모리 | Python metadata O(총길이),BF16동적할당;부분span/미압축구간으로physical보유가W를초과 | metadata O(W+압축span),deadcode실제해제가능성;sharedcentroid·padding·packing offset·decoder지원별도필요
+연산 | native read가fullspan복원후slice; 기존decode비용을줄인다고주장못함 | 부분decode/index관리개발·검증비용추가;실제codec부분복원가능성미검증
+정보 | 재클러스터링/재양자화없음;같은입력구간의codec출력을그대로보존 | 포맷/metadata재설계시원래code·centroid보존을검증해야함;단순3frame재압축이면다른codec문제
+범위 | 현재126latent,21/63,sink0조건의실행가능성확인에적합 | 무한길이/엄격한물리예산이실제로필요하다고관측된뒤검토할범위
+
+최소안의보유메모리가창과정확히같다는주장은금지한다. 원래24framegroup입력을보존하면BF16pending은최대24frame까지남는다. production형상 B1/H12/D128/1560tokens에서K+V BF16 한frame은9,584,640B/층,24frame은230,031,360B/층이다. 30층합단순합은6,900,940,800B이며모델/packed/임시버퍼/공간해제중첩을포함한GPUpeak측정은아니다.
+또한부분span이창경계밖의code를남긴다. 아래합성에서sink0 W21은최대42frame분,W63은84frame분의BF16+전체fakepackedspan길이가남았다. fakecodec은BF16로출력값을저장하므로이값을실제QVG바이트측정이나압축률로해석하지않는다.
+
+6. 수행한 작은 CPU 계약 검사
+허용폴더 qvg_window_repair_preparation/contract_checker.py만추가했다. upstream패키지/model을import하지않고AST로원본ChunkState/ChunkedKVCache와RoPE두함수본문만추출했다. decode대역은전span평균에의존하는작은fakecodec으로대체했다. QVG PRQ codec·centroid실행을검사했다는뜻이아니다.
+production시간형상126latent/42생성청크/24frame압축,작은공간형상frame토큰2/H2/D12로시험했다. 무퇴거reference cache와최소정책cache에같은순서의입력/압축결과를넣고매읽기값을원소exact비교했다. W21/63×sink0/1/3 총6조건,각210번overwrite/read·5번24frame압축을확인했다. 실제cache write/read/store_quantized/evict_range본문을거쳤다. sink1/3은큰변경안의좌표/보유위험을보이기위한합성조건이며최소패치지원범위를늘린것이아니다.
+결과:
+W21,S0:210읽기일치,부분span읽기130회,최대보유frame분42
+W21,S1:210읽기일치,부분span읽기130회,최대보유frame분66
+W21,S3:210읽기일치,부분span읽기110회,최대보유frame분63
+W63,S0:210읽기일치,부분span읽기95회,최대보유frame분84
+W63,S1:210읽기일치,부분span읽기170회,최대보유frame분108
+W63,S3:210읽기일치,부분span읽기160회,최대보유frame분105
+naive21frame eviction은다음24frame압축읽기에서'Chunk 0 is EMPTY, cannot read'로실패함을확인했다.
+RoPE는공간2×3/H2/D12의BF16입력에원본long_input을전체prefix로적용한값을reference로두었다. 시작위치24/27/66/126과W21/63의8구간에서절대start_frame을쓴부분RoPE가전체후slice와정확히일치했다. 시작0으로다시부른경로의차이도검출했다. sink1+tail20은분리된절대RoPE결합으로reference와일치했다.
+검사함수wall0.134462초,CPU4,Cuda initialized=False,실제tensor파일로드0/모델0/PRQ0/GPU0. stdout결과를본보고서에전사했다. 새결과JSON은만들지않았다. upstream코드는변경하지않았다.
+
+root가 선택할 구체적 최소 패치 범위/불변조건
+별도adapter로아래지점을감싸고원upstream파일은유지할수있다.
+A. pipeline CausalInferencePipeline._initialize_kv_cache/inference: physical payload와분리된전체126frame주소용량을전달,빈캐시시작,quantize24frame순서와pending frontier관리. 현재local_attn_size를용량으로다시덮어쓰는469–470행을adapter에서우회해야한다.
+B. CausalWanSelfAttention.attn_kv_cache_prerope: absolute write, visible[ max(0,E-W),E ),실제최대visible token수검사,완료된quantization frontier까지만누적evict. global/localend가절대end라는계약유지. 현재반복denoise에서는end전진0.
+C. causal_rope_apply_long_input: sink0/3frame정렬범위에서optional absolute start_frame만추가하거나동일함수본문adapter를둔다. Q의절대RoPE와K의압축좌표는그대로.
+D. 기존ChunkedKVCache read/store/evict 구현은일단그대로사용가능하다. 별도adapter는현재write가QUANTIZEDspan을부분덮지않는지,미압축pending이전부존재하는지,oldspan해제후읽기가EMPTY를안밟는지fail-fast해야한다.
+E. kv_reuse_core의pool이붙으면기존invalidate가참조수명과함께동작해야한다. 새cache/slot세대간재사용금지. kv_reuse_stage1의180/36/12chunk/60forward 하드코딩은새42chunk진단용설정/호출수로따로등록해야하며기존종료실험기록은수정하지않는다.
+필수대조는같은압축시점·같은window selection을사용하되KV를전부보존한reference와수정cache의Q/K/V byte/timeline동등성이다. 기존전체prefixattention과새windowattention이같은출력을내야한다는대조는잘못이다. 실제PRQ부분span읽기·GPUdtype경로·성능/peak은이후별도잠금된검사전에는미확인이다.
+본보고서는원인과수정가능성판단이며upstream패치나GPU실행권한을추가하지않는다. 다음자원선택은root와독립Opus2검토가결정할사항이다.
+
+파일SHA256
+/home/acorn0415/sfq_data/qvg-reuse-reference/quant_videogen/kv_cache.py e6f03b8223833021c4ff6bbe16d73ee555e1f2ecdf0d0770b565c7b5b17e6963
+/home/acorn0415/sfq_data/qvg-reuse-reference/experiments/Self-Forcing/wan/modules/causal_model.py c3575f16dcd50bd0a492b38b3ce9f299f03180f3719115115e1c5a27ed386375
+/home/acorn0415/sfq_data/qvg-reuse-reference/experiments/Self-Forcing/pipeline/causal_inference.py 824d8cfbd2985a042e253648c2aaaa06f25cb40d62be504a6330c80242caedba
+/home/acorn0415/Quantization/tools/kv_reuse_core.py 15a9ba893f389a694c181b6b85bad37c68bf2a0dc8841c720e0364d49a9ae752
+/home/acorn0415/Quantization/tools/kv_reuse_stage1.py e070ce3d54eeb08bc167165b8bd3855ec0bdeb75b8ed64136c553bad06afa48c
+/home/acorn0415/Quantization/src/experiments/method_search_20261105/qvg_window_repair_preparation/contract_checker.py e870466c5badf4466258fe6b13e3557f8ed481182373535d3d06a819621d3cb4
+완료기록 UTC 2026-11-05T15:21:04.110300+00:00
+
+추가 독립 Codex helper 검토
+사용자의 최신 지시에 따라 남은 시간에 window_frontier_check 하위 작업자 한 명에게 새 실험 없이 pending frontier/부분 overwrite 논리만 독립 검토하도록 배정했다. 실제 Opus2를 대신하는 검토가 아니다. 작업자는 명시된 절대주소·순서 조건에서 반례를 찾지 못했고, W21/index7에서P0이앞3frame원본을보호함을 확인했다. 현재쓰기[3j,3(j+1))가P이상이어서compressed과거를부분덮지않으며, index8에서압축저장전에P24로전진시키면[0,6)퇴거로압축원본을잃는반례를지적했다. 이는본검사의필수순서조건과일치한다. helper는파일수정/torch/GPU/실제자료/추가하위작업 없이읽기전용논리검토만수행했다.
+통합 후 upstream git status는 여전히 깨끗했다. 본보고서와 독립 checker 이외의파일/기존연구결과는 수정하지 않았다.

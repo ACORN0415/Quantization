@@ -430,3 +430,13 @@ root REPORT와 수치·기준·해석은 일치했고 검토 상태만 완료로
 Opus 검토도 저장 기록·스칼라·일부 해시 범위이며 독립 텐서/SSE 재생산이나 새로운 효과 실험이 아니다.
 PRF 잡음 해석은 관측과 양립하는 가설로 남긴다. 원인 증명이나 paired 계열 전체 실패로 확대하지 않는다.
 본 단계는 실행·Codex 감사·실제 Opus 검토까지 완료다. 독립보류/영상/실제비용/신규성을 갖춘 방법론 목표는 미달이다.
+
+E033 [다음 비교의 실행 가능성: 고정 QVG 경로의 capacity는 rolling window가 아님]
+root와독립Codex가고정revision0601468의활성Self-Forcing pre-RoPE 경로를확인했다.
+local_attn_size초과시과거청크를퇴거하지않고ValueError를내며,attention은read(0,end)를쓴다.
+별도의rolling함수는있으나활성forward의호출이주석처리돼있다. evict_range정의존재는활성퇴거지원의증거가아니다.
+기존재사용진단은capacity180/생성36latent로이초과상황을시험하지않았다.세외부소스SHA가당시manifest와일치했다.
+따라서21/63설정으로126latent를생성하는비교는옵션만바꿔진행할수없다.초기입력없는3latent/청크라면8번째/22번째청크에서초과한다.
+이는소스경로판정이며새GPU실행·측정OOM·품질실패가아니다. QVG전반의불가능성이나새메모리방법의신규성으로확대하지않는다.
+해당장단기문맥비교의GPU실행은시작하지않는다.창어댑터개발을자동으로착수하지않고다음독립연구안과실용요구를함께판단한다.
+근거QVG_WINDOW_FEASIBILITY_ROOT.json,source-only독립검토/GPU0. 실제Opus의다음방향검토는별도로진행한다.
