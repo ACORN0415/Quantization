@@ -3,6 +3,7 @@
 Preparation imports only the standard library. Execution needs a new root manifest.
 """
 import argparse
+import ast
 import copy
 import hashlib
 import importlib
@@ -55,6 +56,29 @@ def module_at(name, path):
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def normalization(path):
+    """Read only literal constants/default from the pinned dataset AST, not imports."""
+    require(sha(path) == '7e630c07f34f83ed06d6ccd558d189679ab7869a4cd817ad0199d151ffe939e7', 'dataset normalization source changed')
+    nodes = ast.parse(Path(path).read_text()).body
+    expected = {'ACTION_MEAN':[-.0087,.0068], 'ACTION_STD':[.2019,.2002],
+        'PROPRIO_MEAN':[236.6155,264.5674,-2.93032027,2.54307914],
+        'PROPRIO_STD':[101.1202,87.0112,74.84556075,74.14009094]}
+    values = {}
+    for n in nodes:
+        if isinstance(n,ast.Assign) and len(n.targets)==1 and isinstance(n.targets[0],ast.Name) and n.targets[0].id in expected:
+            call=n.value
+            require(isinstance(call,ast.Call) and isinstance(call.func,ast.Attribute) and isinstance(call.func.value,ast.Name)
+                    and call.func.value.id=='torch' and call.func.attr=='tensor' and len(call.args)==1 and not call.keywords, 'nonliteral dataset constant')
+            values[n.targets[0].id]=ast.literal_eval(call.args[0])
+    require(values==expected,'normalization differs from reviewed constants')
+    cls=next(n for n in nodes if isinstance(n,ast.ClassDef) and n.name=='PushTDataset')
+    init=next(n for n in cls.body if isinstance(n,ast.FunctionDef) and n.name=='__init__')
+    defaults=dict(zip([n.arg for n in init.args.args][-len(init.args.defaults):],init.args.defaults))
+    values['action_scale']=ast.literal_eval(defaults['action_scale'])
+    require(values['action_scale']==100.,'dataset action_scale changed')
+    return values
 
 
 def validate(m):
@@ -150,6 +174,7 @@ def inputs(torch, m, record):
     import cv2
     require(cv2.__version__ == m['cv2_version'], 'cv2 version changed')
     root = Path(m['dataset_root'])
+    norm=normalization(HERE/'source/datasets/pusht_dset.py')
     tensors = {}
     for key in ('states','rel_actions','velocities'):
         tensors[key] = torch.load(root/(key+'.pth'), map_location='cpu', weights_only=True)
@@ -172,8 +197,8 @@ def inputs(torch, m, record):
     image = transform(raw.permute(0,3,1,2).float()/255.)
     state = tensors['states'][0,[0,25]].float()
     vel = tensors['velocities'][0,[0,25]].float()
-    proprio = (torch.cat([state[:,:2],vel],dim=-1)-torch.tensor([236.6155,264.5674,-2.93032027,2.54307914]))/torch.tensor([101.1202,87.0112,74.84556075,74.14009094])
-    actions = (tensors['rel_actions'][0,:25].float()/100.-torch.tensor([-.0087,.0068]))/torch.tensor([.2019,.2002])
+    proprio = (torch.cat([state[:,:2],vel],dim=-1)-torch.tensor(norm['PROPRIO_MEAN']))/torch.tensor(norm['PROPRIO_STD'])
+    actions = (tensors['rel_actions'][0,:25].float()/norm['action_scale']-torch.tensor(norm['ACTION_MEAN']))/torch.tensor(norm['ACTION_STD'])
     require(list(actions.shape)==[25,2], 'recorded action layout')
     g = torch.Generator(device='cpu').manual_seed(SEED)
     candidates = torch.randn(N,5,10,generator=g,dtype=torch.float32)
@@ -182,7 +207,8 @@ def inputs(torch, m, record):
     record['input_adaptation']={'video_decoder':'OpenCV '+cv2.__version__,'original_decoder':'decord (not installed; not claimed byte equivalent)',
         'goal':'recorded frame25, not original PlanWorkspace simulator replay', 'episode':0,'frames':[0,25], 'raw_RGB_shape':list(raw.shape),
         'candidate0':'zero normalized action','candidate1':'recorded normalized relative action sequence','candidate2_15':'fixed CPU Gaussian seed20261106, no clipping/search',
-        'normalization':'Pinned PushTDataset constants/action_scale100, default_transform224, frameskip5 contiguous bundle'}
+        'normalization':norm, 'normalization_source_sha256':sha(HERE/'source/datasets/pusht_dset.py'),
+        'transform':'Pinned default_transform224; frameskip5 contiguous bundle'}
     artifact={'raw_RGB':raw, 'visual':image, 'proprio':proprio, 'actions':candidates}
     torch.save(artifact,HERE/'INPUTS.pt')
     obs={'visual':image[0:1].unsqueeze(0),'proprio':proprio[0:1].unsqueeze(0)}
@@ -257,6 +283,7 @@ def run(manifest_path):
                 if name not in dtype_seen:dtype_seen[name]={'input':str(args[0].dtype),'weight':str(mod.weight.dtype)}
             hooks.append(first.register_forward_pre_hook(inspect))
         objective=module_at('_fixed_objective',HERE/'source/planning/objectives.py').create_objective_fn(alpha=.1,base=1,mode='last')
+        r['objective_choice']={'alpha':.1,'base':1,'mode':'last','intent':'Fixed diagnostic design, not a claim to reproduce plan_pusht.yaml defaults. Original objective function only; base unused in last mode.'}
         with torch.inference_mode(),torch.autocast(device_type='cuda',enabled=False):
             t0=time.perf_counter();target=wm.encode_obs(goal);torch.cuda.synchronize()
             r['goal_encoding_seconds_including_sync']=time.perf_counter()-t0

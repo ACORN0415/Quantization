@@ -1,0 +1,28 @@
+DINO-WM fixed-candidate baseline — 코드준비 source 독립 검토 (실제 Opus1, root msg_5bfbfdf2649d)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음.
+실제 수신·시작 2026-11-05T21:44:59Z, 상한 min(수신+480s=21:52:59Z, 준비 마감 22:07:15Z). 이전 내 NEXT_OBSERVATION(ba9f96ca)은 미채택 독립안으로 불변이며 이 source를 그것으로 검증했다고 하지 않는다.
+SHA(직접 계산 앞자리 일치): experiment.py 234beae779e6a92f…, READY_CODEX 750bfbfbde21a2a0…, SELFTEST 10117ec6d12a6bd4…, MANIFEST_EXAMPLE_UNAPPROVED f1ba9d78e402136e…; 그 외 명세 SHA는 관리자 값 사용.
+읽은 범위: experiment.py 1–317 전체, PINNED_SOURCE_READBACK의 objectives 부분, 로컬 source/ 목록·objectives.py grep. REPORT·selftest.py·SELFTEST 본문·예시 manifest 본문 미열람.
+실행 0(GPU/network/model/pt/pickle load/decode/코드 실행 없음), helper 0(단일 파일).
+
+판정: 수정 권고 2건(차단 가능성 있음, 최소 delta) 외에는 계약과 일치.
+확인(행 근거):
+ - 권한·결합: validate가 approved status, root 승인·실제 Opus 검토, code/spec/base smoke 해시, limits·design 고정, bound/site-packages guard 해시를 요구. RUN.json 'x'로 1회. 실패 시 RESULT 보존.
+ - 모델: smoke와 같은 namespace·offline 차단·fresh strict predictor·mask buffer 값 대조·DINO strict, 7 key 집합 assert. CPU 단계에서 CUDA 미초기화 assert.
+ - 입력: episode0 frame0/25, OpenCV BGR→RGB, default_transform 224, 16 후보(0=zero, 1=기록 행동 25→5×10, 2–15=CPU Gaussian seed 20261106), 모두 같은 텐서를 4팔 공유. adaptation 문구 기록.
+ - reuse 동등성: reused_rollout은 encode_obs만 밖으로 뺀 recurrence. 최종 latent 전 좌표 allclose 1e-5 gate가 timing 전에 오며 실패 시 중단(완화 없음). 범위 문구(최종 좌표만) 정직.
+ - 정밀도: BF16/FP16 predictor 사본, 입력 cast·출력 float, 첫 Linear의 입력·weight dtype을 hook으로 확인, autocast/TF32 off, matmul 'highest'. 호출 수 계약(direct encoder 4/reuse 1, predictor 20, decoder 0).
+ - timing: 공통 goal encoding 분리, warmup 2 + 반복 8의 회전 순서, CUDA event+wall. 점수는 FP32 objective 선호일 뿐 과제 oracle 아님.
+수정 권고(최소 delta)
+ W1 objective alpha: create_objective_fn(alpha, base, mode)는 alpha 기본값이 없다(pinned objectives.py). experiment는 alpha=0.1을 쓰지만, 이전 DINO-WM 검토의 helper(WebFetch 요약,
+    근사)는 pinned conf/plan_pusht.yaml의 objective를 alpha 1·base 2·mode last로 읽었다. alpha는 proprio 항 가중이라 후보 순위가 바뀔 수 있다. → plan_pusht.yaml 값을 고정 source로
+    결합하거나, 0.1을 의도한 설계 선택이라고 ROOT_SPEC/결과에 명시하라(현재 ROOT_SPEC는 "pinned original"이라고 적어 원 config와 불일치 가능).
+ W2 정규화 상수: proprio 평균·표준편차(236.6155 등)와 action 평균·표준편차(-0.0087/0.0068, 0.2019/0.2002)가 experiment.py에 하드코딩돼 있고, 이를 pinned datasets/pusht_dset.py와
+    대조하는 assert·결합이 없다(로컬 source/에는 pusht_dset.py가 없고 readback에서도 값을 찾지 못함). → pinned pusht_dset.py 해시를 bound_files에 넣고 상수를 그 텍스트에서 읽거나
+    일치 assert를 추가하라. 불일치 시 모든 팔이 같은 잘못된 입력을 공유해 비교 자체는 대칭이지만 원 조건 재현이 깨진다.
+잔여(차단 아님)
+ - BF16/FP16 사본으로 predictor의 mask buffer도 저정밀로 바뀐다(값이 0/1·-inf류면 영향 없음, 미확인).
+ - 후보 1의 reshape(5,10)는 [x,y] 단계 순서의 row-major 묶음 — 원 TrajSlicer concat 순서와 같다고 보이나 source 미대조.
+ - 단일 기록 사례·16후보라 일반화·제어·저비트·배포 비용 근거가 아니다(설계 문구와 일치).
+미확인: REPORT·selftest 본문과 toy 검사 로직, 예시 manifest, plan_pusht.yaml 원문(이번 미열람), pusht_dset 상수 원문.
+실제 끝: 2026-11-05T21:46:06Z

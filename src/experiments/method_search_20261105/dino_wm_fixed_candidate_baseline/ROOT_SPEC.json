@@ -13,7 +13,7 @@
     "Same FP32 encoder/action/proprio plus fixed FP16 predictor (explicit input/output casts)"
   ],
   "fixed_candidates": "Candidate0 zero, candidate1 recorded episode0 first25 actions normalized/grouped5x10, candidates2..15 independent CPU Gaussian(seed20261106), no CEM/search/elite/returned-mu claim.",
-  "reference_objective": "Pinned original create_objective_fn(alpha=0.1,base=1,mode=last). Base unused inlast mode. FP32 objective preference only; not task oracle.",
+  "reference_objective": "Use the pinned original objective FUNCTION with intentionally chosen diagnostic alpha0.1/base1/modelast. This does not claim plan_pusht.yaml defaults or paper-config reproduction; base unused inlast mode. Choice fixed before observing any real candidate output.",
   "runtime_limits_proposal": {
     "wall_seconds": 900,
     "GPU_processes": 1,
@@ -37,5 +37,6 @@
     "package_installs": 0
   },
   "actual_Opus_source_review_required": true,
-  "outcome_rule": "No effect/performance threshold is a task-quality or research-adoption gate. Report valid same-candidate score/regret and repeated crossed-order timing. Invalid contracts or caps stop this run; no tolerance/arm changes from outcomes."
+  "outcome_rule": "No effect/performance threshold is a task-quality or research-adoption gate. Report valid same-candidate score/regret and repeated crossed-order timing. Invalid contracts or caps stop this run; no tolerance/arm changes from outcomes.",
+  "normalization_contract": "Parse only literal constants and action_scale100 from locally retained pinned pusht_dset.py AST, exact SHA7e630c07 and reviewed constant values required. Do not import dataset/decord."
 }

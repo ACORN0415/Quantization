@@ -1,0 +1,19 @@
+{
+  "status": "frozen_W1_W2_delta_preparation_not_execution",
+  "created_epoch": 1793915327.412131,
+  "old_commit": "bfb7c1f",
+  "old_source_sha256": "234beae779e6a92f764cc46f455e055c0d6039d751e4ab05bb1941cedc71d799",
+  "new_source_sha256": "4046ce102092035e04e310a74dd1e71d66993b7748d6e0628d26815af82af317",
+  "files": {
+    "ROOT_SPEC.json": "2f0af0ded2169263d786a7b44a82d68abe523c406a1ce2b5af43f446ee60fa30",
+    "SOURCE_W1_W2_DIFF.patch": "b0549c6149a34963624756f9559abfe76dc852cc152d1ee6a81789175e9d18a7",
+    "NORMALIZATION_SELFTEST.json": "481477aef9ec20d6716416367283642e52c0da233bb2c3aab38760ec089a2557",
+    "REPORT_W1_W2_ADDENDUM_KO.txt": "c1c7b6970c17fc977eb5d65faee411aa8c5f9eccbed2f002d114decfd6bb3627",
+    "MANIFEST_W2_EXAMPLE_UNAPPROVED.json": "077026778c3dc14ce5b47b60b387eb84c29c7e3b560a800723091d0fc2a51f34"
+  },
+  "new_dataset_source_sha256": "7e630c07f34f83ed06d6ccd558d189679ab7869a4cd817ad0199d151ffe939e7",
+  "actual_Opus_delta_review_completed": false,
+  "execution_authorized": false,
+  "GPU_model_dataset_pickle_loads": 0,
+  "numerical_arms_candidates_gates_unchanged": true
+}

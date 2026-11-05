@@ -1,0 +1,31 @@
+{
+  "status": "passed_literal_source_normalization_preparation",
+  "constants": {
+    "ACTION_MEAN": [
+      -0.0087,
+      0.0068
+    ],
+    "ACTION_STD": [
+      0.2019,
+      0.2002
+    ],
+    "PROPRIO_MEAN": [
+      236.6155,
+      264.5674,
+      -2.93032027,
+      2.54307914
+    ],
+    "PROPRIO_STD": [
+      101.1202,
+      87.0112,
+      74.84556075,
+      74.14009094
+    ],
+    "action_scale": 100.0
+  },
+  "tampered_constant_rejected_by_SHA": true,
+  "Torch_imports_model_data_GPU": 0,
+  "source_sha256": "4046ce102092035e04e310a74dd1e71d66993b7748d6e0628d26815af82af317",
+  "dataset_source_sha256": "7e630c07f34f83ed06d6ccd558d189679ab7869a4cd817ad0199d151ffe939e7",
+  "created_epoch": 1793915283.1552615
+}
