@@ -1,0 +1,49 @@
+{
+  "created_epoch": 1793904170.6948767,
+  "status": "static_scalar_counterexample_not_real_effect",
+  "construction": "1x1 scalar future taps W_old=1,W_prev=3/2 so a=1,b=13/4,c=3/2, grid step1, values .9,.49; integer codes including2 representable at4bit.",
+  "candidates": [
+    {
+      "codes": [
+        1,
+        0
+      ],
+      "loss_fraction": "25733/40000",
+      "loss": 0.643325
+    },
+    {
+      "codes": [
+        0,
+        0
+      ],
+      "loss_fraction": "116533/40000",
+      "loss": 2.913325
+    },
+    {
+      "codes": [
+        1,
+        1
+      ],
+      "loss_fraction": "40333/40000",
+      "loss": 1.008325
+    },
+    {
+      "codes": [
+        0,
+        1
+      ],
+      "loss_fraction": "11133/40000",
+      "loss": 0.278325
+    },
+    {
+      "codes": [
+        2,
+        0
+      ],
+      "loss_fraction": "14933/40000",
+      "loss": 0.373325
+    }
+  ],
+  "interpretation": "Four floor/ceil joint choices, old-first sequential compensation and reverse-order compensation are not identical algorithms. Old-first yields[1,0]; new-first yields[2,0], outside original floor/ceil choices. Here four choices prefer[0,1] and beat both. This does not prove a novel objective, real Conv improvement, or advantage against generic full2D block enumeration. Strong baseline must allow both orders and actual grid ranges.",
+  "limits": "Exact rational static arithmetic only; no model/weights/activation/GPU/real-data experiments. No adoption. Same public mathematical facts supplied to both reviewers before original deadline."
+}

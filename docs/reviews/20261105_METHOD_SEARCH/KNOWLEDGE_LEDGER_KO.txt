@@ -456,3 +456,9 @@ E039 / 2026-11-06 KST: 고정p00 BF16latent의fresh원VAE BF16/FP32두복원을r
 E040 / 2026-11-06 KST: 실제Opus2사후검토가VAE정밀도진단의등록된stop을범위한정수용했다. 원문과root대조를보존했으며RUN은최초claim/terminal은ROOT_EXECUTION_FINAL+RESULT로구분한다. per-pixelRMSE와temporalmeanRGB L2의비를인과기여율로읽지않는다. 추가GPU/텐서재생산0,신규방법목표미달.
 
 D015 / 2026-11-06 KST: VAE state단독저장양자화후보는현재채택안함. 실제메모리/시간요구위반은없고BF16출력streaming미비교,LightVAE투영history와Q-Mamba persistentstate선행존재. 상태정적payload1.758871GiB는총peak가아니다. sourceoperator scale-boundary root초안은별도비판중이며신규성/효과미검증. 강한BF16출력streaming기준선의동일산술·전501RGB바이트비교준비를20분code+10분actualsourcereview로분리등록했고GPU아직0. 원방법론목표는미완료다.
+
+E041 / 2026-11-06 KST: 원BF16 VAE의출력누적만CPU순차전달로바꾼강한기준선을등록2복원/단1GPU프로세스로64.758초에검사했다. worker가501RGB의shape/dtype/원소바이트를직접비교해모두같았고원conv2한번/decoder126회/두팔trace일치를확인했다. native→stream allocatedpeak5.334531→4.216501GiB,20.958%감소는이실행의관측이다. steadyfeaturestate1,888,573,440B는그대로이며peak동시구성이나제거가능상한으로해석하지않는다. 시간30.959→30.375초는각1회/고정순서/계측+검증비용포함이라가속확정아님. 독립Codex감사1767조건/LOCK25파일hash와실제Opus1사후검토를완료했고8c8af3e에보존했다. rawRGB미저장으로사후501원소독립재생산은없다. source+LOCK는사전b89ad1d,준비검토는원마감내/rootLOCK통합은마감후임을구분했다. 새양자화방법의효과나독립보류성과는아니다.
+
+D016 / 2026-11-06 KST: VAE temporal-tap scale/operator초안은두독립비판을통합해현형태로채택하지않는다. temporalConv2D lowering,group별정수부분합/scale합산,고정scale의저장코드재사용은기존계산/API로표현되며강한staticW8A8의실패나유용한비용공백은미관측이다. LightVAE INT8변환기는고정SHA에서H3transformer2Dlinearweight만대상이며WanConv3DstateINT8의직접선행으로세지않는다. 이범위정정이초안신규성/효과를입증하지는않는다. 근거vae_state_operator_review/ROOT_DECISION.json및독립비판/정정부록. 분야전체종료아님.
+
+N005 / 2026-11-06 KST: future-state joint rounding은별도미채택정적가설로20분독립비판중이다. AQuant(https://arxiv.org/html/2208.11945) Eq8/9는학습된값의존activationborder로출력재구성을최적화한다. Eq6의weight-error계수가0이면그elementwise식은0.5이나학습된coarseborder식9전체가항상RTN으로축소된다고일반화할수없다. 2x2proxy의floor/ceil4선택과한순서/역순순차보상은다른코드를선택할수있고역순은원floor/ceil밖도허용하므로둘다강한기준선에포함해야한다. root의정확유리수반례는이차이를설명하는정적산술일뿐기존일반2D블록탐색대비신규성/실제Conv/RGB효과가아니다. 양쪽동일mathnote를전달했으며실제모델/가중치/활성/효과실험0을유지한다.
