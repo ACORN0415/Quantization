@@ -1,0 +1,29 @@
+{
+  "status": "final_preparation_ready_source_editing_stopped",
+  "recorded_utc": 1793878412.0146372,
+  "files": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/diagnose.py": "274c59a1a796cb2ae41bec3f4fc728a2b6c342ed349f51126133e43bfd0ed819",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/REGISTRATION_PROPOSAL_KO.txt": "0bff9187416130e61413db7b89f532dc28c99af09e7d745a888e5fa6de9cfe2d",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/SELFTEST_V2.json": "ba17bd534c8a3b16e3f83fe3e3f7c53f8387684557d9b4aa86bde92d02610b33",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/SELFTEST.json": "cf1706841949d282babae5f905f6b60c08eddea8007eddf49f7492fcc68baaef",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/SELFTEST_INITIAL.json": "7da323b2f529b2e6bf5c0e3247b49ccdd868d43f7d7e61530903b6c8e9db186b"
+  },
+  "synthetic_passed": true,
+  "valid_V_matches_original": true,
+  "invalid_V_rejected_before_restore": [
+    "zero",
+    "tiny",
+    "nan",
+    "inf",
+    "negative"
+  ],
+  "repository_python_dependency_count": 9,
+  "prior_review_scope": "Independent review observations addressed initial source 711f05f709d42282cdfee37292975bc95a598a84b950755f8960f6ac873d019c; review footer sampled amended source during editing. Original review is preserved. This record does not claim the amended source has independent final approval.",
+  "actual_capture_reads": 0,
+  "actual_capture_computation": false,
+  "GPU_calls": 0,
+  "model_loads": 0,
+  "LOCK_created": false,
+  "pilot_status": "completed stop_quality; this control cannot rescue or revise that decision",
+  "claude_status": "actual Opus 5.5 final source review pending, no calls before 2026-11-05T21:50:00+09:00"
+}

@@ -1,0 +1,42 @@
+고정 부분 회전+RTN 강한 대조 — 실행 전 등록안
+2026-11-05, Codex. 현재 상태: 준비/합성 검사만 허용. 실제 캡처 계산과 비용 측정은 현재 전체 생성 pilot 종료 및 별도 실행 등록 후에만 수행한다. Claude 최종 검토는 사용자 지정 시각 이후 Opus 5.5로 남아 있다.
+
+질문과 범위
+고정 Hadamard 격자에서 알려진 GPTQ로 코드를 보상하는 방법이, 같은 보정 자료로 고정한 단순 부분 회전+RTN보다도 출력 오차가 작은가? 새 방법을 만드는 검사가 아니다. FlagRot 전체 재현도 아니다. 현재 decoder를 유지해야 하는 외부 요구는 입증되지 않았으므로, 더 단순한 회전 대조가 충분하면 폭넓은 품질 우위 주장은 닫는다. 잠긴 8회 생성 pilot의 팔/문턱/입력을 변경하지 않는다.
+
+후보 집합과 사전 선택
+층18/24 각각, 128차원 head의 연속 32채널 블록 4개가 I 또는 정규화 Sylvester H32를 사용하는 16개 block-diagonal 조합과 whole-head H128, 총17개만 둔다. mask 0..15, 이어 H128의 고정 순서다. 각 head의 선택은 p00_s101 c7에 저장된 과거 6청크 K와 q 4680개만 사용해 한 번 결정한다. p4/causal/pilot 출력으로 다시 고르지 않는다.
+공식 FlagRot fixed mode는 local 블록 선택 뒤 head 후보를 비교하는 2단계 규칙이다. 원문 §3.1/부록의 16개 joint 조합 대조도 공개돼 있다. 여기서는 그 동일한 작은 family를 full raw-Q 점수로 전수 평가해 greedy보다 유리한 강한 대조로 만든다. 이는 원리의 adaptation이며 공식 fixed 구현을 그대로 재현했다고 부르지 않는다.
+근거: https://arxiv.org/html/2611.03992v1#S3.SS1
+고정 코드: https://github.com/KunmingSHAO/FlagRot_releaser/blob/22ca355cb67dfef8b1bc8bbab28d3989e3b4dbb5/blockflag/qattention.py#L265
+https://github.com/KunmingSHAO/FlagRot_releaser/blob/22ca355cb67dfef8b1bc8bbab28d3989e3b4dbb5/blockflag/qattention.py#L676
+
+선택 점수는 원좌표 C=Q^TQ/N에 대한 sum_t (Khat_t-K_t)^T C (Khat_t-K_t)이며, quantize/dequantize/BF16 역회전까지 수행한 실제 복원 오차를 쓴다. C는 중심화하지 않은 second moment이고 damping도 없다. 서로 다른 head의 오차를 섞지 않는다. score의 정확한 동점은 앞 후보를 유지한다. OBQ는 기존처럼 회전 좌표에서 p0 H+0.01 mean(diag(H))I를 역분해한 U를 사용한다. raw 선택 점수와 damped solver를 같은 목적함수라고 표시하지 않는다. 어느 쪽도 실제 softmax/Wo의 정확 Hessian이 아니다.
+
+양자화/저장 통제
+K@R FP32 → BF16, frame1560마다 zero pad8, token축 g16, 채널별 native BF16 absmax/7 및 clamp_min(1e-8), FP16 scale 저장. 모든 새/기존 팔에서 유한/양수 stored scale 계약을 확인하며 실패 시 clamp/fallback 변경 없이 무효로 중단한다. RTN_BF16과 RTN_FP32는 기존 정의를 유지한다. 고정 회전 RTN은 FP32 code division/round ties-to-even/clamp[-8,7]을 사용한다. OBQ도 같은 grid/code 범위다. 다른 회전의 scale 값은 달라도 정책·dtype·실제 바이트는 같다.
+모든 팔은 실제 nibble pack→unpack 원소 일치 확인, BF16 code*scale, pad 제거, FP32 inverse R, BF16 복원이다. 한 완료 청크당 sentinel uint8 한 개를 포함한다. V는 기존 fixed V4, 현재 청크 K/V는 BF16, 과거 청크 수와 순서는 같게 유지한다. K6청크 payload와 V6청크 payload를 팔마다 비교한다.
+V 실행 전 계약 보완(실자료 결과를 보기 전): p4의 새 V 패킷과 causal의 기존 V 패킷 모두 복원 전에 같은 검사 함수로 stored FP16 scale의 유한성 및 엄격한 양수 조건을 확인한다. 0·underflow·NaN·Inf·음수는 유효성 실패로 중단하고 clamp, scale 정책, code, fallback은 바꾸지 않는다. 유효 입력에서 기존 fixed_v4와 packet/복원/실제 바이트가 같은지 합성 대조한다. 전체 경로에 공통으로 적용되는 유효성 검사 비용은 실제 진단 상한에 포함한다.
+고정 회전 label은 head마다 uint8 하나, 실제 사용하는 dense FP32 R은 층당786432B를 별도 상태로 센다. transpose는 view다. 후보 family 전체를 런타임 상주로 요구하지 않는다. OBQ의 실제 고정 U 층당786432B와 shared H128도 별도 표시한다. KV bytes 일치가 총상주 메모리/읽기 비용 일치를 뜻하지 않는다. 회전/복원 시간은 0이 아니다.
+
+입력/주 지표
+보정: /home/acorn0415/sfq_data/kv_alllayer_capture/p00_s101/l18_c7.pt, l24_c7.pt. q 4680개와 과거 K6청크만 선택에 사용한다.
+평가1: p04_s101 동일 두 층 c7, q 위치 floor(arange(128)*4680/128), 과거6+현재1청크. 기존 capacity 결과와 같은 CPU FP32 attention, FP64 post-Wo SSE/NSE. RTN_BF16/FP32/OBQ를 재계산해 기존 code/scale hashes·payload가 정확히 같고 SSE/energy는 rtol=atol=1e-9 안에 맞아야 한다.
+평가2: 기존 causal_obq/capture의 층18/24 × read0/read3. 6개 write K/V와 현재 K/V를 사용한다. 동일 CPU attention으로 reference와 네 팔을 새 계산한다. 기존 causal 저장 packet과 RTN/OBQ 코드·scale가 정확히 같아야 한다. GPU-native 결과의 SSE를 CPU 점수에 섞지 않는다. 저장 native_av에 대한 CPU floor는 별도로 보고한다.
+p0/p4는 기존 개발 자료이고 causal 캡처도 이미 방법 검증에 사용했다. 보정과 평가 파일은 다르지만 독립적인 신규 보류 입력이나 새 재현 횟수라고 하지 않는다. 6개 endpoint도 독립 표본으로 유의확률을 계산하지 않는다.
+새 평가 팔은 FIXED17_FP32_RTN 하나다. 기존 RTN_BF16/FP32/OBQ_FULL 재계산은 연산 경로/비교 대조이며 새 방법 후보가 아니다. 선택 17개를 p4/causal에서 전부 평가해 유리한 것을 고르지 않는다.
+
+무개입/합성 유효성
+합성 FP64 orthogonality/logit 보존 maxabs<=1e-10, FP32 noquant roundtrip/logit rtol=atol=5e-5. H128 기존 frames/code/scale/restore/bytes와 정확 일치, nibble full roundtrip, 입력 bytes 보존, 선택 fixture와 p0만 사용한다는 호출 경로를 검사한다. 실제 입력에서는 선택 R의 noquant BF16 roundtrip가 K원본+V4 기준에 주는 post-Wo SSE가 해당 endpoint RTN_FP32 전체 SSE의1% 이하여야 한다. 넘으면 숫자 경로 혼입으로 무효이며 결과 기준을 바꾸지 않는다. exact raw score vs 독립 Q projection 합성 항등도 확인한다.
+추가 합성 회귀: zero/tiny V를 양자화한 stored FP16 scale이0임을 확인하고 decoder가 호출되기 전에 거부되는지 검사한다. NaN/Inf/음수 scale도 같은 방식으로 거부한다. 이전 SELFTEST.json/SELFTEST_INITIAL.json은 보존하고 수정 코드 검증은 새 SELFTEST_V2.json에 기록한다.
+
+사전 결정 — 자원 선택 기준이며 신규성 입증 기준이 아님
+계속: 6개 endpoint가 모두 유효 완료하고 OBQ_FULL의 SSE가 FIXED17_FP32_RTN보다 각각10% 이상 낮다.
+단순 대조로 광범위 우위 공백 불확실: 한 endpoint라도 OBQ_FULL가 fixed17보다 나쁘고 수치적 동점(rtol=atol=1e-9)이 아니다.
+나머지: 추가 효과가 등록10% 조건에 부족하여 유보. 고정 회전과 OBQ가 같다는 보편 명제는 주장하지 않는다. 사후 좋은 층/입력 선택, 변환 family·scale·H·문턱 변경 없음. 층별/endpoint별 SSE,NSE,gain 전부 보고한다.
+
+비용/감사/상한
+실제 실행 시작부터1200초(CPU4 threads/RSS8GiB/새디스크1GiB). 보정 입력 hash/load, raw moment/factor, 17후보 encode/score, 선택 상태 저장, 평가 hash/load/encode/decode/attention, 결과 저장과 정리를 포함한다. supervisor가 자기 worker process group만 종료한다. guard는 관측된 RSS/디스크 검사이며 하드웨어 격리가 아니다. cleanup용5초를 남긴다.
+코드/등록/관련 helper·기존 결과·manifest를 lock에 고정하고 각 캡처 tensor 파일은 manifest hash/bytes를 실행 중 확인한다. 입력 tensor pre/post hash도 확인한다. 한 번의 CPU 시간은 GPU 배포 시간이나 통계적으로 안정된 속도 비교가 아니다. offline 후보탐색 비용, 실제 selected-state 바이트, encode/decode/attention 시간을 구분한다. 실제 캡처 계산·타이밍은 pilot 완료 후 별도 root/독립 검토와 LOCK 없이 시작하지 않는다. 현재 준비 단계에서는 GPU0, 실제 캡처 읽기0, 합성 검사만 수행한다.
+import 동결 보완: 직접 helper뿐 아니라 kvq.quant import가 실행하는 src/kvq/__init__.py와 store.py를 명시적으로 포함한다. 동적 import helper와 현재 로드된 모든 저장소 내부 Python module 경로를 수집하여 동결 목록의 누락을 검사하고 SELFTEST_V2에 실제 dependency hash를 남긴다. Torch/표준 라이브러리는 저장소 파일 동결과 구분하여 Torch 버전으로 기록한다.
+이 진단은 이미 종료 판정된 전체 생성 pilot을 구제하는 절차가 아니다. pilot의 유효한 stop_quality 결론을 유지하며, 기존 국소 이득에 대한 강한 단순 기준선 공백을 별도로 확인하는 준비다.

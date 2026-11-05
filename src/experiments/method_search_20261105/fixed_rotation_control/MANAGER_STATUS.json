@@ -1,0 +1,29 @@
+{
+  "task": "fixed_rotation_control",
+  "status": "final_preparation_ready_pending_root_review_and_lock",
+  "updated_utc": 1793878412.0148785,
+  "files": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/diagnose.py": "274c59a1a796cb2ae41bec3f4fc728a2b6c342ed349f51126133e43bfd0ed819",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/REGISTRATION_PROPOSAL_KO.txt": "0bff9187416130e61413db7b89f532dc28c99af09e7d745a888e5fa6de9cfe2d",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/SELFTEST_V2.json": "ba17bd534c8a3b16e3f83fe3e3f7c53f8387684557d9b4aa86bde92d02610b33"
+  },
+  "final_ready_record": {
+    "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/FINAL_READY.json",
+    "sha256": "765d2a5cfb2acdfe192b7a3c139646a57913ec3c145be5290b6c53cf31b27dc2"
+  },
+  "synthetic_selftest_passed": true,
+  "V_contract_and_import_closure_fixed": true,
+  "source_editing_stopped": true,
+  "actual_capture_reads": 0,
+  "actual_capture_computation": false,
+  "GPU_calls": 0,
+  "model_loads": 0,
+  "LOCK_created": false,
+  "prior_pilot_decision": "stop_quality retained",
+  "actual_run_requires": [
+    "stable-source root review",
+    "independent review or explicit administrative decision",
+    "LOCK.json"
+  ],
+  "claude_status": "actual Opus 5.5 final source review pending, no calls before 2026-11-05T21:50:00+09:00"
+}

@@ -1,0 +1,57 @@
+고정 회전 대조 진단 — 독립 Codex 사전 검토
+2026-11-05 / /root/method_gap_codex
+
+판정: 핵심 비교 설계는 유효하다. 다만 공통 V stored-scale 계약의 실제 검사를 보완한 뒤 실행할 것을 권한다. 이미 종료한 full_obq_rollout_pilot의 stop_quality는 그대로 유지한다. 이 검사는 기존 개발 자료에서 강한 단순 회전 대조로도 남는 국소 오차 차이가 있는지 판단하는 별도 진단이다. actual Claude 검토를 대신하지 않는다. 실제 Claude는 사용자 지정 21:50 이후 Opus 5.5로 별도 검토해야 한다.
+
+검토 범위
+REGISTRATION_PROPOSAL_KO.txt, diagnose.py 전체, SELFTEST.json, IMPLEMENTATION_READY_KO.txt, transitive 수학 helper(qcov_rotation_baseline_codex/diagnose_rotation.py, obq_capacity_codex/diagnose_obq.py, causal_obq/common.py), fair_comparison_codex/diagnose.py, kvq quant/init/store와 headrule_quantizer의 관련 경로를 읽었다. causal capture/replay 코드와 manifest의 상태/개수도 확인했다. 실제 캡처 tensor 파일은 열지 않았고 효과·시간 계산도 실행하지 않았다.
+공식 FlagRot 원문 §3.1/3.2 및 고정 commit의 qattention.py에서 joint 후보와 fixed 선택 경로를 직접 확인했다. 논문의 후보 family를 적용한 대조라는 설명은 맞지만, 공식 FlagRot 시스템 재현이나 모든 rotation 기준선을 대표하는 결과라고 부를 수는 없다.
+
+R1. 실행 전 필수 수정: 공통 V stored-scale 계약의 누락
+- diagnose.py:41–55 K encode는 유한/양수 stored FP16 scale을 검사한다. 그러나 p4 경로(:169)의 old.lib.fixed_v4는 Quantizer.encode의 FP16 scale을 검증하지 않고 restore하며, causal 경로(:177–178)도 저장 V packet을 검증 없이 c.restore한다.
+- registration은 모든 새/기존 팔에서 유한/양수 stored scale을 확인한다고 정했다. 공통 V여도 그 계약은 자동으로 보장되지 않는다. restored output이 finite인지만 보아서는 부족하다.
+- 독립 합성 검사: BF16 zero V [1,4680,12,128]을 c.encode_v에 넣으면 FP16 scale이 모두 0이지만 c.restore는 finite이다. 같은 zero K를 새 encode에 넣으면 기존 scale roundtrip assert에서 거부됐다. 실제 V 자료에서 이러한 상황이 발생했다는 주장은 하지 않는다.
+- 최소 수정: p4 fixed V4 생성과 causal V packet 로드 모두에서 실제 저장 scale의 dtype/shape, isfinite, >0을 restore 전에 검사한다. 허용 범위를 바꾸거나 zero scale을 clamp하는 방식으로 고치지 않는다. packet 또는 scale을 별도로 재생성해 추정한 검사보다 실제 사용하는 패킷 검사여야 한다. 같은 V packet/code/metadata bytes와 복원이 기존 기준선에 정확 일치함을 유지한다.
+- zero/tiny V rejection 합성 검사 하나로 계약 집행을 확인하고 새 source/registration/selftest hash를 잠근다. 실제 입력 효과를 먼저 보며 계약을 완화하지 않는다.
+
+R2. 잠금 범위의 작은 보완 권고
+- sources()는 주요 수학 helper·기존 capacity RESULT·p0/p4 및 causal 두 manifest를 고정한다. tensor는 manifest의 sha/bytes를 읽기 직전에 확인한다. 기존 code/scale/payload 및 p4 SSE anchor가 별도로 있어 참조 경로의 변경을 검출한다.
+- 다만 kvq.quant import 때 src/kvq/__init__.py가 실행되고 여기서 src/kvq/store.py도 import되는데 두 파일이 sources()에 없다. 현재 내용상 store는 이 CPU 계산에 쓰이지 않으므로 관측된 수학 오류는 아니다. 그래도 '모든 transitive project source' 잠금을 명시하려면 두 파일을 추가하는 편이 정확하다.
+- verify_lock은 sources()에 열거된 파일만 검사한다. root가 LOCK.sha256에 추가하는 독립 review/authority snapshot도 보호하려면 전체 sha256 entries를 검증하거나, 그 파일을 sources 목록에 명시해야 한다. 실제 Claude 미완료를 completed로 바꾸는 것은 허용되지 않는다.
+- 현재 SELFTEST 기록의 source/registration SHA는 현재 파일과 일치했다. 수정 뒤에는 이 관계도 잠금 구성 시 다시 assert해야 한다.
+
+핵심 설계에서 확인한 타당한 점
+1. 비교 공정성 및 정보 시점
+   calibrate는 p0 q와 과거 K만 입력으로 받는다. 17개 후보를 모두 점수화하고 head별 argmin 한 번만 선택한 뒤 p4/causal에 고정한다. 평가 점수, 평가 query, pilot 출력은 선택 함수로 전달되지 않는다. p0에서 통계를 얻는 것이므로 온라인 lookahead를 주장하지 않는다. fixed17은 H-only OBQ보다 p0 K까지 추가로 사용하지만, 같은 기존 보정 파일에서 단순 기준선에 유리한 선택을 허용하는 의도와 일치한다.
+   단, p0/p4/causal 모두 이미 개발에 쓰였고 이번 family 자체는 이후 검토에서 선택됐다. 이를 새로운 독립 보류 검증이나 통계적 일반화로 부르지 않는 명세가 적절하다.
+2. 목적함수와 좌표
+   score_error는 원좌표의 실제 BF16 복원 K 오차 e에 대해 sum e^T C e를 head별로 계산하며 C=Q^TQ/N은 중심화·damping 없는 second moment다. 다른 회전으로 바뀐 좌표에 원래 C를 그대로 적용하는 오류는 없다. 모든 팔은 K를 원좌표로 역회전한 뒤 같은 원래 q와 CPU FP32 attention을 사용한다. Wo 이후 FP32 delta를 계산한 뒤 FP64 제곱합을 사용하므로 저장 수치와 dtype 해석을 그대로 유지해야 한다.
+   OBQ의 damped H solver와 raw-C 선택 점수는 같은 목적함수가 아니다. logit proxy를 softmax/Wo 정확 Hessian으로 부르지 않는 문장이 필요하며 현재 명세가 이를 분리했다.
+3. 같은 실제 payload
+   K encode는 실제 nibble pack/unpack과 equality, FP16 scale, 청크당 uint8 sentinel을 사용한다. 모든 회전의 같은 형상·bitwidth 때문에 payload가 같고 평가에서 V bytes를 더해 팔별 equality를 다시 검사한다. dense R 층당786432B, label12B와 OBQ U 층당786432B는 별도 encoder/decoder state다. state를 저장한 파일에는 R+U가 함께 들어가므로 파일 크기 자체를 한 방법의 운영 메모리로 사용하지 않아야 한다.
+   R별 scale 값은 다를 수 있으며 이를 동일 scale 값이라고 하지 않는다. scale 정책·dtype·group·padding·payload를 맞추는 비교다. 6청크 batch CPU encode의 시간은 GPU write당 비용이 아니다.
+4. anchor와 평가 유효성
+   p4 기존 세 팔의 코드/scale hash, payload 및 SSE/energy를 확인한다. causal 기존 팔은 저장 패킷 code/scale/sentinel과 직접 비교한다. native_av는 CPU와 native의 차이를 설명하는 별도 reference이며 새 CPU 팔의 SSE에 GPU native 점수를 섞지 않는다. capture 코드에서 causal native_av가 QIDS 128개로 저장되는 것도 확인했다.
+   선택 R의 noquant BF16 역회전 효과를 동일 K원본+V4 reference로 비교하여 RTN_FP32 전체 SSE의1% 이하라는 사전 유효성 기준을 적용한다. 이 검사가 실패하면 수치 경로 혼입으로 중단하고 사후 완화하지 않아야 한다.
+   q 보존은 evaluation 바깥 호출자에서 별도로 검사하고, k/v/v4는 evaluation 내부 pre/post hash를 검사한다. calibration도 q/k pre/post hash를 검사한다.
+5. 시간과 자원 상한
+   supervisor는 본격 source verification 및 worker 시작 전에 monotonic 시작을 기록하며 worker는 같은 시작값을 사용한다. child process group에만 SIGTERM/SIGKILL을 적용하며 1195초에서 계산을 멈추도록5초를 남긴다. c.codes_obq 내부 guard가 없어도 supervisor timeout은 해당 child를 제어한다. CPU4/RSS8GiB/disk1GiB guard는 관측 기반이며 격리 장치가 아니라는 설명이 정확하다.
+   import/인터프리터 기동 시간은 supervise() 호출 이전이므로 '프로세스 exec 직후부터 모든 시간'과 엄밀히 같지는 않다. 현재 문서의 실험 시계는 supervisor 시작부터라는 한 문장을 명확히 하면 충분하다. 완료 여부와 elapsed≤1200 검사를 최종 보고에서 다시 확인한다.
+6. 사전 결정의 해석
+   6개 endpoint 모두 OBQ의 SSE가 fixed17보다10% 이상 낮아야 계속한다. 한 endpoint라도 fixed17이 더 좋으면 넓은 품질 우위가 불확실하다는 결론이고, 나머지는 등록 효과 미달이다. 이는 이 자료와 후보 family의 CPU 출력 오차 판단이다. 통과해도 전체 생성 stop_quality를 취소하지 않으며, 공식 FlagRot·전체 rotation 방법을 이겼다는 결론도 아니다.
+
+독립 합성 검사의 사실
+실제 캡처 읽기0, GPU 초기화false, 모델 로드0, 새 GPU 실험0. c.encode_v(zero BF16 V)의 stored FP16 scale==0 전체 참 및 restore finite 전체 참. K zero 입력은 새 encode가 AssertionError로 거부. 기존 SELFTEST를 덮어쓰거나 원래 등록/소스를 수정하지 않았다. 추가 대형 selftest는 반복하지 않았다.
+
+선행 구현 대조의 범위
+FlagRot §3.1은 I/H32의 local 선택과 H128 경쟁을 설명하고 16 joint 조합도 다룬다. 공개 qattention.py의 dyn joint 경로와 _static_acc/static_finalize를 확인했다. 현재 진단은 그 family를 raw-C 점수와 BF16 역복원으로 고정 보정하는 adaptation이다. 원문 KIVI 경로의 attention-weighted 선택, asymmetric metadata, query-side read transform, 배포 커널까지 재현하지 않는다. 따라서 전수선택의 강함은 '이 raw-C 목적과 family 안에서'라는 범위에 한정한다.
+원문: https://arxiv.org/html/2611.03992v1#S3.SS1
+공개 코드: https://github.com/KunmingSHAO/FlagRot_releaser/blob/22ca355cb67dfef8b1bc8bbab28d3989e3b4dbb5/blockflag/qattention.py
+
+권고되는 다음 행동 하나
+R1 V 계약 검사를 보완하고 R2 잠금 범위를 정리한 뒤, source/selftest/등록 hash를 다시 고정해 이미 제안한20분 CPU 진단만 수행한다. 원래8생성 pilot은 재개하지 않으며 새 후보·새 문턱·새 입력을 추가하지 않는다. 본 Codex 검토는 root의 실행 결정과21:50 이후 실제 Claude 독립 검토의 자료다.
+
+검토 시점 SHA256
+diagnose.py 274c59a1a796cb2ae41bec3f4fc728a2b6c342ed349f51126133e43bfd0ed819
+REGISTRATION_PROPOSAL_KO.txt 0bff9187416130e61413db7b89f532dc28c99af09e7d745a888e5fa6de9cfe2d
+SELFTEST.json cf1706841949d282babae5f905f6b60c08eddea8007eddf49f7492fcc68baaef

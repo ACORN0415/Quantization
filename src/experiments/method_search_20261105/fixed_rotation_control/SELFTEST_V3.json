@@ -1,0 +1,38 @@
+{
+  "passed": true,
+  "GPU_calls": 0,
+  "real_capture_reads": 0,
+  "model_loads": 0,
+  "family_17": true,
+  "raw_score_projection_equivalence": true,
+  "exact_H128_anchor": true,
+  "owned_output_preserved": true,
+  "packed_payload_bytes": 4515841,
+  "input_preserved": true,
+  "decision_cases": 3,
+  "valid_V_path_exact_previous": true,
+  "V_payload_bytes_six_chunks": 27002880,
+  "invalid_V_rejected_before_decoder": [
+    "zero",
+    "tiny",
+    "nan",
+    "inf",
+    "negative"
+  ],
+  "local_import_dependency_sha256": {
+    "/home/acorn0415/Quantization/src/experiments/kv_headrule_rollout/headrule_quantizer.py": "6176c7b22866fc2150f8eb54273840a0c68e04c595f21da4100a22daf0610d8f",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/common.py": "436f7b2762397ecce840b91feb535094a9008c54066e4e796c3df248f9071c35",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fair_comparison_codex/diagnose.py": "105fe0d3c651be19707b1a8bf0c672ef56550b7f73d776277d02bf5e04cb3cb9",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/diagnose.py": "bc99a8312ccb8695f4db8f8d24959654fcda2899002930292ec71661cc2fc4a2",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_capacity_codex/diagnose_obq.py": "07324360458a1d5687cff8932db316af97f9945ab75a689c7f3f7a0f0968af0d",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/qcov_rotation_baseline_codex/diagnose_rotation.py": "08800ae36db47c55bf05f7f1e2c1c1ad8c86c58143587a810d193051d3093c61",
+    "/home/acorn0415/Quantization/src/kvq/__init__.py": "042cac7d39581efb4f51324194992421b370789116eb9f777c11e89c4e95fcde",
+    "/home/acorn0415/Quantization/src/kvq/quant.py": "61c4d3cabd22109b389fe90623bff5b3eff3b4dcdcc596ffa3a8b7f054903250",
+    "/home/acorn0415/Quantization/src/kvq/store.py": "8960e23326fae1af43793bcd408d977722bc29c8c5306e48299914d42b3f7acb"
+  },
+  "source_sha256": "bc99a8312ccb8695f4db8f8d24959654fcda2899002930292ec71661cc2fc4a2",
+  "registration_sha256": "0bff9187416130e61413db7b89f532dc28c99af09e7d745a888e5fa6de9cfe2d",
+  "torch_version": "2.6.0+cu124",
+  "threads": 4,
+  "time_utc": 1793878484.999302
+}
