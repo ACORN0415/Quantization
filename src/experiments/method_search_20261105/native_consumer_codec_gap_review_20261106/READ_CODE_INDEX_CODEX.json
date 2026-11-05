@@ -1,0 +1,47 @@
+{
+  "created_epoch": 1793919282.118473,
+  "unique_code_files": 8,
+  "sources": [
+    {
+      "path": "/home/acorn0415/sfq_data/qvg-reuse-reference/quant_videogen/real/prq.py",
+      "sha256": "a52c23d2a073815121facaed29a4540e642a082dd558854509a4f4c1c86b7ba4",
+      "scope": "read source; no imports or execution"
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/qvg-reuse-reference/quant_videogen/functions.py",
+      "sha256": "279dbef15b7c1e1ca07b191ba75de6b90570b97ba78d4f51d0298328f8b2e4c5",
+      "scope": "selected lines260-425 plus symbol search; no imports or execution"
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/qvg-reuse-reference/quant_videogen/uncompress.py",
+      "sha256": "7cc222039764e58479e3721214fec5df7afc17f70a74c3fa1682cf07d395385c",
+      "scope": "read source; no imports or execution"
+    },
+    {
+      "path": "/home/acorn0415/sfq_data/qvg-reuse-reference/quant_videogen/kernels/triton/rope.py",
+      "sha256": "fb48e66ed46c2699de8f9f6058b3ee47c36c78c11e89e8046def57d813967b15",
+      "scope": "selected kernel lines33-125 plus symbol search; no imports or execution"
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_consumer_codec_gap_review_20261106/octave_reference.py",
+      "sha256": "2f1990ccbcbaeb14e82d7d50d2fc29b96b91f7ef977ad12edfa8f22e5a3c3696",
+      "scope": "read source; no imports or execution"
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_consumer_codec_gap_review_20261106/octave_format.cuh",
+      "sha256": "852a8cc360e14332ac75d9c5837d306ff5c10b054cdf98bec0a8852549f62213",
+      "scope": "read source; no imports or execution"
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_consumer_codec_gap_review_20261106/commvq_compress_triton.py",
+      "sha256": "b13467f253ea1ffeb2d0d2a4fac09d387684e122f517632e351f908bc8671329",
+      "scope": "selected first 220 lines; no imports or execution"
+    },
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/native_consumer_codec_gap_review_20261106/commvq_triton_kernels.py",
+      "sha256": "ea7f18aa362aee82e1bcc882ca0cc302f4fc19253093fb8d144102423e8c3d95",
+      "scope": "read source; no imports or execution"
+    }
+  ],
+  "GPU_tensor_import_calls": 0
+}
