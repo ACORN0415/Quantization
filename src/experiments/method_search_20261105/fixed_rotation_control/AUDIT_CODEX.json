@@ -1,0 +1,1408 @@
+{
+  "status": "passed",
+  "reviewer": "Codex /root/fair_comparison_codex",
+  "created_utc": 1793879235.9610069,
+  "scope": "Saved JSON arithmetic, hashes and two small saved state artifacts only; no capture recomputation, GPU, model, quantizer rerun, or experimental-source import.",
+  "result_sha256": "4099fb0c8c4afa004405c21b036871986f840b2de044780a3484b4564d84bf97",
+  "lock_sha256": "86a77101c9535eafd67fbed221aff1090c8a7b6cbf727e6e1a4ceec4de675515",
+  "source_sha256": "bc99a8312ccb8695f4db8f8d24959654fcda2899002930292ec71661cc2fc4a2",
+  "checks_total": 311,
+  "checks_passed": 311,
+  "failed_checks": [],
+  "locked_file_hashes_verified": 23,
+  "registered_decision_recomputed": "continue_beyond_simple_fixed_rotation",
+  "endpoint_count": 6,
+  "endpoint_summary": [
+    {
+      "endpoint": "p04_layer18_c7_call0",
+      "OBQ_FULL_SSE": 289.6673852586657,
+      "FIXED17_SSE": 500.11993623082697,
+      "OBQ_relative_reduction": 0.42080416261396203,
+      "noquant_fraction_of_RTN_FP32": 0.00020343438395360337,
+      "KV_payload_bytes": 54097926
+    },
+    {
+      "endpoint": "causal_layer18_c7_call0",
+      "OBQ_FULL_SSE": 517.0038262491346,
+      "FIXED17_SSE": 808.3039651402171,
+      "OBQ_relative_reduction": 0.3603843992532567,
+      "noquant_fraction_of_RTN_FP32": 0.00017847306633242914,
+      "KV_payload_bytes": 54097926
+    },
+    {
+      "endpoint": "causal_layer18_c7_call3",
+      "OBQ_FULL_SSE": 523.221721351294,
+      "FIXED17_SSE": 801.7479665819509,
+      "OBQ_relative_reduction": 0.34739875477088245,
+      "noquant_fraction_of_RTN_FP32": 0.00019297117705658904,
+      "KV_payload_bytes": 54097926
+    },
+    {
+      "endpoint": "p04_layer24_c7_call0",
+      "OBQ_FULL_SSE": 89.46789659630703,
+      "FIXED17_SSE": 134.0054354486947,
+      "OBQ_relative_reduction": 0.3323562115466525,
+      "noquant_fraction_of_RTN_FP32": 0.00012373540191022177,
+      "KV_payload_bytes": 54097926
+    },
+    {
+      "endpoint": "causal_layer24_c7_call0",
+      "OBQ_FULL_SSE": 280.6511454872672,
+      "FIXED17_SSE": 425.70248682807625,
+      "OBQ_relative_reduction": 0.3407340709273079,
+      "noquant_fraction_of_RTN_FP32": 0.00010469099473032883,
+      "KV_payload_bytes": 54097926
+    },
+    {
+      "endpoint": "causal_layer24_c7_call3",
+      "OBQ_FULL_SSE": 300.9479915469889,
+      "FIXED17_SSE": 382.8979544910676,
+      "OBQ_relative_reduction": 0.21402559607037674,
+      "noquant_fraction_of_RTN_FP32": 9.552170446471703e-05,
+      "KV_payload_bytes": 54097926
+    }
+  ],
+  "calibration_summary": [
+    {
+      "layer": 18,
+      "independent_choice_by_head": [
+        2,
+        11,
+        16,
+        11,
+        0,
+        16,
+        16,
+        16,
+        11,
+        3,
+        11,
+        11
+      ],
+      "R_bytes": 786432,
+      "label_bytes": 12,
+      "U_bytes": 786432,
+      "state_artifact_sha256": "008869caa617ed3ba6c4b8566fe874117f0d24f06f78454c97005a82f0c284a6",
+      "calibration_seconds": 18.96461827796884
+    },
+    {
+      "layer": 24,
+      "independent_choice_by_head": [
+        11,
+        11,
+        16,
+        3,
+        8,
+        8,
+        10,
+        2,
+        0,
+        11,
+        11,
+        11
+      ],
+      "R_bytes": 786432,
+      "label_bytes": 12,
+      "U_bytes": 786432,
+      "state_artifact_sha256": "e0d9523176a702d6dd190ac061b3cf862864d6befc696cb04abee9ed63abecf3",
+      "calibration_seconds": 19.264554802910425
+    }
+  ],
+  "common_payload": {
+    "K_six_chunks": 27095046,
+    "V_six_chunks": 27002880,
+    "KV_six_chunks": 54097926
+  },
+  "execution_resources_recorded": {
+    "supervisor_seconds": 81.70663408492692,
+    "worker_seconds": 81.54256506892852,
+    "peak_RSS_bytes": 2566950912,
+    "threads": 4,
+    "GPU_calls": 0,
+    "directory_bytes_before_audit": 3280261
+  },
+  "audit_activity": {
+    "real_capture_tensor_reads": 0,
+    "real_capture_recomputations": 0,
+    "small_saved_state_reads": 2,
+    "GPU_calls": 0,
+    "model_loads": 0,
+    "experiment_restarts": 0
+  },
+  "limits": [
+    "Runtime capture/packet byte equalities and input preservation are recorded passed assertions in the locked code; this audit did not reload or independently recompute raw capture or packet tensors.",
+    "Raw calibration scores were not recalculated; stored 17x12 scores, selected argmin, matrices, state hashes and byte counts were independently checked.",
+    "Directory size and recorded peak RSS are checked; this audit does not establish historical disk peaks or OS isolation.",
+    "Six endpoints are existing development data, not six independent held-out samples.",
+    "No full FlagRot reproduction, algorithmic novelty proof, native GPU quality result, or generation speedup follows.",
+    "Full rollout stop_quality remains valid. Actual Claude Opus 5.5 final review is pending."
+  ],
+  "checks": [
+    {
+      "check": "23_locked_files",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/diagnose.py",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/REGISTRATION_PROPOSAL_KO.txt",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/SELFTEST_V3.json",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/qcov_rotation_baseline_codex/diagnose_rotation.py",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_capacity_codex/diagnose_obq.py",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_capacity_codex/RESULT.json",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/common.py",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fair_comparison_codex/diagnose.py",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/Quantization/src/experiments/kv_headrule_rollout/headrule_quantizer.py",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/Quantization/src/kvq/quant.py",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/Quantization/src/kvq/__init__.py",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/Quantization/src/kvq/store.py",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/sfq_data/kv_alllayer_capture/p00_s101/manifest.json",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/sfq_data/kv_alllayer_capture/p04_s101/manifest.json",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/manifest.json",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/manifest.json",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/ROOT_DECISION.json",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/ROOT_REVIEW_AND_DECISION_KO.txt",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/INDEPENDENT_REVIEW_CODEX_KO.txt",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/FINAL_READY_KO.txt",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/RUN.json",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/QUALITY.json",
+      "passed": true
+    },
+    {
+      "check": "locked_hash:/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/REPORT_KO.txt",
+      "passed": true
+    },
+    {
+      "check": "registered_lock_hash",
+      "passed": true
+    },
+    {
+      "check": "reported_result_hash",
+      "passed": true
+    },
+    {
+      "check": "terminal_success",
+      "passed": true
+    },
+    {
+      "check": "authorization",
+      "passed": true
+    },
+    {
+      "check": "review_deferral_truthful",
+      "passed": true
+    },
+    {
+      "check": "selftest_v3_bound",
+      "passed": true
+    },
+    {
+      "check": "selftest_precedes_lock",
+      "passed": true
+    },
+    {
+      "check": "selftest_synthetic_scope",
+      "passed": true
+    },
+    {
+      "check": "selftest_guard_cases",
+      "passed": true
+    },
+    {
+      "check": "selftest_all_9_imports_locked",
+      "passed": true
+    },
+    {
+      "check": "old_selftests_preserved",
+      "passed": true
+    },
+    {
+      "check": "final_source_protects_all_lock_entries",
+      "passed": true
+    },
+    {
+      "check": "final_source_binds_v3",
+      "passed": true
+    },
+    {
+      "check": "scope_threads_GPU",
+      "passed": true
+    },
+    {
+      "check": "duration_cap",
+      "passed": true
+    },
+    {
+      "check": "wall_and_monotonic_duration",
+      "passed": true
+    },
+    {
+      "check": "RSS_cap",
+      "passed": true
+    },
+    {
+      "check": "current_directory_size_below_cap",
+      "passed": true,
+      "detail": {
+        "directory_bytes_before_audit": 3280261,
+        "not_peak_history": true
+      }
+    },
+    {
+      "check": "pilot_stop_retained",
+      "passed": true
+    },
+    {
+      "check": "six_registered_endpoints",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:arms",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:energy",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:cpu_vs_native:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:noquant_vs_K_reference:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:RTN_BF16:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:RTN_FP32:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:OBQ_FULL:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:FIXED17_FP32_RTN:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:RTN_BF16_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:RTN_FP32_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:OBQ_FULL_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:FIXED17_FP32_RTN_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:RTN_BF16:payload",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:RTN_BF16:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:RTN_BF16:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:RTN_FP32:payload",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:RTN_FP32:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:RTN_FP32:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:OBQ_FULL:payload",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:OBQ_FULL:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:OBQ_FULL:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:FIXED17_FP32_RTN:payload",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:FIXED17_FP32_RTN:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:FIXED17_FP32_RTN:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:gain_arithmetic",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:registered_gain",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:noquant_gate",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:input_preservation_recorded",
+      "passed": true,
+      "detail": {
+        "capture_tensors_not_reloaded_in_audit": true
+      }
+    },
+    {
+      "check": "p04_layer18_c7_call0:source_anchor",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:energy_anchor",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:RTN_BF16:prior_scores",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:RTN_BF16:prior_code_scale_bytes",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:RTN_FP32:prior_scores",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:RTN_FP32:prior_code_scale_bytes",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:OBQ_FULL:prior_scores",
+      "passed": true
+    },
+    {
+      "check": "p04_layer18_c7_call0:OBQ_FULL:prior_code_scale_bytes",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:arms",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:energy",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:cpu_vs_native:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:noquant_vs_K_reference:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:RTN_BF16:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:RTN_FP32:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:OBQ_FULL:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:FIXED17_FP32_RTN:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:RTN_BF16_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:RTN_FP32_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:OBQ_FULL_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:FIXED17_FP32_RTN_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:RTN_BF16:payload",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:RTN_BF16:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:RTN_BF16:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:RTN_FP32:payload",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:RTN_FP32:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:RTN_FP32:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:OBQ_FULL:payload",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:OBQ_FULL:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:OBQ_FULL:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:FIXED17_FP32_RTN:payload",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:FIXED17_FP32_RTN:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:FIXED17_FP32_RTN:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:gain_arithmetic",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:registered_gain",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:noquant_gate",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call0:input_preservation_recorded",
+      "passed": true,
+      "detail": {
+        "capture_tensors_not_reloaded_in_audit": true
+      }
+    },
+    {
+      "check": "causal_layer18_c7_call3:arms",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:energy",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:cpu_vs_native:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:noquant_vs_K_reference:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:RTN_BF16:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:RTN_FP32:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:OBQ_FULL:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:FIXED17_FP32_RTN:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:RTN_BF16_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:RTN_FP32_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:OBQ_FULL_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:FIXED17_FP32_RTN_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:RTN_BF16:payload",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:RTN_BF16:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:RTN_BF16:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:RTN_FP32:payload",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:RTN_FP32:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:RTN_FP32:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:OBQ_FULL:payload",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:OBQ_FULL:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:OBQ_FULL:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:FIXED17_FP32_RTN:payload",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:FIXED17_FP32_RTN:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:FIXED17_FP32_RTN:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:gain_arithmetic",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:registered_gain",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:noquant_gate",
+      "passed": true
+    },
+    {
+      "check": "causal_layer18_c7_call3:input_preservation_recorded",
+      "passed": true,
+      "detail": {
+        "capture_tensors_not_reloaded_in_audit": true
+      }
+    },
+    {
+      "check": "p04_layer24_c7_call0:arms",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:energy",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:cpu_vs_native:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:noquant_vs_K_reference:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:RTN_BF16:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:RTN_FP32:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:OBQ_FULL:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:FIXED17_FP32_RTN:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:RTN_BF16_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:RTN_FP32_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:OBQ_FULL_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:FIXED17_FP32_RTN_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:RTN_BF16:payload",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:RTN_BF16:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:RTN_BF16:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:RTN_FP32:payload",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:RTN_FP32:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:RTN_FP32:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:OBQ_FULL:payload",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:OBQ_FULL:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:OBQ_FULL:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:FIXED17_FP32_RTN:payload",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:FIXED17_FP32_RTN:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:FIXED17_FP32_RTN:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:gain_arithmetic",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:registered_gain",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:noquant_gate",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:input_preservation_recorded",
+      "passed": true,
+      "detail": {
+        "capture_tensors_not_reloaded_in_audit": true
+      }
+    },
+    {
+      "check": "p04_layer24_c7_call0:source_anchor",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:energy_anchor",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:RTN_BF16:prior_scores",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:RTN_BF16:prior_code_scale_bytes",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:RTN_FP32:prior_scores",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:RTN_FP32:prior_code_scale_bytes",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:OBQ_FULL:prior_scores",
+      "passed": true
+    },
+    {
+      "check": "p04_layer24_c7_call0:OBQ_FULL:prior_code_scale_bytes",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:arms",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:energy",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:cpu_vs_native:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:noquant_vs_K_reference:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:RTN_BF16:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:RTN_FP32:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:OBQ_FULL:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:FIXED17_FP32_RTN:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:RTN_BF16_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:RTN_FP32_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:OBQ_FULL_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:FIXED17_FP32_RTN_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:RTN_BF16:payload",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:RTN_BF16:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:RTN_BF16:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:RTN_FP32:payload",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:RTN_FP32:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:RTN_FP32:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:OBQ_FULL:payload",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:OBQ_FULL:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:OBQ_FULL:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:FIXED17_FP32_RTN:payload",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:FIXED17_FP32_RTN:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:FIXED17_FP32_RTN:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:gain_arithmetic",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:registered_gain",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:noquant_gate",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call0:input_preservation_recorded",
+      "passed": true,
+      "detail": {
+        "capture_tensors_not_reloaded_in_audit": true
+      }
+    },
+    {
+      "check": "causal_layer24_c7_call3:arms",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:energy",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:cpu_vs_native:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:noquant_vs_K_reference:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:RTN_BF16:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:RTN_FP32:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:OBQ_FULL:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:FIXED17_FP32_RTN:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:RTN_BF16_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:RTN_FP32_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:OBQ_FULL_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:FIXED17_FP32_RTN_Konly:finite_NSE",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:RTN_BF16:payload",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:RTN_BF16:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:RTN_BF16:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:RTN_FP32:payload",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:RTN_FP32:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:RTN_FP32:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:OBQ_FULL:payload",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:OBQ_FULL:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:OBQ_FULL:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:FIXED17_FP32_RTN:payload",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:FIXED17_FP32_RTN:time_nonnegative",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:FIXED17_FP32_RTN:hash_shape",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:gain_arithmetic",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:registered_gain",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:noquant_gate",
+      "passed": true
+    },
+    {
+      "check": "causal_layer24_c7_call3:input_preservation_recorded",
+      "passed": true,
+      "detail": {
+        "capture_tensors_not_reloaded_in_audit": true
+      }
+    },
+    {
+      "check": "two_calibration_layers",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:17x12_scores",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:independent_argmin",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:timing",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:prior_p0_only",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:prior_raw_H",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:state_artifact",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:state_keys",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:choice_state",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:R_U_shape",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:state_tensor_hashes",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:state_bytes",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:U_triangular",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:rotation_head0",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:rotation_head1",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:rotation_head2",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:rotation_head3",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:rotation_head4",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:rotation_head5",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:rotation_head6",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:rotation_head7",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:rotation_head8",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:rotation_head9",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:rotation_head10",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:rotation_head11",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer18:input_preservation_recorded",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:17x12_scores",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:independent_argmin",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:timing",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:prior_p0_only",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:prior_raw_H",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:state_artifact",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:state_keys",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:choice_state",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:R_U_shape",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:state_tensor_hashes",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:state_bytes",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:U_triangular",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:rotation_head0",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:rotation_head1",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:rotation_head2",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:rotation_head3",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:rotation_head4",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:rotation_head5",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:rotation_head6",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:rotation_head7",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:rotation_head8",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:rotation_head9",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:rotation_head10",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:rotation_head11",
+      "passed": true
+    },
+    {
+      "check": "calibration_layer24:input_preservation_recorded",
+      "passed": true
+    },
+    {
+      "check": "registered_decision_recomputed",
+      "passed": true
+    },
+    {
+      "check": "audit_GPU_uninitialized",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/diagnose.py",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/REGISTRATION_PROPOSAL_KO.txt",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/SELFTEST_V3.json",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/qcov_rotation_baseline_codex/diagnose_rotation.py",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_capacity_codex/diagnose_obq.py",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_capacity_codex/RESULT.json",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/common.py",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fair_comparison_codex/diagnose.py",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/kv_headrule_rollout/headrule_quantizer.py",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/kvq/quant.py",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/kvq/__init__.py",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/kvq/store.py",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/sfq_data/kv_alllayer_capture/p00_s101/manifest.json",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/sfq_data/kv_alllayer_capture/p04_s101/manifest.json",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/capture/manifest.json",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/packets/manifest.json",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/ROOT_DECISION.json",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/ROOT_REVIEW_AND_DECISION_KO.txt",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/INDEPENDENT_REVIEW_CODEX_KO.txt",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/FINAL_READY_KO.txt",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/RUN.json",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/QUALITY.json",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/REPORT_KO.txt",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/LOCK.json",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/RESULT.json",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/SUPERVISOR.json",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/REPORT_KO.txt",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/SELFTEST.json",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/SELFTEST_INITIAL.json",
+      "passed": true
+    },
+    {
+      "check": "protected_unchanged:/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/SELFTEST_V2.json",
+      "passed": true
+    }
+  ]
+}

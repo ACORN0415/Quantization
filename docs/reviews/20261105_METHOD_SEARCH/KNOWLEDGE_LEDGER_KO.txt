@@ -246,4 +246,28 @@ fixed_rotation_control은 별도 강한 기준선 진단의 준비 상태다. �
 기존47status알림은 원문보존 후 handled 처리, 해당 수신함미처리0. UI상태를 직접 본 것은아니다.
 Claude최종검토2업무는21:50KST 이후 실제Opus5.5지원확인 후 실행할 예정이며 현재미완료다.
 
-상태: 국소효과 및 실행가능구현은 확인했으나 전체생성pilot는stop_quality. 강한기준선·실용효과·신규성의종합목표는미달이며연속연구목표active.
+E019 [고정 부분 회전 대조의 기존 자료 CPU 검사 완료]
+fixed_rotation_control/RESULT.json SHA4099fb0c8c4afa004405c21b036871986f840b2de044780a3484b4564d84bf97.
+p0로 각 층의12head별 I/H32 네블록16조합 및 H128 중1개를 고정했다. p4/기존causal에서 재선택하지 않았다.
+층18/24의6endpoint에서 FULL은 fixed17 RTN보다 SSE42.0804/36.0384/34.7399/33.2356/34.0734/21.4026% 감소.
+전부10% 조건통과, decision=continue_beyond_simple_fixed_rotation. 이는 국소 대조의 자원 판단이며 전체pilot stop_quality는 유지한다.
+고정 회전이 모든 endpoint에서 원래 H128 RTN보다 좋지는 않았다. raw logit 보정 점수의 선택을 실제 출력 최적해라 하지 않는다.
+모든팔 pastKV54,097,926B; R786432B+label12B/층, FULL U786432B/층+공유H65536B는 별도고정상태.
+supervisor81.706634초/RSS2.390659GiB/CPU4/GPU0/새생성0. 기존개발자료이므로 새보류검증이아님.
+사전Vscale누락을보완했고 독립리뷰본문/해시시점차이를ROOT_REVIEW_AND_DECISION에기록. 원리대조가공식FlagRot전체재현은아님.
+독립저장감사311/311,23LOCK해시,24head argmin,작은상태2개확인. 실제원캡처점수를다시계산한감사는아니다.
+AUDIT_CODEX SHA d4bd362eba2f9ac9c19bfbf6f6200df2b4f903254f97b2a8a140e66bbd1dcc35. 최종실제Claude검토대기.
+
+D010 [다음 후보의 비교 조건 및 준비]
+이전Fable paired응답보정은D001에서유보됐고,확인한저장소에는실자료검사결과/LOCK이없다. S9의PSAC생성실험종료와구분한다.
+PAIRED_RESPONSE_NEXT_DECISION_CODEX_KO.txt에같은추가메모리를비트증가/PSAC/QKSA/FULL보다응답요약에쓸가치가있는지정리했다.
+FULL도K-only참조Attn(K,Vhat)와동일post-Wo좌표에서필수비교한다. 단순RTN만이긴결과를충분한효과로세지않는다.
+QuantWM PSAC는최신원문의INT8 C행별FP16scale/개선없는행제거/sparse index 포함비용을반영해야한다.
+고정Gaussian공통Omega1개/FP32 DN,Dz/FP64offset rank32계획상태1,403,904B/층/6청크. 두map변형1,600,512B와구분.
+densePSAC rank3의계획1,694,016B는1,806,336B추가상한내,rank4/8dense는초과하나sparse실제비용을보기전배제않음.
+이는설계산술이며실제할당/packedmetadata/효과실측은아니다. 새후보의GPU/실캡처실행은아직승인하지않았다.
+현재는paired요약의합성식/수치core준비만하며,실제Opus검토로최소실자료진단을확정한다. 새방법효과/신규성은미확인.
+중간관리자의21:50일회성재개알림예약PID516187(start_ticks53931741)은root가/proc로동일생존프로세스확인.
+예약은관리Run에알림한번만보내며모델을직접실행하지않고실제Opus검토완료를보장하지않는다.
+
+상태: 국소효과는추가강한회전대조에서도남았으나 전체생성pilot는stop_quality. 강한기준선·실용효과·신규성의종합목표는미달이며연속연구목표active.

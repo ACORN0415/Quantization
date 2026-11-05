@@ -1,29 +1,40 @@
 {
   "task": "fixed_rotation_control",
-  "status": "final_preparation_ready_pending_root_review_and_lock",
-  "updated_utc": 1793878412.0148785,
-  "files": {
-    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/diagnose.py": "274c59a1a796cb2ae41bec3f4fc728a2b6c342ed349f51126133e43bfd0ed819",
-    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/REGISTRATION_PROPOSAL_KO.txt": "0bff9187416130e61413db7b89f532dc28c99af09e7d745a888e5fa6de9cfe2d",
-    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/SELFTEST_V2.json": "ba17bd534c8a3b16e3f83fe3e3f7c53f8387684557d9b4aa86bde92d02610b33"
-  },
-  "final_ready_record": {
-    "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/FINAL_READY.json",
-    "sha256": "765d2a5cfb2acdfe192b7a3c139646a57913ec3c145be5290b6c53cf31b27dc2"
-  },
-  "synthetic_selftest_passed": true,
-  "V_contract_and_import_closure_fixed": true,
-  "source_editing_stopped": true,
-  "actual_capture_reads": 0,
-  "actual_capture_computation": false,
-  "GPU_calls": 0,
-  "model_loads": 0,
-  "LOCK_created": false,
-  "prior_pilot_decision": "stop_quality retained",
-  "actual_run_requires": [
-    "stable-source root review",
-    "independent review or explicit administrative decision",
-    "LOCK.json"
+  "status": "technical_completed_codex_saved_result_audit_passed_actual_claude_pending",
+  "updated_utc": 1793879300.1589983,
+  "execution_terminal": "completed",
+  "decision": "continue_beyond_simple_fixed_rotation",
+  "audit_checks_passed": 311,
+  "audit_checks_total": 311,
+  "locked_file_hashes_verified": 23,
+  "endpoint_count": 6,
+  "OBQ_reduction_range": [
+    0.21402559607037674,
+    0.42080416261396203
   ],
-  "claude_status": "actual Opus 5.5 final source review pending, no calls before 2026-11-05T21:50:00+09:00"
+  "KV_payload_bytes_each_arm": 54097926,
+  "supervisor_elapsed_seconds": 81.70663408492692,
+  "peak_RSS_bytes": 2566950912,
+  "files": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/diagnose.py": "bc99a8312ccb8695f4db8f8d24959654fcda2899002930292ec71661cc2fc4a2",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/LOCK.json": "86a77101c9535eafd67fbed221aff1090c8a7b6cbf727e6e1a4ceec4de675515",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/RESULT.json": "4099fb0c8c4afa004405c21b036871986f840b2de044780a3484b4564d84bf97",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/SUPERVISOR.json": "b4380c04070827c80eb86abea54d4003fdbd63df3ae545ed86db06d90daf9a9c",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/AUDIT_CODEX.json": "d4bd362eba2f9ac9c19bfbf6f6200df2b4f903254f97b2a8a140e66bbd1dcc35",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/RESULT_REVIEW_CODEX_KO.txt": "f3932496fd123bcf530608d5523934af5452c47e9f883778e80d92702a2224ad",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/fixed_rotation_control/REPORT_KO.txt": "3001166358b47156a1befafc74772048709be34c8a4766fedb6c06b5ec28287d"
+  },
+  "source_editing_stopped": true,
+  "audit_activity": {
+    "real_capture_tensor_reads": 0,
+    "real_capture_recomputations": 0,
+    "small_saved_state_reads": 2,
+    "GPU_calls": 0,
+    "model_loads": 0,
+    "experiment_restarts": 0
+  },
+  "prior_pilot_decision": "stop_quality retained",
+  "claude_status": "actual Opus 5.5 final source/result review pending; no call made by this worker",
+  "blocking_issue": null,
+  "no_new_experiment_started": true
 }

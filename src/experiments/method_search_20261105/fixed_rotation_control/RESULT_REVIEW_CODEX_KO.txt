@@ -1,0 +1,39 @@
+고정 부분 회전 대조 — Codex 저장 결과 감사
+2026-11-05. 검토자 /root/fair_comparison_codex.
+
+판정
+저장 자료 감사 311개 항목이 모두 통과했다. 등록한 6개 CPU 평가 지점에서 FULL의 post-Wo SSE 감소는 고정17회전 RTN 대비 21.4026~42.0804%이며, 각 지점 10% 이상이라는 사전 자원 선택 기준을 충족한다. 저장 decision인 continue_beyond_simple_fixed_rotation과 별도 산술 판정이 일치한다. 실행 유효성을 막는 새 오류는 발견하지 못했다.
+전체 생성 pilot의 stop_quality는 그대로 유지한다. 이번 결과는 시험한 작은 고정 회전 가족이 이전 국소 FULL 이득을 대체하지 못했다는 범위다. 새로운 알고리즘의 효과 입증, 공식 FlagRot 전체에 대한 승리, 독립 보류 입력의 일반화 결과로 확대하지 않는다.
+
+읽기 전용 검토 범위
+최종 diagnose.py의 SELFTEST_V3 바인딩 및 LOCK.sha256 전체 항목 검사, ROOT_REVIEW_AND_DECISION_KO.txt, 등록안, SELFTEST_V3, RESULT/SUPERVISOR/LOCK, root 결과 보고서를 읽었다. 실험 코드를 import하거나 실행하지 않았다. JSON 숫자를 별도 산술로 재계산하고 작은 고정 상태 파일 2개만 CPU에서 열었다. 원 캡처·KV packet tensor 재읽기와 재계산, GPU 호출, 모델 로드, 실행 재시작은 모두 0회다.
+23개 LOCK 파일의 현재 SHA256이 모두 일치하고 감사 전후 보호 파일들도 불변이다. 등록 파일에서 합성 기록을 V2라고 부르는 부분은 원문대로 보존되어 있다. 최종 source/LOCK/authority가 V3를 명시적으로 연결하므로 실행에 사용된 기록은 모호하지 않다.
+사전 독립 검토 본문과 말미 해시의 시점 불일치는 root authority 문서에 공개되어 있으며 이 감사는 그 원 리뷰를 수정하거나 수정본의 Claude 검토로 바꾸지 않는다. 실제 Claude Opus 5.5 최종 소스/결과 검토는 미완료다.
+
+저장 결과 산술
+endpoint                         FULL SSE    FIXED17 SSE       감소율
+p04_layer18_c7_call0           289.667385   500.119936    42.0804%
+causal_layer18_c7_call0        517.003826   808.303965    36.0384%
+causal_layer18_c7_call3        523.221721   801.747967    34.7399%
+p04_layer24_c7_call0            89.467897   134.005435    33.2356%
+causal_layer24_c7_call0        280.651145   425.702487    34.0734%
+causal_layer24_c7_call3        300.947992   382.897954    21.4026%
+SSE/기준 에너지=NSE 관계, 감소율, 무개입 오차 분율을 6개 지점에서 모두 재계산했다. 선택 회전의 무개입 BF16 복원 오차는 RTN_FP32 SSE의 0.00955~0.02034%로 등록 1% 이하다. 각 p4 지점의 기존 RTN_BF16/RTN_FP32/FULL 점수, code·scale 해시, payload는 잠긴 capacity 결과와 일치한다.
+
+선택과 바이트
+각 층의 저장된 17×12 점수에서 첫 인덱스 우선 argmin을 별도 계산한 결과, 24개 head의 선택이 모두 같다. 상태 파일의 shape/dtype/텐서 bytes 해시를 확인했고 저장 R을 독립적인 Sylvester 부호 정의로 재구성한 선택 행렬과 원소 단위로 비교했다. U의 유한성·양수 대각선·상삼각 형태도 확인했다. raw 보정 점수 자체나 Q second moment는 재계산하지 않았다.
+층18 선택: [2, 11, 16, 11, 0, 16, 16, 16, 11, 3, 11, 11]
+층24 선택: [11, 11, 16, 3, 8, 8, 10, 2, 0, 11, 11, 11]
+모든 6지점×4팔은 과거6청크 K 27,095,046B, V 27,002,880B, 합계 54,097,926B다. 프레임 패딩과 청크당 sentinel까지 형상으로 계산한 값과 일치한다. R은 층당786,432B와 label12B, FULL U는 층당786,432B와 공유 H12865,536B이며 별도 고정 상태다. 따라서 같은 KV payload만 확인했으며 같은 총상주 메모리를 주장하지 않는다.
+
+자원과 보존
+supervisor 81.706634초, worker 81.542565초, 기록된 최대 RSS 2,566,950,912B(2.390659GiB), CPU4, GPU0으로 등록 1200초/8GiB 상한 안이다. 감사 직전 폴더 크기도1GiB 미만이다. 이는 현재 디스크 크기와 저장된 peak RSS를 확인한 것이며 과거 디스크 peak의 별도 계측이나 OS 자원 격리 검증은 아니다.
+실행 중 원 캡처 입력 보존·패킹 왕복·causal packet equality·K/V stored scale 계약이 통과했다는 것은 잠긴 코드와 완료 기록에 근거한다. 이번 감사가 그 tensor 전체를 재비교했다고 표현하지 않는다. 한 번의 CPU 보정/평가 시간에서 GPU 쓰기 비용이나 생성 가속을 추론하지 않는다.
+root REPORT_KO.txt의 수치·범위 제한은 저장 결과와 일치한다. 이후 후보 예시는 이번 감사나 실험으로 채택된 방법이 아니다.
+
+보존 식별자
+RESULT SHA256 4099fb0c8c4afa004405c21b036871986f840b2de044780a3484b4564d84bf97
+LOCK SHA256 86a77101c9535eafd67fbed221aff1090c8a7b6cbf727e6e1a4ceec4de675515
+source SHA256 bc99a8312ccb8695f4db8f8d24959654fcda2899002930292ec71661cc2fc4a2
+AUDIT_CODEX SHA256 d4bd362eba2f9ac9c19bfbf6f6200df2b4f903254f97b2a8a140e66bbd1dcc35
+기술적 결과 및 Codex 저장 감사 완료. 실제 Claude Opus 5.5 최종 검토 대기.
