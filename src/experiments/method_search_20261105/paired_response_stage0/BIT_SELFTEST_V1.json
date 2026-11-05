@@ -1,0 +1,457 @@
+{
+  "status": "passed",
+  "synthetic_only": true,
+  "real_capture_reads": 0,
+  "GPU_calls": 0,
+  "model_loads": 0,
+  "checks_total": 104,
+  "checks": [
+    {
+      "name": "head0_selected_INT8_exact",
+      "passed": true
+    },
+    {
+      "name": "head0_other_eleven_INT4_exact",
+      "passed": true
+    },
+    {
+      "name": "head0_only_selected_changed",
+      "passed": true
+    },
+    {
+      "name": "head0_state_packet_roundtrip",
+      "passed": true
+    },
+    {
+      "name": "head0_compact_owned_storage",
+      "passed": true
+    },
+    {
+      "name": "head0_all_owned_no_alias",
+      "passed": true
+    },
+    {
+      "name": "head1_selected_INT8_exact",
+      "passed": true
+    },
+    {
+      "name": "head1_other_eleven_INT4_exact",
+      "passed": true
+    },
+    {
+      "name": "head1_only_selected_changed",
+      "passed": true
+    },
+    {
+      "name": "head1_state_packet_roundtrip",
+      "passed": true
+    },
+    {
+      "name": "head1_compact_owned_storage",
+      "passed": true
+    },
+    {
+      "name": "head1_all_owned_no_alias",
+      "passed": true
+    },
+    {
+      "name": "head2_selected_INT8_exact",
+      "passed": true
+    },
+    {
+      "name": "head2_other_eleven_INT4_exact",
+      "passed": true
+    },
+    {
+      "name": "head2_only_selected_changed",
+      "passed": true
+    },
+    {
+      "name": "head2_state_packet_roundtrip",
+      "passed": true
+    },
+    {
+      "name": "head2_compact_owned_storage",
+      "passed": true
+    },
+    {
+      "name": "head2_all_owned_no_alias",
+      "passed": true
+    },
+    {
+      "name": "head3_selected_INT8_exact",
+      "passed": true
+    },
+    {
+      "name": "head3_other_eleven_INT4_exact",
+      "passed": true
+    },
+    {
+      "name": "head3_only_selected_changed",
+      "passed": true
+    },
+    {
+      "name": "head3_state_packet_roundtrip",
+      "passed": true
+    },
+    {
+      "name": "head3_compact_owned_storage",
+      "passed": true
+    },
+    {
+      "name": "head3_all_owned_no_alias",
+      "passed": true
+    },
+    {
+      "name": "head4_selected_INT8_exact",
+      "passed": true
+    },
+    {
+      "name": "head4_other_eleven_INT4_exact",
+      "passed": true
+    },
+    {
+      "name": "head4_only_selected_changed",
+      "passed": true
+    },
+    {
+      "name": "head4_state_packet_roundtrip",
+      "passed": true
+    },
+    {
+      "name": "head4_compact_owned_storage",
+      "passed": true
+    },
+    {
+      "name": "head4_all_owned_no_alias",
+      "passed": true
+    },
+    {
+      "name": "head5_selected_INT8_exact",
+      "passed": true
+    },
+    {
+      "name": "head5_other_eleven_INT4_exact",
+      "passed": true
+    },
+    {
+      "name": "head5_only_selected_changed",
+      "passed": true
+    },
+    {
+      "name": "head5_state_packet_roundtrip",
+      "passed": true
+    },
+    {
+      "name": "head5_compact_owned_storage",
+      "passed": true
+    },
+    {
+      "name": "head5_all_owned_no_alias",
+      "passed": true
+    },
+    {
+      "name": "head6_selected_INT8_exact",
+      "passed": true
+    },
+    {
+      "name": "head6_other_eleven_INT4_exact",
+      "passed": true
+    },
+    {
+      "name": "head6_only_selected_changed",
+      "passed": true
+    },
+    {
+      "name": "head6_state_packet_roundtrip",
+      "passed": true
+    },
+    {
+      "name": "head6_compact_owned_storage",
+      "passed": true
+    },
+    {
+      "name": "head6_all_owned_no_alias",
+      "passed": true
+    },
+    {
+      "name": "head7_selected_INT8_exact",
+      "passed": true
+    },
+    {
+      "name": "head7_other_eleven_INT4_exact",
+      "passed": true
+    },
+    {
+      "name": "head7_only_selected_changed",
+      "passed": true
+    },
+    {
+      "name": "head7_state_packet_roundtrip",
+      "passed": true
+    },
+    {
+      "name": "head7_compact_owned_storage",
+      "passed": true
+    },
+    {
+      "name": "head7_all_owned_no_alias",
+      "passed": true
+    },
+    {
+      "name": "head8_selected_INT8_exact",
+      "passed": true
+    },
+    {
+      "name": "head8_other_eleven_INT4_exact",
+      "passed": true
+    },
+    {
+      "name": "head8_only_selected_changed",
+      "passed": true
+    },
+    {
+      "name": "head8_state_packet_roundtrip",
+      "passed": true
+    },
+    {
+      "name": "head8_compact_owned_storage",
+      "passed": true
+    },
+    {
+      "name": "head8_all_owned_no_alias",
+      "passed": true
+    },
+    {
+      "name": "head9_selected_INT8_exact",
+      "passed": true
+    },
+    {
+      "name": "head9_other_eleven_INT4_exact",
+      "passed": true
+    },
+    {
+      "name": "head9_only_selected_changed",
+      "passed": true
+    },
+    {
+      "name": "head9_state_packet_roundtrip",
+      "passed": true
+    },
+    {
+      "name": "head9_compact_owned_storage",
+      "passed": true
+    },
+    {
+      "name": "head9_all_owned_no_alias",
+      "passed": true
+    },
+    {
+      "name": "head10_selected_INT8_exact",
+      "passed": true
+    },
+    {
+      "name": "head10_other_eleven_INT4_exact",
+      "passed": true
+    },
+    {
+      "name": "head10_only_selected_changed",
+      "passed": true
+    },
+    {
+      "name": "head10_state_packet_roundtrip",
+      "passed": true
+    },
+    {
+      "name": "head10_compact_owned_storage",
+      "passed": true
+    },
+    {
+      "name": "head10_all_owned_no_alias",
+      "passed": true
+    },
+    {
+      "name": "head11_selected_INT8_exact",
+      "passed": true
+    },
+    {
+      "name": "head11_other_eleven_INT4_exact",
+      "passed": true
+    },
+    {
+      "name": "head11_only_selected_changed",
+      "passed": true
+    },
+    {
+      "name": "head11_state_packet_roundtrip",
+      "passed": true
+    },
+    {
+      "name": "head11_compact_owned_storage",
+      "passed": true
+    },
+    {
+      "name": "head11_all_owned_no_alias",
+      "passed": true
+    },
+    {
+      "name": "input_key_unchanged",
+      "passed": true
+    },
+    {
+      "name": "INT4_all_signed_codes_roundtrip",
+      "passed": true
+    },
+    {
+      "name": "INT8_all_signed_codes_serialization",
+      "passed": true
+    },
+    {
+      "name": "no_autograd_graph",
+      "passed": true
+    },
+    {
+      "name": "grad_input_preserved",
+      "passed": true
+    },
+    {
+      "name": "full_state_disk_save_reload",
+      "passed": true
+    },
+    {
+      "name": "disk_state_no_alias",
+      "passed": true
+    },
+    {
+      "name": "synthetic_pt_under_20MiB",
+      "passed": true,
+      "bytes": 100992
+    },
+    {
+      "name": "selection_tie_lowest_index",
+      "passed": true
+    },
+    {
+      "name": "selection_full_raw_moment_weight",
+      "passed": true
+    },
+    {
+      "name": "selection_independent_quadratic_form",
+      "passed": true
+    },
+    {
+      "name": "selection_inputs_preserved",
+      "passed": true
+    },
+    {
+      "name": "selection_no_graph_owned_scores",
+      "passed": true
+    },
+    {
+      "name": "negative_moment_rejected",
+      "passed": true
+    },
+    {
+      "name": "nonfinite_moment_rejected",
+      "passed": true
+    },
+    {
+      "name": "zero_scale_rejected",
+      "passed": true
+    },
+    {
+      "name": "tiny_scale_rejected",
+      "passed": true
+    },
+    {
+      "name": "overflow_scale_rejected",
+      "passed": true
+    },
+    {
+      "name": "nonfinite_input_rejected",
+      "passed": true
+    },
+    {
+      "name": "zero_packet_scale_rejected",
+      "passed": true
+    },
+    {
+      "name": "nonfinite_packet_scale_rejected",
+      "passed": true
+    },
+    {
+      "name": "truncated_state_rejected",
+      "passed": true
+    },
+    {
+      "name": "truncated_packet_rejected",
+      "passed": true
+    },
+    {
+      "name": "production_original_Rfp32_eleven_heads_exact",
+      "passed": true
+    },
+    {
+      "name": "production_scale_eleven_heads_exact",
+      "passed": true
+    },
+    {
+      "name": "production_input_preserved",
+      "passed": true
+    },
+    {
+      "name": "production_payload_no_double_store",
+      "passed": true
+    },
+    {
+      "name": "production_payload_compact",
+      "passed": true
+    },
+    {
+      "name": "six_chunk_code_increment",
+      "passed": true,
+      "bytes": 1806336
+    },
+    {
+      "name": "shared_metadata_and_cap",
+      "passed": true,
+      "bytes": 1806361
+    },
+    {
+      "name": "CPU_only",
+      "passed": true
+    },
+    {
+      "name": "RSS_below_2GiB",
+      "passed": true,
+      "bytes": 564953088
+    }
+  ],
+  "threads": 4,
+  "wall_seconds": 0.2986092669889331,
+  "max_rss_bytes": 564953088,
+  "bytes": {
+    "K4_one_chunk": 4515841,
+    "mixed_one_chunk": 4816897,
+    "packed4": 3311616,
+    "int8": 602112,
+    "scale": 903168,
+    "sentinel": 1,
+    "shared_header": 24,
+    "shared_head": 1,
+    "six_chunk_code_increment": 1806336,
+    "six_chunk_total_increment": 1806361,
+    "six_mixed_K_only_plus_state": 28901407,
+    "common_hadamard_excluded": 65536
+  },
+  "synthetic_artifact": {
+    "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/BIT_SYNTHETIC_STATE.pt",
+    "bytes": 100992,
+    "sha256": "316d9e3532ade1ddebf15a5573ec1a713d02941d7e13b837b24c92b96d258afa"
+  },
+  "source_hashes": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/bit_baseline.py": "73fccb81cbc3a938678a064057940b0ea43bcfa9888c4ce4ef7cd461f5e9da3d",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/bit_baseline_selftest.py": "00256f6bf6dcdb62d6ae979770dd607bcebb78677a075909c8f9650963ef7088",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/common.py": "436f7b2762397ecce840b91feb535094a9008c54066e4e796c3df248f9071c35"
+  }
+}

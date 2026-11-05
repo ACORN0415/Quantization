@@ -1,0 +1,61 @@
+한 head INT8 / 나머지 INT4 강한 기준선 합성 준비
+작성: Codex. 실제 Opus 검토 미완료. 실자료 효과 검사·GPU·모델 실행·커밋0.
+
+정의
+선택한 head 하나는 signed INT8 [-128,127], 나머지 11개 head는 기존 R_fp32 signed INT4 [-8,7]로 각각 나뉘어 저장한다. 전체 12head INT4를 보유하면서 INT8을 추가하는 이중 저장은 없다. 선택 head를 제외한 나머지는 원래 head 번호 오름차순으로 나열하여 INT4 nibble에 저장한다. 선택 head의 INT8 코드는 다른 연속 tensor다. 모든 head의 FP16 scale은 한 tensor이며 선택 head의 scale만 INT8 기준이다. 별도 압축이나 가상 INT5를 쓰지 않는다.
+
+원래 경로와 산술 계약
+causal_obq/common.py의 R_fp32와 동일한 H128 행렬/좌표·연산 시점을 사용한다.
+1. 원좌표 post-RoPE K BF16[1,4680,12,128]을 FP32 H128로 회전한 뒤 BF16으로 만든다.
+2. 1560토큰 frame 세 개를 각각 8토큰 padding하여 [3,98,16,12,128]로 만든다.
+3. token축 group16의 채널별 maxabs를 BF16 산술로 구한다. INT4 head는 /7, INT8 head는 /127, clamp_min(1e-8)을 적용한다.
+4. FP16 scale 저장값이 유한·양수이고 BF16 왕복시 원래 scale과 같아야 한다. zero/tiny/overflow는 거부하며 fallback이나 새로운 clamp를 넣지 않는다.
+5. BF16 회전 K와 FP16 scale을 각각 FP32로 바꾸어 나눈 뒤 ties-to-even round 및 정수범위 clamp한다.
+6. 복원은 code.bfloat16()*scale.bfloat16(), 각 frame padding 제거, FP32 역H128, 최종 BF16 순서다. INT8을 FP32로 복원한 뒤 BF16으로 바꾸는 별도 경로를 쓰지 않는다.
+현재 구현은 CPU 진단용이며 GPU 코드·커널 시간·생성 품질에 대한 주장은 없다. BF16 회전 왕복의 수치 floor가 존재하므로 원래 K와 복원이 비트 동일하다는 주장을 하지 않는다.
+
+head 선택 계약
+select_head(raw_moment, original_key, rtn_restored_key)는 원좌표 raw p0 moment FP64[12,128,128], p0 원본 K와 같은 RTN 복원값 BF16[N,12,128] 또는 [1,N,12,128]을 받는다. 각 head에 대해 토큰별 E M E^T를 합하고 최대 head를 고른다. 정확 동점은 torch.argmax의 최소 index다. raw moment의 대칭/PSD/유한을 확인한다.
+원좌표·p0 출처·선택 시점·보정 범위는 외부 등록/manifest 책임이다. 함수가 전달받은 rotated/damped moment를 의미상 구분하거나 provenance를 검증할 수는 없다. 평가 query, native attention 출력, post-Wo 오차를 head 선택에 쓰지 않는다. 함수 자체가 moment를 fit하거나 새로운 rank를 선택하지 않는다. 점수는 K의 query-weighted 오차이며 실제 attention 또는 post-Wo 오차와 같은 것이 아니다.
+
+API
+prepare_state(selected_head:int, frame_tokens=1560, frames=3) -> MixedHeadState
+encode(key_BF16[1,frames*frame_tokens,12,128], state) -> MixedHeadPacket
+restore(packet,state) -> 같은 형상의 원좌표 BF16 K
+select_head(raw_moment,original_key,rtn_restored_key) -> (head:int,scores_FP64[12])
+state.to_bytes()/MixedHeadState.from_bytes(data)
+packet.to_bytes(state)/MixedHeadPacket.from_bytes(data,state)
+state와packet의 nbytes(), storage_bytes()
+prepare_state/encode/restore/select_head는 no_grad다. 직접 생성한 dataclass의 tensor를 나중에 변경하지 못하도록 봉인한 것은 아니므로, driver는 저장 후 변경하지 않고 source/state 해시에 연결해야 한다.
+
+저장 형식·정확한 cap 근거
+공유 state는 uint8 24B header와 uint8 selected_head 1B다. header는 little-endian <4sIIIII: magic H8K1, frames, frame_tokens, heads, dim, group이다. 12head/H128/group16을 검증하며 실제 입력은 frames3/frame_tokens1560이다. 공유 state를 여섯 packet마다 중복하지 않는다.
+한 packet은 다음 네 개의 서로 독립된 compact storage다.
+- 11head INT4 packed4 uint8: 4704*11*128/2 = 3,311,616B
+- 1head INT8 codes8 int8: 4704*128 = 602,112B
+- 전체head FP16 scale [3,98,1,12,128]: 903,168B
+- 기존 K4와 같은 sentinel uint8[1]=255: 1B
+합계 4,816,897B. 기존 R_fp32 K4 packet은 4,515,841B로 한 청크 차이 301,056B다.
+6청크 코드 추가 = 1,806,336B.
+공유 header24B+head1B를 포함한 실제 추가 tensor/packet bytes = 1,806,361B.
+6청크 mixed K와 공유 state 합계 = 28,901,407B.
+기존 공통 과거 KV 54,097,926B/층 기준, 같은 V4를 그대로 더하면 mixed KV 총 55,904,287B/층이다.
+위 추가 1,806,361B를 실자료 전 정수 cap으로 잠글 근거가 확보되었다. 기존 1,806,336B 숫자를 유지하려면 metadata를 제외했다고 명시해야 하므로, 이 구현의 실제 cap은 25B 더 크다. 실제 효과를 보고 변경한 숫자가 아니다.
+
+실제 storage 비용을 numel*element_size와 untyped_storage.nbytes 양쪽으로 확인했다. 이 숫자는 serialized .pt 파일 크기, Python metadata, allocator padding, shared H128 65,536B, host/device 복제본, encoding/restore workspace 또는 전체 peak 메모리를 뜻하지 않는다. .pt 저장 파일은 별도 크기로 기록한다. 운영에 필요한 shared header/head는 완전한 저장·재시작 대상에 포함한다.
+
+합성 검증 BIT_SELFTEST_V1.json
+104/104 통과. 모든 12개 head를 차례로 선택해 독립 direct INT8/INT4 복원과 대조하고, 선택한 head 외에는 바뀌지 않음을 확인했다. INT4 모든 16개 code와 INT8 모든 256개 signed byte의 pack/serialization을 확인했다. shared state와 packet의 메모리 byte 왕복, 두 state tensor까지 포함한 디스크 저장/재로드, no mutation, graph 미보존, compact storage/alias, exact tie 선택, raw moment 가중, 비유한/음수 moment 및 zero/tiny/overflow scale 거부를 검증했다.
+production shape를 가진 무작위 합성 입력 한 개에서는 원래 common.encode_k(...,'R_fp32')/restore를 직접 호출하여 비선택 11head의 복원 원소 bytes와 scale bytes가 정확히 같음을 확인했다. 이는 실제 캡처나 품질 실험이 아니다.
+시간 0.298609267초(검사 함수, 인터프리터 준비 제외), CPU4threads, RSSpeak 564953088B. .pt 합성 파일 100992B로 20MiB 미만이다. CUDA initialized=False. 신규 실제 입력 로드0, 효과 점수0, 실제 생성0.
+
+미완료와 동결
+실제 Opus 검토와 root 등록/LOCK은 미완료다. 실자료에 대한 선택 head·오차·동작 비용·전체 rollout 효과는 측정하지 않았다. main driver는 이 파일의 source SHA와 실제 state/packet bytes를 묶어야 하며 기존 진단 문턱은 변경하지 않는다. 기존 FULL pilot stop_quality를 구제하는 결과가 아니다.
+본 작성 이후 소스 편집을 멈춘다. 원래 common.py나 peer driver, 기존 결과, Git commit은 변경하지 않았다.
+
+SHA256
+/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/bit_baseline.py 73fccb81cbc3a938678a064057940b0ea43bcfa9888c4ce4ef7cd461f5e9da3d
+/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/bit_baseline_selftest.py 00256f6bf6dcdb62d6ae979770dd607bcebb78677a075909c8f9650963ef7088
+/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/BIT_SELFTEST_V1.json e7f7b47e78ba9cc73292848c9784ae4f5415e323c513b94ebe1f93422d2f6231
+/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/BIT_SYNTHETIC_STATE.pt 316d9e3532ade1ddebf15a5573ec1a713d02941d7e13b837b24c92b96d258afa
+/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/common.py 436f7b2762397ecce840b91feb535094a9008c54066e4e796c3df248f9071c35

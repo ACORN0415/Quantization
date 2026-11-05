@@ -1,0 +1,42 @@
+{
+  "status": "final_ready_synthetic_only",
+  "created_utc": "2026-11-05T12:50:25.501181+00:00",
+  "source_editing_stopped": true,
+  "actual_opus_review": "pending",
+  "root_registration_lock": "pending",
+  "source_hashes": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/bit_baseline.py": "73fccb81cbc3a938678a064057940b0ea43bcfa9888c4ce4ef7cd461f5e9da3d",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/bit_baseline_selftest.py": "00256f6bf6dcdb62d6ae979770dd607bcebb78677a075909c8f9650963ef7088",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/BIT_SELFTEST_V1.json": "e7f7b47e78ba9cc73292848c9784ae4f5415e323c513b94ebe1f93422d2f6231",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/BIT_SYNTHETIC_STATE.pt": "316d9e3532ade1ddebf15a5573ec1a713d02941d7e13b837b24c92b96d258afa",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/causal_obq/common.py": "436f7b2762397ecce840b91feb535094a9008c54066e4e796c3df248f9071c35",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/BIT_PREPARATION_KO.txt": "24143d3707b1149b5308ba882805cf167ada0711a50becc71ce80b5d1af0a4f7"
+  },
+  "checks_total": 104,
+  "checks_pass": true,
+  "real_capture_reads": 0,
+  "GPU_calls": 0,
+  "commits": 0,
+  "bytes": {
+    "K4_one_chunk": 4515841,
+    "mixed_one_chunk": 4816897,
+    "packed4": 3311616,
+    "int8": 602112,
+    "scale": 903168,
+    "sentinel": 1,
+    "shared_header": 24,
+    "shared_head": 1,
+    "six_chunk_code_increment": 1806336,
+    "six_chunk_total_increment": 1806361,
+    "six_mixed_K_only_plus_state": 28901407,
+    "common_hadamard_excluded": 65536
+  },
+  "proposed_exact_extra_cap_bytes": 1806361,
+  "files_owned": [
+    "bit_baseline.py",
+    "bit_baseline_selftest.py",
+    "BIT_*"
+  ],
+  "source_contract": "causal_obq/common.py R_fp32; INT8-selected-head /127 only",
+  "shared_state_serialized_with_packet": true
+}

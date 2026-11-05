@@ -1,0 +1,40 @@
+{
+  "created_utc": "2026-11-05T12:51:53.018090+00:00",
+  "status": "root_byte_contract_resolved_pending_actual_Opus_and_driver_lock",
+  "additional_persistent_tensor_packet_cap_bytes": 1806361,
+  "derivation": {
+    "six_chunk_code_increment": 1806336,
+    "shared_header": 24,
+    "selected_head_uint8": 1,
+    "existing_sentinel_difference": 0
+  },
+  "common_past_kv_payload_bytes": 54097926,
+  "one_head_k8_total_kv_bytes": 55904287,
+  "common_hadamard_bytes_separate": 65536,
+  "source": {
+    "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_response_stage0/bit_baseline.py",
+    "sha256": "73fccb81cbc3a938678a064057940b0ea43bcfa9888c4ce4ef7cd461f5e9da3d"
+  },
+  "basis": "Actual synthetic owned tensor storage and serialized packet/state geometry; not real-data memory peak",
+  "excluded_from_this_cap_but_must_report": [
+    "Python metadata and allocator padding",
+    "temporary workspace and output/logit allocations",
+    "host/device copies",
+    "calibration-only matrix retained by diagnostic host",
+    "serialization-container overhead"
+  ],
+  "candidate_state_bytes": 1403904,
+  "FULL_plus_projected_rank1_bytes": 1800600,
+  "FULL_plus_projected_rank1_margin_bytes": 5761,
+  "unmodified_decisions": [
+    "FULL rollout stop_quality",
+    "no actual data effects measured",
+    "45min CPU diagnostic proposal not locked",
+    "Opus review incomplete"
+  ],
+  "root_review_scope": [
+    "read complete bit source and preparation report",
+    "inspected stored 104-test claims; did not rerun tests"
+  ],
+  "new_experiment_score_reads": 0
+}
