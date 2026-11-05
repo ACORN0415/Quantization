@@ -1,0 +1,45 @@
+Paired 응답 보정: 실제 자료 CPU 판별 제안 v2
+작성: root Codex, 2026-11-05. 상태: 실제 Opus 검토용, 등록/LOCK/실자료 실행 아님.
+이 문서는 NEXT_DECISION의 미결인 기준선 비용과 입력 연결을 구체화한다. 과거 실험과 문턱은 변경하지 않는다. 실제 자료 효과 점수는 아직 0건이다.
+
+판단할 선택 하나
+같은 추가 저장 상한에서 과거 K의 복원 오차를 작은 부호 있는 응답 요약으로 저장할 이유가 있는가? FULL, 비트 증가 및 간단한 PSAC/QKSA 조합이 더 좋은 경우 이 고정 Gaussian 변형을 종료한다. 이 검사는 기존 개발 자료의 국소 가능성 판별이며 새 방법의 효과 입증·독립 보류 평가·전체 생성 성공 판정이 아니다.
+
+고정 입력과 정보 시점
+- p0_s101의 l18/l24_c7 q 전체4680개로만 FULL factor와 PSAC 원좌표 moment/basis를 준비한다. 새 선택에 평가 query를 사용하지 않는다.
+- 평가: 기존 causal_obq seed307 층18/24 × read0/read3의 네 endpoint. 각층 write1..6이 과거, read별 current7은 BF16이다. QIDS=floor(arange(128)*4680/128).
+- 평가 Q와 K는 이미 post-RoPE다. PSAC/paired는 원좌표, QKSA는 실제 H128 code 좌표. p0 raw original moment, rotated raw H, damped H는 별도 이름·해시로 기록한다.
+- 모든 팔은 같은 V4 과거 복원값과 현재 BF16 V를 쓴다. 주 참조는 Attn(Q128,원본 과거K+현재K,공통V4+현재V)다. 전체 BF16 참조 오차도 별도 열로 보고한다.
+- causal native_av는 이미Q128이며 BF16 V 경로이므로 V4 기준값으로 재사용하지 않는다. 새 CPU FP32 attention과 같은 logits에서 output/LSE를 함께 계산한다. 과거만의 LSE를 쓰지 않는다.
+- 주 점수는 post-Wo SSE. 잔차를 head 결합 후 Wo.T에 곱하고 FP64로 제곱합한다. bias는 잔차에서 상쇄된다. NSE는 새 K-only 참조 에너지를 분모로 쓰고 과거 다른 분모의 NSE와 혼동하지 않는다.
+- INPUT_BINDING_CODEX.json에 전사된 파일 해시는 향후 실행 때 실제 파일로 재검증한다. 현재 존재/내용 재검증을 완료했다는 뜻이 아니다.
+
+후보 하나
+R_fp32 K4 복원값 위에 paired K-only 응답 요약을 사용한다. FULL을 기본값으로 함께 쓰지 않는다: FULL factor와 rank32 상태를 동시에 두면 제안 상한을 넘기기 때문이다. 다른 base는 결과를 보고 추가하지 않는다.
+rank32, Gaussian seeds17/29/43, 한 공통 FP32 Omega, 청크별 FP32 Dz/DN와 FP64 feature offset을 고정한다. Vhat는 차분의 두 항에 동일하게 사용한다. 준비/읽기는 수정된 core c66e2e3e429652ad60da35c94d56e0a2baab46134252cbfd7005c8152f10eb82를 사용한다.
+min_denominator_ratio=.1을 실자료 전 제안한다. fallback은 해당 R_fp32 base 출력이며 BF16 복구/오차 인증이 아니다. fallback률·각 원인·underflow·zero state·FP32 저장 소실을 보존한다. 유리한 seed 선택이나 세 seed 평균만의 통과를 허용하지 않는다.
+
+고정 비교 집합 제안
+공통 참조와 좌표를 맞춘 다음 각 endpoint에서 사전에 정한 실행 가능한 팔 중 가장 낮은 SSE를 기준으로 한다. 이는 최적 알고리즘 oracle이라는 뜻이 아니다.
+1. 기존 R_bf16, R_fp32, FULL(O_offline), p0선택 FIXED17. 기존 packet/고정회전 상태를 hash에 묶어 재사용하되 점수는 새 공통 참조에서 구한다.
+2. 한 head K8, 나머지 K4/V4. head는 p0만의 query-weighted K 양자화 손상 최대 head로 고정, 동점은 작은 index. 실제 INT8 코드와 기존 나머지 INT4 코드를 저장한다. 가상의 INT5 또는 전체K4에K8을 덧붙이는 이중 저장을 쓰지 않는다. 선택에 p0 native 전체출력/평가 endpoint 결과를 사용하지 않는다.
+3. R_fp32 + projected PSAC rank3; FULL + projected PSAC rank1. 원좌표 p0 top eigenvectors를 BF16, eigenvalues를 FP32 저장한다. 행 선별은 저장 U/lambda가 정의하는 M_r이며 full raw M 선별과 구분한다. 준비가 끝나면 운영에 불필요한 rawM은 해제 가능하다.
+4. R_fp32 + QKSA; FULL + QKSA; FULL + projected PSAC rank1 + QKSA. QKSA 계수1, 실제 K4 scale 간격, 과거 토큰에만 적용한다. 마지막 조합에서 residual 보정 뒤 오차가 독립 균등이라는 보장은 없으므로 기존 수식의 단순 조합 대조라고 표시한다. 성능이 나빠도 제외하지 않는다.
+5. 높은 비용 참조: R_fp32 + full-M PSAC rank3와 rank8. 원래 rawM의 운영 상주 비용을 포함한다. 원문rank8의 구현 선택을 저rank 하나로 대신하지 않는다. 이 둘은 cap 밖이면 효과/비용 표에는 남기고 cap 내 주판정과 분리한다. 같은 상한에서의 승리만으로 PSAC 일반 우위를 주장하지 않는다.
+별도 평가 Q로 rank/head/filter를 고르지 않는다. full-M와 projected 방식 중 결과가 좋은 것을 같은 방법이라고 바꿔 부르지 않는다.
+
+비용 계약
+공통 과거KV 54,097,926B/층/6청크를 기준으로 추가 persistent tensor/packet bytes를 센다. 제안 상한은 한 head K8의 실제 추가1,806,336B 코드와 필요한 추가 head식별/packet metadata다. metadata 표현과 정확한 상한은 driver 합성 패킹검사 후, 실제p0/평가 입력을 읽기 전에 정수로LOCK한다. cap을 결과에 맞춰 늘리지 않는다.
+paired 계획1,403,904B; FULL factor786,432B; projected PSAC rank3 1,694,328B; FULL+projected rank1 1,800,600B. 모두 층당6청크, 공유기저/고유값/28B header×6 포함이다. full-M PSAC rank3는1,694,184+1,572,864=3,267,048B다. 이 수치들은 총 peak RAM/GPU 사용량이 아니다.
+공통 H12865,536B, host/device 복사, Python 상태, allocator padding, CPU 통계/특징 임시 공간, attention logits/LSE/출력은 범위를 나눠 기록한다. 별도 프로세스로 팔별 최대RSS를 측정한다. 공유 캐시가 전체 검사 시간을 줄여도 각 방법 단독 준비·쓰기·읽기에 필요한 비용을 지우지 않는다.
+FULL/PSAC p0 준비, 후보 write, decode/read, 상태 생성/전송에 해당하는 비용을 각각 기록한다. 기존 packet 재사용으로 생략한 생성 비용은0이라 하지 말고 미실측/기존 기록으로 구분한다. 합성core의 반복 유효성 검사까지 포함한 CPU 시간은 현 구현 진단비용이며 최적 GPU 구현 비용이라고 하지 않는다. 이번에 GPU 속도를 주장하지 않는다.
+
+유효성 및 종료
+최초 실제 자료 접근 직전 monotonic 시작. 총45분, CPU4threads, 각 프로세스RSS8GiB, 새 파일 합2GiB, 새 GPU/생성/모델 다운로드0. 검증·hash·통계준비·실행·실패조사를 모두 포함한다. 하나라도 먼저 도달하면 종료하며 미완료를 음성 결과로 합치지 않는다. 별도 프로세스는 supervisor가 순차 실행해 동시 RAM 폭증을 피한다.
+무개입 연결 검사: Khat=K의 paired 상태0/정확base bytes, PSAC 활성행0/정확복원bytes, 모든 팔의 noquant 공통 CPU attention, 현재/과거 토큰순서/shape/scale 검증을 효과 점수보다 먼저 한다. CPU FP32와 GPU FA2 저장 출력의 차이는 별도 수치 floor이며 비트 일치를 억지로 요구하지 않는다. 실제 연결허용오차와 저장anchor 비교는 driver 합성검사/기존 산술계약에 따라 실자료 전 확정한다.
+제안 통과: 네 endpoint 각각, 세 seed 각각에서 cap 내 최선 등록 기준선 대비 post-Wo SSE≥10% 감소, fallback≤0.1%, 실제 저장cap 준수, 모든 유효성검사통과. 성공해도 결과는 국소개발자료 가능성뿐이다. baseline SSE=0이면 비열화/동점으로 보고 10% 개선 통과로 세지 않는다.
+유효한 결과가 문턱에 미달하면 고정Gaussian rank32 후보 종료. 반례·수치장애·상한초과는 구현무효/판단불가로 따로 기록하되 같은 상한 내 최소 조사만 한다. 결과를 보고 seed/rank/기준선/참조/허용오차를 바꾸지 않는다. 학습feature를 자동으로 이어 붙여 실패를 구제하지 않는다.
+
+이번 실제 Opus에 필요한 판단
+두 독립 업무의 기존 결과/수정 검토를 완료하고, 위 입력·참조·강한 조합대조·persistent 비용 계약을 수용하거나 구체적 오류만 지적한다. 관리자는 실행 권한을 대신 부여하지 않는다. root가 의견과 구현을 반영해 최종LOCK을 만들며 사용자의 기존 연속 진행 승인을 다시 묻지 않는다.
+현재 전체full-H pilot stop_quality는 유지한다. 이 제안은 새 방법의 신규성을 보장하지 않는다. KVLinC의 분자/분모 보정, EVA의 추정 관점, PSAC/QKSA 및 강한 signed base-aware 학습 대조를 넘는 기여는 별도 입증 대상이다.

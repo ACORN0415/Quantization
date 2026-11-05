@@ -1,0 +1,36 @@
+고정 저차원 query metric PSAC — 별도 합성 준비
+작성 2026-11-05T21:31:10.267696+09:00. 소스 편집 종료, root/실제 Opus 검토 대기.
+실자료·모델·GPU·통계 fit·새 효과 실험0. 기존 full-M source/SELFTEST/보고서/FINAL_READY/상태는 변경하지 않았다. 새 projected_metric.py, projected_metric_selftest.py 및 PROJECTED_* 기록만 추가했다.
+
+정의와 변경 범위
+이 변형은 원문에서 명확히 지정하지 않은 query-weighted row-filter 근사를 별도로 고정한 공개 정의 adaptation이다. 공식 QuantWM full-M 구현 재현이나 신규 방법론 후보가 아니다. 외부 p0 고정 U_BF16[H,D,r], lambda_FP32[H,r]를 받아 M_r=U diag(lambda) U^T를 정의한다. lambda는 음이 아닌 유한 FP32여야 하고, 열 순서/좌표/정보 시점은 외부 등록이 보장한다. basis/rank/eigenvalue를 함수 안에서 선택하거나 실제 자료로 맞추지 않는다.
+행별 error E에 대해 (E U)^2·lambda를 FP64로 계산한다. 실제 BF16(Khat+Chat U^T) 전/후 점수를 비교해 엄격히 줄어드는 행만 보존한다. 원래 K-Khat projection, INT8[-127,127], FP16 행별 scale, clipping/rounding, dense/sparse/header/index 선택, decode는 동결 core의 동일 함수·동일 산술을 사용한다. core.py SHA 63364f9d4619a231ea5425fcf8e60bf8254bbde738948a952c6604d5432185d9를 import 시 확인한다.
+prepare_metric이 U와lambda를 owned/no_grad 사본으로 보유하며, encode와restore도 no_grad 경로다. 전체 M_r 또는 원래 full moment를 실제 encoder에서 구성하거나 저장하지 않는다. 모든 저장 state는 U와lambda 두 tensor뿐이다. 함수가 입력받지 않는 원래 H는 고정 오프라인 basis/lambda 준비가 끝난 뒤 외부에서 해제할 수 있다. 다만 외부 U/lambda 원본 사본을 caller가 계속 보유하면 그 메모리도 따로 세야 한다.
+BF16 U가 엄밀히 직교하지 않거나 lambda가 FP32로 반올림돼도, 이 저장된 두 tensor가 정의하는 M_r를 사용한다. 이를 이상적인 p0 full-M나 정확한 원래 고유분해와 같다고 하지 않는다. 잘린 방향의 중요도를 무시하므로 full-M 행 판정과 보류 입력의 선택/품질이 같다는 보장도 없다. 기존 full-M는 더 많은 방향 정보를 쓰는 별도의 비용점으로 계속 보존한다.
+
+검증 결과: PROJECTED_SELFTEST_V1.json
+48/48 합성 검사 통과. 작은 세 형상에서 저장 U/lambda로 명시적으로 만든 M_r를 기존 full-M psac_encode에 넣어 대조했다.
+- 활성 행 수, 실제 packet bytes, BF16 복원 bytes 일치.
+- 행별 전/후 점수와 합계는 미리 정한 atol1e-10/rtol1e-11 범위에서 일치. 관측 최대 행 점수 차이 5.5511151231257827e-17.
+- 서로 다른 FP64 연산 순서이므로 모든 입력·거의 동점인 행에서 비트 동일성을 보장한다고 하지 않는다. 명시된 합성 자료에서는 packet과 결정이 정확히 같았다.
+- 실제 BF16 반올림 때문에 개선이 사라지는 행 제거, lambda0의 동점 제거, 무개입 signed-zero bytes, grad-enabled 상태의 graph 미보존, 입력 bytes·grad flag 보존, owned state, 부적절한 dtype/음수·비유한 lambda/비유한 K 거부를 확인했다.
+- 명시한 BF16 metric이 이상적인 FP64 기저 metric과 다른 것도 합성으로 확인했다. 이 차이는 새 효과 성과가 아니다.
+실행 함수 wall 0.015805초(인터프리터 준비 제외), CPU4, RSSpeak 423981056B, CUDA initialized=False.
+
+메모리 산술과 범위
+실제로 합성 basis/lambda와 dense packet tensor를 만들어 저장량을 확인했다. 여섯 청크 header각28B와 공유 U/lambda를 포함한 합은 다음과 같다.
+rank1 1,014,168B (lambda48B)
+rank2 1,354,248B (lambda96B)
+rank3 1,694,328B (lambda144B)
+rank4 2,034,408B (lambda192B)
+rank8 3,394,728B (lambda384B)
+FULL U786,432B+rank1 PSAC1,014,168B=1,800,600B, cap1,806,336B와의 차이는5,736B다. 이는 tensor/packet 계수만의 계산이다. 실제 sparse layout·allocator padding·Python metadata·임시 FP64 projection·복원·host/device 사본·공통 Hadamard·추가 회전 기저는 각 범위에서 별도 계측해야 한다. GPU packed encoder·시간·실제 peak·전체 모델 비용은 측정하지 않았다.
+이 변형은 full raw moment의 계속된1,572,864B/층 보유를 제거할 수 있는 별도 metric 선택지다. full-M 판정을 유지하면서 같은 비용을 얻었다는 뜻은 아니다. 원래 full-M의 H 상주/전송과 eigvalsh 반복 검증 계약은 그대로 미결이며, 해당 소스의 성능 리팩터링을 하지 않았다.
+
+다음 판단
+실제 Opus가 이 근사 metric 변형을 강한 대조에 포함할지 검토한다. 실자료 rank/팔/효과 gate를 등록하지 않았으며 실제 자료 실행 승인은 없다. FULL·paired·projected PSAC 모두 같은 K-only Attn(Q,K,Vhat) 참조와 post-Wo 좌표로 비교해야 한다는 기존 요구는 유지한다. 기존 full-H pilot stop_quality도 바뀌지 않는다.
+
+해시
+projected_metric.py 17f895a1ae85bfe2f27791bb61157597b2111a4171ced4f68dcfbdb29b56e146
+projected_metric_selftest.py bf8a6656542fdaa0966d2db459aba86f634d38583067330eb1318da36a5c4ea0
+PROJECTED_SELFTEST_V1.json 5829e84fee6b546f968996570113e05aec7ca4157558dd6ad9864423800b5995

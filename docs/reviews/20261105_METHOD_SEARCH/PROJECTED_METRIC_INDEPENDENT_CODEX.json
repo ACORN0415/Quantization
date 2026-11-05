@@ -1,0 +1,172 @@
+{
+  "status": "accepted_as_synthetic_preparation_only",
+  "reviewer": "Codex independent review",
+  "created_utc": "2026-11-05T12:40:10.306935+00:00",
+  "actual_opus_review": "pending",
+  "source_hashes": {
+    "projected_metric.py": "17f895a1ae85bfe2f27791bb61157597b2111a4171ced4f68dcfbdb29b56e146",
+    "projected_metric_selftest.py": "bf8a6656542fdaa0966d2db459aba86f634d38583067330eb1318da36a5c4ea0",
+    "core.py": "63364f9d4619a231ea5425fcf8e60bf8254bbde738948a952c6604d5432185d9",
+    "PROJECTED_SELFTEST_V1.json": "5829e84fee6b546f968996570113e05aec7ca4157558dd6ad9864423800b5995",
+    "PROJECTED_PREPARATION_KO.txt": "0bffd4d5ba2513b3ebe38dd1749f49119cf0ad30599548be937356c5e8e04ee2"
+  },
+  "checks": [
+    {
+      "name": "recorded_source_hash_core.py",
+      "passed": true,
+      "details": "63364f9d4619a231ea5425fcf8e60bf8254bbde738948a952c6604d5432185d9"
+    },
+    {
+      "name": "recorded_source_hash_projected_metric.py",
+      "passed": true,
+      "details": "17f895a1ae85bfe2f27791bb61157597b2111a4171ced4f68dcfbdb29b56e146"
+    },
+    {
+      "name": "recorded_source_hash_projected_metric_selftest.py",
+      "passed": true,
+      "details": "bf8a6656542fdaa0966d2db459aba86f634d38583067330eb1318da36a5c4ea0"
+    },
+    {
+      "name": "saved_48_checks_all_pass",
+      "passed": true,
+      "details": "저장 기록 재계산; 검사 재실행 아님"
+    },
+    {
+      "name": "selftest_hash_matches_report",
+      "passed": true,
+      "details": "기록과 현재 파일 일치"
+    },
+    {
+      "name": "dense_budget_rank1",
+      "passed": true,
+      "details": {
+        "one_dense_packet_bytes": 168508,
+        "six_dense_packets_bytes": 1011048,
+        "shared_basis_bytes": 3072,
+        "shared_eigenvalues_bytes": 48,
+        "total": 1014168
+      }
+    },
+    {
+      "name": "dense_budget_rank2",
+      "passed": true,
+      "details": {
+        "one_dense_packet_bytes": 224668,
+        "six_dense_packets_bytes": 1348008,
+        "shared_basis_bytes": 6144,
+        "shared_eigenvalues_bytes": 96,
+        "total": 1354248
+      }
+    },
+    {
+      "name": "dense_budget_rank3",
+      "passed": true,
+      "details": {
+        "one_dense_packet_bytes": 280828,
+        "six_dense_packets_bytes": 1684968,
+        "shared_basis_bytes": 9216,
+        "shared_eigenvalues_bytes": 144,
+        "total": 1694328
+      }
+    },
+    {
+      "name": "dense_budget_rank4",
+      "passed": true,
+      "details": {
+        "one_dense_packet_bytes": 336988,
+        "six_dense_packets_bytes": 2021928,
+        "shared_basis_bytes": 12288,
+        "shared_eigenvalues_bytes": 192,
+        "total": 2034408
+      }
+    },
+    {
+      "name": "dense_budget_rank8",
+      "passed": true,
+      "details": {
+        "one_dense_packet_bytes": 561628,
+        "six_dense_packets_bytes": 3369768,
+        "shared_basis_bytes": 24576,
+        "shared_eigenvalues_bytes": 384,
+        "total": 3394728
+      }
+    },
+    {
+      "name": "full_plus_rank1",
+      "passed": true,
+      "details": {
+        "full_factor_bytes": 786432,
+        "rank1_bytes": 1014168,
+        "total": 1800600,
+        "cap": 1806336,
+        "margin": 5736
+      }
+    }
+  ],
+  "checks_total": 11,
+  "all_checks_pass": true,
+  "existing_48_selftests_rerun": false,
+  "new_torch_synthetic_probes": 0,
+  "helper_imports": 0,
+  "real_capture_reads": 0,
+  "GPU_calls": 0,
+  "model_loads": 0,
+  "effect_experiments": 0,
+  "commits": 0,
+  "peer_source_edits": 0,
+  "budgets": {
+    "1": {
+      "one_dense_packet_bytes": 168508,
+      "six_dense_packets_bytes": 1011048,
+      "shared_basis_bytes": 3072,
+      "shared_eigenvalues_bytes": 48,
+      "total": 1014168
+    },
+    "2": {
+      "one_dense_packet_bytes": 224668,
+      "six_dense_packets_bytes": 1348008,
+      "shared_basis_bytes": 6144,
+      "shared_eigenvalues_bytes": 96,
+      "total": 1354248
+    },
+    "3": {
+      "one_dense_packet_bytes": 280828,
+      "six_dense_packets_bytes": 1684968,
+      "shared_basis_bytes": 9216,
+      "shared_eigenvalues_bytes": 144,
+      "total": 1694328
+    },
+    "4": {
+      "one_dense_packet_bytes": 336988,
+      "six_dense_packets_bytes": 2021928,
+      "shared_basis_bytes": 12288,
+      "shared_eigenvalues_bytes": 192,
+      "total": 2034408
+    },
+    "8": {
+      "one_dense_packet_bytes": 561628,
+      "six_dense_packets_bytes": 3369768,
+      "shared_basis_bytes": 24576,
+      "shared_eigenvalues_bytes": 384,
+      "total": 3394728
+    }
+  },
+  "full_plus_rank1": {
+    "factor_bytes": 786432,
+    "total_bytes": 1800600,
+    "cap_bytes": 1806336,
+    "margin_bytes": 5736
+  },
+  "unverified": [
+    "실자료의 선택·품질 효과",
+    "U/lambda까지 포함한 저장 후 완전한 재시작",
+    "GPU 비용과 allocator·workspace를 포함한 실제 peak",
+    "외부 상태의 p0 출처·열 순서 및 원좌표 일치",
+    "실제 Opus 독립 검토"
+  ],
+  "nonblocking_contract_notes": [
+    "청크 packet에는 공유 U/lambda가 없으므로 별도 artifact 보존 필요",
+    "ProjectedMetric 직접 생성·사후 변경은 immutable 계약이 아님",
+    "명시적 M_r와의 일치는 원래 full raw moment와의 일치가 아님"
+  ]
+}

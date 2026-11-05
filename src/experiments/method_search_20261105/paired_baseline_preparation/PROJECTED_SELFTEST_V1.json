@@ -1,0 +1,288 @@
+{
+  "status": "passed",
+  "synthetic_only": true,
+  "real_capture_reads": 0,
+  "GPU_calls": 0,
+  "model_loads": 0,
+  "effect_experiments": 0,
+  "checks_total": 48,
+  "checks": [
+    {
+      "name": "packet_exact_case0",
+      "passed": true
+    },
+    {
+      "name": "active_rows_exact_case0",
+      "passed": true
+    },
+    {
+      "name": "BF16_restore_exact_case0",
+      "passed": true
+    },
+    {
+      "name": "row_score_before_case0",
+      "passed": true,
+      "max_absolute_difference": 5.551115123125783e-17
+    },
+    {
+      "name": "row_score_after_case0",
+      "passed": true,
+      "max_absolute_difference": 2.851112900457975e-18
+    },
+    {
+      "name": "aggregate_scores_case0",
+      "passed": true
+    },
+    {
+      "name": "input_bytes_preserved_case0",
+      "passed": true
+    },
+    {
+      "name": "shared_state_bytes_case0",
+      "passed": true
+    },
+    {
+      "name": "packet_roundtrip_case0",
+      "passed": true
+    },
+    {
+      "name": "packet_exact_case1",
+      "passed": true
+    },
+    {
+      "name": "active_rows_exact_case1",
+      "passed": true
+    },
+    {
+      "name": "BF16_restore_exact_case1",
+      "passed": true
+    },
+    {
+      "name": "row_score_before_case1",
+      "passed": true,
+      "max_absolute_difference": 2.7755575615628914e-17
+    },
+    {
+      "name": "row_score_after_case1",
+      "passed": true,
+      "max_absolute_difference": 2.078618852562053e-18
+    },
+    {
+      "name": "aggregate_scores_case1",
+      "passed": true
+    },
+    {
+      "name": "input_bytes_preserved_case1",
+      "passed": true
+    },
+    {
+      "name": "shared_state_bytes_case1",
+      "passed": true
+    },
+    {
+      "name": "packet_roundtrip_case1",
+      "passed": true
+    },
+    {
+      "name": "packet_exact_case2",
+      "passed": true
+    },
+    {
+      "name": "active_rows_exact_case2",
+      "passed": true
+    },
+    {
+      "name": "BF16_restore_exact_case2",
+      "passed": true
+    },
+    {
+      "name": "row_score_before_case2",
+      "passed": true,
+      "max_absolute_difference": 5.551115123125783e-17
+    },
+    {
+      "name": "row_score_after_case2",
+      "passed": true,
+      "max_absolute_difference": 0.0
+    },
+    {
+      "name": "aggregate_scores_case2",
+      "passed": true
+    },
+    {
+      "name": "input_bytes_preserved_case2",
+      "passed": true
+    },
+    {
+      "name": "shared_state_bytes_case2",
+      "passed": true
+    },
+    {
+      "name": "packet_roundtrip_case2",
+      "passed": true
+    },
+    {
+      "name": "BF16_tie_dropped",
+      "passed": true
+    },
+    {
+      "name": "zero_lambda_all_ties_drop",
+      "passed": true
+    },
+    {
+      "name": "noquant_signed_zero_bytes",
+      "passed": true
+    },
+    {
+      "name": "grad_enabled_persistent_state_detached",
+      "passed": true
+    },
+    {
+      "name": "owned_metric_storage",
+      "passed": true
+    },
+    {
+      "name": "grad_enabled_inputs_preserved",
+      "passed": true
+    },
+    {
+      "name": "caller_grad_mode_preserved",
+      "passed": true
+    },
+    {
+      "name": "negative_lambda",
+      "passed": true
+    },
+    {
+      "name": "nonfinite_lambda",
+      "passed": true
+    },
+    {
+      "name": "FP64_lambda_rejected_not_silently_converted",
+      "passed": true
+    },
+    {
+      "name": "FP32_basis_rejected_not_silently_converted",
+      "passed": true
+    },
+    {
+      "name": "nonfinite_key",
+      "passed": true
+    },
+    {
+      "name": "no_full_moment_retained",
+      "passed": true
+    },
+    {
+      "name": "stored_BF16_metric_differs_from_ideal",
+      "passed": true,
+      "maximum_difference": 0.00021362304687477796
+    },
+    {
+      "name": "dense_budget_includes_lambda_rank1",
+      "passed": true,
+      "total_bytes": 1014168
+    },
+    {
+      "name": "dense_budget_includes_lambda_rank2",
+      "passed": true,
+      "total_bytes": 1354248
+    },
+    {
+      "name": "dense_budget_includes_lambda_rank3",
+      "passed": true,
+      "total_bytes": 1694328
+    },
+    {
+      "name": "dense_budget_includes_lambda_rank4",
+      "passed": true,
+      "total_bytes": 2034408
+    },
+    {
+      "name": "dense_budget_includes_lambda_rank8",
+      "passed": true,
+      "total_bytes": 3394728
+    },
+    {
+      "name": "FULL_plus_rank1_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "cuda_not_initialized",
+      "passed": true
+    }
+  ],
+  "cases": [
+    {
+      "shape": [
+        17,
+        2,
+        8,
+        3
+      ],
+      "active_rows": 34,
+      "packet_bytes": 198,
+      "basis_bytes": 96,
+      "lambda_bytes": 24,
+      "maximum_score_difference": 5.551115123125783e-17
+    },
+    {
+      "shape": [
+        19,
+        3,
+        12,
+        1
+      ],
+      "active_rows": 57,
+      "packet_bytes": 199,
+      "basis_bytes": 72,
+      "lambda_bytes": 12,
+      "maximum_score_difference": 2.7755575615628914e-17
+    },
+    {
+      "shape": [
+        7,
+        1,
+        4,
+        4
+      ],
+      "active_rows": 7,
+      "packet_bytes": 70,
+      "basis_bytes": 32,
+      "lambda_bytes": 16,
+      "maximum_score_difference": 5.551115123125783e-17
+    }
+  ],
+  "budgets": {
+    "1": {
+      "six_dense_packets_and_shared_U_lambda": 1014168,
+      "lambda_bytes": 48
+    },
+    "2": {
+      "six_dense_packets_and_shared_U_lambda": 1354248,
+      "lambda_bytes": 96
+    },
+    "3": {
+      "six_dense_packets_and_shared_U_lambda": 1694328,
+      "lambda_bytes": 144
+    },
+    "4": {
+      "six_dense_packets_and_shared_U_lambda": 2034408,
+      "lambda_bytes": 192
+    },
+    "8": {
+      "six_dense_packets_and_shared_U_lambda": 3394728,
+      "lambda_bytes": 384
+    }
+  },
+  "wall_seconds": 0.01580538903363049,
+  "max_rss_bytes": 423981056,
+  "threads": 4,
+  "cuda_initialized": false,
+  "torch": "2.6.0+cu124",
+  "source_hashes": {
+    "core.py": "63364f9d4619a231ea5425fcf8e60bf8254bbde738948a952c6604d5432185d9",
+    "projected_metric.py": "17f895a1ae85bfe2f27791bb61157597b2111a4171ced4f68dcfbdb29b56e146",
+    "projected_metric_selftest.py": "bf8a6656542fdaa0966d2db459aba86f634d38583067330eb1318da36a5c4ea0"
+  }
+}

@@ -1,0 +1,64 @@
+Paired 실제 진단을 위한 입력·좌표 연결 점검 — Codex, 2026-11-05
+상태: 소스/manifest만 읽은 연결 명세. 실험 driver·실자료 등록·효과 판정이 아니다. 실제 Opus 검토 자료다.
+
+결론
+기존 p0 보정과 causal 층18/24×청크7 call0/3의 네 지점을 연결할 자료가 manifest에 기록되어 있다. 새 입력을 만들 필요 없이 좌표 계약을 정할 수 있다. 다만 실제 tensor 파일을 열거나 현재 해시를 재검사하지 않았으므로 이번 결과는 파일 내용 재검증이 아니다.
+실행 전에 주의할 차이는 네 가지다. causal native_av는 이미128query만 저장한다. 기존 K-only NSE 분모는 전체 BF16 참조 에너지다. native_av는 V4를 쓰는 base가 아니며 LSE도 저장하지 않았다. causal common.guard는 과거 RUN 시각을 읽으므로 새 진단에서 호출하면 지난 마감 때문에 중단될 수 있다.
+
+1. 입력 파일과 시간 정보
+p0: /home/acorn0415/sfq_data/kv_alllayer_capture/p00_s101/l18_c7.pt 및l24_c7.pt. prompt0/seed101, 청크7 call0, q 전체4680개가 원래 보정 입력이다. manifest의 두 파일 SHA/bytes는 packets.manifest.offline.source와 일치한다. p0 capture_all_layers.py의 현재 소스 hash도 manifest의 producer code hash와 같다.
+평가: causal_obq/capture/l18_read0.pt,l18_read3.pt,l24_read0.pt,l24_read3.pt. seed307의 동일 기존 생성이며 call0 timestep1000, call3 timestep625다. manifest에는40 forward·과거 raw byte equality·residual_tokens0이 기록되어 있다. 이는 원 기록을 읽은 사실이며 새 GPU 확인이 아니다.
+과거 K/V: 각층의 write1..write6, 각각 청크의 마지막 call4/timestep0에 저장한 BF16 값이다. 현재 K/V는 각 read 파일의 k_current/v_current이며 call0/3마다 다를 수 있다. 과거 청크는 항상1..6 순서, 현재는7이다. call0/3의 current를 서로 바꾸지 않는다.
+기존 packet: 층별 c1..c6의 V, R_bf16, R_fp32, O_offline을 연결할 수 있다. O_own_refresh/O_first_reader 파일도 존재하지만 p0 고정 보정 상태와 다른 정보 시점이다. 이 명세는 새 팔로 선택하거나 혼합하지 않는다.
+manifest 목록: causal capture31파일, packets72파일/12행, p0 capture30파일. 선택에 필요한 원자료18개(12write+4read+2Wo), p0두개, 기존3K팔+V48packet의 descriptor를 JSON에 묶었다. 첫 reader Q12파일과latent는 이번 연결에 필요하지 않다. 파일 존재·현재 tensor hash·dtype/shape는 향후 등록 실행에서 다시 확인해야 한다.
+
+2. 세 종류의 통계와 U를 구분
+고정 PSAC 기저용 C_orig: p0 q[0].permute(1,0,2).double()에서 C=Q^TQ/4680. post-RoPE 원좌표, 비중심화 second moment, damping 없음. PSAC의 top-r basis는 이 C에서 p0만으로 외부 선택하고 BF16 저장한다. 평가 Q128 또는 causal first-reader Q로 basis/rank를 다시 고르지 않는다.
+기존 FULL용 H_rot: common.hessian은 p0 q를 먼저 FP32 Hadamard 회전하고 FP64로 Qrot^TQrot/4680을 계산한다. H_damped=H_rot+0.01*mean(diag(H_rot))*I다. factorize는 inverse를 대칭화한 후 upper Cholesky를 FP32로 저장한다.
+PSAC U_basis[12,128,r]와 FULL U_factor[12,128,128]는 이름이 비슷해도 서로 다른 상태다. common.hessian의 기본 반환값은 damped H이므로 PSAC raw moment로 넘기면 안 된다. return_raw=True의 두번째 값도 원좌표 C가 아니라 회전좌표 H_rot다. 회전이 FP32로 수행되므로 C를 H_rot에서 역회전해 bit-identical하게 얻는다고 가정하지 않는다.
+manifest에는 FULL raw/damped H의 hash와 factor byte 수가 있지만 raw original C tensor 자체는 이 범위의 payload로 저장하지 않는다. 향후 p0 q에서 계산할 때 새 고정 hash를 남겨야 한다. 이번에는 어떠한 C/H/기저도 계산하지 않았다.
+
+3. 좌표와 양자화 복원
+capture는 모델 attention 호출 인자를 저장한다. causal_model.py:197~207,251 이후 경로가 causal_rope_apply를 거친 Q/K를 넘기므로 저장 원 K와 Q는 post-RoPE다. V는 해당 위치의 값이다. 새로운 RoPE를 다시 적용하지 않는다.
+common.frames는 K@H를 FP32로 계산한 뒤 BF16으로 만들고, 프레임1560마다 pad8을 붙여[3,98,16,12,128]로 그룹화한다. stored K scale은FP16[3,98,1,12,128]. INT4 unpack 뒤 BF16 code*scale, 각 프레임 pad 제거, FP32 역Hadamard, BF16 변환을 하면 다시 원래 post-RoPE 좌표의 Khat이다.
+paired의 K/Khat/Q와 PSAC 원좌표 U는 이 복원 후 좌표에서 맞춘다. 회전된 중간 z와 원래 K를 섞지 않는다. 공통 직교회전을 추가해도 고정 Gaussian map의 실현값은 달라질 수 있으므로 같은 seed라는 이유만으로 원좌표와 회전좌표 결과를 동일시하지 않는다.
+QKSA만 실제 코드 좌표의 Q@H와 stored scale을 사용한다. K scale의 singleton group 축을 제거해[3,98,12,128]로 만들고 frame_token_steps(frame_tokens1560,group16)에서 프레임마다 pad를 버린다. 여섯 청크는18프레임→28080실제 토큰이다. pad 포함4704토큰/청크를 그대로 과거 길이에 넣으면 안 된다.
+V는 프레임 경계가 아니라4680청크에 pad8, [1,293,16,12,128]이며scale[1,293,1,12,128]. K 경계 정책과 혼동하지 않는다. V는 공통 V4 packet 복원, 현재V는BF16이다. common.restore 자체는 scale 유효성 계약을 검사하지 않으므로 fixed_rotation_control의 restore_v_checked와 K의 finite/positive 검사에 해당하는 검증을 미래 adapter에 유지해야 한다.
+실제 tensor payload: 청크당K4,515,841B, V4,500,480B; 여섯청크KV54,097,926B. manifest artifacts의 .pt 파일 bytes는 torch.save 직렬화 overhead를 포함하므로 cache payload와 다른 수치다.
+
+4. shape와 Q128 선택
+원 파일 Q[1,4680,12,128], write K/V[1,4680,12,128], 현재 포함 전체KV[1,32760,12,128]. 이 shape는 생산/소비 소스의 계약이고 이번에 tensor를 열어 확인한 값은 아니다.
+paired.summarize: 원파일[0].permute(1,0,2).contiguous()로[12,4680,128]. K-only DN에서는 두 feature 차분 모두 같은 Vhat를 곱한다. 원 V를 한쪽에만 사용하면 V오차까지 개입하게 된다. 청크별1..6의 요약을 만들고 현재7은요약하지 않는다. 캡처는 현재 window snapshot이므로 이 검사만으로 실제 스트리밍 append/evict 비용을 측정했다고 할 수 없다.
+PSAC: 원파일[0] 그대로[N,12,128]. QKSA query:[Q,12,128]. paired reader query/출력은[12,Q,128]이며 logZ는[12,Q]. reader 출력은permute(1,0,2)로 원[Q,12,128] head 순서를 복구한 뒤Wo에 넘긴다.
+QIDS=floor(arange128*4680/128). 시작[0,36,73,109,146,182], 마지막[4570,4606,4643]이며 간격이36/37이라 단순 stride36이 아니다. JSON에128개 정수 전체를 기록했다.
+p0/native_av는4680 query 전체가 들어 있어[0,QIDS]를 사용한다. causal/native_av는 capture.py에서 y[:,QIDS]로 이미128개만 저장했으므로[0]만 취한다. causal q 자체는4680개이므로[0,QIDS]를 취한다. native_av에QIDS를 다시 적용하면 잘못된 인덱싱이다.
+
+5. 같은 K-only 참조와 native base
+주 K-only 참조=Attn(Q128, 원본과거K1..6+현재K7, 공통복원V4_1..6+현재BF16V7).
+각 팔은 같은 Q/Vhat/current/mask/Wo를 쓴다. FULL O_offline도 반드시 이 참조로 점수화한다. paired base=선택한 기본 Khat 과거+현재BF16 K와 같은 Vhat의 attention이다. 보정은 과거 요약만 적용하지만 logZ에는 현재 토큰까지32760개 전체를 포함한다.
+저장 native_av는 원래 BF16 K/V attention이며 V4를 쓰는 base나 K-only 참조가 아니다. CPU 대 native floor용으로만 쓴다. LSE는 캡처되지 않았다. 향후 CPU base 계산이 FP32 logits/softmax이면 같은 logits에서 logsumexp를 함께 얻어야 한다. 다른 dtype/마스크/토큰 집합의 logZ와 Ohat를 섞으면 안 된다. paired 내부 FP64 작업 때문에 base attention 자체를 슬쩍FP64로 바꾸면 기존 anchor와 달라진다.
+기존 old.attn은FP32 query 블록32개, [H,Q,K] bmm/softmax/bmm이며 LSE를 반환하지 않는다. 같은 숫자 경로로 output/LSE를 연결하는 새 adapter는 아직 없다. native GPU FA2 LSE 경로의 가능성은 별도root 문서에 있지만 이 CPU 소스 점검이 실행 동등성 검증을 대신하지 않는다.
+
+6. W_o와 bias, anchor의 재사용 범위
+native_av와 old.attn 출력은 W_o 이전 head output이다. 원 head순서[Q,12,128]를[Q,1536]으로 펴고 W_o.T를 곱한다. 기존 metric은 delta=(candidate-reference).reshape(Q,-1)@Wo.T를 FP32로 계산한 뒤 제곱합만FP64로 누산한다. head별 오차를 먼저 제곱해 더하면 W_o의 교차항이 사라지므로 같은 지표가 아니다. bias는 차분에서 상쇄되므로 잔차에 더하지 않는다. 참조 에너지에는 ref@Wo.T+bias가 들어간다.
+주의: fixed_rotation_control의 arms.*.k_only_reference.sse는 K-only 참조를 사용하지만 nse의 분모인 reference_energy는 원BF16 K/V 참조로 계산됐다. 그러므로 기존 K-only SSE는 입력/packet/QIDS/Vhat/Wo/산술이 정확히같은 경우 anchor로 재사용할 수 있다. 새NSE를 K-only 출력에 정규화하려면 해당 참조 에너지를 새로 구해야 한다. 또는 기존 분모를 명시적으로 유지하고 이름을 제한한다. 이전 k_only_reference.nse를 설명 없이 새로운 K-only-normalized NSE로 옮길 수 없다.
+이전 전체BF16 SSE, causal GPU native output점수, 다른 query집합/FP64 base 점수는 새 K-only 팔의 직접 anchor가 아니다. 고정17회전 R/U state도 소스상 저장돼 있지만 이번에는 그.pt/RESULT를 열지 않았다. 사용하려면 이전 결과의 state artifact hash에 묶어야 하며 평가 입력으로 다시 선택하지 않는다. p0/causal Wo의 동일성도 실제 사용 전에 확인할 사항이지 이번 metadata만으로 증명하지 않았다.
+
+7. 의미 있는 noquant 검사
+(a) paired: 캡처 adapter가 같은 post-RoPE K를 original/decoded 양쪽에 넣으면 Dz/DN0이고 output이 주어진 base Ohat와 원소 bytes로 같아야 한다. H/Q/Dv 축을 바꾸고도 우연히0요약만 통과할 수 있으므로 base attention/shape/현재범위도 따로 비교한다.
+(b) PSAC: Khat=K인 연결에서 보정 packet은0행이며 복원bytes가 K와 같아야 한다. QKSA Δ0은 수식상 항등 검사이며 실제 양자화 packet의0 scale을 허용하는 근거가 아니다.
+(c) 전체 adapter: 양자화를 끈 K, 같은Vhat 및 현재범위로 모든 팔이 동일한 CPU K-only 참조를 내야 한다. Wo에 이르기 전과 뒤를 구분한다. native GPU BF16 출력과 CPU FP32 출력은 기존floor가 있으므로 무조건bitexact를 요구하거나 불일치를 quantization효과로 세지 않는다.
+(d) 회전→BF16→역회전만의 오차는 별도다. Hadamard를 왕복했다고 원K와bitexact인 것은 아니며, 기존고정회전 noquant의1% 기준은 그 이전등록의범위다. 새진단의수치허용오차를이번문서에서사후확정하지않는다.
+이들은 검사 계약이며 이번 턴에 실제 입력 noquant 실행이나 새로운 gate 등록을 수행한 것이 아니다.
+
+8. import와 지난 마감의 구분
+이번에는 helper를 한 개도 import하지 않고 소스만 읽었다.
+causal_obq/common.py: top-level에서는 Torch와 작은CPU QIDS만 준비한다. import 자체가 oldRUN을 읽거나guard를 호출하지 않는다. hessian/frames/pack/restore/codes_obq도guard를 부르지 않는다. 하지만 common.guard()를 부르면 기존 causal_obq/RUN.json의started_utc와현재시각을비교해1800초를검사하므로 지금새진단은지난마감으로막힐수있다. common.check_lock()/capture/replay 진입점은 이전실험권한과폴더에묶여있어새실험driver로재호출할대상이아니다.
+fixed_rotation_control/diagnose.py를 import하면 CUDA_VISIBLE_DEVICES='', OMP/MKL threads, torch threads와grad flag, sys.dont_write_bytecode, transitive sys.path가변한다. 파일결과를자동로드하거나worker를자동실행하지는않는다. START=None, rotation BEGIN=None, old RUN_START=None이어서freshimport만으로과거UTC마감에걸리지는않는다. 다만fixed guard의디스크검사대상은옛fixed폴더이고old worker/check_lock의실행문맥은재사용하면안된다.
+transitive fair_comparison_codex/diagnose.py는import시START=time.monotonic()을만든다. 그guard를호출하는함수를장시간살아있는프로세스에서쓰면import후45분기준으로중단될수있다. 새진단의통합시간상한과같다고가정하지않는다. kvq/__init__.py는quant와store도불러오지만이번에읽은top-level에는GPU실행이나tensor파일로드가없다. Python.pyc 생성은caller의dont_write_bytecode에의존하므로소스에명시적파일쓰기없다는것과모든import의파일부작용0은구분한다.
+새등록에서는순수helper와새로소유한타이머/출력경로를구분해야한다. 과거guard를무시하도록기존소스를고치거나이번에임의monkeypatch하지않았다. 실행driver/등록/새timer는작성하지않았다.
+
+감사 범위와 보존
+모든 .pt 파일을 열지 않았고 tensorhash 재검사0, 통계/효과계산0, 모델/GPU0, helper실행0이다. JSON에서복사한tensor SHA는원manifest의주장으로표시했다. 실제파일검증은향후허용된등록실행의할일이다. 기존p0/causal은이미개발에사용한입력이므로새독립보류자료로부르지않는다.
+PAIRED_INPUT_BINDING_CODEX.json SHA 198ba147a14d165da749e82d822bc3c1fe70befd7101ecf315f666cbde51a2b5
+JSON은source/manifest SHA, 경로·선언된artifact SHA/bytes, p0/H provenance, 128query인덱스와shape/참조계약을담는다. 이번문서의완료는실제방법성공이나Opus검토완료를뜻하지않는다.

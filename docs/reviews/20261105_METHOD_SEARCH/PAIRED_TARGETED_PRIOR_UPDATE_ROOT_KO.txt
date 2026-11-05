@@ -1,0 +1,17 @@
+Paired 준비 중 한정 선행 대조 — root, 2026-11-05
+범위: 검색4개와 관련1차출처3개만 확인. 전체 신규성 조사나 새 후보 추천이 아니다. 실험/코드 실행0.
+검색: "KV cache" quantization "kernel" "difference" correction; attention quantization "random features" "control variate"; "KVLinC" "residual" quantization; "quantization" "paired" "attention" correction cache.
+
+유지할 구분
+KVLinC는 이미 양자화 attention의 분자·분모에 학습 보정 상태를 더한다. 이번에 원문3.2와3.3의 해당 서술을 재확인했다. 작은 보정 상태, 기존 attention 유지, 분자·분모 동시 보정을 자체 신규성으로 쓰지 않는다. 공통 feature를 원본/복원에 적용한 차이가 추가 가치를 주는지는 별도 비교 대상이며, 학습형으로 나아가면 base-aware signed 대조도 필요하다.
+https://arxiv.org/html/2510.05373v1
+
+EVA는 random-feature attention을 control variate 관점으로 다룬다. 이번에는 공식 arXiv 초록만 재확인했으며 전문을 새로 읽었다고 하지 않는다. 시도한 arXiv HTML v3는404, OpenReview PDF는browser verification으로 끝났다. 기존 저장소의 선행 검토와 별도로 이번 확인 범위를 제한한다. shared feature나 control-variate라는 이름만으로 차별성을 주장하지 않는다.
+https://arxiv.org/abs/2302.04542
+
+WitCert는 KV 양자화의 실행 중 위험 계측·gating을 다루며, 원문은 write-time residual witness 및 고정밀 값의 page-in 비용까지 논의한다. 이번 확인은 초록/서론과 fallback 관련6.3.4~6.3.6 서술이다. 증명·공개코드·시스템 수치 재현은 하지 않았다.
+https://arxiv.org/html/2607.28699v1
+우리 fallback은 수치적으로 위험한 보정 계산을 버리고 이미 양자화된 base_output으로 돌아가는 동작이다. BF16 원본을 다시 읽어 품질을 복구하는 동작이 아니며 attention 오차의 인증 상한도 없다. 분모가 양수이거나 fallback이 적다는 것을 품질 보증으로 해석하지 않는다. 이 구분은 외부 연구의 성능 평가가 아니라 현재 코드 계약에 대한 판단이다.
+
+결론
+이번 좁은 검색에서 paired 특정 구현의 동일 선행을 확정하지 못했으나, 이것은 부재 또는 신규성 증거가 아니다. 기존 후보 선택을 변경하지 않는다. 원리·안정화·fallback 자체는 방법론 기여로 세지 않고 실제 효과·동일 자원 강한 기준선·독립 보류 입력 검증을 계속 요구한다. 이 검색은 여기서 종료한다.

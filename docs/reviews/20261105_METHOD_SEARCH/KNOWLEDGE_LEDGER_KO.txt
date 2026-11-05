@@ -295,3 +295,24 @@ paired core 수치수정은한정독립재검토통과. 강한기준선의rawM�
 전체pilot stop_quality,기존후보종료,원임계값은모두유지한다. 실제Claude는사용자지정21:50이후Opus5.5확인전까지호출하지않는다.
 
 상태: 국소효과는추가강한회전대조에서도남았으나 전체생성pilot는stop_quality. paired와기준선은합성구현수정/검토단계이며실제효과미측정. 강한기준선·실용효과·신규성의종합목표는미달이며연속연구목표active.
+
+E022 [projected PSAC 합성 준비와 입력 연결의 한정 독립 검토]
+별도 projected_metric.py는 저장 U_BF16/lambda_FP32가 정의하는 M_r로 실제 BF16 복원 후 행을 선별한다.
+48합성검사 통과, 명시적 같은 M_r의 full-M 계산과 최대 행 점수 차이5.55e-17. 원래 rawM와 동등하다는 검사가 아니다.
+독립 Codex는 소스/저장결과/산술을 확인해 필수 수정 오류를 발견하지 못했다. 검사를 재실행한 검토는 아니다.
+rank3추가tensor/packet1,694,328B; FULL+rank1 1,800,600B. 이는 metadata/전체peak/작업공간을 포함한 총메모리가 아니다.
+청크packet의 왕복검사에 공유 U/lambda 저장·재로드는 포함되지 않았다. 실제 연결에서 별도 artifact로 묶고 보존해야 한다.
+root는 작은 파일 manifest17항목의 현재SHA를 확인했으며 모두일치. 실자료/GPU/방법효과0, 실제Opus미완료.
+입력연결 Codex는 소스/manifest만 읽어 원좌표rawM와 회전dampedH, paired/PSAC축, current경계를 정리했다.
+causal native_av는 이미Q128이며 BF16 V경로이고 LSE없음. V4공통base로 재사용하거나 QIDS를 다시 적용하지 않는다.
+기존K-only NSE의 분모는 전체BF16참조에너지였으므로 새K-only정규화NSE로 그대로 옮기지 않는다.
+원capture파일을 다시 읽어 shape/해시/수치가 맞는지 확인한 작업은 아니며 그 검증은 향후등록실행에 남는다.
+
+D012 [실자료 전 비교 제안 구체화, 등록 전 실제 Opus 검토 대기]
+PAIRED_DIAGNOSTIC_PROPOSAL_V2_ROOT_KO.txt는 R_fp32 위 paired rank32/seed17,29,43 하나를 판별하는 명세다.
+FULL·고정회전·한headK8·projectedPSAC·QKSA와 단순결합을 같은K-only/post-Wo에서 비교하고 full-M는 별도비용점으로 남긴다.
+cap정수는 실제bit기준선의추가metadata형식을 정한뒤 실자료접근전에LOCK한다. 결과뒤상한확대는없다.
+4개개발endpoint×3seed 각각강한등록cap내대조보다SSE10%감소/fallback0.1%이하를 제안하며 통과해도독립보류성공이아니다.
+45분CPU4/RSS8GiB/새파일2GiB/새GPU0 제안. 실제Opus검토와최종연결검사/LOCK전실자료실행없음.
+한정선행검토는KVLinC/EVA/WitCert와의기존아이디어·fallback차이를기록하고종료했다. 동일선행을못찾은것을신규성으로쓰지않는다.
+이준비는전체pilot의stop_quality나기존후보종료판정을변경하지않는다. 실제효과미측정, 연속연구목표active.

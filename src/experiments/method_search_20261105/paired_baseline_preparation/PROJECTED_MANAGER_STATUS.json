@@ -1,0 +1,19 @@
+{
+  "task": "projected_psac_metric_preparation",
+  "status": "synthetic_projected_metric_preparation_ready_pending_root_and_actual_Opus_review",
+  "updated_kst": "2026-11-05T21:31:10.267696+09:00",
+  "source_editing_stopped": true,
+  "synthetic_checks": 48,
+  "real_capture_reads": 0,
+  "GPU_calls": 0,
+  "new_effect_experiments": 0,
+  "actual_Opus_review_completed": false,
+  "final_ready_path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/PROJECTED_FINAL_READY.json",
+  "final_ready_sha256": "33ee6f3e735b33ccf1533bdd076a0d7cd9fd99a0ea2cad5ee6d8e4b31dbf0471",
+  "files": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/projected_metric.py": "17f895a1ae85bfe2f27791bb61157597b2111a4171ced4f68dcfbdb29b56e146",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/projected_metric_selftest.py": "bf8a6656542fdaa0966d2db459aba86f634d38583067330eb1318da36a5c4ea0",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/PROJECTED_SELFTEST_V1.json": "5829e84fee6b546f968996570113e05aec7ca4157558dd6ad9864423800b5995",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/PROJECTED_PREPARATION_KO.txt": "0bffd4d5ba2513b3ebe38dd1749f49119cf0ad30599548be937356c5e8e04ee2"
+  }
+}

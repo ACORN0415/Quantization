@@ -1,0 +1,45 @@
+투영 metric 독립 Codex 검토 — 합성 준비 범위
+
+판정: 검토한 구현·정의·저장 산술 사이에 단계 진행을 막는 모순은 찾지 못했다. 이 판정은 합성 준비 코드에 한정된다. 실제 효과, 강한 대조로서의 충분성, 신규성, GPU 속도, 전체 peak memory를 확인한 것이 아니다. 실제 Opus 검토는 미완료이며 이 검토가 대신하지 않는다.
+
+범위
+projected_metric.py와 PROJECTED_SELFTEST_V1.json/PROJECTED_PREPARATION_KO.txt를 읽었다. 기록의 비교가 무엇을 검사하는지 확인하기 위해 projected_metric_selftest.py와 동결 core.py의 packet/PSAC 함수도 읽었다. 저장된 48건의 pass 여부와 소스 해시, 바이트 산술만 독립 재계산했다. 48건 전수 검사 재실행0, 신규 torch 합성 실행0, helper import0, 실제 tensor 캡처 로드0, GPU0, 모델0, 효과 검사0, 기존 소스 수정0, 커밋0이다. 시작 시각 2026-11-05T12:37:14Z; 8분 상한 안에 완료했다.
+
+1. full-M와의 관계
+실제 목적함수는 저장 BF16 U와 저장 FP32 lambda가 정의하는 M_r = U diag(lambda) U^T에 대해 E M_r E^T이다. 코드의 (EU)^2·lambda는 같은 저장값의 명시적 M_r와 실수 산술상 같다. 원래 p0 full raw moment와 같은 식이라는 뜻이 아니다. rank 절단, BF16 U, FP32 lambda 때문에 일반적으로 서로 다르며 U의 직교성도 저장 후에는 정확하지 않다. r=D여도 원래 full moment와 정확히 같다고 주장할 수 없다. projected metric은 버린 방향의 손상을 놓칠 수 있으므로 행 선택·실제 attention 오차·보류 입력 개선이 full-M와 같다는 결론은 나오지 않는다. 준비 문서는 이 제한을 명확히 적었다.
+
+2. 두 공유 상태의 graph·alias·보존
+prepare_metric은 U와 lambda 각각 detach().clone().contiguous()를 수행한다. no_grad 장식과 validate의 requires_grad/grad_fn 거부로 반환한 공유 상태의 autograd graph 보존을 막는다. encode/restore도 no_grad 경로다. 입력 tensor와 공유 상태 사이 저장 alias가 없는 것은 소스와 기존 owned_metric_storage 검사로 뒷받침된다. dtype을 몰래 바꾸지 않으며 유한·음이 아닌 FP32 lambda와 BF16 U를 검증한다. encoder는 full moment를 보유하지 않는다.
+
+다만 이 계약은 prepare_metric을 사용해 만들어진 상태에 관한 것이다. ProjectedMetric의 직접 생성은 외부 alias를 허용하고, 생성 후 tensor 자체를 변경하지 못하게 봉인하는 클래스도 아니다. 현재 보고서는 immutable state라고 주장하지 않아 결함으로 보지 않는다. 실제 연결에서는 준비 후 U/lambda를 바꾸지 않고 출처·열 순서를 고정해야 한다.
+
+청크 PsacPacket의 직렬화는 계수·scale·index·header만 포함한다. 공유 U와 lambda는 이 청크 packet에 들어가지 않는다. 이는 공유 상태 설계에 맞지만, 현재 packet_roundtrip 검사는 U/lambda를 같은 메모리에 유지한 상태의 청크 왕복이다. U와 lambda까지 저장하고 다시 읽는 완전한 재시작 검사를 통과했다고 표현해서는 안 된다. 실제 저장 manifest에서는 U/lambda를 별도 artifact로 바인딩해야 한다. decode 자체에는 U만 필요해도 encoder의 동일한 row-filter를 재현하려면 lambda도 필요하다. 두 tensor 바이트는 현재 예산에 모두 포함되어 있으며, Python/파일 포맷 metadata·복제본·allocator 비용은 별도다.
+
+3. BF16 행 필터와 명시적 M_r 대조
+계수 생성과 INT8 quantize_rows, FP16 행별 scale, clipping, packet layout 선택은 동결 core와 동일 함수/산술이다. 필터는 양자화 계수로 correction을 만들고 실제 BF16(Khat+correction)을 거친 뒤 error를 다시 계산한다. 따라서 BF16에서 사라지는 이상적 FP64 개선만으로 행을 보존하지 않는다. after < before로 정확 동점도 제거하며 zero lambda는 전부 동점으로 제거한다. 복원은 같은 core를 사용하고 0 계수 행의 signed-zero 보존도 유지한다.
+
+selftest는 저장된 U/lambda로 명시적 M_r를 만든 뒤 기존 full-M encode에 전달한다. 이 비교는 '같은 M_r를 인자로 준 일반 full-M 계산과 projected 계산의 일치'를 확인하는 적절한 구현 대조다. 원래 raw p0 full-M와 같은 것을 확인하는 대조는 아니다. 세 형상에서 packet/활성 행/BF16 복원은 정확히 같고, 행 점수는 atol 1e-10, rtol 1e-11로 비교했다. 최대 차이 5.551115123125783e-17은 저장된 기록이다. 공유하는 양자화·복원 함수의 정확성을 이 검사만으로 독립 증명하지는 않지만, 이번 변경 범위인 목적함수의 별도 행렬식 대조에는 맞는다.
+
+유한 정밀도에서 명시적 M_r 방식과 EU 방식의 연산 순서가 다르므로 거의 동점인 모든 입력의 행 선택까지 동일하다는 보장은 없다. 보고서는 이 범위를 이미 제한했다. 새로운 수치 허용오차나 실자료 gate를 정할 이유는 발견하지 못했다.
+
+4. 바이트 산술
+H=12,D=128,N=4680,rank1의 한 dense packet:
+28 + 4680*12*(1 byte code + 2 byte row scale) = 168,508B.
+여섯 packet: 1,011,048B.
+공유 U: 12*128*1*2 = 3,072B.
+공유 lambda: 12*1*4 = 48B.
+rank1 합계: 1,014,168B.
+FULL FP32 factor: 12*128*128*4 = 786,432B.
+FULL+rank1: 1,800,600B; 명시한 cap 1,806,336B와 차이 5,736B.
+
+수치는 정확하다. rank2/3/4/8 합계도 각각 1,354,248 / 1,694,328 / 2,034,408 / 3,394,728B로 저장 기록과 일치한다. 이는 공통 기본 KV payload에 추가되는 해당 tensor/packet 계수의 산술이며 전체 캐시 또는 GPU peak 측정값이 아니다. FULL factor와 PSAC basis는 서로 다른 상태이므로 각각 세는 것이 맞다. raw full moment를 계속 보유한다면 추가 1,572,864B도 발생한다. 추가 Hadamard·고정 회전 상태·host/device 복제·계수 투영 및 복원 workspace를 누락한 실제 peak 주장을 해서는 안 된다. 보고서는 이 제외 범위를 명시했다.
+
+마무리
+현 소스를 수정할 필수 오류는 발견하지 못했다. 공유 상태의 완전한 저장/재시작 및 실제 메모리 수명은 앞으로 연결 코드에서 확인할 항목이며, 이번 합성 준비가 이미 완료했다고 주장할 항목이 아니다. 기존 FULL pilot의 stop_quality 및 실제 Opus 미완료 상태는 그대로다.
+
+검토 시점 파일 SHA256
+projected_metric.py 17f895a1ae85bfe2f27791bb61157597b2111a4171ced4f68dcfbdb29b56e146
+projected_metric_selftest.py bf8a6656542fdaa0966d2db459aba86f634d38583067330eb1318da36a5c4ea0
+core.py 63364f9d4619a231ea5425fcf8e60bf8254bbde738948a952c6604d5432185d9
+PROJECTED_SELFTEST_V1.json 5829e84fee6b546f968996570113e05aec7ca4157558dd6ad9864423800b5995
+PROJECTED_PREPARATION_KO.txt 0bffd4d5ba2513b3ebe38dd1749f49119cf0ad30599548be937356c5e8e04ee2

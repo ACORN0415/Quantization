@@ -1,0 +1,44 @@
+{
+  "status": "synthetic_projected_metric_preparation_ready_pending_root_and_actual_Opus_review",
+  "created_kst": "2026-11-05T21:31:10.267696+09:00",
+  "source_editing_stopped": true,
+  "scope": "separate baseline adaptation, synthetic only",
+  "real_capture_reads": 0,
+  "GPU_calls": 0,
+  "model_loads": 0,
+  "effect_experiments": 0,
+  "actual_claude_review_complete": false,
+  "real_data_execution_authorized": false,
+  "synthetic_checks_passed": 48,
+  "files": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/projected_metric.py": "17f895a1ae85bfe2f27791bb61157597b2111a4171ced4f68dcfbdb29b56e146",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/projected_metric_selftest.py": "bf8a6656542fdaa0966d2db459aba86f634d38583067330eb1318da36a5c4ea0",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/PROJECTED_SELFTEST_V1.json": "5829e84fee6b546f968996570113e05aec7ca4157558dd6ad9864423800b5995",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/PROJECTED_PREPARATION_KO.txt": "0bffd4d5ba2513b3ebe38dd1749f49119cf0ad30599548be937356c5e8e04ee2"
+  },
+  "frozen_full_M_dependency": {
+    "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/core.py",
+    "sha256": "63364f9d4619a231ea5425fcf8e60bf8254bbde738948a952c6604d5432185d9"
+  },
+  "preserved_existing_files": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/core.py": "63364f9d4619a231ea5425fcf8e60bf8254bbde738948a952c6604d5432185d9",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/selftest.py": "6adfed183fb614726e52cc24f72a91878ea2a56d7ed35b66f60320bc55e9b7de",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/SELFTEST_V3.json": "509ac4c11e6e6d746beed3c6bad1f32d890fbd718f37587d4f89b7c3d7b6f248",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/AMENDMENT_V2_KO.txt": "346b7c74a87e593d13768e01d27c528a7fb778167c3ef54b5c0e7c383e2b8c09",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/FINAL_READY.json": "2f4d1d7e181354b9f2f6996ff62c7bb99e614088e539828c58888a3150075c3e",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/core.py.before_amendment_v2.txt": "d45fab4430d19dba9bb8b68de4f86b90481406b586bfc4cd096556e1c17d3fef",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/selftest.py.before_amendment_v2.txt": "0e1bcb1ab9a1b872fb9bc624801b26e6361c861013ecb02dcc21035fcdb13db7",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/PRESERVED_BEFORE_V2.json": "3317d6cdc90e62361ef735daf0b143b87de17fb77601b452a81ce5b11aa47dc7",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/MANAGER_STATUS_BEFORE_V2.json": "0fb002e8a5566104bc86a077555ca2c640131763519539d4ccd674aa96d3f413",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/SELFTEST.json": "209c57f9094c054a95de7b3ec7c97c237b95655d3f826fa3c7cf43e206a17b66",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/SELFTEST_V2.json": "70cfb4130af0779475aaab9791a3808674e3f253597de373336f83c5892e59e1",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/PREPARATION_KO.txt": "e45ee5d150047138a8fff8b8a4fae1f8f1e26e3877af476387ba513ef4d1733f",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/paired_baseline_preparation/SOURCES.json": "8c356dc2a13f42141d5399b20a4488b0421abb34def7e9ab09a1dbf1d7df8a2e"
+  },
+  "unresolved": [
+    "actual Opus decision whether to include this approximation",
+    "held-out equivalence to full-M not tested",
+    "real GPU allocator/workspace/transfer cost not measured",
+    "real data provenance/rank/arms/gates not registered"
+  ]
+}
