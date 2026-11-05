@@ -1,0 +1,43 @@
+{
+  "status": "code_preparation_only_no_network_asset_transfer",
+  "start_epoch": 1793905882.3160875,
+  "deadline_epoch": 1793906782.3160875,
+  "question": "Prepare small standard-library bounded downloader for two pinned full ZIPs with exact SHA256, and safe explicitly selected extraction. Root alone launches future acquisition after loader manifest and actual code review.",
+  "inputs": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_asset_metadata_preparation/RESULT.json",
+  "limits_preparation": {
+    "wall_seconds": 900,
+    "CPU_threads": 2,
+    "RSS_bytes": 1073741824,
+    "output_bytes": 8388608,
+    "real_asset_downloads": 0,
+    "GPU": 0,
+    "tensor_model_loads": 0,
+    "installation": 0
+  },
+  "planned_future_execution_limits_not_authorized": {
+    "wall_seconds": 1800,
+    "HTTP_body_bytes": 4294967296,
+    "extracted_member_bytes": 8589934592,
+    "disk_bytes": 12884901888,
+    "RSS_bytes": 2147483648,
+    "CPU_threads": 2,
+    "GPU": 0,
+    "archives": 2,
+    "tensor_model_loads": 0,
+    "installation": 0
+  },
+  "contract": [
+    "Require root-approved immutable manifest of URLs/revision/size/LFS SHA/selectors/destination; no embedded future authorization.",
+    "Full archive stream .part to task directory; verify exact size and SHA before atomic final rename. No implicit retry/resume. Preserve failure .part within cap.",
+    "Before extraction inspect declared totals/path traversal/absolute paths/symlink/encryption; only manifest-authorized members under asset directory, exclude __MACOSX and junk. Never extractall.",
+    "Stream selected members with CRC and exact uncompressed count; record member SHA/path/size. Maximum12GiB combined disk and8GiB extracted,4GiB downloaded and root external1800s guard in future.",
+    "No payload deserialization/import/execution. Uncompressed headers untrusted limits enforced while writing. Local tiny ZIP fixtures only for code checks, no network even test.",
+    "Use standardlib urllib/zipfile; keep utility small. Do not create a generalized download framework or extra methods."
+  ],
+  "pair": [
+    "method_gap_codex writer",
+    "existing actual Opus2 source reviewer"
+  ],
+  "writer_scope": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_asset_acquisition_preparation",
+  "deliverable": "acquire_assets.py, READY with source SHA and toy validation, concise source/contract report. No real model/network acquisition until root."
+}

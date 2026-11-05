@@ -1,0 +1,30 @@
+{
+  "status": "source_and_local_metadata_only",
+  "start_epoch": 1793905882.3160875,
+  "deadline_epoch": 1793906482.3160875,
+  "question": "Which exact PushT model/config/val/train files and extra assets does one FP32 planning smoke require? Does checkpoint+hydra+val suffice? Resolve loader normalization tokens/eager RAM and import dependencies, not novel-method question.",
+  "code_commit": "be738be37a0535f75f541a6c1201ce19f95499b0",
+  "upstream_commit": "0a9492fa12044b852ae9e001cc74604b79c8bb0c",
+  "inputs": [
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_asset_metadata_preparation/RESULT.json",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_planning_choice_review/ROOT_DECISION.json"
+  ],
+  "limits": {
+    "wall_seconds": 600,
+    "source_files_max": 8,
+    "CPU_threads": 2,
+    "RSS_bytes": 1073741824,
+    "output_bytes": 4194304,
+    "GPU": 0,
+    "model_dataset_payload_downloads": 0,
+    "model_tensor_loads": 0,
+    "installation": 0
+  },
+  "allowed": "Pinned raw loader/dataset/preprocess/config source and local package metadata/find_spec without importing model; HF JSON metadata only if needed. No full new paper review.",
+  "pair": [
+    "fair_comparison_codex",
+    "existing actual Opus1"
+  ],
+  "deliverables": "Exact required file selectors and why; tokens/train stats necessity; additional pretrained weights/imports; minimal adapter/equivalence concerns and go/no-go acquisition plan. Independent reports.",
+  "writer": "Own named report only; parent one helper for package inventory allowed shared limits; no original modifications/commit."
+}
