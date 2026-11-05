@@ -1,0 +1,28 @@
+{
+  "observed_epoch": 1793906139.3715868,
+  "interpreter": "/home/acorn0415/sfq_data/env/bin/python",
+  "method": "importlib.metadata only; no package/model/torch import",
+  "distribution_versions": {
+    "torch": "2.6.0+cu124",
+    "torchvision": "0.21.0+cu124",
+    "hydra-core": null,
+    "omegaconf": "2.4.0",
+    "gym": null,
+    "gymnasium": null,
+    "pymunk": null,
+    "decord": null,
+    "av": "13.1.0",
+    "opencv-python": "4.11.0.86",
+    "imageio": "2.38.0",
+    "einops": "0.8.2",
+    "timm": "1.0.30",
+    "transformers": "5.20.2",
+    "wandb": null,
+    "h5py": null,
+    "dill": "0.4.1",
+    "torchao": null,
+    "mujoco": null
+  },
+  "disk_available_bytes": 103014715392,
+  "limits": "Missing named distribution does not prove module unavailable; no API/runtime/dependency compatibility test and no installation."
+}
