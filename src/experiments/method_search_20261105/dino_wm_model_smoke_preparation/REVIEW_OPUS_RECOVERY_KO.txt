@@ -1,0 +1,54 @@
+DINO-WM 오프라인 FP32 model-connection smoke — 실제 Claude Opus 5.5 재연결 독립 검토 (1회)
+
+실행 정보
+- 모델: claude-opus-5-5 (Opus 5.5, 실행 환경이 보고한 실제 식별자). 원 검토자가 아니며 원 Opus 검토를 대신 완료했다고 주장하지 않는다.
+- 시작 cwd: /home/acorn0415. 대상 프로젝트: /home/acorn0415/Quantization.
+- 수신 기록 2026-11-06T06:00:08+09:00, 본 문서 작성 완료 약 06:04+09:00 (600초 창 및 hard outer epoch 1793913303 이내).
+- 근거: ROOT_OPUS_REVIEW_RECONNECTION.json / ROOT_OPUS_LAUNCH_RECEIPT.json(session claude_7060cacf_3b35_45d4_b165_b5a551ca6db0).
+  Task/Dispatch ID는 이 세션에 전달되지 않았다. 초기 prompt를 작업 명세로 사용했고, 회신은 지정된 run:run_34feb04fa61d로만 한다.
+- 이전 actual Claude의 최종 코드 검토 미완료·기한 만료 사실은 그대로 유지된다. 이 문서는 별도 재연결 검토이며 소급 완료가 아니다.
+- native 하위 에이전트 0개(단일 29KB 파일, 본인이 직접 수행). 실행/torch·모델 import/pickle·tensor 로드/네트워크/설치/GPU/원코드 수정 0.
+
+읽은 범위
+- Quantization/AGENTS.md, docs/CLAUDE_REVIEW_PROTOCOL_KO.md 전체.
+- model_smoke.py 전체 409행 (sha256 3558180bd58aad11bea0bdb72df57ab1a6db3dd3f03c64c58519b31347ef3e2f 직접 재계산 일치).
+- ROOT_SPEC.json, READY_CODEX.json, REPORT_CODEX_KO.txt, ROOT_OPUS_REVIEW_RECONNECTION.json 전체.
+- dino_wm_runtime_setup_preparation/ROOT_APPROVED_MANIFEST.json 앞부분(약 2.5KB; 상태·environment_guard·approved_stages=acquire/install/imports).
+- root가 취득한 원 source(텍스트 읽기만): /home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/
+  QuantWM/models/{visual_world_model.py, vit.py(구조 grep), vqvae.py 앞 12행, proprio.py grep, dino.py 앞 36행},
+  dinov2_repo/dinov2/{models/vision_transformer.py grep, layers/attention.py grep, hub/backbones.py _make_dinov2_model}.
+  visual_world_model/vit/vqvae/proprio 4개 파일 sha256을 직접 재계산해 EXPECTED_QSHA와 일치 확인.
+- dino_wm_runtime_preparation/SAFE_PICKLE_METADATA.json에서 top-level key 이름 7개 존재만 grep.
+- 읽지 않음: MANIFEST_EXAMPLE_UNAPPROVED.json 본문(시간 우선순위로 미독; 코드상 status/approval/null SHA로 거부되는 경로만 코드에서 확인),
+  SOURCE_API_CHECK_HELPER.json, 같은 폴더의 REVIEW_OPUS_FOLLOWUP_KO.txt(독립성 유지를 위해 의도적으로 미독), plan.py, DINO weight·checkpoint 바이트.
+
+1. 판단: 타당 (source 변경 0 기준 차단 결함 없음). 남은 것은 실행해야만 알 수 있는 실측 위험이며 코드는 이를 phase별로 실패시키도록 되어 있다.
+
+2. 항목별 확인 (직접 대조한 것)
+- models namespace adapter: sys.modules['models']에 __path__=[qroot/models], spec(is_package, submodule_search_locations) 명시 → models/__init__.py(양자화 import) 미실행. import 전 충돌 namespace 거부, import 후·checkpoint 복원 후·종료 시 project_module_paths로 실제 __file__ 경로+SHA 재검증. 타당.
+  vqvae.py의 `import distributed_fn`은 sys.path 선두 qroot로 해석되며 required 목록에 포함. '..' append 부작용은 torch.load 전에 sys.path 재구성으로 제거. 타당.
+- 오프라인 DINO: DINO_KWARGS가 hub/backbones.py _make_dinov2_model 기본값(img_size518, patch14, init_values1.0, ffn mlp, block_chunks0, reg0, antialias False, offset0.1)과 일치, vit_small 시그니처에 in_chans/channel_adaptive 존재.
+  OfflineEncoder는 원 DinoV2Encoder.forward(forward_features[feature_key], latent_ndim2이면 unsqueeze 없음)와 name/emb_dim/patch_size/latent_ndim 계약 동일. VWorldModel의 `"dino" in self.encoder.name` 분기를 name='dinov2_vits14'로 충족. hub 함수 deny + socket 차단. 원 hub 실행이 아닌 adapter로 기록됨. 타당.
+  weights_only=True + plain tensor dict 검사 + strict=True. 타당.
+- checkpoint 복원: 전체 Accelerate pickle을 map_location='cpu', weights_only=False로 1회, manifest의 trust policy 문자열·SHA·크기 일치 후에만. optimizer stub 없음. key 집합 7개는 SAFE_PICKLE_METADATA의 key 이름과 일치. 복원 후 CUDA 미초기화 확인. 타당.
+- old/fresh predictor: strict load, eval 후 named_buffers(비영속 causal mask `bias`, vit.py:59 persistent=False) 이름·값 torch.equal, 동일 FP32 CPU 입력 [1,588,404], allclose(1e-6,1e-6) 사전 고정, 실패 시 GPU 미진행. dim_head 기본 64는 strict load의 to_qkv 형상으로 사실상 검증됨. 타당.
+- 224→196 / 196 patch: VWorldModel: num_side_patches=224//16=14, encoder_image_size=14*14=196, Resize(196). 코드 assert와 patch_embed 입력 hook [3,3,196,196]/출력 [3,196,384] 일치.
+- encode/predict/rollout 형상과 호출 수: rollout(obs 3프레임, act 4): act_0=act[:,:3], action 길이1 → 루프 predict 1회 + 마지막 predict 1회 → z 5프레임 [1,5,196,404]; separate_emb(concat_dim1)로 visual [1,5,196,384], proprio [1,5,10]. 별도 predict 1회 포함 predictor 3회, patch_embed 2회, decoder 0회. 코드의 기대값과 원 source가 일치. wm.forward 미호출 이유도 타당. wm.eval() 반환값 미사용 확인.
+- FP32/TF32: allow_tf32 둘 다 False, precision 'highest', autocast disabled, XFORMERS_DISABLED=1을 dinov2 import 전에 설정 → attention.py:21/32에 의해 XFORMERS_AVAILABLE False, 코드가 이를 assert.
+- 자원: wall/RSS/GPU allocator/output guard는 단계 경계에서만 검사(내부 kill 불가) — 코드와 보고서 모두 root 외부 timeout을 전제로 명시. CPU affinity·스레드 상한 설정. 원 env 불변은 bound hash 종료 시 재검증으로 source/asset에 한해 확인; site-packages 불변은 setup manifest의 environment_guard_files에 의존(본 스크립트는 package 경로·버전만 확인).
+
+3. 비차단 지적 (수정 요구 아님, 기록 권장)
+a) old/fresh 동등성은 같은 클래스 코드의 재생성 비교이므로 사실상 strict state + 버퍼 일치의 확인이다. "plan.py 재생성 의미론 실행 동등성" 이상으로 해석하지 말 것(보고서도 그렇게 한정함).
+b) manifest 검증 실패 시에도 finally에서 RESULT.json이 생성되어 'one run only' 조건으로 재실행이 막힌다. 보수적이므로 의도라면 유지하되, root는 manifest 오타 실패도 1회 소진으로 처리됨을 알고 있어야 한다.
+c) review_and_audit_evidence에 본 리뷰 파일 hash를 넣으면 이후 이 파일 수정 시 실행이 거부된다 — 본 파일은 이 시점 이후 수정하지 않는다.
+d) site-packages(torch/accelerate) 무결성은 이 스크립트가 재해시하지 않는다. setup manifest의 environment_guard_files를 smoke manifest 직전에 root가 재확인하면 충분(새 조건 아님, 기존 setup 계약 재사용).
+
+4. 주장 범위
+- 말할 수 있는 것: 정적 읽기상 코드 경로·형상·호출 수·정책이 원 source와 사양에 일치하고 차단 결함을 찾지 못함.
+- 아직 입증 안 된 것: legacy Accelerate pickle의 실제 복원 성공, DINO weight strict load, CPU allclose 결과, GPU 실행·자원 상한 준수. synthetic 입력이므로 PushT 품질·CEM·양자화 근거가 아님.
+
+5. 직접 확인 / 미확인
+- 직접 확인: 위 '읽은 범위'의 파일과 sha256 재계산(model_smoke.py, QuantWM 4개 source).
+- 미확인: DINO source 파일 SHA(EXPECTED_DSHA) 재계산, checkpoint·weight 바이트 SHA, MANIFEST_EXAMPLE 본문, SOURCE_API_CHECK_HELPER, plan.py 원문, setup 승인 manifest의 나머지 부분, 현재 진행 중인 root CPU import 단계 결과.
+
+결론: source 변경 0으로 차단 사유 없음. 실행 승인은 root의 별도 완성 manifest 권한이며 이 검토가 승인 자체를 대신하지 않는다.

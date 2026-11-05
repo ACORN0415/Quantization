@@ -1,0 +1,26 @@
+{
+  "status": "prepared_frozen_NOT_authorized_to_execute",
+  "completed_epoch": 1793909639.52297,
+  "code_sha256": "3558180bd58aad11bea0bdb72df57ab1a6db3dd3f03c64c58519b31347ef3e2f",
+  "files": {
+    "model_smoke.py": "3558180bd58aad11bea0bdb72df57ab1a6db3dd3f03c64c58519b31347ef3e2f",
+    "MANIFEST_EXAMPLE_UNAPPROVED.json": "6cfc9bff7ff39bc8d3484c91e71975622ea7bd84ad9bb99d1feb26e203a007bf",
+    "REPORT_CODEX_KO.txt": "f006fde775ae097b628cc6571bd9abd172c4ddbda657eecf2b0173b93b59e6a6",
+    "SELFTEST_PREPARATION.json": "6c0a7b7726e4b39c24de8480f6a449a56c9118c148c756ed86e9ccebd304dd94",
+    "SOURCE_API_CHECK_HELPER.json": "3e113456010c314a2ebf97efc3f6d01c6239dc4c362b8800ee2d3e11d5c93c8a",
+    "ROOT_SPEC.json": "da339fdecc9b6e6e6a4c02c0498929dc4f5736caf22974dc1889b039a723d9cd"
+  },
+  "AST_parse": "passed",
+  "scalar_checks": 9,
+  "selftest_scope": "No Torch/NumPy/YAML/model/tensor/pickle import or execution; scalar config/shape and rejection only",
+  "actual_Opus_final_code_review_completed": false,
+  "root_execution_authorized": false,
+  "native_helper_review_scope": "Source/API and in-progress code reading; not final-hash execution approval",
+  "model_tensor_pickle_loads": 0,
+  "GPU": 0,
+  "network": 0,
+  "installation": 0,
+  "new_source_or_runtime_environment_modifications": 0,
+  "preparation_output_bytes": 58081,
+  "future_root_only_command": "PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1 XFORMERS_DISABLED=1 /home/acorn0415/sfq_data/env/bin/python model_smoke.py --manifest <root-approved manifest>"
+}

@@ -1,0 +1,27 @@
+{
+  "status": "completed_setup_only_not_model_execution",
+  "recorded_epoch": 1793912535.4469905,
+  "artifact_count": 26,
+  "payload_bytes": 88383366,
+  "stage_elapsed_seconds": {
+    "ACQUIRE_RESULT.json": 6.842582702636719,
+    "INSTALL_RESULT.json": 0.06433320045471191,
+    "IMPORTS_RESULT.json": 1.1764473915100098
+  },
+  "elapsed_between_first_stage_start_and_last_stage_completion_seconds": 241.3081133365631,
+  "package_installs": 0,
+  "offline_builds": 0,
+  "model_tensor_pickle_loads": 0,
+  "GPU": 0,
+  "existing_environment_guard_unchanged": true,
+  "independent_posthash_audit_sha256": "a0c8b9fcaf6bc9347f0db642a0fa3cb91903ec7ee373287b8fc7d74182d9515d",
+  "bound_files": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_runtime_setup_preparation/ROOT_APPROVED_MANIFEST.json": "e30f8dd72d864a845e8993eb66032c9b7373e8d2ca1c4afee4f6196288c7742d",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_runtime_setup_preparation/ROOT_ACQUIRE_FINAL.json": "b8a2414857cc36ce78356d87f901f00288d5d840e5b6200e4f99150e00aa0382",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_runtime_setup_preparation/SAVED_ACQUIRE_RESULT.json": "390c432b22af18a4c719e428025ade9cd9ee43d88bcb78942b4ad3b8864526af",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_runtime_setup_preparation/SAVED_INSTALL_RESULT.json": "fdf5073dee42a49b66a2eb04d6c247616b40f90ad95ca9f9df2e7ac9d7b7e25c",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_runtime_setup_preparation/SAVED_IMPORTS_RESULT.json": "3f3e9a3b6f80acbea4f60e4d21c6531535b0fd57d841ad779019535b660e4789",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_runtime_setup_preparation/ROOT_ASSET_POSTHASH_AUDIT.json": "a0c8b9fcaf6bc9347f0db642a0fa3cb91903ec7ee373287b8fc7d74182d9515d"
+  },
+  "scope": "Pinned source and official encoder asset acquired; offline package-zero setup and import-only stage passed. Unknown prior weight digest is documented. No model compatibility/quality/method claim."
+}

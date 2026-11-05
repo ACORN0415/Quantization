@@ -1,0 +1,173 @@
+{
+  "status": "batch_handled",
+  "source_queue_record_sha256": "c4d5efbe8f5369141392f4b467af65f1b7fffa6c259efb85a86e7cf09c811b43",
+  "message_count": 20,
+  "messages": [
+    {
+      "message_id": "msg_212ad60162e9",
+      "subject": "단계최종: generic VAE state양자화 후보 불채택 / 조건부 구현검사 차이",
+      "type": "status",
+      "handled_epoch": 1793912257.7422268,
+      "action": "historical_status_archived_no_reexecution",
+      "reason": "Intermediate or final historical stage already represented by preserved reports/decisions; current root execution state supersedes historical pending/zero counters. No question or new work authorization in this status message."
+    },
+    {
+      "message_id": "msg_b0e545c8349e",
+      "subject": "설계단계 최종: BF16 streaming exact 계약·반례 / 소스는 READY 후",
+      "type": "status",
+      "handled_epoch": 1793912257.742228,
+      "action": "historical_status_archived_no_reexecution",
+      "reason": "Intermediate or final historical stage already represented by preserved reports/decisions; current root execution state supersedes historical pending/zero counters. No question or new work authorization in this status message."
+    },
+    {
+      "message_id": "msg_eef8c4105e8a",
+      "subject": "단계최종: state-operator 초안 현재 불채택 / API근거·LightVAE정정 결합",
+      "type": "status",
+      "handled_epoch": 1793912257.7422285,
+      "action": "historical_status_archived_no_reexecution",
+      "reason": "Intermediate or final historical stage already represented by preserved reports/decisions; current root execution state supersedes historical pending/zero counters. No question or new work authorization in this status message."
+    },
+    {
+      "message_id": "msg_b47ff9398b54",
+      "subject": "소스단계 최종: BF16 streaming worker전체검토 / W1·W2 잔여",
+      "type": "status",
+      "handled_epoch": 1793912257.7422287,
+      "action": "historical_status_archived_no_reexecution",
+      "reason": "Intermediate or final historical stage already represented by preserved reports/decisions; current root execution state supersedes historical pending/zero counters. No question or new work authorization in this status message."
+    },
+    {
+      "message_id": "msg_5e8e4db7cc0e",
+      "subject": "변경검토 최종: streaming2258 layout결합 / W1정적근거·W2유지",
+      "type": "status",
+      "handled_epoch": 1793912257.742229,
+      "action": "historical_status_archived_no_reexecution",
+      "reason": "Intermediate or final historical stage already represented by preserved reports/decisions; current root execution state supersedes historical pending/zero counters. No question or new work authorization in this status message."
+    },
+    {
+      "message_id": "msg_ba76473fca80",
+      "subject": "단계최종: BF16 streaming exact baseline / 실제Opus1·1767감사 결합",
+      "type": "status",
+      "handled_epoch": 1793912257.7422295,
+      "action": "historical_status_archived_no_reexecution",
+      "reason": "Intermediate or final historical stage already represented by preserved reports/decisions; current root execution state supersedes historical pending/zero counters. No question or new work authorization in this status message."
+    },
+    {
+      "message_id": "msg_f75816e5538c",
+      "subject": "단계최종: future-state rounding 현재 비채택 / 정적반례·AQuant·기준선 정정",
+      "type": "status",
+      "handled_epoch": 1793912257.7422297,
+      "action": "historical_status_archived_no_reexecution",
+      "reason": "Intermediate or final historical stage already represented by preserved reports/decisions; current root execution state supersedes historical pending/zero counters. No question or new work authorization in this status message."
+    },
+    {
+      "message_id": "msg_c1bdf1fac391",
+      "subject": "단계최종: DINO 새선택기 미채택 / 기존기준선 진단준비는 조건부",
+      "type": "status",
+      "handled_epoch": 1793912257.74223,
+      "action": "historical_status_archived_no_reexecution",
+      "reason": "Intermediate or final historical stage already represented by preserved reports/decisions; current root execution state supersedes historical pending/zero counters. No question or new work authorization in this status message."
+    },
+    {
+      "message_id": "msg_a6067ed84659",
+      "subject": "단계최종·완료근거: Opus2 ZIPmetadata 검토222a /19:08:34종료",
+      "type": "status",
+      "handled_epoch": 1793912257.74223,
+      "action": "historical_status_archived_no_reexecution",
+      "reason": "Intermediate or final historical stage already represented by preserved reports/decisions; current root execution state supersedes historical pending/zero counters. No question or new work authorization in this status message."
+    },
+    {
+      "message_id": "msg_0a07ed45f004",
+      "subject": "새 범위한계: EOCD tail overlap / 원마감후 Claude호출0·관리부록",
+      "type": "status",
+      "handled_epoch": 1793912257.7422302,
+      "action": "historical_status_archived_no_reexecution",
+      "reason": "Intermediate or final historical stage already represented by preserved reports/decisions; current root execution state supersedes historical pending/zero counters. No question or new work authorization in this status message."
+    },
+    {
+      "message_id": "msg_91391eae09c4",
+      "subject": "실제 gate 미완료: Opus1 loader source0/8 / 획득승인 아님",
+      "type": "status",
+      "handled_epoch": 1793912257.7422304,
+      "action": "historical_status_archived_no_reexecution",
+      "reason": "Intermediate or final historical stage already represented by preserved reports/decisions; current root execution state supersedes historical pending/zero counters. No question or new work authorization in this status message."
+    },
+    {
+      "message_id": "msg_0029269218c3",
+      "subject": "B 소스최종: acquire bab23d80 실제Opus2검토 / manifest전 획득0",
+      "type": "status",
+      "handled_epoch": 1793912257.742231,
+      "action": "historical_status_archived_no_reexecution",
+      "reason": "Intermediate or final historical stage already represented by preserved reports/decisions; current root execution state supersedes historical pending/zero counters. No question or new work authorization in this status message."
+    },
+    {
+      "message_id": "msg_11faeceb73c9",
+      "subject": "요청한 첫동작 완료: 기존 A/B 두 Opus 제출receipt",
+      "type": "status",
+      "handled_epoch": 1793912257.7422311,
+      "action": "historical_status_archived_no_reexecution",
+      "reason": "Intermediate or final historical stage already represented by preserved reports/decisions; current root execution state supersedes historical pending/zero counters. No question or new work authorization in this status message."
+    },
+    {
+      "message_id": "msg_54ccb244d5e1",
+      "subject": "전달유효성 정정: latest-dispatch65초 지연·hardouter불변",
+      "type": "status",
+      "handled_epoch": 1793912257.7422311,
+      "action": "historical_status_archived_no_reexecution",
+      "reason": "Intermediate or final historical stage already represented by preserved reports/decisions; current root execution state supersedes historical pending/zero counters. No question or new work authorization in this status message."
+    },
+    {
+      "message_id": "msg_4d6cd4169f91",
+      "subject": "명시후속 A/B 최종: source8/8·loader27조건 / acquire동결결합",
+      "type": "status",
+      "handled_epoch": 1793912257.7422314,
+      "action": "historical_status_archived_no_reexecution",
+      "reason": "Intermediate or final historical stage already represented by preserved reports/decisions; current root execution state supersedes historical pending/zero counters. No question or new work authorization in this status message."
+    },
+    {
+      "message_id": "msg_641a88919b7c",
+      "subject": "새 두업무 첫전달receipt: assetaudit Opus2 / runtimeplan Opus1",
+      "type": "status",
+      "handled_epoch": 1793912257.7422328,
+      "action": "historical_status_archived_no_reexecution",
+      "reason": "Intermediate or final historical stage already represented by preserved reports/decisions; current root execution state supersedes historical pending/zero counters. No question or new work authorization in this status message."
+    },
+    {
+      "message_id": "msg_1e2995d77024",
+      "subject": "자산감사·runtime계획 실제 Opus 취합 / 동일Opus2 sourceclosure접수",
+      "type": "status",
+      "handled_epoch": 1793912257.742233,
+      "action": "historical_status_archived_no_reexecution",
+      "reason": "Intermediate or final historical stage already represented by preserved reports/decisions; current root execution state supersedes historical pending/zero counters. No question or new work authorization in this status message."
+    },
+    {
+      "message_id": "msg_be62565723f0",
+      "subject": "Runtime Opus1 최종READY 후속 완료 / 원부분검토 불변",
+      "type": "status",
+      "handled_epoch": 1793912257.7422333,
+      "action": "historical_status_archived_no_reexecution",
+      "reason": "Intermediate or final historical stage already represented by preserved reports/decisions; current root execution state supersedes historical pending/zero counters. No question or new work authorization in this status message."
+    },
+    {
+      "message_id": "msg_fa5797a4705e",
+      "subject": "DINO sourceclosure 실제Opus2 최종 한정수용 / 다음model-smoke contract연결",
+      "type": "status",
+      "handled_epoch": 1793912257.7422335,
+      "action": "historical_status_archived_no_reexecution",
+      "reason": "Intermediate or final historical stage already represented by preserved reports/decisions; current root execution state supersedes historical pending/zero counters. No question or new work authorization in this status message."
+    },
+    {
+      "message_id": "msg_1109eca14f95",
+      "subject": "setup runner 실제Opus1 source검토 완료 / 86360bd9·01422978",
+      "type": "status",
+      "handled_epoch": 1793912257.7422338,
+      "action": "historical_status_archived_no_reexecution",
+      "reason": "Intermediate or final historical stage already represented by preserved reports/decisions; current root execution state supersedes historical pending/zero counters. No question or new work authorization in this status message."
+    }
+  ],
+  "remaining_current_work": [
+    "DINO setup install-noop and CPU imports after completed acquisition",
+    "Model-smoke final actual Opus source review still not received; original review window missed and explicit read-only followup registered"
+  ],
+  "models_or_GPU_started_by_handling_messages": 0,
+  "manager_liveness": "last worktree ps state done/subagentObservation unverifiable; this alone does not prove stopped or authorize restart/takeover"
+}

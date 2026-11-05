@@ -1,0 +1,36 @@
+{
+  "scope": "read-only local auth/billing-mode metadata; no secrets copied, no billing changes",
+  "Codex": {
+    "auth_mode": "chatgpt",
+    "API_key_present": false,
+    "OAuth_tokens_present": true
+  },
+  "Claude_accounts": [
+    {
+      "authMethod": "subscription-oauth",
+      "oauth_credentials_present": true,
+      "subscriptionType": "team",
+      "rateLimitTier": "default_claude_max_5x",
+      "configured_anthropic_API_key_present": false,
+      "configured_anthropic_auth_token_present": false,
+      "settings_top_level_billing_fields": {}
+    }
+  ],
+  "Claude_usage_billing_metadata": {
+    "extraUsage": null
+  },
+  "Claude_usage_metadata_keys": [
+    "provider",
+    "session",
+    "weekly",
+    "fableWeekly",
+    "monthly",
+    "extraUsage",
+    "updatedAt",
+    "error",
+    "status",
+    "usageMetadata"
+  ],
+  "new_subscriptions_payments_credit_purchases_GPU_rentals_by_root": 0,
+  "actual_provider_invoice_or_extra_usage_settings_verified": false
+}

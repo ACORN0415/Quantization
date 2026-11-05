@@ -1,0 +1,61 @@
+{
+  "stage": "imports",
+  "started_epoch": 1793912324.411048,
+  "deadline_epoch": 1793912444.411048,
+  "manifest_sha256": "e30f8dd72d864a845e8993eb66032c9b7373e8d2ca1c4afee4f6196288c7742d",
+  "status": "completed",
+  "detail": {
+    "command": {
+      "command": [
+        "/home/acorn0415/sfq_data/env/bin/python",
+        "-c",
+        "\nimport importlib,importlib.metadata,json,pathlib,pickle,sys\nm=json.loads(pathlib.Path(sys.argv[1]).read_text());dest=pathlib.Path(m['destination'])\nsys.path[:0]=[str(dest/p) for p in m['source_python_paths']]+[str(dest/'overlay')]\ndef deny(*a,**k):raise RuntimeError('model/tensor/hub/CUDA execution forbidden in import-only stage')\npickle.load=pickle.loads=deny\nimport torch\nassert not torch.cuda.is_initialized()\nassert torch.__version__==m['expected_torch_version']\nassert pathlib.Path(torch.__file__).resolve().is_relative_to(pathlib.Path(m['expected_torch_dir']).resolve())\ntorch.load=deny;torch.serialization.load=deny;torch.hub.load=deny;torch.hub.load_state_dict_from_url=deny;torch.cuda._lazy_init=deny;torch.nn.Module.__init__=deny\nrows=[]\nfor x in m['import_modules']:\n mod=importlib.import_module(x['name']);file=getattr(mod,'__file__',None)\n assert file is not None,('module lacks file provenance',x['name'])\n p=pathlib.Path(file).resolve();base={'environment':pathlib.Path('/home/acorn0415/sfq_data/env'),'overlay':dest/'overlay','source':dest/'sources'}[x['scope']]\n assert p.is_relative_to(base.resolve()),('module provenance mismatch',x['name'],str(p))\n rows.append({'module':x['name'],'file':str(p),'scope':x['scope'],'distribution_version':importlib.metadata.version(x['distribution']) if x.get('distribution') else None})\nassert not torch.cuda.is_initialized()\nprint(json.dumps({'status':'imports_only_no_model_smoke','torch_file':torch.__file__,'torch_version':torch.__version__,'CUDA_initialized':torch.cuda.is_initialized(),'modules':rows,'model_construct_load_authorized':False},sort_keys=True))\n",
+        "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_runtime_setup_preparation/ROOT_APPROVED_MANIFEST.json"
+      ],
+      "exit_code": 0,
+      "log": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/CPU_IMPORT.log",
+      "log_sha256": "c24900fe95209cf8773af2a4221f1dd715a96179cc1c819a5a6295b555d72205",
+      "observed_peak_child_tree_RSS_bytes": 453193728,
+      "RSS_sampling_seconds": 0.1,
+      "read_only_host_network_namespace": "bubblewrap; no unsandboxed fallback"
+    },
+    "import_result": {
+      "CUDA_initialized": false,
+      "model_construct_load_authorized": false,
+      "modules": [
+        {
+          "distribution_version": "1.15.0",
+          "file": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/accelerate/__init__.py",
+          "module": "accelerate",
+          "scope": "environment"
+        },
+        {
+          "distribution_version": "1.24.4",
+          "file": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/numpy/__init__.py",
+          "module": "numpy",
+          "scope": "environment"
+        },
+        {
+          "distribution_version": "0.8.2",
+          "file": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/einops/__init__.py",
+          "module": "einops",
+          "scope": "environment"
+        },
+        {
+          "distribution_version": null,
+          "file": "/home/acorn0415/sfq_data/dino_wm_planning/runtime_20261106_v1/sources/dinov2_repo/dinov2/models/vision_transformer.py",
+          "module": "dinov2.models.vision_transformer",
+          "scope": "source"
+        }
+      ],
+      "status": "imports_only_no_model_smoke",
+      "torch_file": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torch/__init__.py",
+      "torch_version": "2.6.0+cu124"
+    },
+    "model_smoke_completed": false,
+    "unknown_digest_model_load_authorized": false
+  },
+  "completed_epoch": 1793912325.5874953,
+  "elapsed_seconds": 1.1764473915100098,
+  "disk_bytes_before_result": 88413844
+}

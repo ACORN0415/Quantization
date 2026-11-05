@@ -1,0 +1,46 @@
+오프라인 FP32 모델 연결 smoke 코드 준비 — Codex
+작성: 2026-11-05 20:13 UTC / 원 준비 마감20:21:12 UTC
+
+준비 결과
+model_smoke.py와 미승인 manifest 예시를 작성했다. 실제 모델·tensor·pickle 로드, Torch/GPU 실행, 네트워크·설치·기존환경 변경은 하지 않았다. Python scalar만 사용하는 설정·형상·거부 조건9개가 통과했다. 이는 실제 가중치 복원이나 모델 동등성의 실행 성공을 의미하지 않는다. 실제 Opus의 최종 소스 검토와 root의 별도 완성 manifest 이후에만 실행할 코드다.
+
+원문 근거와 고정한 입력
+원 plan.py 전문은 loader_gate/ROOT_PINNED_SOURCE_READBACK.json의 path='plan.py' 항목에서 확인했다. SHA f368dd634d7781a411a0dc1d8869d312ff105d2d5c8608cc2854d8f5a6a965a4. 382–406행의 새 predictor 생성과 strict state_dict 복사, 446–459행의 VWorldModel 연결을 따른다. 원문의 '차이 합계가 양수인가' 검사는 부호 상쇄를 허용하므로 이를 동등성 gate로 사용하지 않고 별도의 명시적 output 비교를 둔다.
+
+기존 취득 hydra.yaml을 일반 텍스트로 읽었고 SHA e4d7f21b85c778ab8b83c0bb83bc7625fdfb193a6a0619fef25f4a2afd7f8049/2021B를 바인딩했다. img_size224/history3/pred1/frameskip5/concat_dim1/action_emb10/proprio_emb10/repeat1은 실제 config 값이다. 원 VWorldModel은224를196으로 Resize하며14×14=196 patch를 사용한다. predictor는 num_frames3, num_patches196, dim404, depth6, heads16, mlp2048, dropout0.1, emb_dropout0, poolmean, 원 기본 dim_head64로 생성한다.
+
+한 번의 실행에서 검사할 단계
+1) 승인·파일/소스 hash 검사. 기존 checkpoint SHA e909f0cec958fc0b49a79f2e85730ae6b5f83dee61a224705f91883eb3bb74c5/377929744B만 허용한다. 코드·명세·공식 고정 source identity와 실제 파일 경로, root/실제 Opus/독립 asset 감사 evidence를 요구한다. 미승인 예시는 실행되지 않는다. RUN.json은 한 번만 생성한다.
+2) 네트워크와 torch.hub 자동 취득을 차단하고 pinned source/기존 패키지 경로를 확인한다. synthetic models namespace의 __path__/__spec__을 명시하고 원 models/__init__.py를 실행하지 않는다. 원 클래스 qualified name과 source 본문은 유지한다. vqvae의 '..' sys.path 추가는 기록 후 복원 전에 제거한다. 기존 충돌 namespace나 예상하지 않은 project module 파일은 실패시킨다.
+3) trusted official checkpoint를 map_location='cpu', weights_only=False로 명시해 전체 복원한다. optimizer 객체를 stub하거나 삭제한 별도 pickle을 만드는 방식은 사용하지 않는다. top-level 키와 실제 action/proprio Conv1d weight shape [10,10,1]/[10,4,1], FP32 CPU 상태를 확인한다. 이때 decoder도 실제 복원하되 forward를 호출하지 않는다. source path를 복원 후 다시 확인하고 CUDA가 초기화되지 않았음을 요구한다.
+4) 원 새 predictor를 생성하고 old.state_dict를 strict=True로 복사한다. old/new 모두 eval을 호출한다. 비영속 causal mask를 포함한 named_buffers의 이름·값도 정확히 비교한다. 동일 FP32 CPU synthetic 입력[1,588,404]를 두 predictor에 넣는다. 사전 고정 gate는 두 출력의 shape/finite와 torch.allclose(atol=1e-6,rtol=1e-6)이며 torch.equal/max_abs도 별도 기록한다. gate 실패 시 CUDA로 진행하거나 tolerance를 바꾸지 않는다. 이 비교는 predictor 재생성의 실행 동등성만 검사한다.
+5) 공식 DINOv2의 직접 vit_small constructor를 앞선 manifest의 exact kwargs로 생성하고 검증된 로컬 vits14 weight만 map_location='cpu',weights_only=True,strict=True로 읽는다. plain tensor state_dict가 아니면 실패한다. 기존 wrapper의 name/emb_dim/patch_size/latent_ndim2/x_norm_patchtokens 계약을 offline wrapper로 유지한다. 원 remote hub constructor나 validation 전역 monkeypatch는 실행하지 않는다. bare DINO를 그대로 VWorldModel에 넣지 않는다.
+6) VWorldModel을 원 source와 stored config로 구성하고 wm.eval()을 따로 호출한다. 이 override는 None을 반환하므로 객체에 다시 대입하거나 chaining하지 않는다. CPU 단계 완료 후에만 GPU를 확인하고 FP32 이동·연결 검사를 수행한다.
+
+GPU 연결 검사의 고정 범위
+seed0/batch1, normalized 형상을 흉내 낸 synthetic uniform[-1,1] 값만 사용한다. 실제 PushT 입력 분포·환경 상태를 모사한 것이라고 하지 않는다.
+- visual [1,3,3,224,224], proprio [1,3,4], bundled actions [1,4,10]
+- encode와 별도 predict: 각각 [1,3,196,404]
+- 원 rollout은 총 action 길이A에서 A+1개 latent 시점을 반환한다. A4이므로 [1,5,196,404], visual latent [1,5,196,384], proprio embedding [1,5,10]이다.
+- GPU predictor 실제 호출3회: 별도 predict1회 + rollout2회. patch_embed2회: 별도 encode와 rollout 내부 encode. decoder forward0회.
+- VWorldModel은 encoder.forward를 직접 호출해 encoder Module hook를 건너뛴다. 따라서 실제 원 DINO PatchEmbed의 Module hook에서 입력[3,3,196,196]과 출력[3,196,384]를 두 번 계측한다.
+- TF32 matmul/cuDNN off, float32_matmul_precision='highest', autocast off, XFORMERS_DISABLED=1 및 실제 공식 Torch SDPA fallback 선택을 확인한다. low-level CUDA kernel을 profiling했다는 주장은 하지 않는다.
+- 원 wm.forward는 hist3+pred1 loss 경로이므로 history3만 넣는 이 검사에서는 호출하지 않는다. encode/predict/rollout API만 사용한다. 모든 출력의 예상 shape/FP32/finite와 원 call count를 검사한다.
+
+자산·환경·권한 계약
+공식 DINO weight의 신뢰 가능한 사전 SHA는 앞선 HEAD에서 확보하지 못했다. 예시의 해당 SHA는 null이며 root가 한정 취득 후 독립 검증한 실제 SHA로 채워야 한다. URL provenance와 local integrity를 공식 사전 배포 checksum 대조로 혼동하지 않는다.
+
+root의 ROOT_CPU_IMPORT_RESULT.json에 기존 torch2.6.0+cu124/torchvision0.21.0+cu124/numpy1.24.4/einops0.8.2/yaml6.0.3/accelerate1.15.0 및 필요한 Accelerate 클래스 import 성공이 기록돼 있다. 이 별도 root 결과를 근거로 최초 smoke는 overlay_paths=[]와 기존 환경을 사용하도록 예시를 작성했다. 패키지 downgrade나 신규 설치를 요구하지 않는다. 클래스 존재와 옛 checkpoint 객체 복원 성공은 다르므로 실제 legacy 복원은 여전히 실패할 수 있다.
+
+model-only 경로는 Hydra를 호출하지 않는다. PyYAML safe_load로 config를 읽고 확인한 생성기 kwargs를 명시한다. dataset MP4·train/val tensor·CEM/GD/MPC·환경 step·quantizer·decoder 이미지 복원은 실행하지 않는다. 이 경로의 성공으로 full planner import closure나 PushT 제어 성공을 주장할 수 없다.
+
+미래 root 실행의 상한은 별도 승인 manifest에600초/CPU4/RSS8GiB/GPU allocator8GiB/output128MiB를 그대로 요구한다. 외부 timeout·단일 GPU lease·프로세스 정리는 root가 담당한다. worker의 단계별 guard와 GPU allocator 제한은 이 외부 감독을 대체하지 않는다. 단계별 PROGRESS와 최종 RESULT가 import/CPU restore/CPU equivalence/local DINO restore/GPU 연결 성공을 구분한다. SIGTERM 및 Python 예외는 실패 phase와 traceback을 남기며 임의 retry는 없다. 강제 kill에서 최종 RESULT가 없더라도 root 외부 기록과 마지막 PROGRESS를 사용해야 한다.
+
+검증 범위와 남은 일
+이번9개 selftest는 pure scalar 설정·shape 계산·설정 변경 거부·미승인 manifest 거부·runtime 미import 검사다. 실제 tensor 합성·Torch import·모델 연산 검사를 했다고 표현하지 않는다. helper는 원 source/API와 작성 중 코드의 독립 읽기 검토를 맡았고 새 차단 결함을 찾지 못했으나 이것이 실제 Opus 최종 소스 검토를 대신하지 않는다.
+
+남은 실측 위험은 legacy Accelerate pickle 복원 호환성, 공식 weight strict load, 지정 GPU에서의 dtype/shape/finite gate와 자원 상한이다. 실패하면 저장한 phase별 근거로 보고하며 새 가중치·모델·정밀도·허용오차로 자동 전환하지 않는다.
+
+실행 예시(현재는 실행 금지):
+PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1 XFORMERS_DISABLED=1 /home/acorn0415/sfq_data/env/bin/python model_smoke.py --manifest <root가 완성·승인한 manifest 절대경로>
+현재 MANIFEST_EXAMPLE_UNAPPROVED.json에는 source root placeholder와 DINO SHA null, 승인 false가 남아 있어 의도적으로 거부된다. 현재 준비에서 실제 모델/가중치 취득·설치·역직렬화·GPU 실행은 모두0회다.

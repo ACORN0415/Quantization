@@ -1,0 +1,271 @@
+{
+  "status": "read_only_static_source_contract_checked_no_model_execution",
+  "created_epoch": 1793909071.9236708,
+  "inputs": {
+    "root_spec": {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_model_smoke_preparation/ROOT_SPEC.json",
+      "sha256": "da339fdecc9b6e6e6a4c02c0498929dc4f5736caf22974dc1889b039a723d9cd"
+    },
+    "hydra": {
+      "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/outputs/pusht/hydra.yaml",
+      "sha256": "e4d7f21b85c778ab8b83c0bb83bc7625fdfb193a6a0619fef25f4a2afd7f8049"
+    },
+    "core_readback": {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_runtime_source_closure/QUANTWM_CORE_SOURCE_READBACK.json",
+      "sha256": "ad6bbd79f3a886b4e904f83f58acb8f3312756a08ef8a3b78dfaa58d88413599"
+    },
+    "prior_readback": {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_runtime_preparation/PINNED_SOURCE_READBACK_CODEX.json",
+      "sha256": "1e0e33be9581716687423212febec807a592a01931f019eb081050bc77f9e085"
+    },
+    "plan_readback": {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_loader_gate/ROOT_PINNED_SOURCE_READBACK.json",
+      "sha256": "346aba94caac9b856219760225cfb03ac27877f27788f71ef5857cb20e351ed6"
+    },
+    "safe_pickle_metadata": {
+      "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/dino_wm_runtime_preparation/SAFE_PICKLE_METADATA.json",
+      "sha256": "69b9ac757f5cad50432e373e5000e7588646077037d0c448ac0ab5915a1f6293"
+    }
+  },
+  "plan_source": {
+    "url": "https://raw.githubusercontent.com/huawei-noah/noah-research/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/plan.py",
+    "sha256": "f368dd634d7781a411a0dc1d8869d312ff105d2d5c8608cc2854d8f5a6a965a4",
+    "lines": {
+      "patch_count": [
+        382,
+        391
+      ],
+      "predictor_constructor": [
+        393,
+        404
+      ],
+      "strict_state_copy": 406,
+      "VWorldModel_constructor": [
+        446,
+        459
+      ]
+    },
+    "semantics": "Original plan.py recreates ViTPredictor with current encoder/config-derived dimensions, copies original predictor state_dict strict=True, then passes recreated predictor to VWorldModel. Does not directly retain loaded old predictor as deployed predictor."
+  },
+  "stored_config_observed": {
+    "img_size": 224,
+    "frameskip": 5,
+    "concat_dim": 1,
+    "num_hist": 3,
+    "num_pred": 1,
+    "action_emb_dim": 10,
+    "proprio_emb_dim": 10,
+    "num_action_repeat": 1,
+    "num_proprio_repeat": 1,
+    "has_decoder": true,
+    "encoder_name": "dinov2_vits14",
+    "feature_key": "x_norm_patchtokens",
+    "with_velocity": true,
+    "normalize_action": true
+  },
+  "predictor_constructor_expected": {
+    "num_patches": 196,
+    "num_frames": 3,
+    "dim": 404,
+    "depth": 6,
+    "heads": 16,
+    "mlp_dim": 2048,
+    "dropout": 0.1,
+    "emb_dropout": 0,
+    "pool": "mean",
+    "dim_head": 64,
+    "dim_head_source": "ViTPredictor default, not explicit hydra field",
+    "dim_source": "encoder.num_features runtime must equal384; plus two10-dimensional embeddings",
+    "pool_note": "Stored but not used to pool outputs in examined ViTPredictor.forward; output remains tokenwise."
+  },
+  "predictor_runtime_assertions": {
+    "pos_embedding": [
+      1,
+      588,
+      404
+    ],
+    "attention_heads": 16,
+    "attention_inner_dimension": 1024,
+    "first_qkv_weight": [
+      3072,
+      404
+    ],
+    "max_input_tokens": 588,
+    "causal_bias": [
+      1,
+      1,
+      588,
+      588
+    ],
+    "strict_state_dict": true,
+    "both_old_and_recreated_eval_required": true,
+    "nonpersistent_bias_note": "Current source registers causal bias persistent=False; state_dict strict loading alone does not prove old loaded object and reconstructed attention semantics agree. CPU forward comparison is meaningful."
+  },
+  "world_model_constructor_expected": {
+    "image_size": 224,
+    "num_hist": 3,
+    "num_pred": 1,
+    "train_encoder": false,
+    "train_predictor": true,
+    "train_decoder": true,
+    "proprio_dim": 10,
+    "action_dim": 10,
+    "concat_dim": 1,
+    "num_action_repeat": 1,
+    "num_proprio_repeat": 1,
+    "predictor": "new strictly loaded predictor",
+    "other_components": "original loaded action_encoder/proprio_encoder/decoder; explicit offline DINO wrapper"
+  },
+  "encoder_contract": {
+    "attributes": [
+      "name",
+      "emb_dim",
+      "patch_size",
+      "latent_ndim",
+      "feature_key"
+    ],
+    "name": "dinov2_vits14",
+    "feature_key": "x_norm_patchtokens",
+    "latent_ndim": 2,
+    "emb_dim_runtime_expected": 384,
+    "patch_size_runtime_expected": 14,
+    "resize": [
+      224,
+      196
+    ],
+    "patch_grid": [
+      14,
+      14
+    ],
+    "patch_tokens": 196,
+    "raw_DINO_output": "forward_features(x)[feature_key]",
+    "note": "Bare DINO backbone without wrapper attributes/forward selection does not meet original VWorldModel contract."
+  },
+  "proprio_action_contract": {
+    "proprio_Conv1d_weight_runtime_expected": [
+      10,
+      4,
+      1
+    ],
+    "action_Conv1d_weight_runtime_expected": [
+      10,
+      10,
+      1
+    ],
+    "both_bias_runtime_expected": [
+      10
+    ],
+    "metadata_support_only": {
+      "action_storage_numel": [
+        100,
+        10
+      ],
+      "proprio_storage_numel": [
+        40,
+        10
+      ]
+    },
+    "inference_limit": "Storage sizes plus source/config are consistent, but do not independently prove tensor shapes; assert loaded Conv1d weight/in_channels/out_channels/kernel_size."
+  },
+  "bounded_synthetic_shape_example": {
+    "B": 1,
+    "initial_history": 3,
+    "obs_visual": [
+      1,
+      3,
+      3,
+      224,
+      224
+    ],
+    "obs_proprio": [
+      1,
+      3,
+      4
+    ],
+    "initial_actions": [
+      1,
+      3,
+      10
+    ],
+    "encoder_resized_images": [
+      3,
+      3,
+      196,
+      196
+    ],
+    "visual_embedding": [
+      1,
+      3,
+      196,
+      384
+    ],
+    "proprio_embedding": [
+      1,
+      3,
+      10
+    ],
+    "action_embedding": [
+      1,
+      3,
+      10
+    ],
+    "encode_output": [
+      1,
+      3,
+      196,
+      404
+    ],
+    "predictor_flat_input": [
+      1,
+      588,
+      404
+    ],
+    "predict_output": [
+      1,
+      3,
+      196,
+      404
+    ],
+    "rollout_total_actions_A": 5,
+    "rollout_actions": [
+      1,
+      5,
+      10
+    ],
+    "rollout_predict_calls": 3,
+    "rollout_z": [
+      1,
+      6,
+      196,
+      404
+    ],
+    "rollout_visual": [
+      1,
+      6,
+      196,
+      384
+    ],
+    "rollout_proprio": [
+      1,
+      6,
+      10
+    ]
+  },
+  "rollout_general_rule": {
+    "condition": "A >= initial_history n >=1",
+    "output_time": "A+1",
+    "predict_calls": "A-n+1",
+    "each_predict_input_time": "min(current accumulated time,num_hist)",
+    "source_lines": "VWorldModel.rollout284-309"
+  },
+  "forward_distinction": "The training VWorldModel.forward loss path is not identical to rollout. With num_hist3/num_pred1 it expects a training-style4-frame obs/action sequence; passing only3history frames yields mismatched prediction/target lengths. Use the explicitly requested encode/predict/rollout APIs for the3history smoke.",
+  "scope_limits": [
+    "No network, package import, torch import, model/pickle/tensor load, GPU, or new effect experiment.",
+    "History3 example is a bounded model-connection test; original planner can start with1observation and grow context. This is not CEM/PushT planner equivalence.",
+    "rollout does not invoke decoder. Loading decoder proves neither its forward success nor image reconstruction quality.",
+    "Input image/proprio/action are synthetic model-domain tensors; no dataset normalization or environment action success claim.",
+    "VWorldModel.eval/train override return None; call separately, not assignment/chaining.",
+    "Stored config and ROOT_SPEC static requirements agree; actual DINO dimension and loaded component shapes remain runtime assertions.",
+    "Legacy checkpoint old predictor and reconstructed predictor equality is unmeasured, and tolerance must be set before execution."
+  ]
+}

@@ -1,0 +1,160 @@
+{
+  "status": "UNAPPROVED_EXAMPLE_NOT_EXECUTABLE",
+  "root_execution_authorized": false,
+  "actual_opus_source_review_completed": false,
+  "independent_source_and_asset_audit_completed": false,
+  "code_sha256": "3558180bd58aad11bea0bdb72df57ab1a6db3dd3f03c64c58519b31347ef3e2f",
+  "spec_sha256": "da339fdecc9b6e6e6a4c02c0498929dc4f5736caf22974dc1889b039a723d9cd",
+  "interpreter": "/home/acorn0415/sfq_data/env/bin/python",
+  "model_epoch": "latest",
+  "checkpoint_trust_policy": "verified_official_acquisition_explicit_weights_only_false_cpu",
+  "quantwm_source_root": "/ROOT_MUST_SET/verified_QuantWM",
+  "dinov2_source_root": "/ROOT_MUST_SET/verified_dinov2",
+  "source_files": {
+    "/ROOT_MUST_SET/verified_QuantWM/models/vit.py": "ae79e86c1be2fc9ac9c2642882c2ddccf2cea65e85cf29b094672aec5d030387",
+    "/ROOT_MUST_SET/verified_QuantWM/models/vqvae.py": "377005da5c79355da6c7db88eded7a04e432c29ddf4279ea89e5364730ff1461",
+    "/ROOT_MUST_SET/verified_QuantWM/models/proprio.py": "b0f7c761c45a6a889dc51f6d9cf4539480d1a0bd2bd200ad44c4b9373a573c72",
+    "/ROOT_MUST_SET/verified_QuantWM/models/visual_world_model.py": "931d44c0d541d95be8236f65247de9b40ac3843fe047c1a44d4a2482d1bf636f",
+    "/ROOT_MUST_SET/verified_QuantWM/distributed_fn/__init__.py": "2f4541598b2a2fb41681db38bd8230f8a7fbcc9ea16e7abb97fe7c9bacad30d1",
+    "/ROOT_MUST_SET/verified_QuantWM/distributed_fn/distributed.py": "bc3263fb5ce314ce484d13e8fb2094da6f640f11d79617c8dd9d73a7ed8341be",
+    "/ROOT_MUST_SET/verified_QuantWM/distributed_fn/launch.py": "79bb9d45c50f1b5d57bde66b6f8ad9744fb4cf5eaee62ee4a972716c5ffc7a6d",
+    "/ROOT_MUST_SET/verified_QuantWM/models/__init__.py": "9ae80cddb2fc9ea28de4c6f97f9b558e88efb3dcef6853f980e36983d8254009",
+    "/ROOT_MUST_SET/verified_dinov2/dinov2/__init__.py": "0d2b87b7e71c7f7279ccc4b4f8b541d26071425284a0ea01a5a435fac4511cfe",
+    "/ROOT_MUST_SET/verified_dinov2/dinov2/models/__init__.py": "b93329ce676f3eb0c9a7790d1b3b2b114a0855ea8dc76e32e262d1a7dc6c55ae",
+    "/ROOT_MUST_SET/verified_dinov2/dinov2/models/vision_transformer.py": "7799a260f2d7d0fe197331d08502fb8c542f9b7424723650f6a39b64fa2639ea",
+    "/ROOT_MUST_SET/verified_dinov2/dinov2/layers/__init__.py": "1b55deed39d5ab0b589bef421bbfe06f24a10cd590a0f8403234c9ee4e34109d",
+    "/ROOT_MUST_SET/verified_dinov2/dinov2/layers/attention.py": "79c7be7a452b3aad96698ec38d5d5150b9f4d8ac084fa93324510dc9f624775d",
+    "/ROOT_MUST_SET/verified_dinov2/dinov2/layers/block.py": "60c0ac7dfa4474be313fabfa5a23d82faf6f0cecd4e720a88be35de9788cb636",
+    "/ROOT_MUST_SET/verified_dinov2/dinov2/layers/dino_head.py": "9fdb1fa61c0609dc0876f711f9d0d828c33bf9fd972aab3d9c968d44e16b98d1",
+    "/ROOT_MUST_SET/verified_dinov2/dinov2/layers/drop_path.py": "b9f8236e86054b9d9a71275efcad2a9ecaa1f86b529d4b8d6109ddb5e806f67a",
+    "/ROOT_MUST_SET/verified_dinov2/dinov2/layers/layer_scale.py": "dadd5aafe178f1bf72a205a02a6645c7e635cacbad585d4a7369c200c6e89135",
+    "/ROOT_MUST_SET/verified_dinov2/dinov2/layers/mlp.py": "255825c73b60a916dd00eb1e38aacbcdbf316e40d6a005efb46e245b7edb43aa",
+    "/ROOT_MUST_SET/verified_dinov2/dinov2/layers/patch_embed.py": "40da6add3d811198ea3e17cb99cdd4e5cda59e369efbbe3d18d89308618cf142",
+    "/ROOT_MUST_SET/verified_dinov2/dinov2/layers/swiglu_ffn.py": "e46d2948fb97e497cf991ff82ce30cb59b59fdf2e12a19568417113716b4f119"
+  },
+  "overlay_paths": [],
+  "packages": {
+    "torch": {
+      "root": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torch",
+      "version": "2.6.0+cu124"
+    },
+    "torchvision": {
+      "root": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/torchvision",
+      "version": "0.21.0+cu124"
+    },
+    "numpy": {
+      "root": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/numpy",
+      "version": "1.24.4"
+    },
+    "einops": {
+      "root": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/einops",
+      "version": "0.8.2"
+    },
+    "accelerate": {
+      "root": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/accelerate",
+      "version": "1.15.0"
+    },
+    "yaml": {
+      "root": "/home/acorn0415/sfq_data/env/lib/python3.10/site-packages/yaml",
+      "version": "6.0.3"
+    }
+  },
+  "checkpoint": {
+    "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/outputs/pusht/checkpoints/model_latest.pth",
+    "bytes": 377929744,
+    "sha256": "e909f0cec958fc0b49a79f2e85730ae6b5f83dee61a224705f91883eb3bb74c5"
+  },
+  "hydra": {
+    "path": "/home/acorn0415/sfq_data/dino_wm_planning/acquisition_20261106_v1/extracted/outputs/pusht/hydra.yaml",
+    "bytes": 2021,
+    "sha256": "e4d7f21b85c778ab8b83c0bb83bc7625fdfb193a6a0619fef25f4a2afd7f8049"
+  },
+  "dino_weight": {
+    "path": "/ROOT_MUST_SET/verified_weights/dinov2_vits14_pretrain.pth",
+    "bytes": 88283115,
+    "sha256": null,
+    "official_url": "https://dl.fbaipublicfiles.com/dinov2/dinov2_vits14/dinov2_vits14_pretrain.pth",
+    "digest_provenance": "must be actual post-acquisition independently verified local SHA; no published official SHA was obtained"
+  },
+  "review_and_audit_evidence": {},
+  "limits": {
+    "wall_seconds": 600,
+    "CPU": 4,
+    "RSS_bytes": 8589934592,
+    "GPU_allocator_bytes": 8589934592,
+    "output_bytes": 134217728
+  },
+  "cpu_equivalence": {
+    "atol": 1e-06,
+    "rtol": 1e-06
+  },
+  "predeclared_synthetic_case": {
+    "seed": 0,
+    "batch": 1,
+    "history_frames": 3,
+    "action_steps": 4,
+    "image": [
+      1,
+      3,
+      3,
+      224,
+      224
+    ],
+    "proprio": [
+      1,
+      3,
+      4
+    ],
+    "actions": [
+      1,
+      4,
+      10
+    ],
+    "predictor_cpu": [
+      1,
+      588,
+      404
+    ],
+    "encoded_and_predict": [
+      1,
+      3,
+      196,
+      404
+    ],
+    "rollout": [
+      1,
+      5,
+      196,
+      404
+    ],
+    "rollout_visual": [
+      1,
+      5,
+      196,
+      384
+    ],
+    "rollout_proprio": [
+      1,
+      5,
+      10
+    ],
+    "patch_embed_calls": 2,
+    "predictor_gpu_calls": 3,
+    "decoder_forward_calls": 0,
+    "CPU_predictor_pair_calls": 2,
+    "payload_load_calls": 2
+  },
+  "root_external_guard_required": "One root-owned process, external wall/RSS/GPU lease guard and cleanup. Worker phase guards are not a generic supervisor.",
+  "minimum_launcher_environment": {
+    "PYTHONNOUSERSITE": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "XFORMERS_DISABLED": "1"
+  },
+  "root_next_actions": [
+    "Supply acquired audited source roots and DINO artifact SHA; all root audit/review evidence file hashes.",
+    "Actual Opus source review must cover this final code, then explicitly bind approved manifest.",
+    "Keep existing environment; no new package installation for initial attempt.",
+    "Root alone runs approved manifest under external600s guard; CPU restore failure stops before CUDA."
+  ],
+  "nonclaims": "This example grants no execution permission and is rejected by code. No source, weight, package, model or GPU execution has been performed by this preparation."
+}
