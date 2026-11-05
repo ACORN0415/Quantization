@@ -1,0 +1,21 @@
+{
+  "status": "root_authorized_one_synthetic_native_baseline_runtime",
+  "created_epoch": 1793918222.042076,
+  "source_preparation_completed_within_original_deadline": true,
+  "source_review_sha256": "0c7ac4f97382e3fa1bde12db8873dd7e7b459bfa7f02d04053ffedf4df76d8d4",
+  "source_sha256": "d15153969bfe5547f9d5a3bf0a45de31cfc11c65ad5e617321e7c2779eba0c7e",
+  "execution_count": 1,
+  "source_unchanged_since_review": true,
+  "D1": "BF16 output, INT8 QK and FP16 PV. K valid-sequence mean/subtraction is outside the kernel and included in full preparation; this is an explicit component pipeline, not original whole core API.",
+  "D2": "Small validation and per-case setup include first-use JIT. Each large case has2qual calls per arm,2warmup+8timing cycles per arm. Total FA2 count48 includes8qual+8warmup+32timed calls. Native attention100 includes4small+16largequal+16warmup+64timed. Cache-only K/V prep is setup, Q always re-quantized.",
+  "D3": "CPU imports and CPU tests were preparation only; numerical correctness and GPU/JIT compatibility begin with this first runtime.",
+  "limits": {
+    "wall_seconds": 900,
+    "CPU": 4,
+    "RSS_bytes": 8589934592,
+    "GPU_allocator_bytes": 4294967296,
+    "output_bytes": 268435456
+  },
+  "failure_rule": "No retry/fallback/threshold or source change after first runtime failure. Preserve partial data and exact failure phase.",
+  "scope": "Older existing synthetic baseline; no model or data load, video quality, SOTA or novel methodology effect."
+}

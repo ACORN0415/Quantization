@@ -1,0 +1,90 @@
+native_attention_baseline_probe — Opus2 source 검토 (단계 최종)
+실제 모델: claude-opus-5-5. 기존 Opus2 채팅(session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5)을 이어서 썼다.
+Task/Dispatch: 없음(worker-start terminal_handle_stale).
+배정: root msg_cf837d61b738 → 관리 run:run_37b53bde176e.
+시각(UTC, date -u로 직접 확인)
+- 수신: 2026-11-05T22:32:41Z
+- 시작: 22:32:45Z
+- 작성 완료: 22:35대
+- 상한: 수신 + 480초 = 22:40:41Z
+helper: 0개. 8분 안에 독립 조각이 없어 쓰지 않았다.
+수행 범위: 읽기, sha256, grep/sed만 했다.
+- 하지 않은 것: 코드 실행, import, Torch·Triton 로드, GPU, 네트워크, 설치, 원본 수정. 추가 실행은 0이다.
+- Codex·Opus1의 이번 결론은 열람하지 않았다.
+
+1. 확인한 정확한 SHA(직접 계산, 접두 8~16자). 모두 ROOT·READY에 기록된 값과 같다.
+- ROOT_SPEC 8f521365
+- SELFTEST_CODEX 3c385f60
+- SELFTEST_SCOPE_ADDENDUM e6d3e13f
+- MANIFEST_EXAMPLE_UNAPPROVED e71d0d5e
+  - status UNAPPROVED_CODE_PREPARATION_EXAMPLE, root_execution_authorized False
+- REPORT_CODEX e3f32488
+- probe.py d1515396
+- READY_CODEX d60359df
+- feasibility/adapter.py e9658942f04d89ac
+  - 원 source 2개를 PINNED sha(quant_per_block 990b4881…, attn_qk_int8_per_block f7563994…)로 검사한 뒤 private 이름으로 로드한다.
+읽은 범위
+- probe.py: 224행 전부
+- adapter.py: 전부
+- 원 quant_per_block.py
+  - kernel 서명
+  - per_block_int8 49–98행
+- 원 attn_qk_int8_per_block.py: mask, load, forward 경로(22–176행 grep과 해당 행)
+- MANIFEST 예시의 bound_files 목록(19개)
+읽지 않은 것: READY, REPORT, SELFTEST의 본문 서술은 sha만 확인했다. CPU_IMPORT_CODEX.json의 내용도 보지 않았다.
+
+2. 판정: source 수준의 차단 결함은 없다(수용, 조건부). 이 판정은 실행 승인이 아니다(source 수용≠root 실행승인).
+
+3. 원 source와 대조한 결과(직접 확인)
+- Q 양자화 factor
+  - probe: D^-.5×1.44269504, BLK 128
+  - 원 per_block_int8: sm_scale×1.44269504, BLKQ 128
+  - 두 값은 같다.
+- K 양자화 factor
+  - probe: 1.0, BLK 64
+  - 원: sm_scale=1.0, BLKK 64
+  - 두 값은 같다.
+  - 정정: 내 이전 메모의 'K factor 1/BLK'는 잘못 적은 것이다. 실제는 1.0이다.
+- smooth_k
+  - 원은 per_block_int8 안에서 k=k−km을 계산한다(k와 km 모두 입력 dtype, 즉 BF16).
+  - probe는 같은 BF16 k−mean(dim=2)을 kernel 밖에서 미리 계산한다.
+  - 연산은 같다. km을 원 wrapper와 같은 축과 dtype으로 만드는지는 원 core.py와 비교하지 못했다(미확인, 경미).
+- padding
+  - quant kernel에는 L=n(padded 길이)을 넘긴다. 따라서 마지막 block에 zero 행이 포함된다.
+  - 0은 amax를 키우지 않으므로 valid 행의 scale은 원 L=valid 경로와 같다(산술 추론).
+- mask(bool, valid.expand, zero-stride)
+  - 원 kernel은 int1 mask를 other=False로 load한다(35행).
+  - 그다음 tl.where(mask,0,−1e6)으로 padding 키를 제외한다.
+  - K와V padding은 실제 zero 메모리이고 kv_len=padded 길이다. 그래서 k와v의 other 미지정 load(42, 65행)가 쓰레기 값을 읽는 경로가 없다.
+  - 앞서 남겨 둔 '위험 3(masked-load other 미지정)'은 이 구성에서 해소된다.
+- output_dtype=q.dtype(BF16)
+  - 원 forward의 기본값은 float16이지만 공개 인자다.
+  - kernel은 acc.to(Out 원소형)으로 저장하므로 계약 위반은 아니다.
+  - 다만 원 sageattn wrapper의 기본 경로와는 출력 반올림이 다르다. 비교표에 'BF16 출력'이라고 명시해야 한다(D1).
+- small 참조(CPU FP64)는 [:klen] 자르기로 mask를 대신한다. padding 키를 −1e6으로 제외하는 것과 실질적으로 같다(exp(−1e6·ln2)=0).
+- counter 합계 Q100, K56, attention100, FA2 48은 내 산술과 일치한다.
+- full과 prepared의 byte 동일성은 small과 large 모두에서 검사한다. small이 실패하면 large 전에 중단한다.
+- INT8 MMA PTX gate(.s8. mma.sync)는 첫 형상의 qual 직후에 있다.
+
+4. 최소 delta(차단 아님, 기록 권고)
+D1. 결과와 보고에 '출력 BF16(원 기본 FP16 아님), smooth_k를 kernel 밖에서 계산'을 명시한다.
+    probe의 scope 문자열에는 이미 'not unmodified core API'라고 되어 있다.
+D2. JIT 컴파일 비용은 small 단계와 setup에 들어가고 timing 10사이클 중 앞 2개를 warm으로 뺀다.
+    FA2 qual 호출은 counter에 포함되지만 timing과는 분리된다. 이 경계를 보고에 적는다.
+D3. CPU import 기록은 GPU 수학이나 Triton 컴파일 통과의 증거가 아니다. GPU 실행 전에는 small gate만이 첫 실증거다.
+
+5. 남은 실행 위험(소스로 판단 불가)
+- SM89, Triton 3.2.0에서 원 kernel의 실제 컴파일 성공 여부, 그리고 PTX에 .s8. MMA가 실제로 나오는지
+- 4GiB GPU fraction과 8GiB 한도 안에서 최대 형상(kv 56160)의 메모리
+  - mask는 view라서 추가 메모리가 0이다. 실측은 하지 않았다.
+- FA2 바인딩(flash_attn 2.7.4.post1)의 로드
+- bound_files 19개의 실행 시점 재해시 결과
+- small gate의 허용 기준(rel ≤.01, max ≤.05)이 INT8 경로에 적절한지
+  - Sage1 보고 수준이면 통과가 예상되지만 실측은 없다.
+- 이 결과는 합성 입력의 기존 baseline이다. 방법 효과나 영상 품질의 근거가 아니다.
+
+6. 결론
+- source는 원 Sage1 INT8-QK/FP16-PV 구성 요소를 원 인자 계약대로 호출한다.
+- padding과 mask 어댑터도 원 kernel 경로와 수학적으로 일치한다.
+- 차단 결함은 0이고 기록 권고는 D1–D3이다.
+- 실행 여부는 root가 결정한다. 이 검토로 실행된 것은 없다(추가 실행 0).
