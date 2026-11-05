@@ -1,0 +1,80 @@
+QVG 실제 stage2 단 1회 결과 — source·실행 해석 최종 검토 (Opus2)
+배정: parent msg_b33326772a19, 관리자 run_37b53bde176e. 시작 UTC: 2026-11-05T16:27:55Z.
+부모: claude-opus-5-5, 기존 채팅 session claude_0c1d7f24_4afb_4e39_acb6_d992557a41b5. Task/Dispatch: 미연결(terminal_handle_stale).
+이번 검토의 추가 실행은 0이다(GPU, PRQ, tensor·packet·model 로드, import, 재검사 모두 없음).
+과거 실제 GPU 실행 1회(root exec9189)는 저장 기록으로만 해석한다. root가 종료 후 GPU idle을 확인한 것은 root의 보고이며, 내가 조회하지 않았다.
+기존 준비 검토 보고서는 수정하지 않았다.
+
+hash (현재 파일 직접 sha256)
+- RESULT 6f87a65e…, AUDIT_FINAL 98489fe4…, SUPERVISOR 515fa184…, LOCK b805b62b…
+- probe 3f90a886…, verify_record 3c4a99bc…: 모두 지정값과 일치.
+- LOCK: status approved_for_one_GPU_probe, 102개 파일. probe.py, verify_record.py, upstream functions.py를 포함한다.
+- LOCK created 1793895480.06 < SUPERVISOR start 1793895503.19. 실행 전에 LOCK이 있었다.
+- 커밋 순서(1e3e23f는 실행 전, 42d109e는 실행 직후)는 root 보고이며, git은 조회하지 않았다.
+
+실행 유효성 (저장 기록)
+- SUPERVISOR: completed, worker exit 0, owned_cleanup_verified True, remaining_group_members {}.
+  - wall 45.629초 < 600초, 마감 1793896103.19 이내.
+  - peak group RSS 2,209,095,680B.
+- RESULT 기록
+  - status passed.
+  - GPU_peak_allocated 6,853,188,608B: allocator 8GiB 안이다. caching allocator 범위만이며 CUDA context와 Triton의 직접 할당은 포함하지 않는다.
+  - peak_RSS 2,314,530,816B, output disk 165,378,550B: 상한 안이다.
+  - 환경: torch 2.6.0+cu124, triton 3.2.0, flash_attn 2.7.4.post1, RTX 4090 sm89.
+- binding 기록
+  - cache는 quant_videogen.kv_cache, compress는 quant_videogen.compress, decoder는 quant_videogen.functions, FA2는 flash_attn.flash_attn_interface다.
+  - RoPE는 원 AST이고 freqs는 [1024,64] complex128(rope_params 44/42/42)이다.
+  - packet은 같은 dict 객체를 4개 store가 공유하며 offload는 없다.
+  - 기존 소스 검토(3f90)에서 확인한 binding·계수 계약과 일치한다.
+- 계수(RESULT_SCOPE_ROOT와 RESULT 요약 기준)
+  - compress 5, PRQ 10, FA2 36, SDPA 0, decode 5530 = 2×uncompress 2765.
+  - 630 읽기, 독립 unpack 10, endpoint 12.
+  - 상세한 내부 일치 여부는 helper 대조 결과를 아래에 통합한다.
+
+helper 대조 통합
+- native general-purpose 1개(depth 1, 읽기 전용, JSON 요약만). model 인자를 생략했다(도구 설명상 부모 상속).
+- helper가 자기 보고한 모델 ID는 "claude-opus-5-5"다. 그 외 provider 근거는 관측하지 못했다.
+- 분담: helper는 RESULT/AUDIT의 counter·coverage 대조, 부모는 SUPERVISOR/LOCK/binding/R1·G 해석과 통합이다.
+- 관찰(helper, 저장값 사이의 대조)
+  - status passed. reads 630(창마다 210)이며 raw_k, raw_v, q_rope, k_rope가 모두 True다.
+  - attention 12건 모두 repeat_equal과 adapter_reference_equal이 True다.
+    - 분포: W21 7/8/9/41, W63 7/8/21/41, W126 7/8/21/41.
+    - W63 block 21은 partial_span, W126 block 21은 intermediate_full_horizon_not_partial이다.
+  - 압축 5건([0,24)…[96,120)): packet 전후 hash 같음, 세 창 입력 일치, 독립 decode k/v 일치, codec 인자 불변.
+  - expected_uncompress 2765가 실제와 같고 decode = 2×uncompress이며, source_hashes_unchanged가 True다.
+  - AUDIT 6998/6998, record_sha가 RESULT와 같다.
+  - AUDIT scope 원문: 저장 JSON coverage와 byte 무결성. 독립 tensor 재구성과 decoder/attention 재계산은 하지 않았다.
+
+R1/G1/G2 구분
+- R1(effective config 하드코딩): 소스로 해소했다.
+  - compress.py:223-243의 TRITON_PRQ(비-clip) 분기는 triton_prq_quantize_tensor에 scale_precision과 clipping을 넘기지 않는다.
+  - functions.py:261-271의 기본값은 float8_e4m3fn과 use_percentile_clipping=False다.
+  - triton-nstages-kmeans-int2는 TRITON_PRQ로 분류된다(compress.py:156-159).
+  - num_bits=2는 quant_type의 정규식에서 나온다.
+  - 따라서 RESULT에 기록된 값은 실제 경로와 일치한다. 다만 실행 객체를 읽어서 확인한 것이 아니라 소스 대조에 근거한다.
+- G1/G2(재신호, 느린 종료): 이번 실행은 정상 경로였다(첫 신호도 없음). 정리 성공(remaining {})은 G1·G2가 일반적으로 고쳐졌다는 증거가 아니다. root의 조건부 수용 항목으로 남는다.
+
+판정: 타당(한정)
+- 등록된 단일 실행이 유효하게 완료됐다.
+- 다음을 실제 원 코덱, decoder, 원 RoPE, native FA2 varlen으로 확인했다(SDPA 0).
+  - 같은 원 PRQ INT2 packet을 공유했을 때, finite window 21/63 adapter의 630회 읽기가 무퇴거 참조의 같은 window slice와 bytes 단위로 같다.
+  - 12개 endpoint의 native FA2 출력이 참조와 같고 반복도 안정적이다.
+- 증명하는 범위
+  - 단일 layer, 고정 seed 20261106, 합성 BF16 입력, B1/H12/D128/1560 토큰/3-frame/126 frame, sink 0, initial latent 없음, 1 GPU(RTX 4090).
+  - 이 조건에서 adapter와 원 코덱 사이의 저장·읽기·RoPE·FA2 호환성.
+- 남는 것
+  - 원 모델 full pipeline과 inference(30층, 실제 K/V 분포, pipeline 경로 install)
+  - 영상 품질, 새 입력에서의 일반화, 속도, 실제 memory Pareto
+  - 원 BF16 dense와의 동등성
+  - 신규성
+  - G1·G2 같은 감독기 일반 견고성
+- 이번 압축 상주 측정(GPU 6.85e9B)은 probe 구성의 peak다. 정정 부록의 logical frame 상주량(42·84)과 섞지 않는다.
+읽은 범위
+- SUPERVISOR, LOCK(요약), RESULT(요약과 binding, rope), RESULT_SCOPE_ROOT
+- compress.py 156-159·218-262, functions.py 261-271·317-324
+- helper의 RESULT/AUDIT 대조
+미확인
+- REPORT_KO.txt, PREEXECUTION_DECISION_ROOT 본문
+- 102개 LOCK 항목 전체의 hash 재대조
+- packet .pt 내용(로드 금지)
+종료 UTC: 2026-11-05T16:28:58Z

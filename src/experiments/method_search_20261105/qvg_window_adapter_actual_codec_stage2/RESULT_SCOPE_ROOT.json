@@ -1,5 +1,5 @@
 {
-  "status": "observed_pass_postexecution_Opus_review_pending",
+  "status": "completed_limited_compatibility_probe_with_actual_Opus_postexecution_reviews",
   "created_utc": 1793895759.5752254,
   "read_comparisons": 630,
   "independent_unpack_comparisons": 10,
@@ -27,5 +27,6 @@
     "Shared encoding packets control randomness; separate independent encodes not compared",
     "Saved-record audit verifies structural arithmetic/hash and self-reported numeric flags, not independent tensor reconstruction",
     "Peak includes whole correctness probe/reference/workspace; not per-arm deployment peak or speed comparison"
-  ]
+  ],
+  "postexecution_review_record": "POSTEXECUTION_REVIEW_ROOT.json"
 }

@@ -1,0 +1,27 @@
+{
+  "status": "completed_limited_compatibility_probe_with_actual_Opus_postexecution_reviews",
+  "created_epoch": 1793896397.0437925,
+  "review_copies": {
+    "OPUS_SOURCE_POSTEXECUTION_FIXED_KO.txt": {
+      "source": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/QVG_STAGE2_ACTUAL_RESULT_SOURCE_REVIEW_OPUS2_KO.txt",
+      "sha256": "1f72f8dd07d4e63252b36020c439371139e59c7ceca67feb2e2dd8e70c394f9f"
+    },
+    "OPUS_AUDIT_POSTEXECUTION_FIXED_KO.txt": {
+      "source": "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/QVG_STAGE2_ACTUAL_RESULT_AUDIT_REVIEW_OPUS1_KO.txt",
+      "sha256": "653788c1d52a3fc8b1a567dbb5e32e2d77d7fae84f844d3bb697b6ae45facfec"
+    }
+  },
+  "result_sha256": "6f87a65e7c8c6781a4c82c992e6d462694a35c8c82f267d97bc0d4e34fcbad6d",
+  "auditor_check_count": 6998,
+  "root_comparison": "Stored source and audit judgments agree with registered pass, counts, resource scope and limitations. No new experiment or tensor replay. Both original reviewer reports preserved verbatim.",
+  "scope_clarification": "Opus2 final verdict mentions finite21/63 alongside630. The630 is explicitly W21/W63/W126 combined,210each; W21+W63 alone420. Root uses the exact three-window coverage.",
+  "limits": [
+    "One synthetic seed and layer, same PRQ packets shared by windows and reference.",
+    "No full inference, new-input generalization, deployment speed/memory Pareto, video utility or method novelty.",
+    "Audit is record/hash/coverage validation, not independent tensor recomputation.",
+    "Repeated-signal and slow-cleanup G1/G2 remain bounded risks; normal execution passed.",
+    "Source/review gitcommit followed launch; preregistration and filesystemLOCK preceded launch."
+  ],
+  "new_GPU_or_tensor_execution": 0,
+  "methodology_goal_achieved": false
+}
