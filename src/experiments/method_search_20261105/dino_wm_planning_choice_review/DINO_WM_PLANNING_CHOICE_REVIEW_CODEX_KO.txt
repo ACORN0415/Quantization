@@ -1,0 +1,146 @@
+DINO-WM 저정밀 계획: 문제·강한 단순 기준선·실행 가능성 독립 검토
+작성: /root/fair_comparison_codex, 2026-11-05 UTC
+등록: DINO_WM_PLANNING_REVIEW_SPEC_ROOT.json, 마감 19:07:23 UTC
+실제 Opus1의 임시안/결론은 열람하지 않았다. native helper stream_audit_contract가 코드·자산 확인을 분담했고 최종 판정은 본인이 통합했다.
+
+선택 결론
+GO — 한정된 행동 선택 진단을 준비할 가치가 있다. 허용할 다음 목적은 “FP32 encoder를 고정한 기존 정밀도 설정과 최종 action의 FP32 재평가로 충분한가” 하나다. 새 선택기·양자화 방법을 채택하거나 실제 저비트 가속 개발에 착수하자는 결론은 아니다.
+
+즉시 GPU에서 실행 가능한 상태는 아니다. 공개 자산의 위치·크기는 확인했지만 로컬 모델/자료, checkpoint 내부 설정, FP32 무개입 연결, 환경 실행을 아직 확인하지 않았다. 이를 먼저 고정하지 못하면 실행하지 않고 준비 단계에서 종료한다. 공개 코드의 fake quant 결과로 속도·압축 바이트를 주장하지 않는다. 자산 준비의 어려움을 알고리즘 실패와 혼동하지 않는다.
+
+왜 최소 검사까지는 필요한가
+문헌에 실제 제어 성공률 하락이 보고됐고, 현재 공개 코드에서 원래 반환하는 action과 로그에 쓰는 action이 다르다는 구체적 비교 문제가 확인됐다. 또한 encoder를 FP32로 유지하는 간단한 대조와 FP32 재평가가 이를 해결하는지 아직 확인하지 않았다. 따라서 다음 자원은 이 공백의 직접 판별에 쓰는 편이 타당하다. “양자화가 미래 의사결정에 영향을 준다”는 넓은 발상 자체는 이미 선행연구와 겹치므로 새 방법의 근거로 삼지 않는다.
+
+1. 문제는 문헌에 있으나, 우리 실험에서는 아직 관측하지 않았다
+
+An Empirical Study of World Model Quantization의 PushT Table 8에서 FP32는 후기 열 0.94, RTN W8A8 encoder/predictor는 0.66, SmoothQuant 동일 비트는 0.78이다. Fig. 3은 latent MSE의 반복별 변화를 보여준다. 이는 시각적으로 그럴듯한 예측과 제어 성공이 다를 수 있다는 근거다. 그러나 특정 shortlist의 순위 오류나 그 오류의 인과 효과를 직접 분리한 결과는 아니다. Table 8의 encoder W8A8은 FP32 encoder 고정 대조도 아니다. 우리가 직접 재현한 계획 실패는 0건이다.
+출처: https://arxiv.org/html/2602.02110v1#S3
+
+원문의 “horizon/iterations” 표현만으로 모델 예측 길이, 최적화 반복, 환경 제어 단계를 같게 세면 안 된다. 아래 고정 공개 코드에서 이 변수들이 구분된다. 원 논문 모든 표/그림에 사용한 실제 override와 원 로그의 연결은 이번 범위에서 확보하지 못했다. 코드의 기본값을 그 표의 실제 실행값이라고 단정하지 않는다.
+
+2. 가장 먼저 바로잡을 비교: sampled best와 실제 반환값 mu
+
+QuantWM/planning/cem.py:115–120은 각 sampled action의 목적함수를 계산하고 top-k를 고른다. 로그에는 가장 작은 sampled loss를 기록하지만, 다음 분포의 평균은 elite action의 평균 mu로 갱신한다. 140행의 실제 반환값은 mu다.
+따라서 “로그 loss가 작다”와 “실제 실행한 mu의 목적함수가 작다”는 다른 사실이다. 비선형 rollout에서는 elite의 평균이 어느 elite보다 좋은 action이라는 보장이 없다. 이것은 원 코드의 비교 계약이지, 논문 그림의 원인이 이 차이였다는 증명은 아니다.
+
+가장 싼 수정은 우선 실제 반환 mu를 그대로 같은 목적함수로 재평가하는 것이다. 그다음 FP32 shortlist 재평가를 하려면 반드시 mu를 후보에 포함한다. 마지막 elite만 재평가하면 원래 선택값을 제외한 후보 집합으로 바뀐다.
+고정 소스: https://github.com/huawei-noah/noah-research/blob/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/planning/cem.py#L115
+
+같은 후보 집합 S에서 FP32 목적함수를 J_fp라고 하면, FP32 재평가는 argmin_(a∈S) J_fp(a)를 정확히 고르는 단순 기준선이다. 여기에서 개선이 나오면 새 선택기가 필요한 것이 아니라 기존 직접 평가로 해결된 것이다. 반대로 좋은 action이 이미 S 밖으로 사라졌다면 마지막 재평가는 회복하지 못한다. 이 경우에도 곧바로 새 방법을 발명하지 말고, 후보 생성의 문제인지 고정 정밀도 선택의 문제인지 먼저 확인해야 한다.
+
+FP32 predictor의 낮은 목적함수는 실제 환경 성공의 oracle이 아니다. 실제 행동 결과는 동일 초기 상태와 동일 환경 난수에서 별도로 확인해야 한다. 평가용 실제 환경의 미래 성공 여부를 배포 시점의 selector 입력으로 쓰면 안 된다.
+
+3. 계획·최적화·환경 단계의 정확한 범위
+
+고정 QuantWM/conf/plan_pusht.yaml은 MPC-CEM이다.
+  goal_H=5, n_evals=50
+  outer MPC max_iter=30, n_taken_actions=5
+  CEM horizon=5, num_samples=300, topk=30, opt_steps=30, eval_every=1
+  quant_encoder=False는 기본값이며 README 예시는 이를 True로 덮어쓰기도 한다.
+이 설정은 H100/256GB/16CPU의 SLURM launcher를 명시한다. 이는 해당 장비가 수학적으로 반드시 필요하다는 증거가 아니며, 4090에서 검증됐다는 증거도 아니다.
+설정: https://github.com/huawei-noah/noah-research/blob/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/conf/plan_pusht.yaml
+
+CEM은 한 번의 최적화 안에서 action sequence를 여러 개 평가한다. MPC는 반환한 action 일부를 실제 환경에 적용하고 관측을 갱신한다. evaluator.py:113–120은 정규화된 action의 묶음을 frameskip만큼 풀어 denormalize한 뒤 환경 rollout을 수행한다. 따라서 horizon 5는 실제 simulator 5 step이라는 뜻이 아니다. 실제 frameskip·action 차원은 checkpoint의 hydra.yaml과 묶어야 한다.
+
+CEM은 첫 반복 및 eval_every 주기에 evaluator를 호출하고 모든 episode가 성공하면 조기 종료한다. MPC 또한 성공 mask를 누적하고 이미 성공한 사례의 action을 처리한다. 명목 sample×iteration만으로 실제 비용을 계산하면 환경 평가·조기 종료·시각화가 빠진다. 최소 진단에서는 비용에 포함할 평가와 사후 측정을 분리해 등록해야 한다.
+
+plan_quant_omse_rtn.py:627–640의 quant_iter는 보정용 복사 설정의 outer MPC max_iter를 바꾼다. 보정은 train 자료, 이후 검증은 valid 자료를 사용하는 별도 PlanWorkspace다. “quant_iter=2”를 CEM 두 번의 목적함수 평가라고 읽으면 안 된다.
+https://github.com/huawei-noah/noah-research/blob/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/planning/mpc.py
+https://github.com/huawei-noah/noah-research/blob/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/planning/evaluator.py
+https://github.com/huawei-noah/noah-research/blob/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/plan_quant_omse_rtn.py#L627
+
+실제 PushT success는 wrapper.eval_state의 조건을 따른다. 상태 앞 4개 좌표의 L2 차이 <20이고 각도 차이 <π/9여야 한다. PushTEnv.step의 95% coverage 보상과 다른 판정이다. evaluator의 success_rate는 이 boolean들의 평균이다. 최종 MSE나 보기 좋은 rollout을 이 성공률로 대체해서는 안 된다.
+https://github.com/huawei-noah/noah-research/blob/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/env/pusht/pusht_wrapper.py#L57
+
+원 DINO-WM 부록 A.5는 CEM, GD와 CEM 기반 MPC를 구분한다. 현재 PushT의 명시적 config는 CEM이므로 GD backward/rounding 문제를 해당 실패 원인으로 확대하지 않는다. root가 공유한 GD·STE 관련 사실은 조건부 구현 점검으로만 남겼으며 새로운 파일을 추가로 읽지 않았다.
+원 논문: https://arxiv.org/html/2411.04983v2#A1.SS5
+
+4. 현재 확인한 저비트 경로는 수치 모사다
+
+RTN/OMSE의 QLinear는 원 float weight를 보유하고 quantizer 결과를 F.linear에 전달한다. token-wise QAct도 round/clamp 후 scale을 곱한 float를 반환한다. 확인한 uniform quantizer에 실제 packing/정수 GEMM은 없다. 따라서 이 경로로 수치적 선택 오류는 검사할 수 있으나 저비트 저장량·GPU 가속을 입증할 수 없다. 다른 AWQ/OmniQuant backend 전체에 대한 결론은 아니다.
+
+QAct의 bits>=16 경로는 dtype 변환 없이 입력을 반환한다. QLinear도 bits>=16이면 원 weight의 F.linear를 쓴다. 그러므로 설정 이름 A16만 보고 FP16 activation 연산이라고 쓰면 안 된다. 실제 dtype을 기록하고, weight-only 비교는 activation quantizer를 우회한 원 dtype 기준으로 명시해야 한다.
+https://github.com/huawei-noah/noah-research/blob/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/models/ptq/layers.py#L126
+https://github.com/huawei-noah/noah-research/blob/be738be37a0535f75f541a6c1201ce19f95499b0/QuantWM/models/ptq/quantizer/uniform.py
+
+따라서 가장 강한 간단한 기준선의 순서는 FP32 encoder 공유 + 원 predictor, FP32 encoder + 고정 W8A8, 같은 encoder + weight-only W4/원 activation dtype이다. W4A8의 실패만 골라 새 방법의 필요성을 주장하지 않는다. bits나 실제 바이트가 다르면 같은 메모리 사용량으로 포장하지 않고 각 설정의 비용을 별도로 보고한다.
+
+동일 관측이 candidate 수만큼 반복돼 wm.rollout으로 들어가는 소스가 있으므로 관측 특징의 재사용은 우선 확인할 단순 최적화다. 다만 본 범위에서는 rollout 내부의 모든 encode/fusion 계약을 읽지 않았다. action-independent 특징을 한 번만 계산해도 동일한지 무개입 검증이 필요하며, 확인 전 비용을 제거했다고 가정하지 않는다.
+
+5. 가까운 선행연구가 이미 덮는 범위
+
+QuantWAMs §3.2–3.3은 co-training objective의 saliency로 정밀도를 배분하고, 고정 저정밀 개입으로 실제 rollout 상태를 재생해 denoising protection schedule을 수정한다. profile/validation/test를 분리한다. 따라서 “중요한 행동·미래 영향을 고려한다”나 “reachable state에서 보정한다”만으로 차별화되지 않는다. 그러나 대상은 Fast-WAM/LingBot-VA의 diffusion video-action 블록이며 DINO-WM CEM의 마지막 mu/elite 재평가와 같은 의사결정을 직접 해결했다고 단정할 수 없다. SM120 backend의 block-level 수치를 4090 전체 planning 이득으로 가져올 수 없다.
+https://arxiv.org/html/2607.28405v1#S3
+https://arxiv.org/html/2607.28405v1#S4.SS2
+
+OnPTQ §4.2는 양자화 정책이 방문한 동일 prefix에서 dense/quantized token의 경계 변화를 비교하고, 짧은 counterfactual branch의 결과를 calibration risk에 반영한다. 이는 미래 영향을 반영한 양자화 의사결정이라는 넓은 아이디어의 직접 선행이다. 목적은 배포 전 calibration이며, 공개 논문 범위에서 continuous action CEM의 online shortlist를 FP32로 재평가하는 방식과 동일하다고 판정하지 않았다. FP32 선호 token을 task-correct라고 가정하지 않는 구분도 우리 검사에 필요하다. 해당 방법의 전체 code는 이번 두 repo 제한에서 검증하지 않았다.
+https://arxiv.org/html/2609.36828v1#S4.SS2
+
+두 논문을 읽고도 남는 질문은 새로운 risk 식이 아니라 “우리 후보 목록에서 단순 고정 설정·직접 재평가가 실제로 부족한가”다. 이 질문에 아직 양성 답이 없으므로 새로운 목적함수나 선택기는 제안하지 않는다.
+
+6. 현재 장비에서의 실행 가능성과 준비 비용
+
+공개 HF metadata를 직접 확인했다. revision d5c69e8fe60c3ed6b01d2f6e88fbfd66be078e57:
+  checkpoints/outputs.zip: 953,204,628B
+    LFS SHA256 425b0d8c2a4194d3ec996b553575f69409aa5714176b063d8401789db9179482
+  datasets/pusht_noise.zip: 2,785,304,515B
+    LFS SHA256 442f5dee246edf670964ed7bdecd248683cd6d00580fa0e4d458abb53f92da08
+  압축 파일 합계: 3,738,509,143B
+https://huggingface.co/datasets/gaoyuezhou/dino_wm/tree/d5c69e8fe60c3ed6b01d2f6e88fbfd66be078e57
+
+이는 공개 위치와 전송량 정보다. 해제 크기, checkpoint 내부 모든 구성, 추가 encoder 자산, 데이터 loader의 RAM 수요를 확인한 것은 아니다. helper는 sfq_data 및 Quantization에서 해당 파일명을 찾지 못했고 본인도 기존 로컬 DINO/QuantWM 자료 경로를 찾지 못했다. 다른 파일명으로 존재하는 자료까지 없다는 증명은 아니다. 실제 다운로드는 하지 않았다.
+
+원 DINO-WM 논문은 predictor 약 19M 파라미터, encoder patch feature 14×14×384와 작은 history 모델을 설명한다. 이 사실과 rollout의 no_grad를 고려하면, 4090 24GB에서 소수 상태·소수 후보의 수치 진단을 시도할 실현 가능성은 있다. 그러나 default 50 episodes×300 candidates와 30회 최적화의 실제 peak/시간을 측정하지 않았으므로 그대로 24GB/64GB 안에서 완주한다고 보장하지 않는다.
+https://arxiv.org/html/2411.04983v2#A1.SS9
+
+현실적인 시작은 n_evals를 소수로 제한하고 원래 후보/정규화 계약을 유지하는 것이다. 필요하면 고정 microbatch를 모든 팔에 공통 사용하되, activation scale의 산출 범위가 바뀌지 않는지 먼저 확인한다. batch 크기를 줄이면 per-tensor scale이 달라지는 설정을 동일 수치 모델이라고 부를 수 없다. 원 평가 50개를 줄인 결과는 논문의 성공률 재현이 아니라 작은 진단이다.
+
+checkpoint는 hydra.yaml과 pickle된 모델 객체의 클래스 경로에 의존한다. 최신 PyTorch의 load 기본값, 실제 env 의존성, model_latest 선택, frameskip/action normalization을 고정하는 작업이 필요하다. 이것은 소스상 확인한 준비 항목이며 실제 런타임 실패를 관측한 것이 아니다. 공식 README도 원 FP planning을 먼저 실행할 수 있어야 한다고 명시한다.
+
+7. 딱 하나의 최소 판별 검사
+
+검사 질문: 동일 초기 상태·목표에서 생성된 저정밀 CEM의 실제 반환 mu를 FP32로 평가했을 때, 고정 정밀도 또는 mu를 포함한 짧은 후보 목록의 직접 재평가로 충분한가?
+
+준비에서 먼저 고정할 것:
+- 원 checkpoint/config/hash, 고정 FP32 encoder, action normalization/frameskip, 환경 초기 상태·난수, quantizer calibration 입력과 평가 입력의 분리.
+- quantization을 끈 교체 모델과 원 FP32 모델의 무개입 연결. 이를 통과하기 전 차이를 양자화 효과라고 해석하지 않는다.
+- 후보 수·CEM 반복·horizon·평가 상태 수와 총 시간 상한. 소규모 값을 택하면 논문 설정의 재현이라고 부르지 않는다. 기존 20분 문헌검토 상한을 실험 상한으로 재활용하지 않는다.
+
+한 번의 진단 안에서 비교할 결정은 세 종류다. 원 FP32 계획, FP32 encoder를 공유한 고정 저정밀 계획, 그 저정밀 계획이 만든 마지막 mu+elite를 FP32 predictor로 재평가한 선택이다. 고정 W8A8/weight-only가 충분한지를 먼저 대조하고, 실제 부족한 설정 하나에 대해서만 shortlist의 추가 가치를 해석한다. 후보 수나 bit를 결과를 본 뒤 바꾸며 실패 조건을 찾지 않는다.
+
+각 action을 저정밀/FP32 목적함수로 모두 평가해 로그의 best candidate와 반환 mu를 구분한다. 전체 마지막 후보 population의 FP32 점수는 진단용 제한 참조로 사용할 수 있지만 배포 가능한 “무료 oracle”로 부르지 않고 그 계산 비용을 별도 계상한다. 후보 전체를 새로 최적화한 FP32 계획과 동일한 최적값이라는 보장도 없다.
+
+실제 제어 결과는 원 상태에서 원 mu와 재평가 선택을 각각 실행해 위 success 정의 및 연속 state distance를 확인한다. 판단에는 후보 순위 변화만 쓰지 않는다. FP32도 실패한 사례를 사후 제외하지 않고 모두 보고한다. 이 한 planning-call 검사는 전체 MPC 성공률이나 독립 새 task의 일반화를 입증하지 않는다.
+
+종료 조건의 의미:
+- 고정 encoder/정밀도만으로 차이가 사라지면 새 선택기 방향을 종료한다.
+- 짧은 FP32 재평가가 충분하면 기존 직접 평가로 해결한 것이므로 새 방법 개발을 종료한다.
+- 재평가도 실제 결과를 개선하지 않거나 FP32 목적함수의 이득이 환경 성공으로 이어지지 않으면 “새 정밀도 정책이 필요하다”로 확대하지 않는다.
+- FP32의 유용한 후보가 low-precision search에서 반복적으로 빠지고, 단순 정밀도 상향이나 직접 평가가 실제 자원 요구를 충족하지 못한다는 근거가 함께 나올 때만 별도 방법 문제를 정한다. 현재 그 근거는 없다.
+
+가장 강한 반론은 명확하다. 현재 19M급 predictor에서 FP32 encoder 고정·관측 재사용·고정 weight-only·짧은 FP32 재평가만으로 충분할 수 있다. 또 공개 fake quant에는 가속이 없어 새 선택에 성공해도 HPC 실익을 아직 보장하지 않는다. 이 반론을 먼저 판별하겠다는 점 때문에 좁은 진단 준비만 GO이며, 신규 방법 채택은 하지 않는다.
+
+8. 접근 범위와 보존 근거
+
+primary 4편: 2602.02110v1, 2607.28405v1, 2609.36828v1, 2411.04983v2. 원문 관련 방법·설정·부록을 읽었고 초록만으로 판정하지 않았다.
+public repo 2개, 서로 다른 source 파일 14개. GitHub web 접근 오류는 raw/API 메모리 읽기로 보완했다. 접근 실패를 파일/구현 부재로 처리하지 않았다. 새 code/모델/자료 다운로드 저장, 설치, GPU, 모델/텐서 로드, 실험, commit은 모두 0회다. JSON tree/HF metadata는 source 파일 수와 구분했다.
+
+upstream dino_wm revision 0a9492fa12044b852ae9e001cc74604b79c8bb0c:
+README.md c8a0d03417f457f26687860e15ee1b4273abb46af4db335d4a2d3217c8643f67
+plan.py 9993a3b372af68321f2f515dfbeddfd384d92a098f4b6b4ae7c1b30d6e5cd5b5
+planning/cem.py 9d9851a9ad992ace4836c77af6a88c6da77aae7f61b7055c422c52b2a5f34378
+planning/gd.py 81e8067f80954db4fcf4ffb477569f4d97199197b6213809c828237d41332d95
+
+QuantWM revision be738be37a0535f75f541a6c1201ce19f95499b0:
+readme.md d95a4c0fa612af0b24dfd63d75bf3aca6693b7b9fa7cac0b7c77f870fe64f893
+plan_quant_omse_rtn.py 28a1374221f616fa11774723edaefb5ff748d5445f8871e53e9518181df1e736
+models/ptq/layers.py 8a63e3078c3fc4252210965fd19b90703d9c1bbad58cdd4ce8ef661e3084bf68
+models/ptq/quantizer/uniform.py a12bc126bba4ce6c364fd3c46e86b89096ffbef138feecaed2a9a5ebaf6ce170
+planning/cem.py a142d1bae0871c04b8ee6715f7d4831ddd10309ddcd742b259907e3eea9ce735
+conf/plan_pusht.yaml d2c353a08e281c237b16724c1e6bbb4a2e8a32315aaf8fd11bb46e765b628fa8
+planning/mpc.py a3ce1d0f1e7867ced3f7ea22d00791af31fc98ece444b0f6e5003254caf4c1c9
+planning/evaluator.py dca799ec7ba4a9dfa0f0668a27a076a1b67f0fd580a6ff58a08f89119c85c8ee
+env/pusht/pusht_env.py 1aaac87d49b619eed2370297d5393cd3e22e22f08bbfb2870ee1422e86ef4c3a
+env/pusht/pusht_wrapper.py b285f3cb8fdecd831341187ea2ac93def0d9a574d863aa7c2ddc5b50c4be8896
+
+상기 해시는 HTTP raw bytes를 메모리에서 계산했다. 긴 env/evaluator 파일은 관련 함수 발췌를 검토했으며 전체 환경 프로그램을 감사했다는 뜻이 아니다. helper의 quant_iter 행번호 583 안내는 본인이 동일 SHA의 전체 행번호를 다시 확인해 628로 정정했다. 원 문헌의 결과 수치, 공개 소스 관측, 우리에게 아직 없는 실제 실패를 구분해 유지한다.

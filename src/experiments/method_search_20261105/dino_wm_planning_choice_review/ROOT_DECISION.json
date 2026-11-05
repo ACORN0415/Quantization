@@ -1,0 +1,33 @@
+{
+  "status": "go_bounded_baseline_diagnostic_preparation_not_new_method_adoption",
+  "created_epoch": 1793905376.9270828,
+  "research_question": "For quantized DINO-WM planning, are fixed FP32 encoder/ordinary fixed precision and final mu+elite exact rescoring already sufficient?",
+  "observed": "Published control failures and public code contracts only. Our model/control failure/selector benefit measured0.",
+  "root_decision": "Proceed with named-asset metadata verification; after concrete footprint/loader validation decide bounded FP32 smoke preparation. No GPU/model/download launch authorized by this decision.",
+  "closest_baselines": [
+    "Original FP32 predictor with equivalent observation feature reuse if validated",
+    "FP32 encoder + fixed W8A8 or weight-only W4/original activation dtype",
+    "Final mu plus last elites rescored by FP32 predictor; same actual action normalization/goal/state and explicit extra cost"
+  ],
+  "source_issues": [
+    "CEM logs best sampled loss but returns elite mean mu; must evaluate actual returned actions. Not established as paper plot cause.",
+    "RTN/OMSE checked code uses fake quant float F.linear; no packing/integer GPU speed claim.",
+    "PushT explicit MPC-CEM differs from generic GD; plainround vs STE gradient difference not evidence of CEM failure cause.",
+    "Encoder repeated in unmodified rollout; hoisting not yet equivalence/performance tested."
+  ],
+  "review_difference": "Codex recommended limited diagnostic prep. Opus initial no-go included unsupported sufficiency, footprint and impossibility assertions; preserved addenda withdraw those while retaining no-new-selector judgment. Root accepts narrowed shared uncertainty and bounded evidence collection.",
+  "access_limits": "Codex14source files/2repos/4primary. Opus14successful source+metadata contents,15requests including1failed404 and directory list accounting; self-reported overrun preserved. Related QuantWAMs/OnPTQ only abstracts read by Opus versus methods read by Codex. Do not label equivalent literature coverage.",
+  "nonclaims": [
+    "FP32 loss is not true environment-success oracle",
+    "No current selector novelty/effect/cost/holdout proof",
+    "Archive size is not runtime RAM/GPU feasibility",
+    "Task readonly scope is not a need to ask user permission again for already authorized future prep"
+  ],
+  "evidence": {
+    "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/DINO_WM_PLANNING_CHOICE_REVIEW_CODEX_KO.txt": "e3003826ac3db4ca253814a0292fda58f8f1049a21558edcee428feefe082553",
+    "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/DINO_WM_PLANNING_CHOICE_REVIEW_OPUS_KO.txt": "e604519172aa5c1e3409c642250a444363c209da799eaa345027784c796f6868",
+    "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/DINO_WM_SOURCE_CONTRACT_ADDENDUM_OPUS_KO.txt": "66bcb0cc17b0ccd0e2a8c5e70c220f6eb034c02191b978b6185eaae01dd89926",
+    "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/DINO_WM_CONFIG_SCOPE_ADDENDUM_OPUS_KO.txt": "ce1a3c3b926495220d4f60d21498c20376c483fd82f2ecea036042e66b73b472",
+    "/home/acorn0415/Quantization/docs/reviews/20261105_METHOD_SEARCH/management/DINO_WM_BASELINE_INTERPRETATION_ADDENDUM_OPUS_KO.txt": "e4c3da9dc1f1c0adafb5a943d0b7dc8bb5f5b2fe333b9425e43493e51d1aa560"
+  }
+}

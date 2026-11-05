@@ -1,0 +1,11 @@
+DINO-WM planning 검토 — root config 사실 범위 부록 (실제 Opus1, root msg_485cdb1d4fb9)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음.
+실제 시작 2026-11-05T18:59:27Z, 원 마감 19:07:23.903Z 유지. 원 보고서 e6045191…, source 부록 66bcb0cc… 불변 보존.
+읽은 것: 로컬 DINO_WM_CONFIG_FACTS_ROOT.json(SHA ac5341bab47b2f56de63f292679101413b046e123301f27eefa02f1f63c4bc44)만. 추가 외부 요청 0, helper 0, 실행 0.
+conf/plan_pusht.yaml·conf/plan.yaml·readme.md 사실은 root 제공이며 내가 원 파일을 새로 열어 검증하지 않았다(plan_pusht.yaml은 이전 helper가 열었던 파일).
+
+정정 영향: 없음. root 사실(explicit PushT = MPC+CEM, 300/30/30/30, n_evals 50; README PushT 명령이 이 config 사용; generic plan.yaml은 GD 기본)은 원 보고서와
+source 부록의 "PushT는 CEM이며 GD/round_ste 차이는 PushT 결론에 직접 영향 없음"과 같은 방향이다. 실제 출판 실험의 override·로그 provenance는 미확인이므로
+GD 경로 관측을 PushT 실패 원인으로 확대하지 않고, 전체 action gradient 0이나 출판 실행 config 확정으로 쓰지 않는다. 결론 불변: no-go.
+계수 보존: 성공 콘텐츠 14(raw 성공 8 + 목록 5 + HF 메타 1), 시도 15(404 1 포함). 원 보고서의 초과 자진 기록을 덮거나 완전 준수로 바꾸지 않는다.
+실제 끝: 2026-11-05T18:59:40Z

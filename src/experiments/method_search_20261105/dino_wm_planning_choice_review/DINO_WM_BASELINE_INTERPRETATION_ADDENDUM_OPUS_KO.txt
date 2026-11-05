@@ -1,0 +1,25 @@
+DINO-WM planning 검토 — 기준선 해석 범위 정정 부록 (실제 Opus1, root msg_c6f7535eace8)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음.
+실제 시작 2026-11-05T19:01:02Z, 원 마감 19:07:23.903Z. 원 보고서 e6045191…, 부록 66bcb0cc…·ce1a3c3b… 불변 보존.
+읽은 것: 로컬 DINO_WM_BASELINE_INTERPRETATION_FACTS_ROOT.json(SHA 05cd02b8760d826df76aaaee25ecae22ad553995bfdeb2ac07bd3d68a973ae82)만(root 제공 excerpt, 원 source 직접 재검증 아님).
+추가 외부 요청 0, helper 0, 실행 0. 계수 보존: 성공 콘텐츠 14, 요청 시도 15(404 포함), 초과 자진 기록 유지.
+
+유지: 새 선택기 방법은 현재 채택하지 않는다(no-go). 이 부분은 그대로다.
+철회·축소(무증거 단정이었던 부분)
+ 1) "encoder 고정밀은 비용이 작다": 철회(부록 66bcb0cc 정정 유지). 현 구현은 반복×후보마다 rollout→encode→encode_obs를 호출하며, 관측 특징 hoisting은 가능한 단순
+    기준선이지만 수치 동등·비용은 미검증.
+ 2) "FP32 shortlist 재평가는 최종 행동이 top-k 평균이라 효과가 제한된다": 철회. 내 서술은 elite 내부 재정렬만 상정했다. final mu와 마지막 elite들을 FP32로 다시 채점해
+    그중에서 고르는 것은 후보 집합에 대한 유효한 개입이며 효과·비용은 미관측이다. FP32 predictor 점수도 env 성공의 oracle은 아니다.
+ 3) "encoder 고정밀 + predictor 양자화가 가장 강한 단순 해법/충분": "충분"을 철회. FP32 encoder + 저비트 predictor가 PushT 격차를 닫는다는 우리 측정은 없고, 논문의
+    encoder 민감도·혼합 비트 표는 문헌 근거다. 정확도 기준선 후보로만 남긴다.
+ 4) "HF 21.9GB 다운로드 필요 → 실행 불가": 철회. 21.9GB는 저장소 전체 합계이며 필요한 asset(outputs.zip 일부, pusht_noise.zip)의 개별 크기·추출량·현재 보유 여부는
+    미확인이다. 4090 실행 가능성도 미확인이지 불가가 아니다.
+ 5) "지금 준비 가능한 판별 검사 없음 / 남는 선택 없음": "검사 불가능"은 철회. 읽기 전용·무다운로드는 이번 업무 범위일 뿐 근본 불가 근거가 아니다.
+
+좁힌 판정(한 개)
+ - 새 선택기: no-go 유지.
+ - 중요 미결 1개: 저비트 계획 실패를 줄이는 데 기존 단순 기준선(① FP32 encoder + 저비트 predictor, ② 마지막 elite+mu의 FP32 재채점, ③ 관측 특징 hoisting으로 encoder 비용
+   절감) 중 어느 것이 충분한지는 미관측이다. 이 셋의 효과·비용은 asset과 실행이 있어야 판단할 수 있고, 후속 자원 여부는 root가 기존 승인 범위에서 정한다.
+   나는 새 실험이나 경로 구현을 제안·시작하지 않는다.
+ 미확인: 출판 실험 override/로그, fake-quant 대비 packed 실행 비용, 필요 asset 개별 크기·보유, hoisting 수치 동등.
+실제 끝: 2026-11-05T19:01:23Z

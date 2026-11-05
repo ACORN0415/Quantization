@@ -1,0 +1,16 @@
+DINO-WM planning 검토 — root source 사실 보충 부록 (실제 Opus1, root msg_147009fc6506)
+검토자: 실제 Claude Opus 5.5 claude-opus-5-5, session claude_beab681e_3eaf_41b0_9688_b8ef268b288f. Task/Dispatch 없음.
+실제 시작 2026-11-05T18:53:46Z, 원 마감 19:07:23.903Z 유지. 원 보고서(SHA e604519172aa5c1e3409c642250a444363c209da799eaa345027784c796f6868) 불변 — 이미 반환됨.
+읽은 것: DINO_WM_SOURCE_CONTRACT_FACTS_ROOT.json(SHA 0e1354ac…)만. 추가 source 파일 0개(14건 한도에 추가 없음). 아래 gd.py·quantizer·visual_world_model.py 사실은
+root excerpt이며 내가 직접 전체 source를 검증한 것이 아니다. helper 추가·재시작 없음. 실행 0.
+
+판정 영향
+1) CEM 관측 반복(cem.py 89–113, visual_world_model.py 295, root 관측): CEM이 같은 현재 관측을 num_samples(300)만큼 복제해 매 반복 wm.rollout→encode로 넣는다.
+   → 원 보고서 근거 a)의 "encoder는 관측·goal 몇 장에만 쓰이므로 비용이 작다(추론)"는 이 구현에선 틀릴 수 있다. 현 코드에서는 encoder가 후보 수×CEM 반복마다 실행될 수 있어
+   encoder 고정밀의 비용이 작다고 말할 수 없다. 관측 특징 amortization(한 번 encode 후 공유)은 정확한 실행 재구성으로 가능할 수 있으나 encode/fusion·cache 수명·
+   입력 형상 계약이 미확인이라 효과·정확성을 보장하지 않는다. 정정: "encoder 고정밀 + predictor 양자화"는 정확도 측면의 가장 강한 단순 기준선으로 유지하되,
+   그 비용은 미측정이며 amortization 여부에 달려 있다.
+2) GD 경로(gd.py 92–113)·QAct per_tensor plain round vs per-token round_ste: PushT 설정은 CEM sub-planner이고(원 보고서 helper 판독) CEM은 미분이 필요 없으므로
+   PushT 결론에는 직접 영향이 없다. GD 비교에서는 surrogate backward 차이가 교란이 될 수 있다는 점만 기록. 모델 전체 action gradient=0이나 논문 실패 원인으로 해석하지 않는다.
+3) 결론 변경 없음: no-go(새 선택기 불필요, 지금 준비 가능한 판별 검사 없음). 변경점은 단순 기준선의 비용 주장 약화(위 1)뿐이다.
+실제 끝: 2026-11-05T18:54:07Z
