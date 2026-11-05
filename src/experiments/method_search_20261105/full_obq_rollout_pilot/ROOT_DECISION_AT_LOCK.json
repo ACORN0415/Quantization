@@ -1,0 +1,28 @@
+{
+  "root_execution_authorized": true,
+  "root_code_review_accepted": true,
+  "independent_codex_code_review_accepted": true,
+  "root_stage2_accepted": true,
+  "cost_review_accepted": true,
+  "historical_fable_design_reviewed": true,
+  "review_route": "root_accepted_deferred_review",
+  "review_status": "deferred_not_completed",
+  "claude_final_source_reviewed": false,
+  "claude_final_result_reviewed": false,
+  "final_reviewer_model": "Opus 5.5",
+  "claude_not_before": "2026-11-05T21:50:00+09:00",
+  "administrative_amendment_adopted": true,
+  "independent_codex_review_sha256": "463098d438b6060f6fdae74a3353ddaa12135e008cbd767cd113bda4c510f3c0",
+  "pilot_source_sha256": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/quality.py": "f21a1b93f1d94677cb1d966062b1f9f516adf1c705ac8acd56441efe1e69f5f3",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/prepare_bundle.py": "051c2b97b6f36242acdd1f02f5a3a537e7602fa83f3cd594441b7184ab1921fd",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/pilot_common.py": "4a8ac098661eaec87ccfddf07418bdd8148f92ec353301339930074b1ab1cdda",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/worker.py": "4b8fdef285db40b21d77e920efcbbabafa338817196e971429aad9dbfa3f7206",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/supervisor.py": "9124d1bfe5096a9a97cc00f2da817a191c9950c53d96a8afffa88fe4ed63d22a",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/packed_adapter.py": "38d470ef2d2e26aca71376e44d1d0c601e2dc0a5f6aec9ea4181838377cc6718",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/selftest.py": "15bfa198098a999c31221a4a2c2ee1ee3dce19186214a5ae19de09b591b3521f",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/audit_posthoc.py": "63a6a930415c830978c0bfa68b2bf104f191a22f91656c2fea91a3ca5a2d4ece"
+  },
+  "notes": "Root read the eight current sources and independent Codex review. Authorize only the registered two-input/eight-generation/60-minute pilot after GPU idle and integration validity. Actual Claude prior design reviews are preserved; final source/result review is deferred until Opus 5.5 at or after 21:50 KST, not completed. Scientific gates and execution caps unchanged. Stage2 measured full encoder 0.729 ms versus fastest tested RTN 0.307 ms; this supports a bounded quality diagnostic, not an end-to-end speed claim. RTN intervention differences are not instrument noise and cannot override negative gates.",
+  "decided_utc": "2026-11-05T10:54:46.782924+00:00"
+}

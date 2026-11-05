@@ -1,0 +1,25 @@
+최종 Claude 검토 유예에 대한 행정 변경 — root 채택, 실행 지시는 별도 — 2026-11-05
+
+root는 실제Fable의과거설계/원칙검토와quota증거를보존하고,독립Codex소스감사와root코드검토를추가하는투명한검토경로를채택했다. 사용자의계속진행승인범위안에서한정pilot실행을검토하는행정변경이며,현재GPU실행지시가아니다.
+
+실행 전 필수 조건
+- stage2의최종정확성·소유권·native4endpoint양RTN20%gate 및실제비용을root가수용한다. 실제RESULT/QUALITY/최종API와전이의존성,binary/sourcehash를잠근다.
+- 이pilot의현재소스를root와별도Codex FAIR가독립검토하고,검토문서해시와정확한소스해시를잠근다. 작성자합성검사는독립검토를대체하지않는다.
+- root가root_execution_authorized=true인별도결정파일로실행을지시한다. root_code_review_accepted/independent_codex_code_review_accepted도참이어야한다. helper는LOCK만준비하며실제RUN은별도root호출이다.
+
+반드시 사실대로 유지할 검토 상태
+review_route=root_accepted_deferred_review
+review_status=deferred_not_completed
+historical_fable_design_reviewed=true
+claude_final_source_reviewed=false
+claude_final_result_reviewed=false
+final_reviewer_model=Opus 5.5
+claude_not_before=2026-11-05T21:50:00+09:00
+root의실행지시는Claude최종검토완료나연구최종승인이라는뜻이아니다. fable_reviewed=true 같은포괄필드로미완료를숨기지않는다.
+
+실제이전Fable설계/원칙검토·독립Codex검토·root결정·REVIEW_AVAILABILITY·사용자모델/시각선호를별도immutable snapshot으로보존한다.21:50 KST이전Claude호출없음. 이후실제Opus5.5가동결된최종소스와자료를검토하며,그검토전에는최종검토완료라고보고하지않는다. 사후에문제가확인되면유효성판정도수정하고당시미검토사실을유지한다.
+
+변경하지 않는 과학적 조건
+두prompt/seed,네팔,BF16참조/RTN2개,고정p0통계,frame/group/packing,모든Q1/Q2/Q3와중단규칙,60분전체상한,8generation/8VAE,RSS/GPU/disk상한,재시도/재시드/후보확장금지. 최종정확성·품질기준을완화하지않는다.
+
+현재는독립Codex검토와root실행지시가아직준비중이다. STAGE2_BINDING pending,root_execution_authorized=false,LOCK/RUN없음,GPU0/새생성0. root_stage2_accepted/cost_review_accepted도최종자료hash가실제binding에묶이기전까지pending파일에서는false로남긴다.

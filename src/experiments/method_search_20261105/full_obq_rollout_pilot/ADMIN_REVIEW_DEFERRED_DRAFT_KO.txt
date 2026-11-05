@@ -1,0 +1,23 @@
+검토 일정에 대한 행정 변경안 — 제안만, 실행 승인 아님 — 2026-11-05
+
+사실
+실제 Claude Fable 두 채팅에서19:30경 rate_limit이 발생했고,21:50 KST 재설정 안내가 나왔다. 근거는 docs/reviews/20261105_METHOD_SEARCH/REVIEW_AVAILABILITY.json이다. 다른 계정·모델로 교체하지 않았다.
+이후 사용자 지시: Claude는21:50 KST부터호출하며모델은Opus5.5다. 그전에는Claude를호출하지않는다. 과거Fable검토는그대로역사적기록이고,예정된최종검토는실제Claude Opus5.5가수행해야한다.
+실제 Fable의 PILOT_DESIGN_FABLE_REVIEW_KO.txt 및 PILOT_DRAFT_FABLE_REVIEW_KO.txt는 설계/초안을 검토했지만 완성된 pilot 소스 전체와 결과를 검토하지 않았다. 따라서 최종 소스·결과에 대한 Fable 검토는 미완료다. 현재 STAGE2_BINDING의 false/pending과 LOCK/RUN 부재를 유지한다.
+
+이미 반영한 설계 판단
+root는 네 팔과 두 입력, Q1/Q2/Q3 및 중단 기준을 유지했다. Fable의 RTN_FP32를 K4h8로 바꾸자는 제안은 산술 변화와 보상 효과를 분리할 필요 때문에 채택하지 않았다. 두 RTN 차이를 기기 잡음으로 간주하는 override와 NSE0.8 포화 override도 근거가 부족해 채택하지 않았다. 구간별NSE와RTN차이는 설명용으로만 기록하고, 초기noise바이트 검증 및층별비동기시간계측은 반영했다. 이견과 수정은 공개된 상태다.
+
+대안 검토 경로 제안
+1. 최종 layoutfix stage2의 실제 정확성·수명·native 품질·비용이 유효 완료돼야 한다. 이 전제는 줄이지 않는다.
+2. root가 pilot 완성 코드 전체를 검토하고, 별도의 Codex FAIR 작업자가 같은 소스를 독립 감사한다. 각자 정확한 소스 SHA·판정·남은 문제를 새 문서로 남긴다. 작성자인 본 Codex의 SELFTEST는 독립 검토를 대체하지 않는다.
+3. root가 이 두 검토와 실제 Fable 설계 검토·이견 처리 기록을 근거로 '최종 Fable 검토를 유예한 한정 실행'을 별도의 행정 결정 파일로 승인할지 판단한다. 이 문서만으로 실행하지 않는다.
+4. 채택하더라도 기록은 historical_fable_design_reviewed=true, claude_final_code_reviewed=false, claude_final_result_reviewed=false, final_reviewer_model=Opus5.5, review_route=deferred_final_claude 같이 사실을 구분해야 한다. 현재 fable_reviewed/최종 검토 플래그를 조용히 true로 바꾸면 안 된다. 실행 guard와잠금도이구분을반영한별도diff를두독립검토자가확인해야한다.
+5.21:50 KST이후 실제Claude Opus5.5에동일한immutable source snapshot과측정자료를제공한다. 최종결과해석의완료전에검토를받는다. 사후에중대한오류가확인되면자료의유효성을다시판정하고,검토가실행전에이루어졌다고표현하지않는다.
+
+바뀌지 않는 항목
+새두입력/seed, 네팔, p0 고정보정, stage2공통전처리/packed bytes, Q1/Q2/Q3와중단/무효규칙,60분전체상한,8generation/8VAE,CPU4threads/RSS40GiB/GPU22GiB/disk4GiB,새후보/재시드/실패재시도금지. GPU 시작은 source검증·보정과같은60분안이며대기/행정검토를실험완료라고세지않는다.
+
+현재 상태
+이 변경안은 proposed이며 adopted가 아니다. GPU0/새생성0, 최종Fable코드검토false, STAGE2_BINDING pending, LOCK/RUN 미생성. 현재 prepare_bundle.py는원래의최종검토완료경로만구현하므로행정유예로우회실행할수없다. root의결정과검토된실행guard변경전까지현상태를유지한다.
+런타임6파일의fable_stage2_reviewed/fable_reviewed라는기존필드명은아직이전규칙의명칭이며모두미충족상태다. Opus5.5검토또는행정유예를이름만바꿔충족한것처럼쓰기전에,후속검토에서모델/설계검토/최종소스검토를분리한schema로명시적으로정리해야한다.

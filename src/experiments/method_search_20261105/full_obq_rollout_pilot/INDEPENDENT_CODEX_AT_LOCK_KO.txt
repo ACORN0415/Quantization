@@ -1,0 +1,33 @@
+독립 Codex 코드 검토: 전체 OBQ 생성 판별 검사
+검토자: /root/fair_comparison_codex
+검토 범위: 아래 8개 소스와 SELFTEST_V3, 등록 명세·기존 stage2 연동. GPU 실행·모델 로드·실험 재실행·동료 코드 수정은 0회다. 이 문서만 신규 작성한다.
+
+판정: 확인한 두 실행 차단 문제의 수정이 반영됐다. 현재 소스에서 추가 실행 차단 오류를 찾지 못했다. 사전 고정한 8회 생성 검사로 넘어갈 수 있다는 코드 검토이며, 방법의 품질 개선·신규성 또는 실제 전체 생성 성공을 미리 인정하는 판단은 아니다.
+
+1. 상대 모델 경로: 해결됨.
+supervisor의 자식 작업 cwd가 ROOT/src로 변경됐다. 실제 Wan wrapper가 사용하는 wan_models/... 상대 경로와 맞는다. ROOT/wan_models는 없고 ROOT/src/wan_models는 유효하다. tokenizer 폴더의 네 항목도 모두 파일이므로 required_sources의 현재 glob은 디렉터리 해시 오류를 만들지 않는다.
+
+2. fused 인코더의 K scale 계약: 해결됨.
+모든 압축 경로에서 동일 api.gpu_frames를 한 번 호출한 뒤 z의 BF16 형상·연속성, s의 FP16 형상·연속성, 유한한 z/s와 엄격한 s>0를 확인한다. 그 후 O_full_gpu는 동일 z/s/U를 T_code의 기존 fused 커널에 전달한다. FP16 underflow로 0이 된 scale은 보정·대체하지 않고 유효성 실패로 중단한다. 이 공통 장치→호스트 판정 비용은 생성 시간과 인코더 계측에 들어가며 timing 필드에도 명시돼 있다. 이 변경은 scale 정책이나 양자화 판정 허용오차를 바꾸지 않는다.
+
+3. 실행 통합 및 비교 조건.
+층별 고정 p0 factor 30개를 각 층 인코더에 연결하며, 실제 GPU 연동 검사는 사전 고정한 두 캡처에서 CPU 코드 참조와 저장 바이트·출력 소유권을 먼저 검사한다. 각 생성은 새 cache/cross-cache/noise에서 시작하고, 동일 입력의 42개 초기 noise 해시를 BF16과 대조한다. 첫 무이력 청크는 BF16과 원소 바이트가 같아야 한다. 이후 6개 과거 청크+현재 청크, 30층×41회 완료 청크 인코딩, 210회 model forward, 실제 K/V payload를 검사한다. O_full_gpu는 고정 보정 factor만 사용하며 평가 입력 query로 갱신하지 않는다. 품질 평가는 저장 latent와 원시 복호 영상 RGB8을 사용하고 MP4는 이후에 기록한다. 판정은 양쪽 RTN에 대해 사전 기준을 그대로 적용한다.
+
+4. 검토 이력과 자원 제한.
+현재 binding과 lock의 review 검사는 root의 명시적 실행 결정, 독립 Codex 검토, 과거 Fable 설계 검토, 최종 Claude 검토 미완료를 각각 구분한다. 최종 source/result Claude 검토가 완료된 것처럼 표시하는 값을 거부한다. root가 실행 허용 결정을 잠그기 전 현재 pending binding으로는 실행할 수 없다. 최신 사용자 지시에 따라 실제 최종 검토는 2026-11-05 21:50 KST 이후 Opus 5.5로 남아 있다. 본 검토가 이를 대신하지 않는다.
+60분 supervisor 제한·자기 process group 종료, 생성/복호 각각 8회 상한, 해시 고정/재검증을 확인했다. RSS/GPU/디스크 검사는 관측 시점의 guard이며 순간 초과를 물리적으로 차단하는 자원 격리는 아니다. GPU peak는 입력 worker의 누적값으로 명시돼 있어 독립적인 팔별 peak라고 해석하지 않는다.
+
+남은 검증: 실제 30층/42청크 입력에서도 K scale 계약이 성립하는지, 모델 로드·GPU 통합·8회 생성·복호/품질 평가가 등록된 상한에서 모두 끝나는지는 실행에서 확인할 사항이다. SELFTEST_V3는 CPU stand-in 검사이며 GPU 성공 증거로 쓰지 않는다. 이번 검토에서는 이를 다시 실행하지 않고 소스·저장 기록·해시를 대조했다. 더 강한 방법론/일반화 결론은 이 두 입력 판별 검사만으로 확보되지 않는다.
+
+SELFTEST_V3 SHA256: daf256ba3e5dc37718852131594b74da466082015fbf42f7cbeb5b144c9f423f
+8개 소스 모두 해당 저장 selftest의 해시와 현재 해시가 일치하며 AST 구문 분석도 통과했다.
+
+검토한 소스 SHA256:
+pilot_common.py: 4a8ac098661eaec87ccfddf07418bdd8148f92ec353301339930074b1ab1cdda
+packed_adapter.py: 38d470ef2d2e26aca71376e44d1d0c601e2dc0a5f6aec9ea4181838377cc6718
+worker.py: 4b8fdef285db40b21d77e920efcbbabafa338817196e971429aad9dbfa3f7206
+quality.py: f21a1b93f1d94677cb1d966062b1f9f516adf1c705ac8acd56441efe1e69f5f3
+supervisor.py: 9124d1bfe5096a9a97cc00f2da817a191c9950c53d96a8afffa88fe4ed63d22a
+selftest.py: 15bfa198098a999c31221a4a2c2ee1ee3dce19186214a5ae19de09b591b3521f
+prepare_bundle.py: 051c2b97b6f36242acdd1f02f5a3a537e7602fa83f3cd594441b7184ab1921fd
+audit_posthoc.py: 63a6a930415c830978c0bfa68b2bf104f191a22f91656c2fea91a3ca5a2d4ece

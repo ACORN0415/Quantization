@@ -1,0 +1,27 @@
+{
+  "time_utc": 1793873191.3924599,
+  "scanned_files": 1103,
+  "scanned_roots": [
+    "docs/reviews",
+    "src/experiments",
+    "tools",
+    "sfq_data prompt-named txt/json"
+  ],
+  "max_file_bytes": 2097152,
+  "skipped_large_files": [],
+  "exact_sentence_matches": {
+    "coast_cycle": [],
+    "rain_market": []
+  },
+  "seed_assignment_matches": {
+    "409": [],
+    "503": []
+  },
+  "known_semantic_overlap": [
+    {
+      "path": "/home/acorn0415/Quantization/src/experiments/mechanism_prompts_v0.txt",
+      "overlap": "lighthouse object; different scene and exact text"
+    }
+  ],
+  "limitation": "Exact text absent in inspected local history. This does not prove semantic novelty, model-pretraining absence, or exhaustive absence in uninspected large files."
+}

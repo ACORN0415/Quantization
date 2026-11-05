@@ -1,0 +1,24 @@
+Full-H 전체 생성 파일럿 코드 검토 범위 — 구현 전 — 2026-11-05
+
+읽은 기존 경로
+- src/scripts/p3_tf_fr.py: build/encode/source_hash. build가checkpoint·dtype·config를정하고textencoder는conditioning뒤CPU로내린다.
+- src/kvq/lockstep.py: chunk_noise는seed와chunk에서독립generator를정하며run_chunk는4denoise+1context-refresh. compressed_cache는ChunkStore이고residual기본0. BF16cache는기존고정buffer.
+- src/kvq/store.py: 다른청크처음읽을때직전pending을segment로넣고capacity7청크에맞게퇴거,완료청크1회encode,현재query의K/V는BF16. source error_stats 계산이unconditional이며encode직후restore와reduction을추가한다. 이번원형store를유지한다면이진단비용은전체생성시간에포함되고production최소실행비용이라고하지않아야한다.
+- stage2 experiment.py: nativeGPU frames/ownedpacket/EXT.obq_pack/restore_gpu. 확정원본의API와hash를기다린다. build_extension을rollout에서새로호출해동일폴더덮어쓰기나재컴파일하지않고,확정BUILD의binary를검증해로드하는wrapper가필요하다.
+- tools/kv_channel_rollout.py windows: raw501frame,후반249..500,MUSIQ평균,DINO정규화cosine. tools/mechanism_worker.py auxiliary_evaluator는DINO와SelfForcing의unqualified utils충돌을격리한다. 기존메커니즘그대로사용한다.
+- kv_headrule_rollout/run_headrule_rollout.py: 기존42청크/초기청크동등/실제층별41호출/품질전rawRGB8흐름을참고하되legacy int8-resident state를새actualpacked이라고표시하지않는다.
+
+구현 후 root/Fable가 볼 단위
+1. factor_prepare: l00..29 p0 manifest,실제SHA검증→동결hessian/factorize→U30층. IO/계산/저장비를분리하고평가text/query를읽지않는다. 한파일씩해제,원본중복저장없음. factor재사용은층ID와해시로연결.
+2. PackedState/encoder adapter: stored tensor가실제uint8이고shape/scales/sentinel값을보존한다. restore는stage2공식확정함수. 각layer에자기U,고정Hadamard공유. 다음encode가과거packet을덮어쓰지않는출력소유권검사. RTN양팔은같은nativeGPU전처리이며나눗셈dtype만다른것을검사.
+3. V 공통 경로: GPU BF16 RTN을기존CPU encode_v와실제packed/scale비트단위대조. K의frame별pad와V의chunkpad를혼동하지않는다. 이부분만새adapter코드이며OBQ수학재구현금지.
+4. generation driver: 새prompt2개,seed고정,arm별noise/crosscache/ChunkStore초기화,globalchunk·layer별실제호출기록,퇴거시점,처음청크참조byte,210forward/41encode 검증. noise와H를arm결과로갱신하지않는다. BF16참조는각prompt하나를새생성해나머지3팔공통사용.
+5. budget/provenance:60분전체시작은metadata/source검증전. compiler/모델로드/metric도포함. processgroup소유권과최대8+8계수,실패시기존결과덮어쓰기/조용한retry금지. 준비단계의최대VRAM도포함.
+6. metrics:latent후반63..125의분자와분모를각각합산,RGB8그대로MUSIQ/DINO,frame정렬249..500,checkpointhash. reference-free점수와BF16ref오차를구분. gate모든조건/두RTN/두prompt를그대로적용하고평균으로악화사례를감추지않는다.
+
+확인한 비용 자료
+kv_headrule_all/p01_K4h8_V4_sampling.json generation_s=78.960827,forward210; kv_headrule_rollout/p00_K3rot_V4_sampling.json generation_s=78.621232.
+kv_alignment_compounding/r8c/quality.json finished-started=2315.075079초,vae_decodes70. 이는새packed/full-H 경로의보장시간이아니다.
+
+업데이트: adapter/worker/quality/supervisor 구현과CPU합성검사를마쳤다. SELFTEST.json에동적V CPU packet일치,층별factor연결,소유권,10chunk×5call store이력,판정6사례를기록했다. OBQ는CPU참조대역을사용했으며실제CUDA검증이아니다. 모든코드는최종binding과root/Fable LOCK이없으면실행되지않는다.
+아직 하지 않은 일:새모델/가중치다운로드,새GPU사용,새latent/VAE생성,원래코드수정,실자료factor준비. 기존stage2의최종API·binary·품질/비용판정은pending이다.

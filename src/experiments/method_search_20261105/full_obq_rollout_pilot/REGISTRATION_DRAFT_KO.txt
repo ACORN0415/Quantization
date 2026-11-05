@@ -1,0 +1,58 @@
+Full-H packed KV 전체 생성 파일럿 등록 초안 — 2026-11-05
+상태: 계획·코드 검토 범위만 준비. GPU 실행0, 새 생성0, 코드 구현/LOCK 이전. 아래 지표·입력은 결과 전에 제안하며 root/Fable 검토 뒤 잠근다.
+
+1. 질문과 실행 전제
+부분 attention 출력에서 확인한 fixed offline full-H 효과가, 같은 실제 저장량의 회전 RTN보다 새로운 입력의 전체 생성 궤적을 BF16 참조에 가깝게 유지하는가? 외관 품질을 해치지 않으면서 얻는 이득인가?
+obq_gpu_encoder_stage2가 정확한 code·owned packet 수명·native BF16 참조 및4 endpoint 양RTN 대비20% 감소 gate를 통과하고, fused/Graph 비용에 대한 root/Fable 판단이 완료된 경우에만 실행 검토한다. 그 결과가 미달이면 본 파일럿을 시작하지 않는다.
+stage2 확정본의 GPU frames, 고정 OBQ kernel, owned packet 계약, restore_gpu를 해시로 잠가 재사용한다. 여기서 full-H 양자화·CUDA kernel을 별도로 재구현하거나 설정을 고르지 않는다. 아직 stage2 확정 해시/라이브러리는 대기 상태이며, 검토 통과 전 임의 값으로 채우지 않는다.
+회전 INT4가 기존 MUSIQ에서 BF16에 가까웠으므로 MUSIQ 우위를 자동 기대하지 않는다. 본 파일럿은 다음 자원 배분을 위한 두 입력 검사이며 새 방법의 신규성·확증 성공·독립 통계적 유의성을 입증하지 않는다.
+
+2. 결과 전 고정한 입력
+PROMPTS.json의 정확한 문자열·해시를 사용한다. coast_cycle(seed409): 등대로 이어지는 해안도로의 자전거 측면 추적. rain_market(seed503): 비 오는 시장에서 파란 우산 보행자를 뒤에서 추적.
+local history1103개 파일과 sfq_data의 prompt명 txt/json에서 정확 문장 및 두 seed 할당을 찾지 못했다. mechanism_prompts_v0에 등대가 등장하는 별도 정적 장면은 있다. 따라서 정확 입력의 첫 사용이라고만 표현하며 장면 개념이나 학습 분포의 신규성을 주장하지 않는다. 입력을 점수에 따라 교체하지 않는다.
+
+3. 네 팔과 통제
+각 입력에 BF16, R_bf16, R_fp32, O_full_gpu 네 팔, 총8세대(각42청크=126 latent frame=501 pixel frame)로 고정한다.
+BF16: 원래 bf16_cache 경로. 나머지3팔: ChunkStore/동일 native attention, pending와현재 BF16, residual_tokens0, sink0, local21 latent frames(현재3+과거18;최대6완료청크), once encoding/동일퇴거순서.
+모든압축팔의K는동일nativeGPU FP32 Hadamard→BF16→frame1560별8padding→g16 BF16 absmax/7→FP16scale다. R_bf16은BF16나눗셈round, R_fp32는동일scale FP32 round, O_full_gpu는고정full-H factor와검증된fused kernel이다. INT4 actual uint8 nibble packing,모든head4bit,head boost없음. V는동일chunk전체g16 BF16 RTN+actualpacking,현재K/V는BF16. Q 회전·attention kernel 변경없음.
+stage2와같은TF32 off/FP32 matmul highest설정을BF16참조를포함한모든팔에공통으로적용하고고정한다. 팔마다산술전역설정을달리하지않는다.
+K 청크4515841B, V 청크4500480B. 한층과거6청크54097926B;30층1622937780B. 이는fixed factor·현재/상호attention cache·decoder workspace를포함한전체peak가아니다. FULL factor30층 FP32 23592960B는encoder공유상태로별도보고한다. 각구간의같은payload를실제tensor numel×element_size로검사한다.
+입력1실행순서BF16→R_bf16→R_fp32→O_full_gpu;입력2BF16→O_full_gpu→R_fp32→R_bf16. 캐시·cross-cache·noise·generator seed는매팔초기화하고같은prompt의noise는같아야한다. 팔별1회뿐이므로생성시간작은차이를통계적속도우위로주장하지않는다.
+
+4. 보정원과 비용
+p00_s101/l00_c7.pt..l29_c7.pt의동일call0 query만고정사용한다. manifest에30개모두존재하며총7042655940B다(층0..9는두자리파일명). 효과를보고층/damping/통계원을선택하지않는다.
+동결causal common.hessian/factorize와같은CPU FP32 Hadamard→FP64moment,lambda=.01mean(originaldiag),FP64inverseCholesky→FP32 U를층별1회준비한다. 파일은한층씩검증·로드해q통계를계산한뒤즉시해제하고U만모은다. 전체원본7GB를복제하거나RAM에동시유지하지않는다. 원본SHA·rawH/H/U해시·층ID/shape·양의대각·유한성검사를저장한다.
+IO/원본hash시간, H+factor계산시간, 저장시간, GPU전송시간을각각기록하고총보정시간도보고한다. 이준비는60분본실행상한에포함한다. 고정U를각layer encoder에한번전달하고, encode중평가Q나미래청크를사용하지않는다.
+
+5. 주 지표와 권고 gate
+Latent 주지표: 후반chunk21..41, 즉latent index63..125 전체의BF16참조NSE = sum((latent_arm-latent_BF16)^2)/sum(latent_BF16^2),FP64누적. chunk별비율을평균하는대신분자/분모를합산한다. 같은입력의두RTN각각에대해 gain=1-NSE_FULL/NSE_RTN. 분모0/비유한은판단불가(비유한출력은실행무효). 이는BF16궤적충실도의대리지표이며영상품질이나정답과동일시하지않는다.
+영상 지표: 전체latent를각팔한번VAE decode해raw RGB8을만들고,MP4인코딩전동일프레임501개에서기존MUSIQ와DINO특징을계산한다. 주창pixel249..500은latent후반과같은구간이다. BF16참조와동일index DINO cosine을사용하며인접프레임DINO는보조설명만한다.
+계속할 signal 권고(두새입력과두RTN에동시에적용):
+ Q1. 후반latent NSE를각입력에서각RTN대비10%이상감소.
+ Q2. 후반DINO_reference의각입력차이가각RTN대비 -0.005 이상이고,두입력평균차이가각RTN대비0 이상.
+ Q3. 후반MUSIQ의각입력차이가각RTN대비 -1.0점 이상이고,두입력평균차이가각RTN대비 -0.5점 이상.
+이마진들은검정으로입증한비열등한계가아니라사전작은투자판별규칙이다. 10% latent 감소는RTN과의명확한궤적차이를요구하고,DINO는BF16의내용/구도보존에대한보조확인,MUSIQ는참조에가까워지더라도외관이손상되는상황을거르는역할이다. BF16궤적이가장좋은영상이라는가정은하지않는다. MUSIQ 단독개선이나latent만의개선으로성공이라하지않는다.
+Q1∧Q2∧Q3일때만더큰검토의진행신호다. 한입력이라도FULL의NSE가어느RTN대비10%이상증가,또는DINO차이<-0.02,또는MUSIQ차이<-2이면품질방향중단권고. 나머지미달은판단불가다. 불리한입력/팔/프레임을빼거나지표를바꾸지않는다. invalid/incomplete는유효한음성결과와분리한다.
+같은조건의전체generation wall·GPUpeak·factor준비비·actualcachebytes를함께보고한다. 아직서비스ms요구가없으므로임의속도한계를새로만들지않으며,단독quality gate를system개선완료라고하지않는다.
+
+6. 실행 유효성과 횟수
+모델은기존SelfForcing1.3B/동일checkpoint/config/denoising/scheduler,기존p3_tf_fr.build/encode및lockstep.run_chunk를재사용한다. 각generation210forward(42×5),전체1680forward. compressed팔6generation은각layer41encode_pair,전체7380pair호출을실제호출위치에서층별기록한다. 완료청크만1회encode,마지막pending은flush하지않는다.
+모든팔첫청크가해당BF16참조와원소바이트일치해야한다. 이첫청크검사를과거캐시전체경로의항등검사라고부르지않는다. 기존source가같은BF16/identity캐시검사증거를연결하고,새adapter의소유권·층별U mapping·단순합성ChunkStore이력/퇴거검사를실행전통과시킨다. stage2 exactcode/nativeBF16 gate도필수다.
+actualpack adapter의V GPU encode는새통합부이므로고정합성+기존두write캡처에서common.encode_v CPU packet과전원소일치및V decode왕복을검사한다. 여기서동등성을완화하지않고실패하면본generation을시작하지않는다. K는stage2완료구현그대로,재구현금지.
+GPUpeak는모델build전초기화하고build/conditioning/sampling/VAE/metric각phase를기록한다. model/data/checkpoint/metricweights/sourcehash는전후확인한다. 외부네트워크·새모델다운로드없음.
+
+7. 자원과 저장
+본실행은GPU유휴·stage2종료확인후시작. source검증·보정준비·모델로드·integration검사·sampling·VAE·평가·저장까지60분상한. 준비문서/코드/사전합성검사는별도. 8generation·8VAE와60분중먼저도달한상한을적용하며새팔/재시드/실패재생성으로구제하지않는다. 단위GPU검사는새generation/VAE가아니지만60분에포함한다.
+CPU4threads,RSS40GiB,GPUobservedpeakallocated22GiB,신규disk4GiB. 초과시자기worker만종료하고완료/미완료/무효를분리한다. 8latent와features/per-frame점수·metadata·필요한preview를보존하며raw RGB8 전체8벌은중복저장하지않는다. preview는지표입력이아니다. 원본/기존실험/LOCK변경없음.
+현실성근거: 기존42청크생성은회전headrule경로약79초/회,기존70VAE+두지표quality가2315초(약33초/영상)였다. 단순8배로약15분에모델/보정/검증준비가더해지는규모라60분은초기목표로합리적이다. 새packeddecoder·full-H의실제rollout오버헤드는미측정이므로끝난다고보장하지않는다.
+
+8. 한계와 후속 범위
+이4팔검사는동일packing/grid에서full-H rounding의추가효과를분리한다. 기존norm-head INT8 혼합은저장량이달라이번팔에추가하지않지만,후속시스템기여를주장하려면단순혼합정밀도와의실제메모리/품질/시간곡선을별도로비교해야한다. 가까운QKSA/SAW/기존GPTQ·query-aware KV방법과의차별성은이pilot성공만으로확보되지않는다.
+구현 준비 업데이트: root는기존4팔/두입력/Q1-Q3와중단기준을유지했다. adapter/worker/quality/supervisor 및CPU합성검사는완료했고결과는SELFTEST.json에보존했다. fused커널은합성검사에서CPU참조대역으로대체했으므로실제CUDA검사완료라고하지않는다. stage2 layoutfix의공통api.gpu_frames(명시적2D mm)를RTN/OBQ와통합검사에사용한다. 예전api.v1.gpu_frames는사용하지않는다. 최종source/확정품질/비용의binding은여전히pending이다.
+0기준chunk1..7,8..20,21..41의NSE와두RTN간차이는설명용만기록한다. 서로다른양자화팔의차이를측정잡음이라고부르지않고,NSE포화문턱이나사후판단불가override를추가하지않는다.
+초기noise텐서의각청크42개실제바이트해시를팔마다비교하고검증시간을기록한다. denoising중추가noise는동결run_chunk의동일seed·호출순서를따른다. 층별encode에는GPUevent와hostenqueue계측을넣되호출별synchronize는하지않는다. event/logger/budget guard가전체생성시간에공통으로포함됨을명시한다. noise검증은sampling timer밖의준비비이며arm전체시간에는포함된다.
+GPU peak는모델build전부터입력worker전체의누적최댓값이다. 각팔sampling.json에누적범위를명시하며독립팔별peak비교로해석하지않는다. build/conditioning상한도guard로검사한다. 모델/T5/base/VAE/tokenizer/metricweights/config/실행code는필수LOCK항목이고worker전후해시검사를강제한다.
+현재남은준비: stage2최종결과·API/binary/sourcehash, root/Fable코드검토, 실제GPU통합검사. 현재LOCK및GPU실행은금지상태다.
+
+행정 변경 적용: 이후root는ADMINISTRATIVE_AMENDMENT_KO.txt의투명한최종Claude검토유예경로를채택했다. 실제이전Fable설계검토와quota증거는보존하고,현재소스에대한root검토·독립Codex검토·별도root_execution_authorized가있어야실행된다. 최종Claude소스/결과검토는false이며review_status=deferred_not_completed다.21:50 KST부터실제Opus5.5가최종검토한다. 이변경은실험팔/입력/Q1-Q3/상한을바꾸지않는다. 현재는독립검토·실행지시전이므로binding pending과LOCK/RUN부재를유지한다.
+독립코드검토반영: worker의cwd를프로젝트src로고정해기존Wan상대경로를유지한다. 모든압축팔에서canonicalGPU frames를한번만계산하고,rotatedK/scale shape·dtype·유한성과저장FP16scale>0을검사한뒤동일code함수에전달한다. zero/tiny scale을조정하거나fallback하지않고invalid로종료한다. 이공통검사는device결과를host에서판정하므로암묵적hostbarrier가있으며encodeevent/전체sampling시간에포함한다. 앞의'호출별synchronize없음'은명시적torch.cuda.synchronize를추가하지않았다는의미이며무동기화encoder라는뜻이아니다. SELFTEST_V3가최신CPU검사다.

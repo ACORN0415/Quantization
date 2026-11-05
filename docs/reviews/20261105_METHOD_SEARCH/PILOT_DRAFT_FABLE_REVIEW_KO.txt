@@ -1,0 +1,26 @@
+full_obq_rollout_pilot 등록 초안 검토(중대 누락 판별) — Claude Fable 5.1, 2026-11-05 19:2x KST (읽기 전용, GPU 0)
+대상(직접 읽음): REGISTRATION_DRAFT_KO.txt c9230bb8…9aa1d(51행), PROMPTS.json 2e9d034e…, CODE_REVIEW_SCOPE_KO.txt 88ad47c5…. PROMPT_HISTORY_CHECK.json은 존재 확인만.
+root 선택(RTN_FP32 유지, K4h8은 후속, latent NSE를 참조 충실도 지표로 유효, stage1 시간으로 비용 확정 불가, first-reader는 "비일관 추가 이득" 관측) 수용. 아래는 그 선택 안에서의 중대 누락 2개와 소 누락 2개다.
+
+중대 누락 1 — 기기 잡음 바닥(instrument floor)의 사전 규칙이 없다.
+ 근거: Q2(DINO 각 입력 ≥ −0.005)·Q3(MUSIQ 각 입력 ≥ −1.0)의 마진은 과거 관측 산포보다 작다. R-7 10 prompt에서 같은 바이트의 팔 간 DINO 차이는 0.02–0.2(p9: rotK 0.618 vs K4h8 0.834), MUSIQ는 그룹 경계만 달라도 ±2(R-8 주의). 따라서 2 입력 × seed 1에서 Q2/Q3는 신호가 아니라 잡음으로 통과·실패가 갈릴 수 있다. 초안은 "통계 비열등 아님·투자 gate"라고 적었지만, 잡음으로 난 판정을 걸러낼 규칙이 없다.
+ 이 설계에는 바닥을 공짜로 재는 장치가 이미 있다: R_bf16 vs R_fp32는 코드 0.6%·단일 읽기 SSE 1–3%만 다른 사실상 동일 양자화기다. 두 RTN 팔 사이의 지표 차이(같은 입력, 같은 바이트, 같은 noise)는 궤적 분기가 만드는 기기 잡음의 직접 추정치다.
+ 제안(결과 전 고정, 기존 Q1–Q3 수치 불변): 각 입력·각 지표에서 spread = |metric(R_bf16) − metric(R_fp32)| 를 먼저 계산한다. Q1은 spread_rel = |1 − NSE_Rbf16/NSE_Rfp32| ≥ 0.10이면, Q2는 spread ≥ 0.005이면, Q3는 spread ≥ 1.0이면 그 입력·그 지표의 판정을 "판단불가(기기 잡음 ≥ 마진)"로 기록하고 signal/stop 어느 쪽으로도 세지 않는다. FULL − RTN 차이는 두 RTN 각각에 대해 그대로 보고한다. 이 규칙은 root가 RTN_FP32를 유지한 이유("FP32 산술 변경과 보상의 분리")와 충돌하지 않고 그 팔에 두 번째 역할을 준다.
+
+중대 누락 2 — latent NSE의 포화(saturation) 진단이 없다.
+ 근거: FR 궤적은 자기 이력으로 분기하므로 후반 NSE가 모든 압축 팔에서 1 근처(상관 상실)로 포화하면 "10% 감소"는 의미를 잃는다. root 입장대로 측정 전에 무의미하다고 배제하지는 않되, 포화 여부를 같은 자료에서 보고해야 Q1 판정의 해석이 가능하다.
+ 제안: 청크 창별 NSE(1–7, 8–20, 21–41)를 네 팔 모두 보고하고, 후반 NSE가 두 RTN 모두에서 ≥ 0.8이면 Q1을 "포화로 판단불가"로 기록(gate 수치 불변). 보고용이며 결정 변수 추가가 아니다.
+
+소 누락 3 — 팔 간 noise 동일성의 실행 시 증거. "같은 prompt의 noise는 같아야 한다"는 문장만 있다. 각 청크 noise 텐서 해시를 팔별로 기록하고 일치 assert(실패 = 무효)를 통합 검사에 넣을 것. chunk_noise가 seed·chunk에서 독립 generator를 쓰므로 비용 0.
+
+소 누락 4 — encode 호출의 시간 기록. 7380 encode_pair 호출의 위치·횟수는 기록하지만 시간은 없다. 호출당 synchronize 없이 CUDA event 또는 호스트 시각이라도 층별 누적 encode 시간을 남기면, FULL − RTN의 전체 wall 차이(각 1회)를 encoder 몫과 그 외(store.py의 unconditional error_stats restore 등)로 나눌 수 있다. 비용 판단은 stage2 fused 결과와 함께 하므로 gate에는 넣지 않는다.
+
+누락이 아닌 확인 사항
+ - 입력: 정확 문장·seed의 첫 사용 표현, 점수에 따른 교체 금지 — 적절. 두 입력이 모두 "추적 샷"이라 장면 유형 다양성은 낮다(한계 명시만).
+ - 보정: p0 30층 c7 call0 고정, 효과 보고 선택 금지, 7GB 원본 복제 금지 — 적절. stage2 kernel/owned packet/restore_gpu 해시 재사용·재구현 금지 — 적절.
+ - 통제: 동일 Hadamard→BF16→pad→g16→FP16 scale, V 공통, 현재 BF16, residual 0, sink 0, 7청크 창, once encode, 실행 순서 교차 — 적절. 첫 청크 바이트 일치를 전체 경로 항등으로 부르지 않음 — 적절.
+ - 중단 규칙(NSE +10%, DINO < −0.02, MUSIQ < −2)과 invalid/incomplete 분리 — 적절. 위 누락 1의 판단불가 규칙은 중단 규칙에도 같이 적용(잡음이 마진보다 크면 중단도 선언하지 않음).
+ - 60분·8 gen·8 VAE·22GiB·40GiB·4GiB, 구제 없음 — 적절. 현실성 근거(79s/gen, 33s/VAE+지표) 인용 — 적절.
+ - K4h8 제외는 후속 필수 비교로 명시됨 — 수용. 성공해도 "4bit가 충분하다"는 반론과 신규성 미확보 문구 유지 — 수용.
+
+결론: 위 1·2를 등록문에 넣으면 잠금 가능. 코드가 나오면 CODE_REVIEW_SCOPE의 1–6 단위를 그 순서로 검토한다. 지금 독립 요청 없음(stage2 확정 해시·adapter/runner 코드 대기).

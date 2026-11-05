@@ -1,0 +1,21 @@
+추가 준비 완료 — 실행 없음 — 2026-11-05
+
+prepare_bundle.py
+- 기본 dry-run. --write는최종stage2 RESULT/QUALITY완료·4endpointgate,실제검토파일2개,명시적root결정JSON을필수로요구한다.
+- stage2 LOCK의모든전이의존성과API/CUDA/binary/v1benchmark/causalcommon을묶는다. 실제검토문서는별도snapshot으로복사하며기존pending binding도보존한다.
+- binding/LOCK준비만하고RUN/GPU를시작하지않는다. 원래최종검토완료경로용이므로행정유예예외를이미허용한코드가아니다.
+- registration fingerprint를준비할때원본hash를읽으며,실제supervisor는다시source검증부터60분상한안에수행한다. 준비시간과실행시간을분리해기록한다.
+
+audit_posthoc.py
+- 독립읽기전용. 원래자료는변경하지않으며stdout기본, --out은새파일독점생성이다.
+- 생성이일부만끝나도completed와failed/incomplete를구분한다. 아직시작되지않은현재상태에서not_started/완료0/GPU0을정상보고하는것을확인했다.
+- 저장latent의실제첫청크원소바이트와후반/전체/구간별NSE를재계산한다. 42개초기noise해시일치,실제encode호출기록의전역순서·층별41회·payload산술을확인한다.
+- 저장DINO특징에서참조cosine을재계산하고MUSIQ원점수의평균과고정Q1-Q3/중단판정을독립계산한다. source/산출물hash는감사전후보존을확인한다.
+- 새noise/양자화/attention/VAE/MUSIQ network를실행하지않으며,전체cache가저장되지않으므로rollout payload확인은로그·코드근거임을명시한다.
+
+현재8개Python파일AST통과,기존SELFTEST의핵심6파일SHA전부불변. 새GPU0·새모델0·새생성0. STAGE2_BINDING pending과LOCK/RUN부재를유지한다.
+실제Claude최종코드검토는미완료다. 사용자최신지시에따라21:50 KST이후Opus5.5로검토하며,이전Fable설계검토와구분한다. 독립Codex FAIR 감사및root의실제비용판정도다음검토항목이다.
+
+후속 행정 변경: root는ADMINISTRATIVE_AMENDMENT_KO.txt의유예경로를채택했다. helper/runtime는이를명시적으로지원하며,root_execution_authorized·root코드검토·독립Codex검토가모두참이어야한다. claude_final_source_reviewed/result_reviewed는false,review_status는deferred_not_completed를강제한다. helper는실제이전Fable원칙/초안,독립Codex,root결정,quota자료,최신사용자선호를각각snapshot으로연결한다. 최종Fable검토true를요구하던이전helper설명은이행정변경이전상태다.
+SELFTEST_V2.json이현재8개Python소스SHA와CPU검사결과를묶는다. 원래검사에행정review gate5사례를추가했고실자료0/GPU0을유지했다. ROOT_DECISION_TEMPLATE.json은실행/코드검토/독립검토false인미완성서식이며그자체로실행할수없다.
+최신본은SELFTEST_V3.json이다. 독립검토의cwd문제를src고정으로수정하고,모든압축팔의K/FP16scale전제검사와zero/tiny6사례거부를추가했다. 기존V2는이력으로보존한다. 공통scale검사의hostbarrier비용을숨기지않으며현재등록에명시했다. 새ROOT_DECISION_TEMPLATE_V2.json에는현재8파일SHA가있고실행허용은false다.

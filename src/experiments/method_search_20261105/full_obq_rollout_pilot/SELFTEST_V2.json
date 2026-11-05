@@ -1,0 +1,67 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "arm": "R_bf16",
+      "layer": 0,
+      "CPU_packet_exact": true,
+      "owned_output_preserved": true
+    },
+    {
+      "arm": "R_bf16",
+      "layer": 29,
+      "CPU_packet_exact": true,
+      "owned_output_preserved": true
+    },
+    {
+      "arm": "R_fp32",
+      "layer": 0,
+      "CPU_packet_exact": true,
+      "owned_output_preserved": true
+    },
+    {
+      "arm": "R_fp32",
+      "layer": 29,
+      "CPU_packet_exact": true,
+      "owned_output_preserved": true
+    },
+    {
+      "arm": "O_full_gpu",
+      "layer": 0,
+      "CPU_packet_exact": true,
+      "owned_output_preserved": true
+    },
+    {
+      "arm": "O_full_gpu",
+      "layer": 29,
+      "CPU_packet_exact": true,
+      "owned_output_preserved": true
+    }
+  ],
+  "CPU_V_packet_exact": true,
+  "layer_factor_mapping_30": true,
+  "logical_cache_10_chunks_5_calls": true,
+  "decision_cases": 6,
+  "administrative_review_gate_cases": 5,
+  "real_capture_reads": 0,
+  "model_loads": 0,
+  "GPU_calls": 0,
+  "OBQ_backend": "CPU reference stand-in only; actual fused kernel/native GPU integration remains pending",
+  "source_sha256": {
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/quality.py": "f21a1b93f1d94677cb1d966062b1f9f516adf1c705ac8acd56441efe1e69f5f3",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/prepare_bundle.py": "b1fa4377f196588d4669de5016407bdebb66a4fed2ccbe2c28020377db320543",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/pilot_common.py": "aaa4d4745dbeb931a26aadc63c09f28c69c81eb91facacd5e16350d7f5b2bb58",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/worker.py": "4b8fdef285db40b21d77e920efcbbabafa338817196e971429aad9dbfa3f7206",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/supervisor.py": "13004b50c2a267ded10a77bd020baa71a9431fe27d6979953477755ddd699151",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/packed_adapter.py": "0fa48bc12ee9d64c63bb4f2261d95e330e5396543cd332caf09277d228967865",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/selftest.py": "f2a4194baf985792034e32d93261eeb09987879362a650a360e24ec079d59da6",
+    "/home/acorn0415/Quantization/src/experiments/method_search_20261105/full_obq_rollout_pilot/audit_posthoc.py": "63a6a930415c830978c0bfa68b2bf104f191a22f91656c2fea91a3ca5a2d4ece"
+  },
+  "preview_api_source": {
+    "path": "/home/acorn0415/Quantization/src/experiments/method_search_20261105/obq_gpu_encoder_stage2_layoutfix/experiment.py",
+    "sha256": "970c53eeb123748a8f8de03aa41c1f334f06557aee863e9d75a5a0f5d003a398",
+    "bytes": 19949
+  },
+  "torch_version": "2.6.0+cu124",
+  "time_utc": 1793875548.465146
+}

@@ -1,0 +1,30 @@
+CPU 구현 준비 상태 — 2026-11-05
+
+코드:
+pilot_common.py — pending binding/필수source·weightLOCK/자원상한/고정판정.
+packed_adapter.py — stage2 canonical frames·fused K·reader 재사용,동적V packed port,owned state,비동기계측.
+worker.py — 30층고정보정준비,기존두캡처통합검사,각입력4팔generation.
+quality.py — 기존VAE/MUSIQ/DINO 및rawRGB8 windows,후반NSE,고정Q1-Q3,설명용RTN차이.
+supervisor.py — CPU준비→GPU통합→입력0→입력1→8VAE품질,최대60분·단일실행·자기child processgroup만정리.
+selftest.py — CPU합성·논리검사. SELFTEST.json은현재6개코드의SHA를포함한다.
+
+통과한 검사:
+- 문법AST:6파일.
+- V CPU 실제packet/scale/reader 일치.
+- 층0/29의두RTN과CPU참조OBQ packet,다음호출후기존packet보존,입력불변.
+- 30층factor참조mapping 및full경로에전달된서로다른layer factor 확인.
+- 10청크×5호출의완료청크쓰기·pending·퇴거·기대history 독립합성대조.
+- fidelity합산과signal/미달/latent악화/MUSIQ악화/DINO악화/평균마진6판정사례.
+- 실제캡처읽기0,모델로드0,GPU호출0.
+
+런타임이 검증할 사항:
+- stage2최종quality gate와completed상태·binary/source해시 및root/Fable비용수용binding.
+- 모델/config/tokenizer/가중치/평가가중치/code의필수LOCK 전후검증.
+- nativeGPU V encode와CPU packet정확일치,owned K/V lifetime,stage2CPU-reference code.
+- 모든generation첫청크BF16동등,층별41encode×30과210forward,실제payload동등,42개초기noise해시동등.
+- 8generation/8VAE/전체상한. 무효실행은재시도하지않는다.
+
+남은 한계:
+CPU대역검사로fusedCUDA와전체rollout효과를보장하지않는다. 현재STAGE2_BINDING.json은pending이며LOCK/RUN/FACTORS/latent는생성하지않았다.
+cache원본ChunkStore의추가error_stats복원/동기화와새event/guard비용을포함하는진단시간이다. CPU·GPU최소서비스속도나독립팔peak라고표현하지않는다.
+제안한정밀도보상은기존GPTQ계열이며pilot성공만으로새방법신규성이확보되지않는다. BF16 latent충실도와DINO/MUSIQ를서로대체하지않는다.
