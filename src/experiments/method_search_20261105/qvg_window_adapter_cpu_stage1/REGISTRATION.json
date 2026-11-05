@@ -1,0 +1,36 @@
+{
+  "status": "registered_CPU_implementation_and_correctness_preparation",
+  "started_utc": 1793892646.3041162,
+  "absolute_deadline_utc": 1793894446.3041162,
+  "total_wall_seconds": 1800,
+  "upstream_revision": "0601468f2dbba6a17ac7086faec6d41527cad188",
+  "scope": "finite horizon QVG adapter, sink0, no initial latent, 3 latent per generation block, windows21/63 and full horizon126; original24-latent quantization groups",
+  "constraints": {
+    "CPU_threads_max": 4,
+    "process_RSS_cap_GiB": 8,
+    "new_files_cap_GiB": 1,
+    "GPU_calls": 0,
+    "model_loads": 0,
+    "actual_PRQ_calls": 0,
+    "upstream_edits": 0
+  },
+  "ownership": {
+    "adapter.py": "fair_comparison_codex",
+    "verify_adapter.py": "method_gap_codex"
+  },
+  "required_invariants": [
+    "absolute address capacity independent of visible window",
+    "quantization-success frontier only advances after original quantizer succeeds",
+    "pending raw values survive until original24-frame compression",
+    "cumulative eviction releases fully expired spans without premature pending eviction",
+    "read span max(0,E-W)..E includes current; correct absolute RoPE offset",
+    "current block may be overwritten five times; packed historical span overwrite rejected",
+    "unsupported sink/initial latent/nonaligned windows rejected before mutation",
+    "full-horizon path matches no-eviction reference; finite path matches same-window reference with all history retained",
+    "source upstream unchanged; fake-codec test does not claim actual PRQ correctness"
+  ],
+  "pass": "all required synthetic reference cases and negative controls pass, source review completed; implementation ready for separately registered actual-codec test only",
+  "fail": "semantic/reference/negative-control failure remains by deadline",
+  "inconclusive": "source unavailable, budget exceeded, or independent review incomplete",
+  "scientific_claim": "No new algorithm, GPU performance, video quality, or novelty claim. Repair enables a fair existing-baseline comparison."
+}
