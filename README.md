@@ -2,11 +2,48 @@
 
 이 저장소는 **인과적 영상 생성 모델에서 KV 캐시를 저비트로 저장할 때, 시간이 지나며 품질이 왜 나빠지고 어떤 저장 방식이 이를 줄이는지** 연구한 코드·실험·검증 기록이다. 주 대상은 Wan2.1-T2V-1.3B 기반 Self-Forcing이며, 단일 RTX 4090 24GB에서 측정했다. 초기에는 LongLive와 가중치·활성 양자화도 비교했으나, 이후에는 KV 저장 정책과 오차의 생성 피드백에 집중했다.
 
-**정리 기준: 2026-10-31.** K+V TT와 마지막 단회·반복 검증까지 완료했으며 추가 후보 탐색은 종료했다. 현재는 [분석 논문 원고](문서/paper/analysis_manuscript_ko.md)를 기준으로 결과를 설명한다. 초기 탐색부터 재구현, 본 실험, 메커니즘 진단 순서로 기록하며 과거 문서는 당시 판단의 기록으로 보존한다. 철회된 문장은 아래 해석과 정정 문서를 함께 읽어야 한다. 실행 가능한 코드는 [`src/`](src/README.md)에 있다.
+**문서 갱신: 2026-11-09 · 결과 정리 기준: 2026-11-06. 현재 연구는 사용자 지시로 일시중지 상태다.** 이 README 갱신과 자료 저장·푸시는 실험·후보 탐색의 재개를 뜻하지 않는다. 기존 저장 정책 분석의 근거와 실행·검증 기반은 확보했지만, 강한 단순 기준선 대비 효과·보류 입력의 재현·실제 비용·선행연구 차별점을 함께 입증한 신규 방법론은 아직 확보하지 못했다. 종료한 개별 후보의 판단을 연구 전체의 완료나 관련 방법 전체의 불가능성으로 확대하지 않는다.
 
-**최종 연구 주장:** 시험한 구현에서 반복 양자화를 유지한 청크별 그룹 규칙 개입은 후반 전체 프레임 MUSIQ를 평균 **+5.3935점** 높였다. 관측된 정책 차이를 반복 횟수만으로 설명할 수 없다. 마지막 검사에서는 새 단회24개가 대응하는 기존 반복 결과와 최종 잠재 텐서의 원소 바이트가 모두 같았다. 실제 반복 경로도 매번 scale을 다시 계산한다. 최종 일치는 모든 중간 캐시 값이나 모든 입력의 멱등성을 증명하지 않는다.
+기존 분석은 [분석 논문 원고](문서/paper/analysis_manuscript_ko.md)를 기준으로 설명한다. 후속 탐색에서는 MoE, 저정밀 attention 실행, DINO-WM 연결까지 확인했다. 실행 가능한 코드는 [`src/`](src/README.md)에 있다. 아래 과거 문서는 당시의 판단과 계획을 보존한 기록이며, 현재 진행 상태는 이 상단 요약을 우선한다.
+
+**기존 저장 정책 분석의 중심 주장:** 시험한 구현에서 반복 양자화를 유지한 청크별 그룹 규칙 개입은 후반 전체 프레임 MUSIQ를 평균 **+5.3935점** 높였다. 관측된 정책 차이를 반복 횟수만으로 설명할 수 없다. 마지막 검사에서는 새 단회24개가 대응하는 기존 반복 결과와 최종 잠재 텐서의 원소 바이트가 모두 같았다. 실제 반복 경로도 매번 scale을 다시 계산한다. 최종 일치는 모든 중간 캐시 값이나 모든 입력의 멱등성을 증명하지 않는다.
 
 [현재 원고·연산 도식](문서/paper/analysis_manuscript_ko.md) · [마지막 검증 보고](src/experiments/repeat_once_final/REPORT_KO.md) · [K+V TT 종료 보고](src/experiments/tt_kv_final/REPORT_KO.md)
+
+## 시각 정리본과 다운로드
+
+19개 주요 작업을 **한눈에 보기·쉬운 설명·전체 기록·남은 자산과 한계**로 정리했다. 근거 연결 도식, K 길이별 호출 시간 그래프, 창 길이별 캐시 payload 그림과 검색 가능한 표를 포함한다. 19개는 작업 묶음 수이며 실험 실행 횟수가 아니다.
+
+| 자료 | 용도 |
+|---|---|
+| [전체 정리본 ZIP](outputs/quantization-research-summary-20261106.zip) · [직접 다운로드](https://raw.githubusercontent.com/ACORN0415/Quantization/main/outputs/quantization-research-summary-20261106.zip) | HTML·CSV·JSON·안내문 묶음 |
+| [시각 대시보드 HTML](outputs/quantization-research-overview-20261106-v1.html) | 내려받아 브라우저에서 열람. 도식·그래프·탭·검색을 내장하며 인터넷 연결 불필요 |
+| [엑셀용 표 CSV](outputs/quantization-research-summary-20261106.csv) | 19개 작업의 결과·판정·한계. UTF-8 BOM 포함 |
+| [휴대폰 저장 카드 HTML](outputs/research-summary-mobile-download-20261106-v1.html) | ZIP·HTML·CSV 내장. 다운로드·공유 지원 여부는 앱과 브라우저에 따라 다름 |
+| [파일 안내](outputs/README_KO.txt) · [정리 데이터 JSON](outputs/quantization-research-overview-20261106-data.json) | 파일별 사용 방법과 정리 원본 데이터 |
+
+GitHub의 HTML 파일 페이지는 소스 보기이므로 대시보드를 사용하려면 파일을 내려받아 열어야 한다. 정리본은 기존 결과의 요약이며 원 보고서의 시험 범위와 판정을 대체하지 않는다.
+
+## 후속 탐색의 현재 판단
+
+| 작업 | 확인한 결과 | 판단·한계와 근거 |
+|---|---|---|
+| A: W8A8 실행과 전체 생성 연결 | 일부 linear 형상은 기존 실행 최적화로 빨라졌으나, A-4 생성 latent 상대 L2는 59.68%로 등록한 5% 조건 초과 | 현재 경로 종료. 유효 성능 대응 쌍 0개이며 영상 품질 저하율·전체 생성 가속률이 아니다. [A-4 보고서](src/experiments/linear_w8a8_rollout_stage1/REPORT_KO.txt) |
+| B: K 채널 boost | V를 BF16으로 고정한 조건에서는 개선됐지만, 총 KV 예산에 들어가는 기존 K8V8이 더 적은 바이트와 더 좋은 개발 결과를 보임 | 현재 boost 추가 개발 종료. 조건부 개선과 총 예산 비교를 구분한다. [B-4 보고서](src/experiments/kv_channel_budget_global_baseline/REPORT_KO.txt) |
+| C: SVD 계산 정밀도 | 제한된 FP32/FP64 TT 비교에서 모든 변화가 등록한 1% 공학 기준 미만이고 방향도 불일치 | 해당 정밀도 상향 탐색 종료. NVIDIA 반복 정련이나 전체 영상 검사는 아니다. [C 보고서](src/experiments/svd_precision_stage1/REPORT_KO.txt) |
+| full-H / OBQ 영상 파일럿 | rain_market에서 R_bf16 대비 MUSIQ −2.1791점으로 등록 중단선 초과 | `stop_quality`. 국소 개선이 모든 영상 판정 기준으로 이어지지 않았다. [실행 보고서](src/experiments/method_search_20261105/full_obq_rollout_pilot/REPORT_KO.txt) |
+| 고정 Gaussian PRF rank32 | 4개 개발 평가점 × 3 seed의 12개 비교 모두 등록 개선 기준 실패 | 해당 rank·seed·구성 종료. paired 계열 전체의 실패를 뜻하지 않는다. [결과·검토 범위](src/experiments/method_search_20261105/paired_response_stage0_packet_contract_fix/REPORT_KO.txt) |
+| QVG 유한 창 호환성 | CPU 검증 후 실제 PRQ·RoPE·FA2 단일층 합성 검사 통과 | 수정 가능성·계약 호환성의 근거. 전체 30층·실제 영상·성능은 미검증. [보고서](src/experiments/method_search_20261105/qvg_window_adapter_actual_codec_stage2/REPORT_KO.txt) |
+| 장문맥 평가와 VAE 진단 | 재등장 물체의 동일성 판정 불가. 단일 latent의 FP32/BF16 VAE 후반 RMSE는 약 0.00158로 공학 민감도 기준 0.02 미만 | 현재 사건 기반 효용 계획과 정밀도 확대 종료. 기억 효과·색 변화의 원인 전반을 확정하지 않는다. [사건 평가](src/experiments/method_search_20261105/long_context_event_screen/REPORT_KO.txt) · [VAE 결과](src/experiments/method_search_20261105/vae_precision_probe_preparation/REPORT_KO.txt) |
+| DINO-WM 연결·고정 후보 비교 | 복원·마스크·형상 검사는 통과했으나 FP32 재사용의 등록 동등성 조건은 실패 | 실행 기반은 보존, 해당 비교는 `stop_equivalence`. 제어·저비트 효과·시간 이득은 미입증. [연결 결과](src/experiments/method_search_20261105/dino_wm_model_smoke_maskfix/REPORT_RESULT_CODEX_KO.txt) · [후보 비교](src/experiments/method_search_20261105/dino_wm_fixed_candidate_baseline/REPORT_RESULT_CODEX_KO.txt) |
+| 기존 Sage1 attention 기준선 | 네 합성 형상에서 K/V 준비값 재사용은 매번 변환 대비 약 6~19%, FA2 대비 약 11~18% 호출 시간 감소 | INT8 K + FP16 V, 단일 실행·형상당 8회 wall 측정, 최초 준비 비용 상각 조건. 신규 방법·SOTA·영상 품질·전체 생성 가속의 근거가 아니다. [결과](src/experiments/method_search_20261105/native_attention_baseline_probe/REPORT_RESULT_KO.txt) · [Opus 사후 검토](src/experiments/method_search_20261105/native_attention_baseline_probe/REVIEW_RESULT_OPUS_KO.txt) |
+| 저비트 저장 ↔ native 입력 공백 | Codex·실제 Opus 5.5 독립 소스 검토 후 현재 넓은 정의에서 채택할 후보 없음 | FP8 V는 미측정. 같은 형상의 126프레임 INT8 K + FP16 V는 payload만 약 25.3GiB이며 전체 peak와 구분한다. [독립안 대조·바이트 계산](src/experiments/method_search_20261105/native_consumer_codec_gap_review_20261106/ROOT_COMPARISON.json) |
+
+**데이터 정리 보완 (2026-11-06):** 불필요한 모델 shard·원본 ZIP 제거와 읽기 전용 중복 통합으로 약 **20.3GiB**를 추가 확보했다. 일부 원 ZIP의 전체 재감사는 재취득이 필요하고, 하드링크로 통합한 자료는 수정 전에 복사해야 한다. [정리 범위·한계](src/experiments/method_search_20261105/storage_cleanup_20261106/REPORT_KO.txt).
+
+## 과거 단계별 판단 기록
+
+아래의 “다음 후보”, “다음 자원”과 실행 계획은 각 작성 시점의 기록이다. 자동 재개 지시가 아니며, 현재 일시중지 상태와 후속 탐색의 결론은 위 요약을 따른다.
 
 **별도 새 주제의 단계1 진단 완료 (2026-10-31):** QVG packed KV의 복원값 재사용을
 12회 생성·약 34분 49초 안에 검증했다. 중복 복원 제거와 1 GiB 보관 경로는 각각
@@ -102,7 +139,7 @@ host/flash 비용과 GPU 전송을 구분하고, cache 우회·채택 window를 
 [원문과 고정 코드의 근거](src/experiments/moe_system_candidate_review_20261101/source_audit.json) ·
 [자원과 모델 메타데이터](src/experiments/moe_system_candidate_review_20261101/inventory.json).
 
-## 먼저 읽을 현재 결론
+## 기존 저장 정책 분석의 결론
 
 | 질문 | 현재 답 | 근거의 범위 |
 |---|---|---|
